@@ -42,7 +42,7 @@ const WhiteboardCanvas: React.FC<WhiteboardCanvasProps> = ({ boardId, userId }) 
           scrollToContent: true,
         });
       } else {
-        setInitialData({ appState: { viewBackgroundColor: '#0b0b0d' } });
+        setInitialData({ appState: { viewBackgroundColor: '#fff2c7' } });
       }
       setLoading(false);
     })();
@@ -107,7 +107,7 @@ const WhiteboardCanvas: React.FC<WhiteboardCanvasProps> = ({ boardId, userId }) 
         excalidrawAPI={(api) => { apiRef.current = api; }}
         initialData={initialData}
         onChange={handleChange}
-        theme="dark"
+        theme="light"
       />
     </div>
   );

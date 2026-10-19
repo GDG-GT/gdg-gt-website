@@ -1,46 +1,31 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import NotificationBell from './NotificationBell';
+import React from "react";
+import type { LucideIcon } from "lucide-react";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
   title: string;
   subtitle?: string;
-  icon: React.ComponentType<any>;
+  icon: LucideIcon;
   actions?: React.ReactNode;
 }
 
-const AdminLayout: React.FC<AdminLayoutProps> = ({ 
-  children, 
-  title, 
-  subtitle, 
-  icon: Icon, 
-  actions 
+const AdminLayout: React.FC<AdminLayoutProps> = ({
+  children,
+  title,
+  subtitle,
+  icon: Icon,
+  actions,
 }) => {
   return (
-    <div className="min-h-screen bg-background pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="gt-admin-page">
+      <div>
         {/* Header */}
-        <div className="mb-8">
+        <div className="gt-admin-page-heading">
           {/* Back Button */}
-          <div className="mb-4 flex items-center justify-between">
-            <Link
-              to="/admin"
-              className="inline-flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <ArrowLeft size={16} />
-              <span className="text-sm font-medium">Back to Admin Dashboard</span>
-            </Link>
-            <NotificationBell />
-          </div>
-
           {/* Page Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
-                <Icon size={24} className="text-primary-foreground" />
-              </div>
+          <div className="gt-admin-heading-inner">
+            <div>
+              <p className="gt-breadcrumb">Chapter workspace</p>
               <div>
                 <h1 className="text-3xl font-bold text-foreground">{title}</h1>
                 {subtitle && (
@@ -48,19 +33,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
                 )}
               </div>
             </div>
-            
+
             {actions && (
-              <div className="flex items-center space-x-3">
-                {actions}
-              </div>
+              <div className="flex items-center space-x-3">{actions}</div>
             )}
           </div>
         </div>
 
         {/* Content */}
-        <div className="space-y-6">
-          {children}
-        </div>
+        <div className="space-y-6">{children}</div>
       </div>
     </div>
   );

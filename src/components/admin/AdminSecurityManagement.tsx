@@ -259,7 +259,7 @@ const AdminSecurityManagement: React.FC<AdminSecurityManagementProps> = ({ curre
                       : 'border-gray-700 bg-black focus:ring-blue-400 focus:border-blue-400 text-primary-foreground'
                     : 'border-gray-700 bg-gray-900 text-muted-foreground'
                 }`}
-                placeholder="Enter new secret code (e.g., gdg-secret@psu.edu)"
+                placeholder="Enter new secret code (e.g., chapter-secret@example.com)"
               />
               <button
                 type="button"
@@ -276,7 +276,7 @@ const AdminSecurityManagement: React.FC<AdminSecurityManagementProps> = ({ curre
               </p>
             ) : (
               <p className="text-xs text-muted-foreground mt-1">
-                Must be in email format with @ symbol and end with .edu or .com (e.g., gdg-secret@psu.edu)
+                Must be in email format with @ symbol and end with .edu or .com (e.g., chapter-secret@example.com)
               </p>
             )}
           </div>

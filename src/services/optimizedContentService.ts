@@ -243,7 +243,7 @@ export class OptimizedContentService {
     ];
 
     try {
-      const results = await requestService.parallel(essentialRequests, 4);
+      const results = await Promise.all(essentialRequests.map(request => request()));
       return {
         siteSettings: results[0],
         navigationItems: results[1],

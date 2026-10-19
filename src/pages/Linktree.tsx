@@ -9,7 +9,7 @@ import { linktreeService, LinktreeProfile, LinktreeLink } from '@/services/linkt
 import { getIconComponent } from '@/lib/icons';
 import EmbedModal from '@/components/EmbedModal';
 import { proxyStorageUrl } from '@/lib/urlProxy';
-import NotFound from './NotFound';
+import { NotFoundPage as NotFound } from '@/ui/PublicPages';
 
 const Linktree = () => {
   const { username } = useParams<{ username: string }>();

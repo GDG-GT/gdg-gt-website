@@ -140,6 +140,8 @@ const AdminEvents = () => {
       registration_url: '',
       google_form_url: '',
       google_event_url: '',
+      event_link: '',
+      type: 'Workshop',
       registration_type: 'both',
       max_participants: '',
       external_attendees: '',
@@ -383,7 +385,7 @@ Please make sure to arrive on time. We're looking forward to seeing you there!
 If you have any questions or need directions, feel free to reach out to us.
 
 Best regards,
-The GDG@PSU Team`
+The GDG@GT Team`
       },
       thank_you: {
         subject: `Thank you for attending: ${event.title}`,
@@ -396,7 +398,7 @@ Your participation made it a great success!
 We'd love to hear your feedback and see you at future events. If you have any questions or suggestions, please don't hesitate to reach out.
 
 Best regards,
-The GDG@PSU Team`
+The GDG@GT Team`
       },
       update: {
         subject: `Update: ${event.title}`,
@@ -410,7 +412,7 @@ ${eventDetails}${rsvpSection}
 If you have any questions about these changes, please feel free to contact us.
 
 Best regards,
-The GDG@PSU Team`
+The GDG@GT Team`
       },
       custom: {
         subject: `${event.title}`,
@@ -420,7 +422,7 @@ The GDG@PSU Team`
 ${eventDetails}${rsvpSection}
 
 Best regards,
-The GDG@PSU Team`
+The GDG@GT Team`
       }
     };
   };
@@ -1624,7 +1626,7 @@ The GDG@PSU Team`
                   onChange={(e) => setEmailData(prev => ({ ...prev, custom_emails: e.target.value }))}
                   rows={3}
                   className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-foreground bg-muted"
-                  placeholder="Enter additional email addresses separated by commas or new lines&#10;example@psu.edu, another@example.com"
+                  placeholder="Enter additional email addresses separated by commas or new lines&#10;student@example.test, another@example.com"
                   disabled={isSendingEmail}
                 />
                 <p className="text-xs text-gray-400 mt-2">

@@ -1343,7 +1343,7 @@ const AdminNewsletter = () => {
                               overflowWrap: 'break-word'
                             }}>
                               <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600 }}>
-                                🚀 GDG@PSU Newsletter
+                                🚀 GDG@GT Newsletter
                               </h1>
                             </div>
                             
@@ -1362,7 +1362,7 @@ const AdminNewsletter = () => {
                               ))}
                               <p style={{ marginBottom: '16px' }}>
                               Best regards,<br />
-                              <strong>The GDG@PSU Team</strong>
+                              <strong>The GDG@GT Team</strong>
                             </p>
                           </div>
                           
@@ -1376,10 +1376,10 @@ const AdminNewsletter = () => {
                             color: '#666'
                           }}>
                             <p style={{ margin: '0 0 10px 0' }}>
-                              You're receiving this email because you subscribed to GDG@PSU newsletter.
+                              You're receiving this email because you subscribed to GDG@GT newsletter.
                             </p>
                             <p style={{ margin: 0 }}>
-                              GDG@PSU - Google Developer Group at Penn State University
+                              GDG@GT - Google Developer Group at Georgia Institute of Technology
                             </p>
                             <div style={{ marginTop: '10px' }}>
                               <a href="#" style={{ color: '#666', textDecoration: 'none' }}>Unsubscribe</a>
@@ -1625,8 +1625,8 @@ const AdminNewsletter = () => {
                     rows={4}
                     className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-foreground bg-muted"
                     placeholder={isTestSend 
-                      ? "Enter test email addresses separated by commas or new lines&#10;your-email@psu.edu, team-member@example.com"
-                      : "Enter additional email addresses separated by commas or new lines&#10;example@psu.edu, another@example.com"}
+                      ? "Enter test email addresses separated by commas or new lines&#10;student@example.test, team-member@example.com"
+                      : "Enter additional email addresses separated by commas or new lines&#10;student@example.test, another@example.com"}
                     disabled={isSendingNewsletter}
                     required={isTestSend}
                   />

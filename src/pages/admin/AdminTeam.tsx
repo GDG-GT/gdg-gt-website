@@ -541,7 +541,7 @@ const AdminTeam = () => {
                   value={memberForm.email}
                   onChange={(e) => setMemberForm(prev => ({ ...prev, email: e.target.value }))}
                   className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-foreground bg-card"
-                  placeholder="john.doe@psu.edu (for Member Management sync)"
+                  placeholder="student@example.test (for Member Management sync)"
                 />
                 <p className="text-xs text-muted-foreground mt-1">
                   Providing an email will create a corresponding entry in Member Management

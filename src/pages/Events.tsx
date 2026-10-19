@@ -54,10 +54,10 @@ const Events = () => {
       capacity: event.max_participants || undefined,
       description: event.description,
       level: (event as any).level ? 
-        (event as any).level === 'beginner' ? 'Beginner' :
-        (event as any).level === 'intermediate' ? 'Intermediate' :
-        (event as any).level === 'advanced' ? 'Advanced' :
-        (event as any).level === 'open_for_all' ? 'Open for All' :
+        (event as any).level === 'beginner' ? 'Beginner' as const :
+        (event as any).level === 'intermediate' ? 'Intermediate' as const :
+        (event as any).level === 'advanced' ? 'Advanced' as const :
+        (event as any).level === 'open_for_all' ? 'Open for All' as const :
         undefined : undefined,
       type: (event as any).type || (event.is_featured ? 'Featured' : 'Workshop'),
       isUpcoming,

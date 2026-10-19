@@ -1,5 +1,4 @@
-/* Import fonts with fallback handling */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+/* Inter is self-hosted in styles/gt.css. */
 
 @tailwind base;
 @tailwind components;
@@ -282,11 +281,11 @@ body {
   }
 
   .text-display {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
   }
 
   .font-display {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
   }
 
   .font-body {

@@ -57,7 +57,7 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
   const [mergedProfile, setMergedProfile] = useState<MergedProfile | null>(null);
   const [userTeams, setUserTeams] = useState<TeamMembership[]>([]);
   const [currentTeam, setCurrentTeam] = useState<AdminTeam | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Computed role checks
@@ -111,6 +111,8 @@ export const AdminProvider: React.FC<AdminProviderProps> = ({ children }) => {
         }
       } catch (error) {
         console.error('Session check error:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 

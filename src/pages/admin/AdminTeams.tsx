@@ -808,7 +808,7 @@ const AdminTeams = () => {
                           <div className="flex items-center space-x-2">
                             <h3 className="font-medium text-foreground">{team.name}</h3>
                             {canManageThisTeam && !isSuperAdmin && !isAdmin && (
-                              <Crown className="w-3 h-3 text-yellow-500" title="You lead this team" />
+                              <span title="You lead this team"><Crown className="w-3 h-3 text-yellow-500" aria-label="You lead this team" /></span>
                             )}
                           </div>
                           <p className="text-xs text-muted-foreground">

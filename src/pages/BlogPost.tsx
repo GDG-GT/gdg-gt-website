@@ -77,7 +77,7 @@ const BlogPost = () => {
       <div className="min-h-screen bg-background pt-16">
         <div className="editorial-grid py-16">
           <div className="col-span-12 lg:col-span-8 lg:col-start-3">
-            <LoadingSkeleton variant="article" />
+            <LoadingSkeleton variant="card" />
           </div>
         </div>
       </div>

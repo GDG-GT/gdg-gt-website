@@ -6,7 +6,7 @@ export interface MergedProfile {
   // Admin data
   adminId: string;
   email: string;
-  role: 'super_admin' | 'admin' | 'blog_editor';
+  role: AdminUser['role'];
   isActive: boolean;
   createdAt: string;
   lastLogin?: string;

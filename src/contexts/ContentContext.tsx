@@ -8,6 +8,7 @@ import { ResourcesService } from '@/services/resourcesService';
 import { OptimizedContentService } from '@/services/optimizedContentService';
 import { preloaderService } from '@/services/preloaderService';
 import { supabase } from '@/lib/supabase';
+import { clearContentCache, clearSpecificCache } from '@/utils/serviceWorker';
 
 interface ContentContextType {
   siteSettings: Record<string, any>;
@@ -113,14 +114,11 @@ export const ContentProvider: React.FC<ContentProviderProps> = ({ children }) =>
 
       // Start preloading other content in the background
       setTimeout(() => {
-        OptimizedContentService.preloadContent(['events', 'team', 'projects', 'contact']);
+        OptimizedContentService.preloadContent(['events', 'team', 'contact']);
         
         // Preload critical assets
         preloaderService.intelligentPreload({
           fonts: [
-            { family: 'Space Grotesk', weight: '400' },
-            { family: 'Space Grotesk', weight: '600' },
-            { family: 'Space Grotesk', weight: '700' },
             { family: 'Inter', weight: '400' },
             { family: 'Inter', weight: '500' },
             { family: 'Inter', weight: '600' }

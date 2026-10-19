@@ -1,11 +1,11 @@
 {
-  "name": "GDG on Campus PSU",
-  "short_name": "GDG PSU",
-  "description": "Google Developer Group on Campus at Prince of Songkla University - Events, Blog, and Developer Resources",
+  "name": "Google Developer Group on Campus at Georgia Institute of Technology",
+  "short_name": "GDG@GT",
+  "description": "Build, learn, and grow with the developer community at Georgia Tech.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0a",
-  "theme_color": "#4285F4",
+  "background_color": "#fff2c7",
+  "theme_color": "#fff2c7",
   "orientation": "portrait-primary",
   "scope": "/",
   "icons": [

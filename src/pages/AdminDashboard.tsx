@@ -56,7 +56,8 @@ const AdminDashboard = () => {
     pendingTasks: 0,
     unreadMessages: 0,
     unreadAnnouncements: 0,
-    pendingComments: 0
+    pendingComments: 0,
+    pendingApprovals: 0
   });
   const [recentActivity, setRecentActivity] = useState<Array<{
     id: string;
@@ -243,7 +244,8 @@ const AdminDashboard = () => {
         pendingTasks: 0,
         unreadMessages: 0,
         unreadAnnouncements: 0,
-        pendingComments: 0
+        pendingComments: 0,
+        pendingApprovals: 0
       });
     } finally {
       setIsLoading(false);

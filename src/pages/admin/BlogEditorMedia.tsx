@@ -21,6 +21,7 @@ import {
     Clock
 } from 'lucide-react';
 import AdminPageWrapper from '@/components/admin/AdminPageWrapper';
+import { localPreviewEnabled } from '@/ui/preview-data';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { 
     MediaService, 
@@ -48,12 +49,8 @@ const BlogEditorMedia: React.FC = () => {
     // Lock body scroll when modal is open
     useBodyScrollLock(!!selectedSubmission || showStatusModal);
 
-    // Authentication check
-    if (!isAuthenticated || currentAdmin?.role !== 'blog_editor') {
-        return <Navigate to="/" replace />;
-    }
-
     useEffect(() => {
+        if (!isAuthenticated || (currentAdmin?.role !== 'blog_editor' && !localPreviewEnabled)) return;
         loadBlogSubmissions();
     }, []);
 
@@ -70,6 +67,10 @@ const BlogEditorMedia: React.FC = () => {
             setIsLoading(false);
         }
     };
+
+    if (!isAuthenticated || (currentAdmin?.role !== 'blog_editor' && !localPreviewEnabled)) {
+        return <Navigate to="/" replace />;
+    }
 
     const handleViewFile = async (submission: BlogSubmission) => {
         try {

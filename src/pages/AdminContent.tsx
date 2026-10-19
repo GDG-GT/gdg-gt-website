@@ -48,8 +48,8 @@ const AdminContent = () => {
 
   // Form states for different sections
   const [siteSettingsForm, setSiteSettingsForm] = useState({
-    site_title: siteSettings.site_title || 'GDG@PSU',
-    site_subtitle: siteSettings.site_subtitle || 'Penn State University',
+    site_title: siteSettings.site_title || 'GDG@GT',
+    site_subtitle: siteSettings.site_subtitle || 'Georgia Institute of Technology',
     site_description: siteSettings.site_description || 'A student-led community passionate about Google technologies',
     // Logo settings
     logo_text: siteSettings.logo_text || 'G',
@@ -267,13 +267,7 @@ const AdminContent = () => {
 
       // If no data exists, create default links
       const defaultLinks = [
-        { id: 'discord', name: 'Discord Server', url: 'https://discord.gg/gdgpsu', category: 'Social', description: 'Join our Discord community' },
-        { id: 'github', name: 'GitHub Organization', url: 'https://github.com/gdgpsu', category: 'Development', description: 'Our code repositories' },
-        { id: 'twitter', name: 'X (Twitter)', url: 'https://twitter.com/gdgpsu', category: 'Social', description: 'Follow us on X' },
-        { id: 'instagram', name: 'Instagram', url: 'https://instagram.com/gdg.psu', category: 'Social', description: 'Photos and updates' },
-        { id: 'linkedin', name: 'LinkedIn', url: 'https://linkedin.com/company/gdgpsu', category: 'Social', description: 'Professional network' },
-        { id: 'gdg_website', name: 'Official GDG Website', url: 'https://gdg.community.dev/penn-state-university/', category: 'Official', description: 'Official GDG chapter page' },
-        { id: 'psu_discover', name: 'PSU Discover Page', url: 'https://studentaffairs.psu.edu/involvement-student-life/student-organizations/search?search=gdg', category: 'Official', description: 'Penn State organization page' }
+        { id: 'gdg_website', name: 'Google Developer Groups', url: 'https://gdg.community.dev/', category: 'Official', description: 'Google Developer Groups community directory' }
       ];
 
       setAllLinks(defaultLinks);
@@ -327,10 +321,10 @@ const AdminContent = () => {
     });
 
     const contactInfoData = parseFooterSection(footerContent.contact_info, {
-      email: 'contact@gdgpsu.org',
+      email: 'chapter@example.test',
       phone: '',
-      address: 'Penn State University, University Park, PA',
-      officeHours: 'Wednesdays 4-6 PM, IST Building'
+      address: 'Georgia Institute of Technology, Atlanta, GA',
+      officeHours: 'To be announced'
     });
 
     const newsletterData = parseFooterSection(footerContent.newsletter, {
@@ -341,8 +335,8 @@ const AdminContent = () => {
     });
 
     return {
-      description: footerContent.description || 'A student-led community passionate about Google technologies at Penn State University.',
-      copyright: footerContent.copyright || '© 2024 GDG@PSU. All rights reserved.',
+      description: footerContent.description || 'A student-led community passionate about Google technologies at Georgia Institute of Technology.',
+      copyright: footerContent.copyright || '© 2026 GDG@GT. All rights reserved.',
       quickLinks: quickLinksData.links || quickLinksData,
       resources: resourcesData.links || resourcesData,
       contactInfo: contactInfoData,
@@ -423,8 +417,8 @@ const AdminContent = () => {
   React.useEffect(() => {
     if (siteSettings && Object.keys(siteSettings).length > 0) {
       setSiteSettingsForm({
-        site_title: siteSettings.site_title || 'GDG@PSU',
-        site_subtitle: siteSettings.site_subtitle || 'Penn State University',
+        site_title: siteSettings.site_title || 'GDG@GT',
+        site_subtitle: siteSettings.site_subtitle || 'Georgia Institute of Technology',
         site_description: siteSettings.site_description || 'A student-led community passionate about Google technologies',
         // Logo settings
         logo_text: siteSettings.logo_text || 'G',
@@ -992,10 +986,10 @@ const AdminContent = () => {
       });
 
       const contactInfoData = parseFooterSection(footerContent.contact_info, {
-        email: 'contact@gdgpsu.org',
+        email: 'chapter@example.test',
         phone: '',
-        address: 'Penn State University, University Park, PA',
-        officeHours: 'Wednesdays 4-6 PM, IST Building'
+        address: 'Georgia Institute of Technology, Atlanta, GA',
+        officeHours: 'To be announced'
       });
 
       const newsletterData = parseFooterSection(footerContent.newsletter, {
@@ -1006,8 +1000,8 @@ const AdminContent = () => {
       });
 
       setFooterForm({
-        description: footerContent.description || 'A student-led community passionate about Google technologies at Penn State University.',
-        copyright: footerContent.copyright || '© 2024 GDG@PSU. All rights reserved.',
+        description: footerContent.description || 'A student-led community passionate about Google technologies at Georgia Institute of Technology.',
+        copyright: footerContent.copyright || '© 2026 GDG@GT. All rights reserved.',
         quickLinks: quickLinksData.links || quickLinksData,
         resources: resourcesData.links || resourcesData,
         contactInfo: contactInfoData,
@@ -2345,14 +2339,14 @@ const AdminContent = () => {
 
               <div>
                 <label className="block text-sm font-medium text-muted-foreground mb-1">Title Second Line</label>
-                <p className="text-xs text-muted-foreground mb-3">Second line of the main heading (e.g., "with GDG@PSU")</p>
+                <p className="text-xs text-muted-foreground mb-3">Second line of the main heading (e.g., "with GDG@GT")</p>
                 {isEditing ? (
                   <input
                     type="text"
                     value={contactPageForm.title_second_line}
                     onChange={(e) => setContactPageForm(prev => ({ ...prev, title_second_line: e.target.value }))}
                     className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-foreground placeholder:text-muted-foreground"
-                    placeholder="with GDG@PSU"
+                    placeholder="with GDG@GT"
                   />
                 ) : (
                   <div className="px-3 py-2 bg-card border border-border rounded-lg text-foreground">
@@ -2539,13 +2533,13 @@ const AdminContent = () => {
                           type="text"
                           value={contactPageForm.email_url || ''}
                           onChange={(e) => setContactPageForm(prev => ({ ...prev, email_url: e.target.value }))}
-                          placeholder="mailto:contact@gdgpsu.org or custom URL"
+                          placeholder="mailto:chapter@example.test or custom URL"
                           className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-foreground placeholder:text-muted-foreground"
                         />
                       </div>
                     ) : (
                       <div className="px-3 py-2 bg-card border border-border rounded-lg text-foreground">
-                        {contactPageForm.email_url || 'mailto:contact@gdgpsu.org'}
+                        {contactPageForm.email_url || 'mailto:chapter@example.test'}
                       </div>
                     )}
                   </div>
@@ -2577,7 +2571,7 @@ const AdminContent = () => {
                           type="text"
                           value={contactPageForm.discord_url || ''}
                           onChange={(e) => setContactPageForm(prev => ({ ...prev, discord_url: e.target.value }))}
-                          placeholder="https://discord.gg/gdgpsu or custom URL"
+                          placeholder="https://discord.gg/your-chapter or custom URL"
                           className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-foreground placeholder:text-muted-foreground"
                         />
                       </div>
@@ -3394,7 +3388,7 @@ const AdminContent = () => {
                       value={teamPageForm.description}
                       onChange={(e) => setTeamPageForm(prev => ({ ...prev, description: e.target.value }))}
                       className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-foreground placeholder:text-muted-foreground"
-                      placeholder="The passionate students and mentors who make GDG@PSU..."
+                      placeholder="The passionate students and mentors who make GDG@GT..."
                     />
                   ) : (
                     <div className="px-3 py-2 bg-card border border-border rounded-lg text-foreground">
@@ -4310,7 +4304,7 @@ const AdminContent = () => {
                         contactInfo: { ...prev.contactInfo, email: e.target.value }
                       }))}
                       className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-foreground placeholder:text-muted-foreground"
-                      placeholder="contact@gdgpsu.org"
+                      placeholder="chapter@example.test"
                     />
                   ) : (
                     <div className="px-3 py-2 bg-card border border-border rounded-lg text-foreground">
@@ -4348,7 +4342,7 @@ const AdminContent = () => {
                         contactInfo: { ...prev.contactInfo, address: e.target.value }
                       }))}
                       className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-foreground placeholder:text-muted-foreground"
-                      placeholder="Penn State University, University Park, PA"
+                      placeholder="Georgia Institute of Technology, Atlanta, GA"
                     />
                   ) : (
                     <div className="px-3 py-2 bg-card border border-border rounded-lg text-foreground">
@@ -4367,7 +4361,7 @@ const AdminContent = () => {
                         contactInfo: { ...prev.contactInfo, officeHours: e.target.value }
                       }))}
                       className="w-full px-3 py-2 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-foreground placeholder:text-muted-foreground"
-                      placeholder="Wednesdays 4-6 PM, IST Building"
+                      placeholder="To be announced"
                     />
                   ) : (
                     <div className="px-3 py-2 bg-card border border-border rounded-lg text-foreground">

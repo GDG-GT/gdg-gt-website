@@ -522,14 +522,14 @@ const AdminMedia: React.FC = () => {
     };
 
     // Utility functions
-    const getFileIcon = (fileType: string) => {
+    const getFileIcon = (fileType: string, size = 20) => {
         switch (fileType) {
-            case 'image': return <Image size={20} className="text-primary" />;
-            case 'video': return <Video size={20} className="text-purple-600" />;
-            case 'audio': return <Music size={20} className="text-green-600" />;
-            case 'document': return <FileText size={20} className="text-red-600" />;
-            case 'archive': return <Package size={20} className="text-yellow-600" />;
-            default: return <File size={20} className="text-gray-600" />;
+            case 'image': return <Image size={size} className="text-primary" />;
+            case 'video': return <Video size={size} className="text-purple-600" />;
+            case 'audio': return <Music size={size} className="text-green-600" />;
+            case 'document': return <FileText size={size} className="text-red-600" />;
+            case 'archive': return <Package size={size} className="text-yellow-600" />;
+            default: return <File size={size} className="text-gray-600" />;
         }
     };
 
@@ -708,7 +708,7 @@ const AdminMedia: React.FC = () => {
             {/* Search and Filters */}
             <div className="bg-card rounded-xl shadow-sm border border-border p-6 mb-8">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-                    <div className="flex items-center space-x-4">
+                    <div className="flex flex-wrap items-center gap-3">
                         <div className="relative">
                             <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                             <input
@@ -720,7 +720,7 @@ const AdminMedia: React.FC = () => {
                                     // Debounce search
                                     setTimeout(() => loadAllData(), 300);
                                 }}
-                                className="pl-10 pr-4 py-2 w-64 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 bg-card text-foreground"
+                                className="pl-10 pr-4 py-2 w-full sm:w-64 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 bg-card text-foreground"
                             />
                         </div>
                         

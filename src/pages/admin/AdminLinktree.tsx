@@ -327,6 +327,7 @@ const AdminLinktree = () => {
                                   <div
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
+                                    style={{...provided.draggableProps.style}}
                                     className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 border rounded-lg bg-card min-w-0"
                                   >
                                     <div {...provided.dragHandleProps}>

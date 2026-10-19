@@ -13,7 +13,7 @@ interface PageAccessGuardProps {
  * Wraps admin pages to check if the current user has access.
  */
 const PageAccessGuard: React.FC<PageAccessGuardProps> = ({ children }) => {
-  const { currentAdmin, isAuthenticated } = useAdmin();
+  const { currentAdmin, isAuthenticated, isLoading } = useAdmin();
   const location = useLocation();
   const navigate = useNavigate();
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
@@ -41,6 +41,8 @@ const PageAccessGuard: React.FC<PageAccessGuardProps> = ({ children }) => {
       setIsChecking(false);
     }
   };
+
+  if (isLoading) return <div className="gt-admin-page" aria-busy="true"><div className="gt-skeleton gt-detail-skeleton"/><span className="sr-only">Loading your workspace</span></div>;
 
   // Not authenticated - redirect to home
   if (!isAuthenticated) {

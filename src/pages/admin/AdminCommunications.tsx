@@ -618,7 +618,7 @@ const AdminCommunications: React.FC = () => {
                     subject: emailForm.subject,
                     message: emailForm.message,
                     email_type: emailForm.email_type,
-                    sender_name: `${currentAdmin.email} (GDG@PSU)`
+                    sender_name: `${currentAdmin.email} (GDG@GT)`
                 }, currentAdmin.id) : { success: false, error: 'User not authenticated' };
             }
 
@@ -902,7 +902,7 @@ const AdminCommunications: React.FC = () => {
 
             {/* Tabs */}
             <div className="border-b border-border mb-8">
-                <nav className="flex space-x-8">
+                <nav className="flex gap-5 overflow-x-auto" aria-label="Communication views">
                     {tabs.map((tab) => {
                         const Icon = tab.icon;
                         return (
@@ -1472,7 +1472,7 @@ const AdminCommunications: React.FC = () => {
                                                         </span>
                                                     </div>
                                                     <h4 className="text-sm font-medium text-foreground truncate">{announcement.title}</h4>
-                                                    <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{announcement.content}</p>
+                                                    <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{announcement.message}</p>
                                                 </div>
                                                 <span className="text-xs text-muted-foreground ml-2 flex-shrink-0">
                                                     {formatDate(announcement.created_at)}

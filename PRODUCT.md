@@ -52,6 +52,13 @@ The visual source of truth is `.docs/FINAL_DESIGN_PROMPTS.md`, followed by `.doc
 
 ## Approved Design Tokens
 
+User revision (2026-10-19): no pure-white UI anywhere. Public page backgrounds,
+workspace backgrounds, cards, inputs, menus, dialogs, and light foregrounds use a
+pale buttery-yellow surface scale. Preserve coral, peach, Google accents, and
+the charcoal sidebar/footer. This explicit revision overrides white surfaces in
+the original visual prompts. Photographic content and official marks are not
+recolored.
+
 - Font: Inter, with Google Sans or SF Pro Display styling where an approved licensed asset exists.
 - Peach scale: `#FFF8F0`, `#FFE5B3`, `#FFD699`, `#FFC093`, `#FFAA7A`, `#FF9A76`.
 - Coral scale: `#FF8366`, `#F88377`, `#E6705F`, `#CC5244`.

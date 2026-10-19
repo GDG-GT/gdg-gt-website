@@ -37,7 +37,7 @@ export const useResponsive = (breakpoints: Partial<BreakpointConfig> = {}) => {
     // Use ResizeObserver if available, fallback to window resize
     let resizeObserver: ResizeObserver | null = null;
     
-    if ('ResizeObserver' in window) {
+    if (typeof ResizeObserver !== 'undefined') {
       resizeObserver = new ResizeObserver(handleResize);
       resizeObserver.observe(document.documentElement);
     } else {

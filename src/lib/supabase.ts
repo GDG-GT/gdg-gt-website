@@ -13,7 +13,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export interface AdminUser {
   id: string;
   email: string;
-  password_hash: string;
+  password_hash?: string;
   role: 'super_admin' | 'admin' | 'team_member' | 'blog_editor';
   display_name?: string;
   is_active: boolean;

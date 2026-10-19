@@ -78,7 +78,7 @@ export const getCanvasConfig = () => {
     : false;
   
   return {
-    dpr: [1, config.pixelRatio],
+    dpr: [1, config.pixelRatio] as [number, number],
     performance: {
       min: config.pixelRatio > 1.5 ? 0.3 : 0.5,
       max: 1,
@@ -87,7 +87,7 @@ export const getCanvasConfig = () => {
     gl: {
       alpha: true,
       antialias: config.antialias,
-      powerPreference: config.pixelRatio > 1.5 ? 'low-power' : 'high-performance',
+      powerPreference: (config.pixelRatio > 1.5 ? 'low-power' : 'high-performance') as WebGLPowerPreference,
       stencil: false,
       depth: true,
     },

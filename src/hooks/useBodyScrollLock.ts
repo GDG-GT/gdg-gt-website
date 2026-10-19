@@ -20,18 +20,8 @@ export const useBodyScrollLock = (isLocked: boolean) => {
       document.body.style.top = `-${scrollY}px`;
       document.body.style.width = '100%';
       
-      // Prevent scroll events more aggressively
-      const preventScroll = (e: Event) => {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-      };
-      
-      // Add event listeners to prevent all scrolling
-      document.addEventListener('wheel', preventScroll, { passive: false });
-      document.addEventListener('touchmove', preventScroll, { passive: false });
-      document.addEventListener('scroll', preventScroll, { passive: false });
-      window.addEventListener('scroll', preventScroll, { passive: false });
+      // Lock only the page. Dialog content must retain native wheel/touch
+      // scrolling; cancelling document-wide events makes long editors unusable.
       
       return () => {
         // Restore original styles
@@ -40,12 +30,6 @@ export const useBodyScrollLock = (isLocked: boolean) => {
         document.body.style.position = originalBodyPosition;
         document.body.style.top = originalBodyTop;
         document.body.style.width = originalBodyWidth;
-        
-        // Remove event listeners
-        document.removeEventListener('wheel', preventScroll);
-        document.removeEventListener('touchmove', preventScroll);
-        document.removeEventListener('scroll', preventScroll);
-        window.removeEventListener('scroll', preventScroll);
         
         // Restore scroll position
         window.scrollTo(0, scrollY);

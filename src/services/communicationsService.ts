@@ -772,7 +772,7 @@ export class CommunicationsService {
                 <p><small>This is an automated message from the GDG@PSU Communications Hub.</small></p>
               </div>
             `,
-            email_type: 'internal_message',
+            email_type: 'direct_message',
             sender_name: 'GDG@PSU Communications'
           }, fromUserId);
         } catch (emailError) {

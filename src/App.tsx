@@ -1,229 +1,196 @@
+import { lazy, Suspense, type ReactNode } from "react";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
-import { useEffect } from "react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import SmoothScroll from "@/components/SmoothScroll";
-import ScrollToTopButton from "@/components/ScrollToTop";
-import GlobalBackground from "@/components/GlobalBackground";
 import { AdminProvider } from "@/contexts/AdminContext";
 import { ContentProvider } from "@/contexts/ContentContext";
-import PerformanceMonitor from "@/components/PerformanceMonitor";
+import PageAccessGuard from "@/components/admin/PageAccessGuard";
+import SiteStatusRedirect from "@/components/SiteStatusRedirect";
+import SiteShell from "@/ui/SiteShell";
+import AdminShell from "@/ui/AdminShell";
+import RouteErrorBoundary from "@/ui/RouteErrorBoundary";
+import {
+  HomePage,
+  EventsPage,
+  EventDetailPage,
+  TeamPage,
+  ResourcesPage,
+  SponsorsPage,
+  GalleryPage,
+  ContactPage,
+  NotFoundPage,
+  InfoPage,
+} from "@/ui/PublicPages";
 
-import Home from "./pages/Home";
-import Events from "./pages/Events";
-import Blog from "./pages/Blog";
-import Contact from "./pages/Contact";
-import Projects from "./pages/Projects";
-import Team from "./pages/Team";
-import Resources from "./pages/Resources";
-import Sponsors from "./pages/Sponsors";
-import Gallery from "./pages/Gallery";
-import AdminDashboard from "./pages/AdminDashboard";
-import AdminContent from "./pages/AdminContent";
-import AdminEvents from "./pages/admin/AdminEvents";
-import AdminTeam from "./pages/admin/AdminTeam";
-import AdminProjects from "./pages/admin/AdminProjects";
-import AdminMembers from "./pages/admin/AdminMembers";
-import AdminResources from "./pages/admin/AdminResources";
-import AdminNewsletter from "./pages/admin/AdminNewsletter";
-import AdminBlog from "./pages/admin/AdminBlog";
-import AdminUsers from "./pages/admin/AdminUsers";
-import AdminProfile from "./pages/admin/AdminProfile";
-import AdminSponsors from "./pages/admin/AdminSponsors";
-import AdminCommunications from "./pages/admin/AdminCommunications";
-import AdminMedia from "./pages/admin/AdminMedia";
-import AdminGuide from "./pages/admin/AdminGuide";
-import AdminLinktree from "./pages/admin/AdminLinktree";
-import AdminSiteStatus from "./pages/admin/AdminSiteStatus";
-import AdminTeams from "./pages/admin/AdminTeams";
-import AdminChannels from "./pages/admin/AdminChannels";
-import AdminWhiteboard from "./pages/admin/AdminWhiteboard";
-import AdminGallery from "./pages/admin/AdminGallery";
-import AdminFinances from "./pages/admin/AdminFinances";
-import AdminAuditLog from "./pages/admin/AdminAuditLog";
-import TeamDashboard from "./pages/admin/TeamDashboard";
-import AcceptInvite from "./pages/admin/AcceptInvite";
-import BlogEditorDashboard from "./pages/admin/BlogEditorDashboard";
-import BlogEditorMedia from "./pages/admin/BlogEditorMedia";
-import PageAccessGuard from "./components/admin/PageAccessGuard";
+const Overview = lazy(() => import("@/ui/AdminOverview"));
+const Forms = lazy(() => import("@/ui/forms/FormsLibrary"));
+const FormBuilder = lazy(() => import("@/ui/forms/FormBuilder"));
+const FormResponses = lazy(() => import("@/ui/forms/FormResponses"));
+const PublicForm = lazy(() => import("@/ui/forms/PublicForm"));
+const Linktree = lazy(() => import("@/pages/Linktree"));
+const NewsletterTokenPage = lazy(() => import("@/ui/NewsletterTokenPage"));
+const AcceptInvite = lazy(() => import("@/pages/admin/AcceptInvite"));
 
-import BlogPost from "./pages/BlogPost";
-import Linktree from "./pages/Linktree";
-import NewsletterConfirm from "./pages/NewsletterConfirm";
-import NewsletterUnsubscribe from "./pages/NewsletterUnsubscribe";
-import NotFound from "./pages/NotFound";
-import Offline from "./pages/Offline";
-import Maintenance from "./pages/Maintenance";
-import OfflineDetector from "./components/OfflineDetector";
-import SiteStatusRedirect from "./components/SiteStatusRedirect";
-import PerformanceOptimizer from "./components/PerformanceOptimizer";
-import AdminTracker from "./components/admin/AdminTracker";
-
+// Preserve every existing workflow and load heavy editors only on their routes.
+const adminRoutes = [
+  ["content", lazy(() => import("@/pages/AdminContent"))],
+  ["events", lazy(() => import("@/pages/admin/AdminEvents"))],
+  ["team", lazy(() => import("@/pages/admin/AdminTeam"))],
+  ["projects", lazy(() => import("@/pages/admin/AdminProjects"))],
+  ["members", lazy(() => import("@/pages/admin/AdminMembers"))],
+  ["resources", lazy(() => import("@/pages/admin/AdminResources"))],
+  ["newsletter", lazy(() => import("@/pages/admin/AdminNewsletter"))],
+  ["blog", lazy(() => import("@/pages/admin/AdminBlog"))],
+  ["users", lazy(() => import("@/pages/admin/AdminUsers"))],
+  ["profile", lazy(() => import("@/pages/admin/AdminProfile"))],
+  ["sponsors", lazy(() => import("@/pages/admin/AdminSponsors"))],
+  ["communications", lazy(() => import("@/pages/admin/AdminCommunications"))],
+  ["media", lazy(() => import("@/pages/admin/AdminMedia"))],
+  ["guide", lazy(() => import("@/ui/WorkspaceGuide"))],
+  ["linktree", lazy(() => import("@/pages/admin/AdminLinktree"))],
+  ["site-status", lazy(() => import("@/pages/admin/AdminSiteStatus"))],
+  ["teams", lazy(() => import("@/pages/admin/AdminTeams"))],
+  ["channels", lazy(() => import("@/pages/admin/AdminChannels"))],
+  ["whiteboard", lazy(() => import("@/pages/admin/AdminWhiteboard"))],
+  ["gallery", lazy(() => import("@/pages/admin/AdminGallery"))],
+  ["finances", lazy(() => import("@/pages/admin/AdminFinances"))],
+  ["audit-log", lazy(() => import("@/pages/admin/AdminAuditLog"))],
+  ["team/:teamId", lazy(() => import("@/pages/admin/TeamDashboard"))],
+  ["blog-editor", lazy(() => import("@/pages/admin/BlogEditorDashboard"))],
+  ["blog-media", lazy(() => import("@/pages/admin/BlogEditorMedia"))],
+] as const;
 const queryClient = new QueryClient();
-
-// Component to handle scroll to top on route changes
-const ScrollToTop = () => {
-  const location = useLocation();
-  
-  useEffect(() => {
-    // Scroll to top when location changes (pathname or search params)
-    const scrollToTop = () => {
-      // Wait for the next frame and then some to ensure content is rendered
-      requestAnimationFrame(() => {
-        // Check if Lenis is available for smooth scrolling
-        const lenis = (window as any).lenis;
-        if (lenis && lenis.scrollTo) {
-          // Use Lenis for optimized scroll to top
-          lenis.scrollTo(0, { 
-            duration: 0.6, // Faster duration for snappier feel
-            easing: (t: number) => 1 - Math.pow(1 - t, 3) // Cubic ease-out
-          });
-        } else {
-          // Fallback to instant scroll for better performance
-          window.scrollTo({ 
-            top: 0, 
-            left: 0, 
-            behavior: 'auto' // Changed from 'smooth' to prevent double smoothing
-          });
-        }
-      });
-    };
-
-    scrollToTop();
-  }, [location.pathname, location.search]); // Listen to both pathname and search changes
-
-  return null;
-};
-
-// Component to conditionally render navigation
-const ConditionalNavigation = () => {
-  const location = useLocation();
-  const isLinktreePage = location.pathname.startsWith('/l/');
-  const isNewsletterPage = location.pathname.startsWith('/newsletter/');
-  const isMaintenancePage = location.pathname === '/maintenance';
-  
-  if (isLinktreePage || isNewsletterPage || isMaintenancePage) {
-    return null;
-  }
-  
-  return <Navigation />;
-};
-
-// Component to conditionally render footer
-const ConditionalFooter = () => {
-  const location = useLocation();
-  const isLinktreePage = location.pathname.startsWith('/l/');
-  const isNewsletterPage = location.pathname.startsWith('/newsletter/');
-  
-  if (isLinktreePage || isNewsletterPage) {
-    return null;
-  }
-  
-  return <Footer />;
-};
-
-// Component to conditionally render scroll-to-top button
-const ConditionalScrollToTop = () => {
-  const location = useLocation();
-  const isLinktreePage = location.pathname.startsWith('/l/');
-  const isNewsletterPage = location.pathname.startsWith('/newsletter/');
-  
-  if (isLinktreePage || isNewsletterPage) {
-    return null;
-  }
-  
-  return <ScrollToTopButton />;
-};
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+function LoadingPage() {
+  return (
+    <div
+      className="gt-container gt-route-loading"
+      role="status"
+      aria-label="Loading page"
+    >
+      <div className="gt-skeleton gt-loading-heading" />
+      <div className="gt-skeleton gt-detail-skeleton" />
+      <span className="sr-only">Loading page…</span>
+    </div>
+  );
+}
+function Frame({ children }: { children: ReactNode }) {
+  const { pathname } = useLocation();
+  return pathname.startsWith("/admin") &&
+    !pathname.startsWith("/admin/invite/") ? (
+    <AdminShell>
+      <RouteErrorBoundary key={pathname}>{children}</RouteErrorBoundary>
+    </AdminShell>
+  ) : (
+    <SiteShell>
+      <RouteErrorBoundary key={pathname}>{children}</RouteErrorBoundary>
+    </SiteShell>
+  );
+}
+function protectedPage(children: ReactNode) {
+  return <PageAccessGuard>{children}</PageAccessGuard>;
+}
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
       <AdminProvider>
         <ContentProvider>
-          <PerformanceMonitor>
-            <PerformanceOptimizer>
-              <TooltipProvider>
-                <Toaster />
-                <Sonner />
-                <BrowserRouter
-                  future={{
-                    v7_startTransition: true,
-                    v7_relativeSplatPath: true
-                  }}
-                >
-                  <ScrollToTop />
-                  <SmoothScroll />
-                  <ConditionalScrollToTop />
-                  <GlobalBackground />
-                  <AdminTracker />
-                  <OfflineDetector>
-                    <SiteStatusRedirect>
-                      <div className="min-h-screen flex flex-col relative z-10">
-                        <ConditionalNavigation />
-                        <main className="flex-1">
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter
+              future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+            >
+              <SiteStatusRedirect>
+                <Frame>
+                  <Suspense fallback={<LoadingPage />}>
                     <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/events" element={<Events />} />
-                      <Route path="/blog" element={<Blog />} />
-                      <Route path="/blog/:slug" element={<BlogPost />} />
-                      <Route path="/contact" element={<Contact />} />
-                      <Route path="/projects" element={<Projects />} />
-                      <Route path="/team" element={<Team />} />
-                      <Route path="/resources" element={<Resources />} />
-                      <Route path="/sponsors" element={<Sponsors />} />
-                      <Route path="/gallery" element={<Gallery />} />
-                      <Route path="/admin" element={<PageAccessGuard><AdminDashboard /></PageAccessGuard>} />
-                      <Route path="/admin/content" element={<PageAccessGuard><AdminContent /></PageAccessGuard>} />
-                      <Route path="/admin/events" element={<PageAccessGuard><AdminEvents /></PageAccessGuard>} />
-                      <Route path="/admin/team" element={<PageAccessGuard><AdminTeam /></PageAccessGuard>} />
-                      <Route path="/admin/projects" element={<PageAccessGuard><AdminProjects /></PageAccessGuard>} />
-                      <Route path="/admin/members" element={<PageAccessGuard><AdminMembers /></PageAccessGuard>} />
-                      <Route path="/admin/resources" element={<PageAccessGuard><AdminResources /></PageAccessGuard>} />
-                      <Route path="/admin/newsletter" element={<PageAccessGuard><AdminNewsletter /></PageAccessGuard>} />
-                      <Route path="/admin/blog" element={<PageAccessGuard><AdminBlog /></PageAccessGuard>} />
-                      <Route path="/admin/users" element={<PageAccessGuard><AdminUsers /></PageAccessGuard>} />
-                      <Route path="/admin/profile" element={<PageAccessGuard><AdminProfile /></PageAccessGuard>} />
-                      <Route path="/admin/sponsors" element={<PageAccessGuard><AdminSponsors /></PageAccessGuard>} />
-                      <Route path="/admin/communications" element={<PageAccessGuard><AdminCommunications /></PageAccessGuard>} />
-                      <Route path="/admin/channels" element={<PageAccessGuard><AdminChannels /></PageAccessGuard>} />
-                      <Route path="/admin/whiteboard" element={<PageAccessGuard><AdminWhiteboard /></PageAccessGuard>} />
-                      <Route path="/admin/gallery" element={<PageAccessGuard><AdminGallery /></PageAccessGuard>} />
-                      <Route path="/admin/blog-comments" element={<Navigate to="/admin/blog?tab=comments" replace />} />
-                      <Route path="/admin/media" element={<PageAccessGuard><AdminMedia /></PageAccessGuard>} />
-                      <Route path="/admin/guide" element={<PageAccessGuard><AdminGuide /></PageAccessGuard>} />
-                      <Route path="/admin/linktree" element={<PageAccessGuard><AdminLinktree /></PageAccessGuard>} />
-                      <Route path="/admin/site-status" element={<PageAccessGuard><AdminSiteStatus /></PageAccessGuard>} />
-                      <Route path="/admin/teams" element={<PageAccessGuard><AdminTeams /></PageAccessGuard>} />
-                      <Route path="/admin/finances" element={<PageAccessGuard><AdminFinances /></PageAccessGuard>} />
-                      <Route path="/admin/audit-log" element={<PageAccessGuard><AdminAuditLog /></PageAccessGuard>} />
-                      <Route path="/admin/team/:teamId" element={<PageAccessGuard><TeamDashboard /></PageAccessGuard>} />
-                      <Route path="/admin/invite/:token" element={<AcceptInvite />} />
-
-                      <Route path="/admin/blog-editor" element={<PageAccessGuard><BlogEditorDashboard /></PageAccessGuard>} />
-                      <Route path="/admin/blog-media" element={<PageAccessGuard><BlogEditorMedia /></PageAccessGuard>} />
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/events" element={<EventsPage />} />
+                      <Route
+                        path="/events/:slug"
+                        element={<EventDetailPage />}
+                      />
+                      <Route path="/team" element={<TeamPage />} />
+                      <Route path="/resources" element={<ResourcesPage />} />
+                      <Route path="/sponsors" element={<SponsorsPage />} />
+                      <Route path="/gallery" element={<GalleryPage />} />
+                      <Route path="/contact" element={<ContactPage />} />
+                      <Route path="/forms/:slug" element={<PublicForm />} />
                       <Route path="/l/:username" element={<Linktree />} />
-                      <Route path="/newsletter/confirm" element={<NewsletterConfirm />} />
-                      <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
-                      <Route path="/offline" element={<Offline />} />
-                      <Route path="/maintenance" element={<Maintenance />} />
-                      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                      <Route path="*" element={<NotFound />} />
+                      <Route
+                        path="/newsletter/confirm"
+                        element={<NewsletterTokenPage kind="confirm" />}
+                      />
+                      <Route
+                        path="/newsletter/unsubscribe"
+                        element={<NewsletterTokenPage kind="unsubscribe" />}
+                      />
+                      <Route
+                        path="/privacy"
+                        element={<InfoPage kind="privacy" />}
+                      />
+                      <Route
+                        path="/accessibility"
+                        element={<InfoPage kind="accessibility" />}
+                      />
+                      <Route
+                        path="/offline"
+                        element={<InfoPage kind="offline" />}
+                      />
+                      <Route
+                        path="/maintenance"
+                        element={<InfoPage kind="maintenance" />}
+                      />
+                      <Route
+                        path="/admin"
+                        element={protectedPage(<Overview />)}
+                      />
+                      {adminRoutes.map(([path, Component]) => (
+                        <Route
+                          key={path}
+                          path={`/admin/${path}`}
+                          element={protectedPage(<Component />)}
+                        />
+                      ))}
+                      <Route
+                        path="/admin/forms"
+                        element={protectedPage(<Forms />)}
+                      />
+                      <Route
+                        path="/admin/forms/:formId/edit"
+                        element={protectedPage(<FormBuilder />)}
+                      />
+                      <Route
+                        path="/admin/forms/:formId/responses"
+                        element={protectedPage(<FormResponses />)}
+                      />
+                      <Route
+                        path="/admin/invite/:token"
+                        element={<AcceptInvite />}
+                      />
+                      <Route
+                        path="/admin/blog-comments"
+                        element={
+                          <Navigate to="/admin/blog?tab=comments" replace />
+                        }
+                      />
+                      <Route path="*" element={<NotFoundPage />} />
                     </Routes>
-                        </main>
-                        <ConditionalFooter />
-                      </div>
-                    </SiteStatusRedirect>
-                  </OfflineDetector>
-                </BrowserRouter>
-              </TooltipProvider>
-            </PerformanceOptimizer>
-          </PerformanceMonitor>
+                  </Suspense>
+                </Frame>
+              </SiteStatusRedirect>
+            </BrowserRouter>
+          </TooltipProvider>
         </ContentProvider>
       </AdminProvider>
-  </QueryClientProvider>
-);
-
-export default App;
+    </QueryClientProvider>
+  );
+}

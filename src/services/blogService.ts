@@ -30,6 +30,7 @@ export interface BlogPost {
   read_time_minutes: number;
   views_count: number;
   likes_count: number;
+  comments_count?: number;
   published_at?: string;
   created_at: string;
   updated_at: string;

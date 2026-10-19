@@ -25,10 +25,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        'display': ['Space Grotesk', 'system-ui', 'sans-serif'],
+        'display': ['Inter', 'system-ui', 'sans-serif'],
         'body': ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
+        white: '#fff5d6',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

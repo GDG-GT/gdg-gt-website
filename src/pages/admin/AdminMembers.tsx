@@ -13,6 +13,7 @@ const AdminMembers = () => {
   const [memberStats, setMemberStats] = useState({
     total: 0,
     active: 0,
+    coreTeam: 0,
     categoryDistribution: {} as Record<string, number>
   });
   const [searchTerm, setSearchTerm] = useState('');
@@ -770,7 +771,7 @@ const AdminMembers = () => {
                       value={formData.email}
                       onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                       className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-foreground bg-card"
-                      placeholder="john.doe@psu.edu"
+                      placeholder="student@example.test"
                     />
                   </div>
                 </div>

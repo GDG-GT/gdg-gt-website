@@ -33,6 +33,7 @@ export type AuditActionType =
   | 'update_social_links' | 'update_admin_secret_code'
   // Security Actions
   | 'change_password' | 'update_security_settings' | 'view_audit_log' | 'export_audit_log'
+  | 'update_team_profile' | 'export_data' | 'delete_account'
   // System Actions
   | 'backup_database' | 'restore_database' | 'clear_cache' | 'update_system_settings'
   // Dashboard Actions
@@ -316,7 +317,7 @@ export class AuditService {
         query = query.or(`target_email.ilike.%${searchTerm}%,action.ilike.%${searchTerm}%,details->>description.ilike.%${searchTerm}%`);
       }
 
-      const { data, error } = await query;
+      const { data, error } = await query.returns<AuditLogEntry[]>();
 
       if (error) {
         return [];
@@ -584,6 +585,9 @@ export class AuditService {
    */
   static getActionDescription(action: AuditActionType, details?: any): string {
     const descriptions: Record<AuditActionType, string> = {
+      update_team_profile: 'Updated public team profile',
+      export_data: 'Exported own data',
+      delete_account: 'Deleted own account',
       // User Management
       'login': 'Logged into admin panel',
       'logout': 'Logged out of admin panel',

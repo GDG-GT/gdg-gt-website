@@ -25,6 +25,7 @@ import { CommunicationsService } from '@/services/communicationsService';
 import { BlogCommentsService } from '@/services/blogCommentsService';
 import BlogPostModal from '@/components/admin/BlogPostModal';
 import { AuditService } from '@/services/auditService';
+import { localPreviewEnabled } from '@/ui/preview-data';
 
 const BlogEditorDashboard = () => {
   const { isAuthenticated, currentAdmin, logout } = useAdmin();
@@ -48,6 +49,7 @@ const BlogEditorDashboard = () => {
   const [requestFilter, setRequestFilter] = useState<'pending' | 'rejected' | 'completed' | 'all'>('pending');
 
   useEffect(() => {
+    if (!isAuthenticated || (currentAdmin?.role !== 'blog_editor' && !localPreviewEnabled)) return;
     loadBlogStats();
     loadRequests();
     
@@ -67,7 +69,7 @@ const BlogEditorDashboard = () => {
   }, [requestFilter, currentAdmin?.id]);
 
   // Authentication check after all hooks
-  if (!isAuthenticated || currentAdmin?.role !== 'blog_editor') {
+  if (!isAuthenticated || (currentAdmin?.role !== 'blog_editor' && !localPreviewEnabled)) {
     return <Navigate to="/" replace />;
   }
 

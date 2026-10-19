@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase';
-import type { AdminUser } from '@/lib/supabase';
+import type { AdminUser, AdminAction } from '@/lib/supabase';
 
 export class AdminService {
   /**

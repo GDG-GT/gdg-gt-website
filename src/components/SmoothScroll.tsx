@@ -15,12 +15,10 @@ const SmoothScroll = () => {
     const lenis = new Lenis({
       duration: 0.6, // Even faster for better responsiveness
       easing: (t: number) => 1 - Math.pow(1 - t, 3), // Simpler cubic ease-out
-      smooth: true,
-      smoothTouch: false, // Disable on touch devices for better performance
+      syncTouch: false,
       touchMultiplier: 1.5, // Reduced for better control
       infinite: false,
-      gestureDirection: 'vertical',
-      normalizeWheel: true,
+      gestureOrientation: 'vertical',
       smoothWheel: true,
     });
 

@@ -142,8 +142,8 @@ export async function clearContentCache() {
       );
       
       // Also send message to service worker to clear specific patterns
-      const registration = await navigator.serviceWorker.ready;
-      if (registration.active) {
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (registration?.active) {
         registration.active.postMessage({
           type: 'CLEAR_ADMIN_CONTENT_CACHE'
         });
@@ -160,8 +160,8 @@ export async function clearContentCache() {
 export async function clearSpecificCache(pattern: string) {
   if ('serviceWorker' in navigator && 'caches' in window) {
     try {
-      const registration = await navigator.serviceWorker.ready;
-      if (registration.active) {
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (registration?.active) {
         registration.active.postMessage({
           type: 'CLEAR_SPECIFIC_CACHE',
           pattern: pattern
