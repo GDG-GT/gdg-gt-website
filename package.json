@@ -10,6 +10,9 @@
     "lint": "eslint .",
     "lint:ui": "eslint src/ui src/App.tsx scripts/local-preview.ts",
     "test:ui": "vitest run --config vitest.config.ts",
+    "test": "vitest run --config vitest.config.ts",
+    "audit:phase0": "node scripts/phase0-inventory.mjs --write",
+    "audit:db:source": "node scripts/source-db-audit.mjs",
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit",
     "preview": "vite preview"
   },

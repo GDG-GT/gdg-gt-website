@@ -1,0 +1,593 @@
+{
+  "source": {
+    "prd": ".docs/GDG_GT_WEBSITE_PRD_v1.5.md",
+    "prdSha256": "b469bd27dd24e17b21f03a61193015214518c72efb62f4dcd982ed3ac606762d"
+  },
+  "scope": "Read-only repository inventory. No database, credentials, seeds, or remote services accessed.",
+  "limitations": "Regex-derived object names require executed SQL/catalog verification. Requirement statuses are not implementation or launch approval.",
+  "tables": [
+    "admin_actions",
+    "admin_sessions",
+    "admin_teams",
+    "admin_users",
+    "announcement_reads",
+    "announcements",
+    "blog_categories",
+    "blog_comments",
+    "blog_likes",
+    "blog_posts",
+    "blog_submission_comments",
+    "blog_submissions",
+    "budget_allocations",
+    "channel_messages",
+    "channels",
+    "communication_tasks",
+    "csrf_tokens",
+    "events",
+    "finance_attachments",
+    "finance_report_cache",
+    "finances",
+    "footer_content",
+    "internal_messages",
+    "linktree_analytics",
+    "linktree_links",
+    "linktree_profiles",
+    "media_files",
+    "media_folders",
+    "media_usage",
+    "members",
+    "navigation_items",
+    "newsletter_campaigns",
+    "newsletter_subscribers",
+    "newsletter_subscription_attempts",
+    "newsletter_templates",
+    "notifications",
+    "page_content",
+    "project_members",
+    "project_stars",
+    "projects",
+    "resources",
+    "security_alerts",
+    "security_events",
+    "site_content",
+    "site_settings",
+    "site_status",
+    "social_links",
+    "sponsor_impact_stats",
+    "sponsors",
+    "sponsorship_tiers",
+    "task_comments",
+    "team_activity_log",
+    "team_announcements",
+    "team_invites",
+    "team_member_transfers",
+    "team_members",
+    "team_memberships",
+    "team_messages",
+    "team_page_access",
+    "team_permissions",
+    "team_statistics",
+    "whiteboards"
+  ],
+  "functions": [
+    "authenticate_admin",
+    "check_and_mark_overdue_tasks",
+    "check_newsletter_rate_limit",
+    "cleanup_expired_csrf_tokens",
+    "cleanup_expired_report_cache",
+    "cleanup_expired_sessions",
+    "cleanup_old_newsletter_attempts",
+    "cleanup_old_notifications",
+    "clear_admin_rate_limit",
+    "create_admin_session",
+    "create_admin_user",
+    "create_security_alert",
+    "debug_current_user",
+    "generate_csrf_token",
+    "get_category_stats",
+    "get_file_type_from_mime",
+    "increment_blog_views",
+    "increment_link_clicks",
+    "invalidate_admin_session",
+    "is_admin",
+    "is_admin_authenticated",
+    "is_admin_user",
+    "is_authenticated_admin",
+    "is_password_breached",
+    "is_storage_admin",
+    "is_super_admin",
+    "log_admin_action",
+    "log_admin_login",
+    "mark_overdue_tasks",
+    "monitor_failed_logins",
+    "sync_storage_to_media_files",
+    "update_admin_password",
+    "update_blog_categories_updated_at",
+    "update_blog_post_comment_count",
+    "update_blog_post_like_count",
+    "update_blog_submission_comments_updated_at_column",
+    "update_blog_updated_at_column",
+    "update_folder_path",
+    "update_media_updated_at_column",
+    "update_project_stars_count",
+    "update_projects_updated_at",
+    "update_updated_at_column",
+    "validate_admin_secret",
+    "validate_admin_session",
+    "validate_csrf_token"
+  ],
+  "migrations": [
+    {
+      "file": "supabase/migrations/001_add_password_auth.sql",
+      "sha256": "36754d187692dcc9ba9755b4688e1996647b0402dd915b69245d820c86e9df4a"
+    },
+    {
+      "file": "supabase/migrations/002_content_management.sql",
+      "sha256": "e29c6cf903ef3acec060488f48137fbaeaf216d3ab8da37bb60ee5479fdbbb27"
+    },
+    {
+      "file": "supabase/migrations/003_admin_users_management.sql",
+      "sha256": "7a1acbc86e8b4bd971ac5257d083563bcc732f64479c033a730399177560345a"
+    },
+    {
+      "file": "supabase/migrations/004_add_members_table.sql",
+      "sha256": "911d59a3fe821447e6e0f0399e5a5ec4feae4df2a2b8dffaac7c3f1bad2c8c82"
+    },
+    {
+      "file": "supabase/migrations/005_add_resources_table.sql",
+      "sha256": "5073e2fd6d1c6097e013fd05953ee18828641129f42490812feb571e49f2111e"
+    },
+    {
+      "file": "supabase/migrations/006_add_team_members_columns.sql",
+      "sha256": "e01efbb667a1e0f0e7c9d2db0eab9d35c0dad5c567cc9eac3fc4d412d1d3878a"
+    },
+    {
+      "file": "supabase/migrations/007_fix_admin_rls_policies.sql",
+      "sha256": "03a8beb93dd76d17e2c60839cf3b452b520cbda4c024be47bd1f1aac31647c30"
+    },
+    {
+      "file": "supabase/migrations/007_update_newsletter_subscribers.sql",
+      "sha256": "a26a0c8c0d039187be3730d59a2ec7b23b090a9992ea1e0adc8521ddd177494d"
+    },
+    {
+      "file": "supabase/migrations/008_add_blog_approval_columns.sql",
+      "sha256": "00d97d6123de9e9fdda2c7b2b607dccb5ee5bcbf384cf900d71c0acdd886996c"
+    },
+    {
+      "file": "supabase/migrations/008_add_newsletter_campaigns.sql",
+      "sha256": "89c5ba64ddc0541dc173e353c8a78c31e3b4dd8fd78ff66ad7e2098bf3af9ad3"
+    },
+    {
+      "file": "supabase/migrations/009_add_security_events.sql",
+      "sha256": "10756affce19b8318618f4683c5cc0b760bff0017a44b48134af20256b1086bc"
+    },
+    {
+      "file": "supabase/migrations/010_fix_security_and_passwords.sql",
+      "sha256": "1880bbbea141e8549c27984fa864db48b269c336ed59893fe1172e62da98e6af"
+    },
+    {
+      "file": "supabase/migrations/011_create_communications_system.sql",
+      "sha256": "5663c02d7271dbc1fb8f2b05fddbab79b42e4e03b9c6f4c3816410364edc5551"
+    },
+    {
+      "file": "supabase/migrations/012_create_media_system.sql",
+      "sha256": "1d731b48f83c3c194b34b04ffabfb7f687243f5e8996ffb74718159fd2badb6d"
+    },
+    {
+      "file": "supabase/migrations/013_create_blog_system.sql",
+      "sha256": "b5d2df13fbc57c400da923bbaa30940646a454345a89196e43ca45a5afe81538"
+    },
+    {
+      "file": "supabase/migrations/014_ensure_audit_log.sql",
+      "sha256": "71c30d108d7524231083e27d23467991dea7a28e9c97007b6bbe63cb01d49dce"
+    },
+    {
+      "file": "supabase/migrations/015_fix_media_storage.sql",
+      "sha256": "c257ba0f76fa08e4c5aaa27a2e3e8eb0387c7bc168847978ee5673c89c46994e"
+    },
+    {
+      "file": "supabase/migrations/016_add_blog_submission_comments.sql",
+      "sha256": "7f0d0408c96c1bf4b355d2676d1c4764fcc6e61fd4327a1b193c9a7738fb2870"
+    },
+    {
+      "file": "supabase/migrations/016_fix_storage_policies.sql",
+      "sha256": "b048463b235c131ecbb012e6b49b8274b2c7082320856ecd8b62a2b84ce3e409"
+    },
+    {
+      "file": "supabase/migrations/017_fix_blog_submission_comments_rls.sql",
+      "sha256": "fed0278e37b5a3a793c9b8eaf55543b8bb31f4071595b6cc8600b4abc9f6767e"
+    },
+    {
+      "file": "supabase/migrations/017_update_audit_actions.sql",
+      "sha256": "1bf861c98fcdebf2f5cc3f2a3fa7fd30656f48f4c6b4044282b163921d6a8797"
+    },
+    {
+      "file": "supabase/migrations/018_fix_blog_submissions_rls.sql",
+      "sha256": "6c7b963c9688690f1a8183b0e7a4f6e3ff0c3ecd87842e5ccff5d7f20d2b5565"
+    },
+    {
+      "file": "supabase/migrations/019_fix_communications_rls.sql",
+      "sha256": "df83084936eb62708d0f1255d66e059e60b52a4dabc14622a84acb3449a8d400"
+    },
+    {
+      "file": "supabase/migrations/020_create_blog_comments.sql",
+      "sha256": "413b044d8416a3051878ed211e9165f2fd477c61e4c825a805da1821b0fedefd"
+    },
+    {
+      "file": "supabase/migrations/021_add_comment_notification_trigger.sql",
+      "sha256": "22f40866aed4eab350e428f85facc70e6ad9e3cb78111810a116ca0eb5246bc0"
+    },
+    {
+      "file": "supabase/migrations/20241224000001_create_linktree_tables.sql",
+      "sha256": "3e95f3e15d6c72206dcf19ede8908be858141faf94affe20cb7c03cfce84869b"
+    },
+    {
+      "file": "supabase/migrations/20241224000002_add_increment_function.sql",
+      "sha256": "b7f8ede96e7db8a15d18547358ea164c0406bf3a9b04c7ad8383ebbd1742d37f"
+    },
+    {
+      "file": "supabase/migrations/20241224000003_add_external_attendees.sql",
+      "sha256": "bf5d9a55ef94a506eef82ea648f16112a484a8672de89067f674f833ec694eb1"
+    },
+    {
+      "file": "supabase/migrations/20241225000001_fix_security_issues.sql",
+      "sha256": "473e657c60d5f7284fac74183c2a796b935bc8bac4ca5b8ac8d3cde09a5d3369"
+    },
+    {
+      "file": "supabase/migrations/20241226_blog_improvements.sql",
+      "sha256": "5aa79e4634d2a126f595dabe67142e69512bab0a4c3614db2031593624a93ccd"
+    },
+    {
+      "file": "supabase/migrations/20241227_create_blog_likes.sql",
+      "sha256": "8ec7cbb678fb038106548f4064af3f7e8e3cc1002bcf5abc375850c070b05116"
+    },
+    {
+      "file": "supabase/migrations/20241227_create_public_blog_bucket.sql",
+      "sha256": "4ba8baced26a65042339620d114ca892b8b67939ca22b95675c228a66e79609a"
+    },
+    {
+      "file": "supabase/migrations/20250119_add_sponsors_page_content.sql",
+      "sha256": "be2e5572ed0b87c2ffede9be083c561855c59828a00ca74f7518eae1028afe91"
+    },
+    {
+      "file": "supabase/migrations/20250119_setup_media_storage_policies.sql",
+      "sha256": "e6cfaea8d297b75417380d708199707ddaad7152c07faaa2adfa620d7992d061"
+    },
+    {
+      "file": "supabase/migrations/20250127_add_event_level.sql",
+      "sha256": "009d60db3031d44a117640a620b8772ab6d45d477d6dfd663bfc08a4d8bb1b9b"
+    },
+    {
+      "file": "supabase/migrations/20250127_add_project_stars.sql",
+      "sha256": "ea7673b6179ab021b0f53852ce221ff99575428fabc2e391370d72e08f75c442"
+    },
+    {
+      "file": "supabase/migrations/20250127_create_projects_table.sql",
+      "sha256": "cda774282e36c8ff1183a65e76c300da6e412229192822d2fdb922bd2f403365"
+    },
+    {
+      "file": "supabase/migrations/20250127_fix_admin_project_permissions.sql",
+      "sha256": "2ca84b64ad16726e415c8ae684af7fb3ce2966543c63907052aa0f2a149ffc8a"
+    },
+    {
+      "file": "supabase/migrations/20250127_fix_blog_likes.sql",
+      "sha256": "49860a37ac4d37586947c99dc5df69d020116018c15ba8ef94e894327a93f13e"
+    },
+    {
+      "file": "supabase/migrations/20250127_fix_linktree_policies.sql",
+      "sha256": "8fed9a3cdb0be3aeea033ad17d29adc83894e259526abddde5229b57925bde6d"
+    },
+    {
+      "file": "supabase/migrations/20250127_fix_newsletter_subscribers.sql",
+      "sha256": "254d14b24f5344b2501b053aec7558421c9f8f85fa573cf0a9d4f99489351d3d"
+    },
+    {
+      "file": "supabase/migrations/20250127_fix_project_stars_trigger.sql",
+      "sha256": "f2fad3f44d4bbce30257303c02551dd6ba70fecdf687fb003da79baff27f8114"
+    },
+    {
+      "file": "supabase/migrations/20250127_fix_projects_policies.sql",
+      "sha256": "fa8c2267c043ceb0a6142b477f9f297289401eb5909d0f8f2964fb8a90f91d99"
+    },
+    {
+      "file": "supabase/migrations/20250127_production_rls_policies.sql",
+      "sha256": "256280e99fcd8ef4e1fa239c6834ecdb342eb86a49ef871737bfdaac058d3df6"
+    },
+    {
+      "file": "supabase/migrations/20250127_simple_production_rls.sql",
+      "sha256": "427e9bde7292c87b1f5ac2acd106a3479d4af6bfdc17c8deda5f4f89c362f75c"
+    },
+    {
+      "file": "supabase/migrations/20250128_add_embed_type_to_linktree_links.sql",
+      "sha256": "32d617315add172b6423a52d389567aa8cc37d8f65c3541df5aa88597f708904"
+    },
+    {
+      "file": "supabase/migrations/20250128_add_overdue_task_automation.sql",
+      "sha256": "e8b4e2a07f213fadbc51369647f6d10191c4cc7e656d7cd330a1cd49e9d2c215"
+    },
+    {
+      "file": "supabase/migrations/20250128_add_show_click_count_to_linktree_links.sql",
+      "sha256": "66dc4ae9df30172433ba0dd28cd54cf9d5af75bcf71f36ff6e88552d476c4bf7"
+    },
+    {
+      "file": "supabase/migrations/20250129_add_page_content_defaults.sql",
+      "sha256": "e084f2c841e2c2915efb94bc979f8735412dfae7dc9df18f578acef34518b287"
+    },
+    {
+      "file": "supabase/migrations/20250129_create_site_status_table.sql",
+      "sha256": "57c4d2aa599485555ccc680d164c1776f4b02071a9096f51422d7fe9176c3795"
+    },
+    {
+      "file": "supabase/migrations/20250129_move_meeting_to_contact.sql",
+      "sha256": "46f14d0aebea6af3d5b92bbf9c4879893b372d5370887a3bd83e0511893eec39"
+    },
+    {
+      "file": "supabase/migrations/20250130_debug_rls_issue.sql",
+      "sha256": "ede853cb350582454f906280f6035539e2f36fb8e1a7449444b0ba21d096a541"
+    },
+    {
+      "file": "supabase/migrations/20250130_finalize_rls_security.sql",
+      "sha256": "1e965651f420ac047221f3b4204e924df6ba2f55f7cd124d182946d3dda50768"
+    },
+    {
+      "file": "supabase/migrations/20250203_add_newsletter_rate_limiting.sql",
+      "sha256": "235e8e347bb61ef11be210751dd26d396ce0d8a2d6d546e5e2db69211b8afafc"
+    },
+    {
+      "file": "supabase/migrations/20250203_enable_sponsor_tables_rls.sql",
+      "sha256": "3422ea1ce095f7c5663bf78aee4c72770991a8378e2530831f6068b812211371"
+    },
+    {
+      "file": "supabase/migrations/20250203_fix_function_search_paths.sql",
+      "sha256": "c96000cc97c79d015edf72d661ceb3b58123ab19631cbcf05c7080b129b3890e"
+    },
+    {
+      "file": "supabase/migrations/20250203_fix_remaining_function.sql",
+      "sha256": "f20a063061acebc3763f991c791a9d4b9c1ec3141d6b202ed1a5c62b274829b3"
+    },
+    {
+      "file": "supabase/migrations/20250203_recreate_triggers.sql",
+      "sha256": "b085a2732a190c76982e822fade2c49e669d516a58a364a69105eb3ee5c0838f"
+    },
+    {
+      "file": "supabase/migrations/20250209_add_team_section_to_members.sql",
+      "sha256": "657b0546a2defdbec1cef20f34cdfdb7f156de4510a1c328ed4030e8b7dc404a"
+    },
+    {
+      "file": "supabase/migrations/20250209_add_team_section_to_team_members.sql",
+      "sha256": "3abeaa464c9a00d7a581ea5cad91b4c9c8214da3e0144c288fd440323b799d4b"
+    },
+    {
+      "file": "supabase/migrations/20250224_add_announcement_scheduling.sql",
+      "sha256": "40cc416c760a54b78ee6a18050280a05f64522322e252f9b7d66a0ef8f1931f7"
+    },
+    {
+      "file": "supabase/migrations/20250224_additional_features.sql",
+      "sha256": "9e129b8d06ed8a718788f11fdfd6dd9a3573ebc0c8c0d602c6b556f1c4a3657d"
+    },
+    {
+      "file": "supabase/migrations/20250224_create_team_hierarchy_system.sql",
+      "sha256": "5b55367434c4ed93356340672f32900127baa0342cb6c57f81ec85867de66b96"
+    },
+    {
+      "file": "supabase/migrations/20250224_team_features_expansion.sql",
+      "sha256": "96eb521e55e61e478c2e18ffc7fdfb335879999cfc26eb0851d117c823bb8db0"
+    },
+    {
+      "file": "supabase/migrations/20250316000000_create_secure_auth_function.sql",
+      "sha256": "560c9b656d383d590e92ea941e4e3cf7f06560c104dfa3b297cbf8a3cfc1b940"
+    },
+    {
+      "file": "supabase/migrations/20250316000001_fix_rls_policies.sql",
+      "sha256": "e6bb02ef7da3f59ea8bfdf7904ce6227d6b9331e0325e54ae7de81ad360672a1"
+    },
+    {
+      "file": "supabase/migrations/20250321000000_fix_storage_policies.sql",
+      "sha256": "c27a04ab1cfb6dc90fc76c2a8b967e576d0782e757c90908093ec29b017c1b07"
+    },
+    {
+      "file": "supabase/migrations/20250321000001_add_session_management.sql",
+      "sha256": "8f7488b8a706c262f7098ec34b3594b8fa041d2dcf2eb6451cab479ea5352061"
+    },
+    {
+      "file": "supabase/migrations/20250321000002_add_csrf_protection.sql",
+      "sha256": "0b653042b95792169abebf5a9f3ab1e5fcf9f0ae62d1c3f8ac89d0911d4bda9a"
+    },
+    {
+      "file": "supabase/migrations/20250321000003_improve_auth_security.sql",
+      "sha256": "a02ccf79aab5b2a49b1a650a095165fb763c3394a0350324fddf45a4e9a4ada9"
+    },
+    {
+      "file": "supabase/migrations/20250321000004_add_monitoring_alerts.sql",
+      "sha256": "9e713578a570bd9e3dd1df5ca05774e7b21df6705c2f3b7dbad09fa1d378a5ef"
+    },
+    {
+      "file": "supabase/migrations/20250321000005_fix_newsletter_rls.sql",
+      "sha256": "e298a02fcb52df3649e66973fa9e73a30d6c5739ff2a42f06258d9f52fc974af"
+    },
+    {
+      "file": "supabase/migrations/20250321000007_add_update_password_function.sql",
+      "sha256": "202e763e8715100fd7ae99bd72a023f8a21d8b5c7ae2ade43197eaf77ecf5787"
+    },
+    {
+      "file": "supabase/migrations/20250321000008_sync_storage_to_media_files.sql",
+      "sha256": "9251f9514295ee0b3e9b16d92b7544a59347d9ad0a94754e805d0577ef06c789"
+    },
+    {
+      "file": "supabase/migrations/20250321000009_fix_media_rls_policies.sql",
+      "sha256": "8b27efadb0bef3af7434e1347ef797896dfdee9930eb0b337c94afce0f517d79"
+    },
+    {
+      "file": "supabase/migrations/20250321000010_fix_all_rls_policies.sql",
+      "sha256": "29e5e635f560374d8505f75d1ceafd292fe06a7f2eaed965a7efa07b0f707650"
+    },
+    {
+      "file": "supabase/migrations/20250321000011_add_event_link.sql",
+      "sha256": "29938f2e4262bca7e6826f474d005dd8407851783c12844e97d0cd92fb2ab82d"
+    },
+    {
+      "file": "supabase/migrations/20250404000000_add_clear_rate_limit_function.sql",
+      "sha256": "926db863780ced3168dd3fb71c6d8d8741fd0027ec3904399ab3bd440c76e626"
+    },
+    {
+      "file": "supabase/migrations/20260616000001_add_event_columns.sql",
+      "sha256": "6dbee2b43933003bce9bd23606c6a54ec07cb0d91558e656d2947de724e7ece9"
+    },
+    {
+      "file": "supabase/migrations/20260616000002_channels.sql",
+      "sha256": "24c52e69462c69cf2b984056bfb159a060d192da45396d2dd1a7208ea9027056"
+    },
+    {
+      "file": "supabase/migrations/20260616000003_public_media.sql",
+      "sha256": "40ce7d406e5515fd0b5998f716ff02eb1225bd087aa86af3810c8616393a1fc8"
+    },
+    {
+      "file": "supabase/migrations/20260616000004_whiteboards.sql",
+      "sha256": "fbb73b445949a5a746f97f935d02824d6eb8810a1612a589d40493a546c81e5f"
+    }
+  ],
+  "missingRpcDefinitions": [
+    {
+      "file": "src/services/attendanceService.ts",
+      "name": "increment_attendees_count"
+    },
+    {
+      "file": "src/services/attendanceService.ts",
+      "name": "decrement_attendees_count"
+    },
+    {
+      "file": "src/services/resourcesService.ts",
+      "name": "increment_resource_views"
+    }
+  ],
+  "directTableServiceFiles": [
+    {
+      "file": "src/services/adminService.ts",
+      "count": 7
+    },
+    {
+      "file": "src/services/attendanceService.ts",
+      "count": 10
+    },
+    {
+      "file": "src/services/auditService.ts",
+      "count": 14
+    },
+    {
+      "file": "src/services/blogCommentsService.ts",
+      "count": 12
+    },
+    {
+      "file": "src/services/blogService.ts",
+      "count": 37
+    },
+    {
+      "file": "src/services/blogSubmissionService.ts",
+      "count": 14
+    },
+    {
+      "file": "src/services/channelsService.ts",
+      "count": 7
+    },
+    {
+      "file": "src/services/communicationsService.ts",
+      "count": 45
+    },
+    {
+      "file": "src/services/contentService.ts",
+      "count": 24
+    },
+    {
+      "file": "src/services/eventsService.ts",
+      "count": 10
+    },
+    {
+      "file": "src/services/financesService.ts",
+      "count": 26
+    },
+    {
+      "file": "src/services/linktreeService.ts",
+      "count": 13
+    },
+    {
+      "file": "src/services/mediaService.ts",
+      "count": 39
+    },
+    {
+      "file": "src/services/membersService.ts",
+      "count": 13
+    },
+    {
+      "file": "src/services/newsletterService.ts",
+      "count": 29
+    },
+    {
+      "file": "src/services/notificationService.ts",
+      "count": 11
+    },
+    {
+      "file": "src/services/permissionsService.ts",
+      "count": 4
+    },
+    {
+      "file": "src/services/profileMergingService.ts",
+      "count": 6
+    },
+    {
+      "file": "src/services/projectStarsService.ts",
+      "count": 7
+    },
+    {
+      "file": "src/services/projectsService.ts",
+      "count": 10
+    },
+    {
+      "file": "src/services/resourcesService.ts",
+      "count": 13
+    },
+    {
+      "file": "src/services/securityService.ts",
+      "count": 8
+    },
+    {
+      "file": "src/services/siteStatusService.ts",
+      "count": 4
+    },
+    {
+      "file": "src/services/sponsorContentService.ts",
+      "count": 11
+    },
+    {
+      "file": "src/services/sponsorsService.ts",
+      "count": 9
+    },
+    {
+      "file": "src/services/teamActivityService.ts",
+      "count": 3
+    },
+    {
+      "file": "src/services/teamInviteService.ts",
+      "count": 9
+    },
+    {
+      "file": "src/services/teamManagementService.ts",
+      "count": 33
+    },
+    {
+      "file": "src/services/teamMessagingService.ts",
+      "count": 12
+    },
+    {
+      "file": "src/services/teamService.ts",
+      "count": 10
+    },
+    {
+      "file": "src/services/teamStatisticsService.ts",
+      "count": 8
+    },
+    {
+      "file": "src/services/whiteboardService.ts",
+      "count": 6
+    }
+  ]
+}

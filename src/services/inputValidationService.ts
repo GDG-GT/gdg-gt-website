@@ -7,11 +7,11 @@ import { z } from 'zod';
  * Email validation schema
  */
 export const emailSchema = z.string()
+  .trim()
+  .toLowerCase()
   .email('Invalid email format')
   .min(5, 'Email too short')
-  .max(255, 'Email too long')
-  .toLowerCase()
-  .trim();
+  .max(255, 'Email too long');
 
 /**
  * Password validation schema (14+ characters, complexity requirements)
@@ -63,7 +63,7 @@ export const adminLoginSchema = z.object({
 export const fileUploadSchema = z.object({
   fileName: z.string().min(1).max(255),
   fileSize: z.number().min(1).max(52428800), // 50MB
-  mimeType: z.string().regex(/^[a-z]+\/[a-z0-9\-\+\.]+$/i),
+  mimeType: z.string().regex(/^[a-z]+\/[a-z0-9+.-]+$/i),
   folderId: z.string().uuid().optional()
 });
 
@@ -95,7 +95,10 @@ export function sanitizeString(input: string): string {
   if (!input) return '';
   
   // Remove null bytes and control characters
-  return input.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '').trim();
+  return Array.from(input).filter((character) => {
+    const code = character.charCodeAt(0);
+    return code === 9 || code === 10 || code === 13 || (code >= 32 && code !== 127);
+  }).join('').trim();
 }
 
 /**

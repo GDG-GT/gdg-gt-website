@@ -124,21 +124,24 @@ export class TeamActivityService {
         return `${actorName} added ${targetName} to the team`;
       case 'member_removed':
         return `${actorName} removed ${targetName} from the team`;
-      case 'role_changed':
+      case 'role_changed': {
         const newRole = activity.details?.new_role || 'member';
         return `${actorName} changed ${targetName}'s role to ${newRole}`;
+      }
       case 'announcement_posted':
         return `${actorName} posted an announcement`;
       case 'message_sent':
         return `${actorName} sent a message`;
-      case 'invite_sent':
+      case 'invite_sent': {
         const inviteEmail = activity.details?.email || 'someone';
         return `${actorName} invited ${inviteEmail} to join`;
+      }
       case 'invite_accepted':
         return `${actorName} accepted the team invite`;
-      case 'finance_submitted':
+      case 'finance_submitted': {
         const amount = activity.details?.amount || 0;
         return `${actorName} submitted an expense of $${amount}`;
+      }
       case 'finance_approved':
         return `${actorName} approved a finance request`;
       case 'finance_rejected':

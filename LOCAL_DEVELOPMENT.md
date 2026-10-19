@@ -32,13 +32,18 @@ implemented by this UI work.
   are not uploaded or scanned. Other media-library uploads are server-memory
   samples only, not production storage.
 
-The user revised the palette to pale yellow with **no pure-white UI surfaces**.
-The hero keeps its peach/coral atmosphere and real moving objects. Official marks
-and photographs are not recolored.
+The latest palette correction removes the yellow cast across the entire site.
+Page surfaces are low-tint neutral off-whites; the hero keeps its original
+peach/coral atmosphere and real moving objects. Official marks and photographs
+are not recolored. Native scroll chaining is enabled; overlapping legacy modals
+share a reference-counted page scroll lock.
 
 ## Checks
 
-`npm run test:ui`, `npm run lint:ui`, `npm run typecheck`, `npm run build`.
+`npm test`, `npm run lint`, `npm run typecheck`, `npm run build`.
+`npm run audit:phase0` refreshes the mechanical source inventory and the numbered
+PRD requirements tracker. It preserves existing tracker status/evidence fields;
+unverified requirements are never automatically marked complete.
 
 See `.docs/UI_LOCAL_REVIEW.md` for review scope, observed checks, and remaining
 PRD work. `npm run build` verifies compilation, not production readiness. The
@@ -47,7 +52,8 @@ do not deploy that environment or expose this Vite server publicly.
 
 The adapter is registered only by the Vite development server when
 `VITE_LOCAL_UI=true`. It is not an authentication implementation and must never be
-used for production. Existing server APIs and SQL remain unchanged.
+used for production. Existing server APIs and legacy SQL are still unsafe for
+deployment; the full PRD implementation begins with the Phase 0 reconstruction.
 
 ## Original baseline
 

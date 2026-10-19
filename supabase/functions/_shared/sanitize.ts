@@ -26,7 +26,10 @@ export function sanitizeSubject(subject: string): string {
   if (!subject) return '';
 
   // Remove control characters and newlines
-  let sanitized = subject.replace(/[\x00-\x1F\x7F-\x9F]/g, '');
+  let sanitized = Array.from(subject).filter((character) => {
+    const code = character.charCodeAt(0);
+    return code >= 32 && (code < 127 || code > 159);
+  }).join('');
   
   // Limit length
   if (sanitized.length > 200) {

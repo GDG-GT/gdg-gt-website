@@ -21,7 +21,7 @@ export function sanitizeEmailHtml(html: string): string {
       'href', 'src', 'alt', 'title', 'style', 'class', 'width', 'height',
       'align', 'border', 'cellpadding', 'cellspacing'
     ],
-    ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+    ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.-]+(?:[^a-z+.:-]|$))/i,
     ALLOW_DATA_ATTR: false,
     FORBID_TAGS: ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input', 'button'],
     FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur'],
@@ -59,7 +59,10 @@ export function sanitizeEmailSubject(subject: string): string {
   if (!subject) return '';
 
   // Remove control characters and newlines
-  let sanitized = subject.replace(/[\x00-\x1F\x7F-\x9F]/g, '');
+  let sanitized = Array.from(subject).filter((character) => {
+    const code = character.charCodeAt(0);
+    return code >= 32 && (code < 127 || code > 159);
+  }).join('');
   
   // Limit length
   if (sanitized.length > 200) {

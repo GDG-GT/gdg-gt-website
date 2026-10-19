@@ -20,9 +20,10 @@ approval. No deployment or remote repository has been created.
   duplication/order, keyboard movement, undo/redo, autosave, field visibility
   rules, basic validation, access-setting UI, versioned publishing, respondent
   preview/review/save/resume/edit, response workspace, exports, and redaction.
-- Pale-yellow surface scale following Tejas's 2026-10-19 revision. This overrides
-  the original prompts' pure-white surfaces. The public atmosphere remains peach
-  and coral; the sidebar/footer remain charcoal.
+- Low-tint neutral off-white surfaces following Tejas's latest 2026-10-19
+  correction: the pale-yellow treatment was rejected across the site, particularly
+  in admin. The homepage glass is peach again; the atmosphere remains peach and
+  coral, and the sidebar/footer remain charcoal.
 - Addressed inherited route crashes, missing cache imports, service-worker-ready
   hangs, body scroll-lock interference with dialogs, and TypeScript mismatches
   encountered while preserving the existing UI.
@@ -40,12 +41,17 @@ approval. No deployment or remote repository has been created.
   are isolated in the ignored `.ui-review.local` directory.
 - Computed-style scan of 14 representative routes found no pure-white visible
   surface backgrounds and no document-width overflow at desktop width. Native
-  checkboxes/radios are also styled with yellow surfaces.
+  checkboxes/radios use the shared surface palette.
 - New UI lint, full TypeScript project checks, UI unit tests, and production
   compilation are available as the commands in `LOCAL_DEVELOPMENT.md`.
-- Whole-repository lint still has 10 inherited errors and hundreds of warnings
-  outside the new UI layer (sanitizer regex lint, finance const, and switch-case
-  lexical declarations). They have not been hidden or disabled globally.
+- The 10 inherited whole-repository lint errors were subsequently resolved in
+  Phase 0 without disabling rules. Hundreds of inherited warnings still remain.
+- Follow-up scroll fix removed universal scroll-chain suppression and replaced
+  overlapping legacy dialog locks with shared ownership and cleanup tests. Real
+  wheel input moved the admin profile from 0 to about 848 CSS pixels.
+- The neutral-palette follow-up reviewed main public pages and all sidebar
+  destinations at desktop width. The new phone-width pass remains pending after
+  browser-control timeouts; the earlier mobile review is not a substitute for it.
 
 ## Explicitly not complete
 
@@ -66,7 +72,8 @@ approval. No deployment or remote repository has been created.
   coverage, pinned-clock visual regression, offline queue, push, or completed SEO.
 - Photos/architecture are development assets pending chapter review. Empty team
   and sponsor datasets are not filled with invented people or partnerships.
-- Captures in `ui-review/` are review artifacts, **not approved golden baselines**.
+- The `yellow-*` captures in `ui-review/` show the superseded, rejected yellow
+  palette. Other captures are review artifacts, **not approved golden baselines**.
   PRD visual sign-off must come from Tejas; the implementation cannot approve it.
 
 ## Git and local use

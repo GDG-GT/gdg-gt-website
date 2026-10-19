@@ -96,7 +96,7 @@ const AdminFinances = () => {
     setIsLoading(true);
     try {
       // For team members, filter by their teams
-      let financeFilters = { ...filters };
+      const financeFilters = { ...filters };
       if (!isAdmin && !isSuperAdmin) {
         // Team members can only see finances for their teams
         const userTeamIds = userTeams.map(t => t.team_id);
