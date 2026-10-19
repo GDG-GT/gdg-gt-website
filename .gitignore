@@ -31,3 +31,8 @@ dist-ssr
 # Claude Code
 CLAUDE.md
 user_feedback.md
+
+# Generated local target stack (canonical sources are database/migrations).
+infra/supabase/migrations/
+infra/supabase/.temp/
+infra/supabase/.branches/

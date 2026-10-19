@@ -56,6 +56,61 @@ production-ready while the browser still uses the legacy direct table services.
 
 Phase 0 is in progress. All later phase exit gates remain open.
 
+## Backend foundation checkpoint — 2026-10-19
+
+- Explicit repair transforms reproduce all 83 historical SQL files with zero
+  failures and all 62 source-defined tables in network-isolated PostgreSQL 17.
+  Evidence: `phase0/source-replay-repaired.json`. This is source archaeology,
+  not a copy of source data or source security policies into GT.
+- `database/migrations/202610190001_canonical_structure.sql` reconstructs clean
+  structure only. Target tables have RLS and deny browser table/function access.
+  Security and public-workflow additions are separate forward migrations.
+- The first three target migrations and database tests passed against isolated
+  PostgreSQL. A 100-independent-client final-seat test produced exactly one
+  registration, 99 full-capacity outcomes, and one durable confirmation job.
+  Evidence: `phase0/canonical-tests.json`. Storage/Realtime remain unverified.
+- Added server-only scrypt verification, opaque hashed sessions, bound CSRF,
+  persistent sliding risk limits, current-role checks, central authorization,
+  same-origin validation, safe request envelopes, and redacted telemetry.
+- Added `/api/v1` deployment entry and loopback local Node API/Vite proxy.
+  Auth, password rotation, and manual Super Admin gate rotation are implemented
+  server-side. **The browser UI has not migrated to these real endpoints.**
+- Retired unsafe source session, CSRF, arbitrary-email, media, feed, sitemap,
+  and keep-alive handlers with no-store HTTP 410 responses. Historical code is
+  preserved in Git. Public sitemap must be rebuilt before launch.
+- Removed obsolete keep-alive cron and unsafe-eval/third-party tracking hosts
+  from production CSP. Staging report-only verification is still required.
+- Latest code verification: **58 unit tests pass, typecheck passes, ESLint has
+  zero errors, production build passes**. Inherited lint warnings, non-strict TS,
+  large chunks, stale browser compatibility data, and dependency vulnerabilities
+  remain open. Unit tests use an injected fake store; they do not certify live
+  Supabase HTTP integration or complete the PRD's mandatory security suite.
+- Migration `202610190004_password_and_lockout.sql` and its SQL test were added
+  after the last successful database execution. They are **not database-verified**
+  yet; do not treat the earlier report as evidence for this new migration.
+
+## Current local infrastructure blocker
+
+The Mac's disk reached approximately 100 MB free during the updated Supabase
+image pull. File writes and Vitest initially failed with `ENOSPC`; Docker then
+reported containerd metadata I/O errors. Removed only the 127 MB temporary npm
+CLI download created during this work (re-downloadable). File tests/build work
+again with approximately 229 MB free, but this is insufficient for the stack.
+The attempt to remove eight stopped generated test containers failed with I/O
+errors; no successful database/container deletion is claimed.
+
+Free at least **10–15 GB** on the host, then check Docker/Colima health before
+retrying. Do not delete or reset the existing Colima disk. Supabase CLI 2.90.0
+also has a documented SQL splitter bug for identifiers containing `atomic`;
+the local stack requires an updated CLI (see `infra/README.md`). The new CLI
+could not finish downloading its database image. No target Supabase stack is
+running and no cloud project was changed.
+
+The UI preview remains on `http://127.0.0.1:8080`. The Node API listens on
+loopback port 8081 and fails closed with 503 until private configuration and
+a healthy target database are available. No default target admin password or
+source credentials were installed.
+
 ## First isolated source replay
 
 `npm run audit:db:source` runs PostgreSQL 17 in a labeled, resource-limited Docker

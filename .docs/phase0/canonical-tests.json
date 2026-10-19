@@ -1,0 +1,42 @@
+{
+  "note": "Executed against network-isolated PostgreSQL 17. Not certification of Supabase Storage/Realtime or hosted deployment.",
+  "migrations": [
+    "202610190001_canonical_structure.sql",
+    "202610190002_security_foundation.sql",
+    "202610190003_events_and_public_workflows.sql"
+  ],
+  "tests": [
+    {
+      "name": "isolated test roles",
+      "passed": true
+    },
+    {
+      "name": "202610190001_canonical_structure.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190002_security_foundation.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190003_events_and_public_workflows.sql",
+      "passed": true
+    },
+    {
+      "name": "001_security_foundation.sql",
+      "passed": true
+    },
+    {
+      "name": "002_event_registration.sql",
+      "passed": true
+    },
+    {
+      "name": "003_event_concurrency.sql",
+      "passed": true
+    },
+    {
+      "name": "EVT concurrency: 100 clients, exactly one last-seat registration",
+      "passed": true
+    }
+  ]
+}

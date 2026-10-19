@@ -9,6 +9,9 @@ export default defineConfig(({ mode }) => ({
     host: "127.0.0.1",
     port: 8080,
     strictPort: true,
+    proxy: {
+      '/api/v1': { target: 'http://127.0.0.1:8081', changeOrigin: false },
+    },
   },
   plugins: [react(), ...(mode === 'development' && loadEnv(mode, process.cwd(), '').VITE_LOCAL_UI === 'true' ? [localPreview()] : [])],
   resolve: {

@@ -1,0 +1,51 @@
+# Dedicated local GT stack. Never point the historical source migration directory
+# at a GT project. Generated copies of database/migrations live below this file.
+project_id = "gdg-gt-prd-local"
+
+[api]
+enabled = true
+port = 54361
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54362
+shadow_port = 54360
+major_version = 17
+
+[db.migrations]
+enabled = true
+schema_paths = []
+
+[db.seed]
+enabled = false
+sql_paths = []
+
+[realtime]
+enabled = true
+
+[studio]
+enabled = false
+
+[inbucket]
+enabled = true
+port = 54364
+smtp_port = 54365
+pop3_port = 54366
+
+[storage]
+enabled = true
+file_size_limit = "250MiB"
+
+[auth]
+enabled = false
+site_url = "http://127.0.0.1:8080"
+additional_redirect_urls = []
+enable_signup = false
+
+[analytics]
+enabled = false
+
+[edge_runtime]
+enabled = false
