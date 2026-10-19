@@ -42,7 +42,7 @@ const WhiteboardCanvas: React.FC<WhiteboardCanvasProps> = ({ boardId, userId }) 
           scrollToContent: true,
         });
       } else {
-        setInitialData({ appState: { viewBackgroundColor: '#fff2c7' } });
+        setInitialData({ appState: { viewBackgroundColor: '#f7f8fa' } });
       }
       setLoading(false);
     })();

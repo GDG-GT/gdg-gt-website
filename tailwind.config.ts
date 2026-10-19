@@ -29,7 +29,7 @@ export default {
         'body': ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
-        white: '#fff5d6',
+        white: '#fafbfc',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

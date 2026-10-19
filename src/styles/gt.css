@@ -32,37 +32,37 @@
   }
 }
 :root {
-  --background: 47 100% 93%;
+  --background: 210 12% 97%;
   --foreground: 0 0% 18%;
-  --card: 47 100% 90%;
+  --card: 210 14% 98%;
   --card-foreground: 0 0% 18%;
-  --popover: 47 100% 92%;
+  --popover: 210 14% 98%;
   --popover-foreground: 0 0% 18%;
   --primary: 7 57% 41%;
-  --primary-foreground: 47 100% 93%;
-  --secondary: 45 75% 88%;
+  --primary-foreground: 210 14% 98%;
+  --secondary: 210 10% 93%;
   --secondary-foreground: 0 0% 18%;
-  --muted: 45 60% 87%;
-  --muted-foreground: 38 18% 33%;
+  --muted: 210 10% 93%;
+  --muted-foreground: 210 5% 37%;
   --accent: 15 100% 92%;
   --accent-foreground: 7 57% 33%;
-  --border: 42 38% 76%;
-  --input: 42 30% 66%;
+  --border: 210 7% 85%;
+  --input: 210 6% 70%;
   --ring: 7 62% 45%;
   --sidebar-background: 0 0% 16%;
-  --sidebar-foreground: 45 72% 89%;
+  --sidebar-foreground: 210 10% 93%;
   --sidebar-primary: 10 100% 75%;
-  --ink: #342f27;
-  --text-secondary: #675a46;
+  --ink: #2e3033;
+  --text-secondary: #60646a;
   --coral: #bd4b3d;
   --coral-bright: #ff8366;
   --peach: #fff8f0;
-  --canvas: oklch(97% 0.055 93);
-  --workspace: oklch(93.2% 0.052 92);
-  --line: #dccc9e;
-  --surface: oklch(96% 0.067 93);
-  --surface-raised: oklch(97.5% 0.047 93);
-  --text-on-dark: #fff3ce;
+  --canvas: oklch(98% 0.002 250);
+  --workspace: oklch(96% 0.003 250);
+  --line: #dce0e3;
+  --surface: oklch(99% 0.001 250);
+  --surface-raised: oklch(97.5% 0.002 250);
+  --text-on-dark: #f5f6f7;
   --warm-shadow: 0 8px 28px #ca765b14;
   --layer-navigation: 30;
   --layer-overlay: 40;
@@ -363,9 +363,9 @@ img {
   margin-inline: auto;
   height: 70px;
   padding: 0 18px 0 24px;
-  background: #fff1ccd9;
+  background: #fff8f2d9;
   backdrop-filter: blur(18px);
-  border: 1px solid #fff1cce6;
+  border: 1px solid #fff8f2e6;
   border-radius: 18px;
   display: flex;
   gap: 26px;
@@ -508,8 +508,8 @@ img {
   z-index: 2;
   width: min(600px, 52%);
   padding: 32px 36px 20px;
-  background: #fff1c9d1;
-  border: 1px solid #fff1ccd9;
+  background: #fff3e8c9;
+  border: 1px solid #fff9f4d9;
   border-radius: 24px;
   backdrop-filter: blur(9px);
 }
@@ -712,7 +712,7 @@ img {
   position: absolute;
   right: 12px;
   bottom: 12px;
-  background: #fff1cced;
+  background: #f8f9faed;
   color: #54443c;
   font-size: 0.62rem;
   font-weight: 600;
@@ -906,7 +906,7 @@ img {
   color: #f9eee8;
 }
 .gt-socials a:hover {
-  background: #fff1cc12;
+  background: #f5f6f712;
 }
 .gt-footer-links {
   display: grid;
@@ -938,7 +938,7 @@ img {
   min-width: 0;
   padding: 11px 13px;
   border: 1px solid #79645a;
-  background: #fff1cc08;
+  background: #f5f6f708;
   border-radius: 8px;
   color: var(--text-on-dark);
   font-size: 0.75rem;
@@ -960,7 +960,7 @@ img {
   align-items: center;
   justify-content: space-between;
   padding-block: 20px;
-  border-top: 1px solid #fff1cc1f;
+  border-top: 1px solid #f5f6f71f;
   font-size: 0.65rem;
   color: #c7bbb4;
   gap: 20px;
@@ -1794,7 +1794,7 @@ img {
   min-height: 39px;
 }
 .gt-sidebar-group a:hover {
-  background: #fff1cc08;
+  background: #f5f6f708;
   color: var(--text-on-dark);
 }
 .gt-sidebar-group a.active {
@@ -1806,7 +1806,7 @@ img {
 }
 .gt-sidebar-bottom {
   padding: 14px 25px 22px;
-  border-top: 1px solid #fff1cc12;
+  border-top: 1px solid #f5f6f712;
 }
 .gt-sidebar-bottom > a,
 .gt-sidebar-bottom > button {
@@ -1997,7 +1997,7 @@ img {
   background-color: var(--workspace);
 }
 .gt-admin-body .bg-card {
-  background-color: var(--text-on-dark);
+  background-color: var(--surface);
 }
 .gt-admin-body .border-border {
   border-color: #e3d9d0;
@@ -2022,7 +2022,7 @@ img {
   background: #fff6f0;
 }
 .gt-admin-app :is(.text-gray-300, .text-gray-400, .text-gray-500) {
-  color: #695b44;
+  color: #62676d;
 }
 .gt-admin-app :is(.text-blue-400, .text-blue-500) {
   color: #285b9c;
@@ -2043,11 +2043,11 @@ img {
   color: var(--text-on-dark);
 }
 .gt-admin-app .bg-gray-700 {
-  background-color: #e8d8ab;
+  background-color: #e7eaed;
   color: var(--ink);
 }
 .gt-admin-app .hover\:bg-gray-800:hover {
-  background-color: #eddfb5;
+  background-color: #eef0f2;
 }
 /* Portaled menus/dialogs inherit the same palette as the page. */
 :is(input, textarea, select):not([type="checkbox"]):not([type="radio"]):not(
@@ -2063,13 +2063,13 @@ img {
   color: var(--text-on-dark);
 }
 .excalidraw.excalidraw {
-  --default-bg-color: #fff2c7;
-  --island-bg-color: #fff4d0;
-  --popup-bg-color: #fff4d0;
-  --color-surface-lowest: #fff5d6;
-  --color-surface-low: #f5e8bd;
-  --color-surface-high: #fff5d6;
-  --color-surface-mid: #f5e8bd;
+  --default-bg-color: #f7f8fa;
+  --island-bg-color: #fafbfc;
+  --popup-bg-color: #fafbfc;
+  --color-surface-lowest: #fafbfc;
+  --color-surface-low: #eef0f2;
+  --color-surface-high: #fafbfc;
+  --color-surface-mid: #eef0f2;
 }
 .gt-admin-body .bg-primary .text-primary-foreground {
   color: var(--text-on-dark);
@@ -3455,6 +3455,63 @@ img {
   height: 100%;
   background: #dca17c;
   border-radius: 6px;
+}
+
+/* Operational labels need to remain readable, not decorative microtype. */
+.gt-workspace-preview,
+.gt-workspace-breadcrumb,
+.gt-command-trigger,
+.gt-profile-button small,
+.gt-breadcrumb,
+.gt-panel-heading > a,
+.gt-panel-heading > span,
+.gt-dashboard-date,
+.gt-dashboard-date small,
+.gt-kpi > span:last-child,
+.gt-upcoming-list p,
+.gt-funding-row small,
+.gt-quick-actions p,
+.gt-activity-entry p,
+.gt-activity-entry small,
+.gt-activity-entry a,
+.gt-forms-stats span,
+.gt-table th,
+.gt-table td > small {
+  font-size: 0.75rem;
+}
+.gt-admin-page-heading p:not(.gt-breadcrumb),
+.gt-upcoming-list h3,
+.gt-quick-actions h3,
+.gt-funding-row > div,
+.gt-task-list > label,
+.gt-activity-entry strong,
+.gt-admin-body table td {
+  font-size: 0.875rem;
+}
+.gt-breadcrumb,
+.gt-kpi > span:last-child,
+.gt-upcoming-list p,
+.gt-funding-row small,
+.gt-quick-actions p,
+.gt-task-list > label,
+.gt-activity-entry p,
+.gt-activity-entry small,
+.gt-forms-stats span,
+.gt-table td,
+.gt-table td > small,
+.gt-admin-body .text-muted-foreground {
+  color: var(--text-secondary);
+}
+.gt-admin-body table th {
+  color: var(--text-secondary);
+  background: var(--surface-raised);
+}
+.gt-workspace-preview {
+  background: #eaedef;
+  color: #515a63;
+}
+.gt-workspace-preview > span:nth-child(2) {
+  color: #515a63;
 }
 
 @media (min-width: 1600px) {

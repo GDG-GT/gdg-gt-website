@@ -26,7 +26,7 @@ Playful, warm, glossy, energetic, and technically credible.
 
 The public experience uses a peach and coral world with floating glossy 3D objects, Google color details, Georgia Tech architecture, soft glass surfaces, and large friendly sans-serif typography. It should feel celebratory and imaginative while still functioning as a real student organization website.
 
-The admin experience carries the same coral warmth into a more controlled workspace: dark architectural sidebar, bright white content canvas, coral highlights, rounded metric panels, clear charts, and dense operational information.
+The admin experience carries coral accents into a controlled workspace: dark architectural sidebar, soft neutral off-white content canvas, rounded metric panels, clear charts, and dense operational information. Avoid a yellow cast.
 
 The visual source of truth is `.docs/FINAL_DESIGN_PROMPTS.md`, followed by `.docs/DESIGN_SYSTEM.md`, `.docs/GDG_GT_UI_IMAGE_PROMPTS.md`, and the approved reference images. Do not reinterpret this direction from general Georgia Tech branding.
 
@@ -52,12 +52,13 @@ The visual source of truth is `.docs/FINAL_DESIGN_PROMPTS.md`, followed by `.doc
 
 ## Approved Design Tokens
 
-User revision (2026-10-19): no pure-white UI anywhere. Public page backgrounds,
-workspace backgrounds, cards, inputs, menus, dialogs, and light foregrounds use a
-pale buttery-yellow surface scale. Preserve coral, peach, Google accents, and
-the charcoal sidebar/footer. This explicit revision overrides white surfaces in
-the original visual prompts. Photographic content and official marks are not
-recolored.
+Latest user correction (2026-10-19): remove the yellow cast across all pages,
+especially admin. Use low-chroma neutral off-whites for page/workspace backgrounds,
+cards, inputs, menus, and dialogs, without pure-white backgrounds. Restore the
+homepage's peach atmosphere and translucent peach glass rather than yellow-tinted
+glass. Preserve coral accents, Google colors, moving 3D objects, and the charcoal
+sidebar/footer. This supersedes the earlier pale-yellow interpretation.
+Photographic content and official marks are not recolored.
 
 - Font: Inter, with Google Sans or SF Pro Display styling where an approved licensed asset exists.
 - Peach scale: `#FFF8F0`, `#FFE5B3`, `#FFD699`, `#FFC093`, `#FFAA7A`, `#FF9A76`.
