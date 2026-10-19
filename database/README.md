@@ -15,3 +15,6 @@ the PRD gates. Local validation uses disposable, labeled, network-isolated
 PostgreSQL containers. It does not certify Supabase Storage/Realtime behavior.
 
 Reconstruction evidence: `.docs/phase0/source-replay-repaired.json`.
+The frozen structural migration's source-report hash refers to the report as
+committed in `76b12f5`. Later verified replays can update the report's container
+identifier; they do not authorize rewriting an applied target migration.

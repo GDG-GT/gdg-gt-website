@@ -1,7 +1,7 @@
 import { readdir, readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { disposablePostgres, command } from './lib/disposable-postgres.mjs';
+import { disposablePostgres, dockerCommand } from './lib/disposable-postgres.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const database = await disposablePostgres('canonical-test');
@@ -21,7 +21,7 @@ try {
   for (const file of tests) await execute(file, await readFile(path.join(root,'database/tests',file),'utf8'));
   // pgbench opens 100 independent database sessions. Each client submits once;
   // expected full-capacity failures are counted, not swallowed as test success.
-  const concurrent=await command('docker',['exec','-i',database.name,'sh','-c',
+  const concurrent=await dockerCommand(['exec','-i',database.name,'sh','-c',
     'script=$(mktemp); trap \'rm -f "$script"\' EXIT; cat > "$script"; pgbench -n -U postgres -d postgres -c 100 -j 4 -t 1 -f "$script"'],
     'SELECT public.test_last_seat(:client_id);\n');
   if(concurrent.code!==0)throw new Error('100-client registration test failed: '+concurrent.stderr);

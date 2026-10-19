@@ -3,7 +3,8 @@
   "migrations": [
     "202610190001_canonical_structure.sql",
     "202610190002_security_foundation.sql",
-    "202610190003_events_and_public_workflows.sql"
+    "202610190003_events_and_public_workflows.sql",
+    "202610190004_password_and_lockout.sql"
   ],
   "tests": [
     {
@@ -23,6 +24,10 @@
       "passed": true
     },
     {
+      "name": "202610190004_password_and_lockout.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -32,6 +37,10 @@
     },
     {
       "name": "003_event_concurrency.sql",
+      "passed": true
+    },
+    {
+      "name": "004_password_and_lockout.sql",
       "passed": true
     },
     {

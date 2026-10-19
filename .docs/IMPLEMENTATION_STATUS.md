@@ -44,7 +44,7 @@ production-ready while the browser still uses the legacy direct table services.
 
 ## Current external inputs / gates
 
-- GT-owned Supabase, Redis/rate-limit, email, scanner/queue, Realtime signing, and
+- Hosted GT-owned Supabase, Redis/rate-limit, email, scanner/queue, Realtime signing, and
   deployment credentials are not configured. Do not reuse PSU credentials.
 - No domains are assumed to be controlled; no purchase or remote deploy is authorized
   by this local checkpoint.
@@ -65,7 +65,7 @@ Phase 0 is in progress. All later phase exit gates remain open.
 - `database/migrations/202610190001_canonical_structure.sql` reconstructs clean
   structure only. Target tables have RLS and deny browser table/function access.
   Security and public-workflow additions are separate forward migrations.
-- The first three target migrations and database tests passed against isolated
+- All four current target migrations and database tests passed against isolated
   PostgreSQL. A 100-independent-client final-seat test produced exactly one
   registration, 99 full-capacity outcomes, and one durable confirmation job.
   Evidence: `phase0/canonical-tests.json`. Storage/Realtime remain unverified.
@@ -85,11 +85,12 @@ Phase 0 is in progress. All later phase exit gates remain open.
   large chunks, stale browser compatibility data, and dependency vulnerabilities
   remain open. Unit tests use an injected fake store; they do not certify live
   Supabase HTTP integration or complete the PRD's mandatory security suite.
-- Migration `202610190004_password_and_lockout.sql` and its SQL test were added
-  after the last successful database execution. They are **not database-verified**
-  yet; do not treat the earlier report as evidence for this new migration.
+- Migration `202610190004_password_and_lockout.sql` and its SQL test now pass,
+  including persistent account lockout, token rotation, other-session revocation,
+  and rejection of a stale verified password hash. The canonical test report was
+  refreshed after the runtime recovery.
 
-## Current local infrastructure blocker
+## Resolved local infrastructure blocker
 
 The Mac's disk reached approximately 100 MB free during the updated Supabase
 image pull. File writes and Vitest initially failed with `ENOSPC`; Docker then
@@ -99,17 +100,44 @@ again with approximately 229 MB free, but this is insufficient for the stack.
 The attempt to remove eight stopped generated test containers failed with I/O
 errors; no successful database/container deletion is claimed.
 
-Free at least **10–15 GB** on the host, then check Docker/Colima health before
-retrying. Do not delete or reset the existing Colima disk. Supabase CLI 2.90.0
-also has a documented SQL splitter bug for identifiers containing `atomic`;
-the local stack requires an updated CLI (see `infra/README.md`). The new CLI
-could not finish downloading its database image. No target Supabase stack is
-running and no cloud project was changed.
+Follow-up checks showed host space had increased to 39–41 GiB. A non-destructive
+Colima restart cleared the runtime's metadata I/O errors. Its kernel log recorded
+filesystem recovery from prior I/O failure; a newly downloaded Postgres image
+still contained a zero-filled ELF loader. Removing/re-pulling that image reused
+the damaged cache. Three stopped diagnostic containers and that image reference
+were removed/re-downloadable; no initialized application database was erased.
+The full repaired historical replay was also repeated in the new profile:
+83/83 SQL files passed and the 62-table catalog was unchanged (only its forensic
+container identifier changed). No historical data entered the GT application DB.
 
-The UI preview remains on `http://127.0.0.1:8080`. The Node API listens on
-loopback port 8081 and fails closed with 503 until private configuration and
-a healthy target database are available. No default target admin password or
-source credentials were installed.
+The project now uses a separate **`gdg-gt` Colima profile** with 4 CPUs, 4 GiB RAM,
+and a 40 GiB sparse virtual data disk. The old default profile is stopped and its
+data remains intact. Project commands explicitly select `colima-gdg-gt`, without
+requiring a global Docker context switch. Fresh image downloads run successfully.
+Supabase CLI **2.121.0** is now pinned in project dev dependencies; the old global
+CLI is untouched. No cloud project was changed.
+
+All four migrations applied in actual local Supabase. Database, gateway, Auth,
+Storage, Realtime, and local mail containers are healthy. Published ports bind
+only to `127.0.0.1`. Platform Auth is enabled for transport key generation; signup
+is disabled and application accounts still use custom opaque server sessions.
+
+Local auth was bootstrapped with random, non-default credentials for one fictional
+development Super Admin. Private configuration and credentials are ignored by Git
+and mode 0600. Nothing was copied from source accounts. Re-running bootstrap
+verifies existing credentials and never resets them silently.
+
+`npm run test:local-auth` passed **16 real HTTP integration checks** through Vite,
+the Node API, and Supabase, including anonymous table/RPC denial, gate enforcement,
+origin checks, role-property rejection, hashed sessions and CSRF, current account
+lookup, unsigned-cookie rejection, logout, and revoked-token replay rejection.
+Evidence: `phase0/local-auth-integration.json`. This is not full PRD certification.
+
+The UI preview remains on `http://127.0.0.1:8080`. The configured real Node API
+listens on loopback port 8081 and is proxied at `/api/v1`. The browser's legacy UI
+fixtures have **not** yet been migrated to the real API. No default target admin
+password or source credentials were installed. Host space was approximately
+34 GiB free after setup; historical free-space readings are not current readings.
 
 ## First isolated source replay
 

@@ -1,42 +1,30 @@
-import { spawn } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { inventory } from './phase0-inventory.mjs';
 import { repairedOrder, repairSourceSql } from './source-sql-repairs.mjs';
+import { dockerCommand } from './lib/disposable-postgres.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const name = `gdg-source-audit-${Date.now()}-${randomBytes(3).toString('hex')}`;
 const label = 'dev.gdggt.purpose=source-reconstruction';
-function run(command, args, input) {
-  return new Promise((resolve, reject) => {
-    const child = spawn(command, args, { stdio: ['pipe', 'pipe', 'pipe'] });
-    let stdout = '', stderr = '';
-    child.stdout.on('data', (chunk) => { stdout += chunk; });
-    child.stderr.on('data', (chunk) => { stderr += chunk; });
-    child.on('error', reject);
-    child.on('close', (code) => resolve({ code, stdout, stderr }));
-    child.stdin.on('error', () => {});
-    child.stdin.end(input);
-  });
-}
-const sql = (source) => run('docker', ['exec', '-i', name, 'psql', '-X', '-U', 'postgres', '-d', 'postgres', '--single-transaction', '--set=ON_ERROR_STOP=1', '--set=VERBOSITY=sqlstate', '-qAt'], source);
+const sql = (source) => dockerCommand(['exec', '-i', name, 'psql', '-X', '-U', 'postgres', '-d', 'postgres', '--single-transaction', '--set=ON_ERROR_STOP=1', '--set=VERBOSITY=sqlstate', '-qAt'], source);
 const sourceInventory = await inventory();
 const repaired = process.argv.includes('--repaired');
 let created = false;
 let report;
 try {
-  const ready = await run('docker', ['info', '--format', '{{.ServerVersion}}']);
+  const ready = await dockerCommand(['info', '--format', '{{.ServerVersion}}']);
   if (ready.code !== 0) throw new Error('Local Docker runtime is not ready. No database was touched.');
   console.log('Creating isolated source-audit container; PostgreSQL image may download on first run.');
-  const started = await run('docker', ['run', '-d', '--name', name, '--label', label,
+  const started = await dockerCommand(['run', '-d', '--name', name, '--label', label,
     '--network', 'none', '--memory', '768m', '--cpus', '1',
     '-e', `POSTGRES_PASSWORD=${randomBytes(32).toString('base64url')}`, 'postgres:17']);
   if (started.code !== 0) throw new Error('Could not start isolated PostgreSQL. Check the local Docker runtime and image availability.');
   created = true;
   for (let attempt = 0; attempt < 60; attempt++) {
-    const probe = await run('docker', ['exec', name, 'pg_isready', '-U', 'postgres']);
+    const probe = await dockerCommand(['exec', name, 'pg_isready', '-U', 'postgres']);
     if (probe.code === 0) break;
     if (attempt === 59) throw new Error('Disposable PostgreSQL did not become ready.');
     await new Promise((resolve) => setTimeout(resolve, 500));
@@ -68,7 +56,7 @@ try {
   );`;
   const catalogResult = await sql(catalogSql);
   if (catalogResult.code !== 0) throw new Error('Could not read disposable schema catalog.');
-  const image = await run('docker', ['inspect', name, '--format', '{{.Image}}']);
+  const image = await dockerCommand(['inspect', name, '--format', '{{.Image}}']);
   report = {
     source: sourceInventory.source, repairedReplay: repaired,
     container: name, imageId: image.stdout.trim(), dockerVersion: ready.stdout.trim(),
@@ -87,9 +75,9 @@ try {
   // Leave the exact labeled audit container stopped and recoverable for inspection.
   // Never prune, drop, reset, or remove the user's other containers or databases.
   if (created) {
-    const check = await run('docker', ['inspect', name, '--format', '{{index .Config.Labels "dev.gdggt.purpose"}}']);
+    const check = await dockerCommand(['inspect', name, '--format', '{{index .Config.Labels "dev.gdggt.purpose"}}']);
     if (check.code === 0 && check.stdout.trim() === 'source-reconstruction') {
-      await run('docker', ['stop', name]);
+      await dockerCommand(['stop', name]);
       console.log(`Stopped recoverable source-audit container: ${name}`);
     }
   }

@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "vite",
     "dev:api": "node --env-file=.env.server.local scripts/local-api.mjs",
+    "local:start": "node scripts/local-stack.mjs start",
+    "local:stop": "node scripts/local-stack.mjs stop",
+    "local:status": "node scripts/local-stack.mjs status",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
@@ -16,6 +19,8 @@
     "audit:db:source": "node scripts/source-db-audit.mjs",
     "test:db": "node scripts/test-database.mjs",
     "db:prepare": "node scripts/prepare-local-db.mjs",
+    "setup:local-auth": "node scripts/setup-local-auth.mjs",
+    "test:local-auth": "node scripts/test-local-auth.mjs",
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit",
     "preview": "vite preview"
   },
@@ -100,6 +105,7 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^15.15.0",
     "postcss": "^8.5.6",
+    "supabase": "2.121.0",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
