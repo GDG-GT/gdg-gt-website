@@ -116,11 +116,16 @@ export default function SiteShell({ children }: { children: ReactNode }) {
           undefined,
           subscriptionRequest.current.key,
         );
+        if (result.gateValid) {
+          setLoginOpen(true);
+          setEmail("");
+          return;
+        }
         setNotice(result.message);
         if (result.success) setEmail("");
       }
-    } catch {
-      setNotice("We could not save your signup. Please try again.");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "We could not save your signup. Please try again.");
     } finally {
       setSending(false);
     }

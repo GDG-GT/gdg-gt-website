@@ -172,9 +172,17 @@ Private development credentials are in `.docs/local-auth.local` (ignored, mode
 0600). Bootstrap verifies existing credentials and never silently resets them.
 Do not copy those values, S3 secrets, or the cron secret into logs, Git, or VITE_*.
 
-For an email-shaped gate code, enter it in the footer newsletter field and press
-**Shift+Enter** to explicitly request officer access. Ordinary Subscribe/Enter
-retains the newsletter workflow; the server silently excludes a gate-code match
-from subscription storage and delivery. Gate access still uses its existing
-five-failure lockout, server-only hash and private gate cookie. No gate value or
-hash is embedded in frontend code.
+Enter the gate code in the footer newsletter field and press **Enter** or click
+**Subscribe**. The server recognizes an email-shaped gate code and issues only
+the existing private gate cookie, never a subscriber row or mail job. Ordinary
+addresses still use newsletter double opt-in. Shift+Enter remains an optional
+direct-gate shortcut, not a requirement. No gate value or hash is embedded in
+frontend code. This shared email-entry endpoint is limited to five requests per
+risk key per 15-minute window; a successful match also checks the existing gate
+failure lockout and gate request budget. The dedicated gate endpoint retains its
+separate successful-open and five-failure limits.
+
+The login and restricted public Forms screens display **Georgia Tech SSO · Coming
+soon** as a disabled, non-submitting option. The Forms builder shows a disabled
+future access mode. No provider is configured, no provider redirects happen, and
+no SSO session or verification proof can be created. See `GEORGIA_TECH_SSO_PLAN.md`.

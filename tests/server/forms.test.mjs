@@ -20,6 +20,21 @@ const definition = () => {
   };
 };
 describe("shared first-party form contract", () => {
+  it("cannot enable the planned SSO mode or trust an SSO flag in form settings", () => {
+    const d = definition();
+    expect(
+      formDefinitionSchema.safeParse({
+        ...d,
+        settings: { ...d.settings, access: "georgia-tech-sso-planned" },
+      }).success,
+    ).toBe(false);
+    expect(
+      formDefinitionSchema.safeParse({
+        ...d,
+        settings: { ...d.settings, ssoVerified: true },
+      }).success,
+    ).toBe(false);
+  });
   it("provides five distinct valid structure-only templates and a blank starter", () => {
     const signatures = new Set();
     for (const kind of [

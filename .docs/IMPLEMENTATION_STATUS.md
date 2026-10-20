@@ -5,6 +5,30 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Normal gate submission and planned Georgia Tech SSO — 2026-10-20
+
+- The footer accepts the configured gate using ordinary Enter or Subscribe,
+  including email-shaped codes. Recognition is server-side; matching entries
+  issue only the existing 15-minute private gate cookie, never a newsletter row
+  or email job. The user still needs a chapter login. Existing gate lockouts are
+  checked, and the shared email-entry endpoint has a five-request/risk/15-minute
+  cap. Normal email addresses retain the opt-in workflow. No code/hash is in JS.
+- User-requested Georgia Tech SSO is visibly planned, not active: disabled login
+  and Forms-verification buttons, a disabled builder access-mode option, and
+  honest explanatory copy. No provider call, SSO session, account linking, role
+  grant or verification proof was implemented. Forged SSO form settings fail
+  validation. Activation still requires institutional approval/configuration and
+  a separately tested server integration; see `GEORGIA_TECH_SSO_PLAN.md`.
+- Verification: 180 unit tests, TypeScript, scoped lint and production build pass
+  (existing bundle warnings remain). Browser verified ordinary Enter and actual
+  Subscribe each open the login, login SSO is disabled, and restricted Forms keep
+  existing email verification alongside disabled SSO. At 375 px, login fits the
+  viewport and the public form has no document-width overflow. Builder inspection
+  confirms the SSO option cannot be selected. Proofs use the prefixes
+  `ui-review/real-gate-normal-entry-sso-` and `ui-review/real-form-planned-sso-`.
+  The fictional verified-email
+  form was archived after review; temporary viewport overrides were reset.
+
 ### Managed team chat and durable reconnect recovery — 2026-10-20
 
 - Added a Chat tab to each authorized team workspace and one explicitly provisioned

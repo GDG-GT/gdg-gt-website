@@ -6,15 +6,20 @@ export class PublicNewsletterService {
     name?: string,
     key: string = crypto.randomUUID(),
   ) {
-    const data = await api<{ accepted: boolean; message: string }>(
-      "/newsletter/subscriptions",
-      {
-        method: "POST",
-        idempotencyKey: key,
-        body: { email, ...(name ? { name } : {}), website: "" },
-      },
-    );
-    return { success: data.accepted, message: data.message };
+    const data = await api<{
+      accepted?: boolean;
+      message?: string;
+      gateValid?: boolean;
+    }>("/newsletter/subscriptions", {
+      method: "POST",
+      idempotencyKey: key,
+      body: { email, ...(name ? { name } : {}), website: "" },
+    });
+    return {
+      success: !!data.accepted,
+      message: data.message || "",
+      gateValid: data.gateValid === true,
+    };
   }
   static async confirmSubscription(token: string) {
     return this.consume("confirm", token);

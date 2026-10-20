@@ -5,7 +5,10 @@ describe("newsletter and officer entry intent", () => {
   it("keeps ordinary email submissions in the newsletter flow", () => {
     expect(newsletterEntryIntent("student@example.test")).toBe("newsletter");
   });
-  it("routes email-shaped officer entries to the protected gate only when explicit", () => {
+  it("uses the shared server entry for email-shaped codes, with an optional direct gate shortcut", () => {
+    expect(newsletterEntryIntent("fictional-officer@example.test")).toBe(
+      "newsletter",
+    );
     expect(newsletterEntryIntent("fictional-officer@example.test", true)).toBe(
       "gate",
     );

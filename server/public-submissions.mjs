@@ -13,6 +13,7 @@ import {
   verifySecret,
 } from "./lib/security.mjs";
 import { encryptPayload } from "./lib/encryption.mjs";
+import { checkGateAttempt, createGateAccess } from "./auth.mjs";
 export async function publicSubmissionRoutes(
   request,
   response,
@@ -33,7 +34,14 @@ export async function publicSubmissionRoutes(
       request.socket?.remoteAddress || "unknown",
       config.riskSecret,
     ),
-    limit = await store.rateLimit("public:" + path, risk, 20, 900);
+    // This endpoint also recognizes email-shaped gate entries. Cap that public
+    // guessing surface at five requests per risk window, not the contact limit.
+    limit = await store.rateLimit(
+      "public:" + path,
+      risk,
+      path.endsWith("/subscriptions") ? 5 : 20,
+      900,
+    );
   if (!limit.allowed) {
     response.setHeader("Retry-After", String(limit.retryAfter));
     throw new ApiError(429, "RATE_LIMITED", "Please wait before trying again.");
@@ -58,17 +66,20 @@ export async function publicSubmissionRoutes(
         "VALIDATION_ERROR",
         "This submission could not be accepted.",
       );
+    const gate = await store.gateConfiguration(config.initialGateHash);
+    if (await verifySecret(body.email, gate.gate_hash)) {
+      await checkGateAttempt({ store, response, risk, requestId });
+      await createGateAccess({ store, config, response, settings: gate });
+      sendJson(response, 200, { gateValid: true }, requestId);
+      return true;
+    }
     const emailLimit = await store.rateLimit(
       "newsletter.email",
       riskHash(body.email, config.riskSecret),
       5,
       900,
     );
-    // An email-shaped gate code accidentally submitted as a normal newsletter
-    // entry must never be stored as a subscriber or put into an email job. Keep
-    // the public response identical; this is not a second gate/token endpoint.
-    const gate = await store.gateConfiguration(config.initialGateHash);
-    if (emailLimit.allowed && !(await verifySecret(body.email, gate.gate_hash)))
+    if (emailLimit.allowed)
       checked(
         await db.rpc("subscribe_newsletter", {
           p_email: body.email,

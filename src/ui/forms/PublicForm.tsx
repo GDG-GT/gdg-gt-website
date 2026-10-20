@@ -18,6 +18,7 @@ import {
 import FieldRenderer from "./FieldRenderer";
 import RespondentFileField from "./RespondentFileField";
 import { api, ApiFailure } from "@/lib/api";
+import GeorgiaTechSsoOption from "../auth/GeorgiaTechSsoOption";
 type RespondentForm = FormDefinition & {
   id: string;
   slug: string;
@@ -227,6 +228,7 @@ export default function PublicForm() {
             </p>
           )}
           {feedback && <p role="status">{feedback}</p>}
+          <GeorgiaTechSsoOption purpose="form" />
           <Link to="/contact">Contact the chapter</Link>
         </section>
       </div>

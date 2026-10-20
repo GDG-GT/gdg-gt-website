@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import GeorgiaTechSsoOption from "@/ui/auth/GeorgiaTechSsoOption";
 
 interface AdminLoginModalProps {
     isOpen: boolean;
@@ -151,6 +152,9 @@ const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                         </Button>
                     </div>
                 </form>
+                <div className="border-t pt-4">
+                    <GeorgiaTechSsoOption />
+                </div>
             </DialogContent>
         </Dialog>
     );

@@ -56,6 +56,35 @@ function clearCookies(response, config) {
     }),
   );
 }
+export async function checkGateAttempt({ store, response, risk, requestId }) {
+  const requests = await store.rateLimit("auth.gate.requests", risk, 60, 900);
+  const failures = await store.checkRateLimit("auth.gate.failures", risk, 5);
+  if (!requests.allowed || !failures.allowed) {
+    response.setHeader(
+      "Retry-After",
+      String(!requests.allowed ? requests.retryAfter : failures.retryAfter),
+    );
+    if (!failures.allowed)
+      await store.audit({
+        action: "auth.gate_locked",
+        requestId,
+        result: "denied",
+      });
+    throw new ApiError(429, "RATE_LIMITED", "Please wait before trying again.");
+  }
+}
+export async function createGateAccess({ store, config, response, settings }) {
+  const raw = token();
+  await store.createGate(tokenHash(raw), settings.gate_version);
+  appendCookie(
+    response,
+    authCookie(config.gateCookie, raw, {
+      maxAge: 900,
+      strict: true,
+      secure: config.secureCookies,
+    }),
+  );
+}
 export async function requireSession(request, store, config) {
   const raw = readCookie(request.headers.cookie, config.sessionCookie);
   const session = raw && (await store.validateSession(tokenHash(raw)));
@@ -133,25 +162,7 @@ export function createAuthHandler({
               requestId,
             );
           }
-          await rate("auth.gate.requests", risk, 60, 900);
-          const gateLimit = await store.checkRateLimit(
-            "auth.gate.failures",
-            risk,
-            5,
-          );
-          if (!gateLimit.allowed) {
-            response.setHeader("Retry-After", String(gateLimit.retryAfter));
-            await store.audit({
-              action: "auth.gate_locked",
-              requestId,
-              result: "denied",
-            });
-            throw new ApiError(
-              429,
-              "RATE_LIMITED",
-              "Please wait before trying again.",
-            );
-          }
+          await checkGateAttempt({ store, response, risk, requestId });
           const { code } = await jsonBody(request, gateSchema, 4096);
           if (!(await verify(code, settings.gate_hash))) {
             await rate("auth.gate.failures", risk, 5, 900);
@@ -162,16 +173,7 @@ export function createAuthHandler({
             });
             throw failure();
           }
-          const raw = token();
-          await store.createGate(tokenHash(raw), settings.gate_version);
-          appendCookie(
-            response,
-            authCookie(config.gateCookie, raw, {
-              maxAge: 900,
-              strict: true,
-              secure: config.secureCookies,
-            }),
-          );
+          await createGateAccess({ store, config, response, settings });
           return sendJson(response, 200, { gateValid: true }, requestId);
         }
         if (pathname === "/api/v1/auth/login") {

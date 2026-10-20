@@ -634,6 +634,9 @@ export default function FormBuilder() {
                   {label}
                 </option>
               ))}
+              <option value="georgia-tech-sso-planned" disabled>
+                Georgia Tech SSO · Coming soon
+              </option>
             </select>
           </Field>
           {form.settings.access !== "public" && (
@@ -643,6 +646,11 @@ export default function FormBuilder() {
               account.
             </p>
           )}
+          <p className="gt-helper">
+            Georgia Tech SSO verification is planned but not connected yet. It
+            cannot be enabled on this form. Use Verified email when email
+            verification is needed.
+          </p>
           <Field label="Response limit" hint="0 means no configured limit">
             <input
               type="number"
