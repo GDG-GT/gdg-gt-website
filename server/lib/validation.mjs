@@ -92,6 +92,14 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    INVITE_INVALID: [
+      400,
+      "This invitation is invalid, expired, or no longer available.",
+    ],
+    INVITE_SIGNIN_REQUIRED: [
+      403,
+      "Sign in with the account that received this invitation.",
+    ],
     LAST_TEAM_LEAD: [
       409,
       "Assign another active team lead before removing this lead or disabling their account.",

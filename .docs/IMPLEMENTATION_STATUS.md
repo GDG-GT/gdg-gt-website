@@ -5,6 +5,40 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Secure team invitation lifecycle — 2026-10-20
+
+- Team invitation management and the recipient route now use same-origin APIs.
+  The active legacy path-token invitation page no longer loads the browser
+  database flow; new invitations use `/team/join#invite=...` and remove the fragment
+  from the visible address. Raw capabilities never appear in manager responses.
+- Invitations are single-use, email/account-bound, valid for seven days, and
+  hashed at rest. Encrypted outbox delivery supports deduplicated recipients,
+  cooldown-protected resend rotation and revocation. Acceptance rechecks the
+  inviter's current authority and team state. Losing lead/admin authority closes
+  outstanding links rather than preserving a stale privilege.
+- Existing recipients must sign in as the intended account and pass CSRF; the
+  invitation cannot overwrite credentials or change their chapter role. New
+  recipients choose a password and receive only the fixed Team Member account
+  role, plus the explicitly approved team membership role. No automatic session
+  or chapter-gate bypass is issued.
+- Actual local HTTP/SMTP integration: 28 checks, including encrypted-secret
+  cleanup after local delivery, duplicate prevention, email mismatch, replay,
+  wrong-account rejection, unchanged existing credentials, resend/revoke and
+  inviter-authority loss. All fictional teams/accounts were archived. Local mail
+  capture only; no external email or remote account changes occurred.
+- All 27 migrations and isolated SQL checks pass, with 104 unit tests, TypeScript,
+  scoped ESLint and build checks passing. Browser review covered the invitation
+  composer and unsaved granular Forms-grant controls; no browser-created
+  credential or permission change was submitted. Evidence:
+  `ui-review/real-team-invitations-desktop.jpg` (1440 × 900),
+  `ui-review/real-team-invitations-mobile.jpg` (375 × 812), and
+  `ui-review/real-team-grants-desktop.jpg`. Mobile document width is 375 px,
+  content height 1577 px; actual wheel scrolling moved 765 px. Viewport reset.
+- The temporary visual fixture was recoverably archived after review. The local
+  scheduler was restored after deterministic delivery tests. Team announcements,
+  richer historical statistics, collaboration, broader security/accessibility
+  acceptance and the remaining PRD modules are still required.
+
 ### Team membership and grant administration — 2026-10-20
 
 - Team directory and individual team routes now use protected APIs. Chapter

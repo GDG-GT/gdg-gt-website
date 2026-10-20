@@ -141,6 +141,44 @@ export async function deliveryMessage(job, db, config, mail) {
       subject = "New chapter inquiry: " + contact.inquiry_type;
       content = `${contact.name} (${contact.email}) sent an inquiry.\n\n${contact.message}\n\nReview securely: ${config.origin}/admin/communications`;
     }
+  } else if (job.kind === "team_invite") {
+    const invite = checked(
+      await db
+        .from("team_invites")
+        .select("id,email,team_id,status,expires_at,token_hash")
+        .eq("id", job.payload.inviteId)
+        .maybeSingle(),
+    );
+    if (
+      !invite ||
+      invite.status !== "pending" ||
+      invite.token_hash !== job.payload.tokenHash ||
+      new Date(invite.expires_at) <= new Date()
+    )
+      return null;
+    const secret = decryptPayload(job.secret_payload, config.encryptionSecret);
+    if (
+      secret.email !== invite.email ||
+      tokenHash(secret.token) !== invite.token_hash
+    )
+      return null;
+    const info = checked(
+      await db.rpc("inspect_team_invite", {
+        p_hash: invite.token_hash,
+        p_email: invite.email,
+      }),
+    );
+    if (!info) return null;
+    to = invite.email;
+    subject = "Join the chapter team: " + info.teamName;
+    content =
+      "You have been invited to join " +
+      info.teamName +
+      " at GDG at Georgia Tech.\n" +
+      config.origin +
+      "/team/join#invite=" +
+      secret.token +
+      "\n\nUse the email address that received this message. The single-use link expires in seven days. Existing account holders must sign in; an invitation never resets an existing password. Do not forward this private link.";
   } else if (job.kind === "account_access") {
     const access = checked(
       await db

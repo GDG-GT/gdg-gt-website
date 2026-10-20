@@ -37,7 +37,7 @@ const FormResponses = lazy(() => import("@/ui/forms/ResponseWorkspace"));
 const PublicForm = lazy(() => import("@/ui/forms/PublicForm"));
 const Linktree = lazy(() => import("@/pages/Linktree"));
 const NewsletterTokenPage = lazy(() => import("@/ui/NewsletterTokenPage"));
-const AcceptInvite = lazy(() => import("@/pages/admin/AcceptInvite"));
+const AcceptInvite = lazy(() => import("@/ui/teams/AcceptTeamInvitation"));
 const AccountSetup = lazy(() => import("@/ui/users/AccountSetup"));
 
 // Preserve every existing workflow and load heavy editors only on their routes.
@@ -141,6 +141,7 @@ export default function App() {
                         element={<EventDetailPage />}
                       />
                       <Route path="/team" element={<TeamPage />} />
+                      <Route path="/team/join" element={<AcceptInvite />} />
                       <Route path="/resources" element={<ResourcesPage />} />
                       <Route path="/sponsors" element={<SponsorsPage />} />
                       <Route path="/gallery" element={<GalleryPage />} />

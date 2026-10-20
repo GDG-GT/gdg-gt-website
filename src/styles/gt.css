@@ -26,6 +26,7 @@
 }
 .gt-admin-heading h1 {
   font-size: 2rem;
+  font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.2;
   margin: 4px 0 12px;
@@ -55,7 +56,7 @@
 .gt-team-directory article { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; padding: 24px 0; border-bottom: 1px solid var(--line); }
 .gt-team-directory h2 { font-size: 1.2rem; font-weight: 650; margin: 0 0 8px; }
 .gt-team-directory p { max-width: 65ch; margin-bottom: 12px; overflow-wrap: anywhere; }
-.gt-team-grants { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,280px),1fr)); gap: 20px; }
+.gt-team-grants { display: grid; align-items: start; grid-template-columns: repeat(auto-fit,minmax(min(100%,280px),1fr)); gap: 20px; }
 .gt-team-grants fieldset { min-width: 0; padding: 16px; border: 1px solid var(--line); border-radius: 10px; }
 .gt-team-grants legend { padding-inline: 6px; font-weight: 650; }
 .gt-team-grants label { display: flex; align-items: center; gap: 10px; min-height: 44px; }
@@ -63,6 +64,9 @@
 .gt-grant-actions { margin-top: 10px; }
 .gt-team-history { padding: 0; list-style: none; }
 .gt-team-history li { display: flex; flex-direction: column; gap: 6px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.gt-admin-heading h2, .gt-invite-editor h3 { font-size: 1.25rem; font-weight: 650; margin: 0 0 12px; }
+.gt-team-tabs { flex-wrap: wrap; gap: 4px; }
+.gt-team-tabs .gt-button { font-size: 0.9rem; padding: 10px 14px; }
 .gt-content-columns { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap: 28px; margin-top: 24px; }
 .gt-content-columns article { padding: 20px 0; border-top: 1px solid var(--line); }
 .gt-content-columns h3 { margin: 12px 0; }

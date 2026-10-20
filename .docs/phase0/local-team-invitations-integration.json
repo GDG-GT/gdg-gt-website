@@ -1,0 +1,117 @@
+{
+  "note": "Real local invitation API, independent existing/lead sessions, actual local SMTP delivery, single-use/email/authority binding, fixed-role new account creation. All new fictional teams/accounts archived. Only fixture send timestamp advanced for resend cooldown; no quotas reset.",
+  "tests": [
+    {
+      "name": "invitation fixture team has a real active founding lead",
+      "passed": true
+    },
+    {
+      "name": "invitation inventory is protected",
+      "passed": true
+    },
+    {
+      "name": "invitations cannot assign chapter account roles",
+      "passed": true
+    },
+    {
+      "name": "invitation creates a safe status record without exposing its capability",
+      "passed": true
+    },
+    {
+      "name": "duplicate pending recipient does not create a second invitation",
+      "passed": true
+    },
+    {
+      "name": "deduplicated invite outbox stores only hashed metadata and encrypted secrets",
+      "passed": true
+    },
+    {
+      "name": "local SMTP worker delivers the private link and clears encrypted outbox secrets",
+      "passed": true
+    },
+    {
+      "name": "valid capability alone does not bypass invitation email binding",
+      "passed": true
+    },
+    {
+      "name": "new recipient can inspect only minimal valid invitation details",
+      "passed": true
+    },
+    {
+      "name": "new recipient creates an account without bypassing chapter sign-in",
+      "passed": true
+    },
+    {
+      "name": "new invited account has fixed Team Member role and a scrypt credential",
+      "passed": true
+    },
+    {
+      "name": "accepted invitation cannot be replayed",
+      "passed": true
+    },
+    {
+      "name": "existing-account invitations cannot take over credentials without sign-in",
+      "passed": true
+    },
+    {
+      "name": "a different signed-in account cannot accept the intended recipient's invitation",
+      "passed": true
+    },
+    {
+      "name": "intended existing account can accept with its current session and CSRF",
+      "passed": true
+    },
+    {
+      "name": "existing acceptance does not change chapter role or password",
+      "passed": true
+    },
+    {
+      "name": "persisted invitation resend cooldown is enforced",
+      "passed": true
+    },
+    {
+      "name": "resending rotates an eligible pending invitation",
+      "passed": true
+    },
+    {
+      "name": "previous invitation capability stops working after resend",
+      "passed": true
+    },
+    {
+      "name": "new invitation capability is usable after rotation",
+      "passed": true
+    },
+    {
+      "name": "revocation preserves the invitation status record",
+      "passed": true
+    },
+    {
+      "name": "revoked invitation is unusable immediately",
+      "passed": true
+    },
+    {
+      "name": "secondary lead is scoped to the existing team",
+      "passed": true
+    },
+    {
+      "name": "lead cannot invite a new officer or broaden chapter access",
+      "passed": true
+    },
+    {
+      "name": "lead can invite a fixed-role member within their team",
+      "passed": true
+    },
+    {
+      "name": "chapter administrator can remove a non-final lead",
+      "passed": true
+    },
+    {
+      "name": "invitation loses validity when its inviter loses team authority",
+      "passed": true
+    },
+    {
+      "name": "manager status inventory shows outcomes but never raw or hashed capabilities",
+      "passed": true
+    }
+  ]
+}

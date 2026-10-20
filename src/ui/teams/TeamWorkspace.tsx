@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useAdmin } from "@/contexts/AdminContext";
 import { api } from "@/lib/api";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
+import TeamInvitations from "./TeamInvitations";
 import { teamGrantOptions, type TeamGrant } from "../../../shared/teams";
 type Team = {
   id: string;
@@ -87,7 +88,10 @@ const icons = [
   "star",
   "briefcase",
 ];
-const readable = (value: string) => value.replace(/_/g, " ");
+const readable = (value: string) =>
+  value === "co_lead"
+    ? "Co-lead"
+    : value.replace(/_/g, " ").replace(/^./, (char) => char.toUpperCase());
 function grantsFor(w: Workspace): TeamGrant[] {
   return teamGrantOptions
     .filter((o) => w.pages.some((p) => p.page_path === o.path && p.can_access))
@@ -738,9 +742,12 @@ export default function TeamWorkspace() {
               )}
             </div>
           </div>
-          <nav className="gt-tabs" aria-label="Team sections">
+          <nav className="gt-tabs gt-team-tabs" aria-label="Team sections">
             {[
               "members",
+              ...(workspace.actions.manage && !workspace.team.deleted_at
+                ? ["invitations"]
+                : []),
               ...(workspace.actions.permissions ? ["permissions"] : []),
               "activity",
               "transfers",
@@ -848,6 +855,11 @@ export default function TeamWorkspace() {
               </div>
             </section>
           )}
+          {tab === "invitations" &&
+            workspace.actions.manage &&
+            !workspace.team.deleted_at && (
+              <TeamInvitations teamId={workspace.team.id} />
+            )}
           {tab === "permissions" && (
             <section className="gt-panel gt-event-editor">
               <h2>Page & action access</h2>

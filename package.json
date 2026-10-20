@@ -37,6 +37,7 @@
     "test:local-content": "node scripts/test-local-content.mjs",
     "test:local-users": "node scripts/test-local-users.mjs",
     "test:local-teams": "node scripts/test-local-teams.mjs",
+    "test:local-team-invitations": "node scripts/test-local-team-invitations.mjs",
     "test:local-site-content": "node scripts/test-local-site-content.mjs",
     "test:local-form-branches": "node scripts/test-local-form-branches.mjs",
     "test:local-forms-suite": "node scripts/test-local-forms-suite.mjs",
