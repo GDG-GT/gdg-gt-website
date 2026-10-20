@@ -192,9 +192,15 @@ export async function accessRoutes(
         }),
       );
   if (params.route?.startsWith("/admin/team/") && !routes[params.route])
-    allowed = memberships.some(
-      (m) => m.team_id === params.route.split("/")[3] && m.is_active,
-    );
+    allowed =
+      uuid.safeParse(params.route.split("/")[3]).success &&
+      checked(
+        await db.rpc("can_operate_team", {
+          p_actor: session.user.id,
+          p_team: params.route.split("/")[3],
+          p_action: "read",
+        }),
+      );
   if (!params.route && !params.resource)
     sendJson(response, 200, { accessibleRoutes, grants }, requestId);
   else sendJson(response, 200, { allowed }, requestId);

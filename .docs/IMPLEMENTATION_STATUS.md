@@ -5,6 +5,37 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Team membership and grant administration — 2026-10-20
+
+- Team directory and individual team routes now use protected APIs. Chapter
+  administrators can create/edit/archive/restore teams, with a required founding
+  lead and no default page grants. Team members see only their current active
+  memberships; unrelated records are filtered before counts and pagination.
+- Leads/co-leads can add/remove ordinary members within their own team but cannot
+  grant officer roles, change chapter roles, edit security permissions or transfer
+  people across teams. Chapter administrators can assign team roles and transfer
+  memberships atomically. The final active lead is protected in both membership
+  operations and account deactivation. Account roles are not team roles.
+- A structured page/action editor covers 16 operational surfaces and explicit
+  Forms response/sensitive/export actions. Security/user/audit controls cannot be
+  delegated here. Special-action rows no longer imply general read/edit access.
+  Current grants are applied on the next request. Team restoration leaves previous
+  page grants disabled for deliberate reapproval.
+- Transfers preserve inactive source membership, create member-level destination
+  access, append a transfer record and activity entries in one transaction, and
+  drop old team grants immediately. Activity and transfer records are append-only.
+  Ordinary members receive display names, not private account emails. Counts are
+  derived from actual current memberships rather than placeholder statistics.
+- Local HTTP integration: 28 checks with independent lead/member/outsider
+  sessions. Only newly created fictional teams/accounts were used and archived.
+  All 26 migrations are applied locally. Isolated SQL, 104 units, TypeScript,
+  scoped ESLint and production build pass; existing production performance and
+  security acceptance gates remain open. Mobile editor width/document width:
+  375/375 px; content height 1762 px. Proof: `ui-review/real-team-editor-mobile.jpg`.
+- Invitations, announcements, richer historical statistics and collaboration
+  remain unfinished. This checkpoint does not claim complete TEAM acceptance,
+  full PRD completion or production readiness.
+
 ### Protected account management — 2026-10-20
 
 - The active Users screen now uses protected server APIs, not the legacy browser

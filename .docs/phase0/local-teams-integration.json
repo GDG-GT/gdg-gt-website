@@ -1,0 +1,117 @@
+{
+  "note": "Real local team API/roles, independent user sessions, current page/action grants, membership transfers, archival/restore. Only newly created fictional teams/accounts used, then recoverably archived.",
+  "tests": [
+    {
+      "name": "team inventory rejects anonymous callers",
+      "passed": true
+    },
+    {
+      "name": "team creation assigns a real founding lead without default grants",
+      "passed": true
+    },
+    {
+      "name": "second team is independently scoped",
+      "passed": true
+    },
+    {
+      "name": "lead team listing filters unrelated teams before counts and paging",
+      "passed": true
+    },
+    {
+      "name": "unrelated members cannot infer a private team workspace",
+      "passed": true
+    },
+    {
+      "name": "active team members receive the own-team directory route",
+      "passed": true
+    },
+    {
+      "name": "lead can add an existing active member only within their team",
+      "passed": true
+    },
+    {
+      "name": "stale team revisions cannot overwrite membership changes",
+      "passed": true
+    },
+    {
+      "name": "lead cannot elevate another member to an officer",
+      "passed": true
+    },
+    {
+      "name": "final active lead cannot be removed",
+      "passed": true
+    },
+    {
+      "name": "account administration cannot disable the team's only active lead",
+      "passed": true
+    },
+    {
+      "name": "ordinary members see names but not private email or management affordances",
+      "passed": true
+    },
+    {
+      "name": "team leads cannot grant page or resource permissions",
+      "passed": true
+    },
+    {
+      "name": "team grant API refuses security-critical account pages",
+      "passed": true
+    },
+    {
+      "name": "chapter administrator can explicitly grant a page and read action",
+      "passed": true
+    },
+    {
+      "name": "new request reflects a newly granted page without another sign-in",
+      "passed": true
+    },
+    {
+      "name": "page visibility does not imply create permission",
+      "passed": true
+    },
+    {
+      "name": "transfer preserves inactive source membership history",
+      "passed": true
+    },
+    {
+      "name": "transfer creates only member-level destination access",
+      "passed": true
+    },
+    {
+      "name": "transferred member loses source grants on the next request",
+      "passed": true
+    },
+    {
+      "name": "former member cannot read their previous team workspace",
+      "passed": true
+    },
+    {
+      "name": "transfer ledger records the committed movement",
+      "passed": true
+    },
+    {
+      "name": "team activity contains transactional membership events",
+      "passed": true
+    },
+    {
+      "name": "team archive requires the exact team name",
+      "passed": true
+    },
+    {
+      "name": "team archival is recoverable and preserves history",
+      "passed": true
+    },
+    {
+      "name": "archived teams are unavailable to former active members",
+      "passed": true
+    },
+    {
+      "name": "team restoration never silently restores old page grants",
+      "passed": true
+    },
+    {
+      "name": "administrator exact-email lookup returns minimal eligible account fields",
+      "passed": true
+    }
+  ]
+}

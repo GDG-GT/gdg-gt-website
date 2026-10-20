@@ -25,6 +25,7 @@ import { jobRoutes } from "./jobs.mjs";
 import { contentRecordRoutes } from "./content-records.mjs";
 import { siteContentRoutes } from "./site-content.mjs";
 import { userRoutes } from "./users.mjs";
+import { teamRoutes } from "./teams.mjs";
 
 export function applicationHandler({ store, config, db, log } = {}) {
   const auth = createAuthHandler({ store, config, log });
@@ -44,6 +45,10 @@ export function applicationHandler({ store, config, db, log } = {}) {
         });
         if (
           await userRoutes(request, response, { db, store, config, requestId })
+        )
+          return;
+        if (
+          await teamRoutes(request, response, { db, store, config, requestId })
         )
           return;
         if (

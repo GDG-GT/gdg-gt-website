@@ -92,6 +92,14 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    LAST_TEAM_LEAD: [
+      409,
+      "Assign another active team lead before removing this lead or disabling their account.",
+    ],
+    ACCOUNT_NOT_READY: [
+      409,
+      "Use an active, fully set up chapter account eligible for team membership.",
+    ],
     LAST_SUPER_ADMIN: [
       409,
       "Keep at least one active Super Admin with completed account setup.",

@@ -27,6 +27,7 @@ export function isAuthorized({user,resource,action='view',route,teamId,ownerId,g
   if (user.role==='super_admin') return true;
   if (resource==='users' || resource==='security') return false;
   if (user.role==='admin') return true;
+  if (resource==='teams' && ['view','list','read'].includes(action) && memberships.some(m=>m.is_active && m.team?.is_active)) return true;
   if (user.role==='blog_editor') {
     if (!editor.has(resource)) return false;
     if (['publish','approve','moderate','manage_users'].includes(action)) return false;

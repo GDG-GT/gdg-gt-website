@@ -24,7 +24,9 @@
     "202610200021_content_revision_publication_guard.sql",
     "202610200022_site_content_editor.sql",
     "202610200023_account_management.sql",
-    "202610200024_account_revision_guard.sql"
+    "202610200024_account_revision_guard.sql",
+    "202610200025_team_administration.sql",
+    "202610200026_team_explicit_action_grants.sql"
   ],
   "tests": [
     {
@@ -128,6 +130,14 @@
       "passed": true
     },
     {
+      "name": "202610200025_team_administration.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200026_team_explicit_action_grants.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -181,6 +191,18 @@
     },
     {
       "name": "023_accounts.sql",
+      "passed": true
+    },
+    {
+      "name": "024_account_revisions.sql",
+      "passed": true
+    },
+    {
+      "name": "025_teams.sql",
+      "passed": true
+    },
+    {
+      "name": "026_explicit_team_actions.sql",
       "passed": true
     },
     {
