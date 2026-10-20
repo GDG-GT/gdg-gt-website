@@ -110,7 +110,7 @@ export async function channelRoutes(
 ) {
   const url = new URL(request.url, config.origin),
     match = url.pathname.match(
-      /^\/api\/v1\/admin\/channels(?:\/([^/]+))?(?:\/(messages|members))?(?:\/([^/]+))?$/,
+      /^\/api\/v1\/admin\/channels(?:\/([^/]+))?(?:\/(messages|members|updates))?(?:\/([^/]+))?$/,
     );
   if (!match) return false;
   allowMethod(
@@ -120,7 +120,7 @@ export async function channelRoutes(
       ? ["POST"]
       : match[2] === "messages"
         ? ["GET", "POST"]
-        : match[2] === "members"
+        : ["members", "updates"].includes(match[2])
           ? ["GET"]
           : match[1]
             ? ["GET", "POST", "PATCH"]
@@ -195,6 +195,27 @@ export async function channelRoutes(
       )
     )
       throw new ApiError(404, "NOT_FOUND", "This channel was not found.");
+    if (match[2] === "updates") {
+      const q = queryValues(
+        url.searchParams,
+        z
+          .object({
+            after: z.coerce.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+          })
+          .strict(),
+      );
+      return reply(
+        response,
+        checked(
+          await db.rpc("list_channel_changes", {
+            p_actor: actor.id,
+            p_channel: id,
+            p_after: q.after,
+          }),
+        ),
+        requestId,
+      );
+    }
     if (match[2] === "messages") {
       const q = queryValues(
         url.searchParams,
@@ -232,7 +253,7 @@ export async function channelRoutes(
       await db
         .from("channels")
         .select(
-          "id,name,description,visibility,team_id,is_archived,revision,created_at,updated_at",
+          "id,name,description,visibility,team_id,is_team_chat,is_archived,revision,created_at,updated_at",
         )
         .eq("id", id)
         .single(),
@@ -250,7 +271,25 @@ export async function channelRoutes(
       ]),
     );
     const actions = Object.fromEntries(permissions);
+    actions.manageMembers = actions.manage && !record.is_team_chat;
+    const teamActive =
+      !record.team_id ||
+      !!checked(
+        await db
+          .from("admin_teams")
+          .select("id")
+          .eq("id", record.team_id)
+          .eq("is_active", true)
+          .is("deleted_at", null)
+          .maybeSingle(),
+      );
     if (match[2] === "members") {
+      if (record.is_team_chat)
+        throw new ApiError(
+          409,
+          "TEAM_MANAGED_CHAT",
+          "Team chat memberships are managed in Teams, not as separate room roles.",
+        );
       const q = queryValues(
         url.searchParams,
         z
@@ -301,7 +340,17 @@ export async function channelRoutes(
         actions,
         actorId: actor.id,
         canRestore:
-          ["super_admin", "admin"].includes(actor.role) && record.is_archived,
+          teamActive &&
+          record.is_archived &&
+          (["super_admin", "admin"].includes(actor.role) ||
+            (record.is_team_chat &&
+              checked(
+                await db.rpc("can_operate_team", {
+                  p_actor: actor.id,
+                  p_team: record.team_id,
+                  p_action: "manage",
+                }),
+              ))),
       },
       requestId,
     );
@@ -312,7 +361,7 @@ export async function channelRoutes(
     const body = await jsonBody(
         request,
         messageId ? messageAction : messageRecord,
-        16384,
+        65536,
       ),
       key = !messageId ? idempotency(request) : null;
     const result = checked(

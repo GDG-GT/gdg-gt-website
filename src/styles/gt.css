@@ -134,6 +134,11 @@ fieldset.gt-announcement-choices { border: 1px solid var(--line); border-radius:
 .gt-announcement-confirm p { margin-block: 16px; max-width: 70ch; }
 .gt-announcement-sample { padding-left: 20px; columns: 2; margin-block: 16px; }
 @media(max-width:600px) { .gt-announcement-sample { columns: 1; } }
+.gt-team-chat { padding-block: 24px; }
+.gt-team-chat > h2 { font-size: 1.3rem; font-weight: 650; margin-bottom: 16px; }
+.gt-team-chat > p { max-width: 70ch; margin-block: 16px; }
+.gt-team-chat form .gt-field { margin-block: 20px; }
+.gt-team-chat form h3 { font-size: 1.15rem; font-weight: 650; margin-bottom: 16px; }
 .gt-task-filters { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; margin-block: 24px; }
 .gt-task-filters > * { flex: 1 1 180px; min-width: 0; }
 .gt-task-facts { display: flex; flex-wrap: wrap; gap: 20px 40px; margin-block: 24px; }

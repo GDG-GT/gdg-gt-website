@@ -5,6 +5,61 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Managed team chat and durable reconnect recovery — 2026-10-20
+
+- Added a Chat tab to each authorized team workspace and one explicitly provisioned
+  conversation per team. Read-only inspection never creates a room. Setup requires
+  current lead/co-lead or chapter-admin authority, the exact team name, the current
+  password, CSRF, a current opaque session and a bounded confirmation quota. Two
+  concurrent setup requests resolve to the same database-enforced room.
+- Team-chat access follows current parent-team membership. Moderation follows the
+  current lead/co-lead role; stale explicit channel ownership cannot retain that
+  authority. Separate room-member edits are rejected. Removed members lose HTTP
+  reads and replacement socket grants. Inactive teams become read-only even for
+  chapter administrators; restoration preserves conversation history. The UI
+  explicitly discloses chapter-administrator oversight.
+- Channels now use transaction-serialized, per-room change cursors. Initial
+  history and its high-water mark share a stable database snapshot. Bounded
+  100-message change pages recover gaps beyond the latest-50 history window,
+  including edits, pins and removed-body placeholders. Cursors advance only after
+  applying a page; newly created messages remain eligible across coalesced edits
+  and multiple pages. Older history responses cannot overwrite newer changes.
+  No duplicate message-body change log or browser table/RPC grant was added.
+- Current room actions control visible message permissions. Staged room and
+  message edits retain their original revision, preserve draft text on a remote
+  conflict, and disable stale saves. Late responses cannot retarget a newly
+  selected room. Known reply previews refresh when their original is removed.
+  Full-length 10,000-character Unicode messages fit the protected byte bound.
+- Verification: **49 canonical migrations**, the complete SQL suite (including a
+  125-message reconnect gap, edits, rollback-safe cursors, tombstones, private
+  scope and both 100-client capacity regressions), **169 unit tests**, TypeScript,
+  scoped ESLint and the production build pass. Build still warns about large
+  vendor/whiteboard chunks; this is not a performance-budget pass.
+- **30 actual local HTTP/private-WebSocket checks** (including two independent
+  browser-review updates) passed. Lifecycle evidence is recorded in
+  `phase0/local-team-chat-integration.json`. Browser checks verified sending,
+  pinned/full views, independent-session updates without losing an unsent draft,
+  parent-team navigation, and the earlier staged-edit conflicts. At 375 px the
+  document width was 375 px, height 1,864 px, with a real wheel movement of 812 px.
+  Screenshots: `ui-review/real-team-chat-*`. Temporary viewport overrides were
+  reset and fictional drafts cleared. Test accounts, team and conversation are
+  recoverably archived; no external messages or permanent deletions were made.
+- A repeated transport test initially missed an event during a local Realtime
+  database-worker rebalance. The socket can report SUBSCRIBED before that worker
+  is ready. Tests now establish readiness with a metadata-only control probe on
+  the exact fictional private topic before asserting the business trigger; they
+  do not retry the business write. Application correctness now has durable HTTP
+  catch-up independent of advisory broadcasts. Hosted transport acceptance and
+  longer-running reconnect/load checks remain unverified.
+
+This completes this implementation milestone, **not the complete PRD**. Remaining
+work includes private attachments/media workflows, finance, private editorial
+workflows, newsletter campaigns/scoped mail, member-management gaps, Linktree,
+remaining Forms export/receipt/retention contracts, global unsaved-navigation
+protection, PWA/offline/push, dependency/strictness/performance remediation, CI,
+and comprehensive accessibility/security/multibrowser acceptance. Existing UI
+routes or earlier subsystem checkpoints do not certify those remaining contracts.
+
 ### Chapter announcements, audiences and scheduling — 2026-10-20
 
 - Added the protected Announcements workspace alongside Tasks and Messages.

@@ -34,6 +34,7 @@ import { whiteboardRoutes } from "./whiteboards.mjs";
 import { taskRoutes } from "./tasks.mjs";
 import { directMessageRoutes } from "./direct-messages.mjs";
 import { chapterAnnouncementRoutes } from "./chapter-announcements.mjs";
+import { teamChatRoutes } from "./team-chat.mjs";
 
 export function applicationHandler({ store, config, db, log } = {}) {
   const auth = createAuthHandler({ store, config, log });
@@ -119,6 +120,15 @@ export function applicationHandler({ store, config, db, log } = {}) {
           return;
         if (
           await teamInvitationRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
+        if (
+          await teamChatRoutes(request, response, {
             db,
             store,
             config,

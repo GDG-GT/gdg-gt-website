@@ -1,0 +1,125 @@
+{
+  "note": "Actual isolated local HTTP and private WebSocket checks with fictional current/former leads, members and outsiders. Parent team creation, membership changes, archival and restoration use protected APIs. No role promotion outside the fictional team, external messages, quota resets or permanent deletions. All fictional accounts/team/chat recoverably archived.",
+  "tests": [
+    {
+      "name": "anonymous callers cannot inspect or set up team chat",
+      "passed": true
+    },
+    {
+      "name": "read-only team-chat inspection does not create a room",
+      "passed": true
+    },
+    {
+      "name": "non-members cannot infer the team chat workspace",
+      "passed": true
+    },
+    {
+      "name": "ordinary members cannot provision the team's shared room",
+      "passed": true
+    },
+    {
+      "name": "two concurrent setup requests resolve to one stable team conversation",
+      "passed": true
+    },
+    {
+      "name": "the database enforces exactly one managed chat per team",
+      "passed": true
+    },
+    {
+      "name": "current members receive send/read access without secondary room management roles",
+      "passed": true
+    },
+    {
+      "name": "current leads manage chat through their team role",
+      "passed": true
+    },
+    {
+      "name": "managed-chat membership inventory cannot be mistaken for explicit room membership",
+      "passed": true
+    },
+    {
+      "name": "explicit channel roles cannot widen or override team-chat authority",
+      "passed": true
+    },
+    {
+      "name": "unrelated accounts cannot read the room or mint a private room token",
+      "passed": true
+    },
+    {
+      "name": "a normal team member joins the actual private chat socket",
+      "passed": true
+    },
+    {
+      "name": "the local database broadcast worker is ready before the business event assertion",
+      "passed": true
+    },
+    {
+      "name": "team chat messages invalidate the real scoped socket",
+      "passed": true
+    },
+    {
+      "name": "team-chat broadcasts contain no private message text or member emails",
+      "passed": true
+    },
+    {
+      "name": "the authorized HTTP history supplies server-owned message attribution",
+      "passed": true
+    },
+    {
+      "name": "catch-up cursors are validated and cannot expose another team's messages",
+      "passed": true
+    },
+    {
+      "name": "full-length Unicode room messages fit the protected byte limit",
+      "passed": true
+    },
+    {
+      "name": "protected HTTP catch-up returns a missed message from the acknowledged history cursor",
+      "passed": true
+    },
+    {
+      "name": "team role changes immediately transfer room moderation without explicit owner edits",
+      "passed": true
+    },
+    {
+      "name": "a demoted lead cannot retain message-pinning authority",
+      "passed": true
+    },
+    {
+      "name": "the current lead can pin a message through its derived moderation scope",
+      "passed": true
+    },
+    {
+      "name": "removed teammates lose protected room reads and replacement socket grants",
+      "passed": true
+    },
+    {
+      "name": "archiving retains a read-only conversation and current-lead recovery",
+      "passed": true
+    },
+    {
+      "name": "the current lead can restore team chat without a chapter-role promotion",
+      "passed": true
+    },
+    {
+      "name": "team archival revokes member access and blocks even administrator message writes",
+      "passed": true
+    },
+    {
+      "name": "restoring the team retains its existing conversation and message history",
+      "passed": true
+    },
+    {
+      "name": "the large Unicode fixture is soft-deleted to a body-free placeholder before browser review",
+      "passed": true
+    },
+    {
+      "name": "independent-session browser-review team message delivered",
+      "passed": true
+    },
+    {
+      "name": "independent-session browser-review team message delivered",
+      "passed": true
+    }
+  ]
+}

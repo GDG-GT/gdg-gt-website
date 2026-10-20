@@ -92,6 +92,7 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    TEAM_MANAGED_CHAT: [409,"Team chat access and moderation follow current team memberships. Manage them in Teams."],
     AUDIENCE_LIMIT: [409, "Choose an audience with 1–1,000 active recipients."],
     AUDIENCE_CHANGED: [409, "The audience changed. Preview it again before confirming."],
     PREVIEW_REQUIRED: [409, "A current audience preview from this session is required."],

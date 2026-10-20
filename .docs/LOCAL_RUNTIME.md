@@ -7,6 +7,21 @@ No production configuration is implied by this setup.
 
 ## Communications checks
 
+`npm run test:local-team-chat` checks one-room provisioning, current team-derived
+access/moderation, private WebSocket events, protected HTTP catch-up cursors,
+Unicode messages, team/room archival and recovery. It uses independent fictional
+accounts and recoverably archives the fixture team/chat/accounts. No quota reset,
+external delivery or permanent deletion is involved. A metadata-only private
+control probe confirms the local database Broadcast worker is ready before the
+real message-trigger assertion; SUBSCRIBED alone is insufficient during a local
+tenant rebalance. `-- --hold-for-browser` accepts `change` and `done`.
+
+Migration 049 adds per-room change cursors, without a second copy of message
+bodies. SQL recovery tests cover a 125-message gap across bounded 100-row pages,
+old edits, rollback-safe cursors, removed-body placeholders and authorization.
+Application live events remain advisory: authorized HTTP catch-up is the source
+of truth. Hosted transport/load acceptance is still pending.
+
 Direct-message integration is available with `npm run test:local-direct-messages`.
 It uses independent fictional sessions, private sockets and loopback Mailpit only.
 The suite needs two available `messages.review` confirmations in the natural

@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import TeamInvitations from "./TeamInvitations";
 import TeamAnnouncements from "./TeamAnnouncements";
+import TeamChat from "./TeamChat";
 import { teamGrantOptions, type TeamGrant } from "../../../shared/teams";
 type Team = {
   id: string;
@@ -114,7 +115,7 @@ function grantsFor(w: Workspace): TeamGrant[] {
     });
 }
 export default function TeamWorkspace() {
-  const [searchParams] = useSearchParams(),
+  const [searchParams, setSearchParams] = useSearchParams(),
     section = searchParams.get("section");
   const { teamId } = useParams(),
     { currentAdmin, refreshTeams } = useAdmin();
@@ -136,7 +137,11 @@ export default function TeamWorkspace() {
     [grants, setGrants] = useState<TeamGrant[]>([]),
     [busy, setBusy] = useState(false),
     [tab, setTab] = useState(
-      section === "announcements" ? "announcements" : "members",
+      section === "announcements"
+        ? "announcements"
+        : section === "chat"
+          ? "chat"
+          : "members",
     ),
     [historyPage, setHistoryPage] = useState(1),
     [history, setHistory] = useState<{
@@ -168,7 +173,19 @@ export default function TeamWorkspace() {
   }, [mode, destinationQuery, selected]);
   useEffect(() => setSelected(teamId || ""), [teamId]);
   useEffect(() => {
-    if (section === "announcements") setTab("announcements");
+    if (
+      section &&
+      [
+        "members",
+        "announcements",
+        "chat",
+        "invitations",
+        "permissions",
+        "activity",
+        "transfers",
+      ].includes(section)
+    )
+      setTab(section);
   }, [section, teamId]);
   useEffect(() => {
     const controller = new AbortController();
@@ -754,6 +771,7 @@ export default function TeamWorkspace() {
             {[
               "members",
               "announcements",
+              "chat",
               ...(workspace.actions.manage && !workspace.team.deleted_at
                 ? ["invitations"]
                 : []),
@@ -768,6 +786,9 @@ export default function TeamWorkspace() {
                 onClick={() => {
                   setTab(t);
                   setHistoryPage(1);
+                  const next = new URLSearchParams(searchParams);
+                  next.set("section", t);
+                  setSearchParams(next);
                 }}
               >
                 {readable(t)}
@@ -869,6 +890,9 @@ export default function TeamWorkspace() {
               teamId={workspace.team.id}
               canManage={workspace.actions.manage && !workspace.team.deleted_at}
             />
+          )}
+          {tab === "chat" && (
+            <TeamChat key={workspace.team.id} teamId={workspace.team.id} />
           )}
           {tab === "invitations" &&
             workspace.actions.manage &&

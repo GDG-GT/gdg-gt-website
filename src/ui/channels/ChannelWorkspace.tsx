@@ -1,7 +1,16 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { api, ApiFailure } from "@/lib/api";
 import { useScopedRealtime } from "@/hooks/useScopedRealtime";
-import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
+import { useSearchParams } from "react-router-dom";
+import { mergeMessageChanges, mergeMessageHistory } from "./message-sync";
+import {
+  ActionLink,
+  Badge,
+  Button,
+  EmptyState,
+  Field,
+  SearchBox,
+} from "../primitives";
 type Channel = {
   id: string;
   name: string;
@@ -9,12 +18,18 @@ type Channel = {
   visibility: string;
   team_id: string | null;
   is_archived: boolean;
+  is_team_chat: boolean;
   revision: number;
   unreadCount?: number;
 };
 type Room = {
   record: Channel;
-  actions: { manage: boolean; moderate: boolean; send: boolean };
+  actions: {
+    manage: boolean;
+    moderate: boolean;
+    send: boolean;
+    manageMembers: boolean;
+  };
   actorId: string;
   canRestore: boolean;
 };
@@ -26,6 +41,8 @@ type Message = {
   is_deleted: boolean;
   is_pinned: boolean;
   revision: number;
+  creation_sequence: number;
+  change_sequence: number;
   created_at: string;
   updated_at: string;
   canEdit: boolean;
@@ -33,7 +50,12 @@ type Message = {
   reply: { id: string; message: string; is_deleted: boolean } | null;
 };
 type Cursor = { before: string; beforeId: string };
-type Thread = { items: Message[]; nextCursor: Cursor | null };
+type Thread = {
+  items: Message[];
+  nextCursor: Cursor | null;
+  highWaterMark: number;
+};
+type Changes = { items: Message[]; cursor: number; hasMore: boolean };
 type Listing = { items: Channel[]; total: number; pageSize: number };
 type Member = {
   admin_user_id: string;
@@ -58,6 +80,9 @@ const modeName: Record<Mode, string> = {
   member_remove: "Remove explicit room membership",
 };
 export default function ChannelWorkspace() {
+  const [searchParams, setSearchParams] = useSearchParams(),
+    selected = searchParams.get("room") || "";
+  const setSelected = (id: string) => setSearchParams(id ? { room: id } : {});
   const [list, setList] = useState<Listing>(),
     [capabilities, setCapabilities] = useState<{
       globalCreate: boolean;
@@ -66,13 +91,13 @@ export default function ChannelWorkspace() {
     [q, setQ] = useState(""),
     [archived, setArchived] = useState(false),
     [page, setPage] = useState(1),
-    [selected, setSelected] = useState(""),
     [room, setRoom] = useState<Room>(),
     [messages, setMessages] = useState<Message[]>([]),
     [cursor, setCursor] = useState<Cursor | null>(null),
     [pinned, setPinned] = useState(false),
     [tick, setTick] = useState(0),
     [loading, setLoading] = useState(true),
+    [capabilityVersion, setCapabilityVersion] = useState(0),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
@@ -87,20 +112,54 @@ export default function ChannelWorkspace() {
     [password, setPassword] = useState(""),
     [confirmation, setConfirmation] = useState("");
   const heading = useRef<HTMLHeadingElement>(null),
+    modeRevision = useRef<number>(),
     bottom = useRef<HTMLDivElement>(null),
     scrollAfterSend = useRef(false),
     sendKey = useRef<string | null>(null),
-    historyStarted = useRef(false),
+    changeCursor = useRef<{
+      key: string;
+      after: number;
+      baseline: number;
+    } | null>(null),
     selectedRef = useRef(selected);
   const [memberPage, setMemberPage] = useState(1),
     [memberTotal, setMemberTotal] = useState(0);
+  selectedRef.current = selected;
+  useEffect(() => {
+    setRoom(undefined);
+    setMessages([]);
+    setMembers(null);
+    setCursor(null);
+    changeCursor.current = null;
+    setReplyTo(null);
+    setEditing(null);
+    setMode(null);
+    setPassword("");
+    setConfirmation("");
+    setDraft("");
+    sendKey.current = null;
+  }, [selected]);
+  function clearRoomAccess() {
+    setRoom(undefined);
+    setMessages([]);
+    setMembers(null);
+    setMode(null);
+    setValues({});
+    setPassword("");
+    setConfirmation("");
+    setDraft("");
+    setReplyTo(null);
+    setEditing(null);
+    setEditText("");
+    setDeleteMessage(null);
+    changeCursor.current = null;
+    sendKey.current = null;
+  }
   const liveStatus = useScopedRealtime(
     selected ? { kind: "channel", id: selected } : null,
     () => setTick((v) => v + 1),
     () => {
-      setRoom(undefined);
-      setMessages([]);
-      setMembers(null);
+      clearRoomAccess();
       setTick((v) => v + 1);
     },
   );
@@ -126,7 +185,9 @@ export default function ChannelWorkspace() {
       `/admin/channels?${new URLSearchParams({ q, page: String(page), archived: archived ? "1" : "0" })}`,
       { signal: controller.signal },
     )
-      .then(setList)
+      .then((r) => {
+        if (!controller.signal.aborted) setList(r);
+      })
       .catch((e) => {
         if (!controller.signal.aborted) setError(e.message);
       })
@@ -136,10 +197,18 @@ export default function ChannelWorkspace() {
     return () => controller.abort();
   }, [q, page, archived, tick]);
   useEffect(() => {
-    api<typeof capabilities>("/admin/channels/capabilities")
-      .then(setCapabilities)
-      .catch((e) => setError(e.message));
-  }, []);
+    const controller = new AbortController();
+    api<typeof capabilities>("/admin/channels/capabilities", {
+      signal: controller.signal,
+    })
+      .then((r) => {
+        if (!controller.signal.aborted) setCapabilities(r);
+      })
+      .catch((e) => {
+        if (!controller.signal.aborted) setError(e.message);
+      });
+    return () => controller.abort();
+  }, [capabilityVersion]);
   useEffect(() => {
     const timer = window.setInterval(
       () => {
@@ -151,51 +220,74 @@ export default function ChannelWorkspace() {
   }, [liveStatus]);
   useEffect(() => {
     const refresh = () => setTick((v) => v + 1);
+    const access = () => {
+      setCapabilities(undefined);
+      setCapabilityVersion((v) => v + 1);
+      setTick((v) => v + 1);
+    };
     window.addEventListener("gdg:notifications-updated", refresh);
-    return () =>
+    window.addEventListener("gdg:access-changed", access);
+    return () => {
+      window.removeEventListener("gdg:access-changed", access);
       window.removeEventListener("gdg:notifications-updated", refresh);
+    };
   }, []);
   useEffect(() => {
     if (!selected) return;
     const controller = new AbortController();
-    Promise.all([
-      api<Room>(`/admin/channels/${selected}`, { signal: controller.signal }),
-      api<Thread>(
-        `/admin/channels/${selected}/messages?pinned=${pinned ? "1" : "0"}`,
-        { signal: controller.signal },
-      ),
-    ])
-      .then(([r, t]) => {
-        if (controller.signal.aborted) return;
-        setRoom(r);
-        setMessages((previous) => {
-          const combined = new Map(previous.map((m) => [m.id, m]));
-          for (const m of t.items) combined.set(m.id, m);
-          return [...combined.values()]
-            .filter((m) => !pinned || (m.is_pinned && !m.is_deleted))
-            .sort(
-              (a, b) =>
-                a.created_at.localeCompare(b.created_at) ||
-                a.id.localeCompare(b.id),
-            );
-        });
-        if (!historyStarted.current) {
-          setCursor(t.nextCursor);
-          historyStarted.current = true;
-        }
-      })
-      .catch((e) => {
-        if (!controller.signal.aborted) {
-          if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
-            setRoom(undefined);
-            setMessages([]);
-            setMembers(null);
-          }
-          setError(e.message);
-        }
+    const key = `${selected}:${pinned}`;
+    const current = () =>
+      !controller.signal.aborted && selectedRef.current === selected;
+    let moreTimer: number | undefined;
+    (async () => {
+      const r = await api<Room>(`/admin/channels/${selected}`, {
+        signal: controller.signal,
       });
-    return () => controller.abort();
-  }, [selected, pinned, tick]);
+      if (!current()) return;
+      setRoom(r);
+      if (changeCursor.current?.key !== key) {
+        const t = await api<Thread>(
+          `/admin/channels/${selected}/messages?pinned=${pinned ? "1" : "0"}`,
+          { signal: controller.signal },
+        );
+        if (!current()) return;
+        setMessages(mergeMessageHistory([], t.items, pinned));
+        setCursor(t.nextCursor);
+        changeCursor.current = {
+          key,
+          after: t.highWaterMark,
+          baseline: t.highWaterMark,
+        };
+      }
+      // Each bounded page is acknowledged only after applying it. Broadcast loss,
+      // token renewal, or >50 new messages cannot skip the middle of a reconnect.
+      for (let page = 0; page < 10; page++) {
+        const { after, baseline } = changeCursor.current;
+        const delta = await api<Changes>(
+          `/admin/channels/${selected}/updates?after=${after}`,
+          { signal: controller.signal },
+        );
+        if (!current()) return;
+        setMessages((previous) =>
+          mergeMessageChanges(previous, delta.items, baseline, pinned),
+        );
+        changeCursor.current = { key, after: delta.cursor, baseline };
+        if (!delta.hasMore) return;
+      }
+      moreTimer = window.setTimeout(() => setTick((v) => v + 1), 100);
+    })().catch((e) => {
+      if (!controller.signal.aborted && selectedRef.current === selected) {
+        if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
+          clearRoomAccess();
+        }
+        setError(e.message);
+      }
+    });
+    return () => {
+      controller.abort();
+      window.clearTimeout(moreTimer);
+    };
+  }, [selected, pinned, tick, liveStatus]);
   useEffect(() => {
     if (scrollAfterSend.current) {
       bottom.current?.scrollIntoView({ block: "end" });
@@ -206,6 +298,20 @@ export default function ChannelWorkspace() {
     if (mode) heading.current?.focus();
   }, [mode]);
   const dirty = !!draft || !!editing || !!mode;
+  const modeStale =
+    !!mode &&
+    mode !== "create" &&
+    !!room &&
+    modeRevision.current !== room.record.revision;
+  const modeAccessLost =
+    !!mode &&
+    mode !== "create" &&
+    (!room ||
+      (mode === "restore"
+        ? !room.canRestore
+        : mode.startsWith("member_")
+          ? !room.actions.manageMembers
+          : !room.actions.manage));
   useEffect(() => {
     if (!dirty) return;
     const warn = (e: BeforeUnloadEvent) => {
@@ -222,7 +328,7 @@ export default function ChannelWorkspace() {
     setRoom(undefined);
     setMessages([]);
     setCursor(null);
-    historyStarted.current = false;
+    changeCursor.current = null;
     setMembers(null);
     setDraft("");
     setReplyTo(null);
@@ -236,19 +342,16 @@ export default function ChannelWorkspace() {
   }
   function open(next: Mode, m?: Member) {
     if (
-      next === "create" &&
-      (draft || editing) &&
-      !window.confirm(
-        "Discard your unsent message changes before creating another room?",
-      )
+      dirty &&
+      !window.confirm("Discard your unsaved room or message changes?")
     )
       return;
-    if (next === "create") {
-      setDraft("");
-      setReplyTo(null);
-      setEditing(null);
-      sendKey.current = null;
-    }
+    setDraft("");
+    setReplyTo(null);
+    setEditing(null);
+    setEditText("");
+    sendKey.current = null;
+    modeRevision.current = room?.record.revision;
     setMode(next);
     setPassword("");
     setConfirmation("");
@@ -263,7 +366,8 @@ export default function ChannelWorkspace() {
   }
   async function saveRoom(event: FormEvent) {
     event.preventDefault();
-    if (!mode) return;
+    if (!mode || busy || modeStale || modeAccessLost) return;
+    const originalSelection = selected;
     setBusy(true);
     setError("");
     const secret = password;
@@ -280,13 +384,13 @@ export default function ChannelWorkspace() {
       else if (mode === "update")
         body = {
           ...body,
-          revision: room!.record.revision,
+          revision: modeRevision.current,
           record: { name: values.name, description: values.description },
         };
       else
         body = {
           ...body,
-          revision: room!.record.revision,
+          revision: modeRevision.current,
           action: mode,
           ...(["archive", "restore"].includes(mode)
             ? { confirmation }
@@ -296,12 +400,13 @@ export default function ChannelWorkspace() {
         "/admin/channels" + (mode === "create" ? "" : "/" + room!.record.id),
         { method: mode === "update" ? "PATCH" : "POST", protected: true, body },
       );
+      if (selectedRef.current !== originalSelection) return;
       setMode(null);
       if (r.record.id !== selected) {
         setRoom(undefined);
         setMessages([]);
         setCursor(null);
-        historyStarted.current = false;
+        changeCursor.current = null;
         setReplyTo(null);
         setDraft("");
         setEditing(null);
@@ -326,6 +431,8 @@ export default function ChannelWorkspace() {
     message: Message,
     action: "edit" | "delete" | "pin" | "read",
   ) {
+    if (busy) return;
+    const originalSelection = selected;
     setBusy(true);
     setError("");
     try {
@@ -345,8 +452,12 @@ export default function ChannelWorkspace() {
                     : {}),
               },
       });
-      setEditing(null);
-      setDeleteMessage(null);
+      if (selectedRef.current !== originalSelection) return;
+      if (action === "edit") {
+        setEditing(null);
+        setEditText("");
+      }
+      if (action === "delete") setDeleteMessage(null);
       setTick((v) => v + 1);
       setNotice(
         action === "read"
@@ -363,6 +474,8 @@ export default function ChannelWorkspace() {
   }
   async function send(event: FormEvent) {
     event.preventDefault();
+    if (busy || editing || mode) return;
+    const originalSelection = selected;
     setBusy(true);
     setError("");
     try {
@@ -373,6 +486,7 @@ export default function ChannelWorkspace() {
         idempotencyKey: sendKey.current,
         body: { message: draft, replyToId: replyTo?.id || null },
       });
+      if (selectedRef.current !== originalSelection) return;
       setDraft("");
       setReplyTo(null);
       sendKey.current = null;
@@ -389,6 +503,7 @@ export default function ChannelWorkspace() {
     }
   }
   const field = (name: string) => ({
+    disabled: busy,
     value: values[name] || "",
     onChange: (
       e: React.ChangeEvent<
@@ -421,6 +536,18 @@ export default function ChannelWorkspace() {
         </p>
       )}
       {notice && <p role="status">{notice}</p>}
+      {modeStale && (
+        <p className="gt-form-error" role="alert">
+          This room changed. Your staged settings are preserved. Cancel to load
+          the latest version before saving.
+        </p>
+      )}
+      {modeAccessLost && (
+        <p className="gt-form-error" role="alert">
+          Your room permissions changed. This action can no longer be saved;
+          cancel it to continue with your current access.
+        </p>
+      )}
       {mode && (
         <section className="gt-panel gt-event-editor">
           <h2 ref={heading} tabIndex={-1}>
@@ -512,6 +639,7 @@ export default function ChannelWorkspace() {
                   <input
                     required
                     value={confirmation}
+                    disabled={busy}
                     onChange={(e) => setConfirmation(e.target.value)}
                   />
                 </Field>
@@ -524,11 +652,15 @@ export default function ChannelWorkspace() {
                 autoComplete="current-password"
                 maxLength={128}
                 value={password}
+                disabled={busy}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Field>
             <div className="gt-button-row">
-              <Button type="submit" disabled={busy}>
+              <Button
+                type="submit"
+                disabled={busy || modeStale || modeAccessLost}
+              >
                 {busy ? "Saving…" : "Save room change"}
               </Button>
               <Button
@@ -633,6 +765,12 @@ export default function ChannelWorkspace() {
                 <div>
                   <h2># {room.record.name}</h2>
                   <p>{room.record.description}</p>
+                  {room.record.is_team_chat && (
+                    <p className="gt-help">
+                      Access follows current team membership. Chapter
+                      administrators retain oversight access.
+                    </p>
+                  )}
                   <Badge>
                     {room.record.visibility}
                     {room.record.is_archived ? " · read-only archive" : ""}
@@ -658,27 +796,38 @@ export default function ChannelWorkspace() {
               <div className="gt-button-row">
                 <Button
                   variant="secondary"
+                  disabled={busy || !!editing || !!mode}
                   onClick={() => {
                     setPinned((v) => !v);
                     setMessages([]);
                     setCursor(null);
-                    historyStarted.current = false;
+                    changeCursor.current = null;
                   }}
                 >
                   {pinned ? "Show conversation" : "Pinned messages"}
                 </Button>
-                <Button
-                  variant="ghost"
-                  onClick={async () => {
-                    if (members) {
-                      setMembers(null);
-                      return;
-                    }
-                    await loadMembers(1);
-                  }}
-                >
-                  Room memberships
-                </Button>
+                {!room.record.is_team_chat && (
+                  <Button
+                    variant="ghost"
+                    onClick={async () => {
+                      if (members) {
+                        setMembers(null);
+                        return;
+                      }
+                      await loadMembers(1);
+                    }}
+                  >
+                    Room memberships
+                  </Button>
+                )}
+                {room.record.is_team_chat && (
+                  <ActionLink
+                    to={`/admin/team/${room.record.team_id}?section=members`}
+                    variant="ghost"
+                  >
+                    Team memberships
+                  </ActionLink>
+                )}
                 {room.actions.manage && (
                   <>
                     <Button
@@ -688,13 +837,15 @@ export default function ChannelWorkspace() {
                     >
                       Edit room
                     </Button>
-                    <Button
-                      variant="ghost"
-                      disabled={!!mode || busy}
-                      onClick={() => open("member_add")}
-                    >
-                      Add membership
-                    </Button>
+                    {room.actions.manageMembers && (
+                      <Button
+                        variant="ghost"
+                        disabled={!!mode || busy}
+                        onClick={() => open("member_add")}
+                      >
+                        Add membership
+                      </Button>
+                    )}
                     <Button
                       variant="ghost"
                       disabled={!!mode || busy}
@@ -728,7 +879,7 @@ export default function ChannelWorkspace() {
                           {m.user?.display_name || "Chapter teammate"}
                           {m.user?.email && " · " + m.user.email} · {m.role}
                         </span>
-                        {room.actions.manage && (
+                        {room.actions.manageMembers && (
                           <div className="gt-button-row">
                             <Button
                               variant="ghost"
@@ -781,10 +932,10 @@ export default function ChannelWorkspace() {
                       const r = await api<Thread>(
                         `/admin/channels/${selected}/messages?${new URLSearchParams({ ...cursor, pinned: pinned ? "1" : "0" })}`,
                       );
-                      setMessages((v) => [
-                        ...r.items,
-                        ...v.filter((m) => !r.items.some((n) => n.id === m.id)),
-                      ]);
+                      if (selectedRef.current !== selected) return;
+                      setMessages((v) =>
+                        mergeMessageHistory(v, r.items, pinned),
+                      );
                       setCursor(r.nextCursor);
                     } catch (e) {
                       setError(
@@ -823,38 +974,56 @@ export default function ChannelWorkspace() {
                           : m.reply.message}
                       </blockquote>
                     )}
-                    {m.is_deleted ? (
-                      <p className="gt-helper">Message removed.</p>
-                    ) : editing?.id === m.id ? (
+                    {editing?.id === m.id ? (
                       <form
                         className="gt-form"
                         onSubmit={(e) => {
                           e.preventDefault();
-                          messageAction(m, "edit");
+                          messageAction(editing, "edit");
                         }}
                       >
                         <Field label="Edit your message" required>
                           <textarea
                             required
                             maxLength={10000}
+                            disabled={busy}
                             value={editText}
                             onChange={(e) => setEditText(e.target.value)}
                           />
                         </Field>
+                        {(editing.revision !== m.revision || m.is_deleted) && (
+                          <p className="gt-form-error" role="alert">
+                            This message changed or was removed. Your edit draft
+                            is preserved. Cancel to load its current version.
+                          </p>
+                        )}
                         <div className="gt-button-row">
-                          <Button type="submit" disabled={busy}>
+                          <Button
+                            type="submit"
+                            disabled={
+                              busy ||
+                              !room.actions.send ||
+                              editing.revision !== m.revision ||
+                              m.is_deleted
+                            }
+                          >
                             Save edit
                           </Button>
                           <Button
                             type="button"
                             variant="secondary"
                             disabled={busy}
-                            onClick={() => setEditing(null)}
+                            onClick={() => {
+                              setEditing(null);
+                              setEditText("");
+                            }}
                           >
                             Cancel edit
                           </Button>
                         </div>
                       </form>
+                    ) : m.is_deleted ? (
+                      <p className="gt-helper">Message removed.</p>
                     ) : (
                       <p className="gt-message-body">{m.message}</p>
                     )}
@@ -863,7 +1032,7 @@ export default function ChannelWorkspace() {
                         {room.actions.send && (
                           <Button
                             variant="ghost"
-                            disabled={busy}
+                            disabled={busy || !!editing || !!mode}
                             onClick={() => {
                               setReplyTo(m);
                               sendKey.current = null;
@@ -872,10 +1041,10 @@ export default function ChannelWorkspace() {
                             Reply
                           </Button>
                         )}
-                        {m.canEdit && (
+                        {room.actions.send && m.sender_id === room.actorId && (
                           <Button
                             variant="ghost"
-                            disabled={busy}
+                            disabled={busy || !!editing || !!mode || !!draft}
                             onClick={() => {
                               setEditing(m);
                               setEditText(m.message);
@@ -884,19 +1053,21 @@ export default function ChannelWorkspace() {
                             Edit
                           </Button>
                         )}
-                        {m.canDelete && (
-                          <Button
-                            variant="ghost"
-                            disabled={busy}
-                            onClick={() => setDeleteMessage(m)}
-                          >
-                            Remove
-                          </Button>
-                        )}
+                        {room.actions.send &&
+                          (m.sender_id === room.actorId ||
+                            room.actions.moderate) && (
+                            <Button
+                              variant="ghost"
+                              disabled={busy || !!editing || !!mode}
+                              onClick={() => setDeleteMessage(m)}
+                            >
+                              Remove
+                            </Button>
+                          )}
                         {room.actions.moderate && (
                           <Button
                             variant="ghost"
-                            disabled={busy}
+                            disabled={busy || !!editing || !!mode}
                             onClick={() => messageAction(m, "pin")}
                           >
                             {m.is_pinned ? "Unpin" : "Pin"}
@@ -910,12 +1081,12 @@ export default function ChannelWorkspace() {
               {messages.length > 0 && (
                 <Button
                   variant="secondary"
-                  disabled={busy}
+                  disabled={busy || !!editing || !!mode}
                   onClick={() =>
                     messageAction(messages[messages.length - 1], "read")
                   }
                 >
-                  Mark room read through latest loaded message
+                  Mark loaded messages read
                 </Button>
               )}
               {!messages.length && (
@@ -951,7 +1122,7 @@ export default function ChannelWorkspace() {
                   </div>
                 </section>
               )}
-              {room.actions.send && (
+              {room.actions.send && !editing && !mode && (
                 <form className="gt-form gt-channel-composer" onSubmit={send}>
                   {replyTo && (
                     <div className="gt-button-row">
@@ -979,6 +1150,7 @@ export default function ChannelWorkspace() {
                       required
                       rows={3}
                       maxLength={10000}
+                      disabled={busy}
                       value={draft}
                       onChange={(e) => {
                         setDraft(e.target.value);
@@ -987,7 +1159,7 @@ export default function ChannelWorkspace() {
                     />
                   </Field>
                   <Button disabled={busy || !draft.trim()} type="submit">
-                    {busy ? "Sending…" : "Send message"}
+                    {busy ? "Working…" : "Send message"}
                   </Button>
                 </form>
               )}

@@ -47,6 +47,7 @@
     "test:local-task-privacy": "node scripts/test-local-task-privacy.mjs",
     "test:local-direct-messages": "node scripts/test-local-direct-messages.mjs",
     "test:local-announcements": "node scripts/test-local-announcements.mjs",
+    "test:local-team-chat": "node scripts/test-local-team-chat.mjs",
     "test:local-site-content": "node scripts/test-local-site-content.mjs",
     "test:local-form-branches": "node scripts/test-local-form-branches.mjs",
     "test:local-forms-suite": "node scripts/test-local-forms-suite.mjs",
