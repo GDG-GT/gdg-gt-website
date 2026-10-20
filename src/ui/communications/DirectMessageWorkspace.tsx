@@ -592,6 +592,12 @@ export default function DirectMessageWorkspace() {
         className="gt-button-row gt-team-tabs"
         aria-label="Communications workspaces"
       >
+        <ActionLink
+          to="/admin/communications?tab=announcements"
+          variant="ghost"
+        >
+          Announcements
+        </ActionLink>
         <ActionLink to="/admin/communications?tab=tasks" variant="ghost">
           Tasks
         </ActionLink>

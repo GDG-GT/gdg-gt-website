@@ -525,6 +525,12 @@ export default function TaskWorkspace() {
         className="gt-button-row gt-team-tabs"
         aria-label="Communications workspaces"
       >
+        <ActionLink
+          to="/admin/communications?tab=announcements"
+          variant="ghost"
+        >
+          Announcements
+        </ActionLink>
         <span className="gt-button" aria-current="page">
           Tasks
         </span>

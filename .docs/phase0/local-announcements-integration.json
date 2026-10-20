@@ -1,0 +1,121 @@
+{
+  "note": "Actual local protected API, audience, state, secret-authenticated job, worker and Mailpit checks with fictional accounts. No external email, quota/scheduler resets, or permanent deletion. Browser fixture identity only is printed. Fixtures recoverably archived and notices marked read.",
+  "tests": [
+    {
+      "name": "anonymous chapter announcement reads are denied",
+      "passed": true
+    },
+    {
+      "name": "creation saves a draft without sending notifications",
+      "passed": true
+    },
+    {
+      "name": "draft metadata and bodies are hidden from recipients and outsiders",
+      "passed": true
+    },
+    {
+      "name": "draft creation does not invalidate an ordinary recipient socket; the private notification control arrives",
+      "passed": true
+    },
+    {
+      "name": "ordinary accounts cannot publish chapter-wide announcements",
+      "passed": true
+    },
+    {
+      "name": "browser-supplied author and publication state are rejected",
+      "passed": true
+    },
+    {
+      "name": "preview displays an exact current count and safe account names",
+      "passed": true
+    },
+    {
+      "name": "another administrator cannot borrow the preview from a different actor/session",
+      "passed": true
+    },
+    {
+      "name": "audience changes between preview and confirmation fail closed",
+      "passed": true
+    },
+    {
+      "name": "confirmed publication freezes exactly the approved notification recipients",
+      "passed": true
+    },
+    {
+      "name": "approved publication invalidates the eligible reader's private topic without content",
+      "passed": true
+    },
+    {
+      "name": "announcement invalidations contain only kind and a generated transport ID, not announcement identity or content",
+      "passed": true
+    },
+    {
+      "name": "replayed publication returns its original result without duplicate fanout",
+      "passed": true
+    },
+    {
+      "name": "recipient reads omit audience inventory and administrative tracking",
+      "passed": true
+    },
+    {
+      "name": "unrelated accounts cannot infer targeted announcements through IDs or counts",
+      "passed": true
+    },
+    {
+      "name": "read acknowledgments bind to the authenticated reader and publication version",
+      "passed": true
+    },
+    {
+      "name": "published content cannot be silently edited without unpublishing",
+      "passed": true
+    },
+    {
+      "name": "durable fanout uses two per-recipient identity-only jobs",
+      "passed": true
+    },
+    {
+      "name": "durable notice creation deduplicates and excludes announcement bodies",
+      "passed": true
+    },
+    {
+      "name": "optional generic announcement email is captured in local Mailpit only",
+      "passed": true
+    },
+    {
+      "name": "captured email contains only a protected link, not the private subject or message",
+      "passed": true
+    },
+    {
+      "name": "unpublishing immediately removes recipient body access",
+      "passed": true
+    },
+    {
+      "name": "restoration is recoverable and never republishes or resends automatically",
+      "passed": true
+    },
+    {
+      "name": "confirmed schedules stay hidden until the server publishes them",
+      "passed": true
+    },
+    {
+      "name": "even a valid cron credential cannot invoke schedules through a browser-origin request",
+      "passed": true
+    },
+    {
+      "name": "the secret-authenticated distributed job publishes due announcements",
+      "passed": true
+    },
+    {
+      "name": "a targeted editor can read the server-published scheduled announcement",
+      "passed": true
+    },
+    {
+      "name": "repeated scheduled-job requests do not publish or enqueue twice",
+      "passed": true
+    },
+    {
+      "name": "in-app-only announcements finish without contacting an email provider",
+      "passed": true
+    }
+  ]
+}

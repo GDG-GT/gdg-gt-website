@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { useSearchParams } from "react-router-dom";
 const Tasks = lazy(() => import("../tasks/TaskWorkspace"));
 const Messages = lazy(() => import("./DirectMessageWorkspace"));
+const Announcements = lazy(() => import("./AnnouncementWorkspace"));
 export default function CommunicationsWorkspace() {
   const [params] = useSearchParams();
   return (
@@ -12,7 +13,13 @@ export default function CommunicationsWorkspace() {
         </div>
       }
     >
-      {params.get("tab") === "messages" ? <Messages /> : <Tasks />}
+      {params.get("tab") === "announcements" ? (
+        <Announcements />
+      ) : params.get("tab") === "messages" ? (
+        <Messages />
+      ) : (
+        <Tasks />
+      )}
     </Suspense>
   );
 }

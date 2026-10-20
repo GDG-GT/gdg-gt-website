@@ -1,0 +1,57 @@
+BEGIN;
+INSERT INTO public.admin_users(id,email,password_hash,role,is_active) VALUES
+ ('df000000-0000-4000-8000-000000000001','chapter-publisher@example.test','fixture-publisher','admin',true),
+ ('df000000-0000-4000-8000-000000000002','chapter-reader@example.test','fixture-reader','blog_editor',true),
+ ('df000000-0000-4000-8000-000000000003','chapter-other@example.test','fixture-other','team_member',true);
+DO $$ DECLARE a uuid:='df000000-0000-4000-8000-000000000001';b uuid:='df000000-0000-4000-8000-000000000002';c uuid:='df000000-0000-4000-8000-000000000003';s uuid;bs uuid;bs2 uuid;n uuid;p jsonb;r jsonb;published jsonb;v integer;j public.delivery_jobs;BEGIN
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(a,repeat('1',64)) RETURNING id INTO s;
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(b,repeat('2',64)) RETURNING id INTO bs;
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(a,repeat('3',64)) RETURNING id INTO bs2;
+ r:=public.mutate_chapter_announcement(a,s,NULL,'create',NULL,'{"title":"Fictional scoped announcement","message":"Private chapter text","priority":"medium","pinned":false,"audience":{"type":"users","emails":["chapter-reader@example.test"]},"emailEnabled":true}',repeat('1',64),repeat('1',64),gen_random_uuid());n:=(r->>'id')::uuid;
+ IF public.can_read_chapter_announcement(b,n) OR public.can_read_chapter_announcement(c,n) THEN RAISE EXCEPTION 'Draft leaked to recipients';END IF;
+ IF(SELECT target_audience->'userIds' FROM public.announcements WHERE id=n)<>jsonb_build_array(b) THEN RAISE EXCEPTION 'Explicit recipient was not account-bound';END IF;
+ BEGIN PERFORM public.mutate_chapter_announcement(b,bs,NULL,'create',NULL,'{}',repeat('2',64),repeat('2',64),gen_random_uuid());RAISE EXCEPTION 'Editor published chapter content';EXCEPTION WHEN insufficient_privilege THEN NULL;END;
+ p:=public.preview_chapter_announcement(a,s,n,1,gen_random_uuid());
+ IF p->>'count'<>'1' THEN RAISE EXCEPTION 'Preview count failed';END IF;
+ BEGIN PERFORM public.confirm_chapter_announcement(a,bs2,'fixture-publisher',n,1,(p->>'id')::uuid,'Fictional scoped announcement',repeat('3',64),repeat('3',64),gen_random_uuid());RAISE EXCEPTION 'Other session borrowed preview';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'PREVIEW_REQUIRED' THEN RAISE;END IF;END;
+ UPDATE public.admin_users SET is_active=false WHERE id=b;
+ BEGIN PERFORM public.confirm_chapter_announcement(a,s,'fixture-publisher',n,1,(p->>'id')::uuid,'Fictional scoped announcement',repeat('4',64),repeat('4',64),gen_random_uuid());RAISE EXCEPTION 'Changed audience accepted';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'AUDIENCE_CHANGED' THEN RAISE;END IF;END;
+ UPDATE public.admin_users SET is_active=true WHERE id=b;
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(b,repeat('4',64)) RETURNING id INTO bs;
+ published:=public.confirm_chapter_announcement(a,s,'fixture-publisher',n,1,(p->>'id')::uuid,'Fictional scoped announcement',repeat('5',64),repeat('5',64),gen_random_uuid());
+ IF published->>'state'<>'Published' OR NOT public.can_read_chapter_announcement(b,n) OR public.can_read_chapter_announcement(c,n) THEN RAISE EXCEPTION 'Published scope failed';END IF;
+ IF public.confirm_chapter_announcement(a,s,'fixture-publisher',n,1,(p->>'id')::uuid,'Fictional scoped announcement',repeat('5',64),repeat('5',64),gen_random_uuid())<>published THEN RAISE EXCEPTION 'Publication retry not idempotent';END IF;
+ IF(SELECT count(*) FROM public.delivery_jobs WHERE kind='chapter_announcement' AND payload->>'announcementId'=n::text)<>1 THEN RAISE EXCEPTION 'Publication duplicated fanout';END IF;
+ r:=public.chapter_announcement_projection(b,n);
+ IF r->'audience'<>'null'::jsonb OR r->'readCount'<>'null'::jsonb THEN RAISE EXCEPTION 'Recipient got private audience inventory';END IF;
+ PERFORM public.mutate_chapter_announcement(b,bs,n,'read',NULL,'{"publicationVersion":1}',repeat('6',64),repeat('6',64),gen_random_uuid());
+ IF public.chapter_announcement_projection(a,n)->>'readCount'<>'1' THEN RAISE EXCEPTION 'Versioned read receipt failed';END IF;
+ BEGIN PERFORM public.mutate_chapter_announcement(a,s,n,'read',NULL,'{"publicationVersion":1}',repeat('7',64),repeat('7',64),gen_random_uuid());RAISE EXCEPTION 'Manager outside audience acknowledged announcement';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ SELECT * INTO j FROM public.delivery_jobs WHERE kind='chapter_announcement' AND payload->>'announcementId'=n::text;
+ UPDATE public.delivery_jobs SET state='running',lease_token=gen_random_uuid(),locked_until=now()+interval '1 minute' WHERE id=j.id RETURNING * INTO j;
+ IF public.prepare_chapter_announcement_notice(j.id,gen_random_uuid()) IS NOT NULL THEN RAISE EXCEPTION 'Stale worker lease could deliver';END IF;
+ IF public.prepare_chapter_announcement_notice(j.id,j.lease_token)->>'email'<>'chapter-reader@example.test' THEN RAISE EXCEPTION 'Snapshot recipient delivery failed';END IF;
+ PERFORM public.prepare_chapter_announcement_notice(j.id,j.lease_token);
+ IF(SELECT count(*) FROM public.notifications WHERE delivery_key='chapter-announcement:'||n||':1:'||b)<>1 THEN RAISE EXCEPTION 'Announcement notice duplicated';END IF;
+ UPDATE public.admin_users SET email='changed-chapter-reader@example.test' WHERE id=b;
+ IF public.prepare_chapter_announcement_notice(j.id,j.lease_token) IS NOT NULL THEN RAISE EXCEPTION 'Changed recipient email silently retargeted delivery';END IF;
+ UPDATE public.admin_users SET email='chapter-reader@example.test' WHERE id=b;
+ PERFORM public.mutate_chapter_announcement(a,s,n,'unpublish',2,'{}',repeat('8',64),repeat('8',64),gen_random_uuid());
+ IF public.can_read_chapter_announcement(b,n) OR public.prepare_chapter_announcement_notice(j.id,j.lease_token) IS NOT NULL THEN RAISE EXCEPTION 'Unpublished content remained available';END IF;
+ PERFORM public.mutate_chapter_announcement(a,s,n,'update',3,'{"title":"Fictional scheduled announcement","message":"Private chapter text","priority":"high","pinned":false,"audience":{"type":"roles","roles":["blog_editor"]},"emailEnabled":false}',repeat('9',64),repeat('9',64),gen_random_uuid());
+ UPDATE public.announcements SET scheduled_for=now()+interval '1 minute' WHERE id=n;
+ p:=public.preview_chapter_announcement(a,s,n,4,gen_random_uuid());
+ published:=public.confirm_chapter_announcement(a,s,'fixture-publisher',n,4,(p->>'id')::uuid,'Fictional scheduled announcement',repeat('a',64),repeat('a',64),gen_random_uuid());
+ IF published->>'state'<>'Scheduled' OR public.can_read_chapter_announcement(b,n) THEN RAISE EXCEPTION 'Schedule became visible early';END IF;
+ UPDATE public.announcements SET scheduled_for=now()-interval '1 minute' WHERE id=n;
+ r:=public.advance_chapter_announcements();
+ IF r->>'published'<>'1' OR NOT public.can_read_chapter_announcement(b,n) THEN RAISE EXCEPTION 'Due schedule failed';END IF;
+ IF public.advance_chapter_announcements()->>'published'<>'0' THEN RAISE EXCEPTION 'Schedule advanced twice';END IF;
+ IF public.chapter_announcement_projection(b,n)->>'isRead'<>'false' THEN RAISE EXCEPTION 'Old publication receipt carried into new version';END IF;
+ UPDATE public.admin_users SET role='team_member' WHERE id=a;
+ SELECT * INTO j FROM public.delivery_jobs WHERE kind='chapter_announcement' AND payload->>'announcementId'=n::text AND payload->>'version'='2';
+ UPDATE public.delivery_jobs SET state='running',lease_token=gen_random_uuid(),locked_until=now()+interval '1 minute' WHERE id=j.id RETURNING * INTO j;
+ IF public.prepare_chapter_announcement_notice(j.id,j.lease_token) IS NOT NULL THEN RAISE EXCEPTION 'Revoked publisher still sent notifications';END IF;
+ IF has_function_privilege('anon','public.list_chapter_announcements(uuid,integer,text,text)','EXECUTE') OR has_table_privilege('gdg_realtime','public.announcement_recipients','SELECT') THEN RAISE EXCEPTION 'Browser announcement grants exist';END IF;
+END $$;
+ROLLBACK;

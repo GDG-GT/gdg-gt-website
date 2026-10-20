@@ -180,6 +180,7 @@ export function startScopedRealtime(options: Options, deps = dependencies) {
                 "channel-directory",
                 "whiteboard-directory",
                 "direct-directory",
+                "announcement-directory",
               ].includes(payload.kind))
           )
             options.onChange(); // Fetch content through the independently authorized API.

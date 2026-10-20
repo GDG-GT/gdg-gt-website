@@ -5,7 +5,7 @@ requests proxy to the Node API on port 8081. The database and private Storage us
 only the isolated `gdg-gt` Colima profile and `gdg-gt-prd-local` Supabase project.
 No production configuration is implied by this setup.
 
-## Start or resume
+## Communications checks
 
 Direct-message integration is available with `npm run test:local-direct-messages`.
 It uses independent fictional sessions, private sockets and loopback Mailpit only.
@@ -16,6 +16,17 @@ the dedicated local database to verify hard socket/API expiry; production polici
 and session lifetimes are unchanged. `-- --hold-for-browser` keeps a fictional
 own-thread fixture open; enter `change` for a remote follow-up and `done` for
 recoverable cleanup. It never prints passwords, session material or email values.
+
+`npm run test:local-announcements` checks protected drafts, preview/confirmation,
+current audience scope, private invalidations, durable notices, Mailpit and the
+secret-authenticated publication job. It requires an unclaimed natural five-minute
+announcement occurrence: pause the identified local polling process, then wait for
+the next slot if the read-only preflight stops. Never reset scheduler rows or rate
+limits. Test-only accounts have independent confirmation quotas; all fixtures are
+recoverably archived. `-- --hold-for-browser` accepts `change` (remote pin) and
+`done` (cleanup). The browser-only draft review also remained unpublished.
+
+## Start or resume
 
 Run these in separate terminals as needed. Starting an already-running listener
 can fail with an occupied-port error; inspect the existing task process first.

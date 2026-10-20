@@ -44,7 +44,10 @@
     "202610200041_task_activity_projection.sql",
     "202610200042_task_private_assignment_guard.sql",
     "202610200043_direct_messages.sql",
-    "202610200044_direct_messages_realtime.sql"
+    "202610200044_direct_messages_realtime.sql",
+    "202610200045_chapter_announcements.sql",
+    "202610200046_announcement_jobs_live.sql",
+    "202610200047_announcement_draft_invalidation_guard.sql"
   ],
   "tests": [
     {
@@ -228,6 +231,18 @@
       "passed": true
     },
     {
+      "name": "202610200045_chapter_announcements.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200046_announcement_jobs_live.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200047_announcement_draft_invalidation_guard.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -329,6 +344,10 @@
     },
     {
       "name": "043_direct_messages.sql",
+      "passed": true
+    },
+    {
+      "name": "045_chapter_announcements.sql",
       "passed": true
     },
     {

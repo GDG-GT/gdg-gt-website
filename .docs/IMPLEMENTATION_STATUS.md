@@ -5,6 +5,53 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Chapter announcements, audiences and scheduling — 2026-10-20
+
+- Added the protected Announcements workspace alongside Tasks and Messages.
+  Chapter publishing is restricted to current Admin/Super Admin accounts; existing
+  scoped team announcements remain in Teams. Readers see only currently published,
+  unexpired announcements for their current role/team/account. Drafts, schedules,
+  archived records and audience/read inventories are hidden from ordinary readers.
+- Implemented draft CRUD, role/team/exact-email audiences, pinning, per-publication
+  read acknowledgments, unpublish/cancel schedule, retained archive and restoration
+  as an unpublished draft. Explicit recipients bind to immutable account IDs, not
+  reusable email addresses. Published text cannot be silently edited. Counts and
+  lists are scoped before pagination. Plain text and UTC instants are validated.
+- Publication requires a ten-minute server-stored audience preview bound to the
+  current actor/session/record revision, a visible final count/name sample, exact
+  title confirmation and the current password. Confirm rechecks the account hash
+  under the hierarchy lock and rejects changed audiences. Each publication freezes
+  1–1,000 notification recipients; repeated requests cannot duplicate fan-out.
+- Added a five-minute secret-authenticated, distributed-lease announcement job.
+  Due schedules publish once, expiry removes reader access, and scheduled approval
+  is cancelled if its author loses publishing authority. The local runner includes
+  the new cadence. A browser origin is rejected even with a valid cron credential.
+- Durable per-recipient jobs recheck the publication, current audience/account,
+  frozen email and publisher authority. Generic in-app notices deduplicate. Optional
+  email carries a protected link, never the private subject/body. The UI separates
+  queued/processed/dead jobs from provider-confirmed email count; in-app-only work
+  never calls a mail provider. New eligible people may read published content but
+  are not silently added to an already-approved notification batch.
+- Real local integration: 29 HTTP/WebSocket/job/worker/Mailpit checks, plus a held
+  browser fixture with a remote pin change. Draft updates do not invalidate reader
+  sockets; approved publication does, with only kind/generated transport identity.
+  Browser verified read acknowledgment, stale-action input preservation, creating
+  and editing a draft, a one-account preview with disabled unconfirmed send,
+  cancelling publication and typed recoverable archiving. Phone width 375/375 px;
+  preview/editor heights 1816/2028 px, real wheel scroll 812 px, viewport reset.
+  Evidence: `ui-review/real-announcement-preview-desktop.jpg`,
+  `ui-review/real-announcement-preview-mobile.jpg`,
+  `ui-review/real-announcement-editor-mobile.jpg`,
+  `ui-review/real-announcement-conflict.jpg`,
+  `ui-review/real-announcement-browser-cleanup.jpg`. Impeccable kept the existing
+  calm palette, familiar controls and inline confirmations. Fictional records and
+  accounts are recoverably archived, notices read; no external email was sent.
+- All 47 canonical migrations applied locally; isolated SQL and both existing
+  100-client capacity regressions pass. All 160 units, TypeScript, scoped ESLint
+  and production build pass. Existing bundle warnings remain. This is not complete
+  PRD acceptance: team-chat entry, private attachments, scoped custom/marketing
+  campaigns, other unfinished modules and final quality/security gates remain.
+
 ### Private direct messages and audited review — 2026-10-20
 
 - Communications now has Tasks and Messages workspaces. The inbox uses protected

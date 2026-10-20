@@ -121,6 +121,19 @@
 .gt-direct-confirm p { margin-bottom: 16px; }
 .gt-direct-thread > .gt-button-row { margin-block: 20px; }
 @media(max-width:1000px) { .gt-direct-layout { grid-template-columns: minmax(0,1fr); } .gt-direct-selected > .gt-direct-inbox { display: none; } }
+.gt-announcement-editor .gt-field,.gt-announcement-confirm .gt-field { margin-block: 20px; }
+.gt-announcement-choices { display: flex; flex-wrap: wrap; gap: 12px 24px; padding: 16px 0; margin-block: 16px; min-width: 0; }
+fieldset.gt-announcement-choices { border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+.gt-announcement-choices label { display: inline-flex; gap: 10px; align-items: center; min-height: 44px; }
+.gt-announcement-choices input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--coral); }
+.gt-announcement-detail { margin-top: 24px; }
+.gt-announcement-detail > h2 { font-size: 1.4rem; font-weight: 650; margin-block: 24px 12px; overflow-wrap: anywhere; }
+.gt-announcement-body { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 70ch; margin-block: 24px; }
+.gt-announcement-confirm { padding-block: 24px; margin-block: 24px; border-block: 1px solid var(--line); max-width: 80ch; }
+.gt-announcement-confirm h3 { font-size: 1.2rem; font-weight: 650; margin-bottom: 16px; }
+.gt-announcement-confirm p { margin-block: 16px; max-width: 70ch; }
+.gt-announcement-sample { padding-left: 20px; columns: 2; margin-block: 16px; }
+@media(max-width:600px) { .gt-announcement-sample { columns: 1; } }
 .gt-task-filters { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; margin-block: 24px; }
 .gt-task-filters > * { flex: 1 1 180px; min-width: 0; }
 .gt-task-facts { display: flex; flex-wrap: wrap; gap: 20px 40px; margin-block: 24px; }
