@@ -4,7 +4,16 @@
     "202610190001_canonical_structure.sql",
     "202610190002_security_foundation.sql",
     "202610190003_events_and_public_workflows.sql",
-    "202610190004_password_and_lockout.sql"
+    "202610190004_password_and_lockout.sql",
+    "202610190005_event_operations.sql",
+    "202610190006_profile_operations.sql",
+    "202610190007_public_submissions_and_delivery.sql",
+    "202610190008_event_audience.sql",
+    "202610190009_notifications_and_job_recovery.sql",
+    "202610190010_forms_core.sql",
+    "202610190011_forms_drafts_edits_and_access.sql",
+    "202610190012_form_response_workspace.sql",
+    "202610190013_failed_gate_limits.sql"
   ],
   "tests": [
     {
@@ -28,6 +37,42 @@
       "passed": true
     },
     {
+      "name": "202610190005_event_operations.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190006_profile_operations.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190007_public_submissions_and_delivery.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190008_event_audience.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190009_notifications_and_job_recovery.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190010_forms_core.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190011_forms_drafts_edits_and_access.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190012_form_response_workspace.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190013_failed_gate_limits.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -44,7 +89,31 @@
       "passed": true
     },
     {
+      "name": "005_event_operations.sql",
+      "passed": true
+    },
+    {
+      "name": "007_public_submissions.sql",
+      "passed": true
+    },
+    {
+      "name": "009_notifications.sql",
+      "passed": true
+    },
+    {
+      "name": "010_forms.sql",
+      "passed": true
+    },
+    {
+      "name": "013_gate_failures.sql",
+      "passed": true
+    },
+    {
       "name": "EVT concurrency: 100 clients, exactly one last-seat registration",
+      "passed": true
+    },
+    {
+      "name": "FORM concurrency: 100 clients, exactly one remaining response",
       "passed": true
     }
   ]

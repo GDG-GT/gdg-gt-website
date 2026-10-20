@@ -29,25 +29,40 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
-import {
-  createTemplate,
-  formsStore,
-  useForms,
-  useResponses,
-  type PreviewForm,
-} from "./store";
-import { localPreviewEnabled } from "../preview-data";
+import { createTemplate, type PreviewForm } from "./store";
+import { formsApi, useFormLibrary } from "./api";
 
 export default function FormsLibrary() {
-  const forms = useForms(),
-    responses = useResponses(),
-    navigate = useNavigate();
+  const navigate = useNavigate();
+  const [page, setPage] = useState(1),
+    [busy, setBusy] = useState(false),
+    [error, setError] = useState("");
   const [query, setQuery] = useState(""),
     [status, setStatus] = useState("All states"),
     [createOpen, setCreateOpen] = useState(false),
     [title, setTitle] = useState(""),
     [share, setShare] = useState<PreviewForm | null>(null),
     [copied, setCopied] = useState(false);
+  const library = useFormLibrary(
+      new URLSearchParams({
+        page: String(page),
+        q: query,
+        ...(status !== "All states" ? { state: status } : {}),
+      }).toString(),
+    ),
+    forms = library.items;
+  const work = async (action: () => Promise<unknown>) => {
+    setBusy(true);
+    setError("");
+    try {
+      await action();
+      library.reload();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
   const templates = [
     ["Event Interest", "Find out what the community wants to explore."],
     ["Event Feedback", "Make your next gathering even better."],
@@ -55,27 +70,16 @@ export default function FormsLibrary() {
     ["Team Application", "Help students find their place in the chapter."],
     ["General Survey", "Start a conversation with your community."],
   ];
-  const create = (name: string) => {
-    const form = createTemplate(name);
-    formsStore.save(form);
-    navigate(`/admin/forms/${form.id}/edit`);
-  };
+  const create = (name: string) =>
+    work(async () => {
+      const form = await formsApi.create(createTemplate(name));
+      navigate(`/admin/forms/${form.id}/edit`);
+    });
   const filtered = forms.filter(
     (form) =>
       form.title.toLowerCase().includes(query.toLowerCase()) &&
-      (status === "All states"
-        ? form.status !== "Archived"
-        : status === form.status),
+      (status === "All states" ? true : status === form.status),
   );
-  if (!localPreviewEnabled)
-    return (
-      <div className="gt-admin-page">
-        <EmptyState title="Forms UI preview">
-          The Forms interface is available in local development. Production
-          persistence and authorization will be connected in the backend phase.
-        </EmptyState>
-      </div>
-    );
   return (
     <div className="gt-admin-page">
       <div className="gt-admin-page-heading">
@@ -86,22 +90,32 @@ export default function FormsLibrary() {
           <h1>Forms</h1>
           <p>Build, publish, and make sense of what comes back.</p>
         </div>
-        <Button onClick={() => setCreateOpen(true)}>
+        <Button disabled={busy} onClick={() => setCreateOpen(true)}>
           <Plus size={17} /> Create form
         </Button>
       </div>
+      {(error || library.error) && (
+        <p role="alert" className="gt-form-error">
+          {error || library.error}{" "}
+          <button onClick={library.reload}>Try again</button>
+        </p>
+      )}
+      {library.loading && <p role="status">Loading your forms…</p>}
       <div className="gt-forms-stats">
         {[
+          ["Matching forms", library.total],
           [
-            "All forms",
-            forms.filter((form) => form.status !== "Archived").length,
-          ],
-          [
-            "Accepting responses",
+            "Open on this page",
             forms.filter((form) => form.status === "Open").length,
           ],
-          ["Drafts", forms.filter((form) => form.status === "Draft").length],
-          ["Local responses", responses.length],
+          [
+            "Drafts on this page",
+            forms.filter((form) => form.status === "Draft").length,
+          ],
+          [
+            "Responses on this page",
+            forms.reduce((sum, form) => sum + (form.responseCount || 0), 0),
+          ],
         ].map(([label, value]) => (
           <div key={label}>
             <span>{label}</span>
@@ -113,12 +127,15 @@ export default function FormsLibrary() {
         <section className="gt-panel gt-forms-inventory">
           <div className="gt-panel-heading">
             <h2>Your forms</h2>
-            <Badge tone="coral">Local sample workspace</Badge>
+            <Badge tone="coral">Chapter workspace</Badge>
           </div>
           <div className="gt-toolbar">
             <SearchBox
               value={query}
-              onChange={setQuery}
+              onChange={(value) => {
+                setQuery(value);
+                setPage(1);
+              }}
               label="Search forms"
               placeholder="Find a form…"
             />
@@ -126,7 +143,10 @@ export default function FormsLibrary() {
               <span className="sr-only">Form status</span>
               <select
                 value={status}
-                onChange={(event) => setStatus(event.target.value)}
+                onChange={(event) => {
+                  setStatus(event.target.value);
+                  setPage(1);
+                }}
               >
                 {[
                   "All states",
@@ -169,7 +189,9 @@ export default function FormsLibrary() {
                           </span>
                           <span>
                             <strong>{form.title}</strong>
-                            <small>{form.team} · Example form</small>
+                            <small>
+                              {form.team} · Owner {form.ownerId}
+                            </small>
                           </span>
                         </Link>
                       </td>
@@ -188,11 +210,7 @@ export default function FormsLibrary() {
                       </td>
                       <td>
                         <Link to={`/admin/forms/${form.id}/responses`}>
-                          {
-                            responses.filter(
-                              (response) => response.formId === form.id,
-                            ).length
-                          }
+                          {form.responseCount ?? "Restricted"}
                         </Link>
                       </td>
                       <td>
@@ -247,22 +265,25 @@ export default function FormsLibrary() {
                               Share
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                              onClick={() => formsStore.duplicate(form)}
+                              onClick={() =>
+                                work(() => formsApi.duplicate(form))
+                              }
                             >
                               Duplicate
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
+                              disabled={
+                                !form.versions.length ||
+                                !form.actions?.includes("publish")
+                              }
                               onClick={() =>
-                                formsStore.save({
-                                  ...form,
-                                  status:
-                                    form.status === "Open"
-                                      ? "Closed"
-                                      : form.versions.length
-                                        ? "Open"
-                                        : "Draft",
-                                })
+                                work(() =>
+                                  formsApi.state(
+                                    form,
+                                    form.status === "Open" ? "Closed" : "Open",
+                                  ),
+                                )
                               }
                             >
                               {form.status === "Open"
@@ -270,14 +291,13 @@ export default function FormsLibrary() {
                                 : "Reopen form"}
                             </DropdownMenuItem>
                             <DropdownMenuItem
+                              disabled={!form.actions?.includes("delete")}
                               onClick={() =>
-                                formsStore.save({
-                                  ...form,
-                                  status:
-                                    form.status === "Archived"
-                                      ? "Draft"
-                                      : "Archived",
-                                })
+                                work(() =>
+                                  form.status === "Archived"
+                                    ? formsApi.restore(form)
+                                    : formsApi.archive(form),
+                                )
                               }
                             >
                               {form.status === "Archived"
@@ -318,8 +338,24 @@ export default function FormsLibrary() {
             </EmptyState>
           )}
           <div className="gt-table-footer">
-            <span>{filtered.length} forms</span>
-            <span>Only local development data</span>
+            <span>{library.total} matching forms</span>
+            <div className="gt-actions">
+              <Button
+                variant="ghost"
+                disabled={page === 1 || library.loading}
+                onClick={() => setPage(page - 1)}
+              >
+                Previous
+              </Button>
+              <span>Page {page}</span>
+              <Button
+                variant="ghost"
+                disabled={page * 30 >= library.total || library.loading}
+                onClick={() => setPage(page + 1)}
+              >
+                Next
+              </Button>
+            </div>
           </div>
         </section>
         <aside className="gt-forms-template-panel">
@@ -370,7 +406,7 @@ export default function FormsLibrary() {
                 placeholder="For example, Workshop feedback"
               />
             </Field>
-            <Button type="submit">
+            <Button type="submit" disabled={busy}>
               <Plus size={17} /> Create form
             </Button>
           </form>
@@ -386,7 +422,7 @@ export default function FormsLibrary() {
           <DialogTitle>Share your form</DialogTitle>
           <DialogDescription>
             {share?.versions.length
-              ? "This address opens the locally published form. It works on this computer only."
+              ? "This opens the published form. Restricted forms also require their private access link or an authorized account."
               : "Publish this draft before collecting responses."}
           </DialogDescription>
           <Field label="Form address">

@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 import AdminLoginModal from "@/components/AdminLoginModal";
-import { NewsletterService } from "@/services/newsletterService";
+import { PublicNewsletterService as NewsletterService } from "@/services/publicWorkflows";
 import { Brand, Button } from "./primitives";
 import {
   Dialog,
@@ -40,6 +40,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const subscriptionRequest = useRef({ email: "", key: crypto.randomUUID() });
 
   useEffect(() => {
     setMenuOpen(false);
@@ -78,7 +79,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
           body: JSON.stringify({ code: email }),
         });
         const result = response.ok ? await response.json() : null;
-        if (result?.gateValid) {
+        if (result?.data?.gateValid) {
           setLoginOpen(true);
           setEmail("");
         } else setNotice("We couldn’t process that entry. Please try again.");
@@ -95,7 +96,13 @@ export default function SiteShell({ children }: { children: ReactNode }) {
         setNotice("Preview complete. No subscription or email was created.");
         setEmail("");
       } else {
-        const result = await NewsletterService.subscribe(email);
+        if (subscriptionRequest.current.email !== email)
+          subscriptionRequest.current = { email, key: crypto.randomUUID() };
+        const result = await NewsletterService.subscribe(
+          email,
+          undefined,
+          subscriptionRequest.current.key,
+        );
         setNotice(result.message);
         if (result.success) setEmail("");
       }

@@ -1,137 +1,29 @@
-// Secure session management service with httpOnly cookies
-// CRITICAL FIX: Replace localStorage sessions with httpOnly cookies
-
-import CSRFService from './csrfService';
-import type { AdminUser } from '@/lib/supabase';
-
-interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-interface SessionResponse {
-  success: boolean;
-  admin?: {
-    id: string;
+import { api, clearApiSession, ApiFailure } from "@/lib/api";
+import type { AdminUser } from "@/lib/supabase";
+export default class SessionService {
+  static async login(credentials: {
     email: string;
-    role: string;
-    display_name: string;
-  };
-  error?: string;
-}
-
-class SessionService {
-  /**
-   * Login with email and password
-   * Creates httpOnly cookie session
-   */
-  static async login(credentials: LoginCredentials): Promise<AdminUser | null> {
-    try {
-      // Get CSRF token
-      const csrfToken = await CSRFService.getToken();
-
-      // Call session API
-      const response = await fetch('/api/session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken
-        },
-        credentials: 'include', // Important: send cookies
-        body: JSON.stringify({
-          email: credentials.email,
-          password: credentials.password,
-          csrfToken
-        })
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        console.error('Login failed:', error);
-        return null;
-      }
-
-      const data: SessionResponse = await response.json();
-
-      if (data.success && data.admin) {
-        // Convert to AdminUser format
-        return {
-          id: data.admin.id,
-          email: data.admin.email,
-          role: data.admin.role as 'super_admin' | 'admin' | 'team_member' | 'blog_editor',
-          display_name: data.admin.display_name,
-          password_hash: '', // Never exposed
-          is_active: true,
-          created_at: new Date().toISOString(),
-          last_login: new Date().toISOString()
-        };
-      }
-
-      return null;
-    } catch (error) {
-      console.error('Login error:', error);
-      return null;
-    }
+    password: string;
+  }): Promise<AdminUser | null> {
+    const result = await api<{ user: AdminUser; csrfToken: string }>(
+      "/auth/login",
+      { method: "POST", body: credentials },
+    );
+    return result.user;
   }
-
-  /**
-   * Validate current session
-   * Checks httpOnly cookie
-   */
   static async validateSession(): Promise<AdminUser | null> {
     try {
-      const response = await fetch('/api/session', {
-        method: 'GET',
-        credentials: 'include' // Important: send cookies
-      });
-
-      // 401 is expected when not logged in - don't log as error
-      if (!response.ok) {
-        return null;
-      }
-
-      const data: SessionResponse = await response.json();
-
-      if (data.admin) {
-        return {
-          id: data.admin.id,
-          email: data.admin.email,
-          role: data.admin.role as 'super_admin' | 'admin' | 'team_member' | 'blog_editor',
-          display_name: data.admin.display_name,
-          password_hash: '',
-          is_active: true,
-          created_at: new Date().toISOString(),
-          last_login: new Date().toISOString()
-        };
-      }
-
-      return null;
+      return (
+        await api<{ user: AdminUser; csrfToken: string }>("/auth/session")
+      ).user;
     } catch (error) {
-      // Silent fail - session validation errors are expected
-      return null;
+      if (error instanceof ApiFailure && error.status === 401) return null;
+      throw error;
     }
   }
-
-  /**
-   * Logout
-   * Clears httpOnly cookie session
-   */
   static async logout(): Promise<boolean> {
-    try {
-      const response = await fetch('/api/session', {
-        method: 'DELETE',
-        credentials: 'include' // Important: send cookies
-      });
-
-      // Clear CSRF token
-      CSRFService.clearToken();
-
-      return response.ok;
-    } catch (error) {
-      console.error('Logout error:', error);
-      return false;
-    }
+    await api("/auth/session", { method: "DELETE", protected: true });
+    clearApiSession();
+    return true;
   }
 }
-
-export default SessionService;

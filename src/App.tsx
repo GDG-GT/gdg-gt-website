@@ -33,7 +33,7 @@ import {
 const Overview = lazy(() => import("@/ui/AdminOverview"));
 const Forms = lazy(() => import("@/ui/forms/FormsLibrary"));
 const FormBuilder = lazy(() => import("@/ui/forms/FormBuilder"));
-const FormResponses = lazy(() => import("@/ui/forms/FormResponses"));
+const FormResponses = lazy(() => import("@/ui/forms/ResponseWorkspace"));
 const PublicForm = lazy(() => import("@/ui/forms/PublicForm"));
 const Linktree = lazy(() => import("@/pages/Linktree"));
 const NewsletterTokenPage = lazy(() => import("@/ui/NewsletterTokenPage"));
@@ -42,7 +42,7 @@ const AcceptInvite = lazy(() => import("@/pages/admin/AcceptInvite"));
 // Preserve every existing workflow and load heavy editors only on their routes.
 const adminRoutes = [
   ["content", lazy(() => import("@/pages/AdminContent"))],
-  ["events", lazy(() => import("@/pages/admin/AdminEvents"))],
+  ["events", lazy(() => import("@/ui/EventWorkspace"))],
   ["team", lazy(() => import("@/pages/admin/AdminTeam"))],
   ["projects", lazy(() => import("@/pages/admin/AdminProjects"))],
   ["members", lazy(() => import("@/pages/admin/AdminMembers"))],
@@ -50,7 +50,7 @@ const adminRoutes = [
   ["newsletter", lazy(() => import("@/pages/admin/AdminNewsletter"))],
   ["blog", lazy(() => import("@/pages/admin/AdminBlog"))],
   ["users", lazy(() => import("@/pages/admin/AdminUsers"))],
-  ["profile", lazy(() => import("@/pages/admin/AdminProfile"))],
+  ["profile", lazy(() => import("@/ui/ProfileWorkspace"))],
   ["sponsors", lazy(() => import("@/pages/admin/AdminSponsors"))],
   ["communications", lazy(() => import("@/pages/admin/AdminCommunications"))],
   ["media", lazy(() => import("@/pages/admin/AdminMedia"))],
@@ -62,7 +62,7 @@ const adminRoutes = [
   ["whiteboard", lazy(() => import("@/pages/admin/AdminWhiteboard"))],
   ["gallery", lazy(() => import("@/pages/admin/AdminGallery"))],
   ["finances", lazy(() => import("@/pages/admin/AdminFinances"))],
-  ["audit-log", lazy(() => import("@/pages/admin/AdminAuditLog"))],
+  ["audit-log", lazy(() => import("@/ui/AuditWorkspace"))],
   ["team/:teamId", lazy(() => import("@/pages/admin/TeamDashboard"))],
   ["blog-editor", lazy(() => import("@/pages/admin/BlogEditorDashboard"))],
   ["blog-media", lazy(() => import("@/pages/admin/BlogEditorMedia"))],

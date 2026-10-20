@@ -1,6 +1,8 @@
 /// <reference types="vite/client" />
 export const localPreviewEnabled =
-  !!import.meta.env?.DEV && import.meta.env?.VITE_LOCAL_UI === "true";
+  !!import.meta.env?.DEV &&
+  import.meta.env?.VITE_LOCAL_UI === "true" &&
+  import.meta.env?.VITE_REAL_API !== "true";
 
 export const chapterName =
   "Google Developer Group on Campus at Georgia Institute of Technology";

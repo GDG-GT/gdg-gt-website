@@ -4,6 +4,7 @@ import {
   useEffect,
   useMemo,
   useState,
+  useRef,
   type FormEvent,
 } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
@@ -40,7 +41,8 @@ import {
 } from "@/components/ui/dialog";
 import { useContent } from "@/contexts/ContentContext";
 import { ContactService } from "@/services/contactService";
-import { MediaService } from "@/services/mediaService";
+import { api } from "@/lib/api";
+import { eventForPage, type ChapterEvent } from "./events";
 import type { Event } from "@/services/eventsService";
 import {
   ActionLink,
@@ -53,7 +55,6 @@ import {
 } from "./primitives";
 import { chapterName, localPreviewEnabled } from "./preview-data";
 import { useInitialLoad } from "./useInitialLoad";
-import { eventCalendar } from "./calendar";
 const HeroObjects = lazy(() => import("./HeroObjects"));
 
 type SiteEvent = Event & {
@@ -361,38 +362,62 @@ export function HomePage() {
 
 export function EventsPage() {
   usePageTitle("Events");
-  const { events, loading } = useEvents();
+  const [events, setEvents] = useState<SiteEvent[]>([]),
+    [loading, setLoading] = useState(true),
+    [loadError, setLoadError] = useState(""),
+    [total, setTotal] = useState(0),
+    [refresh, setRefresh] = useState(0);
   const [params, setParams] = useSearchParams();
   const query = params.get("q") || "",
     filter = params.get("filter") || "upcoming",
     sort = params.get("sort") || "soonest";
+  const page = Math.max(1, Number(params.get("page")) || 1),
+    level = params.get("level") || "";
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true);
+    setLoadError("");
+    const search = new URLSearchParams({
+      q: query,
+      status: ["all", "past", "upcoming"].includes(filter)
+        ? filter
+        : "upcoming",
+      sort,
+      page: String(page),
+      pageSize: "12",
+    });
+    if (!["all", "past", "upcoming"].includes(filter))
+      search.set(
+        "type",
+        filter === "demo day"
+          ? "Demo Day"
+          : filter[0].toUpperCase() + filter.slice(1),
+      );
+    if (level) search.set("level", level);
+    api<{ items: ChapterEvent[]; total: number }>("/events?" + search, {
+      signal: controller.signal,
+    })
+      .then((r) => {
+        setEvents(r.items.map(eventForPage));
+        setTotal(r.total);
+      })
+      .catch((error) => {
+        if (!controller.signal.aborted) setLoadError(error.message);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [query, filter, sort, page, level, refresh]);
   const change = (key: string, value: string) =>
     setParams((previous) => {
       const next = new URLSearchParams(previous);
       if (value) next.set(key, value);
       else next.delete(key);
+      if (key !== "page") next.delete("page");
       return next;
     });
-  const filtered = events
-    .filter(
-      (event) =>
-        `${event.title} ${event.description}`
-          .toLowerCase()
-          .includes(query.toLowerCase()) &&
-        (filter === "all" ||
-          (filter === "upcoming"
-            ? !isPast(event)
-            : filter === "past"
-              ? isPast(event)
-              : event.type?.toLowerCase() === filter)),
-    )
-    .sort((a, b) =>
-      sort === "title"
-        ? a.title.localeCompare(b.title)
-        : sort === "newest"
-          ? b.created_at.localeCompare(a.created_at)
-          : a.date.localeCompare(b.date),
-    );
+  const filtered = events;
   return (
     <>
       <PageHeader
@@ -436,15 +461,45 @@ export function EventsPage() {
               <option value="soonest">Soonest first</option>
               <option value="newest">Recently added</option>
               <option value="title">Title A–Z</option>
+              <option value="availability">Registration availability</option>
             </select>
           </label>
+          <label className="gt-sort">
+            <span>Level</span>
+            <select
+              value={level}
+              onChange={(e) => change("level", e.target.value)}
+            >
+              <option value="">All levels</option>
+              {["beginner", "intermediate", "advanced", "open_for_all"].map(
+                (value) => (
+                  <option key={value} value={value}>
+                    {levelLabel(value)}
+                  </option>
+                ),
+              )}
+            </select>
+          </label>
+          <Button variant="ghost" onClick={() => setParams({})}>
+            Reset
+          </Button>
         </div>
         <p className="gt-results-count" role="status">
           {loading
             ? "Finding events…"
-            : `${filtered.length} ${filtered.length === 1 ? "event" : "events"}`}
+            : `${total} ${total === 1 ? "event" : "events"}`}
         </p>
-        {loading ? (
+        {loadError ? (
+          <div role="alert" className="gt-form-error">
+            {loadError}
+            <Button
+              variant="secondary"
+              onClick={() => setRefresh((value) => value + 1)}
+            >
+              Try again
+            </Button>
+          </div>
+        ) : loading ? (
           <div className="gt-event-grid">
             {[1, 2, 3].map((id) => (
               <div key={id} className="gt-skeleton gt-event-skeleton" />
@@ -471,6 +526,23 @@ export function EventsPage() {
             Try another search or see what the community has been building.
           </EmptyState>
         )}
+        <div className="gt-inline-actions">
+          <Button
+            variant="secondary"
+            disabled={page === 1 || loading}
+            onClick={() => change("page", String(page - 1))}
+          >
+            Previous
+          </Button>
+          <span>Page {page}</span>
+          <Button
+            variant="secondary"
+            disabled={page * 12 >= total || loading}
+            onClick={() => change("page", String(page + 1))}
+          >
+            Next
+          </Button>
+        </div>
         {localPreviewEnabled && (
           <p className="gt-data-note">
             Local reference data. Images illustrate the experience and are not
@@ -484,23 +556,112 @@ export function EventsPage() {
 
 export function EventDetailPage() {
   const { slug } = useParams();
-  const { events, loading } = useEvents();
-  const event = events.find((item) => slugFor(item) === slug);
+  const [event, setEvent] = useState<SiteEvent | null>(null),
+    [events, setRelated] = useState<SiteEvent[]>([]),
+    [loading, setLoading] = useState(true),
+    [loadError, setLoadError] = useState("");
+  const registrationRequest = useRef<{ body: string; key: string } | null>(
+    null,
+  );
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true);
+    setLoadError("");
+    api<{ event: ChapterEvent; related: ChapterEvent[] }>(
+      "/events/" + encodeURIComponent(slug || ""),
+      { signal: controller.signal },
+    )
+      .then((r) => {
+        setEvent(eventForPage(r.event));
+        setRelated(r.related.map(eventForPage));
+      })
+      .catch((error) => {
+        if (!controller.signal.aborted) {
+          setEvent(null);
+          if (error.status !== 404) setLoadError(error.message);
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [slug]);
   const [submitted, setSubmitted] = useState(false),
     [busy, setBusy] = useState(false),
     [feedback, setFeedback] = useState("");
   usePageTitle(event?.title || "Event");
+  useEffect(() => {
+    if (!event) return;
+    const canonical = document.createElement("link");
+    canonical.rel = "canonical";
+    canonical.href = window.location.origin + "/events/" + slugFor(event);
+    document.head.append(canonical);
+    const metadata = document.createElement("script");
+    metadata.type = "application/ld+json";
+    metadata.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Event",
+      name: event.title,
+      description: event.description.replace(/<[^>]*>/g, ""),
+      startDate: event.date,
+      endDate: event.end_at,
+      url: canonical.href,
+      eventStatus: "https://schema.org/EventScheduled",
+      location: { "@type": "Place", name: event.location },
+      organizer: { "@type": "Organization", name: chapterName },
+    }).replace(/</g, "\\u003c");
+    document.head.append(metadata);
+    const tags = [
+      ["description", event.description.replace(/<[^>]*>/g, "").slice(0, 160)],
+      ["og:title", event.title],
+      [
+        "og:description",
+        event.description.replace(/<[^>]*>/g, "").slice(0, 160),
+      ],
+      ["og:url", canonical.href],
+      [
+        "og:image",
+        new URL(
+          event.image_url || "/assets/event-community.jpg",
+          location.origin,
+        ).href,
+      ],
+      ["twitter:card", "summary_large_image"],
+    ].map(([key, content]) => {
+      const tag = document.createElement("meta");
+      tag.setAttribute(key.startsWith("og:") ? "property" : "name", key);
+      tag.content = content;
+      document.head.append(tag);
+      return tag;
+    });
+    return () => {
+      canonical.remove();
+      metadata.remove();
+      tags.forEach((tag) => tag.remove());
+    };
+  }, [event]);
   if (loading)
     return (
       <div className="gt-container gt-section">
         <div className="gt-skeleton gt-detail-skeleton" />
       </div>
     );
+  if (loadError)
+    return (
+      <div className="gt-container gt-section">
+        <EmptyState title="This event could not load">
+          {loadError}
+          <ActionLink to="/events">Return to events</ActionLink>
+        </EmptyState>
+      </div>
+    );
   if (!event) return <NotFoundPage />;
   const past = isPast(event);
   const full =
     !!event.max_participants &&
-    (event.accurate_attendee_count ?? 0) >= event.max_participants;
+    ((event as SiteEvent & { registration_state?: string })
+      .registration_state === "full" ||
+      (event.accurate_attendee_count ?? 0) >= event.max_participants);
   const unavailable =
     full ||
     event.status === "cancelled" ||
@@ -509,19 +670,11 @@ export function EventDetailPage() {
     event.registration_url || event.google_form_url,
   );
   const calendar = () => {
-    const content = eventCalendar(
-      event,
-      window.location.origin + window.location.pathname,
+    window.location.assign(
+      "/api/v1/events/" +
+        encodeURIComponent(event.slug || slug || "") +
+        "/calendar.ics",
     );
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(
-      new Blob([content], { type: "text/calendar" }),
-    );
-    link.download = `${slug}.ics`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    setTimeout(() => URL.revokeObjectURL(link.href), 30_000);
   };
   const register = async (submit: FormEvent<HTMLFormElement>) => {
     submit.preventDefault();
@@ -552,13 +705,39 @@ export function EventDetailPage() {
           JSON.stringify(records),
         );
         setSubmitted(true);
-      } else
-        setFeedback(
-          "Registration is not connected in this UI release. Please contact the chapter for registration details.",
+      } else {
+        const form = new FormData(submit.currentTarget),
+          body = {
+            name: String(form.get("name") || ""),
+            email: String(form.get("email") || ""),
+            notes: String(form.get("notes") || ""),
+            consent: form.get("consent") === "on",
+            website: String(form.get("website") || ""),
+          };
+        const serialized = JSON.stringify(body);
+        if (registrationRequest.current?.body !== serialized)
+          registrationRequest.current = {
+            body: serialized,
+            key: crypto.randomUUID(),
+          };
+        await api(
+          "/events/" +
+            encodeURIComponent(event.slug || slug || "") +
+            "/registrations",
+          {
+            method: "POST",
+            body,
+            idempotencyKey: registrationRequest.current.key,
+          },
         );
-    } catch {
+        setSubmitted(true);
+        setFeedback("");
+      }
+    } catch (error) {
       setFeedback(
-        "This browser couldn’t save your sample registration. Please try again.",
+        error instanceof Error
+          ? error.message
+          : "Your registration could not be saved. Please try again.",
       );
     } finally {
       setBusy(false);
@@ -597,7 +776,7 @@ export function EventDetailPage() {
                 <p>
                   <Clock3 size={19} />
                   {event.time || "Time to be announced"}
-                  <small>Eastern Time</small>
+                  <small>{event.timezone || "America/New_York"}</small>
                 </p>
                 <p>
                   <MapPin size={19} />
@@ -641,6 +820,30 @@ export function EventDetailPage() {
               <p>{event.what_youll_learn}</p>
             </>
           )}
+          {event.prerequisites && (
+            <>
+              <h3>Prerequisites</h3>
+              <p>{event.prerequisites}</p>
+            </>
+          )}
+          {event.room && (
+            <>
+              <h3>Room</h3>
+              <p>{event.room}</p>
+            </>
+          )}
+          {event.additional_info && (
+            <>
+              <h3>Additional information</h3>
+              <p>{event.additional_info}</p>
+            </>
+          )}
+          {event.contact_info && (
+            <>
+              <h3>Questions?</h3>
+              <p>{event.contact_info}</p>
+            </>
+          )}
           {event.what_to_bring && (
             <>
               <h3>What to bring</h3>
@@ -668,10 +871,15 @@ export function EventDetailPage() {
           {submitted ? (
             <div className="gt-success">
               <CheckCircle2 size={38} />
-              <h2>Saved in your local preview</h2>
+              <h2>
+                {localPreviewEnabled
+                  ? "Saved in your local preview"
+                  : "Your place is confirmed."}
+              </h2>
               <p>
-                Your sample registration is stored in this browser. No real
-                registration or confirmation email was created.
+                {localPreviewEnabled
+                  ? "Your sample registration is stored in this browser. No real registration or confirmation email was created."
+                  : "Your registration was saved by the chapter. A confirmation message is queued; delivery may take a moment."}
               </p>
               <Button variant="secondary" onClick={() => setSubmitted(false)}>
                 Try another registration
@@ -722,6 +930,7 @@ export function EventDetailPage() {
                       autoComplete="name"
                       required
                       minLength={2}
+                      maxLength={100}
                     />
                   </Field>
                   <Field label="Email address" required>
@@ -733,10 +942,10 @@ export function EventDetailPage() {
                     />
                   </Field>
                   <Field label="Anything we should know?">
-                    <textarea name="notes" rows={3} maxLength={1000} />
+                    <textarea name="notes" rows={3} maxLength={2000} />
                   </Field>
                   <label className="gt-check">
-                    <input type="checkbox" required />
+                    <input type="checkbox" name="consent" required />
                     <span>
                       I agree to be contacted about this event.{" "}
                       <Link to="/privacy">Privacy notice</Link>
@@ -1118,12 +1327,22 @@ export function GalleryPage() {
   const [galleryLoading, setGalleryLoading] = useState(true);
   useInitialLoad(async () => {
     try {
-      const media = await MediaService.getPublicMedia();
+      const media = (
+        await api<{
+          items: {
+            url: string;
+            alt_text?: string;
+            description?: string;
+            id: string;
+          }[];
+        }>("/gallery")
+      ).items;
       setPublishedPhotos(
         media.map((photo) => ({
-          src: MediaService.getFileUrl(photo.file_path),
+          src: photo.url,
           category: "Chapter photos",
-          caption: photo.alt_text || photo.description || photo.original_name,
+          caption:
+            photo.alt_text || photo.description || "Chapter community photo",
         })),
       );
     } finally {
@@ -1274,6 +1493,7 @@ export function ContactPage() {
     [error, setError] = useState(""),
     [success, setSuccess] = useState(false),
     [busy, setBusy] = useState(false);
+  const contactRequest = useRef<{ body: string; key: string } | null>(null);
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
@@ -1308,12 +1528,23 @@ export function ContactPage() {
           "Attachments are not connected in this UI release. Please send your message without an attachment.",
         );
       else {
-        const result = await ContactService.submitContactForm({
+        const body = {
           name: String(data.get("name")),
           email: String(data.get("email")),
           message,
           type,
-        });
+          website: String(data.get("website") || ""),
+        };
+        const fingerprint = JSON.stringify(body);
+        if (contactRequest.current?.body !== fingerprint)
+          contactRequest.current = {
+            body: fingerprint,
+            key: crypto.randomUUID(),
+          };
+        const result = await ContactService.submitContactForm(
+          body,
+          contactRequest.current.key,
+        );
         if (result.success) setSuccess(true);
         else
           setError(
@@ -1400,6 +1631,10 @@ export function ContactPage() {
             </div>
           ) : (
             <form className="gt-form" onSubmit={submit}>
+              <label className="gt-honeypot" aria-hidden="true">
+                Leave this empty
+                <input name="website" tabIndex={-1} autoComplete="off" />
+              </label>
               <h2>Say hello.</h2>
               <p>
                 Fields marked <span className="gt-required">*</span> are

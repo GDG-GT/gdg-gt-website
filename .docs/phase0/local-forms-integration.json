@@ -1,0 +1,161 @@
+{
+  "note": "Real local HTTP/Supabase tests with fictional data, preserved in archived form. No external email sent. Does not certify every Forms requirement.",
+  "tests": [
+    {
+      "name": "anonymous callers cannot discover private form inventories",
+      "passed": true
+    },
+    {
+      "name": "form creation rejects client-supplied ownership",
+      "passed": true
+    },
+    {
+      "name": "form creation commits a real server draft",
+      "passed": true
+    },
+    {
+      "name": "builder route authorizes the actual form record",
+      "passed": true
+    },
+    {
+      "name": "unpublished form definitions are concealed",
+      "passed": true
+    },
+    {
+      "name": "publication creates an immutable version",
+      "passed": true
+    },
+    {
+      "name": "public definition excludes private ownership, counts, and retention controls",
+      "passed": true
+    },
+    {
+      "name": "save-and-resume returns a high-entropy private token",
+      "passed": true
+    },
+    {
+      "name": "valid resume token restores only its own draft",
+      "passed": true
+    },
+    {
+      "name": "resume token is stored only as a hash",
+      "passed": true
+    },
+    {
+      "name": "submission rejects unknown field IDs",
+      "passed": true
+    },
+    {
+      "name": "final submission commits before returning success",
+      "passed": true
+    },
+    {
+      "name": "submission retries return the same committed result and edit token",
+      "passed": true
+    },
+    {
+      "name": "idempotency key cannot change its submitted payload",
+      "passed": true
+    },
+    {
+      "name": "response limit is enforced inside the transaction",
+      "passed": true
+    },
+    {
+      "name": "committed response consumes its resume draft",
+      "passed": true
+    },
+    {
+      "name": "default response projection masks sensitive answers and tokens",
+      "passed": true
+    },
+    {
+      "name": "explicit sensitive reveal is separately authorized",
+      "passed": true
+    },
+    {
+      "name": "default search cannot infer sensitive answer values",
+      "passed": true
+    },
+    {
+      "name": "response filters execute on the server",
+      "passed": true
+    },
+    {
+      "name": "review preferences persist in a server-owned saved view",
+      "passed": true
+    },
+    {
+      "name": "saved views are available to their account owner",
+      "passed": true
+    },
+    {
+      "name": "version-aware summaries exclude sensitive and free-text values",
+      "passed": true
+    },
+    {
+      "name": "CSV export preserves stable field IDs and neutralizes spreadsheet formulas",
+      "passed": true
+    },
+    {
+      "name": "JSON export is server-authorized and omits sensitive answers",
+      "passed": true
+    },
+    {
+      "name": "XLSX download contains literal strings rather than executable formulas",
+      "passed": true
+    },
+    {
+      "name": "separate edit token retrieves the respondent’s own committed answers",
+      "passed": true
+    },
+    {
+      "name": "editing creates a versioned response update",
+      "passed": true
+    },
+    {
+      "name": "old answer values remain only in the protected revision history",
+      "passed": true
+    },
+    {
+      "name": "editing a published form changes only its draft",
+      "passed": true
+    },
+    {
+      "name": "published definition remains unchanged by draft edits",
+      "passed": true
+    },
+    {
+      "name": "new publication retains historical immutable labels",
+      "passed": true
+    },
+    {
+      "name": "database trigger rejects published-version rewrites",
+      "passed": true
+    },
+    {
+      "name": "authorized identity redaction commits through the protected API",
+      "passed": true
+    },
+    {
+      "name": "redaction removes identity from protected historical revisions",
+      "passed": true
+    },
+    {
+      "name": "redaction revokes the respondent edit token",
+      "passed": true
+    },
+    {
+      "name": "Blog Editors cannot discover form definitions or counts",
+      "passed": true
+    },
+    {
+      "name": "role change immediately conceals private form responses",
+      "passed": true
+    },
+    {
+      "name": "test form archives without deleting its protected responses",
+      "passed": true
+    }
+  ]
+}

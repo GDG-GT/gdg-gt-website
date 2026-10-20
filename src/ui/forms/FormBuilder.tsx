@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   ArrowDown,
   ArrowLeft,
@@ -30,70 +30,125 @@ import {
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import {
   fieldTypes,
-  formsStore,
   newField,
-  useForms,
   validateDefinition,
   duplicateSection,
   type FieldType,
   type PreviewForm,
 } from "./store";
 import FieldRenderer from "./FieldRenderer";
+import { formsApi, useServerForm } from "./api";
 
 export default function FormBuilder() {
   const { formId } = useParams(),
-    forms = useForms();
-  const source = forms.find((form) => form.id === formId);
+    server = useServerForm(formId),
+    source = server.form,
+    navigate = useNavigate();
   const [form, setForm] = useState<PreviewForm | null>(() =>
     source ? structuredClone(source) : null,
   );
   const [selected, setSelected] = useState(source?.fields[0]?.id || ""),
     [query, setQuery] = useState(""),
     [tab, setTab] = useState("Field"),
-    [saveStatus, setSaveStatus] = useState("Saved locally"),
+    [saveStatus, setSaveStatus] = useState("Loading draft…"),
     [mobile, setMobile] = useState(false),
     [paletteOpen, setPaletteOpen] = useState(false),
     [inspectorOpen, setInspectorOpen] = useState(false),
     [historyOpen, setHistoryOpen] = useState(false),
-    [publishOpen, setPublishOpen] = useState(false);
+    [publishOpen, setPublishOpen] = useState(false),
+    [saveError, setSaveError] = useState(""),
+    [publishing, setPublishing] = useState(false);
   const undo = useRef<PreviewForm[]>([]),
     redo = useRef<PreviewForm[]>([]),
     dragged = useRef<string | null>(null);
   const latest = useRef(form);
   latest.current = form;
-  useEffect(
-    () => () => {
-      if (latest.current) {
-        try {
-          formsStore.save(latest.current);
-        } catch {
-          /* Preserve the in-memory draft. */
-        }
-      }
-    },
-    [],
-  );
+  const revision = useRef<number>(),
+    queue = useRef<Promise<PreviewForm | undefined>>(
+      Promise.resolve(undefined),
+    ),
+    saved = useRef("");
+  const signature = (value: PreviewForm) =>
+    JSON.stringify([
+      value.slug,
+      value.title,
+      value.description,
+      value.fields,
+      value.sections,
+      value.settings,
+      value.teamId,
+    ]);
   useEffect(() => {
-    if (!form) return;
-    setSaveStatus("Saving…");
+    if (source && !latest.current) {
+      setForm(structuredClone(source));
+      setSelected(source.fields[0]?.id || "");
+      revision.current = source.revision;
+      saved.current = signature(source);
+      setSaveStatus("Saved");
+    }
+  }, [source]);
+  const persist = (snapshot: PreviewForm) => {
+    queue.current = queue.current
+      .catch(() => undefined)
+      .then(async () => {
+        if (saved.current === signature(snapshot)) return snapshot;
+        setSaveStatus("Saving…");
+        setSaveError("");
+        try {
+          const result = await formsApi.save({
+            ...snapshot,
+            revision: revision.current,
+          });
+          revision.current = result.revision;
+          saved.current = signature(snapshot);
+          setSaveStatus(
+            latest.current && signature(latest.current) === saved.current
+              ? "Saved"
+              : "Unsaved changes",
+          );
+          return result;
+        } catch (e) {
+          setSaveStatus("Not saved");
+          setSaveError((e as Error).message);
+          throw e;
+        }
+      });
+    return queue.current;
+  };
+  useEffect(() => {
+    if (
+      !form ||
+      saved.current === signature(form) ||
+      !form.actions?.includes("edit")
+    )
+      return;
+    setSaveStatus("Unsaved changes");
     const timer = setTimeout(() => {
-      try {
-        formsStore.save(form);
-        setSaveStatus("Saved locally");
-      } catch {
-        setSaveStatus("Could not save · browser storage full");
-      }
-    }, 450);
+      void persist(structuredClone(form)).catch(() => {});
+    }, 600);
     return () => clearTimeout(timer);
   }, [form]);
+  useEffect(() => {
+    const warn = (event: BeforeUnloadEvent) => {
+      if (latest.current && saved.current !== signature(latest.current)) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, []);
   if (!form)
     return (
       <div className="gt-admin-page">
         <EmptyState
-          title="This form is not available"
+          title={
+            server.loading ? "Loading your form…" : "This form is not available"
+          }
           action={<Link to="/admin/forms">Back to forms</Link>}
         >
-          It may have been reset in this local preview.
+          {server.error ||
+            "Your saved draft is loaded from the chapter server."}
         </EmptyState>
       </div>
     );
@@ -109,7 +164,34 @@ export default function FormBuilder() {
       update({
         ...form,
         fields: form.fields.map((item) =>
-          item.id === field.id ? { ...item, ...values } : item,
+          item.id === field.id
+            ? {
+                ...item,
+                ...values,
+                ...(values.options
+                  ? {
+                      optionIds: values.options.map(
+                        (option, index) =>
+                          item.optionIds?.[item.options.indexOf(option)] ||
+                          item.optionIds?.[index] ||
+                          crypto.randomUUID(),
+                      ),
+                    }
+                  : {}),
+                ...(values.columns
+                  ? {
+                      columnIds: values.columns.map(
+                        (column, index) =>
+                          item.columnIds?.[
+                            item.columns?.indexOf(column) ?? -1
+                          ] ||
+                          item.columnIds?.[index] ||
+                          crypto.randomUUID(),
+                      ),
+                    }
+                  : {}),
+              }
+            : item,
         ),
       });
   };
@@ -543,8 +625,9 @@ export default function FormBuilder() {
           </Field>
           {form.settings.access !== "public" && (
             <p className="gt-helper">
-              Identity and token checks require the backend phase. Public
-              collection stays unavailable for this mode in the local preview.
+              Access is checked by the server. Token-restricted forms require a
+              valid invitation or access link; chapter forms require an active
+              account.
             </p>
           )}
           <Field label="Response limit" hint="0 means no configured limit">
@@ -693,17 +776,38 @@ export default function FormBuilder() {
           </button>
           <Link
             to={`/forms/${form.slug}?preview=1`}
-            onClick={() => formsStore.save(form)}
+            onClick={async (event) => {
+              event.preventDefault();
+              try {
+                await persist(structuredClone(form));
+                navigate(`/forms/${form.slug}?preview=1`);
+              } catch {
+                /* Save error is shown beside the draft. */
+              }
+            }}
             className="gt-button gt-button-secondary"
           >
             <Eye size={16} />
             <span>Preview</span>
           </Link>
-          <Button onClick={() => setPublishOpen(true)}>
+          <Button
+            disabled={!form.actions?.includes("publish") || publishing}
+            onClick={() => setPublishOpen(true)}
+          >
             Publish <ArrowUp size={15} />
           </Button>
         </div>
       </div>
+      {saveError && (
+        <p role="alert" className="gt-form-error">
+          {saveError} Your changes remain on this page.{" "}
+          <button
+            onClick={() => persist(structuredClone(form)).catch(() => {})}
+          >
+            Retry save
+          </button>
+        </p>
+      )}
       <div className="gt-builder-mobile-tools">
         <Button variant="secondary" onClick={() => setPaletteOpen(true)}>
           <Plus size={16} />
@@ -900,8 +1004,8 @@ export default function FormBuilder() {
             </div>
           </div>
           <p className="gt-builder-hint">
-            Drag to reorder, or use the move up and down buttons. All changes
-            stay in this browser.
+            Drag to reorder, or use the move up and down buttons. Draft changes
+            autosave securely; publication creates a separate immutable version.
           </p>
         </div>
         <aside className="gt-builder-inspector">{inspector}</aside>
@@ -961,7 +1065,7 @@ export default function FormBuilder() {
           <DialogDescription>
             {issues.length
               ? "Resolve these checks to create a published version."
-              : `This creates immutable local version ${form.versions.length + 1}. No production form or email is created.`}
+              : `This publishes immutable version ${form.versions.length + 1}. Existing responses keep their original questions and labels.`}
           </DialogDescription>
           {issues.length ? (
             <ul className="gt-validation-list">
@@ -980,13 +1084,29 @@ export default function FormBuilder() {
             </div>
           )}
           <Button
-            disabled={!!issues.length}
-            onClick={() => {
-              setForm(formsStore.publish(form));
-              setPublishOpen(false);
+            disabled={!!issues.length || publishing}
+            onClick={async () => {
+              setPublishing(true);
+              try {
+                await persist(structuredClone(form));
+                const result = await formsApi.publish({
+                  ...form,
+                  revision: revision.current,
+                });
+                revision.current = result.revision;
+                saved.current = signature(result);
+                setForm(result);
+                setSaveStatus("Published and saved");
+                setPublishOpen(false);
+              } catch (e) {
+                setSaveError((e as Error).message);
+                setPublishOpen(false);
+              } finally {
+                setPublishing(false);
+              }
             }}
           >
-            Publish local version
+            {publishing ? "Publishing…" : "Publish version"}
           </Button>
         </DialogContent>
       </Dialog>

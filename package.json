@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:api": "node --env-file=.env.server.local scripts/local-api.mjs",
+    "dev:api": "node --watch --env-file=.env.server.local scripts/local-api.mjs",
     "local:start": "node scripts/local-stack.mjs start",
     "local:stop": "node scripts/local-stack.mjs stop",
     "local:status": "node scripts/local-stack.mjs status",
@@ -21,6 +21,11 @@
     "db:prepare": "node scripts/prepare-local-db.mjs",
     "setup:local-auth": "node scripts/setup-local-auth.mjs",
     "test:local-auth": "node scripts/test-local-auth.mjs",
+    "test:local-events": "node scripts/test-local-events.mjs",
+    "test:local-workspace": "node scripts/test-local-workspace.mjs",
+    "test:local-forms": "node scripts/test-local-forms.mjs",
+    "jobs:local": "node --env-file=.env.server.local scripts/local-delivery.mjs",
+    "test:local-submissions": "node scripts/test-local-submissions.mjs",
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit",
     "preview": "vite preview"
   },
@@ -74,6 +79,7 @@
     "lenis": "^1.3.11",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
+    "nodemailer": "10.1.7",
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",

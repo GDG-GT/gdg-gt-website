@@ -9,24 +9,43 @@ import {
 } from "lucide-react";
 import { Badge, Button, EmptyState } from "../primitives";
 import {
-  formsStore,
-  useForms,
-  useResponses,
   visibleFields,
   validateAnswer,
   type Answer,
+  type FormDefinition,
 } from "./store";
 import FieldRenderer from "./FieldRenderer";
+import { api, ApiFailure } from "@/lib/api";
+type RespondentForm = FormDefinition & {
+  id: string;
+  slug: string;
+  status: string;
+  versionId: string;
+  version: number;
+};
 
 export default function PublicForm() {
   const { slug } = useParams(),
     [params] = useSearchParams(),
-    forms = useForms(),
-    responses = useResponses();
-  const form = forms.find((item) => item.slug === slug),
     preview = params.get("preview") === "1";
-  const version = form?.versions[form.versions.length - 1],
-    definition = preview ? form : version;
+  const [form, setForm] = useState<RespondentForm>(),
+    [loading, setLoading] = useState(true),
+    [loadError, setLoadError] = useState(""),
+    [pending, setPending] = useState(false),
+    [savedLink, setSavedLink] = useState("");
+  const [tokens] = useState(() => {
+    const values = new URLSearchParams(window.location.hash.slice(1));
+    return {
+      access: values.get("access") || undefined,
+      resume: values.get("resume") || undefined,
+      edit: values.get("edit") || undefined,
+    };
+  });
+  const definition = form,
+    editToken = useRef(tokens.edit),
+    resumeToken = useRef(tokens.resume),
+    editRevision = useRef(0),
+    submission = useRef<{ payload: string; key: string }>();
   const [answers, setAnswers] = useState<Record<string, Answer>>({}),
     [step, setStep] = useState(0),
     [submitted, setSubmitted] = useState(false),
@@ -39,29 +58,97 @@ export default function PublicForm() {
   const formId = form?.id,
     formTitle = form?.title;
   useEffect(() => {
-    if (!formId) return;
-    document.title = `${formTitle} · GDG at Georgia Tech`;
-    try {
-      const saved = localStorage.getItem(`gdg-form-draft-${formId}`);
-      if (saved) {
-        setAnswers(JSON.parse(saved));
-        setFeedback("Your local draft was restored.");
-      }
-    } catch {
-      /* Use an empty draft when storage is unavailable. */
-    }
+    if (formId) document.title = `${formTitle} · GDG at Georgia Tech`;
   }, [formId, formTitle]);
+  useEffect(() => {
+    let meta = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    const previous = meta?.content;
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "robots";
+      document.head.appendChild(meta);
+    }
+    meta.content = "noindex, nofollow, noarchive";
+    return () => {
+      if (previous !== undefined) meta!.content = previous;
+      else meta?.remove();
+    };
+  }, []);
+  useEffect(() => {
+    window.history.replaceState(
+      null,
+      "",
+      window.location.pathname + window.location.search,
+    );
+    const controller = new AbortController();
+    setLoading(true);
+    setLoadError("");
+    const load = async () => {
+      if (tokens.edit && !preview) {
+        const data = await api<{
+          form: RespondentForm;
+          responseId: string;
+          revision: number;
+          answers: Record<string, Answer>;
+        }>(`/forms/${slug}/edits/load`, {
+          method: "POST",
+          body: {
+            editToken: tokens.edit,
+            ...(tokens.access ? { accessToken: tokens.access } : {}),
+          },
+          signal: controller.signal,
+        });
+        setForm(data.form);
+        setAnswers(data.answers);
+        responseId.current = data.responseId;
+        editRevision.current = data.revision;
+        setFeedback(
+          "Your response is ready to edit. Previous answers stay private.",
+        );
+      } else {
+        const data = await api<{ form: RespondentForm }>(
+          `/forms/${slug}${preview ? "/preview" : ""}`,
+          { formAccessToken: tokens.access, signal: controller.signal },
+        );
+        setForm(data.form);
+        if (tokens.resume && !preview) {
+          const draft = await api<{ answers: Record<string, Answer> }>(
+            `/forms/${slug}/drafts/load`,
+            {
+              method: "POST",
+              body: {
+                resumeToken: tokens.resume,
+                ...(tokens.access ? { accessToken: tokens.access } : {}),
+              },
+              signal: controller.signal,
+            },
+          );
+          setAnswers(draft.answers);
+          setFeedback("Your saved draft was restored.");
+        }
+      }
+    };
+    load()
+      .catch((e) => {
+        if (!controller.signal.aborted) setLoadError(e.message);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [slug, preview, tokens]);
   useEffect(() => {
     if (step) heading.current?.focus();
   }, [step]);
-  if (!form || !definition)
+  if (loading || loadError || !form || !definition)
     return (
       <div className="gt-public-form-page">
         <EmptyState
-          title="This form isn’t available"
+          title={loading ? "Loading your form…" : "This form isn’t available"}
           action={<Link to="/">Return home</Link>}
         >
-          It may be a draft, closed, or unavailable in this local preview.
+          {loadError ||
+            "It may be a draft, archived, or require a valid access link."}
         </EmptyState>
       </div>
     );
@@ -72,10 +159,7 @@ export default function PublicForm() {
     !responseId.current &&
     (form.status !== "Open" ||
       (settings.opensAt && new Date(settings.opensAt) > new Date()) ||
-      (settings.closesAt && new Date(settings.closesAt) < new Date()) ||
-      (settings.limit > 0 &&
-        responses.filter((response) => response.formId === form.id).length >=
-          settings.limit));
+      (settings.closesAt && new Date(settings.closesAt) < new Date()));
   if (closed)
     return (
       <div className="gt-public-form-page">
@@ -87,36 +171,13 @@ export default function PublicForm() {
         </div>
       </div>
     );
-  if (!preview && settings.access !== "public")
-    return (
-      <div className="gt-public-form-page">
-        <div className="gt-public-form-sheet">
-          <ShieldCheck size={34} />
-          <h1>{definition.title}</h1>
-          <p>
-            This form requires{" "}
-            {settings.access === "verified"
-              ? "a verified email address"
-              : settings.access === "internal"
-                ? "chapter member access"
-                : "a valid access link"}
-            .
-          </p>
-          <p className="gt-helper">
-            Identity verification is not connected in this UI preview. No
-            responses can be collected in this access mode yet.
-          </p>
-          <Link to="/contact">Contact the chapter</Link>
-        </div>
-      </div>
-    );
   const section =
     definition.sections[Math.min(step, definition.sections.length - 1)];
   const fields = visibleFields(definition.fields, answers).filter(
     (field) => field.sectionId === section.id,
   );
   const review = step >= definition.sections.length;
-  const next = (event: FormEvent) => {
+  const next = async (event: FormEvent) => {
     event.preventDefault();
     setError("");
     const errors = Object.fromEntries(
@@ -145,45 +206,108 @@ export default function PublicForm() {
     }
     if (preview) {
       setFeedback(
-        "This is a preview. Return to the builder and publish to collect local sample responses.",
+        "This is a preview. Return to the builder and publish before collecting responses.",
       );
       return;
     }
     if (!navigator.onLine) {
       setError(
-        "Reconnect to submit. You can save a local draft while offline.",
+        "Reconnect to submit. Keep this page open; final responses are never queued offline.",
       );
       return;
     }
     const visible = visibleFields(definition.fields, answers);
-    responseId.current ||= crypto.randomUUID();
-    formsStore.submit({
-      id: responseId.current,
-      formId: form.id,
-      version: version?.version || 1,
-      submittedAt: new Date().toISOString(),
-      answers: Object.fromEntries(
-        Object.entries(answers).filter(([id]) =>
-          visible.some((field) => field.id === id),
-        ),
+    const submittedAnswers = Object.fromEntries(
+      Object.entries(answers).filter(([id]) =>
+        visible.some((field) => field.id === id),
       ),
-    });
-    localStorage.removeItem(`gdg-form-draft-${form.id}`);
-    setSubmitted(true);
-  };
-  const save = () => {
+    );
+    const body = editToken.current
+      ? {
+          versionId: form.versionId,
+          answers: submittedAnswers,
+          editToken: editToken.current,
+          revision: editRevision.current,
+          ...(tokens.access ? { accessToken: tokens.access } : {}),
+        }
+      : {
+          versionId: form.versionId,
+          answers: submittedAnswers,
+          website: "",
+          ...(tokens.access ? { accessToken: tokens.access } : {}),
+          ...(resumeToken.current ? { resumeToken: resumeToken.current } : {}),
+        };
+    const payload = JSON.stringify(body);
+    if (submission.current?.payload !== payload)
+      submission.current = { payload, key: crypto.randomUUID() };
+    setPending(true);
     try {
-      localStorage.setItem(
-        `gdg-form-draft-${form.id}`,
-        JSON.stringify(answers),
+      const result = await api<{
+        responseId: string;
+        editToken?: string;
+        revision?: number;
+      }>(`/forms/${slug}/${editToken.current ? "edits" : "submissions"}`, {
+        method: "POST",
+        body,
+        idempotencyKey: submission.current.key,
+      });
+      responseId.current = result.responseId;
+      editToken.current = result.editToken || editToken.current;
+      if (result.revision !== undefined) editRevision.current = result.revision;
+      if (editToken.current)
+        setSavedLink(
+          window.location.origin +
+            window.location.pathname +
+            "#edit=" +
+            editToken.current,
+        );
+      setSubmitted(true);
+    } catch (e) {
+      setError((e as Error).message);
+      if (e instanceof ApiFailure && e.fields) setFieldErrors(e.fields);
+    } finally {
+      setPending(false);
+    }
+  };
+  const save = async () => {
+    setPending(true);
+    setError("");
+    try {
+      const visible = visibleFields(definition.fields, answers),
+        safe = Object.fromEntries(
+          Object.entries(answers).filter(([id]) =>
+            visible.some((f) => f.id === id),
+          ),
+        );
+      const result = await api<{ resumeToken: string; expiresInDays: number }>(
+        `/forms/${slug}/drafts`,
+        {
+          method: "POST",
+          body: {
+            versionId: form.versionId,
+            answers: safe,
+            ...(resumeToken.current
+              ? { resumeToken: resumeToken.current }
+              : {}),
+            ...(tokens.access ? { accessToken: tokens.access } : {}),
+          },
+        },
+      );
+      resumeToken.current = result.resumeToken;
+      const fragment = new URLSearchParams({
+        resume: result.resumeToken,
+        ...(tokens.access ? { access: tokens.access } : {}),
+      });
+      setSavedLink(
+        window.location.origin + window.location.pathname + "#" + fragment,
       );
       setFeedback(
-        "Draft saved in this browser. Return to this address to resume.",
+        `Draft saved securely for ${result.expiresInDays} days. Keep your private resume link.`,
       );
-    } catch {
-      setError(
-        "This browser could not save your draft. Keep this page open and try again.",
-      );
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setPending(false);
     }
   };
   return (
@@ -200,13 +324,12 @@ export default function PublicForm() {
         {submitted ? (
           <div className="gt-success">
             <CheckCircle2 size={48} />
-            <h1>Response saved locally.</h1>
+            <h1>Response submitted.</h1>
             <p>{settings.confirmation}</p>
             <p className="gt-helper">
-              This is a sample response stored in your browser. No production
-              submission or receipt email was sent.
+              Your response is saved securely. Reference: {responseId.current}
             </p>
-            {settings.editing && (
+            {settings.editing && editToken.current && (
               <Button
                 variant="secondary"
                 onClick={() => {
@@ -236,7 +359,7 @@ export default function PublicForm() {
                     : `Section ${step + 1} of ${definition.sections.length}`}
                 </span>
                 <Badge tone="success">
-                  {preview ? "Draft preview" : "Local sample form"}
+                  {preview ? "Draft preview" : "Chapter form"}
                 </Badge>
               </div>
               <div
@@ -334,13 +457,18 @@ export default function PublicForm() {
                 ) : (
                   <span />
                 )}
-                <Button type="submit" disabled={preview && review}>
-                  {review ? "Save local response" : "Next"}
+                <Button type="submit" disabled={pending || (preview && review)}>
+                  {pending ? "Saving…" : review ? "Submit response" : "Next"}
                   <ArrowRight size={17} />
                 </Button>
               </div>
-              {settings.resume && (
-                <button type="button" className="gt-save-resume" onClick={save}>
+              {settings.resume && !preview && !editToken.current && (
+                <button
+                  disabled={pending}
+                  type="button"
+                  className="gt-save-resume"
+                  onClick={save}
+                >
                   <Save size={15} />
                   Save and resume later
                 </button>
@@ -354,11 +482,34 @@ export default function PublicForm() {
         <div className="gt-public-form-privacy">
           <ShieldCheck size={15} />
           <span>
-            Local UI preview. Please use fictional information.{" "}
+            Your answers are shared only with authorized chapter reviewers.{" "}
             <Link to="/privacy">Privacy notice</Link>
           </span>
         </div>
       </div>
+      {savedLink && (
+        <div className="gt-public-form-sheet">
+          <h2>Your private {editToken.current ? "edit" : "resume"} link</h2>
+          <p>
+            Anyone with this link can access your response. Save it privately;
+            do not share it.
+          </p>
+          <Button
+            variant="secondary"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(savedLink);
+                setFeedback("Private link copied.");
+              } catch {
+                setError("The link could not be copied.");
+              }
+            }}
+          >
+            Copy private link
+          </Button>
+          <p role="status">{feedback}</p>
+        </div>
+      )}
       {!submitted && (
         <p className="gt-form-bottom-note">
           Your response is not saved until you complete the final step.

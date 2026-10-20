@@ -10,10 +10,17 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     strictPort: true,
     proxy: {
-      '/api/v1': { target: 'http://127.0.0.1:8081', changeOrigin: false },
+      "/api/v1": { target: "http://127.0.0.1:8081", changeOrigin: false },
     },
   },
-  plugins: [react(), ...(mode === 'development' && loadEnv(mode, process.cwd(), '').VITE_LOCAL_UI === 'true' ? [localPreview()] : [])],
+  plugins: [
+    react(),
+    ...(mode === "development" &&
+    loadEnv(mode, process.cwd(), "").VITE_LOCAL_UI === "true" &&
+    loadEnv(mode, process.cwd(), "").VITE_REAL_API !== "true"
+      ? [localPreview()]
+      : []),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -21,15 +28,19 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     minify: true,
-    sourcemap: mode === 'development',
+    sourcemap: mode === "development",
     rollupOptions: {
       output: {
         manualChunks: {
           // Separate vendor chunks for better caching
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-tabs'],
-          'admin-vendor': ['@supabase/supabase-js', '@tanstack/react-query'],
-          'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          "ui-vendor": [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-tabs",
+          ],
+          "admin-vendor": ["@supabase/supabase-js", "@tanstack/react-query"],
+          "three-vendor": ["three", "@react-three/fiber", "@react-three/drei"],
           // NOTE: do NOT manually chunk tldraw — splitting `tldraw` from its
           // @tldraw/* sub-packages breaks its cross-package singletons at
           // runtime ("p is not a function"). The lazy import in
@@ -43,6 +54,6 @@ export default defineConfig(({ mode }) => ({
   // Production environment optimizations
   define: {
     // Remove development-only code in production
-    __DEV__: mode === 'development',
+    __DEV__: mode === "development",
   },
 }));

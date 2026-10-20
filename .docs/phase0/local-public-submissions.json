@@ -1,0 +1,69 @@
+{
+  "note": "Actual loopback API, PostgreSQL, encrypted queue and Mailpit only. No real provider sends. Fictional test subscriptions and contact records retained.",
+  "tests": [
+    {
+      "name": "newsletter request returns a generic accepted response",
+      "passed": true
+    },
+    {
+      "name": "newsletter is inactive until double opt-in",
+      "passed": true
+    },
+    {
+      "name": "confirmation delivery has an encrypted token payload",
+      "passed": true
+    },
+    {
+      "name": "newsletter token storage contains the hash, not the raw token",
+      "passed": true
+    },
+    {
+      "name": "durable mail jobs deliver into the local mail catcher",
+      "passed": true
+    },
+    {
+      "name": "confirmation email is captured locally",
+      "passed": true
+    },
+    {
+      "name": "confirmation token activates the subscription",
+      "passed": true
+    },
+    {
+      "name": "consumed confirmation token cannot be replayed",
+      "passed": true
+    },
+    {
+      "name": "existing-address response does not reveal subscriber state",
+      "passed": true
+    },
+    {
+      "name": "unsubscribe is safe to repeat: 1",
+      "passed": true
+    },
+    {
+      "name": "unsubscribe is safe to repeat: 2",
+      "passed": true
+    },
+    {
+      "name": "contact submission is committed through the public API",
+      "passed": true
+    },
+    {
+      "name": "contact retry is idempotent",
+      "passed": true
+    },
+    {
+      "name": "contact key cannot be reused with changed content",
+      "passed": true
+    },
+    {
+      "name": "one durable contact record exists after retries",
+      "passed": true
+    },
+    {
+      "name": "contact acknowledgment and chapter notification are locally captured",
+      "passed": true
+    }
+  ]
+}

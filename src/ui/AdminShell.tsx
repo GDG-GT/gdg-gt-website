@@ -111,34 +111,36 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false),
     [searchOpen, setSearchOpen] = useState(false),
     [query, setQuery] = useState("");
-  const [allowed, setAllowed] = useState<string[]>([]);
+  const [allowed, setAllowed] = useState<string[]>([]),
+    [navFailed, setNavFailed] = useState(false),
+    [navRetry, setNavRetry] = useState(0);
   useEffect(() => {
     if (!currentAdmin) return;
     let cancelled = false;
-    Promise.all(
-      workspaceDestinations.map(async (destination) => ({
-        href: destination.href,
-        allowed:
-          (!destination.href.startsWith("/admin/blog-") ||
-            currentAdmin.role === "blog_editor" ||
-            localPreviewEnabled) &&
-          (await PermissionsService.canAccessPage(
-            currentAdmin,
-            destination.href,
-          )),
-      })),
-    ).then((results) => {
-      if (!cancelled)
-        setAllowed(
-          results
-            .filter((result) => result.allowed)
-            .map((result) => result.href),
-        );
-    });
+    PermissionsService.getAccessiblePages(currentAdmin)
+      .then((routes) => {
+        if (!cancelled) {
+          setAllowed(
+            routes.filter(
+              (route) =>
+                !route.startsWith("/admin/blog-") ||
+                currentAdmin.role === "blog_editor" ||
+                localPreviewEnabled,
+            ),
+          );
+          setNavFailed(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setAllowed([]);
+          setNavFailed(true);
+        }
+      });
     return () => {
       cancelled = true;
     };
-  }, [currentAdmin]);
+  }, [currentAdmin, navRetry, location.pathname]);
   useEffect(() => {
     setMobileOpen(false);
     window.scrollTo(0, 0);
@@ -181,6 +183,14 @@ export default function AdminShell({ children }: { children: ReactNode }) {
         <Brand inverse compact />
         <span className="gt-workspace-label">Chapter workspace</span>
       </div>
+      {navFailed && (
+        <button
+          className="gt-button gt-button-secondary"
+          onClick={() => setNavRetry((v) => v + 1)}
+        >
+          Retry workspace navigation
+        </button>
+      )}
       <nav aria-label="Workspace navigation" className="gt-sidebar-navigation">
         {groups.map((group) => {
           const links = group.links.filter((item) =>
@@ -245,6 +255,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           </div>
           <button
             className="gt-command-trigger"
+            aria-label="Search the workspace"
             onClick={() => setSearchOpen(true)}
           >
             <Search size={16} />

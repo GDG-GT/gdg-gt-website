@@ -1,0 +1,89 @@
+{
+  "note": "Real local HTTP/PostgreSQL tests. Fictional event remains archived with its audited test registration; no provider email sent.",
+  "tests": [
+    {
+      "name": "protected event list rejects anonymous callers",
+      "passed": true
+    },
+    {
+      "name": "admin creates a draft event",
+      "passed": true
+    },
+    {
+      "name": "draft detail is concealed from public API",
+      "passed": true
+    },
+    {
+      "name": "event mutations reject client-supplied ownership",
+      "passed": true
+    },
+    {
+      "name": "authorized publication succeeds",
+      "passed": true
+    },
+    {
+      "name": "published detail is a safe public projection",
+      "passed": true
+    },
+    {
+      "name": "public detail supplies ETag and short edge caching",
+      "passed": true
+    },
+    {
+      "name": "calendar uses stable event metadata and UTC timestamps",
+      "passed": true
+    },
+    {
+      "name": "registration requires an idempotency key",
+      "passed": true
+    },
+    {
+      "name": "atomic registration commits successfully",
+      "passed": true
+    },
+    {
+      "name": "same idempotency key returns the same committed registration",
+      "passed": true
+    },
+    {
+      "name": "idempotency key cannot be reused with a different payload",
+      "passed": true
+    },
+    {
+      "name": "normalized duplicate email is rejected",
+      "passed": true
+    },
+    {
+      "name": "capacity is enforced by the database",
+      "passed": true
+    },
+    {
+      "name": "authorized attendee listing reads committed registrations",
+      "passed": true
+    },
+    {
+      "name": "check-in succeeds through protected API",
+      "passed": true
+    },
+    {
+      "name": "event slug can be renamed",
+      "passed": true
+    },
+    {
+      "name": "old public slug redirects without exposing drafts",
+      "passed": true
+    },
+    {
+      "name": "stale edits cannot silently overwrite newer revisions",
+      "passed": true
+    },
+    {
+      "name": "one confirmation job exists after repeated registration",
+      "passed": true
+    },
+    {
+      "name": "test fixture archives without destroying registrations",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,267 @@
+import { Resend } from "resend";
+import nodemailer from "nodemailer";
+import { serverDatabase } from "./db/client.mjs";
+import { serverConfig } from "./config.mjs";
+import { databaseResult as checked } from "./lib/validation.mjs";
+import { decryptPayload } from "./lib/encryption.mjs";
+import { ApiError } from "./lib/http.mjs";
+const escape = (v) =>
+  String(v || "").replace(
+    /[&<>"']/g,
+    (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
+        c
+      ],
+  );
+export function mailConfig(env) {
+  const local = env.MAIL_MODE === "local";
+  if (
+    local &&
+    (env.NODE_ENV === "production" ||
+      env.SUPABASE_URL !== "http://127.0.0.1:54361")
+  )
+    throw new Error(
+      "Local mail is restricted to the dedicated loopback database.",
+    );
+  if (
+    !local &&
+    (env.MAIL_MODE !== "resend" ||
+      env.EMAIL_SEND_ENABLED !== "true" ||
+      !env.RESEND_API_KEY)
+  )
+    throw new ApiError(
+      503,
+      "MAIL_NOT_CONFIGURED",
+      "Email delivery is not configured.",
+    );
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(env.FROM_EMAIL || ""))
+    throw new Error("A valid configured sender is required.");
+  return {
+    local,
+    from: env.FROM_EMAIL,
+    replyTo: env.REPLY_TO_EMAIL || env.CHAPTER_CONTACT_EMAIL,
+    chapter: env.CHAPTER_CONTACT_EMAIL,
+  };
+}
+export async function deliveryMessage(job, db, config, mail) {
+  let to, subject, content;
+  if (job.kind === "event_confirmation") {
+    const registration = checked(
+      await db
+        .from("event_attendance")
+        .select("attendee_name,attendee_email,event_id,deleted_at")
+        .eq("id", job.payload.registrationId)
+        .maybeSingle(),
+    );
+    if (!registration || registration.deleted_at) return null;
+    const event = checked(
+      await db
+        .from("events")
+        .select("title,slug,start_at,timezone,location,publication_status")
+        .eq("id", registration.event_id)
+        .single(),
+    );
+    if (event.publication_status === "archived") return null;
+    to = registration.attendee_email;
+    subject = "Your registration: " + event.title;
+    content = `Hi ${registration.attendee_name},\n\nYour place at ${event.title} is confirmed.\n${new Date(event.start_at).toLocaleString("en-US", { timeZone: event.timezone })} (${event.timezone})\n${event.location}\n\nDetails: ${config.origin}/events/${event.slug}`;
+  } else if (job.kind === "event_message") {
+    const recipient = checked(
+      await db
+        .from("event_message_recipients")
+        .select("recipient_email")
+        .eq("message_id", job.payload.messageId)
+        .eq("registration_id", job.payload.registrationId)
+        .maybeSingle(),
+    );
+    if (!recipient) return null;
+    const message = checked(
+      await db
+        .from("event_messages")
+        .select("subject,message")
+        .eq("id", job.payload.messageId)
+        .single(),
+    );
+    to = recipient.recipient_email;
+    subject = message.subject;
+    content = message.message;
+  } else if (job.kind === "newsletter_confirmation") {
+    const record = checked(
+      await db
+        .from("newsletter_tokens")
+        .select("consumed_at,expires_at")
+        .eq("id", job.payload.tokenId)
+        .maybeSingle(),
+    );
+    if (
+      !record ||
+      record.consumed_at ||
+      new Date(record.expires_at) <= new Date()
+    )
+      return null;
+    const subscriber = checked(
+      await db
+        .from("newsletter_subscribers")
+        .select("email")
+        .eq("id", job.payload.subscriberId)
+        .single(),
+    );
+    const secret = decryptPayload(job.secret_payload, config.encryptionSecret);
+    to = subscriber.email;
+    subject = "Confirm your GDG at Georgia Tech subscription";
+    content =
+      "Confirm that you want chapter news and event updates:\n" +
+      config.origin +
+      "/newsletter/confirm#token=" +
+      secret.token +
+      "\n\nThis link expires in 24 hours. If you did not request it, ignore this email.";
+  } else if (
+    ["contact_acknowledgment", "contact_notification"].includes(job.kind)
+  ) {
+    const contact = checked(
+      await db
+        .from("contact_submissions")
+        .select("name,email,inquiry_type,message")
+        .eq("id", job.payload.contactId)
+        .single(),
+    );
+    if (job.kind === "contact_acknowledgment") {
+      to = contact.email;
+      subject = "We received your message";
+      content = `Hi ${contact.name},\n\nYour message to GDG at Georgia Tech has been saved. The chapter will review it and be in touch.\n\nPlease do not send sensitive personal information by email.`;
+    } else {
+      if (!mail.chapter)
+        throw new ApiError(
+          503,
+          "MAIL_NOT_CONFIGURED",
+          "A chapter inbox is required.",
+        );
+      to = mail.chapter;
+      subject = "New chapter inquiry: " + contact.inquiry_type;
+      content = `${contact.name} (${contact.email}) sent an inquiry.\n\n${contact.message}\n\nReview securely: ${config.origin}/admin/communications`;
+    }
+  } else if (job.kind === "form_response_notification") {
+    const form = checked(
+      await db
+        .from("forms")
+        .select("id,title,owner_id")
+        .eq("id", job.payload.formId)
+        .maybeSingle(),
+    );
+    if (!form) return null;
+    if (
+      checked(
+        await db.rpc("can_operate_form", {
+          p_actor: form.owner_id,
+          p_form: form.id,
+          p_action: "view_responses",
+        }),
+      )
+    )
+      checked(
+        await db
+          .from("notifications")
+          .upsert(
+            {
+              user_id: form.owner_id,
+              type: "system",
+              title: "New form response",
+              message: "A response to " + form.title + " is ready for review.",
+              link: "/admin/forms/" + form.id + "/responses",
+              delivery_key:
+                "form-response:" + job.payload.responseId + ":" + form.owner_id,
+            },
+            { onConflict: "delivery_key", ignoreDuplicates: true },
+          ),
+      );
+    return null;
+  } else
+    throw new ApiError(
+      400,
+      "UNKNOWN_JOB_KIND",
+      "This delivery type has no handler.",
+    );
+  return {
+    from: mail.from,
+    to,
+    subject,
+    text: content,
+    html: `<!doctype html><html><body><h1 style="font:600 22px system-ui">GDG at Georgia Tech</h1><div style="font:16px/1.6 system-ui;white-space:pre-wrap">${escape(content)}</div></body></html>`,
+    ...(mail.replyTo ? { replyTo: mail.replyTo } : {}),
+    headers: { "X-GDG-Job-ID": job.id },
+    messageId: "<" + job.id + "@gdg.local>",
+  };
+}
+export async function runDelivery({
+  db = serverDatabase(),
+  env = process.env,
+  limit = 10,
+} = {}) {
+  const config = serverConfig(env),
+    mail = mailConfig(env),
+    jobs = checked(await db.rpc("claim_delivery_jobs", { p_limit: limit }));
+  const smtp = mail.local
+    ? nodemailer.createTransport({
+        host: "127.0.0.1",
+        port: 54365,
+        secure: false,
+        ignoreTLS: true,
+        connectionTimeout: 10000,
+        socketTimeout: 15000,
+      })
+    : null;
+  const resend = mail.local ? null : new Resend(env.RESEND_API_KEY);
+  const result = {
+    claimed: jobs.length,
+    completed: 0,
+    retried: 0,
+    lostLease: 0,
+  };
+  for (const job of jobs) {
+    let providerId = null,
+      success = false,
+      errorCode = null;
+    try {
+      const message = await deliveryMessage(job, db, config, mail);
+      if (message) {
+        if (smtp) {
+          const info = await smtp.sendMail(message);
+          providerId = String(info.messageId);
+        } else {
+          const { messageId: unused, ...send } = message;
+          void unused;
+          const response = await resend.emails.send(send, {
+            idempotencyKey: "gdg-job-" + job.id,
+          });
+          if (response.error)
+            throw new ApiError(
+              503,
+              "PROVIDER_RETRY",
+              "Delivery is unavailable.",
+            );
+          providerId = response.data.id;
+        }
+      }
+      success = true;
+    } catch (error) {
+      errorCode = error instanceof ApiError ? error.code : "DELIVERY_RETRY";
+    }
+    const finished = checked(
+      await db.rpc("finish_delivery_job", {
+        p_id: job.id,
+        p_lease: job.lease_token,
+        p_success: success,
+        p_provider_id: providerId,
+        p_error_code: errorCode,
+      }),
+    );
+    if (!finished) {
+      result.lostLease++;
+      continue;
+    }
+    if (success) result.completed++;
+    else result.retried++;
+  }
+  smtp?.close();
+  return result;
+}

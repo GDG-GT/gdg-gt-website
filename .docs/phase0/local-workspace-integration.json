@@ -1,0 +1,65 @@
+{
+  "note": "Real loopback HTTP and PostgreSQL. Only fictional development accounts and notifications used; role restored in finally. No external delivery.",
+  "tests": [
+    {
+      "name": "dashboard rejects anonymous readers",
+      "passed": true
+    },
+    {
+      "name": "dashboard loads real authorized widgets",
+      "passed": true
+    },
+    {
+      "name": "session list never exposes bearer hashes",
+      "passed": true
+    },
+    {
+      "name": "self-service profile rejects privilege fields",
+      "passed": true
+    },
+    {
+      "name": "notifications are account-scoped",
+      "passed": true
+    },
+    {
+      "name": "notification metadata and unsafe links are omitted",
+      "passed": true
+    },
+    {
+      "name": "cross-account notification mutation is concealed",
+      "passed": true
+    },
+    {
+      "name": "own notification mutation persists",
+      "passed": true
+    },
+    {
+      "name": "notification mutation rejects unsupported state",
+      "passed": true
+    },
+    {
+      "name": "audit list returns bounded safe projections",
+      "passed": true
+    },
+    {
+      "name": "audit export uses server-side filters",
+      "passed": true
+    },
+    {
+      "name": "audit rejects inverted date ranges",
+      "passed": true
+    },
+    {
+      "name": "revoked role immediately removes ungranted dashboard data",
+      "passed": true
+    },
+    {
+      "name": "current role is rechecked for audit access",
+      "passed": true
+    },
+    {
+      "name": "members retain access to their own notifications",
+      "passed": true
+    }
+  ]
+}

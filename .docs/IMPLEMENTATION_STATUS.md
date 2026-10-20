@@ -5,6 +5,65 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Real local workflows — latest implementation pass, 2026-10-19
+
+This section supersedes older prototype-only statements below. The full PRD is
+**not complete**; no staging/production or final visual acceptance is claimed.
+
+- The active browser now uses `/api/v1`, real opaque sessions, and the dedicated
+  loopback Supabase database. The fixture adapter is disabled in real-API mode.
+  No browser application-table privileges were opened to make this work.
+- Event draft/edit/publication, revision conflicts, slug redirects, registrations,
+  attendee correction/check-in/soft deletion, CSV, and audience-snapshot email
+  enqueueing have server implementations. Local event HTTP evidence has 21 checks;
+  audience delivery and all team permission combinations still need more coverage.
+- Public CMS reads, team/resources/sponsors/gallery metadata, newsletter double
+  opt-in, and contact persistence are server-backed. Local SMTP captures mail;
+  no external provider delivery is enabled. Newsletter/contact integration evidence
+  has 16 checks. Public image-byte delivery and contact attachments remain open.
+- Own-account/profile, password/session management, dashboard widgets, own
+  notifications, and append-only audit list/export are connected. Dashboard
+  widgets fail independently and omit ungranted sections. Workspace integration
+  has 15 real HTTP/database checks, including current-role revocation.
+- Forms now has an RLS-locked schema, shared bounded browser/server validation,
+  action/team/collaborator authorization, optimistic draft saves, immutable
+  published versions, atomic online submissions, hashed resume/edit tokens,
+  protected answer revisions, masked sensitive values, filtered responses,
+  version-aware summaries, account-owned saved views, CSV/XLSX/JSON downloads,
+  operational-hold checks, and identity redaction across historical answers.
+  Active library/builder/respondent/response routes use these APIs. No real answers
+  or authentication tokens are saved to browser localStorage by these routes.
+- Forms remains partial: invitation/verification issuance and delivery UI, complete
+  branch/end logic, scanned private uploads, large asynchronous exports, full
+  history UI, retention cleanup, reviewed receipts, richer settings/templates,
+  and complete action/access-mode acceptance coverage remain required. Publication
+  of file fields and receipts is fail-closed until their services are connected.
+- Thirteen target migrations applied in actual local Supabase. Isolated SQL tests
+  also pass, including **100 event clients: one final-seat registration** and
+  **100 form clients: one final-slot response**, with one deduplicated outbox job
+  per committed operation. Evidence: `phase0/canonical-tests.json`.
+- Latest full verification at this checkpoint: 74 unit tests, TypeScript check,
+  ESLint with zero errors, and production build passed. This is not complete
+  mandatory PRD test coverage. Build still reports large/circular vendor chunks;
+  strict TypeScript, coverage/CI, security/dependency remediation, and browser
+  acceptance across all routes remain open.
+- Added bounded CSRF refresh/retry for stale tokens, transient auth-error retry
+  instead of treating an API outage as logout, and single-request sidebar access
+  discovery. The gate now counts failed entries separately from successful opens;
+  its five-failure lockout is persistent, with a separate bounded request quota.
+- Browser proof: created/published a fictional form, submitted fictional answers,
+  then read the committed response in the protected workspace. Dashboard phone
+  viewport was 375 px with document width 375 px and real scroll movement of
+  812 px. Evidence screenshots are under `ui-review/real-*`. These are verification
+  captures, not user visual approval. Temporary viewport was reset.
+- Other legacy admin modules still need server migration (CMS mutation, teams,
+  users, finance, communications/channels/whiteboards, media, campaigns, private
+  blog/projects, and Linktree). Do not mistake an accessible route for a completed
+  workflow. The real API no longer silently substitutes preview records.
+- Runtime: Vite `127.0.0.1:8080`, watch-mode Node API `127.0.0.1:8081`, isolated
+  Colima/Supabase. Current disk check showed about 27 GiB free; older disk errors
+  below are historical, not a current blocker. No cloud resources were changed.
+
 - Local public/admin UI prototype exists; see `UI_LOCAL_REVIEW.md` for its limits.
 - The yellow palette was rejected. Surfaces now use low-chroma neutral off-whites;
   homepage framing is peach again. Coral and charcoal remain.

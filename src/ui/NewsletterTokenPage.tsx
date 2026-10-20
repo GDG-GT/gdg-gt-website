@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { CheckCircle2, Loader2, Mail, CircleAlert } from "lucide-react";
-import { NewsletterService } from "@/services/newsletterService";
+import { PublicNewsletterService as NewsletterService } from "@/services/publicWorkflows";
 import { Badge } from "./primitives";
 import { localPreviewEnabled } from "./preview-data";
 
@@ -10,8 +10,14 @@ export default function NewsletterTokenPage({
 }: {
   kind: "confirm" | "unsubscribe";
 }) {
-  const [params] = useSearchParams(),
-    token = params.get("token");
+  const [token] = useState(() => {
+    const current = new URL(window.location.href),
+      value =
+        new URLSearchParams(current.hash.slice(1)).get("token") ||
+        current.searchParams.get("token");
+    if (value) window.history.replaceState(null, "", current.pathname);
+    return value;
+  });
   const [state, setState] = useState<
     "loading" | "success" | "error" | "preview"
   >("loading");

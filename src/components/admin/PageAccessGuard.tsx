@@ -1,96 +1,102 @@
-import React, { useState, useEffect } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useAdmin } from '@/contexts/AdminContext';
-import { PermissionsService } from '@/services/permissionsService';
-import { Shield, Lock } from 'lucide-react';
-
-interface PageAccessGuardProps {
-  children: React.ReactNode;
-}
-
-/**
- * Component that enforces page access based on user role and team permissions.
- * Wraps admin pages to check if the current user has access.
- */
-const PageAccessGuard: React.FC<PageAccessGuardProps> = ({ children }) => {
-  const { currentAdmin, isAuthenticated, isLoading } = useAdmin();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [hasAccess, setHasAccess] = useState<boolean | null>(null);
-  const [isChecking, setIsChecking] = useState(true);
-
+import { useState, useEffect, type ReactNode } from "react";
+import { Navigate, useLocation, Link } from "react-router-dom";
+import { useAdmin } from "@/contexts/AdminContext";
+import { PermissionsService } from "@/services/permissionsService";
+import { Button, EmptyState } from "@/ui/primitives";
+export default function PageAccessGuard({ children }: { children: ReactNode }) {
+  const {
+      currentAdmin,
+      isAuthenticated,
+      isLoading,
+      error: sessionError,
+      retrySession,
+    } = useAdmin(),
+    location = useLocation();
+  const [refresh, setRefresh] = useState(0),
+    [decision, setDecision] = useState<{
+      key: string;
+      allowed?: boolean;
+      error?: string;
+    }>();
+  const key =
+    location.pathname +
+    ":" +
+    (currentAdmin?.id || "") +
+    ":" +
+    currentAdmin?.role;
   useEffect(() => {
-    checkAccess();
-  }, [currentAdmin, location.pathname]);
-
-  const checkAccess = async () => {
-    if (!currentAdmin) {
-      setHasAccess(false);
-      setIsChecking(false);
-      return;
-    }
-
-    setIsChecking(true);
-    try {
-      const canAccess = await PermissionsService.canAccessPage(currentAdmin, location.pathname);
-      setHasAccess(canAccess);
-    } catch (error) {
-      console.error('Error checking page access:', error);
-      setHasAccess(false);
-    } finally {
-      setIsChecking(false);
-    }
-  };
-
-  if (isLoading) return <div className="gt-admin-page" aria-busy="true"><div className="gt-skeleton gt-detail-skeleton"/><span className="sr-only">Loading your workspace</span></div>;
-
-  // Not authenticated - redirect to home
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
-
-  // Still checking access
-  if (isChecking) {
+    if (!currentAdmin) return;
+    let active = true;
+    PermissionsService.canAccessPage(currentAdmin, location.pathname)
+      .then((allowed) => {
+        if (active) setDecision({ key, allowed });
+      })
+      .catch(() => {
+        if (active)
+          setDecision({
+            key,
+            error:
+              "Access could not be checked. Your saved work has not been changed.",
+          });
+      });
+    return () => {
+      active = false;
+    };
+  }, [currentAdmin, location.pathname, key, refresh]);
+  if (isLoading)
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <Shield className="w-8 h-8 animate-pulse text-primary mx-auto mb-4" />
-          <p className="text-muted-foreground">Checking access...</p>
-        </div>
+      <div className="gt-admin-page" role="status">
+        Loading your workspace…
       </div>
     );
-  }
-
-  // No access - show access denied
-  if (!hasAccess) {
+  if (!isAuthenticated && sessionError)
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-card rounded-xl border border-border p-8 text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Lock className="w-8 h-8 text-red-600" />
-          </div>
-          <h1 className="text-2xl font-bold text-foreground mb-2">Access Denied</h1>
-          <p className="text-muted-foreground mb-6">
-            You don't have permission to access this page. This page may be restricted to specific teams or roles.
-          </p>
-          <div className="space-y-3">
-            <button
-              onClick={() => navigate('/admin')}
-              className="block w-full py-2 px-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-            >
-              Go to Dashboard
-            </button>
-            <p className="text-xs text-muted-foreground">
-              If you believe you should have access, contact your team lead or administrator.
-            </p>
-          </div>
-        </div>
+      <div className="gt-admin-page">
+        <EmptyState
+          title="Your workspace is temporarily unavailable"
+          action={
+            <Button onClick={() => void retrySession()}>Try again</Button>
+          }
+        >
+          {sessionError}
+        </EmptyState>
       </div>
     );
-  }
-
-  // Has access - render children
+  if (!isAuthenticated) return <Navigate to="/" replace />;
+  if (decision?.key !== key)
+    return (
+      <div className="gt-admin-page" role="status">
+        Checking access…
+      </div>
+    );
+  if (decision.error)
+    return (
+      <div className="gt-admin-page">
+        <EmptyState
+          title="Could not check access"
+          action={
+            <Button onClick={() => setRefresh((v) => v + 1)}>Try again</Button>
+          }
+        >
+          {decision.error}
+        </EmptyState>
+      </div>
+    );
+  if (!decision.allowed)
+    return (
+      <div className="gt-admin-page">
+        <EmptyState
+          title="This workspace is restricted"
+          action={
+            <Link to="/admin" className="gt-button gt-button-secondary">
+              Back to dashboard
+            </Link>
+          }
+        >
+          Your current account does not have access to this page. Ask a chapter
+          administrator if your responsibilities have changed.
+        </EmptyState>
+      </div>
+    );
   return <>{children}</>;
-};
-
-export default PageAccessGuard;
+}

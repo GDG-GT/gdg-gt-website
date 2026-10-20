@@ -1,15 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { ContentService } from '@/services/contentService';
-import { EventsService } from '@/services/eventsService';
-import { TeamService } from '@/services/teamService';
-import { ProjectsService } from '@/services/projectsService';
-import { SponsorsService } from '@/services/sponsorsService';
-import { ResourcesService } from '@/services/resourcesService';
-import { OptimizedContentService } from '@/services/optimizedContentService';
-import { preloaderService } from '@/services/preloaderService';
-import { supabase } from '@/lib/supabase';
-import { clearContentCache, clearSpecificCache } from '@/utils/serviceWorker';
-
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import { api } from "@/lib/api";
 interface ContentContextType {
   siteSettings: Record<string, any>;
   pageContent: Record<string, Record<string, any>>;
@@ -42,511 +38,167 @@ interface ContentContextType {
   getAllLinks: (category?: string) => any[];
 }
 
+type Row = Record<string, any>;
 const ContentContext = createContext<ContentContextType | undefined>(undefined);
-
 export const useContent = () => {
-  const context = useContext(ContentContext);
-  if (context === undefined) {
-    throw new Error('useContent must be used within a ContentProvider');
-  }
-  return context;
+  const value = useContext(ContentContext);
+  if (!value) throw new Error("ContentProvider is required.");
+  return value;
 };
-
-interface ContentProviderProps {
+export const ContentProvider = ({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-export const ContentProvider: React.FC<ContentProviderProps> = ({ children }) => {
-  const [siteSettings, setSiteSettings] = useState<Record<string, any>>({});
-  const [pageContent, setPageContent] = useState<Record<string, Record<string, any>>>({});
-  const [navigationItems, setNavigationItems] = useState<any[]>([]);
-  const [footerContent, setFooterContent] = useState<Record<string, any>>({});
-  const [events, setEvents] = useState<any[]>([]);
-  const [teamMembers, setTeamMembers] = useState<any[]>([]);
-  const [projects, setProjects] = useState<any[]>([]);
-  const [sponsors, setSponsors] = useState<any[]>([]);
-  const [resources, setResources] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingEvents, setIsLoadingEvents] = useState(false);
-  const [isLoadingTeam, setIsLoadingTeam] = useState(false);
-  const [isLoadingProjects, setIsLoadingProjects] = useState(false);
-  const [isLoadingSponsors, setIsLoadingSponsors] = useState(false);
-  const [isLoadingResources, setIsLoadingResources] = useState(false);
+}) => {
+  const [siteSettings, setSiteSettings] = useState<Record<string, any>>({}),
+    [pageContent, setPageContent] = useState<
+      Record<string, Record<string, any>>
+    >({});
+  const [navigationItems, setNavigationItems] = useState<Row[]>([]),
+    [footerContent, setFooterContent] = useState<Record<string, any>>({});
+  const [events, setEvents] = useState<Row[]>([]),
+    [teamMembers, setTeamMembers] = useState<Row[]>([]),
+    [sponsors, setSponsors] = useState<Row[]>([]),
+    [resources, setResources] = useState<Row[]>([]);
+  const [isLoading, setLoading] = useState(true),
+    [isLoadingEvents, setEventsLoading] = useState(false),
+    [isLoadingTeam, setTeamLoading] = useState(false),
+    [isLoadingSponsors, setSponsorsLoading] = useState(false),
+    [isLoadingResources, setResourcesLoading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(Date.now());
-  
-  // Cache for loaded data to prevent unnecessary refetches
-  const [loadedSections, setLoadedSections] = useState<Set<string>>(new Set());
-
-  // Load only essential content on initial load with optimizations
-  const loadEssentialContent = async () => {
+  const loadEssential = useCallback(async () => {
+    setLoading(true);
     try {
-      setIsLoading(true);
-
-      // Use optimized batch loading for essential content
-      const { siteSettings: settings, navigationItems: navItems, footerContent: footer, homeContent } = 
-        await OptimizedContentService.loadEssentialContent();
-
-      // Process site settings
-      const settingsMap = settings.reduce((acc: Record<string, any>, setting: any) => {
-        acc[setting.key] = setting.value;
-        return acc;
-      }, {} as Record<string, any>);
-      setSiteSettings(settingsMap);
-
-      // Process navigation
-      setNavigationItems(navItems);
-
-      // Process footer
-      const footerMap = footer.reduce((acc: Record<string, any>, item: any) => {
-        acc[item.section_key] = item.content;
-        return acc;
-      }, {} as Record<string, any>);
-      setFooterContent(footerMap);
-
-      // Process home content
-      const homeContentMap = homeContent.reduce((acc: Record<string, any>, item: any) => {
-        acc[item.section_key] = item.content;
-        return acc;
-      }, {} as Record<string, any>);
-      
-      setPageContent(prev => ({ ...prev, home: homeContentMap }));
-      setLoadedSections(prev => new Set([...prev, 'home']));
-
-      // Start preloading other content in the background
-      setTimeout(() => {
-        OptimizedContentService.preloadContent(['events', 'team', 'contact']);
-        
-        // Preload critical assets
-        preloaderService.intelligentPreload({
-          fonts: [
-            { family: 'Inter', weight: '400' },
-            { family: 'Inter', weight: '500' },
-            { family: 'Inter', weight: '600' }
-          ]
-        });
-      }, 100);
-
-    } catch (error) {
-      // Silently handle errors
+      const data = await api<{
+        settings: Row[];
+        navigation: Row[];
+        footer: Row[];
+        pages: Row[];
+      }>("/public/home");
+      setSiteSettings(
+        Object.fromEntries(data.settings.map((r) => [r.key, r.value])),
+      );
+      setNavigationItems(data.navigation);
+      setFooterContent(
+        Object.fromEntries(data.footer.map((r) => [r.section_key, r.content])),
+      );
+      const pages: Record<string, Record<string, any>> = {};
+      for (const row of data.pages) {
+        pages[row.page_slug] ||= {};
+        pages[row.page_slug][row.section_key] = row.content;
+      }
+      setPageContent(pages);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
       setLastUpdated(Date.now());
     }
-  };
-
-  // Lazy load page content when needed with caching
-  const loadPageContent = useCallback(async (pageSlug: string) => {
-    if (loadedSections.has(pageSlug)) return;
-
+  }, []);
+  const loadEvents = useCallback(async () => {
+    setEventsLoading(true);
     try {
-      // Query database directly to avoid OptimizedContentService caching issues
-      const { data: content, error } = await supabase
-        .from('page_content')
-        .select('*')
-        .eq('page_slug', pageSlug)
-        .eq('is_active', true)
-        .order('order_index');
-      
-      if (error) throw error;
-      
-      const contentMap = content.reduce((acc: Record<string, any>, item: any) => {
-        acc[item.section_key] = item.content;
-        return acc;
-      }, {} as Record<string, any>);
-      
-      setPageContent(prev => ({ ...prev, [pageSlug]: contentMap }));
-      setLoadedSections(prev => new Set([...prev, pageSlug]));
-    } catch (error) {
-      // Silently handle errors
-    }
-  }, [loadedSections]);
-
-  // Lazy load events with caching
-  const loadEvents = useCallback(async (forceReload = false) => {
-    if (events.length > 0 && !forceReload) return; // Already loaded
-    
-    try {
-      setIsLoadingEvents(true);
-      
-      if (forceReload) {
-        OptimizedContentService.invalidateCache('events');
-      }
-      
-      const eventsData = await OptimizedContentService.getEventsWithAccurateAttendeeCount();
-      setEvents(eventsData);
-    } catch (error) {
-      // Silently handle errors
+      const result = await api<{ items: Row[] }>(
+        "/events?status=all&pageSize=100",
+      );
+      setEvents(
+        result.items.map((e) => ({
+          ...e,
+          date: e.start_at,
+          time: new Intl.DateTimeFormat("en-US", {
+            timeZone: e.timezone,
+            hour: "numeric",
+            minute: "2-digit",
+          }).format(new Date(e.start_at)),
+        })),
+      );
     } finally {
-      setIsLoadingEvents(false);
+      setEventsLoading(false);
     }
-  }, [events.length]);
-
-  // Lazy load team members with caching
+  }, []);
   const loadTeamMembers = useCallback(async () => {
-    if (teamMembers.length > 0) return; // Already loaded
-    
+    setTeamLoading(true);
     try {
-      setIsLoadingTeam(true);
-      const teamData = await OptimizedContentService.getTeamMembers();
-      setTeamMembers(teamData);
-    } catch (error) {
-      // Silently handle errors
+      setTeamMembers((await api<{ items: Row[] }>("/team?pageSize=100")).items);
     } finally {
-      setIsLoadingTeam(false);
+      setTeamLoading(false);
     }
-  }, [teamMembers.length]);
-
-  // Lazy load projects with caching
-  const loadProjects = useCallback(async (forceReload = false) => {
-    if (projects.length > 0 && !forceReload) return; // Already loaded
-    
-    try {
-      setIsLoadingProjects(true);
-      
-      if (forceReload) {
-        OptimizedContentService.invalidateCache('projects');
-      }
-      
-      const projectsData = await OptimizedContentService.getProjects();
-      setProjects(projectsData);
-    } catch (error) {
-      // Silently handle errors
-    } finally {
-      setIsLoadingProjects(false);
-    }
-  }, [projects.length]);
-
-  // Lazy load sponsors with caching
+  }, []);
   const loadSponsors = useCallback(async () => {
-    if (sponsors.length > 0) return; // Already loaded
-    
+    setSponsorsLoading(true);
     try {
-      setIsLoadingSponsors(true);
-      const sponsorsData = await OptimizedContentService.getSponsors();
-      setSponsors(sponsorsData);
-    } catch (error) {
-      // Silently handle errors
+      setSponsors(
+        (await api<{ items: Row[] }>("/sponsors?pageSize=100")).items,
+      );
     } finally {
-      setIsLoadingSponsors(false);
+      setSponsorsLoading(false);
     }
-  }, [sponsors.length]);
-
-  // Lazy load resources with caching
+  }, []);
   const loadResources = useCallback(async () => {
-    if (resources.length > 0) return; // Already loaded
-    
+    setResourcesLoading(true);
     try {
-      setIsLoadingResources(true);
-      const resourcesData = await OptimizedContentService.getResources();
-      setResources(resourcesData);
-    } catch (error) {
-      // Silently handle errors
+      setResources(
+        (await api<{ items: Row[] }>("/resources?pageSize=100")).items,
+      );
     } finally {
-      setIsLoadingResources(false);
+      setResourcesLoading(false);
     }
-  }, [resources.length]);
-
-  // Define refresh functions first
+  }, []);
+  useEffect(() => {
+    loadEssential().catch(() => {});
+  }, [loadEssential]);
   const refreshContent = async () => {
-    // Clear all caches
-    OptimizedContentService.clearAllCaches();
-    
-    // Clear page content state and loaded sections to force fresh reload
-    setLoadedSections(new Set());
-    setPageContent({});
-    
-    // Add a small delay to ensure database write is committed
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Reload essential content (site settings, nav, footer, home)
-    await loadEssentialContent();
-    
-    // Force reload events with accurate counts
-    await loadEvents(true);
-    
-    // Force update timestamp to trigger re-renders
+    await Promise.all([loadEssential(), loadEvents()]);
     setLastUpdated(Date.now());
   };
-
-  // Specific function to refresh page content
-  const refreshPageContent = async (pageSlug?: string) => {
-    console.log(`ContentContext: Refreshing page content for: ${pageSlug || 'all pages'}`);
-    
-    if (pageSlug) {
-      // Clear specific page cache from all sources
-      OptimizedContentService.invalidateCache('pageContent', pageSlug);
-      
-      // Clear service worker cache for this page
-      await clearSpecificCache(`pageContent_${pageSlug}`);
-      
-      // Remove from loaded sections to force reload
-      setLoadedSections(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(pageSlug);
-        return newSet;
-      });
-      
-      // Clear specific page content from state
-      setPageContent(prev => {
-        const newContent = { ...prev };
-        delete newContent[pageSlug];
-        return newContent;
-      });
-      
-      // Reload the specific page
-      await loadPageContent(pageSlug);
-    } else {
-      // Clear all page content from all sources
-      OptimizedContentService.invalidateCache('pageContent');
-      await clearContentCache();
-      
-      setLoadedSections(new Set());
-      setPageContent({});
-      
-      // Reload essential content which includes home page
-      await loadEssentialContent();
-    }
-    
-    // Force update the last updated timestamp to trigger re-renders
-    setLastUpdated(Date.now());
-    
-    console.log(`ContentContext: Page content refresh completed for: ${pageSlug || 'all pages'}`);
+  const refreshPageContent = async () => {
+    await loadEssential();
   };
-
-  // Force refresh with aggressive cache clearing
-  const forceRefreshPageContent = async (pageSlug?: string) => {
-    console.log(`ContentContext: Force refreshing page content for: ${pageSlug || 'all pages'}`);
-    
-    // Clear all caches aggressively
-    OptimizedContentService.clearAllCaches();
-    await clearContentCache();
-    
-    // Clear browser cache by adding timestamp
-    const timestamp = Date.now();
-    
-    if (pageSlug) {
-      // Clear specific page
-      setLoadedSections(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(pageSlug);
-        return newSet;
-      });
-      
-      setPageContent(prev => {
-        const newContent = { ...prev };
-        delete newContent[pageSlug];
-        return newContent;
-      });
-      
-      // Force reload with cache busting
-      await loadPageContent(pageSlug);
-    } else {
-      // Clear everything
-      setLoadedSections(new Set());
-      setPageContent({});
-      setSiteSettings({});
-      setNavigationItems([]);
-      setFooterContent({});
-      
-      // Reload everything
-      await loadEssentialContent();
-    }
-    
-    // Force update timestamp
-    setLastUpdated(timestamp);
-    
-    console.log(`ContentContext: Force refresh completed for: ${pageSlug || 'all pages'}`);
-  };
-
-  // Load essential content on mount
-  useEffect(() => {
-    loadEssentialContent();
-  }, []);
-
-
-
-  // Listen for force refresh events from admin
-  useEffect(() => {
-    const handleForceRefresh = (event: CustomEvent) => {
-      const { pageSlug } = event.detail;
-      console.log('ContentContext: Received force refresh event for:', pageSlug);
-      
-      // Force refresh the specific page content
-      if (pageSlug) {
-        forceRefreshPageContent(pageSlug);
-      } else {
-        forceRefreshPageContent();
-      }
-    };
-
-    window.addEventListener('forceContentRefresh', handleForceRefresh as EventListener);
-    
-    return () => {
-      window.removeEventListener('forceContentRefresh', handleForceRefresh as EventListener);
-    };
-  }, []);
-
-  // Optimized real-time subscriptions - only for critical content
-  useEffect(() => {
-    const subscriptions = [
-      // Only subscribe to essential content changes
-      supabase
-        .channel('essential_content_changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'site_settings' }, () => {
-          setTimeout(() => loadEssentialContent(), 500);
-        })
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'navigation_items' }, () => {
-          setTimeout(() => loadEssentialContent(), 500);
-        })
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'footer_content' }, () => {
-          setTimeout(() => loadEssentialContent(), 500);
-        })
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'page_content' }, () => {
-          setTimeout(() => {
-            OptimizedContentService.invalidateCache('pageContent');
-            loadEssentialContent();
-          }, 1000);
-        })
-        .subscribe(),
-
-      // Specific subscriptions for dynamic content (only reload specific sections)
-      supabase
-        .channel('events_changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, () => {
-          if (events.length > 0) {
-            loadEvents();
-          }
-        })
-        .subscribe(),
-
-      supabase
-        .channel('team_changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'team_members' }, () => {
-          if (teamMembers.length > 0) {
-            loadTeamMembers();
-          }
-        })
-        .subscribe(),
-
-      supabase
-        .channel('projects_changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, () => {
-          if (projects.length > 0) {
-            loadProjects(true); // Force reload when projects change
-          }
-        })
-        .subscribe()
-    ];
-
-    return () => {
-      subscriptions.forEach(sub => sub.unsubscribe());
-    };
-  }, [events.length, teamMembers.length, projects.length, loadEvents, loadTeamMembers, loadProjects]);
-
-  const getSiteSetting = (key: string) => {
-    return siteSettings[key] || null;
-  };
-
-  const getPageSection = (pageSlug: string, sectionKey: string) => {
-    // Lazy load page content if not already loaded
-    if (!loadedSections.has(pageSlug)) {
-      loadPageContent(pageSlug);
-    }
-    
-    return pageContent[pageSlug]?.[sectionKey] || null;
-  };
-
-  const getFooterSection = (sectionKey: string) => {
-    return footerContent[sectionKey] || null;
-  };
-
-  const getLink = (linkType: string) => {
-    // Get all links from unified system
-    const allLinksData = siteSettings.all_links;
-    if (allLinksData) {
-      try {
-        const allLinks = typeof allLinksData === 'string' 
-          ? JSON.parse(allLinksData) 
-          : allLinksData;
-        
-        // Find link by ID or by name (converted to lowercase with underscores)
-        const link = allLinks.find((link: any) => 
-          link.id === linkType || 
-          link.name.toLowerCase().replace(/\s+/g, '_') === linkType.toLowerCase()
-        );
-        
-        if (link) {
-          return link.url;
-        }
-      } catch (error) {
-    // Silently handle errors
-  }
-    }
-
-    // Fallback to old system for backward compatibility
-    const linkKey = `${linkType}_url`;
-    if (siteSettings[linkKey]) {
-      return siteSettings[linkKey];
-    }
-
-    return '#';
-  };
-
   const getAllLinks = (category?: string) => {
-    const allLinksData = siteSettings.all_links;
-    if (allLinksData) {
-      try {
-        const allLinks = typeof allLinksData === 'string' 
-          ? JSON.parse(allLinksData) 
-          : allLinksData;
-        
-        if (Array.isArray(allLinks)) {
-          if (category) {
-            return allLinks.filter((link: any) => link.category === category);
-          }
-          return allLinks;
-        }
-      } catch (error) {
-    // Silently handle errors
-  }
-    }
-    return [];
+    const items = Array.isArray(siteSettings.all_links)
+      ? siteSettings.all_links
+      : [];
+    return category ? items.filter((r) => r.category === category) : items;
   };
-
-  const value = {
-    siteSettings,
-    pageContent,
-    navigationItems,
-    footerContent,
-    events,
-    teamMembers,
-    projects,
-    sponsors,
-    resources,
-    isLoading,
-    isLoadingEvents,
-    isLoadingTeam,
-    isLoadingProjects,
-    isLoadingSponsors,
-    isLoadingResources,
-    lastUpdated,
-    refreshContent,
-    refreshPageContent,
-    forceRefreshPageContent,
-    loadEvents,
-    loadTeamMembers,
-    loadProjects,
-    loadSponsors,
-    loadResources,
-    getSiteSetting,
-    getPageSection,
-    getFooterSection,
-    getLink,
-    getAllLinks
-  };
-
   return (
-    <ContentContext.Provider value={value}>
+    <ContentContext.Provider
+      value={{
+        siteSettings,
+        pageContent,
+        navigationItems,
+        footerContent,
+        events,
+        teamMembers,
+        projects: [],
+        sponsors,
+        resources,
+        isLoading,
+        isLoadingEvents,
+        isLoadingTeam,
+        isLoadingProjects: false,
+        isLoadingSponsors,
+        isLoadingResources,
+        lastUpdated,
+        refreshContent,
+        refreshPageContent,
+        forceRefreshPageContent: refreshPageContent,
+        loadEvents,
+        loadTeamMembers,
+        loadProjects: async () => {},
+        loadSponsors,
+        loadResources,
+        getSiteSetting: (key) => siteSettings[key] ?? null,
+        getPageSection: (page, section) => pageContent[page]?.[section] ?? null,
+        getFooterSection: (section) => footerContent[section] ?? null,
+        getAllLinks,
+        getLink: (key) =>
+          getAllLinks().find(
+            (item) =>
+              item.id === key ||
+              String(item.name).toLowerCase().replace(/\s+/g, "_") === key,
+          )?.url ||
+          siteSettings[key + "_url"] ||
+          "#",
+      }}
+    >
       {children}
     </ContentContext.Provider>
   );
