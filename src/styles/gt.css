@@ -73,6 +73,25 @@
 .gt-announcement-list h3 { font-size: 1.25rem; font-weight: 650; margin: 16px 0 8px; overflow-wrap: anywhere; }
 .gt-announcement-body { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 75ch; line-height: 1.65; margin: 20px 0; }
 .gt-announcement-editor > h3 { font-size: 1.25rem; font-weight: 650; margin: 0 0 20px; }
+.gt-channel-layout { display: grid; grid-template-columns: 270px minmax(0,1fr); gap: 28px; align-items: start; }
+.gt-room-directory { min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+.gt-room-directory ul,.gt-room-members ul,.gt-channel-messages { list-style: none; padding: 0; margin: 0; }
+.gt-room-directory li { border-bottom: 1px solid var(--line); }
+.gt-room-directory li > button { width: 100%; display: flex; flex-direction: column; gap: 6px; align-items: start; padding: 16px 12px; text-align: left; overflow-wrap: anywhere; }
+.gt-room-directory li > button[aria-current=page] { background: var(--surface-raised); color: #9b4030; }
+.gt-room-directory small { color: var(--text-secondary); }
+.gt-channel-thread { min-width: 0; }
+.gt-channel-thread > .gt-button-row { margin-bottom: 20px; }
+.gt-channel-thread h2 { overflow-wrap: anywhere; }
+.gt-channel-messages li { padding: 20px 0; border-bottom: 1px solid var(--line); }
+.gt-channel-messages header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.gt-channel-messages time { font-size: 0.8rem; color: var(--text-secondary); }
+.gt-message-body { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 75ch; line-height: 1.65; margin: 12px 0; }
+.gt-channel-messages blockquote { padding: 12px; margin: 12px 0; border: 1px solid var(--line); border-radius: 8px; color: var(--text-secondary); overflow-wrap: anywhere; }
+.gt-channel-composer { padding-top: 24px; }
+.gt-room-members { padding: 20px 0; }
+.gt-room-members li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+@media(max-width:900px) { .gt-channel-layout { grid-template-columns: minmax(0,1fr); } .gt-channel-selected > .gt-room-directory { display: none; } }
 .gt-content-columns { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap: 28px; margin-top: 24px; }
 .gt-content-columns article { padding: 20px 0; border-top: 1px solid var(--line); }
 .gt-content-columns h3 { margin: 12px 0; }

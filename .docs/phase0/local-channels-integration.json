@@ -1,0 +1,137 @@
+{
+  "note": "Real local channels and independent member/outsider/editor sessions; private/internal audience, sender/moderator boundaries, replies, idempotency, tombstones, unread markers, revocation and archival. Only new fictional rooms/accounts used and recoverably archived. Realtime and attachments are not certified by this suite.",
+  "tests": [
+    {
+      "name": "channel inventory rejects anonymous callers",
+      "passed": true
+    },
+    {
+      "name": "new room defaults to private with server-owned creator",
+      "passed": true
+    },
+    {
+      "name": "private room cannot be inferred by an unrelated active account",
+      "passed": true
+    },
+    {
+      "name": "private rooms are filtered before list counts and pagination",
+      "passed": true
+    },
+    {
+      "name": "room owner adds explicit scoped membership",
+      "passed": true
+    },
+    {
+      "name": "ordinary room member can send but cannot administer the room",
+      "passed": true
+    },
+    {
+      "name": "room membership does not imply administrative edit permission",
+      "passed": true
+    },
+    {
+      "name": "message input rejects sender mass assignment",
+      "passed": true
+    },
+    {
+      "name": "authorized member sends a real message",
+      "passed": true
+    },
+    {
+      "name": "same send idempotency key never duplicates the message",
+      "passed": true
+    },
+    {
+      "name": "send idempotency key cannot be reused for another payload",
+      "passed": true
+    },
+    {
+      "name": "private message history cannot be read by an outsider",
+      "passed": true
+    },
+    {
+      "name": "moderation does not permit editing somebody else's message text",
+      "passed": true
+    },
+    {
+      "name": "ordinary member cannot pin messages",
+      "passed": true
+    },
+    {
+      "name": "authorized moderator can pin a message",
+      "passed": true
+    },
+    {
+      "name": "pinned-message view uses the same room authorization",
+      "passed": true
+    },
+    {
+      "name": "stale message revisions cannot overwrite moderation changes",
+      "passed": true
+    },
+    {
+      "name": "sender can edit their own current message",
+      "passed": true
+    },
+    {
+      "name": "same-room reply is linked to an authorized parent",
+      "passed": true
+    },
+    {
+      "name": "internal room audience does not grant owner powers",
+      "passed": true
+    },
+    {
+      "name": "cross-channel reply targets are rejected",
+      "passed": true
+    },
+    {
+      "name": "sender can soft-delete their own message",
+      "passed": true
+    },
+    {
+      "name": "deleted body is absent from messages and quoted reply previews",
+      "passed": true
+    },
+    {
+      "name": "read marker is bound to an actual authorized room message",
+      "passed": true
+    },
+    {
+      "name": "read markers update room unread counts without trusting browser counters",
+      "passed": true
+    },
+    {
+      "name": "explicit room membership can admit an editorial account without general chapter access",
+      "passed": true
+    },
+    {
+      "name": "editor channel route appears only after explicit room admission",
+      "passed": true
+    },
+    {
+      "name": "editor admission to one room does not expose internal chapter-wide rooms",
+      "passed": true
+    },
+    {
+      "name": "explicit private room membership can be revoked",
+      "passed": true
+    },
+    {
+      "name": "revocation blocks the next message-history request",
+      "passed": true
+    },
+    {
+      "name": "room archival preserves messages as a read-only workspace",
+      "passed": true
+    },
+    {
+      "name": "even chapter administrators cannot send into an archived room",
+      "passed": true
+    },
+    {
+      "name": "restoring a room does not widen its audience",
+      "passed": true
+    }
+  ]
+}

@@ -28,6 +28,7 @@ import { userRoutes } from "./users.mjs";
 import { teamRoutes } from "./teams.mjs";
 import { teamInvitationRoutes } from "./team-invitations.mjs";
 import { teamAnnouncementRoutes } from "./team-announcements.mjs";
+import { channelRoutes } from "./channels.mjs";
 
 export function applicationHandler({ store, config, db, log } = {}) {
   const auth = createAuthHandler({ store, config, log });
@@ -47,6 +48,15 @@ export function applicationHandler({ store, config, db, log } = {}) {
         });
         if (
           await userRoutes(request, response, { db, store, config, requestId })
+        )
+          return;
+        if (
+          await channelRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
         )
           return;
         if (

@@ -168,6 +168,17 @@ export async function accessRoutes(
     );
     if (visible.total > 0 || create) accessibleRoutes.push("/admin/forms");
   }
+  if (session.user.role === "blog_editor") {
+    const channels = checked(
+      await db.rpc("list_channels", {
+        p_actor: session.user.id,
+        p_page: 1,
+        p_query: null,
+        p_archived: false,
+      }),
+    );
+    if (channels.total > 0) accessibleRoutes.push("/admin/channels");
+  }
   const resource = params.resource || routes[params.route];
   let allowed = params.route ? accessibleRoutes.includes(params.route) : false;
   if (params.resource)

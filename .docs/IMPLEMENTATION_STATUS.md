@@ -5,6 +5,38 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Protected channel core — 2026-10-20
+
+- Active Channels route now uses protected room and message APIs. Private rooms
+  default to explicit membership, internal rooms have a defined chapter audience,
+  and team rooms require current active team membership. Existing editor accounts
+  receive a channel route only after explicit room admission; admission does not
+  expose other internal rooms. Metadata edits cannot silently widen room scope.
+- Room administration confirms the actor's password; role/member changes and
+  archive/restore are revision-checked and audited. Messages support session-owned
+  senders, idempotent sends, sender-only edits, moderator pins, same-room replies,
+  soft-deleted tombstones, read markers and derived unread counts. Deleted text
+  is excluded from message projections and reply previews. Archived rooms are
+  read-only, including for administrators.
+- Message history uses stable timestamp/ID cursors; explicit memberships are
+  paginated and ordinary recipients do not receive private account emails. UI
+  preserves an unsent draft on failure, separates room-change state, supports
+  replies and pin views, and refreshes through the protected API every five seconds.
+  This polling is explicitly not claimed as the required scoped Realtime feature.
+- Actual independent-session local HTTP integration: 33 checks. Isolated SQL
+  includes NULL-denial checks, private scope, idempotency, cross-room reply denial,
+  sender/moderator boundaries, deleted-preview removal and unread markers. All 29
+  migrations are applied locally. Unit count: 113; TypeScript, scoped ESLint and
+  build pass, with existing bundle warnings remaining.
+- Browser sent a fictional message, replied and pinned the original in a private
+  test-only room. Evidence: `ui-review/real-channel-conversation-desktop.jpg`
+  (1440 px full-page capture), `ui-review/real-channel-conversation-mobile.jpg`
+  (375 × 812). Mobile viewport/document widths 375/375 px; height 1559 px. Temporary
+  viewport reset and room recoverably archived, preserving fictional messages.
+- Scoped Realtime, private message attachments, richer search/notifications and
+  remaining collaboration/PRD modules are still required. No production or full
+  channel acceptance claim is made by this checkpoint.
+
 ### Team announcements and durable notifications — 2026-10-20
 
 - Team announcements now have protected draft/edit/publication, scheduling,

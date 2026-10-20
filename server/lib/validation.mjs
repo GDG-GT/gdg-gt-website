@@ -92,6 +92,10 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    LAST_CHANNEL_OWNER: [
+      409,
+      "Assign another active room owner before removing the last owner.",
+    ],
     INVITE_INVALID: [
       400,
       "This invitation is invalid, expired, or no longer available.",

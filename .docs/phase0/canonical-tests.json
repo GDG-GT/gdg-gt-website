@@ -28,7 +28,8 @@
     "202610200025_team_administration.sql",
     "202610200026_team_explicit_action_grants.sql",
     "202610200027_team_invitations.sql",
-    "202610200028_team_announcements.sql"
+    "202610200028_team_announcements.sql",
+    "202610200029_channels_core.sql"
   ],
   "tests": [
     {
@@ -148,6 +149,10 @@
       "passed": true
     },
     {
+      "name": "202610200029_channels_core.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -221,6 +226,10 @@
     },
     {
       "name": "028_team_announcements.sql",
+      "passed": true
+    },
+    {
+      "name": "029_channels.sql",
       "passed": true
     },
     {
