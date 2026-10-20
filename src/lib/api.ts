@@ -14,6 +14,8 @@ let csrf: string | undefined;
 let refresh: Promise<void> | undefined;
 export const clearApiSession = () => {
   csrf = undefined;
+  if (typeof window !== "undefined")
+    window.dispatchEvent(new Event("gdg:session-cleared"));
 };
 export function acceptCsrf(value: unknown) {
   if (typeof value === "string") csrf = value;

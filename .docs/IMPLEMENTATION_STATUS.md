@@ -5,6 +5,42 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Private Realtime channels and notifications — 2026-10-20
+
+- Connected the active channel workspace and notification bell/inbox to private
+  Broadcast subscriptions. Content still travels through authorized HTTP reads,
+  not socket payloads or browser database queries. A rejoin triggers a fresh read;
+  foreground polling remains a recovery/backstop path.
+- PRD token endpoint is `/api/v1/auth/realtime-token`; the earlier local spelling
+  remains a compatibility alias. Session + CSRF issuance validates current scope
+  and produces a maximum-five-minute token containing a least-privileged socket
+  role, exact topic, permission version and server-backed grant identity. A
+  restrictive policy prevents future permissive policies widening this role.
+- Production signing accepts imported ES256 P-256 keys; symmetric signing is
+  explicitly restricted to the isolated loopback development stack. No signing
+  material, bearer token or private profile data is stored in browser storage.
+  Separate clients prevent channel and notification tokens broadening each other.
+- Logout/session failure disconnect immediately. Account/session/membership and
+  team-state changes broadcast a body-free reauthorization instruction. Clients
+  tear down old scopes and request current grants; the five-minute expiry remains
+  the hard server-enforced maximum for a client ignoring that instruction.
+- Actual local integration: 19 checks, including real private joins, cross-room /
+  cross-account rejection, signature tampering, token expiry, revoked sessions,
+  PostgREST table/RPC denial and metadata-only database broadcasts. Additional
+  browser review saw a new message and unread count appear without page reload.
+  Fictional rooms recoverably archived; only the review notification marked read.
+- Browser evidence: `ui-review/real-channel-live-desktop.jpg` (natural 885 px
+  viewport, full page), `ui-review/real-channel-live-mobile.jpg` (375 px viewport,
+  document width 375 px, height 1348 px), `ui-review/real-notification-live.jpg`.
+  Temporary responsive override reset. The restrained approved admin palette and
+  existing control vocabulary were preserved during this Impeccable UI pass.
+- Canonical migrations through 033 applied locally, with isolated SQL scope and
+  concurrency checks. All 129 unit tests, TypeScript, scoped ESLint and production
+  build pass; existing bundle warnings and broader production acceptance remain
+  open. This is not complete COMM or full PRD acceptance.
+  Whiteboards/team chat/content refresh, private attachments, tasks, finances,
+  remaining modules and final accessibility/performance/security gates remain.
+
 ### Protected channel core — 2026-10-20
 
 - Active Channels route now uses protected room and message APIs. Private rooms

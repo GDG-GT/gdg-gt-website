@@ -33,6 +33,38 @@ uploads is an explicit operator configuration after verification, not a fallback
 to public buckets. All five configured buckets are private; only form uploads
 are connected end-to-end at this checkpoint.
 
+## Private live updates
+
+`npm run setup:local-realtime` installs the isolated stack's public transport key
+and local signing configuration into the ignored, mode-0600 `.env.server.local`.
+Restart the API after bootstrap. This script refuses a non-loopback environment
+or conflicting existing values. The symmetric local key is accepted only with
+the explicit development flag and exact dedicated localhost origins. It is not
+a production setup or a reason to export a service-role key to the browser.
+
+Production requires an imported ES256 P-256 key/key ID in the server environment,
+matching the backend verification key. Follow the official
+[Supabase JWT guidance](https://supabase.com/docs/guides/auth/jwts) and
+[private Realtime authorization](https://supabase.com/docs/guides/realtime/authorization).
+No hosted key import or deployment has been performed.
+
+The browser calls `/api/v1/auth/realtime-token` with its HttpOnly session and CSRF,
+then authenticates a private, single-topic socket. JWTs last at most five minutes,
+are held in memory, and are renewed before expiry. The dedicated `gdg_realtime`
+database role cannot read application tables or mint grants. Broadcasts contain
+only invalidation metadata; content is reread through the protected API. Current
+channel and own-notification scopes are implemented. Authorization-change
+signals request immediate teardown/reauthorization; cached backend policies mean
+expiry remains the hard maximum for a client ignoring that instruction. Logout
+and observed session failures disconnect immediately. Offline fallback is API
+polling, never a public socket or anonymous database query.
+
+`npm run test:local-realtime` exercises actual local WebSockets, cross-topic and
+PostgREST denial, signature/expiry enforcement and body-free broadcasts. The
+optional `-- --hold-for-browser` requires an interactive terminal and leaves only
+new fictional rooms available for UI inspection until `done` is entered. Cleanup
+archives those rooms and marks only the new review notification read.
+
 ## Local scheduling and retention
 
 The local runner invokes authenticated HTTP jobs with a separate `CRON_SECRET`,

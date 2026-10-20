@@ -29,12 +29,17 @@ import { teamRoutes } from "./teams.mjs";
 import { teamInvitationRoutes } from "./team-invitations.mjs";
 import { teamAnnouncementRoutes } from "./team-announcements.mjs";
 import { channelRoutes } from "./channels.mjs";
+import { realtimeRoutes } from "./realtime.mjs";
 
 export function applicationHandler({ store, config, db, log } = {}) {
   const auth = createAuthHandler({ store, config, log });
   return async (request, response) => {
     const pathname = new URL(request.url, config.origin).pathname;
-    if (pathname.startsWith("/api/v1/auth/")) return auth(request, response);
+    if (
+      pathname.startsWith("/api/v1/auth/") &&
+      pathname !== "/api/v1/auth/realtime-token"
+    )
+      return auth(request, response);
     return apiBoundary(
       request,
       response,
@@ -48,6 +53,15 @@ export function applicationHandler({ store, config, db, log } = {}) {
         });
         if (
           await userRoutes(request, response, { db, store, config, requestId })
+        )
+          return;
+        if (
+          await realtimeRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
         )
           return;
         if (

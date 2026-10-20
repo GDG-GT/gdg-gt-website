@@ -1,0 +1,81 @@
+{
+  "note": "Actual local private WebSocket joins, database broadcasts, JWT expiry/signature checks, topic/session boundaries and PostgREST denial. Payloads are metadata-only. Only new fictional rooms/notification used; rooms archived and notification marked read. No JWTs or transport/signing keys recorded.",
+  "tests": [
+    {
+      "name": "anonymous callers cannot mint socket tokens",
+      "passed": true
+    },
+    {
+      "name": "notification scope cannot be supplied for an arbitrary user",
+      "passed": true
+    },
+    {
+      "name": "opaque session receives a maximum five-minute socket token",
+      "passed": true
+    },
+    {
+      "name": "socket JWT carries no chapter-admin role or private profile data",
+      "passed": true
+    },
+    {
+      "name": "socket token cannot read application tables over PostgREST",
+      "passed": true
+    },
+    {
+      "name": "socket token cannot invoke the protected grant-issuing RPC",
+      "passed": true
+    },
+    {
+      "name": "real private WebSocket authorizes the exact issued room topic",
+      "passed": true
+    },
+    {
+      "name": "valid JWT cannot subscribe to another room topic",
+      "passed": true
+    },
+    {
+      "name": "publishable transport key alone cannot join the private topic",
+      "passed": true
+    },
+    {
+      "name": "protected message mutation commits while a socket is subscribed",
+      "passed": true
+    },
+    {
+      "name": "actual database mutation emits a private Realtime invalidation",
+      "passed": true
+    },
+    {
+      "name": "broadcast carries only scoped invalidation metadata, never message text",
+      "passed": true
+    },
+    {
+      "name": "forged higher-privilege JWT payload fails signature validation",
+      "passed": true
+    },
+    {
+      "name": "short-lived fixture JWT is valid before its expiry",
+      "passed": true
+    },
+    {
+      "name": "Realtime server expires the socket authorization without a refreshed JWT",
+      "passed": true
+    },
+    {
+      "name": "own notification topic accepts its distinct scoped token",
+      "passed": true
+    },
+    {
+      "name": "notification broadcasts also omit private notification bodies",
+      "passed": true
+    },
+    {
+      "name": "own notification JWT cannot join another account topic",
+      "passed": true
+    },
+    {
+      "name": "revoked opaque session cannot authorize a new socket join",
+      "passed": true
+    }
+  ]
+}

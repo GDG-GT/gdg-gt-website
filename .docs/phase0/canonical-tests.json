@@ -29,7 +29,11 @@
     "202610200026_team_explicit_action_grants.sql",
     "202610200027_team_invitations.sql",
     "202610200028_team_announcements.sql",
-    "202610200029_channels_core.sql"
+    "202610200029_channels_core.sql",
+    "202610200030_scoped_realtime.sql",
+    "202610200031_realtime_restrictive_scope.sql",
+    "202610200032_realtime_reauthorization.sql",
+    "202610200033_realtime_membership_change_filter.sql"
   ],
   "tests": [
     {
@@ -153,6 +157,22 @@
       "passed": true
     },
     {
+      "name": "202610200030_scoped_realtime.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200031_realtime_restrictive_scope.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200032_realtime_reauthorization.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200033_realtime_membership_change_filter.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -230,6 +250,10 @@
     },
     {
       "name": "029_channels.sql",
+      "passed": true
+    },
+    {
+      "name": "030_scoped_realtime.sql",
       "passed": true
     },
     {

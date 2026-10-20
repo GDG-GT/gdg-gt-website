@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { api, ApiFailure } from "@/lib/api";
+import { useScopedRealtime } from "@/hooks/useScopedRealtime";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 type Channel = {
   id: string;
@@ -93,6 +94,16 @@ export default function ChannelWorkspace() {
     selectedRef = useRef(selected);
   const [memberPage, setMemberPage] = useState(1),
     [memberTotal, setMemberTotal] = useState(0);
+  const liveStatus = useScopedRealtime(
+    selected ? { kind: "channel", id: selected } : null,
+    () => setTick((v) => v + 1),
+    () => {
+      setRoom(undefined);
+      setMessages([]);
+      setMembers(null);
+      setTick((v) => v + 1);
+    },
+  );
   async function loadMembers(page: number) {
     try {
       const r = await api<{ items: Member[]; total: number }>(
@@ -130,10 +141,19 @@ export default function ChannelWorkspace() {
       .catch((e) => setError(e.message));
   }, []);
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      if (!document.hidden) setTick((v) => v + 1);
-    }, 5000);
+    const timer = window.setInterval(
+      () => {
+        if (!document.hidden) setTick((v) => v + 1);
+      },
+      liveStatus === "live" ? 30000 : 5000,
+    );
     return () => clearInterval(timer);
+  }, [liveStatus]);
+  useEffect(() => {
+    const refresh = () => setTick((v) => v + 1);
+    window.addEventListener("gdg:notifications-updated", refresh);
+    return () =>
+      window.removeEventListener("gdg:notifications-updated", refresh);
   }, []);
   useEffect(() => {
     if (!selected) return;
@@ -382,9 +402,8 @@ export default function ChannelWorkspace() {
         <div>
           <h1>Channels</h1>
           <p>
-            Internal conversations with deliberate room scope. This version
-            refreshes through the protected API every five seconds; Realtime
-            transport is still being completed.
+            Private chapter conversations, with live updates and deliberately
+            scoped room access.
           </p>
         </div>
         {(capabilities?.globalCreate || !!capabilities?.teams.length) && (
@@ -618,6 +637,15 @@ export default function ChannelWorkspace() {
                     {room.record.visibility}
                     {room.record.is_archived ? " · read-only archive" : ""}
                   </Badge>
+                  <span role="status" className="gt-field-hint">
+                    {liveStatus === "live"
+                      ? "Live updates connected"
+                      : liveStatus === "denied"
+                        ? "Live access ended — checking room access"
+                        : liveStatus === "connecting"
+                          ? "Connecting live updates…"
+                          : "Live connection unavailable — checking every five seconds"}
+                  </span>
                 </div>
                 <Button
                   variant="ghost"
@@ -945,7 +973,7 @@ export default function ChannelWorkspace() {
                   <Field
                     label="Message this room"
                     required
-                    hint="Plain text only. Files and Realtime are not yet connected; never share passwords or private access links."
+                    hint="Plain text only; file attachments are not available yet. Never share passwords or private access links."
                   >
                     <textarea
                       required

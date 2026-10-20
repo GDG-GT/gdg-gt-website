@@ -3,6 +3,7 @@ import { Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 import { api } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
+import { useScopedRealtime } from "@/hooks/useScopedRealtime";
 import {
   Dialog,
   DialogContent,
@@ -46,6 +47,12 @@ export function NotificationInbox({
   }, [page, onChange]);
   useEffect(() => {
     void load();
+  }, [load]);
+  useEffect(() => {
+    const refresh = () => void load();
+    window.addEventListener("gdg:notifications-updated", refresh);
+    return () =>
+      window.removeEventListener("gdg:notifications-updated", refresh);
   }, [load]);
   const mutate = async (path: string, method = "PATCH") => {
     setBusy(true);
@@ -141,10 +148,23 @@ export function NotificationInbox({
 }
 export default function NotificationBell() {
   const { currentAdmin } = useAdmin();
+  const accountId = currentAdmin?.id;
   const [open, setOpen] = useState(false),
-    [count, setCount] = useState(0);
+    [count, setCount] = useState(0),
+    [revision, setRevision] = useState(0);
+  useScopedRealtime(
+    { kind: "notifications" },
+    () => {
+      setRevision((v) => v + 1);
+      window.dispatchEvent(new Event("gdg:notifications-updated"));
+    },
+    () => {
+      setCount(0);
+      setOpen(false);
+    },
+  );
   useEffect(() => {
-    if (!currentAdmin) return;
+    if (!accountId) return;
     let active = true;
     const update = () => {
       if (document.visibilityState === "hidden") return;
@@ -164,7 +184,7 @@ export default function NotificationBell() {
       clearInterval(timer);
       document.removeEventListener("visibilitychange", update);
     };
-  }, [currentAdmin?.id]);
+  }, [accountId, revision]);
   return (
     <>
       <button
