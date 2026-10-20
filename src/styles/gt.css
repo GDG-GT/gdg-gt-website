@@ -66,7 +66,13 @@
 .gt-team-history li { display: flex; flex-direction: column; gap: 6px; padding: 14px 0; border-bottom: 1px solid var(--line); }
 .gt-admin-heading h2, .gt-invite-editor h3 { font-size: 1.25rem; font-weight: 650; margin: 0 0 12px; }
 .gt-team-tabs { flex-wrap: wrap; gap: 4px; }
-.gt-team-tabs .gt-button { font-size: 0.9rem; padding: 10px 14px; }
+.gt-team-tabs .gt-button { font-size: 0.9rem; padding: 10px 14px; color: var(--text-secondary); }
+.gt-team-tabs > .gt-button[aria-current="page"] { color: #9b4030; font-weight: 650; border-bottom-color: var(--coral); }
+.gt-announcement-list { margin: 24px 0; }
+.gt-announcement-list article { padding: 24px 0; border-bottom: 1px solid var(--line); }
+.gt-announcement-list h3 { font-size: 1.25rem; font-weight: 650; margin: 16px 0 8px; overflow-wrap: anywhere; }
+.gt-announcement-body { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 75ch; line-height: 1.65; margin: 20px 0; }
+.gt-announcement-editor > h3 { font-size: 1.25rem; font-weight: 650; margin: 0 0 20px; }
 .gt-content-columns { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap: 28px; margin-top: 24px; }
 .gt-content-columns article { padding: 20px 0; border-top: 1px solid var(--line); }
 .gt-content-columns h3 { margin: 12px 0; }

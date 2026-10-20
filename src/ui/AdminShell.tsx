@@ -155,15 +155,16 @@ export default function AdminShell({ children }: { children: ReactNode }) {
     document.addEventListener("keydown", key);
     return () => document.removeEventListener("keydown", key);
   }, []);
-  const title =
-    [...workspaceDestinations]
-      .sort((a, b) => b.href.length - a.href.length)
-      .find(
-        (item) =>
-          location.pathname === item.href ||
-          (item.href !== "/admin" &&
-            location.pathname.startsWith(`${item.href}/`)),
-      )?.label || "Workspace";
+  const title = location.pathname.startsWith("/admin/team/")
+    ? "Team workspace"
+    : [...workspaceDestinations]
+        .sort((a, b) => b.href.length - a.href.length)
+        .find(
+          (item) =>
+            location.pathname === item.href ||
+            (item.href !== "/admin" &&
+              location.pathname.startsWith(`${item.href}/`)),
+        )?.label || "Workspace";
   useEffect(() => {
     document.title = `${title} · GDG workspace`;
   }, [title]);
@@ -203,7 +204,14 @@ export default function AdminShell({ children }: { children: ReactNode }) {
                 <NavLink
                   key={href}
                   to={href}
-                  end={href === "/admin"}
+                  end={href === "/admin" || href === "/admin/team"}
+                  className={({ isActive }) =>
+                    isActive ||
+                    (href === "/admin/teams" &&
+                      location.pathname.startsWith("/admin/team/"))
+                      ? "active"
+                      : undefined
+                  }
                   onClick={() => setMobileOpen(false)}
                 >
                   <Icon size={17} />

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useSearchParams, Link } from "react-router-dom";
 import { useAdmin } from "@/contexts/AdminContext";
 import { api } from "@/lib/api";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import TeamInvitations from "./TeamInvitations";
+import TeamAnnouncements from "./TeamAnnouncements";
 import { teamGrantOptions, type TeamGrant } from "../../../shared/teams";
 type Team = {
   id: string;
@@ -113,6 +114,8 @@ function grantsFor(w: Workspace): TeamGrant[] {
     });
 }
 export default function TeamWorkspace() {
+  const [searchParams] = useSearchParams(),
+    section = searchParams.get("section");
   const { teamId } = useParams(),
     { currentAdmin, refreshTeams } = useAdmin();
   const [list, setList] = useState<Listing>(),
@@ -132,7 +135,9 @@ export default function TeamWorkspace() {
     [confirmation, setConfirmation] = useState(""),
     [grants, setGrants] = useState<TeamGrant[]>([]),
     [busy, setBusy] = useState(false),
-    [tab, setTab] = useState("members"),
+    [tab, setTab] = useState(
+      section === "announcements" ? "announcements" : "members",
+    ),
     [historyPage, setHistoryPage] = useState(1),
     [history, setHistory] = useState<{
       items: Record<string, unknown>[];
@@ -162,6 +167,9 @@ export default function TeamWorkspace() {
     return () => controller.abort();
   }, [mode, destinationQuery, selected]);
   useEffect(() => setSelected(teamId || ""), [teamId]);
+  useEffect(() => {
+    if (section === "announcements") setTab("announcements");
+  }, [section, teamId]);
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
@@ -745,6 +753,7 @@ export default function TeamWorkspace() {
           <nav className="gt-tabs gt-team-tabs" aria-label="Team sections">
             {[
               "members",
+              "announcements",
               ...(workspace.actions.manage && !workspace.team.deleted_at
                 ? ["invitations"]
                 : []),
@@ -854,6 +863,12 @@ export default function TeamWorkspace() {
                 </table>
               </div>
             </section>
+          )}
+          {tab === "announcements" && (
+            <TeamAnnouncements
+              teamId={workspace.team.id}
+              canManage={workspace.actions.manage && !workspace.team.deleted_at}
+            />
           )}
           {tab === "invitations" &&
             workspace.actions.manage &&

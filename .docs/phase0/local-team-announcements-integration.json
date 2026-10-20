@@ -1,0 +1,101 @@
+{
+  "note": "Real local announcements, independent reader session, durable notification delivery, current audience revalidation, scheduling/expiry and recoverable archival. Only new fictional records used; only a fixture announcement clock was advanced for expiry. No quotas reset or external mail sent.",
+  "tests": [
+    {
+      "name": "announcement team is created with real scope",
+      "passed": true
+    },
+    {
+      "name": "reader receives ordinary membership without management grants",
+      "passed": true
+    },
+    {
+      "name": "announcement lists require authentication",
+      "passed": true
+    },
+    {
+      "name": "announcement creation rejects client-controlled authorship",
+      "passed": true
+    },
+    {
+      "name": "announcement saves as a private draft",
+      "passed": true
+    },
+    {
+      "name": "ordinary members cannot read draft posts or infer their counts",
+      "passed": true
+    },
+    {
+      "name": "ordinary members cannot create team announcements",
+      "passed": true
+    },
+    {
+      "name": "publication is a separate explicit mutation",
+      "passed": true
+    },
+    {
+      "name": "current team members receive published plain-text posts",
+      "passed": true
+    },
+    {
+      "name": "read acknowledgements are idempotent and account-owned",
+      "passed": true
+    },
+    {
+      "name": "durable delivery notifies only the snapshot audience and excludes private body text",
+      "passed": true
+    },
+    {
+      "name": "pinning does not republish the post",
+      "passed": true
+    },
+    {
+      "name": "pinning preserves published visibility",
+      "passed": true
+    },
+    {
+      "name": "stale announcement revisions cannot overwrite a newer post",
+      "passed": true
+    },
+    {
+      "name": "editing a published announcement saves a new private draft",
+      "passed": true
+    },
+    {
+      "name": "edited announcement is hidden until republished",
+      "passed": true
+    },
+    {
+      "name": "a former audience member is excluded again at delivery time",
+      "passed": true
+    },
+    {
+      "name": "former members immediately lose announcement access",
+      "passed": true
+    },
+    {
+      "name": "scheduled announcement notification cannot be claimed early",
+      "passed": true
+    },
+    {
+      "name": "scheduled published posts remain hidden before their start time",
+      "passed": true
+    },
+    {
+      "name": "expired published posts are not exposed to ordinary members",
+      "passed": true
+    },
+    {
+      "name": "announcement archive preserves content and audit history",
+      "passed": true
+    },
+    {
+      "name": "announcement restores as a private draft",
+      "passed": true
+    },
+    {
+      "name": "restoration never silently republishes an announcement",
+      "passed": true
+    }
+  ]
+}

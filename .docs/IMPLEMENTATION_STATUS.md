@@ -5,6 +5,36 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Team announcements and durable notifications — 2026-10-20
+
+- Team announcements now have protected draft/edit/publication, scheduling,
+  expiry, priority, independent pinning, account-owned read acknowledgements,
+  revision conflicts, recoverable archive and restore-as-draft workflows.
+  Ordinary members cannot see drafts or scheduled/expired posts, and inaccessible
+  records are filtered before counts. Editing a published body returns it to draft.
+- Publication snapshots the active team audience and queues a durable, scheduled
+  notification job. The fenced worker rechecks current team/account membership,
+  publication version, expiry and active team state before delivery. Duplicate
+  claims do not duplicate notifications. Notifications contain generic metadata
+  and a protected deep link, never the private post body. Pinning does not change
+  publication identity or accidentally cancel scheduled delivery.
+- Actual local API/notification integration: 24 checks. Isolated SQL additionally
+  covers worker lease rejection and delivery/read idempotency. All 28 migrations
+  are applied locally. Current unit count: 108; TypeScript, scoped ESLint and
+  production build pass, with the previously documented bundle warnings remaining.
+- Browser-created a fictional draft, explicitly confirmed publication, and read
+  the real committed post. Captures:
+  `ui-review/real-team-announcement-published-desktop.jpg` (1440 × 900), and
+  `ui-review/real-team-announcement-published-mobile.jpg` (375 × 812). Phone
+  viewport/document widths are both 375 px, content height 1471 px. Viewport reset.
+  The temporary team was recoverably archived and the scheduler restored.
+- Corrected team-workspace title/sidebar selection so a team deep link is not
+  mislabeled as the unrelated public-profile editor. Restored visible selected-tab
+  styling for the team navigation. No external recipient or production data used.
+- Richer team statistics, messages/tasks/channels/whiteboards, finances, remaining
+  private/content modules and final cross-browser/security/accessibility gates
+  remain unfinished. Full PRD and production completion are not claimed.
+
 ### Secure team invitation lifecycle — 2026-10-20
 
 - Team invitation management and the recipient route now use same-origin APIs.
