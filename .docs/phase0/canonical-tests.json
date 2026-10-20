@@ -42,7 +42,9 @@
     "202610200039_task_overdue_notifications.sql",
     "202610200040_task_job_cadence.sql",
     "202610200041_task_activity_projection.sql",
-    "202610200042_task_private_assignment_guard.sql"
+    "202610200042_task_private_assignment_guard.sql",
+    "202610200043_direct_messages.sql",
+    "202610200044_direct_messages_realtime.sql"
   ],
   "tests": [
     {
@@ -218,6 +220,14 @@
       "passed": true
     },
     {
+      "name": "202610200043_direct_messages.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200044_direct_messages_realtime.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -315,6 +325,10 @@
     },
     {
       "name": "039_task_jobs.sql",
+      "passed": true
+    },
+    {
+      "name": "043_direct_messages.sql",
       "passed": true
     },
     {

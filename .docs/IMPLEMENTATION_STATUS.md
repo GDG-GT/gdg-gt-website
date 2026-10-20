@@ -5,6 +5,46 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Private direct messages and audited review — 2026-10-20
+
+- Communications now has Tasks and Messages workspaces. The inbox uses protected
+  APIs, fixed one-to-one participants, exact-email addressing, normalized search,
+  scoped counts and cursor pagination. Sender/session identities are server-owned.
+  Ordinary Admins cannot read unrelated conversations; Super Admins do not receive
+  implicit private-body access. No browser table-read or RPC grants were added.
+- Added same-thread replies/quote references, bounded plain text, author-only
+  revision-checked edits, retained removal placeholders/restoration, explicit
+  recipient-only read acknowledgments and independent personal archives. New
+  replies unarchive both personal inboxes. Inactive recipients cannot receive new
+  messages, but authorized historical records remain readable.
+- Source Super Admin oversight is an explicit password-confirmed, reason-recorded,
+  five-minute review bound to one opaque session. Review is read-only and reads
+  are audited. Stop/expiry denies the next HTTP request/token mint. Review socket
+  JWTs cannot outlive their proof, including near-expiry issuance. Browser review
+  data clears at its deadline; unsent drafts survive ordinary live refresh.
+- Private exact-topic sockets and durable jobs carry identifiers only. Delivery
+  rechecks accounts/message/worker lease, deduplicates generic in-app notices and
+  emails a protected link without the subject/body. Local Mailpit delivery was
+  verified. No external mail or production send was enabled.
+- Actual local suite: 39 independent-session HTTP/WebSocket/mail checks, plus a
+  held browser fixture with a real remote follow-up. Browser sent, edited, removed
+  and restored a message, and preserved an unsent draft during live refresh.
+  Desktop 1280/1280 px; phone 375/375 px (height 1789 px). Real wheel scrolling
+  reached 812 px. Overrides reset; fictional threads/accounts recoverably archived
+  and notices read. Evidence: `ui-review/real-direct-message-wide.jpg`,
+  `ui-review/real-direct-message-mobile.jpg`,
+  `ui-review/real-direct-message-cleanup.jpg`. Impeccable kept the existing calm
+  palette/controls and moved exceptional review into a disclosure.
+- All 44 canonical migrations applied locally. SQL covers participants/reviewers,
+  archives, conflicts, read receipts, tombstones, notice fencing/deduplication,
+  session/socket expiry and both 100-client capacity regressions. All 155 unit
+  tests, TypeScript, scoped ESLint and production build pass; existing bundle
+  warnings remain. Read errors recover separately from action errors, and short
+  proof-bound renewal avoids once-per-second churn throughout the final minute.
+- Full PRD/COMM acceptance remains open: chapter announcements, scoped email
+  campaigns, private attachments, remaining modules and final quality/security/
+  accessibility gates still need implementation and verification.
+
 ### Scoped tasks, comments and overdue automation — 2026-10-20
 
 - Communications now opens the protected Tasks workspace; the legacy page entry

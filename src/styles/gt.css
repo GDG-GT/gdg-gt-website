@@ -92,6 +92,35 @@
 .gt-board-canvas { position: relative; height: 620px; min-height: 420px; width: 100%; margin-block: 20px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .gt-board-canvas .excalidraw { --color-surface-lowest: #f7f8fa; --color-surface-low: #f0f1f3; --color-primary: #a84334; --color-primary-darker: #903a2d; }
 .gt-board-save-state { color: var(--text-secondary); margin-block: 14px; }
+.gt-direct-layout { display: grid; grid-template-columns: minmax(240px,0.8fr) minmax(0,1.5fr); gap: 32px; align-items: start; }
+.gt-direct-inbox,.gt-direct-thread { min-width: 0; }
+.gt-direct-inbox { border: 1px solid var(--line); border-radius: 12px; padding: 20px; background: var(--surface); }
+.gt-direct-inbox .gt-panel-heading { flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.gt-direct-inbox .gt-search { width: 100%; }
+.gt-direct-filters { margin-block: 12px; }
+.gt-direct-list,.gt-direct-history { list-style: none; padding: 0; margin: 0; }
+.gt-direct-list button { display: flex; flex-direction: column; gap: 8px; width: 100%; padding: 18px 12px; border-radius: 8px; border: 1px solid transparent; background: transparent; text-align: left; overflow-wrap: anywhere; }
+.gt-direct-list button:hover { background: var(--surface-raised); }
+.gt-direct-list button.is-selected { border-color: var(--line); background: var(--surface-raised); }
+.gt-direct-list button > span:first-child { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.gt-direct-list time,.gt-direct-list button > span:nth-child(2) { font-size: 0.82rem; color: var(--text-secondary); }
+.gt-direct-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-block: 24px; }
+.gt-direct-heading h2 { overflow-wrap: anywhere; font-size: 1.3rem; font-weight: 650; line-height: 1.35; margin-bottom: 8px; }
+.gt-direct-thread .gt-field { margin-block: 16px 20px; }
+.gt-direct-review + .gt-event-editor .gt-field { margin-block: 16px; }
+.gt-direct-history > li { padding-block: 24px; border-bottom: 1px solid var(--line); }
+.gt-direct-history header { display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+.gt-direct-history time,.gt-direct-history small { font-size: 0.82rem; color: var(--text-secondary); }
+.gt-direct-body { white-space: pre-wrap; overflow-wrap: anywhere; margin-block: 16px; max-width: 70ch; }
+.gt-direct-history blockquote,.gt-direct-reply { margin: 16px 0; padding: 12px; background: var(--surface-raised); border: 1px solid var(--line); border-radius: 8px; overflow-wrap: anywhere; }
+.gt-direct-history footer { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; }
+.gt-direct-review { padding-block: 8px; margin-bottom: 24px; border-block: 1px solid var(--line); }
+.gt-direct-review summary { min-height: 44px; padding-block: 12px; font-weight: 600; cursor: pointer; }
+.gt-direct-review p { max-width: 70ch; color: var(--text-secondary); margin: 8px 0 0; }
+.gt-direct-confirm { margin-top: 16px; padding: 16px; border: 1px solid var(--line); border-radius: 8px; }
+.gt-direct-confirm p { margin-bottom: 16px; }
+.gt-direct-thread > .gt-button-row { margin-block: 20px; }
+@media(max-width:1000px) { .gt-direct-layout { grid-template-columns: minmax(0,1fr); } .gt-direct-selected > .gt-direct-inbox { display: none; } }
 .gt-task-filters { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; margin-block: 24px; }
 .gt-task-filters > * { flex: 1 1 180px; min-width: 0; }
 .gt-task-facts { display: flex; flex-wrap: wrap; gap: 20px 40px; margin-block: 24px; }

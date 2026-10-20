@@ -1,0 +1,161 @@
+{
+  "note": "Real local protected HTTP, private WebSocket, audit and generic-notice checks with independent fictional sessions. No external mail, quota resets or permanent deletions. Fictional accounts and threads recoverably archived. Browser fixture IDs only are printed; no credentials or recipient emails are logged.",
+  "tests": [
+    {
+      "name": "anonymous inbox requests are denied",
+      "passed": true
+    },
+    {
+      "name": "a member can create a private conversation with an active editor",
+      "passed": true
+    },
+    {
+      "name": "replayed creation does not duplicate a thread",
+      "passed": true
+    },
+    {
+      "name": "reused idempotency key rejects a changed request",
+      "passed": true
+    },
+    {
+      "name": "the fixed recipient can read its conversation",
+      "passed": true
+    },
+    {
+      "name": "an unrelated Admin cannot read private metadata or history",
+      "passed": true
+    },
+    {
+      "name": "Super Admin does not receive implicit private body access",
+      "passed": true
+    },
+    {
+      "name": "own inbox counts exclude unrelated conversations",
+      "passed": true
+    },
+    {
+      "name": "ordinary Admin cannot activate or enumerate review scope",
+      "passed": true
+    },
+    {
+      "name": "sender attribution cannot be supplied by a browser",
+      "passed": true
+    },
+    {
+      "name": "self conversations are rejected uniformly as unavailable recipients",
+      "passed": true
+    },
+    {
+      "name": "recipient can reply with a same-thread quote reference",
+      "passed": true
+    },
+    {
+      "name": "recipients cannot rewrite the other author's text",
+      "passed": true
+    },
+    {
+      "name": "full-length Unicode messages fit byte-bounded edit requests",
+      "passed": true
+    },
+    {
+      "name": "stale message revisions fail without overwriting text",
+      "passed": true
+    },
+    {
+      "name": "removed bodies disappear from both history and reply previews",
+      "passed": true
+    },
+    {
+      "name": "author can recover removed content without permanent deletion",
+      "passed": true
+    },
+    {
+      "name": "read acknowledgments affect only messages addressed to the current account",
+      "passed": true
+    },
+    {
+      "name": "archiving is personal and does not alter the peer inbox",
+      "passed": true
+    },
+    {
+      "name": "a fresh reply returns an archived conversation to the recipient inbox",
+      "passed": true
+    },
+    {
+      "name": "participant can join its private direct-message socket",
+      "passed": true
+    },
+    {
+      "name": "direct-message JWT cannot join another thread topic",
+      "passed": true
+    },
+    {
+      "name": "unrelated Admin cannot mint a thread socket token",
+      "passed": true
+    },
+    {
+      "name": "real message changes arrive through a private socket",
+      "passed": true
+    },
+    {
+      "name": "live broadcasts never contain messages, subjects or account emails",
+      "passed": true
+    },
+    {
+      "name": "socket credentials cannot read application message tables",
+      "passed": true
+    },
+    {
+      "name": "password-confirmed review receives a five-minute server expiry",
+      "passed": true
+    },
+    {
+      "name": "explicit review permits audited read-only thread inspection",
+      "passed": true
+    },
+    {
+      "name": "review cannot impersonate participants or change their read receipts",
+      "passed": true
+    },
+    {
+      "name": "review metadata and body reads leave audit records without message content",
+      "passed": true
+    },
+    {
+      "name": "review socket JWT cannot outlive the originating review session",
+      "passed": true
+    },
+    {
+      "name": "ending review revokes protected reads and token issuance on the next request",
+      "passed": true
+    },
+    {
+      "name": "near-expiry review receives a capped JWT that can join before expiration",
+      "passed": true
+    },
+    {
+      "name": "Realtime server closes a review socket when its capped JWT expires",
+      "passed": true
+    },
+    {
+      "name": "expired review cannot read messages or mint replacement socket grants",
+      "passed": true
+    },
+    {
+      "name": "durable in-app notices contain only a protected link and generic text",
+      "passed": true
+    },
+    {
+      "name": "durable job payloads store identity only, not copied private bodies",
+      "passed": true
+    },
+    {
+      "name": "generic message email is captured only in the local Mailpit sink",
+      "passed": true
+    },
+    {
+      "name": "captured email contains the protected deep link without private subject or message text",
+      "passed": true
+    }
+  ]
+}

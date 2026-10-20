@@ -74,6 +74,18 @@ afterEach(() => {
   vi.useRealTimers();
 });
 describe("scoped browser Realtime lifecycle", () => {
+  it("does not churn tokens once a second when a short proof expiry cannot extend", async () => {
+    const fixed = { ...grant(), expiresAt: Math.floor(Date.now() / 1000) + 30 };
+    const f = fixture(vi.fn(async () => fixed));
+    await settle();
+    await vi.advanceTimersByTimeAsync(23999);
+    expect(f.issue).toHaveBeenCalledTimes(1);
+    await vi.advanceTimersByTimeAsync(1);
+    expect(f.issue).toHaveBeenCalledTimes(2);
+    await vi.advanceTimersByTimeAsync(4000);
+    expect(f.issue).toHaveBeenCalledTimes(2);
+    f.live.stop();
+  });
   it("authenticates before private join and invalidates after every successful subscription", async () => {
     const f = fixture();
     await settle();

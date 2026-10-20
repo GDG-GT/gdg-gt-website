@@ -7,6 +7,16 @@ No production configuration is implied by this setup.
 
 ## Start or resume
 
+Direct-message integration is available with `npm run test:local-direct-messages`.
+It uses independent fictional sessions, private sockets and loopback Mailpit only.
+The suite needs two available `messages.review` confirmations in the natural
+15-minute window; a read-only preflight stops before fixture creation if needed.
+No quota is reset. One review proof is deliberately shortened to four seconds in
+the dedicated local database to verify hard socket/API expiry; production policies
+and session lifetimes are unchanged. `-- --hold-for-browser` keeps a fictional
+own-thread fixture open; enter `change` for a remote follow-up and `done` for
+recoverable cleanup. It never prints passwords, session material or email values.
+
 Run these in separate terminals as needed. Starting an already-running listener
 can fail with an occupied-port error; inspect the existing task process first.
 

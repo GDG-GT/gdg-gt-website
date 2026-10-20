@@ -528,6 +528,9 @@ export default function TaskWorkspace() {
         <span className="gt-button" aria-current="page">
           Tasks
         </span>
+        <ActionLink to="/admin/communications?tab=messages" variant="ghost">
+          Messages
+        </ActionLink>
         {allowedLinks.includes("/admin/teams") && (
           <ActionLink to="/admin/teams" variant="ghost">
             Team announcements

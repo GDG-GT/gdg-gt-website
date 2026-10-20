@@ -141,6 +141,21 @@ export async function deliveryMessage(job, db, config, mail) {
       subject = "New chapter inquiry: " + contact.inquiry_type;
       content = `${contact.name} (${contact.email}) sent an inquiry.\n\n${contact.message}\n\nReview securely: ${config.origin}/admin/communications`;
     }
+  } else if (job.kind === "direct_message_notice") {
+    const notice = checked(
+      await db.rpc("prepare_direct_notice", {
+        p_job: job.id,
+        p_lease: job.lease_token,
+      }),
+    );
+    if (!notice) return null;
+    to = notice.email;
+    subject = "New private chapter message";
+    content =
+      "A private chapter conversation has a new message. Read it securely:\n" +
+      config.origin +
+      "/admin/communications?tab=messages&thread=" +
+      notice.threadId;
   } else if (job.kind === "task_notification") {
     checked(
       await db.rpc("deliver_task_notification", {

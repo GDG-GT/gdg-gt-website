@@ -10,6 +10,7 @@ import {
 const schema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("channel"), id: uuid }).strict(),
   z.object({ kind: z.literal("whiteboard"), id: uuid }).strict(),
+  z.object({ kind: z.literal("direct-thread"), id: uuid }).strict(),
   z.object({ kind: z.literal("notifications") }).strict(),
 ]);
 export async function realtimeRoutes(

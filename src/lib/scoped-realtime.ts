@@ -2,7 +2,7 @@ import type { SupabaseClient, RealtimeChannel } from "@supabase/supabase-js";
 import { api, ApiFailure } from "./api";
 
 export type LiveScope =
-  { kind: "notifications" } | { kind: "channel" | "whiteboard"; id: string };
+  { kind: "notifications" } | { kind: "channel" | "whiteboard" | "direct-thread"; id: string };
 export type LiveStatus = "connecting" | "live" | "fallback" | "denied";
 type Grant = {
   token: string;
@@ -100,9 +100,12 @@ export function startScopedRealtime(options: Options, deps = dependencies) {
   }
   function scheduleRenewal() {
     if (timer) clearTimeout(timer);
+    const remaining = grant!.expiresAt * 1000 - Date.now();
     timer = setTimeout(
       () => void renew(),
-      Math.max(1000, grant!.expiresAt * 1000 - Date.now() - 60000),
+      // A review-scoped expiry cannot be extended. Avoid issuing once a second
+      // for its entire final minute while retaining a bounded expiry recheck.
+      Math.max(1000, remaining > 60000 ? remaining - 60000 : remaining * 0.8),
     );
   }
   async function renew() {
@@ -176,6 +179,7 @@ export function startScopedRealtime(options: Options, deps = dependencies) {
                 "notifications",
                 "channel-directory",
                 "whiteboard-directory",
+                "direct-directory",
               ].includes(payload.kind))
           )
             options.onChange(); // Fetch content through the independently authorized API.
