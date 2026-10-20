@@ -1,0 +1,169 @@
+{
+  "note": "Actual local independent-session HTTP and fenced scheduler/delivery verification. Only new fictional tasks/accounts were used and recoverably archived. Notifications contain generic metadata; no external email or credential disclosure.",
+  "tests": [
+    {
+      "name": "task inventory rejects anonymous callers",
+      "passed": true
+    },
+    {
+      "name": "task creator attribution cannot be supplied by the browser",
+      "passed": true
+    },
+    {
+      "name": "administrator creates a private assigned task",
+      "passed": true
+    },
+    {
+      "name": "task defaults preserve server ownership and private scope",
+      "passed": true
+    },
+    {
+      "name": "repeated create request is idempotent",
+      "passed": true
+    },
+    {
+      "name": "unrelated active account cannot open a private task",
+      "passed": true
+    },
+    {
+      "name": "unauthorized tasks are excluded before inventory counts",
+      "passed": true
+    },
+    {
+      "name": "blog editor receives only the protected own-communications entry",
+      "passed": true
+    },
+    {
+      "name": "assignee can update status without editing task ownership or details",
+      "passed": true
+    },
+    {
+      "name": "ordinary assignee cannot edit manager-owned task metadata",
+      "passed": true
+    },
+    {
+      "name": "assignee advances a task through a permitted status transition",
+      "passed": true
+    },
+    {
+      "name": "stale task revision cannot overwrite a newer status",
+      "passed": true
+    },
+    {
+      "name": "only the scheduled worker may mark a task overdue",
+      "passed": true
+    },
+    {
+      "name": "comment attribution cannot be forged",
+      "passed": true
+    },
+    {
+      "name": "assignee posts a plain-text task comment",
+      "passed": true
+    },
+    {
+      "name": "same comment retry does not duplicate history",
+      "passed": true
+    },
+    {
+      "name": "administrator cannot rewrite another comment author’s text",
+      "passed": true
+    },
+    {
+      "name": "comment author edits with an optimistic revision",
+      "passed": true
+    },
+    {
+      "name": "authorized manager soft-deletes a comment without deleting its history",
+      "passed": true
+    },
+    {
+      "name": "removed comment text is omitted from the projected conversation",
+      "passed": true
+    },
+    {
+      "name": "private reassignment requires the correct current password",
+      "passed": true
+    },
+    {
+      "name": "administrator explicitly reassigns the task after confirming the audience change",
+      "passed": true
+    },
+    {
+      "name": "former assignee loses private task and comment access on the next request",
+      "passed": true
+    },
+    {
+      "name": "new assignee receives only the assigned task scope",
+      "passed": true
+    },
+    {
+      "name": "ordinary member cannot assign a personal task to another account",
+      "passed": true
+    },
+    {
+      "name": "ordinary member can create their own private task",
+      "passed": true
+    },
+    {
+      "name": "authorized manager sets a date-only deadline",
+      "passed": true
+    },
+    {
+      "name": "deadline round-trip does not shift the date through a timezone",
+      "passed": true
+    },
+    {
+      "name": "scheduled overdue endpoint rejects browser origins even with the job key",
+      "passed": true
+    },
+    {
+      "name": "real authenticated scheduled job marks due tasks overdue",
+      "passed": true
+    },
+    {
+      "name": "scheduled deadline transition is revisioned and visible through the API",
+      "passed": true
+    },
+    {
+      "name": "retrying the same scheduler occurrence does not duplicate work",
+      "passed": true
+    },
+    {
+      "name": "durable task-notice jobs complete through the actual fenced delivery worker",
+      "passed": true
+    },
+    {
+      "name": "current assignee receives assignment and overdue notices; stale former-recipient jobs are skipped",
+      "passed": true
+    },
+    {
+      "name": "task-notice bodies contain no private task text",
+      "passed": true
+    },
+    {
+      "name": "delivery retry does not duplicate assignment or overdue notifications",
+      "passed": true
+    },
+    {
+      "name": "recoverable task archive requires its exact title",
+      "passed": true
+    },
+    {
+      "name": "task archive is recoverable and revision checked",
+      "passed": true
+    },
+    {
+      "name": "archived tasks reject new comments",
+      "passed": true
+    },
+    {
+      "name": "authorized manager restores the original task scope",
+      "passed": true
+    },
+    {
+      "name": "browser review remote task update committed",
+      "passed": true
+    }
+  ]
+}

@@ -76,6 +76,16 @@ wait for existing limits; neither rate windows nor authentication are reset.
 The optional interactive hold uses `change` to commit a new fictional version and
 `done` to recoverably archive only that suite's records.
 
+Tasks are available in `/admin/communications`. `npm run test:local-tasks`
+exercises independent assignee/outsider/editor sessions, comments, private
+reassignment, date-only deadlines and the real scheduled/notification pipeline.
+Pause the identified local job runner before this deterministic suite, then
+restart it afterward. A read-only preflight requires an unused natural
+15-minute overdue occurrence and confirmation-quota headroom; do not delete run
+rows, reset quotas or weaken checks to rerun it faster. SQL tests do not consume
+application login or scheduler windows. The interactive hold can leave only new
+fictional tasks available for browser review until `done` is entered.
+
 ## Local scheduling and retention
 
 The local runner invokes authenticated HTTP jobs with a separate `CRON_SECRET`,
@@ -86,12 +96,13 @@ never a browser session. Times use UTC cadence windows, not browser timezone.
 | Open/close scheduled forms | 5 minutes | 30-second local retry; distributed lease and occurrence deduplication |
 | Expired form drafts and abandoned/rejected uploads | Hourly | Failed object deletion remains retryable; active drafts and response files are protected |
 | Local transactional delivery | 1 minute | Per-message fenced leases; bounded backoff and eight-attempt dead state |
+| Overdue tasks | 15 minutes, UTC date boundaries | Per-occurrence scheduler lease; one generic notice per task/deadline occurrence |
 | Upload scanning | Queue polled every 2 seconds | Fenced leases; transient scanner failure retries; unsafe content is rejected |
 
 Abandoned/rejected uploads wait 24 hours after expiry/rejection. Deleted intent
 cleanup also waits beyond the direct-upload capability's lifetime. Completed
 response files are not treated as abandoned. This does not yet implement every
-PRD retention policy, campaign/task/reminder job, or missed-run alert.
+PRD retention policy, campaign/event-reminder job, or missed-run alert.
 
 Hosted deployment must choose and configure Supabase Cron or an equivalently
 precise paid scheduler. No Vercel Hobby schedule is used. This local process is

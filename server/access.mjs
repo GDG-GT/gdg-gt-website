@@ -180,6 +180,8 @@ export async function accessRoutes(
     if (channels.total > 0) accessibleRoutes.push("/admin/channels");
   }
   const resource = params.resource || routes[params.route];
+  if (!accessibleRoutes.includes("/admin/communications"))
+    accessibleRoutes.push("/admin/communications");
   if (
     !["super_admin", "admin"].includes(session.user.role) &&
     !accessibleRoutes.includes("/admin/whiteboard")

@@ -1,0 +1,33 @@
+{
+  "note": "Local single-fictional-account recipient privacy and Unicode regression checks. Denials create no tasks; the Unicode task/account are recoverably archived. No rate/scheduler state was reset, and no credentials or email values are recorded.",
+  "tests": [
+    {
+      "name": "unrelated existing and nonexistent private recipients receive the same denial",
+      "passed": true
+    },
+    {
+      "name": "recipient existence is not reflected in response text or records",
+      "passed": true
+    },
+    {
+      "name": "denied recipient probes do not create task records",
+      "passed": true
+    },
+    {
+      "name": "valid full-length Unicode task descriptions fit the byte-bounded API",
+      "passed": true
+    },
+    {
+      "name": "valid full-length Unicode comments are not incorrectly rejected by byte limits",
+      "passed": true
+    },
+    {
+      "name": "Unicode comment content round-trips without truncation",
+      "passed": true
+    },
+    {
+      "name": "invalid PostgreSQL calendar year is rejected by shared validation",
+      "passed": true
+    }
+  ]
+}

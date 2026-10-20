@@ -41,7 +41,11 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
   if (!match) return false;
   allowMethod(request, response, ["POST"]);
   authorizeJob(request);
-  if (!["form-schedules", "form-cleanup", "delivery"].includes(match[1]))
+  if (
+    !["form-schedules", "form-cleanup", "delivery", "task-overdue"].includes(
+      match[1],
+    )
+  )
     throw new ApiError(404, "NOT_FOUND", "This job is not available.");
   const run = checked(
     await db.rpc("begin_scheduled_job", {
@@ -57,6 +61,8 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
   try {
     if (match[1] === "form-schedules")
       counts = checked(await db.rpc("advance_form_schedules"));
+    else if (match[1] === "task-overdue")
+      counts = checked(await db.rpc("advance_overdue_tasks"));
     else if (match[1] === "form-cleanup") {
       const drafts = checked(
           await db.rpc("expire_form_drafts", { p_limit: 1000 }),

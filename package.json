@@ -43,6 +43,8 @@
     "test:local-channels": "node scripts/test-local-channels.mjs",
     "test:local-realtime": "node scripts/test-local-realtime.mjs",
     "test:local-whiteboards": "node scripts/test-local-whiteboards.mjs",
+    "test:local-tasks": "node scripts/test-local-tasks.mjs",
+    "test:local-task-privacy": "node scripts/test-local-task-privacy.mjs",
     "test:local-site-content": "node scripts/test-local-site-content.mjs",
     "test:local-form-branches": "node scripts/test-local-form-branches.mjs",
     "test:local-forms-suite": "node scripts/test-local-forms-suite.mjs",

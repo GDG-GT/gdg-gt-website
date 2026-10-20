@@ -74,7 +74,7 @@ const adminRoutes = [
       })),
     ),
   ],
-  ["communications", lazy(() => import("@/pages/admin/AdminCommunications"))],
+  ["communications", lazy(() => import("@/ui/tasks/TaskWorkspace"))],
   ["media", lazy(() => import("@/pages/admin/AdminMedia"))],
   ["guide", lazy(() => import("@/ui/WorkspaceGuide"))],
   ["linktree", lazy(() => import("@/pages/admin/AdminLinktree"))],

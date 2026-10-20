@@ -5,6 +5,55 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Scoped tasks, comments and overdue automation — 2026-10-20
+
+- Communications now opens the protected Tasks workspace; the legacy page entry
+  is a compatibility wrapper, not a browser database/scheduler implementation.
+  Active accounts receive an own-communications route, while every record read and
+  mutation is resolved separately. Blog Editors see assigned/own task summaries,
+  not unrelated chapter work. Navigation links respect current route eligibility.
+- Implemented private creator/assignee and explicitly granted team scope,
+  server-owned creation/attribution, eligible assignment, filters/counts/paging,
+  detail editing, revision conflicts, status transitions, recoverable archive /
+  restore and password/title-confirmed reassignment. Former private assignees lose
+  access immediately on the next request. Private personal-task recipient probes
+  receive a uniform denial before any unrelated account lookup.
+- Comments have cursor history, idempotent posting, author-only edits, permitted
+  soft deletion, tombstones and revision checks. Status and assignment activity is
+  immutable through the comment API and projects safe, readable transition data.
+  Private account emails are not returned in task or comment projections. Shared
+  validation covers date-only calendars, bounded plain text, tags and state; byte
+  limits accommodate valid full-length Unicode descriptions/comments.
+- Added a separate-secret, distributed-lease overdue job at 15-minute cadence.
+  UTC calendar deadlines are marked once per deadline occurrence. Reopening a
+  late task does not duplicate its notice; changing the deadline creates a new
+  occurrence. Completed/archived tasks and inactive teams are excluded. Durable
+  notification delivery rechecks current assignee, scope, occurrence and worker
+  lease, and carries only generic text with a protected task deep link.
+- Actual local integration: 41 task/worker checks plus 7 recipient-privacy /
+  Unicode regression checks. Real independent sessions exercised editor/assignee /
+  outsider boundaries, comments, reassignment, stale writes, date round-trips,
+  authenticated scheduling, duplicate suppression and fenced delivery. No rate or
+  scheduler state was reset. All new fictional tasks/accounts were recoverably
+  archived; their notifications were marked read. Local scheduler restarted with
+  the new cadence and completed a clean zero-work overdue run.
+- Browser posted a fictional note, completed a task, reviewed the safe activity
+  history and confirmed preservation/blocking of a stale staged title. Phone
+  editor viewport/document widths 375/375 px, height 2811 px; override reset.
+  Actual wheel scrolling moved the review page from 0 to 604.5 px, then reset.
+  Evidence: `ui-review/real-task-completed-desktop.jpg`,
+  `ui-review/real-task-editor-mobile.jpg`, `ui-review/real-task-conflict.jpg`.
+  Impeccable guidance kept the existing restrained admin controls/palette and
+  improved task-navigation spacing rather than introducing a new visual system.
+- All 42 canonical migrations applied locally. Isolated SQL covers nullable
+  assignees failing closed, private scope, revisions, comments, occurrence/worker
+  fencing and both existing 100-client capacity checks. All 141 units, TypeScript,
+  scoped ESLint and production build pass, with prior bundle warnings remaining.
+- This is not complete COMM/PRD acceptance. Chapter-wide announcements, direct
+  messages, scoped email fan-out, private attachments and remaining modules/gates
+  still require implementation and verification. No production deployment or
+  external mail was performed.
+
 ### Protected, versioned live whiteboards — 2026-10-20
 
 - The active Whiteboards route and legacy compatibility entry points now use

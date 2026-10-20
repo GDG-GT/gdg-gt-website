@@ -31,6 +31,7 @@ import { teamAnnouncementRoutes } from "./team-announcements.mjs";
 import { channelRoutes } from "./channels.mjs";
 import { realtimeRoutes } from "./realtime.mjs";
 import { whiteboardRoutes } from "./whiteboards.mjs";
+import { taskRoutes } from "./tasks.mjs";
 
 export function applicationHandler({ store, config, db, log } = {}) {
   const auth = createAuthHandler({ store, config, log });
@@ -72,6 +73,10 @@ export function applicationHandler({ store, config, db, log } = {}) {
             config,
             requestId,
           })
+        )
+          return;
+        if (
+          await taskRoutes(request, response, { db, store, config, requestId })
         )
           return;
         if (

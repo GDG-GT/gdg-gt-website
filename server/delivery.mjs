@@ -141,6 +141,14 @@ export async function deliveryMessage(job, db, config, mail) {
       subject = "New chapter inquiry: " + contact.inquiry_type;
       content = `${contact.name} (${contact.email}) sent an inquiry.\n\n${contact.message}\n\nReview securely: ${config.origin}/admin/communications`;
     }
+  } else if (job.kind === "task_notification") {
+    checked(
+      await db.rpc("deliver_task_notification", {
+        p_job: job.id,
+        p_lease: job.lease_token,
+      }),
+    );
+    return null;
   } else if (job.kind === "team_announcement") {
     checked(
       await db.rpc("deliver_team_announcement", {

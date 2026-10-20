@@ -92,6 +92,16 @@
 .gt-board-canvas { position: relative; height: 620px; min-height: 420px; width: 100%; margin-block: 20px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .gt-board-canvas .excalidraw { --color-surface-lowest: #f7f8fa; --color-surface-low: #f0f1f3; --color-primary: #a84334; --color-primary-darker: #903a2d; }
 .gt-board-save-state { color: var(--text-secondary); margin-block: 14px; }
+.gt-task-filters { display: flex; flex-wrap: wrap; gap: 16px; align-items: end; margin-block: 24px; }
+.gt-task-filters > * { flex: 1 1 180px; min-width: 0; }
+.gt-task-facts { display: flex; flex-wrap: wrap; gap: 20px 40px; margin-block: 24px; }
+.gt-task-facts dt { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 6px; }
+.gt-task-facts dd { margin: 0; font-weight: 600; }
+.gt-task-comments { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
+.gt-task-comments h3 { font-size: 1.15rem; font-weight: 650; margin-bottom: 20px; }
+.gt-admin-page > nav.gt-team-tabs { margin-bottom: 24px; }
+.gt-task-detail > .gt-button-row { margin-block: 20px; }
+.gt-task-comments > form { margin-top: 24px; }
 .gt-board-canvas .HintViewer { color: #55585f; opacity: 1; }
 .gt-board-canvas .excalidraw .HintViewer span { color: #55585f; }
 .gt-board-canvas .excalidraw .Island { background: #f7f8fa; }

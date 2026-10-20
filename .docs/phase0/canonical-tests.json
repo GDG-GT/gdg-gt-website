@@ -37,7 +37,12 @@
     "202610200034_whiteboards_core.sql",
     "202610200035_whiteboard_idempotency_scope.sql",
     "202610200036_whiteboard_scoped_realtime.sql",
-    "202610200037_whiteboard_policy_topic.sql"
+    "202610200037_whiteboard_policy_topic.sql",
+    "202610200038_tasks_core.sql",
+    "202610200039_task_overdue_notifications.sql",
+    "202610200040_task_job_cadence.sql",
+    "202610200041_task_activity_projection.sql",
+    "202610200042_task_private_assignment_guard.sql"
   ],
   "tests": [
     {
@@ -193,6 +198,26 @@
       "passed": true
     },
     {
+      "name": "202610200038_tasks_core.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200039_task_overdue_notifications.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200040_task_job_cadence.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200041_task_activity_projection.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200042_task_private_assignment_guard.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -282,6 +307,14 @@
     },
     {
       "name": "036_whiteboard_realtime.sql",
+      "passed": true
+    },
+    {
+      "name": "038_tasks.sql",
+      "passed": true
+    },
+    {
+      "name": "039_task_jobs.sql",
       "passed": true
     },
     {
