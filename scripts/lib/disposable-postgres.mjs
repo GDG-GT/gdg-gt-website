@@ -67,7 +67,7 @@ export async function disposablePostgres(purpose) {
     throw new Error(
       "Disposable database could not start; no existing database was touched.",
     );
-  const stop = async () => {
+  const stop = async ({ remove = false } = {}) => {
     const check = await dockerCommand([
       "inspect",
       name,
@@ -76,7 +76,16 @@ export async function disposablePostgres(purpose) {
     ]);
     if (check.code !== 0 || check.stdout.trim() !== purpose)
       throw new Error("Refusing to stop an unverified container.");
-    await dockerCommand(["stop", name]);
+    const stopped = await dockerCommand(["stop", name]);
+    if (stopped.code !== 0)
+      throw new Error("Verified disposable database could not stop.");
+    if (remove) {
+      // Only this invocation's randomly named, purpose-verified test container
+      // and its anonymous data volume. Never a project database or broad prune.
+      const removed = await dockerCommand(["rm", "-v", name]);
+      if (removed.code !== 0)
+        throw new Error("Disposable test database cleanup failed.");
+    }
   };
   try {
     for (let attempt = 0; attempt < 60; attempt++) {

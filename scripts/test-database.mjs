@@ -9,6 +9,7 @@ import {
 const root = fileURLToPath(new URL("../", import.meta.url));
 const database = await disposablePostgres("canonical-test");
 const evidence = [];
+let passed = false;
 async function execute(name, source) {
   const result = await database.sql(source);
   evidence.push({ name, passed: result.code === 0 });
@@ -104,7 +105,12 @@ try {
       2,
     ) + "\n",
   );
+  passed = true;
 } finally {
-  await database.stop();
-  console.log("Stopped recoverable test database: " + database.name);
+  await database.stop({ remove: passed });
+  console.log(
+    (passed
+      ? "Removed successful disposable test database: "
+      : "Stopped recoverable failed test database: ") + database.name,
+  );
 }
