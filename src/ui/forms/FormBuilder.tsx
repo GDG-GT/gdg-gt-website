@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   ArrowDown,
@@ -53,6 +54,7 @@ const signature = (value: PreviewForm) =>
   ]);
 
 export default function FormBuilder() {
+  const navigationSafety = useNavigationSafety();
   const { formId } = useParams(),
     server = useServerForm(formId),
     source = server.form,
@@ -141,6 +143,10 @@ export default function FormBuilder() {
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, []);
+  useDraftGuard(!!form && saved.current !== signature(form), {
+    busy: publishing || saveStatus === "Saving…",
+    label: "Form definition changes",
+  });
   if (!form)
     return (
       <div className="gt-admin-page">
@@ -850,7 +856,9 @@ export default function FormBuilder() {
               event.preventDefault();
               try {
                 await persist(structuredClone(form));
-                navigate(`/forms/${form.slug}?preview=1`);
+                const preview = () => navigate(`/forms/${form.slug}?preview=1`);
+                if (navigationSafety) navigationSafety.allow(preview);
+                else preview();
               } catch {
                 /* Save error is shown beside the draft. */
               }

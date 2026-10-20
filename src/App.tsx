@@ -1,6 +1,7 @@
 import { lazy, Suspense, type ReactNode } from "react";
 import {
-  BrowserRouter,
+  createBrowserRouter,
+  RouterProvider,
   Navigate,
   Route,
   Routes,
@@ -17,6 +18,7 @@ import SiteStatusRedirect from "@/components/SiteStatusRedirect";
 import SiteShell from "@/ui/SiteShell";
 import AdminShell from "@/ui/AdminShell";
 import RouteErrorBoundary from "@/ui/RouteErrorBoundary";
+import NavigationSafety from "@/ui/NavigationSafety";
 import {
   HomePage,
   EventsPage,
@@ -74,7 +76,10 @@ const adminRoutes = [
       })),
     ),
   ],
-  ["communications", lazy(() => import("@/ui/communications/CommunicationsWorkspace"))],
+  [
+    "communications",
+    lazy(() => import("@/ui/communications/CommunicationsWorkspace")),
+  ],
   ["media", lazy(() => import("@/pages/admin/AdminMedia"))],
   ["guide", lazy(() => import("@/ui/WorkspaceGuide"))],
   ["linktree", lazy(() => import("@/pages/admin/AdminLinktree"))],
@@ -119,6 +124,77 @@ function Frame({ children }: { children: ReactNode }) {
 function protectedPage(children: ReactNode) {
   return <PageAccessGuard>{children}</PageAccessGuard>;
 }
+function RoutedApplication() {
+  return (
+    <NavigationSafety>
+      <SiteStatusRedirect>
+        <Frame>
+          <Suspense fallback={<LoadingPage />}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/events" element={<EventsPage />} />
+              <Route path="/events/:slug" element={<EventDetailPage />} />
+              <Route path="/team" element={<TeamPage />} />
+              <Route path="/team/join" element={<AcceptInvite />} />
+              <Route path="/resources" element={<ResourcesPage />} />
+              <Route path="/sponsors" element={<SponsorsPage />} />
+              <Route path="/gallery" element={<GalleryPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/forms/:slug" element={<PublicForm />} />
+              <Route path="/account/setup" element={<AccountSetup />} />
+              <Route path="/l/:username" element={<Linktree />} />
+              <Route
+                path="/newsletter/confirm"
+                element={<NewsletterTokenPage kind="confirm" />}
+              />
+              <Route
+                path="/newsletter/unsubscribe"
+                element={<NewsletterTokenPage kind="unsubscribe" />}
+              />
+              <Route path="/privacy" element={<InfoPage kind="privacy" />} />
+              <Route
+                path="/accessibility"
+                element={<InfoPage kind="accessibility" />}
+              />
+              <Route path="/offline" element={<InfoPage kind="offline" />} />
+              <Route
+                path="/maintenance"
+                element={<InfoPage kind="maintenance" />}
+              />
+              <Route path="/admin" element={protectedPage(<Overview />)} />
+              {adminRoutes.map(([path, Component]) => (
+                <Route
+                  key={path}
+                  path={`/admin/${path}`}
+                  element={protectedPage(<Component />)}
+                />
+              ))}
+              <Route path="/admin/forms" element={protectedPage(<Forms />)} />
+              <Route
+                path="/admin/forms/:formId/edit"
+                element={protectedPage(<FormBuilder />)}
+              />
+              <Route
+                path="/admin/forms/:formId/responses"
+                element={protectedPage(<FormResponses />)}
+              />
+              <Route path="/admin/invite/:token" element={<AcceptInvite />} />
+              <Route
+                path="/admin/blog-comments"
+                element={<Navigate to="/admin/blog?tab=comments" replace />}
+              />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Suspense>
+        </Frame>
+      </SiteStatusRedirect>
+    </NavigationSafety>
+  );
+}
+const router = createBrowserRouter(
+  [{ path: "*", element: <RoutedApplication /> }],
+  { future: { v7_relativeSplatPath: true } },
+);
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -127,91 +203,10 @@ export default function App() {
           <TooltipProvider>
             <Toaster />
             <Sonner />
-            <BrowserRouter
-              future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-            >
-              <SiteStatusRedirect>
-                <Frame>
-                  <Suspense fallback={<LoadingPage />}>
-                    <Routes>
-                      <Route path="/" element={<HomePage />} />
-                      <Route path="/events" element={<EventsPage />} />
-                      <Route
-                        path="/events/:slug"
-                        element={<EventDetailPage />}
-                      />
-                      <Route path="/team" element={<TeamPage />} />
-                      <Route path="/team/join" element={<AcceptInvite />} />
-                      <Route path="/resources" element={<ResourcesPage />} />
-                      <Route path="/sponsors" element={<SponsorsPage />} />
-                      <Route path="/gallery" element={<GalleryPage />} />
-                      <Route path="/contact" element={<ContactPage />} />
-                      <Route path="/forms/:slug" element={<PublicForm />} />
-                      <Route path="/account/setup" element={<AccountSetup />} />
-                      <Route path="/l/:username" element={<Linktree />} />
-                      <Route
-                        path="/newsletter/confirm"
-                        element={<NewsletterTokenPage kind="confirm" />}
-                      />
-                      <Route
-                        path="/newsletter/unsubscribe"
-                        element={<NewsletterTokenPage kind="unsubscribe" />}
-                      />
-                      <Route
-                        path="/privacy"
-                        element={<InfoPage kind="privacy" />}
-                      />
-                      <Route
-                        path="/accessibility"
-                        element={<InfoPage kind="accessibility" />}
-                      />
-                      <Route
-                        path="/offline"
-                        element={<InfoPage kind="offline" />}
-                      />
-                      <Route
-                        path="/maintenance"
-                        element={<InfoPage kind="maintenance" />}
-                      />
-                      <Route
-                        path="/admin"
-                        element={protectedPage(<Overview />)}
-                      />
-                      {adminRoutes.map(([path, Component]) => (
-                        <Route
-                          key={path}
-                          path={`/admin/${path}`}
-                          element={protectedPage(<Component />)}
-                        />
-                      ))}
-                      <Route
-                        path="/admin/forms"
-                        element={protectedPage(<Forms />)}
-                      />
-                      <Route
-                        path="/admin/forms/:formId/edit"
-                        element={protectedPage(<FormBuilder />)}
-                      />
-                      <Route
-                        path="/admin/forms/:formId/responses"
-                        element={protectedPage(<FormResponses />)}
-                      />
-                      <Route
-                        path="/admin/invite/:token"
-                        element={<AcceptInvite />}
-                      />
-                      <Route
-                        path="/admin/blog-comments"
-                        element={
-                          <Navigate to="/admin/blog?tab=comments" replace />
-                        }
-                      />
-                      <Route path="*" element={<NotFoundPage />} />
-                    </Routes>
-                  </Suspense>
-                </Frame>
-              </SiteStatusRedirect>
-            </BrowserRouter>
+            <RouterProvider
+              router={router}
+              future={{ v7_startTransition: true }}
+            />
           </TooltipProvider>
         </ContentProvider>
       </AdminProvider>

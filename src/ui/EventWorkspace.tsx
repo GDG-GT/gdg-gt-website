@@ -1,4 +1,5 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { Link } from "react-router-dom";
 import { Plus, ArrowLeft, Save, Users, Copy, ExternalLink } from "lucide-react";
 import { api } from "@/lib/api";
@@ -91,7 +92,7 @@ export default function EventWorkspace() {
     confirmed: boolean;
     key: string;
   } | null>(null);
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     try {
       const r = await api<{ items: ChapterEvent[]; total: number }>(
@@ -104,10 +105,10 @@ export default function EventWorkspace() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page]);
   useEffect(() => {
     load();
-  }, [page]);
+  }, [load]);
   useEffect(() => {
     const warn = (e: BeforeUnloadEvent) => {
       if (dirty) {
@@ -118,6 +119,10 @@ export default function EventWorkspace() {
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty]);
+  useDraftGuard(dirty || !!mail?.subject || !!mail?.message, {
+    busy,
+    label: "Event changes or unsent event mail",
+  });
   const change = (key: keyof ChapterEvent, value: unknown) => {
     setDraft((d) => ({ ...d, [key]: value }));
     setDirty(true);

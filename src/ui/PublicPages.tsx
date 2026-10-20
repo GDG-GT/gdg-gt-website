@@ -8,6 +8,7 @@ import {
   type FormEvent,
 } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
+import { useDraftGuard } from "@/hooks/useDraftGuard";
 import {
   ArrowDown,
   ArrowRight,
@@ -652,6 +653,12 @@ export function EventDetailPage() {
   const [submitted, setSubmitted] = useState(false),
     [busy, setBusy] = useState(false),
     [feedback, setFeedback] = useState("");
+  const [registrationDirty, setRegistrationDirty] = useState(false);
+  useDraftGuard(registrationDirty && !submitted, {
+    busy,
+    label: "Event registration details",
+    privateDraft: false,
+  });
   usePageTitle(event?.title || "Event");
   useEffect(() => {
     if (!event) return;
@@ -982,7 +989,11 @@ export function EventDetailPage() {
                   <span className="sr-only">(opens a new tab)</span>
                 </a>
               ) : (
-                <form onSubmit={register} className="gt-form">
+                <form
+                  onSubmit={register}
+                  className="gt-form"
+                  onChange={() => setRegistrationDirty(true)}
+                >
                   <label className="gt-honeypot" aria-hidden="true">
                     Leave this empty
                     <input name="website" tabIndex={-1} autoComplete="off" />
@@ -1607,6 +1618,12 @@ export function ContactPage() {
     [success, setSuccess] = useState(false),
     [busy, setBusy] = useState(false);
   const contactRequest = useRef<{ body: string; key: string } | null>(null);
+  const [contactDirty, setContactDirty] = useState(false);
+  useDraftGuard(!success && (contactDirty || !!message || !!file), {
+    busy,
+    label: "Contact message or attachment",
+    privateDraft: false,
+  });
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
@@ -1754,7 +1771,11 @@ export function ContactPage() {
               </Button>
             </div>
           ) : (
-            <form className="gt-form" onSubmit={submit}>
+            <form
+              className="gt-form"
+              onSubmit={submit}
+              onChange={() => setContactDirty(true)}
+            >
               <label className="gt-honeypot" aria-hidden="true">
                 Leave this empty
                 <input name="website" tabIndex={-1} autoComplete="off" />

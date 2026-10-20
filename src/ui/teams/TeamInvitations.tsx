@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { api } from "@/lib/api";
 import { Badge, Button, EmptyState, Field } from "../primitives";
 type Invitation = {
@@ -33,6 +34,10 @@ export default function TeamInvitations({ teamId }: { teamId: string }) {
       action: "resend" | "revoke";
     } | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
+  useDraftGuard(!!email || !!password || !!pending, {
+    busy,
+    label: "Team invitation or confirmation",
+  });
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
@@ -114,7 +119,10 @@ export default function TeamInvitations({ teamId }: { teamId: string }) {
         </p>
       )}
       {notice && <p role="status">{notice}</p>}
-      <form className="gt-panel gt-event-editor gt-form gt-invite-editor" onSubmit={submit}>
+      <form
+        className="gt-panel gt-event-editor gt-form gt-invite-editor"
+        onSubmit={submit}
+      >
         <h3 ref={heading} tabIndex={-1}>
           {pending
             ? pending.action === "revoke"

@@ -5,7 +5,10 @@ import {
   useState,
   type FormEvent,
 } from "react";
-import { useSearchParams } from "react-router-dom";
+import {
+  useApprovedSearchParams as useSearchParams,
+  useDraftGuard,
+} from "@/hooks/useDraftGuard";
 import { api, ApiFailure } from "@/lib/api";
 import { validationMessage } from "@/lib/validationMessage";
 import { useScopedRealtime } from "@/hooks/useScopedRealtime";
@@ -123,6 +126,7 @@ export default function DirectMessageWorkspace() {
     password
   );
   const reviewExpiry = useRef<ReturnType<typeof setTimeout>>();
+  useDraftGuard(dirty, { busy, label: "Private message or review input" });
   const fail = useCallback(
     (e: unknown) =>
       setError(

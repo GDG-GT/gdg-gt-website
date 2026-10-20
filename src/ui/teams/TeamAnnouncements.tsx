@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { api } from "@/lib/api";
 import { Badge, Button, EmptyState, Field } from "../primitives";
 type Post = {
@@ -97,6 +98,10 @@ export default function TeamAnnouncements({
     if (editorKey) heading.current?.focus();
   }, [editorKey]);
   const editing = !!editor;
+  useDraftGuard(editing || !!pending, {
+    busy,
+    label: "Team announcement or confirmation",
+  });
   useEffect(() => {
     if (!editing) return;
     const warn = (event: BeforeUnloadEvent) => {

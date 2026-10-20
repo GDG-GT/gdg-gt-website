@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { useSearchParams } from "react-router-dom";
+import {
+  useApprovedSearchParams as useSearchParams,
+  useDraftGuard,
+} from "@/hooks/useDraftGuard";
 import { api, ApiFailure } from "@/lib/api";
 import { validationMessage } from "@/lib/validationMessage";
 import {
@@ -235,6 +238,7 @@ export default function TaskWorkspace() {
     return () => controller.abort();
   }, [selected, tick, historyStarted]);
   const dirty = !!mode || !!comment.trim() || !!editingComment;
+  useDraftGuard(dirty, { busy, label: "Task changes or comment" });
   useEffect(() => {
     if (!dirty) return;
     const warn = (e: BeforeUnloadEvent) => {

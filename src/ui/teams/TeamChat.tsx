@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
+import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { api, ApiFailure } from "@/lib/api";
 import { useScopedRealtime } from "@/hooks/useScopedRealtime";
 import { teamChatSetup } from "../../../shared/team-chat.mjs";
@@ -78,6 +79,10 @@ export default function TeamChat({ teamId }: { teamId: string }) {
     window.addEventListener("beforeunload", leave);
     return () => window.removeEventListener("beforeunload", leave);
   }, [password, confirmation]);
+  useDraftGuard(!!password || !!confirmation, {
+    busy,
+    label: "Team conversation setup",
+  });
   async function provision(e: FormEvent) {
     e.preventDefault();
     if (busy) return;
@@ -143,8 +148,8 @@ export default function TeamChat({ teamId }: { teamId: string }) {
             {!workspace.teamActive
               ? "This team is inactive. Restore the team before reopening its conversation."
               : workspace.channel.archived
-              ? "Authorized leads or administrators can restore the conversation from its room controls."
-              : "Replies, pins, read markers and live updates use the same protected channel workspace."}
+                ? "Authorized leads or administrators can restore the conversation from its room controls."
+                : "Replies, pins, read markers and live updates use the same protected channel workspace."}
           </p>
         </>
       ) : !workspace.teamActive ? (

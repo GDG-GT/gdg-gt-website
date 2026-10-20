@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { api, ApiFailure } from "@/lib/api";
 import { useContent } from "@/contexts/ContentContext";
 import { Badge, Button, EmptyState, Field } from "../primitives";
@@ -115,6 +116,7 @@ export default function SiteContentWorkspace() {
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty]);
+  useDraftGuard(dirty, { busy, label: "Site content changes" });
   const label = (row: Row) =>
     String(
       row.key ||

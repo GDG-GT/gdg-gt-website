@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useNavigationSafety } from "@/hooks/useDraftGuard";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   Activity,
@@ -106,6 +107,7 @@ const workspaceDestinations = groups.flatMap((group) => group.links);
 
 export default function AdminShell({ children }: { children: ReactNode }) {
   const { currentAdmin, logout, isAuthenticated } = useAdmin();
+  const navigationSafety = useNavigationSafety();
   const location = useLocation(),
     navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false),
@@ -228,9 +230,16 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           <ArrowUpRight size={17} /> View public site
         </Link>
         <button
-          onClick={async () => {
-            await logout();
-            navigate("/");
+          onClick={() => {
+            const leave = async () => {
+              await logout();
+              navigate("/");
+            };
+            if (navigationSafety)
+              navigationSafety.request(() => {
+                void leave();
+              });
+            else void leave();
           }}
         >
           <LogOut size={17} /> Sign out

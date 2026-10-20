@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { useParams, useSearchParams, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import {
+  useApprovedSearchParams as useSearchParams,
+  useDraftGuard,
+  useNavigationSafety,
+} from "@/hooks/useDraftGuard";
 import { useAdmin } from "@/contexts/AdminContext";
 import { api } from "@/lib/api";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
@@ -150,6 +155,11 @@ export default function TeamWorkspace() {
     }>(),
     [historyLoading, setHistoryLoading] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null);
+  const navigationSafety = useNavigationSafety();
+  useDraftGuard(!!mode || !!password || !!confirmation, {
+    busy,
+    label: "Team or permission changes",
+  });
   const [destinationQuery, setDestinationQuery] = useState(""),
     [destinations, setDestinations] = useState<Team[]>([]);
   useEffect(() => {
@@ -273,12 +283,15 @@ export default function TeamWorkspace() {
     setConfirmation("");
   }
   function choose(id: string) {
-    if (mode && !window.confirm("Discard the open team changes?")) return;
-    close();
-    setSelected(id);
-    setTab("members");
-    setHistoryPage(1);
-    setWorkspace(undefined);
+    const change = () => {
+      close();
+      setSelected(id);
+      setTab("members");
+      setHistoryPage(1);
+      setWorkspace(undefined);
+    };
+    if (navigationSafety) navigationSafety.request(change);
+    else change();
   }
   const input = (key: string) => ({
     value: values[key] || "",
@@ -784,11 +797,15 @@ export default function TeamWorkspace() {
                 variant={tab === t ? "primary" : "ghost"}
                 aria-current={tab === t ? "page" : undefined}
                 onClick={() => {
-                  setTab(t);
-                  setHistoryPage(1);
-                  const next = new URLSearchParams(searchParams);
-                  next.set("section", t);
-                  setSearchParams(next);
+                  const change = () => {
+                    setTab(t);
+                    setHistoryPage(1);
+                    const next = new URLSearchParams(searchParams);
+                    next.set("section", t);
+                    setSearchParams(next);
+                  };
+                  if (navigationSafety) navigationSafety.request(change);
+                  else change();
                 }}
               >
                 {readable(t)}

@@ -1,4 +1,5 @@
 import "./assets";
+import { useDraftGuard } from "@/hooks/useDraftGuard";
 import {
   lazy,
   Suspense,
@@ -278,6 +279,10 @@ export default function WhiteboardWorkspace() {
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty, mode]);
+  useDraftGuard(dirty || !!mode, {
+    busy: busy || saving.current,
+    label: "Whiteboard scene or settings",
+  });
   useEffect(() => {
     if (mode) formHeading.current?.focus();
   }, [mode]);

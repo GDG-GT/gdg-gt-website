@@ -5,6 +5,46 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Shared unsaved-work navigation protection — 2026-10-20
+
+- Added a data-router-backed navigation boundary for ordinary links, browser
+  Back/Forward, record-selection query changes, explicit sign-out and protected
+  local workspace transitions. A focus-trapped, labeled dialog initially focuses
+  **Stay here**. Declining leaves the route and input unchanged. Busy operations
+  offer no discard action until they finish. Refresh/close use the browser's
+  native before-unload warning. Approved successful saves/local discard flows
+  receive a synchronous, one-transition bypass rather than disabling protection.
+- Integrated the implemented event, collection/CMS, Forms builder/respondent,
+  profile/security, user, team/invitation/announcement/chat-setup, channel, task,
+  private-message, chapter-announcement, whiteboard and finance editors, plus
+  public event registration and contact forms. Team-tab switches now consider
+  nested editor state. Finance tab/request switches use the same in-app dialog.
+  Saved/resumed Form snapshots do not count as fresh unsaved answers; completed
+  submissions stop warning. A builder preview bypass is allowed only after its
+  save succeeds.
+- The registry holds only transient flags and generic labels, not draft content,
+  credentials or browser storage. Session-clear suppresses private session-bound
+  guards so revoked access cannot trap a user; unrelated public respondent work
+  remains protected. This is a UX safeguard, not an authorization mechanism.
+- Verification: **197 unit tests**, TypeScript, `lint:ui` and production build
+  pass (existing bundle warnings remain). Browser checks cover local tab changes,
+  cross-route navigation, explicit discard, Stay preserving exact editor text,
+  browser Back both across routes and between finance record query states,
+  sign-out cancellation without losing the session, and Tab focus cycling.
+  At 375 px the dialog is 343 px wide, within a 375 px document, and starts with
+  Stay focused. Proofs: `ui-review/real-navigation-unsaved-{desktop,mobile}.png`.
+  All fictional unsaved input was cleared without creating an event or note;
+  temporary viewport overrides were reset.
+- The earlier login quota expired naturally: all **36 existing actual local
+  Forms-upload HTTP/storage/scanner checks** subsequently passed with the new
+  finance-aware worker, including removal fencing, response ownership, immutable
+  promotion, metadata stripping, malware rejection and audited downloads. Evidence
+  remains `phase0/local-upload-integration.json`. No quota or job reset occurred.
+- Remaining acceptance includes native close/refresh dialogs across browsers,
+  exhaustive save-in-flight/forced-revocation timing checks, integration into
+  remaining legacy workflows as they are replaced, and full accessibility/
+  multibrowser regression. This checkpoint does not certify the complete PRD.
+
 ### Private finance ledger, allocations and scanned receipts — 2026-10-20
 
 - Replaced the legacy browser-database finance screen with protected APIs and a
@@ -61,8 +101,9 @@ incremental implementation tracker, not a completion or launch claim.
   fictional browser-created draft was cancelled through the protected API.
   Browser file selection is not certified: the Chrome extension needs file-URL
   access, which was not granted. The actual upload pipeline was tested over HTTP.
-- A repeat of the existing Forms-upload HTTP regression hit the shared login
-  quota before setup. It was not bypassed or reset; rerun after natural expiry.
+- A repeat of the existing Forms-upload HTTP regression initially hit the shared
+  login quota before setup. After natural expiry all 36 checks passed; the quota
+  was not bypassed or reset.
   The existing Forms upload/scan/removal/draft-cleanup SQL regressions pass with
   the new shared scanner completion function. Hosted storage, scanner operations,
   long-running load, comprehensive accessibility and production acceptance remain
@@ -143,8 +184,8 @@ incremental implementation tracker, not a completion or launch claim.
 This completes this implementation milestone, **not the complete PRD**. Remaining
 work includes remaining private attachments/media workflows, private editorial
 workflows, newsletter campaigns/scoped mail, member-management gaps, Linktree,
-remaining Forms export/receipt/retention contracts, global unsaved-navigation
-protection, PWA/offline/push, dependency/strictness/performance remediation, CI,
+remaining Forms export/receipt/retention contracts, remaining navigation-guard
+integration and acceptance, PWA/offline/push, dependency/strictness/performance remediation, CI,
 and comprehensive accessibility/security/multibrowser acceptance. Existing UI
 routes or earlier subsystem checkpoints do not certify those remaining contracts.
 

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -60,6 +61,7 @@ export default function PublicForm() {
   const heading = useRef<HTMLHeadingElement>(null),
     formRef = useRef<HTMLFormElement>(null);
   const responseId = useRef<string | null>(null);
+  const savedAnswers = useRef("{}");
   const [uploadToken] = useState(() =>
     tokens.upload && /^[A-Za-z0-9_-]{43}$/.test(tokens.upload)
       ? tokens.upload
@@ -70,6 +72,14 @@ export default function PublicForm() {
   );
   const [uploading, setUploading] = useState<string[]>([]),
     [fileNames, setFileNames] = useState<Record<string, string>>({});
+  useDraftGuard(
+    !submitted && JSON.stringify(answers) !== savedAnswers.current,
+    {
+      busy: pending || uploading.length > 0,
+      label: "Form answers or files not yet saved",
+      privateDraft: form?.settings.access === "internal",
+    },
+  );
   useEffect(() => {
     if (!uploading.length) return;
     const warn = (event: BeforeUnloadEvent) => {
@@ -124,6 +134,7 @@ export default function PublicForm() {
           signal: controller.signal,
         });
         setForm(data.form);
+        savedAnswers.current = JSON.stringify(data.answers);
         setAnswers(data.answers);
         responseId.current = data.responseId;
         editRevision.current = data.revision;
@@ -148,6 +159,7 @@ export default function PublicForm() {
               signal: controller.signal,
             },
           );
+          savedAnswers.current = JSON.stringify(draft.answers);
           setAnswers(draft.answers);
           setFeedback("Your saved draft was restored.");
         }
@@ -409,6 +421,7 @@ export default function PublicForm() {
         },
       );
       resumeToken.current = result.resumeToken;
+      savedAnswers.current = JSON.stringify(answers);
       const fragment = new URLSearchParams({
         resume: result.resumeToken,
         upload: uploadToken,

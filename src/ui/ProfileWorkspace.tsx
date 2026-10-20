@@ -1,4 +1,5 @@
 import { useState, useEffect, type FormEvent } from "react";
+import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { useAdmin } from "@/contexts/AdminContext";
 import { api } from "@/lib/api";
 import { Button, Field, Badge, EmptyState } from "./primitives";
@@ -16,6 +17,9 @@ type Activity = {
   result: string;
 };
 export default function ProfileWorkspace() {
+  const [accountDirty, setAccountDirty] = useState(false),
+    [profileDirty, setProfileDirty] = useState(false),
+    [passwordDirty, setPasswordDirty] = useState(false);
   const { currentAdmin, mergedProfile, refreshProfile, updateTeamProfile } =
     useAdmin();
   const [sessions, setSessions] = useState<Session[]>([]),
@@ -77,9 +81,14 @@ export default function ProfileWorkspace() {
         },
       });
       form.reset();
+      setPasswordDirty(false);
       setMessage("Password changed. Your other sessions were revoked.");
     });
   };
+  useDraftGuard(accountDirty || profileDirty || passwordDirty, {
+    busy,
+    label: "Profile or password input",
+  });
   return (
     <div className="gt-admin-page">
       <header className="gt-admin-heading">
@@ -98,6 +107,7 @@ export default function ProfileWorkspace() {
       <div className="gt-guide-grid">
         <form
           className="gt-panel gt-form"
+          onChange={() => setAccountDirty(true)}
           onSubmit={(e) => {
             e.preventDefault();
             work(async () => {
@@ -107,6 +117,7 @@ export default function ProfileWorkspace() {
                 body: { display_name: displayName },
               });
               await refreshProfile();
+              setAccountDirty(false);
               setMessage("Your display name is saved.");
             });
           }}
@@ -126,7 +137,11 @@ export default function ProfileWorkspace() {
           </Field>
           <Button disabled={busy}>Save account details</Button>
         </form>
-        <form className="gt-panel gt-form" onSubmit={password}>
+        <form
+          className="gt-panel gt-form"
+          onSubmit={password}
+          onChange={() => setPasswordDirty(true)}
+        >
           <h2>Change password</h2>
           <p>
             Use at least 14 characters. This rotates your current session and
@@ -166,11 +181,13 @@ export default function ProfileWorkspace() {
       </div>
       <form
         className="gt-form gt-panel gt-event-editor"
+        onChange={() => setProfileDirty(true)}
         onSubmit={(e) => {
           e.preventDefault();
           work(async () => {
             if (!(await updateTeamProfile(profile)))
               throw new Error("Your public profile could not be saved.");
+            setProfileDirty(false);
             setMessage(
               "Profile saved. New profiles remain unpublished until an officer approves them.",
             );

@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import {
+  useApprovedSearchParams as useSearchParams,
+  useDraftGuard,
+  useNavigationSafety,
+} from "@/hooks/useDraftGuard";
 import { api, ApiFailure } from "@/lib/api";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import { financeStates } from "../../../shared/finances.mjs";
@@ -44,14 +48,21 @@ export default function FinanceWorkspace() {
     [from, setFrom] = useState(""),
     [to, setTo] = useState("");
   const selectedRef = useRef(selected);
+  const navigationSafety = useNavigationSafety();
+  const [guardState, setGuardState] = useState({ dirty: false, busy: false });
   const editState = useRef({ dirty: false, busy: false });
   const onEditState = useCallback(
     (value: { dirty: boolean; busy: boolean }) => {
       editState.current = value;
+      setGuardState(value);
     },
     [],
   );
   selectedRef.current = selected;
+  useDraftGuard(!!mode || guardState.dirty, {
+    busy: guardState.busy,
+    label: "Finance changes, notes or supporting files",
+  });
   const filter = new URLSearchParams({
     q,
     ...(state ? { state } : {}),
@@ -172,14 +183,13 @@ export default function FinanceWorkspace() {
       );
       return;
     }
-    if (
-      (mode || editState.current.dirty) &&
-      !window.confirm("Discard your unsaved finance changes?")
-    )
-      return;
-    editState.current = { dirty: false, busy: false };
-    setMode(null);
-    run();
+    const next = () => {
+      editState.current = { dirty: false, busy: false };
+      setMode(null);
+      run();
+    };
+    if (navigationSafety) navigationSafety.request(next);
+    else next();
   };
   const select = (id: string) =>
     leave(() => {

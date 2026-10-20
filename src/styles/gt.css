@@ -24,6 +24,9 @@
   gap: 24px;
   margin-bottom: 28px;
 }
+.gt-navigation-backdrop { position: fixed; inset: 0; z-index: var(--layer-overlay); background: rgb(24 28 32 / 40%); }
+.gt-navigation-dialog { position: fixed; inset: 50% auto auto 50%; transform: translate(-50%, -50%); z-index: var(--layer-dialog); width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); overflow-y: auto; border: 1px solid var(--line); border-radius: 12px; padding: 28px; background: var(--surface-raised); color: var(--ink); }
+.gt-navigation-dialog h2 { font-size: 1.25rem; font-weight: 650; margin: 0 0 12px; }.gt-navigation-dialog p { line-height: 1.6; }.gt-navigation-dialog ul { padding-left: 20px; margin: 16px 0 24px; }.gt-navigation-dialog .gt-button-row { margin-top: 24px; flex-wrap: wrap; }
 .gt-admin-heading h1 {
   font-size: 2rem;
   font-weight: 700;

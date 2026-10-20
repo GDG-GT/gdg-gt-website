@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { api, ApiFailure } from "@/lib/api";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 type Kind =
@@ -220,6 +221,7 @@ export default function CollectionWorkspace({
     prefix = "/admin/content-records/" + kind;
   const dirty = !!editor && JSON.stringify(editor) !== original.current,
     editorKey = editor ? editor.row?.id || "new" : null;
+  useDraftGuard(dirty, { busy, label: "Content collection changes" });
   useEffect(() => {
     document.title = spec.title + " · GDG workspace";
   }, [spec.title]);

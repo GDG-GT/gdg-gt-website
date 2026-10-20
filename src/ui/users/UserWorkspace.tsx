@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { api } from "@/lib/api";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 type Role = "super_admin" | "admin" | "team_member" | "blog_editor";
@@ -106,6 +107,10 @@ export default function UserWorkspace() {
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [editor]);
+  useDraftGuard(!!editor || !!pending || !!currentPassword || !!confirmation, {
+    busy,
+    label: "Account or security changes",
+  });
   function close() {
     if (busy) return;
     setEditor(null);

@@ -5,7 +5,10 @@ import {
   useState,
   type FormEvent,
 } from "react";
-import { useSearchParams } from "react-router-dom";
+import {
+  useApprovedSearchParams as useSearchParams,
+  useDraftGuard,
+} from "@/hooks/useDraftGuard";
 import { api, ApiFailure } from "@/lib/api";
 import { validationMessage } from "@/lib/validationMessage";
 import { useScopedRealtime } from "@/hooks/useScopedRealtime";
@@ -139,6 +142,10 @@ export default function AnnouncementWorkspace() {
   const editorHeading = useRef<HTMLHeadingElement>(null);
   selectedRef.current = selected;
   const dirty = !!mode || !!password || !!confirmation;
+  useDraftGuard(dirty, {
+    busy,
+    label: "Announcement draft or publication confirmation",
+  });
   useEffect(() => {
     if (mode) editorHeading.current?.focus();
   }, [mode]);

@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { api, ApiFailure } from "@/lib/api";
 import { useScopedRealtime } from "@/hooks/useScopedRealtime";
-import { useSearchParams } from "react-router-dom";
+import {
+  useApprovedSearchParams as useSearchParams,
+  useDraftGuard,
+} from "@/hooks/useDraftGuard";
 import { mergeMessageChanges, mergeMessageHistory } from "./message-sync";
 import {
   ActionLink,
@@ -321,6 +324,7 @@ export default function ChannelWorkspace() {
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty]);
+  useDraftGuard(dirty, { busy, label: "Room message or room settings" });
   function choose(id: string) {
     if (dirty && !window.confirm("Discard your unsent room changes?")) return;
     setSelected(id);
