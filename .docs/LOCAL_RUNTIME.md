@@ -171,3 +171,10 @@ signed-upload integration do not depend on broadening extension access.
 Private development credentials are in `.docs/local-auth.local` (ignored, mode
 0600). Bootstrap verifies existing credentials and never silently resets them.
 Do not copy those values, S3 secrets, or the cron secret into logs, Git, or VITE_*.
+
+For an email-shaped gate code, enter it in the footer newsletter field and press
+**Shift+Enter** to explicitly request officer access. Ordinary Subscribe/Enter
+retains the newsletter workflow; the server silently excludes a gate-code match
+from subscription storage and delivery. Gate access still uses its existing
+five-failure lockout, server-only hash and private gate cookie. No gate value or
+hash is embedded in frontend code.

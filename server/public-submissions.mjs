@@ -5,7 +5,13 @@ import {
   idempotency,
   databaseResult as checked,
 } from "./lib/validation.mjs";
-import { token, tokenHash, validToken, riskHash } from "./lib/security.mjs";
+import {
+  token,
+  tokenHash,
+  validToken,
+  riskHash,
+  verifySecret,
+} from "./lib/security.mjs";
 import { encryptPayload } from "./lib/encryption.mjs";
 export async function publicSubmissionRoutes(
   request,
@@ -58,7 +64,11 @@ export async function publicSubmissionRoutes(
       5,
       900,
     );
-    if (emailLimit.allowed)
+    // An email-shaped gate code accidentally submitted as a normal newsletter
+    // entry must never be stored as a subscriber or put into an email job. Keep
+    // the public response identical; this is not a second gate/token endpoint.
+    const gate = await store.gateConfiguration(config.initialGateHash);
+    if (emailLimit.allowed && !(await verifySecret(body.email, gate.gate_hash)))
       checked(
         await db.rpc("subscribe_newsletter", {
           p_email: body.email,

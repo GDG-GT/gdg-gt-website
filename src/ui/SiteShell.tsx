@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/dialog";
 import { chapterName, localPreviewEnabled, publicLinks } from "./preview-data";
 import { useContent } from "@/contexts/ContentContext";
+import { newsletterEntryIntent } from "./newsletter-entry";
 
 export default function SiteShell({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -73,14 +74,15 @@ export default function SiteShell({ children }: { children: ReactNode }) {
       setNotice("Chapter officers can enter their access code here.");
     }
   };
-  const subscribe = async (event: FormEvent) => {
+  const subscribe = async (event: FormEvent, officerAccess = false) => {
     event.preventDefault();
+    if (sending) return;
     setNotice("");
     if (localPreviewEnabled && email === "local-preview") {
       setLoginOpen(true);
       return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (newsletterEntryIntent(email, officerAccess) === "gate") {
       setSending(true);
       try {
         const response = await fetch("/api/v1/auth/gate", {
@@ -289,6 +291,11 @@ export default function SiteShell({ children }: { children: ReactNode }) {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 autoComplete="email"
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && event.shiftKey) {
+                    void subscribe(event, true);
+                  }
+                }}
                 placeholder="Your email address"
                 required
               />
