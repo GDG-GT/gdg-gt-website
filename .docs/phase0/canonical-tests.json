@@ -33,7 +33,11 @@
     "202610200030_scoped_realtime.sql",
     "202610200031_realtime_restrictive_scope.sql",
     "202610200032_realtime_reauthorization.sql",
-    "202610200033_realtime_membership_change_filter.sql"
+    "202610200033_realtime_membership_change_filter.sql",
+    "202610200034_whiteboards_core.sql",
+    "202610200035_whiteboard_idempotency_scope.sql",
+    "202610200036_whiteboard_scoped_realtime.sql",
+    "202610200037_whiteboard_policy_topic.sql"
   ],
   "tests": [
     {
@@ -173,6 +177,22 @@
       "passed": true
     },
     {
+      "name": "202610200034_whiteboards_core.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200035_whiteboard_idempotency_scope.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200036_whiteboard_scoped_realtime.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200037_whiteboard_policy_topic.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -254,6 +274,14 @@
     },
     {
       "name": "030_scoped_realtime.sql",
+      "passed": true
+    },
+    {
+      "name": "034_whiteboards.sql",
+      "passed": true
+    },
+    {
+      "name": "036_whiteboard_realtime.sql",
       "passed": true
     },
     {

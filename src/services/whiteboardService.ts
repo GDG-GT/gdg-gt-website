@@ -1,103 +1,53 @@
-import { supabase } from '@/lib/supabase';
-
-export interface Whiteboard {
-  id: string;
-  name: string;
-  document: any | null;
-  created_by?: string;
-  updated_by?: string;
-  created_at: string;
-  updated_at: string;
-}
-
-/**
- * Persistence + sync for collaborative whiteboards. The tldraw store snapshot is
- * stored in whiteboards.document (JSONB). Live collaboration uses Supabase Realtime
- * on the whiteboards table (last-write-wins). See 20260616000004_whiteboards.sql.
- */
+import { api } from "@/lib/api";
+import type { Board, BoardDocument, OpenBoard } from "@/ui/whiteboards/types";
+export type Whiteboard = Board;
+const path = "/admin/whiteboards";
 export class WhiteboardService {
-  static async list(): Promise<Whiteboard[]> {
-    try {
-      const { data, error } = await supabase
-        .from('whiteboards')
-        .select('id, name, created_by, updated_by, created_at, updated_at')
-        .order('updated_at', { ascending: false });
-      if (error) throw error;
-      return (data || []) as Whiteboard[];
-    } catch (error) {
-      console.error('Error listing whiteboards:', error);
-      return [];
-    }
+  static list(query = "") {
+    return api<{ items: Board[]; total: number; pageSize: number }>(
+      path + query,
+    );
   }
-
-  static async get(id: string): Promise<Whiteboard | null> {
-    try {
-      const { data, error } = await supabase
-        .from('whiteboards')
-        .select('*')
-        .eq('id', id)
-        .single();
-      if (error) throw error;
-      return data as Whiteboard;
-    } catch (error) {
-      console.error('Error loading whiteboard:', error);
-      return null;
-    }
+  static get(id: string) {
+    return api<OpenBoard>(path + "/" + id);
   }
-
-  static async create(name: string, createdBy: string): Promise<Whiteboard | null> {
-    try {
-      const { data, error } = await supabase
-        .from('whiteboards')
-        .insert({ name: name.trim() || 'Untitled board', created_by: createdBy, updated_by: createdBy })
-        .select('*')
-        .single();
-      if (error) throw error;
-      return data as Whiteboard;
-    } catch (error) {
-      console.error('Error creating whiteboard:', error);
-      return null;
-    }
+  static create(record: { name: string; teamId: string | null }, key: string) {
+    return api<{ record: Board }>(path, {
+      method: "POST",
+      protected: true,
+      idempotencyKey: key,
+      body: record,
+    });
   }
-
-  static async saveDocument(id: string, document: any, updatedBy: string): Promise<boolean> {
-    try {
-      const { error } = await supabase
-        .from('whiteboards')
-        .update({ document, updated_by: updatedBy, updated_at: new Date().toISOString() })
-        .eq('id', id);
-      if (error) throw error;
-      return true;
-    } catch (error) {
-      console.error('Error saving whiteboard:', error);
-      return false;
-    }
+  static mutate(
+    record: Board,
+    action: string,
+    document: Record<string, unknown>,
+    key: string,
+  ) {
+    return api<{ record: Board }>(path + "/" + record.id, {
+      method: "POST",
+      protected: true,
+      idempotencyKey: key,
+      body: {
+        action,
+        version: record.version,
+        updatedAt: record.updated_at,
+        ...document,
+      },
+    });
   }
-
-  static async rename(id: string, name: string): Promise<boolean> {
-    try {
-      const { error } = await supabase
-        .from('whiteboards')
-        .update({ name: name.trim(), updated_at: new Date().toISOString() })
-        .eq('id', id);
-      if (error) throw error;
-      return true;
-    } catch (error) {
-      console.error('Error renaming whiteboard:', error);
-      return false;
-    }
+  static saveDocument(record: Board, document: BoardDocument, key: string) {
+    return this.mutate(record, "save", { document }, key);
   }
-
-  static async remove(id: string): Promise<boolean> {
-    try {
-      const { error } = await supabase.from('whiteboards').delete().eq('id', id);
-      if (error) throw error;
-      return true;
-    } catch (error) {
-      console.error('Error deleting whiteboard:', error);
-      return false;
-    }
+  static rename(record: Board, name: string, key: string) {
+    return this.mutate(record, "rename", { name }, key);
+  }
+  static archive(record: Board, key: string) {
+    return this.mutate(record, "archive", { confirmation: record.name }, key);
+  }
+  static restore(record: Board, key: string) {
+    return this.mutate(record, "restore", { confirmation: record.name }, key);
   }
 }
-
 export default WhiteboardService;

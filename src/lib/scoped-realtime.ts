@@ -2,7 +2,7 @@ import type { SupabaseClient, RealtimeChannel } from "@supabase/supabase-js";
 import { api, ApiFailure } from "./api";
 
 export type LiveScope =
-  { kind: "notifications" } | { kind: "channel"; id: string };
+  { kind: "notifications" } | { kind: "channel" | "whiteboard"; id: string };
 export type LiveStatus = "connecting" | "live" | "fallback" | "denied";
 type Grant = {
   token: string;
@@ -93,8 +93,8 @@ export function startScopedRealtime(options: Options, deps = dependencies) {
       next.token &&
       remaining > 1000 &&
       remaining <= 300000 &&
-      (options.scope.kind === "channel"
-        ? next.topic === `gdg:channel:${options.scope.id}`
+      (options.scope.kind !== "notifications"
+        ? next.topic === `gdg:${options.scope.kind}:${options.scope.id}`
         : /^gdg:user:[0-9a-f-]{36}$/.test(next.topic))
     );
   }
@@ -168,11 +168,15 @@ export function startScopedRealtime(options: Options, deps = dependencies) {
           )
             return;
           if (
-            (options.scope.kind === "channel" &&
-              payload.kind === "channel" &&
+            (options.scope.kind !== "notifications" &&
+              payload.kind === options.scope.kind &&
               payload.id === options.scope.id) ||
             (options.scope.kind === "notifications" &&
-              ["notifications", "channel-directory"].includes(payload.kind))
+              [
+                "notifications",
+                "channel-directory",
+                "whiteboard-directory",
+              ].includes(payload.kind))
           )
             options.onChange(); // Fetch content through the independently authorized API.
           if (

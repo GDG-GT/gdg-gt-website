@@ -89,6 +89,13 @@
 .gt-message-body { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 75ch; line-height: 1.65; margin: 12px 0; }
 .gt-channel-messages blockquote { padding: 12px; margin: 12px 0; border: 1px solid var(--line); border-radius: 8px; color: var(--text-secondary); overflow-wrap: anywhere; }
 .gt-channel-composer { padding-top: 24px; }
+.gt-board-canvas { position: relative; height: 620px; min-height: 420px; width: 100%; margin-block: 20px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.gt-board-canvas .excalidraw { --color-surface-lowest: #f7f8fa; --color-surface-low: #f0f1f3; --color-primary: #a84334; --color-primary-darker: #903a2d; }
+.gt-board-save-state { color: var(--text-secondary); margin-block: 14px; }
+.gt-board-canvas .HintViewer { color: #55585f; opacity: 1; }
+.gt-board-canvas .excalidraw .HintViewer span { color: #55585f; }
+.gt-board-canvas .excalidraw .Island { background: #f7f8fa; }
+@media(max-width:600px) { .gt-board-canvas { height: 560px; border-radius: 8px; } }
 .gt-room-members { padding: 20px 0; }
 .gt-room-members li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
 @media(max-width:900px) { .gt-channel-layout { grid-template-columns: minmax(0,1fr); } .gt-channel-selected > .gt-room-directory { display: none; } }

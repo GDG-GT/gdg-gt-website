@@ -30,6 +30,7 @@ import { teamInvitationRoutes } from "./team-invitations.mjs";
 import { teamAnnouncementRoutes } from "./team-announcements.mjs";
 import { channelRoutes } from "./channels.mjs";
 import { realtimeRoutes } from "./realtime.mjs";
+import { whiteboardRoutes } from "./whiteboards.mjs";
 
 export function applicationHandler({ store, config, db, log } = {}) {
   const auth = createAuthHandler({ store, config, log });
@@ -66,6 +67,15 @@ export function applicationHandler({ store, config, db, log } = {}) {
           return;
         if (
           await channelRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
+        if (
+          await whiteboardRoutes(request, response, {
             db,
             store,
             config,

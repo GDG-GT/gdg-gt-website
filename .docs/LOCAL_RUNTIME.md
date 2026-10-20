@@ -53,7 +53,7 @@ then authenticates a private, single-topic socket. JWTs last at most five minute
 are held in memory, and are renewed before expiry. The dedicated `gdg_realtime`
 database role cannot read application tables or mint grants. Broadcasts contain
 only invalidation metadata; content is reread through the protected API. Current
-channel and own-notification scopes are implemented. Authorization-change
+channel, whiteboard and own-notification scopes are implemented. Authorization-change
 signals request immediate teardown/reauthorization; cached backend policies mean
 expiry remains the hard maximum for a client ignoring that instruction. Logout
 and observed session failures disconnect immediately. Offline fallback is API
@@ -64,6 +64,17 @@ PostgREST denial, signature/expiry enforcement and body-free broadcasts. The
 optional `-- --hold-for-browser` requires an interactive terminal and leaves only
 new fictional rooms available for UI inspection until `done` is entered. Cleanup
 archives those rooms and marks only the new review notification read.
+
+Whiteboards use a lazy-loaded local editor, with fonts prepared from the installed
+package by `scripts/prepare-whiteboard-assets.mjs` before `dev` and `build`. The
+generated `public/assets/excalidraw` directory is ignored; do not put user files
+there. No editor cloud, external scene upload or remote font host is required.
+`npm run test:local-whiteboards` checks independent-session scope, optimistic
+version/timestamp conflicts, archive recovery, exports and actual private sockets.
+It checks confirmation-quota headroom before creating fixtures. Repeated runs must
+wait for existing limits; neither rate windows nor authentication are reset.
+The optional interactive hold uses `change` to commit a new fictional version and
+`done` to recoverably archive only that suite's records.
 
 ## Local scheduling and retention
 

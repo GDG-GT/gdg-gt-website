@@ -5,6 +5,55 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Protected, versioned live whiteboards — 2026-10-20
+
+- The active Whiteboards route and legacy compatibility entry points now use
+  protected APIs instead of browser database reads/writes or Postgres Changes.
+  Private creator/explicit-collaborator scope and team-scoped action grants are
+  checked per operation. Explicit viewer/editor admission does not change chapter
+  roles; former team members cannot retain a team board through collaboration.
+- Implemented scoped search/counts/pagination, create, rename, explicit sharing /
+  revocation with password confirmation, read-only viewers, portable scene export,
+  recoverable archive and administrative restoration. Sharing changes recheck
+  current password identity under the hierarchy lock. Collaborator email inventory
+  is available only to board managers. Archived boards cannot be written.
+- Autosaves require both version and saved timestamp, use idempotency keys and
+  serialize concurrent edits. Stale writes return 409. Unsaved drawing/details
+  remain in tab memory; users can download a local drawing copy or explicitly
+  reload the server version. An open metadata form also blocks silent adoption of
+  a remote version. Native drawing normalization does not count as a user edit.
+- Shared Zod validation runs in the editor and API. Scene limits reject embeds,
+  images, files, executable links, invalid coordinates/styles, excessive nesting,
+  duplicate IDs, overlong text and oversized drawings. Editor cloud features and
+  file imports are disabled. Editor JS/CSS load lazily; packaged fonts are prepared
+  locally, with asset-path configuration evaluated before the editor package.
+- Private whiteboard sockets use the existing short-lived single-topic role and
+  restrictive policy. Broadcasts contain only board identity, never scene data.
+  Rejoins reread the API. Revocation requests immediate reauthorization, with the
+  same five-minute hard expiry bound. No application-table browser grants added.
+- Actual independent-session HTTP/WebSocket integration: 38 checks, including
+  exactly one winner from two concurrent saves, timestamp conflicts, scope and
+  viewer/editor boundaries, private socket topic isolation, metadata-only
+  broadcasts, table-read denial, export and archive recovery. Temporary accounts
+  and boards were recoverably archived. Repeated runs respect confirmation/login
+  quotas; a read-only preflight avoids creating fixtures during cooldown.
+- Browser created a separate fictional board, drew/autosaved a shape, fitted it
+  at 375 px, downloaded and verified its `.excalidraw` scene, and recoverably
+  archived it. The generated export remains in Downloads. A second live fixture
+  demonstrated remote refresh, preservation of a staged rename on conflict, and
+  explicit server-version recovery. Responsive override reset. Evidence:
+  `ui-review/real-whiteboard-live-desktop.jpg`,
+  `ui-review/real-whiteboard-fit-mobile.jpg` (375/375 px width, height 1512 px),
+  `ui-review/real-whiteboard-conflict.jpg`, and
+  `ui-review/real-whiteboard-review-cleanup.jpg`. Existing restrained admin tokens
+  and controls were preserved under the Impeccable product-UI guidance.
+- All 37 migrations applied locally; isolated SQL covers team and explicit scope,
+  session revocation, idempotency and Realtime, plus both 100-client capacity tests.
+  All 135 unit tests, TypeScript and scoped ESLint pass. Production build passes
+  with existing bundle warnings. This is not full PRD/production completion:
+  communications/tasks, team chat, financial workflows, other unfinished content
+  modules and final accessibility/security/performance gates remain.
+
 ### Private Realtime channels and notifications — 2026-10-20
 
 - Connected the active channel workspace and notification bell/inbox to private

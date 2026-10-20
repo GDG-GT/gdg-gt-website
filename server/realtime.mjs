@@ -9,6 +9,7 @@ import {
 } from "./lib/realtime-token.mjs";
 const schema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("channel"), id: uuid }).strict(),
+  z.object({ kind: z.literal("whiteboard"), id: uuid }).strict(),
   z.object({ kind: z.literal("notifications") }).strict(),
 ]);
 export async function realtimeRoutes(
@@ -42,7 +43,7 @@ export async function realtimeRoutes(
       p_actor: session.user.id,
       p_session: session.sessionId,
       p_kind: body.kind,
-      p_target: body.kind === "channel" ? body.id : session.user.id,
+      p_target: body.kind !== "notifications" ? body.id : session.user.id,
       p_request_id: requestId,
     }),
   );

@@ -78,7 +78,7 @@ export function signRealtimeGrant(
     !Number.isSafeInteger(grant.expiresAt) ||
     !Number.isSafeInteger(grant.permissionVersion) ||
     grant.permissionVersion < 0 ||
-    !/^gdg:(channel|user):[0-9a-f-]{36}$/.test(grant.topic || "") ||
+    !/^gdg:(channel|whiteboard|user):[0-9a-f-]{36}$/.test(grant.topic || "") ||
     grant.expiresAt <= grant.issuedAt ||
     grant.expiresAt > grant.issuedAt + 300
   )

@@ -180,6 +180,20 @@ export async function accessRoutes(
     if (channels.total > 0) accessibleRoutes.push("/admin/channels");
   }
   const resource = params.resource || routes[params.route];
+  if (
+    !["super_admin", "admin"].includes(session.user.role) &&
+    !accessibleRoutes.includes("/admin/whiteboard")
+  ) {
+    const boards = checked(
+      await db.rpc("list_whiteboards", {
+        p_actor: session.user.id,
+        p_page: 1,
+        p_query: null,
+        p_deleted: false,
+      }),
+    );
+    if (boards.total > 0) accessibleRoutes.push("/admin/whiteboard");
+  }
   let allowed = params.route ? accessibleRoutes.includes(params.route) : false;
   if (params.resource)
     allowed = isAuthorized({

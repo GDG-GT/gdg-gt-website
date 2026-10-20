@@ -16,11 +16,11 @@ export function useScopedRealtime(
   callbacks.current = { onChange, onDenied };
   const [status, setStatus] = useState<LiveStatus>("connecting");
   const kind = scope?.kind,
-    id = scope?.kind === "channel" ? scope.id : "";
+    id = scope && scope.kind !== "notifications" ? scope.id : "";
   useEffect(() => {
     if (!currentAdmin?.id || !kind) return;
     const live = startScopedRealtime({
-      scope: kind === "channel" ? { kind, id } : { kind },
+      scope: kind !== "notifications" ? { kind, id } : { kind },
       onChange: () => callbacks.current.onChange(),
       onDenied: () => callbacks.current.onDenied?.(),
       onStatus: setStatus,

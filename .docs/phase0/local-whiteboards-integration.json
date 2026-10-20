@@ -1,0 +1,157 @@
+{
+  "note": "Actual local independent-session HTTP checks. Only new fictional accounts and boards used; boards/accounts recoverably archived. No external assets, messages or credentials recorded.",
+  "tests": [
+    {
+      "name": "whiteboard inventory rejects anonymous callers",
+      "passed": true
+    },
+    {
+      "name": "new board is private with a minimal metadata projection",
+      "passed": true
+    },
+    {
+      "name": "duplicate create retry does not create another board",
+      "passed": true
+    },
+    {
+      "name": "creator identity cannot be supplied by the caller",
+      "passed": true
+    },
+    {
+      "name": "unrelated active account cannot open a private board",
+      "passed": true
+    },
+    {
+      "name": "unauthorized boards are filtered before inventory counts",
+      "passed": true
+    },
+    {
+      "name": "explicit board sharing requires a correct current password",
+      "passed": true
+    },
+    {
+      "name": "owner grants explicit viewer access without changing chapter role",
+      "passed": true
+    },
+    {
+      "name": "viewer receives read and export but no edit capability",
+      "passed": true
+    },
+    {
+      "name": "viewer cannot write a drawing through the API",
+      "passed": true
+    },
+    {
+      "name": "viewer cannot inspect collaborator email inventory",
+      "passed": true
+    },
+    {
+      "name": "explicit editor access is allowed for an existing blog editor",
+      "passed": true
+    },
+    {
+      "name": "explicit collaboration grants the whiteboard route without broader chapter permissions",
+      "passed": true
+    },
+    {
+      "name": "authorized editor saves a versioned drawing",
+      "passed": true
+    },
+    {
+      "name": "same save retry is idempotent even after the version advanced",
+      "passed": true
+    },
+    {
+      "name": "stale version cannot silently overwrite a collaborator save",
+      "passed": true
+    },
+    {
+      "name": "a correct version with a stale saved timestamp is also rejected",
+      "passed": true
+    },
+    {
+      "name": "two real independent-session saves produce one winner and one conflict",
+      "passed": true
+    },
+    {
+      "name": "embeds and executable element links never enter a saved scene",
+      "passed": true
+    },
+    {
+      "name": "ordinary metadata edits cannot change the owning scope",
+      "passed": true
+    },
+    {
+      "name": "authorized export returns a portable sanitized local drawing",
+      "passed": true
+    },
+    {
+      "name": "explicit collaborator access is recoverably revoked",
+      "passed": true
+    },
+    {
+      "name": "removed collaborator loses access on the next HTTP request",
+      "passed": true
+    },
+    {
+      "name": "recoverable archive requires the exact board name",
+      "passed": true
+    },
+    {
+      "name": "board archive retains the versioned record",
+      "passed": true
+    },
+    {
+      "name": "archived private board is hidden from ordinary collaborators",
+      "passed": true
+    },
+    {
+      "name": "archived drawings are read-only even for an administrator",
+      "passed": true
+    },
+    {
+      "name": "administrator restores a board without changing its original scope",
+      "passed": true
+    },
+    {
+      "name": "restoration does not reactivate previously removed explicit access",
+      "passed": true
+    },
+    {
+      "name": "revoked opaque session cannot continue reading a board",
+      "passed": true
+    },
+    {
+      "name": "protected issuance produces an exact whiteboard socket scope",
+      "passed": true
+    },
+    {
+      "name": "actual private whiteboard WebSocket authorizes the scoped board",
+      "passed": true
+    },
+    {
+      "name": "whiteboard JWT cannot subscribe to a different board",
+      "passed": true
+    },
+    {
+      "name": "socket review mutation still uses protected HTTP saving",
+      "passed": true
+    },
+    {
+      "name": "actual drawing broadcast contains only board invalidation metadata, never scene content",
+      "passed": true
+    },
+    {
+      "name": "whiteboard socket token cannot read application records over PostgREST",
+      "passed": true
+    },
+    {
+      "name": "removed collaborator cannot mint a replacement whiteboard socket token",
+      "passed": true
+    },
+    {
+      "name": "browser review remote version saved through protected API",
+      "passed": true
+    }
+  ]
+}
