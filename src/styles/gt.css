@@ -47,6 +47,10 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
 }
+.gt-button-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.gt-event-editor > h2 { font-size: 1.25rem; font-weight: 650; margin: 0 0 20px; }
+.gt-account-table td:first-child { min-width: 220px; max-width: 320px; overflow-wrap: anywhere; }
+.gt-account-table td:last-child { min-width: 240px; max-width: 330px; }
 .gt-content-columns { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap: 28px; margin-top: 24px; }
 .gt-content-columns article { padding: 20px 0; border-top: 1px solid var(--line); }
 .gt-content-columns h3 { margin: 12px 0; }

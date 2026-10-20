@@ -1,0 +1,129 @@
+{
+  "note": "Real local account API, hashed capabilities, encrypted local-mail generation, current role hierarchy, session revocation. Only new fictional accounts used and recoverably archived; no credentials recorded.",
+  "tests": [
+    {
+      "name": "account directory rejects anonymous callers",
+      "passed": true
+    },
+    {
+      "name": "account creation rejects password hash mass assignment",
+      "passed": true
+    },
+    {
+      "name": "new account requires setup without exposing credentials or raw capabilities",
+      "passed": true
+    },
+    {
+      "name": "setup capability is hashed with encrypted outbox payload",
+      "passed": true
+    },
+    {
+      "name": "local setup email binds the recipient and keeps capability in a fragment",
+      "passed": true
+    },
+    {
+      "name": "setup rejects a different recipient email",
+      "passed": true
+    },
+    {
+      "name": "recipient can choose their own password through the public API",
+      "passed": true
+    },
+    {
+      "name": "completed setup link cannot be replayed",
+      "passed": true
+    },
+    {
+      "name": "configured recipient signs in through the normal gate and password flow",
+      "passed": true
+    },
+    {
+      "name": "team members cannot list chapter accounts",
+      "passed": true
+    },
+    {
+      "name": "Super Admin can inspect session dates without bearer material",
+      "passed": true
+    },
+    {
+      "name": "destructive account changes require typed identity confirmation",
+      "passed": true
+    },
+    {
+      "name": "correct CSRF alone cannot authorize an account change",
+      "passed": true
+    },
+    {
+      "name": "deactivation is applied atomically",
+      "passed": true
+    },
+    {
+      "name": "deactivation blocks the very next existing-session request",
+      "passed": true
+    },
+    {
+      "name": "stale account revisions cannot overwrite a newer state",
+      "passed": true
+    },
+    {
+      "name": "inactive accounts can be explicitly activated",
+      "passed": true
+    },
+    {
+      "name": "reset requires new password setup and queues one private link",
+      "passed": true
+    },
+    {
+      "name": "setup resend has a persisted cooldown",
+      "passed": true
+    },
+    {
+      "name": "old password cannot sign in while reset is pending",
+      "passed": true
+    },
+    {
+      "name": "fresh reset capability restores password access",
+      "passed": true
+    },
+    {
+      "name": "role changes use the protected account mutation",
+      "passed": true
+    },
+    {
+      "name": "self-role changes and self-lockout are rejected",
+      "passed": true
+    },
+    {
+      "name": "Super Admin can create an administrator with private setup",
+      "passed": true
+    },
+    {
+      "name": "Admin has no Super Admin directory route",
+      "passed": true
+    },
+    {
+      "name": "Admin cannot inspect Super Admin sessions",
+      "passed": true
+    },
+    {
+      "name": "Admin cannot promote a subordinate to a privileged role",
+      "passed": true
+    },
+    {
+      "name": "Admin may manage subordinate accounts through scoped API calls",
+      "passed": true
+    },
+    {
+      "name": "archival preserves account history while revoking access",
+      "passed": true
+    },
+    {
+      "name": "restoration never silently activates an account",
+      "passed": true
+    },
+    {
+      "name": "directory search returns only safe account projections",
+      "passed": true
+    }
+  ]
+}

@@ -84,7 +84,7 @@ export class SecurityStore {
       await this.db
         .from("admin_users")
         .select(
-          "id,email,password_hash,role,is_active,display_name,locked_until,created_at",
+          "id,email,password_hash,role,is_active,display_name,locked_until,created_at,must_change_password,temporary_password_expires_at,deleted_at",
         )
         .eq("email", email)
         .maybeSingle(),

@@ -92,6 +92,10 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    LAST_SUPER_ADMIN: [
+      409,
+      "Keep at least one active Super Admin with completed account setup.",
+    ],
     UPLOAD_QUOTA: [
       409,
       "This response or field has reached its file limit. Remove an unused file before trying again.",

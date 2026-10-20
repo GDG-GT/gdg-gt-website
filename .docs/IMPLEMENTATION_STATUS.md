@@ -5,6 +5,39 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Protected account management — 2026-10-20
+
+- The active Users screen now uses protected server APIs, not the legacy browser
+  database service. Creation, role/name edits, activation, session inspection and
+  revocation, reset, recoverable archival and inactive restoration are connected.
+  Directory access is Super Admin only; Admin API operations are restricted to
+  Team Member / Blog Editor targets and cannot grant privileged roles.
+- Every account mutation confirms the actor's password; high-impact actions also
+  require typed target identity. The database rechecks the current actor, session,
+  verified password hash, target hierarchy and optimistic revision under a shared
+  hierarchy lock. Self-management uses the separate own-profile routes; users
+  cannot self-elevate, deactivate or archive through this API.
+- New accounts use an undisclosed random credential and must complete setup.
+  Single-use, email-bound setup/reset capabilities expire in 24 hours, are hashed
+  at rest, and enter the outbox only encrypted. Administrators never receive raw
+  links or temporary passwords. The recipient page removes the URL fragment and
+  stores no capability/password in browser storage. Reset blocks old passwords
+  and revokes existing sessions; role and activation changes also revoke sessions.
+- Real local HTTP integration: 31 checks, including setup replay/email binding,
+  immediate next-request revocation, role escalation denial, resend cooldown,
+  recoverable archival and restore-as-inactive. Fictional accounts were archived.
+  Local scheduler handles the added delivery kind; no external email was sent.
+- Isolated database tests pass with 24 forward migrations, plus both existing
+  100-client concurrency checks. Existing 97 unit tests, TypeScript, scoped ESLint
+  and production build pass. Mobile editor is 375 px wide with document width
+  375 px and 1865 px scrollable content. Screenshot:
+  `ui-review/real-account-editor-mobile.jpg`. Browser creation was inspected but
+  not submitted; credential/setup flows were tested through the local HTTP suite.
+- This is not full security/teams completion. Security-event/alert tooling,
+  team administration/invitations/transfers, short-lived Realtime scopes and the
+  broader PRD modules below remain required, along with final accessibility,
+  security coverage, dependency and performance acceptance.
+
 ### Public content operations — 2026-10-20
 
 - Resource, sponsor, sponsorship-tier, impact-statistic and public team-profile

@@ -24,6 +24,7 @@ import { uploadRoutes } from "./uploads.mjs";
 import { jobRoutes } from "./jobs.mjs";
 import { contentRecordRoutes } from "./content-records.mjs";
 import { siteContentRoutes } from "./site-content.mjs";
+import { userRoutes } from "./users.mjs";
 
 export function applicationHandler({ store, config, db, log } = {}) {
   const auth = createAuthHandler({ store, config, log });
@@ -41,6 +42,10 @@ export function applicationHandler({ store, config, db, log } = {}) {
         checkOrigin(request, config.origin, {
           mutation: !["GET", "HEAD"].includes(request.method),
         });
+        if (
+          await userRoutes(request, response, { db, store, config, requestId })
+        )
+          return;
         if (
           await eventRoutes(request, response, { db, store, config, requestId })
         )

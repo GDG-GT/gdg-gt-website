@@ -38,6 +38,7 @@ const PublicForm = lazy(() => import("@/ui/forms/PublicForm"));
 const Linktree = lazy(() => import("@/pages/Linktree"));
 const NewsletterTokenPage = lazy(() => import("@/ui/NewsletterTokenPage"));
 const AcceptInvite = lazy(() => import("@/pages/admin/AcceptInvite"));
+const AccountSetup = lazy(() => import("@/ui/users/AccountSetup"));
 
 // Preserve every existing workflow and load heavy editors only on their routes.
 const adminRoutes = [
@@ -63,7 +64,7 @@ const adminRoutes = [
   ],
   ["newsletter", lazy(() => import("@/pages/admin/AdminNewsletter"))],
   ["blog", lazy(() => import("@/pages/admin/AdminBlog"))],
-  ["users", lazy(() => import("@/pages/admin/AdminUsers"))],
+  ["users", lazy(() => import("@/ui/users/UserWorkspace"))],
   ["profile", lazy(() => import("@/ui/ProfileWorkspace"))],
   [
     "sponsors",
@@ -145,6 +146,7 @@ export default function App() {
                       <Route path="/gallery" element={<GalleryPage />} />
                       <Route path="/contact" element={<ContactPage />} />
                       <Route path="/forms/:slug" element={<PublicForm />} />
+                      <Route path="/account/setup" element={<AccountSetup />} />
                       <Route path="/l/:username" element={<Linktree />} />
                       <Route
                         path="/newsletter/confirm"

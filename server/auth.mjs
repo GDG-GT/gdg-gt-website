@@ -202,6 +202,11 @@ export function createAuthHandler({
           if (
             !matches ||
             !account?.is_active ||
+            account.deleted_at ||
+            account.must_change_password ||
+            (account.temporary_password_expires_at &&
+              new Date(account.temporary_password_expires_at).getTime() <=
+                Date.now()) ||
             (account.locked_until &&
               new Date(account.locked_until).getTime() > Date.now())
           ) {

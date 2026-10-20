@@ -5,6 +5,7 @@ import { serverConfig } from "./config.mjs";
 import { databaseResult as checked } from "./lib/validation.mjs";
 import { decryptPayload } from "./lib/encryption.mjs";
 import { ApiError } from "./lib/http.mjs";
+import { tokenHash } from "./lib/security.mjs";
 const escape = (v) =>
   String(v || "").replace(
     /[&<>"']/g,
@@ -140,6 +141,50 @@ export async function deliveryMessage(job, db, config, mail) {
       subject = "New chapter inquiry: " + contact.inquiry_type;
       content = `${contact.name} (${contact.email}) sent an inquiry.\n\n${contact.message}\n\nReview securely: ${config.origin}/admin/communications`;
     }
+  } else if (job.kind === "account_access") {
+    const access = checked(
+      await db
+        .from("account_access_tokens")
+        .select(
+          "admin_user_id,intended_email,expires_at,consumed_at,revoked_at,token_hash",
+        )
+        .eq("id", job.payload.tokenId)
+        .maybeSingle(),
+    );
+    if (
+      !access ||
+      access.revoked_at ||
+      access.consumed_at ||
+      new Date(access.expires_at) <= new Date()
+    )
+      return null;
+    const user = checked(
+      await db
+        .from("admin_users")
+        .select("email,is_active,deleted_at")
+        .eq("id", access.admin_user_id)
+        .maybeSingle(),
+    );
+    if (
+      !user?.is_active ||
+      user.deleted_at ||
+      user.email !== access.intended_email
+    )
+      return null;
+    const secret = decryptPayload(job.secret_payload, config.encryptionSecret);
+    if (
+      secret.email !== user.email ||
+      tokenHash(secret.token) !== access.token_hash
+    )
+      return null;
+    to = user.email;
+    subject = "Set up your GDG at Georgia Tech account";
+    content =
+      "A chapter administrator requested account access for this email address. Choose your own password:\n" +
+      config.origin +
+      "/account/setup#token=" +
+      secret.token +
+      "\n\nThis single-use link expires in 24 hours. Do not forward it. Completing setup does not bypass the chapter access entry. If you did not expect this request, contact chapter leadership.";
   } else if (job.kind === "form_access") {
     const access = checked(
       await db
