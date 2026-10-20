@@ -19,7 +19,10 @@
     "202610200016_upload_removal_fencing.sql",
     "202610200017_form_upload_drafts_cleanup.sql",
     "202610200018_draft_upload_binding_fix.sql",
-    "202610200019_scheduled_forms_jobs.sql"
+    "202610200019_scheduled_forms_jobs.sql",
+    "202610200020_content_operations.sql",
+    "202610200021_content_revision_publication_guard.sql",
+    "202610200022_site_content_editor.sql"
   ],
   "tests": [
     {
@@ -103,6 +106,18 @@
       "passed": true
     },
     {
+      "name": "202610200020_content_operations.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200021_content_revision_publication_guard.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200022_site_content_editor.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -144,6 +159,14 @@
     },
     {
       "name": "019_scheduled_jobs.sql",
+      "passed": true
+    },
+    {
+      "name": "020_content_operations.sql",
+      "passed": true
+    },
+    {
+      "name": "022_site_content.sql",
       "passed": true
     },
     {

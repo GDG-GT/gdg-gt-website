@@ -1,0 +1,97 @@
+{
+  "note": "Actual local API/database content transitions with fictional fixtures archived afterward. No production content or cloud systems were changed.",
+  "tests": [
+    {
+      "name": "anonymous callers cannot read private content inventory",
+      "passed": true
+    },
+    {
+      "name": "content creation rejects client-controlled publication",
+      "passed": true
+    },
+    {
+      "name": "resource links reject private network destinations",
+      "passed": true
+    },
+    {
+      "name": "new resources are private drafts with trusted initial counters",
+      "passed": true
+    },
+    {
+      "name": "draft resource does not leak into public search",
+      "passed": true
+    },
+    {
+      "name": "publication is an explicit committed transition",
+      "passed": true
+    },
+    {
+      "name": "public resource projection excludes internal scope and authorship",
+      "passed": true
+    },
+    {
+      "name": "editing published content returns it to private review",
+      "passed": true
+    },
+    {
+      "name": "optimistic revision prevents overwriting newer content",
+      "passed": true
+    },
+    {
+      "name": "duplicate creates an independent private draft without inherited view counts",
+      "passed": true
+    },
+    {
+      "name": "archive preserves a recoverable record",
+      "passed": true
+    },
+    {
+      "name": "archived records remain visible in protected recovery inventory",
+      "passed": true
+    },
+    {
+      "name": "restoration never silently republishes content",
+      "passed": true
+    },
+    {
+      "name": "create real sponsors draft",
+      "passed": true
+    },
+    {
+      "name": "publish authorized sponsors record",
+      "passed": true
+    },
+    {
+      "name": "minimal public sponsors serialization excludes private contact data",
+      "passed": true
+    },
+    {
+      "name": "create real sponsor-stats draft",
+      "passed": true
+    },
+    {
+      "name": "publish authorized sponsor-stats record",
+      "passed": true
+    },
+    {
+      "name": "minimal public sponsor-stats serialization excludes private contact data",
+      "passed": true
+    },
+    {
+      "name": "create real team-profiles draft",
+      "passed": true
+    },
+    {
+      "name": "publish authorized team-profiles record",
+      "passed": true
+    },
+    {
+      "name": "minimal public team-profiles serialization excludes private contact data",
+      "passed": true
+    },
+    {
+      "name": "current-role revocation blocks content inventory immediately",
+      "passed": true
+    }
+  ]
+}

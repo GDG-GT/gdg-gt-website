@@ -10,11 +10,14 @@ interface ContentContextType {
   siteSettings: Record<string, any>;
   pageContent: Record<string, Record<string, any>>;
   navigationItems: any[];
+  socialLinks: any[];
   footerContent: Record<string, any>;
   events: any[];
   teamMembers: any[];
   projects: any[];
   sponsors: any[];
+  chapterMetrics: Row[];
+  sponsorshipTiers: Row[];
   resources: any[];
   isLoading: boolean;
   isLoadingEvents: boolean;
@@ -55,10 +58,13 @@ export const ContentProvider = ({
       Record<string, Record<string, any>>
     >({});
   const [navigationItems, setNavigationItems] = useState<Row[]>([]),
+    [socialLinks, setSocialLinks] = useState<Row[]>([]),
     [footerContent, setFooterContent] = useState<Record<string, any>>({});
   const [events, setEvents] = useState<Row[]>([]),
     [teamMembers, setTeamMembers] = useState<Row[]>([]),
     [sponsors, setSponsors] = useState<Row[]>([]),
+    [chapterMetrics, setChapterMetrics] = useState<Row[]>([]),
+    [sponsorshipTiers, setSponsorshipTiers] = useState<Row[]>([]),
     [resources, setResources] = useState<Row[]>([]);
   const [isLoading, setLoading] = useState(true),
     [isLoadingEvents, setEventsLoading] = useState(false),
@@ -74,11 +80,15 @@ export const ContentProvider = ({
         navigation: Row[];
         footer: Row[];
         pages: Row[];
+        social: Row[];
+        metrics: Row[];
       }>("/public/home");
       setSiteSettings(
         Object.fromEntries(data.settings.map((r) => [r.key, r.value])),
       );
       setNavigationItems(data.navigation);
+      setSocialLinks(data.social);
+      setChapterMetrics(data.metrics || []);
       setFooterContent(
         Object.fromEntries(data.footer.map((r) => [r.section_key, r.content])),
       );
@@ -125,9 +135,12 @@ export const ContentProvider = ({
   const loadSponsors = useCallback(async () => {
     setSponsorsLoading(true);
     try {
-      setSponsors(
-        (await api<{ items: Row[] }>("/sponsors?pageSize=100")).items,
-      );
+      const [partners, tiers] = await Promise.all([
+        api<{ items: Row[] }>("/sponsors?pageSize=100"),
+        api<{ items: Row[] }>("/sponsor-tiers?pageSize=100"),
+      ]);
+      setSponsors(partners.items);
+      setSponsorshipTiers(tiers.items);
     } finally {
       setSponsorsLoading(false);
     }
@@ -164,11 +177,14 @@ export const ContentProvider = ({
         siteSettings,
         pageContent,
         navigationItems,
+        socialLinks,
         footerContent,
         events,
         teamMembers,
         projects: [],
         sponsors,
+        chapterMetrics,
+        sponsorshipTiers,
         resources,
         isLoading,
         isLoadingEvents,

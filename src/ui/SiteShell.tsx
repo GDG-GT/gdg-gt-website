@@ -29,6 +29,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { chapterName, localPreviewEnabled, publicLinks } from "./preview-data";
+import { useContent } from "@/contexts/ContentContext";
 
 export default function SiteShell({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -39,6 +40,16 @@ export default function SiteShell({ children }: { children: ReactNode }) {
   const { login, isLoading, error, isAuthenticated } = useAdmin();
   const navigate = useNavigate();
   const location = useLocation();
+  const { navigationItems, socialLinks, footerContent } = useContent();
+  const navigation: readonly (readonly [string, string])[] =
+    navigationItems.length
+      ? navigationItems.map(
+          (item) => [String(item.label), String(item.href)] as const,
+        )
+      : publicLinks;
+  const footerAbout = footerContent.about || {},
+    footerNewsletter = footerContent.newsletter || {},
+    footerCopyright = footerContent.copyright || {};
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const subscriptionRequest = useRef({ email: "", key: crypto.randomUUID() });
 
@@ -121,7 +132,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
         <nav className="gt-nav" aria-label="Main navigation">
           <Brand compact />
           <div className="gt-nav-links">
-            {publicLinks.map(([label, href]) => (
+            {navigation.map(([label, href]) => (
               <NavLink key={href} to={href} end={href === "/"}>
                 {label}
               </NavLink>
@@ -161,7 +172,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
             <DialogDescription>
               Find your next event, resource, or connection.
             </DialogDescription>
-            {publicLinks.map(([label, href]) => (
+            {navigation.map(([label, href]) => (
               <NavLink
                 key={href}
                 to={href}
@@ -200,35 +211,55 @@ export default function SiteShell({ children }: { children: ReactNode }) {
             <Brand inverse compact />
             <p className="gt-footer-name">{chapterName}</p>
             <p>
-              A student-led community of builders, learners, and leaders
-              creating impact through technology.
+              {footerAbout.description ||
+                "A student-led community of builders, learners, and leaders creating impact through technology."}
             </p>
             <div className="gt-socials">
-              <a
-                href="https://github.com/gdg-on-campus"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GDG on Campus on GitHub (opens a new tab)"
-              >
-                <Github size={19} />
-              </a>
-              <Link to="/contact" aria-label="Contact the chapter">
-                <Mail size={19} />
-              </Link>
-              <a
-                href="https://gdg.community.dev/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Google Developer Groups community (opens a new tab)"
-              >
-                <ExternalLink size={19} />
-              </a>
+              {socialLinks.length ? (
+                socialLinks.map((item) => (
+                  <a
+                    key={item.platform + item.url}
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${item.platform} (opens a new tab)`}
+                  >
+                    {item.platform === "github" ? (
+                      <Github size={19} />
+                    ) : (
+                      <ExternalLink size={19} />
+                    )}
+                  </a>
+                ))
+              ) : (
+                <>
+                  <a
+                    href="https://github.com/gdg-on-campus"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="GDG on Campus on GitHub (opens a new tab)"
+                  >
+                    <Github size={19} />
+                  </a>
+                  <Link to="/contact" aria-label="Contact the chapter">
+                    <Mail size={19} />
+                  </Link>
+                  <a
+                    href="https://gdg.community.dev/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Google Developer Groups community (opens a new tab)"
+                  >
+                    <ExternalLink size={19} />
+                  </a>
+                </>
+              )}
             </div>
           </div>
           <div>
             <h2>Explore the community</h2>
             <div className="gt-footer-links">
-              {publicLinks.map(([label, href]) => (
+              {navigation.map(([label, href]) => (
                 <Link to={href} key={href}>
                   {label}
                 </Link>
@@ -239,10 +270,15 @@ export default function SiteShell({ children }: { children: ReactNode }) {
             </div>
           </div>
           <div>
-            <h2>Stay in the loop</h2>
+            <h2>
+              {footerNewsletter.newsletter_title ||
+                footerNewsletter.title ||
+                "Stay in the loop"}
+            </h2>
             <p>
-              Events, workshops, and new opportunities. A little inspiration for
-              your inbox.
+              {footerNewsletter.newsletter_description ||
+                footerNewsletter.description ||
+                "Events, workshops, and new opportunities. A little inspiration for your inbox."}
             </p>
             <form onSubmit={subscribe} className="gt-newsletter" noValidate>
               <label htmlFor="newsletter-email" className="sr-only">
@@ -269,7 +305,8 @@ export default function SiteShell({ children }: { children: ReactNode }) {
         </div>
         <div className="gt-container gt-footer-bottom">
           <span>
-            © {new Date().getFullYear()} GDG on Campus at Georgia Tech
+            {footerCopyright.copyright ||
+              `© ${new Date().getFullYear()} GDG on Campus at Georgia Tech`}
           </span>
           <div>
             <Link to="/privacy">Privacy</Link>

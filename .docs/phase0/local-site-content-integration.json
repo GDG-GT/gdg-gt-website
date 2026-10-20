@@ -1,0 +1,69 @@
+{
+  "note": "Real local CMS API/public serialization; only new fictional records used and archived. Existing copy was never overwritten.",
+  "tests": [
+    {
+      "name": "anonymous callers cannot list CMS drafts",
+      "passed": true
+    },
+    {
+      "name": "CMS cannot change server credentials or arbitrary settings",
+      "passed": true
+    },
+    {
+      "name": "public navigation cannot expose protected admin routes",
+      "passed": true
+    },
+    {
+      "name": "CMS cannot reactivate public blog or project pages",
+      "passed": true
+    },
+    {
+      "name": "page copy saves as a real private draft",
+      "passed": true
+    },
+    {
+      "name": "private CMS values do not enter the public aggregate",
+      "passed": true
+    },
+    {
+      "name": "approved page copy publishes in a separate transaction",
+      "passed": true
+    },
+    {
+      "name": "public aggregate includes published copy without editor identities",
+      "passed": true
+    },
+    {
+      "name": "stale CMS edits cannot overwrite a published revision",
+      "passed": true
+    },
+    {
+      "name": "navigation order and destination persist server-side",
+      "passed": true
+    },
+    {
+      "name": "navigation requires explicit publication",
+      "passed": true
+    },
+    {
+      "name": "published navigation is available to the website shell",
+      "passed": true
+    },
+    {
+      "name": "CMS archive is recoverable",
+      "passed": true
+    },
+    {
+      "name": "archived page copy disappears from public aggregates",
+      "passed": true
+    },
+    {
+      "name": "restoring CMS content does not publish it",
+      "passed": true
+    },
+    {
+      "name": "editorial role cannot access site configuration",
+      "passed": true
+    }
+  ]
+}

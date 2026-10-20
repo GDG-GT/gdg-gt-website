@@ -47,6 +47,11 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
 }
+.gt-content-columns { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,260px),1fr)); gap: 28px; margin-top: 24px; }
+.gt-content-columns article { padding: 20px 0; border-top: 1px solid var(--line); }
+.gt-content-columns h3 { margin: 12px 0; }
+.gt-content-columns ul { margin: 16px 0; padding-left: 20px; }
+.gt-content-columns dd { margin: 12px 0; }
 .gt-table-wrap {
   overflow-x: auto;
   margin: 24px 0;

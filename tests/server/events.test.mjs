@@ -24,7 +24,7 @@ describe("event and delivery safety", () => {
       expect(eventInput.safeParse(row).success).toBe(false);
     expect(
       eventInput.safeParse({
-        event_link: "https://example.test/event",
+        event_link: "https://example.org/event",
         image_url: "/assets/event-community.jpg",
       }).success,
     ).toBe(true);

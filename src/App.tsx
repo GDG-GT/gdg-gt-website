@@ -41,17 +41,38 @@ const AcceptInvite = lazy(() => import("@/pages/admin/AcceptInvite"));
 
 // Preserve every existing workflow and load heavy editors only on their routes.
 const adminRoutes = [
-  ["content", lazy(() => import("@/pages/AdminContent"))],
+  ["content", lazy(() => import("@/ui/content/SiteContentWorkspace"))],
   ["events", lazy(() => import("@/ui/EventWorkspace"))],
-  ["team", lazy(() => import("@/pages/admin/AdminTeam"))],
+  [
+    "team",
+    lazy(() =>
+      import("@/ui/content/CollectionWorkspace").then((module) => ({
+        default: module.PublicTeamWorkspace,
+      })),
+    ),
+  ],
   ["projects", lazy(() => import("@/pages/admin/AdminProjects"))],
   ["members", lazy(() => import("@/pages/admin/AdminMembers"))],
-  ["resources", lazy(() => import("@/pages/admin/AdminResources"))],
+  [
+    "resources",
+    lazy(() =>
+      import("@/ui/content/CollectionWorkspace").then((module) => ({
+        default: module.ResourceWorkspace,
+      })),
+    ),
+  ],
   ["newsletter", lazy(() => import("@/pages/admin/AdminNewsletter"))],
   ["blog", lazy(() => import("@/pages/admin/AdminBlog"))],
   ["users", lazy(() => import("@/pages/admin/AdminUsers"))],
   ["profile", lazy(() => import("@/ui/ProfileWorkspace"))],
-  ["sponsors", lazy(() => import("@/pages/admin/AdminSponsors"))],
+  [
+    "sponsors",
+    lazy(() =>
+      import("@/ui/content/CollectionWorkspace").then((module) => ({
+        default: module.SponsorWorkspace,
+      })),
+    ),
+  ],
   ["communications", lazy(() => import("@/pages/admin/AdminCommunications"))],
   ["media", lazy(() => import("@/pages/admin/AdminMedia"))],
   ["guide", lazy(() => import("@/ui/WorkspaceGuide"))],

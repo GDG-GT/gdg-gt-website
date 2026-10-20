@@ -39,6 +39,17 @@ const select = {
     columns: "id,name,logo_url,website_url,tier,order_index",
     order: "order_index",
   },
+  "sponsor-tiers": {
+    table: "sponsorship_tiers",
+    columns:
+      "id,tier_name,tier_level,amount,color_gradient,benefits,order_index",
+    order: "order_index",
+  },
+  "sponsor-stats": {
+    table: "sponsor_impact_stats",
+    columns: "id,stat_label,stat_value,stat_description,icon_name,order_index",
+    order: "order_index",
+  },
 };
 export async function publicContentRoutes(
   request,
@@ -58,10 +69,13 @@ export async function publicContentRoutes(
       events,
       team,
       sponsors,
+      metrics,
     ] = await Promise.all([
       db
         .from("site_settings")
         .select("key,value")
+        .eq("is_active", true)
+        .is("deleted_at", null)
         .in("key", [
           "site_title",
           "site_subtitle",
@@ -73,21 +87,25 @@ export async function publicContentRoutes(
         .from("navigation_items")
         .select("id,label,href,order_index,parent_id")
         .eq("is_active", true)
+        .is("deleted_at", null)
         .order("order_index"),
       db
         .from("footer_content")
         .select("section_key,content")
-        .eq("is_active", true),
+        .eq("is_active", true)
+        .is("deleted_at", null),
       db
         .from("page_content")
         .select("page_slug,section_key,content,order_index")
         .eq("is_active", true)
+        .is("deleted_at", null)
         .in("page_slug", publicPages)
         .order("order_index"),
       db
         .from("social_links")
         .select("platform,url,icon")
         .eq("is_active", true)
+        .is("deleted_at", null)
         .order("order_index"),
       db
         .from("events")
@@ -110,6 +128,16 @@ export async function publicContentRoutes(
         .eq("is_active", true)
         .order("order_index")
         .limit(12),
+      db
+        .from("sponsor_impact_stats")
+        .select(
+          "id,stat_label,stat_value,stat_description,icon_name,order_index",
+        )
+        .eq("is_active", true)
+        .is("deleted_at", null)
+        .order("order_index")
+        .order("id")
+        .limit(4),
     ]);
     for (const result of [
       settings,
@@ -120,6 +148,7 @@ export async function publicContentRoutes(
       events,
       team,
       sponsors,
+      metrics,
     ])
       checked(result);
     // CMS JSON is curated public content, never arbitrary settings or private rows.
@@ -128,7 +157,17 @@ export async function publicContentRoutes(
       response,
       {
         settings: settings.data,
-        navigation: navigation.data.filter((item) => publicHref(item.href)),
+        navigation: navigation.data.filter(
+          (item) =>
+            publicHref(item.href) &&
+            (!item.parent_id ||
+              navigation.data.some(
+                (parent) =>
+                  parent.id === item.parent_id &&
+                  !parent.parent_id &&
+                  publicHref(parent.href),
+              )),
+        ),
         footer: footer.data.filter(
           (item) =>
             !["blog", "projects", "admin", "security"].includes(
@@ -140,6 +179,7 @@ export async function publicContentRoutes(
         events: events.data,
         team: team.data,
         sponsors: sponsors.data,
+        metrics: metrics.data,
       },
       requestId,
     );
@@ -191,7 +231,13 @@ export async function publicContentRoutes(
       .order("id");
     if (p.q)
       query = query.ilike(
-        resource === "team" || resource === "sponsors" ? "name" : "title",
+        resource === "team" || resource === "sponsors"
+          ? "name"
+          : resource === "sponsor-tiers"
+            ? "tier_name"
+            : resource === "sponsor-stats"
+              ? "stat_label"
+              : "title",
         "%" + p.q.replace(/[%_\\]/g, "\\$&") + "%",
       );
     if (resource === "resources") {

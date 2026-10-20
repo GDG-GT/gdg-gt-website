@@ -55,6 +55,7 @@ import {
 } from "./primitives";
 import { chapterName, localPreviewEnabled } from "./preview-data";
 import { useInitialLoad } from "./useInitialLoad";
+import type { PageCopy } from "../../shared/site-content";
 const HeroObjects = lazy(() => import("./HeroObjects"));
 
 type SiteEvent = Event & {
@@ -108,9 +109,11 @@ function useEvents() {
   };
 }
 function usePageTitle(title: string) {
+  const { getSiteSetting } = useContent(),
+    siteTitle = String(getSiteSetting("site_title") || "GDG at Georgia Tech");
   useEffect(() => {
-    document.title = `${title} · GDG at Georgia Tech`;
-  }, [title]);
+    document.title = `${title} · ${siteTitle}`;
+  }, [title, siteTitle]);
 }
 
 export function EventTile({ event }: { event: SiteEvent }) {
@@ -178,6 +181,11 @@ export function EventTile({ event }: { event: SiteEvent }) {
 
 export function HomePage() {
   usePageTitle("A community of builders");
+  const { getPageSection, chapterMetrics } = useContent(),
+    hero = (getPageSection("home", "hero") || {}) as PageCopy,
+    community = (getPageSection("home", "community") || {}) as PageCopy,
+    eventCopy = (getPageSection("home", "events") || {}) as PageCopy,
+    mission = (getPageSection("home", "mission") || {}) as PageCopy;
   const { events, loading } = useEvents();
   const upcoming = [...events]
     .filter((event) => !isPast(event))
@@ -212,20 +220,31 @@ export function HomePage() {
                 />
               </span>
               <span>
-                Developer
-                <br className="gt-hero-break" /> Groups
+                {hero.title || (
+                  <>
+                    Developer
+                    <br className="gt-hero-break" /> Groups
+                  </>
+                )}
               </span>
             </h1>
             <p>
-              Building the future
-              <br className="gt-mobile-break" /> together at Georgia Tech.
+              {hero.description || (
+                <>
+                  Building the future
+                  <br className="gt-mobile-break" /> together at Georgia Tech.
+                </>
+              )}
             </p>
             <div className="gt-hero-actions">
-              <ActionLink to="/events" arrow>
-                Upcoming Events
+              <ActionLink to={hero.primary_cta_link || "/events"} arrow>
+                {hero.primary_cta_text || "Upcoming Events"}
               </ActionLink>
-              <ActionLink to="/contact?type=membership" variant="secondary">
-                Join Us
+              <ActionLink
+                to={hero.secondary_cta_link || "/contact?type=membership"}
+                variant="secondary"
+              >
+                {hero.secondary_cta_text || "Join Us"}
               </ActionLink>
             </div>
             <a className="gt-scroll-cue" href="#community-events">
@@ -248,6 +267,24 @@ export function HomePage() {
           />
         </svg>
       </section>
+      {!localPreviewEnabled && chapterMetrics.length > 0 && (
+        <section
+          className="gt-container gt-community-stats"
+          aria-label="Chapter-approved impact"
+        >
+          {chapterMetrics.map((metric) => (
+            <div className="gt-stat" key={metric.id}>
+              <span>
+                <Users size={24} />
+              </span>
+              <div>
+                <strong>{metric.stat_value}</strong>
+                <p>{metric.stat_label}</p>
+              </div>
+            </div>
+          ))}
+        </section>
+      )}
       {localPreviewEnabled && (
         <section
           className="gt-container gt-community-stats"
@@ -279,12 +316,24 @@ export function HomePage() {
           <div>
             <p className="gt-section-note">A community of builders</p>
             <h2>
-              {localPreviewEnabled ? "Fall" : "Upcoming"} <span>Events</span>
+              {eventCopy.title || (
+                <>
+                  {localPreviewEnabled ? "Fall" : "Upcoming"}{" "}
+                  <span>Events</span>
+                </>
+              )}
             </h2>
-            <p>Come curious. Leave with something you made.</p>
+            <p>
+              {eventCopy.description ||
+                "Come curious. Leave with something you made."}
+            </p>
           </div>
-          <ActionLink to="/events" variant="secondary" arrow>
-            View all events
+          <ActionLink
+            to={eventCopy.cta_link || "/events"}
+            variant="secondary"
+            arrow
+          >
+            {eventCopy.cta_text || "View all events"}
           </ActionLink>
         </div>
         {loading ? (
@@ -301,8 +350,8 @@ export function HomePage() {
           </div>
         ) : (
           <EmptyState title="The next chapter is taking shape">
-            New workshops and gatherings will appear here. Join the newsletter
-            to hear first.
+            {eventCopy.no_events_message ||
+              "New workshops and gatherings will appear here. Join the newsletter to hear first."}
           </EmptyState>
         )}
         {localPreviewEnabled && (
@@ -319,16 +368,23 @@ export function HomePage() {
               Built by students. Open to everyone.
             </span>
             <h2>
-              Your next idea
-              <br />
-              belongs <span>here.</span>
+              {community.title || (
+                <>
+                  Your next idea
+                  <br />
+                  belongs <span>here.</span>
+                </>
+              )}
             </h2>
             <p>
-              Whether you’re writing your first line of code or building your
-              next big thing, there’s a place for you in our community.
+              {community.description ||
+                "Whether you’re writing your first line of code or building your next big thing, there’s a place for you in our community."}
             </p>
-            <ActionLink to="/contact?type=membership" arrow>
-              Find your people
+            <ActionLink
+              to={community.cta_link || "/contact?type=membership"}
+              arrow
+            >
+              {community.cta_text || "Find your people"}
             </ActionLink>
           </div>
           <div className="gt-community-photo">
@@ -348,12 +404,19 @@ export function HomePage() {
       <section className="gt-container gt-section gt-join-strip">
         <div>
           <h2>
-            Big ideas start with a <span>hello.</span>
+            {mission.title || (
+              <>
+                Big ideas start with a <span>hello.</span>
+              </>
+            )}
           </h2>
-          <p>Meet the students making this community happen.</p>
+          <p>
+            {mission.description ||
+              "Meet the students making this community happen."}
+          </p>
         </div>
-        <ActionLink to="/team" variant="secondary" arrow>
-          Meet the team
+        <ActionLink to={mission.cta_link || "/team"} variant="secondary" arrow>
+          {mission.cta_text || "Meet the team"}
         </ActionLink>
       </section>
     </>
@@ -1241,7 +1304,8 @@ export function ResourcesPage() {
 
 export function SponsorsPage() {
   usePageTitle("Our partners");
-  const { sponsors, loadSponsors } = useContent();
+  const { sponsors, loadSponsors, sponsorshipTiers, chapterMetrics } =
+    useContent();
   useInitialLoad(loadSponsors);
   return (
     <>
@@ -1290,6 +1354,50 @@ export function SponsorsPage() {
               Start a conversation
             </ActionLink>
           </div>
+        )}
+        {sponsorshipTiers.length > 0 && (
+          <section
+            className="gt-section"
+            aria-label="Approved sponsorship packages"
+          >
+            <h2>Ways to support the chapter</h2>
+            <div className="gt-content-columns">
+              {sponsorshipTiers.map((tier) => (
+                <article key={tier.id}>
+                  <Badge tone="coral">{tier.tier_level}</Badge>
+                  <h3>{tier.tier_name}</h3>
+                  <p>{tier.amount}</p>
+                  <ul>
+                    {(tier.benefits as string[]).map((benefit) => (
+                      <li key={benefit}>{benefit}</li>
+                    ))}
+                  </ul>
+                  <ActionLink
+                    to="/contact?type=sponsorship"
+                    variant="secondary"
+                  >
+                    Discuss this package
+                  </ActionLink>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+        {chapterMetrics.length > 0 && (
+          <section className="gt-section" aria-label="Chapter-approved impact">
+            <h2>Impact, with context</h2>
+            <dl className="gt-content-columns">
+              {chapterMetrics.map((metric) => (
+                <div key={metric.id}>
+                  <dt>{metric.stat_label}</dt>
+                  <dd>
+                    <strong>{metric.stat_value}</strong>
+                    <p>{metric.stat_description}</p>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
         )}
         <div className="gt-partner-benefits">
           {[
@@ -1486,6 +1594,11 @@ export function GalleryPage() {
 
 export function ContactPage() {
   usePageTitle("Let’s build something together");
+  const { getPageSection, getSiteSetting } = useContent(),
+    copy = (getPageSection("contact", "main") ||
+      getPageSection("contact", "header") ||
+      {}) as PageCopy,
+    contactEmail = getSiteSetting("contact_email");
   const [params] = useSearchParams(),
     [type, setType] = useState(params.get("type") || "general");
   const [message, setMessage] = useState(""),
@@ -1563,13 +1676,17 @@ export function ContactPage() {
         <div className="gt-contact-copy">
           <span className="gt-section-note">A good place to start</span>
           <h1>
-            Let’s build
-            <br />
-            something <span>together.</span>
+            {copy.title || (
+              <>
+                Let’s build
+                <br />
+                something <span>together.</span>
+              </>
+            )}
           </h1>
           <p>
-            Have an idea, a question, or a reason to connect? We’d love to hear
-            from you.
+            {copy.description ||
+              "Have an idea, a question, or a reason to connect? We’d love to hear from you."}
           </p>
           <div className="gt-contact-reasons">
             {[
@@ -1603,6 +1720,12 @@ export function ContactPage() {
             Everyone is welcome. Tell us about any accessibility needs so we can
             help you take part.
           </p>
+          {typeof contactEmail === "string" &&
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail) && (
+              <p>
+                <a href={"mailto:" + contactEmail}>{contactEmail}</a>
+              </p>
+            )}
         </div>
         <div className="gt-contact-form gt-panel">
           {success ? (
@@ -1616,7 +1739,8 @@ export function ContactPage() {
               <p>
                 {localPreviewEnabled
                   ? "It is stored in this browser for UI testing. No email or real contact submission was sent."
-                  : "Thank you for reaching out. The chapter will review your message."}
+                  : copy.success_message ||
+                    "Thank you for reaching out. The chapter will review your message."}
               </p>
               <Button
                 onClick={() => {
@@ -1635,7 +1759,7 @@ export function ContactPage() {
                 Leave this empty
                 <input name="website" tabIndex={-1} autoComplete="off" />
               </label>
-              <h2>Say hello.</h2>
+              <h2>{copy.form_title || "Say hello."}</h2>
               <p>
                 Fields marked <span className="gt-required">*</span> are
                 required.

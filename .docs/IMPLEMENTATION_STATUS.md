@@ -5,6 +5,44 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Public content operations — 2026-10-20
+
+- Resource, sponsor, sponsorship-tier, impact-statistic and public team-profile
+  routes now use same-origin server APIs instead of legacy browser database
+  services. New records are private drafts. Publishing is a separate permission;
+  edits return published records to review. Optimistic revisions, team ownership,
+  explicit team grants, duplication where valid, archive/restore, filtered
+  inventory and mutation audits are implemented. Tier levels remain unique.
+  Linked public-profile edits cannot silently bypass publication review.
+- Site-content editing covers approved identity settings and links, structured
+  page copy, navigation, social links, and footer copy. Configuration keys are
+  allowlisted; server credentials cannot be read or changed through this editor.
+  Private Blog/Projects routes cannot be added as public navigation or page copy.
+  Navigation parent cycles are rejected. Public aggregates include only published
+  copy and omit editor identities. Header/home/contact copy, public navigation,
+  footer/social links, sponsorship packages and approved impact figures consume
+  those values. Unsupported legacy content shapes still need migration review;
+  this is not a claim of complete CMS schema or visual acceptance.
+- Actual local content API integration: 23 checks. Site-content API/public
+  serialization integration: 16 checks. All fictional fixtures were archived,
+  including the resource created and published through the browser. The browser
+  proof captures the temporary published fixture, not real chapter content.
+- Twenty-two migrations are applied in actual local Supabase. Isolated SQL tests
+  cover scoped content grants, draft/publication separation, stale revisions,
+  recoverable archival, CMS field restrictions and navigation cycles, as well as
+  the existing event/Form 100-client tests. Unit count is now 97; type-check,
+  scoped ESLint and production build pass. Existing vendor chunk/performance,
+  dependency, strictness, coverage and broad accessibility gates remain open.
+- Mobile CMS copy editor: viewport/document width both 375 px, content height
+  2115 px, observed scroll movement 812 px. Human-readable section-specific fields
+  replace the initial all-fields-at-once editor. Evidence:
+  `ui-review/real-cms-editor-mobile.jpg` and
+  `ui-review/real-resource-published-desktop.jpg` (1440 × 900).
+- Finances, users/team administration, channels/whiteboards, private editorial
+  workflows, campaigns, media management and Linktree still need their own real
+  server migrations. Forms work noted below remains partial. Full PRD completion
+  and production readiness are not claimed.
+
 ### Private Forms workflows and worker runtime — 2026-10-20
 
 This pass extends the checkpoint below; the complete PRD remains unfinished.

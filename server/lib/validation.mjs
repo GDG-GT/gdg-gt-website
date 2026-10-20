@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ApiError } from "./http.mjs";
+import { isIP } from "node:net";
 export const uuid = z.string().uuid();
 export const slug = z
   .string()
@@ -13,7 +14,20 @@ export const safeUrl = z
     if (value === "") return true;
     try {
       const u = new URL(value);
-      return u.protocol === "https:" && !u.username && !u.password;
+      const host = u.hostname.toLowerCase().replace(/\.$/, "");
+      return (
+        u.protocol === "https:" &&
+        !u.username &&
+        !u.password &&
+        !isIP(host.replace(/^\[|\]$/g, "")) &&
+        host.includes(".") &&
+        !["localhost", "local", "internal", "test", "invalid"].some(
+          (suffix) => host === suffix || host.endsWith("." + suffix),
+        ) &&
+        !Array.from(value).some(
+          (char) => char.codePointAt(0) <= 32 || char.codePointAt(0) === 127,
+        )
+      );
     } catch {
       return false;
     }

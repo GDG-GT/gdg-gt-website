@@ -2,6 +2,9 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Search, Inbox } from "lucide-react";
 import { chapterName } from "./preview-data";
+import { useContent } from "@/contexts/ContentContext";
+import { useLocation } from "react-router-dom";
+import type { PageCopy } from "../../shared/site-content";
 
 export function Brand({
   inverse = false,
@@ -115,20 +118,26 @@ export function PageHeader({
   description: string;
   children?: ReactNode;
 }) {
+  const { getPageSection } = useContent(),
+    { pathname } = useLocation(),
+    page = pathname.split("/")[1];
+  const content = (getPageSection(page, "header") ||
+    getPageSection(page, "main") ||
+    {}) as PageCopy;
   return (
     <header className="gt-page-hero">
       <div className="gt-container">
         <span className="gt-section-note gt-full-identity">{chapterName}</span>
         <h1>
-          {title}
-          {accent && (
+          {content.title || title}
+          {(content.accent || accent) && (
             <>
               {" "}
-              <span>{accent}</span>
+              <span>{content.accent || accent}</span>
             </>
           )}
         </h1>
-        <p>{description}</p>
+        <p>{content.description || description}</p>
         {children}
       </div>
     </header>
