@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { api, ApiFailure } from "@/lib/api";
+import { validationMessage } from "@/lib/validationMessage";
 import {
   taskCreate,
   taskDetails,
@@ -360,7 +361,18 @@ export default function TaskWorkspace() {
         setParams(next);
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "The task could not save.");
+      setError(
+        validationMessage(e, "The task could not save.", {
+          title: "Task title",
+          "record.title": "Task title",
+          description: "Task description",
+          dueDate: "Due date",
+          tags: "Tags",
+          assigneeEmail: "Assignee email",
+          currentPassword: "Current password",
+          confirmation: "Confirmation",
+        }),
+      );
       if (e instanceof ApiFailure && e.status === 409) setConflict(true);
     } finally {
       setBusy(false);

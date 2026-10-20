@@ -102,6 +102,7 @@
 .gt-admin-page > nav.gt-team-tabs { margin-bottom: 24px; }
 .gt-task-detail > .gt-button-row { margin-block: 20px; }
 .gt-task-comments > form { margin-top: 24px; }
+.gt-task-detail h2, .gt-team-directory h2 { overflow-wrap: anywhere; }
 .gt-board-canvas .HintViewer { color: #55585f; opacity: 1; }
 .gt-board-canvas .excalidraw .HintViewer span { color: #55585f; }
 .gt-board-canvas .excalidraw .Island { background: #f7f8fa; }
