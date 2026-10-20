@@ -1,0 +1,49 @@
+{
+  "note": "Real local API submissions use the shared immutable branch schema. Fictional form archived without removing historical responses.",
+  "tests": [
+    {
+      "name": "branch rules persist in a real mutable draft",
+      "passed": true
+    },
+    {
+      "name": "valid forward section branching can be published",
+      "passed": true
+    },
+    {
+      "name": "respondents receive the same immutable versioned rule used by the server",
+      "passed": true
+    },
+    {
+      "name": "server rejects answers to a skipped section",
+      "passed": true
+    },
+    {
+      "name": "server still requires the visible destination section",
+      "passed": true
+    },
+    {
+      "name": "skipping a section does not require its hidden required questions",
+      "passed": true
+    },
+    {
+      "name": "end-form behavior is saved only to the next draft",
+      "passed": true
+    },
+    {
+      "name": "early ending publishes a separate immutable version",
+      "passed": true
+    },
+    {
+      "name": "the prior version cannot accept new submissions after republication",
+      "passed": true
+    },
+    {
+      "name": "early ending commits without demanding later required sections",
+      "passed": true
+    },
+    {
+      "name": "historical responses retain their original branching version",
+      "passed": true
+    }
+  ]
+}

@@ -6,6 +6,7 @@ import {
   validateSubmission,
   validateAnswer,
   safePattern,
+  reconcileOptionIds,
 } from "../../shared/forms.ts";
 import { projectResponse } from "../../server/forms.mjs";
 const definition = () => {
@@ -19,6 +20,46 @@ const definition = () => {
   };
 };
 describe("shared first-party form contract", () => {
+  it("provides five distinct valid structure-only templates and a blank starter", () => {
+    const signatures = new Set();
+    for (const kind of [
+      "interest",
+      "feedback",
+      "volunteer",
+      "application",
+      "survey",
+      "blank",
+    ]) {
+      const f = createTemplate("Template " + kind, kind),
+        { title, description, fields, sections, settings } = f;
+      expect(
+        formDefinitionSchema.safeParse({
+          title,
+          description,
+          fields,
+          sections,
+          settings,
+        }).success,
+      ).toBe(true);
+      signatures.add(fields.map((f) => f.label).join("|"));
+      expect(f.versions).toEqual([]);
+      expect(f.responseCount).toBeUndefined();
+    }
+    expect(signatures.size).toBe(6);
+  });
+  it("preserves stable option identities across simultaneous reorder and rename", () => {
+    const result = reconcileOptionIds(["A", "B"], ["a", "b"], ["B", "C"]);
+    expect(result[0]).toBe("b");
+    expect(new Set(result).size).toBe(2);
+    expect(reconcileOptionIds(["A", "B"], ["a", "b"], ["C", "B"])).toEqual([
+      "a",
+      "b",
+    ]);
+    expect(reconcileOptionIds(["A", "B"], ["a", "b"], ["B", "A"])).toEqual([
+      "b",
+      "a",
+    ]);
+  });
   it("rejects executable/unknown schema and duplicate stable identities", () => {
     let d = definition();
     expect(formDefinitionSchema.safeParse({ ...d, script: "x" }).success).toBe(

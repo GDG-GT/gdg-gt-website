@@ -1,0 +1,141 @@
+{
+  "note": "Real loopback API, database and local mail capture. Fictional fixtures archived; no external email sent.",
+  "tests": [
+    {
+      "name": "create invited access fixture",
+      "passed": true
+    },
+    {
+      "name": "publish invited immutable definition",
+      "passed": true
+    },
+    {
+      "name": "private form title is concealed without a link",
+      "passed": true
+    },
+    {
+      "name": "invitation delivery requires explicit confirmation",
+      "passed": true
+    },
+    {
+      "name": "normalized duplicate recipients queue once",
+      "passed": true
+    },
+    {
+      "name": "invitation retry returns its committed result",
+      "passed": true
+    },
+    {
+      "name": "a new batch does not resend an active invitation",
+      "passed": true
+    },
+    {
+      "name": "outbox metadata excludes raw access token",
+      "passed": true
+    },
+    {
+      "name": "access and recipient are stored as a hash and ciphertext",
+      "passed": true
+    },
+    {
+      "name": "administrative status list returns only masked recipient hints",
+      "passed": true
+    },
+    {
+      "name": "the matching private link opens its published form",
+      "passed": true
+    },
+    {
+      "name": "create unlisted access fixture",
+      "passed": true
+    },
+    {
+      "name": "publish unlisted immutable definition",
+      "passed": true
+    },
+    {
+      "name": "a private token cannot open a different form",
+      "passed": true
+    },
+    {
+      "name": "resend rotates the token before queueing a new link",
+      "passed": true
+    },
+    {
+      "name": "superseded delivery jobs cannot send old access links",
+      "passed": true
+    },
+    {
+      "name": "rotation invalidates the previous link immediately",
+      "passed": true
+    },
+    {
+      "name": "outbox metadata excludes raw access token",
+      "passed": true
+    },
+    {
+      "name": "delivery uses a private fragment link and the intended recipient",
+      "passed": true
+    },
+    {
+      "name": "resends enforce a persistent cooldown",
+      "passed": true
+    },
+    {
+      "name": "an invited respondent commits a response through the private link",
+      "passed": true
+    },
+    {
+      "name": "single-use invitations are consumed by final submission",
+      "passed": true
+    },
+    {
+      "name": "unlisted delivery creates a separately scoped private capability",
+      "passed": true
+    },
+    {
+      "name": "outbox metadata excludes raw access token",
+      "passed": true
+    },
+    {
+      "name": "an authorized manager can revoke an unlisted link",
+      "passed": true
+    },
+    {
+      "name": "revocation blocks subsequent reads",
+      "passed": true
+    },
+    {
+      "name": "create verified access fixture",
+      "passed": true
+    },
+    {
+      "name": "publish verified immutable definition",
+      "passed": true
+    },
+    {
+      "name": "verification responses do not disclose form existence or recipient membership",
+      "passed": true
+    },
+    {
+      "name": "outbox metadata excludes raw access token",
+      "passed": true
+    },
+    {
+      "name": "repeated verification requests are debounced in the transaction",
+      "passed": true
+    },
+    {
+      "name": "verified-email capability opens only its purpose-bound form",
+      "passed": true
+    },
+    {
+      "name": "expired verification links fail closed",
+      "passed": true
+    },
+    {
+      "name": "the local SMTP worker completes current mail jobs without external email",
+      "passed": true
+    }
+  ]
+}

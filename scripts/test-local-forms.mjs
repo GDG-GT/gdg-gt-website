@@ -3,7 +3,7 @@ import { writeFile } from "node:fs/promises";
 import { localHttp } from "./lib/local-http.mjs";
 import { createTemplate, newField } from "../shared/forms.ts";
 import { unzipSync, strFromU8 } from "fflate";
-const { call, login, db } = await localHttp(),
+const { call, login, db,logout } = await localHttp(),
   evidence = [];
 const check = (value, name) => {
   if (!value) throw new Error("FAIL " + name);
@@ -379,7 +379,7 @@ try {
       );
     }
   }
-  await call("/auth/session", { method: "DELETE" });
+  await logout();
 }
 await writeFile(
   new URL("../.docs/phase0/local-forms-integration.json", import.meta.url),

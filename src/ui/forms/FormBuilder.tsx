@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   ArrowDown,
@@ -28,6 +28,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
+import { reconcileOptionIds } from "./store";
 import {
   fieldTypes,
   newField,
@@ -38,6 +39,18 @@ import {
 } from "./store";
 import FieldRenderer from "./FieldRenderer";
 import { formsApi, useServerForm } from "./api";
+import AccessPanel from "./AccessPanel";
+import SectionLogic from "./SectionLogic";
+const signature = (value: PreviewForm) =>
+  JSON.stringify([
+    value.slug,
+    value.title,
+    value.description,
+    value.fields,
+    value.sections,
+    value.settings,
+    value.teamId,
+  ]);
 
 export default function FormBuilder() {
   const { formId } = useParams(),
@@ -68,16 +81,6 @@ export default function FormBuilder() {
       Promise.resolve(undefined),
     ),
     saved = useRef("");
-  const signature = (value: PreviewForm) =>
-    JSON.stringify([
-      value.slug,
-      value.title,
-      value.description,
-      value.fields,
-      value.sections,
-      value.settings,
-      value.teamId,
-    ]);
   useEffect(() => {
     if (source && !latest.current) {
       setForm(structuredClone(source));
@@ -87,7 +90,7 @@ export default function FormBuilder() {
       setSaveStatus("Saved");
     }
   }, [source]);
-  const persist = (snapshot: PreviewForm) => {
+  const persist = useCallback((snapshot: PreviewForm) => {
     queue.current = queue.current
       .catch(() => undefined)
       .then(async () => {
@@ -114,7 +117,7 @@ export default function FormBuilder() {
         }
       });
     return queue.current;
-  };
+  }, []);
   useEffect(() => {
     if (
       !form ||
@@ -127,7 +130,7 @@ export default function FormBuilder() {
       void persist(structuredClone(form)).catch(() => {});
     }, 600);
     return () => clearTimeout(timer);
-  }, [form]);
+  }, [form, persist]);
   useEffect(() => {
     const warn = (event: BeforeUnloadEvent) => {
       if (latest.current && saved.current !== signature(latest.current)) {
@@ -170,23 +173,19 @@ export default function FormBuilder() {
                 ...values,
                 ...(values.options
                   ? {
-                      optionIds: values.options.map(
-                        (option, index) =>
-                          item.optionIds?.[item.options.indexOf(option)] ||
-                          item.optionIds?.[index] ||
-                          crypto.randomUUID(),
+                      optionIds: reconcileOptionIds(
+                        item.options,
+                        item.optionIds,
+                        values.options,
                       ),
                     }
                   : {}),
                 ...(values.columns
                   ? {
-                      columnIds: values.columns.map(
-                        (column, index) =>
-                          item.columnIds?.[
-                            item.columns?.indexOf(column) ?? -1
-                          ] ||
-                          item.columnIds?.[index] ||
-                          crypto.randomUUID(),
+                      columnIds: reconcileOptionIds(
+                        item.columns || [],
+                        item.columnIds,
+                        values.columns,
                       ),
                     }
                   : {}),
@@ -258,7 +257,7 @@ export default function FormBuilder() {
         <Settings2 size={17} />
       </div>
       <div className="gt-tabs" role="tablist" aria-label="Builder inspector">
-        {["Field", "Logic", "Settings"].map((value) => (
+        {["Field", "Logic", "Settings", "Access"].map((value) => (
           <button
             role="tab"
             aria-selected={tab === value}
@@ -269,7 +268,9 @@ export default function FormBuilder() {
           </button>
         ))}
       </div>
-      {tab === "Field" ? (
+      {tab === "Access" ? (
+        <AccessPanel form={form} />
+      ) : tab === "Field" ? (
         field ? (
           <div className="gt-form">
             <Badge tone="coral">
@@ -593,6 +594,18 @@ export default function FormBuilder() {
           ) : (
             <p>Select a question to add a rule.</p>
           )}
+          <SectionLogic
+            form={form}
+            sectionId={field?.sectionId || form.sections[0].id}
+            onChange={(section) =>
+              update({
+                ...form,
+                sections: form.sections.map((value) =>
+                  value.id === section.id ? section : value,
+                ),
+              })
+            }
+          />
         </div>
       ) : (
         <div className="gt-form">
@@ -675,6 +688,8 @@ export default function FormBuilder() {
               ["resume", "Save & resume"],
               ["editing", "Allow response edits"],
               ["receipts", "Response receipt"],
+              ["review", "Final answer review"],
+              ["oneResponse", "One response per verified identity"],
             ] as const
           ).map(([key, label]) => (
             <label className="gt-toggle-row" key={key}>
@@ -682,7 +697,10 @@ export default function FormBuilder() {
               <input
                 type="checkbox"
                 role="switch"
-                checked={form.settings[key]}
+                checked={form.settings[key] ?? key === "review"}
+                disabled={
+                  key === "oneResponse" && form.settings.access === "public"
+                }
                 onChange={(event) =>
                   update({
                     ...form,
@@ -692,6 +710,50 @@ export default function FormBuilder() {
               />
             </label>
           ))}
+          <p className="gt-helper">
+            One-response enforcement requires a verified identity or unique
+            private invitation. An anonymous form cannot reliably identify
+            respondents.
+          </p>
+          <Field
+            label="Response retention (days)"
+            hint="1–365 days. Historical responses and files follow the published privacy policy."
+          >
+            <input
+              type="number"
+              min={1}
+              max={365}
+              value={form.settings.retentionDays || 365}
+              onChange={(event) =>
+                update({
+                  ...form,
+                  settings: {
+                    ...form.settings,
+                    retentionDays: Number(event.target.value),
+                  },
+                })
+              }
+            />
+          </Field>
+          <Field label="Closed-form message">
+            <textarea
+              maxLength={3000}
+              rows={3}
+              value={
+                form.settings.closedMessage ||
+                "This form is not accepting responses right now."
+              }
+              onChange={(event) =>
+                update({
+                  ...form,
+                  settings: {
+                    ...form.settings,
+                    closedMessage: event.target.value,
+                  },
+                })
+              }
+            />
+          </Field>
           <Field label="Confirmation message">
             <textarea
               rows={3}

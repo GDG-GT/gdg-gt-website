@@ -1,0 +1,2 @@
+Fictional local browser upload for PRD verification.
+No personal information or production data.

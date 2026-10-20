@@ -5,6 +5,57 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Private Forms workflows and worker runtime — 2026-10-20
+
+This pass extends the checkpoint below; the complete PRD remains unfinished.
+
+- Invitation, unlisted-link, and verified-email issuance now use hashed access
+  tokens, encrypted recipient/delivery secrets, deduplicated recipient batches,
+  final confirmation, resend rotation/cooldown, revocation, and masked status UI.
+  The local SMTP worker delivers private fragment links, not raw tokens to admins.
+  Actual local API/database/mail integration: 34 checks.
+- Private form uploads use 120-second, one-object signed direct PUTs, expected
+  size/MIME/checksum validation, durable scan jobs, a real native ClamAV worker,
+  detected-content validation, image metadata stripping, and separate randomized
+  clean objects. A replayed upload cannot modify promoted bytes. Response-file
+  downloads require current form/response/sensitive permissions and are audited;
+  download capabilities expire in 60 seconds. Real Storage/scanner/API checks: 36.
+- File association and removal serialize with final submission. Saved drafts bind
+  files to the respondent capability; cleanup preserves active resume drafts and
+  committed response attachments. Expired/abandoned/rejected form uploads are
+  tombstoned and cleaned after the retention delay, with retries on object errors.
+- Section routing and early endings are shared between browser and server.
+  Publication rejects backward cycles, invalid destinations, conflicting rules,
+  unreachable sections, and tested unreachable required-field conditions. Actual
+  HTTP branching/republication integration: 11 checks. Five distinct reusable
+  templates and a blank starter contain structure only. Stable option IDs survive
+  reorder-plus-rename without duplication.
+- A separate bearer-authenticated scheduler rejects browser origins/cookies,
+  records fenced run IDs, counters and retries, and deduplicates completed cadence
+  occurrences. Local form schedules run every five minutes, draft/upload cleanup
+  hourly, and mail delivery every minute. Scan work runs outside request handlers.
+  Job API integration: 10 checks; actual scanner health/clean/EICAR checks: 3.
+- Nineteen forward migrations are applied to actual local Supabase. Isolated SQL
+  tests include access, upload quotas, draft-file binding, cleanup protection,
+  worker/job lease fencing, and both 100-client concurrency checks. Latest unit
+  count: 91. TypeScript and scoped ESLint checks pass. Production build still has
+  vendor chunk warnings; full security/coverage/accessibility gates remain open.
+- Browser review confirmed the inspector dialog scrolls (589 px viewport,
+  708 px content, 119.5 px actual scroll movement) and public form document width
+  equals its 885 px viewport. File-picker automation requires the browser
+  extension's file-URL permission; it was not broadened silently. Actual signed
+  byte upload and scanning are independently verified through integration tests.
+- Native scanner, local scan worker, and precise local scheduler are development
+  processes only. No production scanner/scheduler or email provider was deployed.
+  Forms still needs asynchronous large exports, full historical-revision UI,
+  reviewed receipts/notification settings, comprehensive privacy retention, and
+  complete role/browser/accessibility acceptance. Other PRD modules listed below
+  remain in scope and require implementation, not just UI routes.
+- `.env.example` no longer recommends browser-exposed email-provider secrets.
+  Dedicated local credentials remain ignored and mode 0600. Dependency audit
+  remediation is still required; passing build/tests is not a zero-vulnerability
+  or production-readiness claim. Current disk check: about 18 GiB free.
+
 ### Real local workflows — latest implementation pass, 2026-10-19
 
 This section supersedes older prototype-only statements below. The full PRD is

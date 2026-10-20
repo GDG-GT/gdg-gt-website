@@ -55,6 +55,8 @@ export interface FormSection {
   id: string;
   title: string;
   description: string;
+  next?: string;
+  rules?: { id: string; fieldId: string; value: string; target: string }[];
 }
 export interface FormSettings {
   access: "public" | "verified" | "unlisted" | "invited" | "internal";
@@ -114,6 +116,35 @@ export interface FormResponse {
   revisions?: { editedAt: string; answers: Record<string, Answer> }[];
 }
 const id = () => crypto.randomUUID();
+// Keep exact-label matches first; reserve their IDs before reusing a positional
+// identity for a renamed label. Reorder+rename must never duplicate an ID.
+export function reconcileOptionIds(
+  previous: string[],
+  previousIds: string[] | undefined,
+  next: string[],
+): string[] {
+  const reserved = new Set<string>();
+  const matched = next.map((label) => {
+    const index = previous.indexOf(label),
+      value = index < 0 ? undefined : previousIds?.[index];
+    if (value && !reserved.has(value)) {
+      reserved.add(value);
+      return value;
+    }
+    return undefined;
+  });
+  return matched.map((value, index) => {
+    if (value) return value;
+    const positional = previousIds?.[index];
+    if (positional && !reserved.has(positional)) {
+      reserved.add(positional);
+      return positional;
+    }
+    const created = id();
+    reserved.add(created);
+    return created;
+  });
+}
 export function newField(type: FieldType, sectionId: string): FormField {
   return {
     id: id(),
@@ -123,11 +154,27 @@ export function newField(type: FieldType, sectionId: string): FormField {
     required: false,
     options: ["Option 1", "Option 2", "Option 3"],
     optionIds: [id(), id(), id()],
+    ...(["grid", "likert"].includes(type)
+      ? {
+          columns: ["Disagree", "Neutral", "Agree"],
+          columnIds: [id(), id(), id()],
+        }
+      : {}),
     sectionId,
     sensitive: false,
   };
 }
-export function createTemplate(title = "Untitled form"): PreviewForm {
+export type FormTemplate =
+  | "interest"
+  | "feedback"
+  | "volunteer"
+  | "application"
+  | "survey"
+  | "blank";
+export function createTemplate(
+  title = "Untitled form",
+  kind: FormTemplate = "interest",
+): PreviewForm {
   const section = { id: id(), title: "About you", description: "" };
   const settings: FormSettings = {
     access: "public",
@@ -170,6 +217,100 @@ export function createTemplate(title = "Untitled form"): PreviewForm {
       "Mobile development",
     ],
   };
+  let templateFields: FormField[] = [name, email, experience, interests];
+  const templateSections: FormSection[] = [section];
+  const question = (
+    type: FieldType,
+    label: string,
+    values: Partial<FormField> = {},
+  ): FormField => ({ ...newField(type, section.id), label, ...values });
+  if (kind === "blank") {
+    section.title = "Your questions";
+    templateFields = [question("short", "Your question")];
+  }
+  if (kind === "feedback") {
+    section.title = "Your experience";
+    templateFields = [
+      question("rating", "How was the event?", {
+        required: true,
+        min: 1,
+        max: 5,
+      }),
+      question("long", "What worked well?", { maxLength: 2000 }),
+      question("long", "What should we improve?", { maxLength: 2000 }),
+      question("radio", "Would you attend another chapter event?", {
+        required: true,
+        options: ["Yes", "No", "Not sure"],
+      }),
+    ];
+  }
+  if (kind === "volunteer") {
+    section.title = "Get involved";
+    templateFields = [
+      name,
+      email,
+      question("checkbox", "Where would you like to help?", {
+        required: true,
+        options: ["Event logistics", "Workshop support", "Design", "Outreach"],
+      }),
+      question("checkbox", "When are you usually available?", {
+        options: ["Weekday afternoons", "Weekday evenings", "Weekends"],
+      }),
+      question("long", "Skills or interests you would like to share", {
+        maxLength: 2000,
+      }),
+      question(
+        "consent",
+        "The chapter may contact me about these volunteering opportunities.",
+        { required: true },
+      ),
+    ];
+  }
+  if (kind === "application") {
+    const background = {
+      id: id(),
+      title: "Your interests and experience",
+      description: "",
+    };
+    templateSections.push(background);
+    templateFields = [
+      name,
+      email,
+      question("radio", "Which team interests you?", {
+        required: true,
+        options: ["Engineering", "Design", "Community", "Operations"],
+      }),
+      question("long", "Why would you like to join?", {
+        sectionId: background.id,
+        required: true,
+        maxLength: 2000,
+      }),
+      question("long", "Tell us about relevant experience", {
+        sectionId: background.id,
+        maxLength: 2000,
+      }),
+      question("url", "Portfolio or project link (optional)", {
+        sectionId: background.id,
+      }),
+      question(
+        "consent",
+        "I understand that authorized chapter reviewers will use these answers to review my application.",
+        { sectionId: background.id, required: true },
+      ),
+    ];
+  }
+  if (kind === "survey") {
+    section.title = "Your perspective";
+    templateFields = [
+      question("radio", "How would you describe your experience?", {
+        required: true,
+        options: ["Positive", "Neutral", "Could be better"],
+      }),
+      question("long", "What would you like the chapter to know?", {
+        maxLength: 2000,
+      }),
+    ];
+  }
   return {
     id: id(),
     slug: `${title
@@ -180,11 +321,11 @@ export function createTemplate(title = "Untitled form"): PreviewForm {
     description: "Help us create experiences that are right for our community.",
     status: "Draft",
     updatedAt: new Date().toISOString(),
-    fields: [name, email, experience, interests].map((field) => ({
+    fields: templateFields.map((field) => ({
       ...field,
       optionIds: field.options.map(() => id()),
     })),
-    sections: [section],
+    sections: templateSections,
     settings,
     versions: [],
     team: "Chapter",
@@ -204,11 +345,22 @@ export function duplicateSection(
   };
   const fields = form.fields.filter((field) => field.sectionId === sectionId),
     mapping = new Map(fields.map((field) => [field.id, id()]));
+  copied.rules = copied.rules?.map((rule) => ({
+    ...rule,
+    id: id(),
+    fieldId: mapping.get(rule.fieldId) || rule.fieldId,
+  }));
   return {
     ...form,
-    sections: [...form.sections, copied],
+    sections: form.sections.flatMap((value) =>
+      value.id === sectionId ? [value, copied] : [value],
+    ),
     fields: [
-      ...form.fields,
+      ...form.fields.filter(
+        (field) =>
+          form.sections.findIndex((value) => value.id === field.sectionId) <=
+          form.sections.indexOf(section),
+      ),
       ...fields.map((field) => ({
         ...structuredClone(field),
         id: mapping.get(field.id)!,
@@ -221,13 +373,27 @@ export function duplicateSection(
             }
           : undefined,
       })),
+      ...form.fields.filter(
+        (field) =>
+          form.sections.findIndex((value) => value.id === field.sectionId) >
+          form.sections.indexOf(section),
+      ),
     ],
   };
 }
 export function visibleFields(
   fields: FormField[],
   answers: Record<string, Answer>,
+  sections?: FormSection[],
 ) {
+  if (sections) {
+    const visited = new Set(
+      formPath({ fields, sections }, answers).sections.map(
+        (section) => section.id,
+      ),
+    );
+    fields = fields.filter((field) => visited.has(field.sectionId));
+  }
   const visible = new Set<string>();
   return fields.filter((field) => {
     const show =
@@ -242,6 +408,65 @@ export function visibleFields(
     return show;
   });
 }
+const choiceTypes = ["radio", "checkbox", "dropdown", "scale", "rating"];
+function answerMatches(answer: Answer | undefined, value: string) {
+  return Array.isArray(answer) ? answer.includes(value) : answer === value;
+}
+export function conditionValues(field: FormField): string[] {
+  if (["scale", "rating"].includes(field.type)) {
+    const min = field.min ?? 1,
+      max = field.max ?? 5;
+    return Array.from(
+      { length: Math.max(0, Math.min(101, max - min + 1)) },
+      (_, i) => String(min + i),
+    );
+  }
+  return field.options;
+}
+export function formPath(
+  definition: Pick<FormDefinition, "fields" | "sections">,
+  answers: Record<string, Answer>,
+) {
+  const sections: FormSection[] = [],
+    visited = new Set<string>(),
+    visible = new Set<string>();
+  let index = 0,
+    ended = false;
+  while (index >= 0 && index < definition.sections.length) {
+    const section = definition.sections[index];
+    if (visited.has(section.id)) break;
+    visited.add(section.id);
+    sections.push(section);
+    for (const field of definition.fields.filter(
+      (field) => field.sectionId === section.id,
+    )) {
+      if (
+        !field.condition ||
+        (visible.has(field.condition.fieldId) &&
+          answerMatches(
+            answers[field.condition.fieldId],
+            field.condition.value,
+          ))
+      )
+        visible.add(field.id);
+    }
+    const rule = section.rules?.find(
+        (rule) =>
+          visible.has(rule.fieldId) &&
+          answerMatches(answers[rule.fieldId], rule.value),
+      ),
+      target = rule?.target || section.next || "next";
+    if (target === "end") {
+      ended = true;
+      break;
+    }
+    index =
+      target === "next"
+        ? index + 1
+        : definition.sections.findIndex((candidate) => candidate.id === target);
+  }
+  return { sections, ended };
+}
 export function validateDefinition(form: PreviewForm): string[] {
   const issues: string[] = [];
   if (!form.title.trim()) issues.push("Give your form a title.");
@@ -249,6 +474,101 @@ export function validateDefinition(form: PreviewForm): string[] {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(form.slug))
     issues.push("Use a URL slug with lowercase letters, numbers, and hyphens.");
   if (!form.sections.length) issues.push("Add at least one section.");
+  const sectionIndex = new Map(
+    form.sections.map((section, index) => [section.id, index]),
+  );
+  const possibleTargets = (
+    section: FormSection,
+    forced: Map<string, string> = new Map(),
+  ) => {
+    const rules = section.rules || [],
+      known = rules.find((rule) => forced.get(rule.fieldId) === rule.value);
+    if (known) return [known.target];
+    const possible = rules.filter((rule) => !forced.has(rule.fieldId)),
+      source = form.fields.find((field) => field.id === rules[0]?.fieldId);
+    const exhaustive =
+      source?.required &&
+      !source.condition &&
+      rules.every((rule) => rule.fieldId === source.id) &&
+      conditionValues(source).every((value) =>
+        rules.some((rule) => rule.value === value),
+      );
+    return [
+      ...possible.map((rule) => rule.target),
+      ...(!exhaustive ? [section.next || "next"] : []),
+    ];
+  };
+  const edges = new Map<string, string[]>();
+  for (const [index, section] of form.sections.entries()) {
+    const targets: string[] = [],
+      rules = section.rules || [];
+    const target = (value: string) => {
+      if (value === "end") return;
+      const destination =
+        value === "next" ? form.sections[index + 1]?.id : value;
+      if (destination === undefined) return;
+      if (!sectionIndex.has(destination))
+        issues.push(`“${section.title}” has an invalid branch target.`);
+      else if (sectionIndex.get(destination)! <= index)
+        issues.push(`“${section.title}” must branch forward to avoid cycles.`);
+      targets.push(destination);
+    };
+    // Validate even an unreachable fallback, but only include feasible edges.
+    const feasible = new Set(possibleTargets(section));
+    if (feasible.has(section.next || "next")) target(section.next || "next");
+    else if (
+      section.next &&
+      !["next", "end"].includes(section.next) &&
+      (!sectionIndex.has(section.next) ||
+        sectionIndex.get(section.next)! <= index)
+    )
+      issues.push(`“${section.title}” has an invalid default destination.`);
+    if (new Set(rules.map((rule) => rule.id)).size !== rules.length)
+      issues.push("Branch rule IDs must be unique.");
+    for (const rule of rules) {
+      const source = form.fields.find((field) => field.id === rule.fieldId);
+      if (
+        !source ||
+        !choiceTypes.includes(source.type) ||
+        !conditionValues(source).includes(rule.value) ||
+        (sectionIndex.get(source.sectionId) ?? Infinity) > index
+      )
+        issues.push(
+          `“${section.title}” needs a valid prior choice, scale, or rating answer for each branch.`,
+        );
+      target(rule.target);
+    }
+    for (let a = 0; a < rules.length; a++)
+      for (let b = a + 1; b < rules.length; b++) {
+        const left = rules[a],
+          right = rules[b],
+          source = form.fields.find((field) => field.id === left.fieldId);
+        if (left.fieldId === right.fieldId && left.value === right.value)
+          issues.push(
+            `“${section.title}” has duplicate or contradictory branch rules.`,
+          );
+        else if (
+          left.target !== right.target &&
+          (left.fieldId !== right.fieldId || source?.type === "checkbox")
+        )
+          issues.push(
+            `“${section.title}” has branch rules that could match at the same time. Use one single-choice source or a shared destination.`,
+          );
+      }
+    edges.set(section.id, targets);
+  }
+  const reachable = new Set<string>();
+  const walk = (sectionId: string) => {
+    if (reachable.has(sectionId)) return;
+    reachable.add(sectionId);
+    for (const next of edges.get(sectionId) || []) walk(next);
+  };
+  if (form.sections[0]) walk(form.sections[0].id);
+  for (const section of form.sections)
+    if (!reachable.has(section.id))
+      issues.push(
+        `“${section.title}” is unreachable. Add a path to it or remove it before publishing.`,
+      );
   if (
     form.settings.opensAt &&
     form.settings.closesAt &&
@@ -288,6 +608,61 @@ export function validateDefinition(form: PreviewForm): string[] {
         );
       if (!field.condition.value.trim())
         issues.push(`Choose a matching answer for “${field.label}”.`);
+      const sourceField = form.fields[source];
+      if (
+        sourceField &&
+        (!choiceTypes.includes(sourceField.type) ||
+          !conditionValues(sourceField).includes(field.condition.value) ||
+          (sectionIndex.get(sourceField.sectionId) ?? Infinity) >
+            (sectionIndex.get(field.sectionId) ?? -1))
+      )
+        issues.push(
+          `“${field.label}” has an unreachable visibility condition.`,
+        );
+      if (field.required && sourceField) {
+        const forced = new Map<string, string>();
+        let dependency: FormField | undefined = field;
+        for (
+          let step = 0;
+          dependency?.condition && step < form.fields.length;
+          step++
+        ) {
+          const condition = dependency.condition;
+          if (
+            forced.has(condition.fieldId) &&
+            forced.get(condition.fieldId) !== condition.value
+          ) {
+            issues.push(`“${field.label}” has contradictory visibility rules.`);
+            break;
+          }
+          forced.set(condition.fieldId, condition.value);
+          dependency = form.fields.find(
+            (candidate) => candidate.id === condition.fieldId,
+          );
+        }
+        const seen = new Set<string>(),
+          queue = form.sections[0] ? [form.sections[0].id] : [];
+        while (queue.length) {
+          const current = queue.shift()!;
+          if (seen.has(current)) continue;
+          seen.add(current);
+          const section = form.sections.find(
+            (candidate) => candidate.id === current,
+          );
+          if (!section) continue;
+          for (const target of possibleTargets(section, forced)) {
+            const destination =
+              target === "next"
+                ? form.sections[(sectionIndex.get(current) ?? -1) + 1]?.id
+                : target;
+            if (destination && destination !== "end") queue.push(destination);
+          }
+        }
+        if (!seen.has(field.sectionId))
+          issues.push(
+            `Required question “${field.label}” cannot be reached with its visibility condition.`,
+          );
+      }
     }
   }
   return [...new Set(issues)];
@@ -558,6 +933,22 @@ export const formDraftDefinitionSchema = z
             id: z.string().uuid(),
             title: bounded(200),
             description: bounded(3000),
+            next: z
+              .union([z.literal("next"), z.literal("end"), z.string().uuid()])
+              .optional(),
+            rules: z
+              .array(
+                z
+                  .object({
+                    id: z.string().uuid(),
+                    fieldId: z.string().uuid(),
+                    value: bounded(300),
+                    target: z.union([z.literal("end"), z.string().uuid()]),
+                  })
+                  .strict(),
+              )
+              .max(20)
+              .optional(),
           })
           .strict(),
       )
@@ -651,7 +1042,10 @@ export const formDefinitionSchema = formDraftDefinitionSchema.superRefine(
       issues.push(
         "One-response mode requires verified identity or an invitation.",
       );
-    if (definition.settings.shuffleQuestions && fields.some((f) => f.condition))
+    if (
+      definition.settings.shuffleQuestions &&
+      (fields.some((f) => f.condition) || sections.some((s) => s.rules?.length))
+    )
       issues.push("Conditional questions cannot be shuffled.");
     for (const message of new Set(issues))
       context.addIssue({ code: z.ZodIssueCode.custom, message });
@@ -666,7 +1060,7 @@ export function validateSubmission(
   answers: Record<string, Answer>,
   partial = false,
 ): Record<string, string> {
-  const fields = visibleFields(definition.fields, answers),
+  const fields = visibleFields(definition.fields, answers, definition.sections),
     allowed = new Set(
       fields
         .filter(

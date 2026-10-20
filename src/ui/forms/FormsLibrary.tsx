@@ -29,7 +29,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
-import { createTemplate, type PreviewForm } from "./store";
+import { createTemplate, type PreviewForm, type FormTemplate } from "./store";
 import { formsApi, useFormLibrary } from "./api";
 
 export default function FormsLibrary() {
@@ -64,15 +64,27 @@ export default function FormsLibrary() {
     }
   };
   const templates = [
-    ["Event Interest", "Find out what the community wants to explore."],
-    ["Event Feedback", "Make your next gathering even better."],
-    ["Volunteer Signup", "Bring willing hands and good ideas together."],
-    ["Team Application", "Help students find their place in the chapter."],
-    ["General Survey", "Start a conversation with your community."],
-  ];
-  const create = (name: string) =>
+    [
+      "Event Interest",
+      "Find out what the community wants to explore.",
+      "interest",
+    ],
+    ["Event Feedback", "Make your next gathering even better.", "feedback"],
+    [
+      "Volunteer Signup",
+      "Bring willing hands and good ideas together.",
+      "volunteer",
+    ],
+    [
+      "Team Application",
+      "Help students find their place in the chapter.",
+      "application",
+    ],
+    ["General Survey", "Start a conversation with your community.", "survey"],
+  ] as const;
+  const create = (name: string, kind: FormTemplate = "blank") =>
     work(async () => {
-      const form = await formsApi.create(createTemplate(name));
+      const form = await formsApi.create(createTemplate(name, kind));
       navigate(`/admin/forms/${form.id}/edit`);
     });
   const filtered = forms.filter(
@@ -361,8 +373,12 @@ export default function FormsLibrary() {
         <aside className="gt-forms-template-panel">
           <h2>A head start.</h2>
           <p>Good questions start here.</p>
-          {templates.map(([name, description]) => (
-            <button key={name} onClick={() => create(`${name} Form`)}>
+          {templates.map(([name, description, kind]) => (
+            <button
+              key={name}
+              disabled={busy}
+              onClick={() => create(`${name} Form`, kind)}
+            >
               <span className="gt-template-icon">
                 <FilePlus2 size={19} />
               </span>

@@ -1,0 +1,22 @@
+{
+  "note": "Real native ClamAV over a loopback-only TCP endpoint. EICAR test string was scanned in memory, not saved to disk.",
+  "scanner": {
+    "ready": true,
+    "version": "ClamAV 1.5.4",
+    "signatureVersion": "28158"
+  },
+  "tests": [
+    {
+      "name": "native scanner responds with a current signature database",
+      "passed": true
+    },
+    {
+      "name": "clean text passes the real scanner",
+      "passed": true
+    },
+    {
+      "name": "harmless EICAR antivirus test signature is rejected",
+      "passed": true
+    }
+  ]
+}

@@ -7,14 +7,16 @@ import {
   Save,
   ShieldCheck,
 } from "lucide-react";
-import { Badge, Button, EmptyState } from "../primitives";
+import { Badge, Button, EmptyState, Field } from "../primitives";
 import {
   visibleFields,
+  formPath,
   validateAnswer,
   type Answer,
   type FormDefinition,
 } from "./store";
 import FieldRenderer from "./FieldRenderer";
+import RespondentFileField from "./RespondentFileField";
 import { api, ApiFailure } from "@/lib/api";
 type RespondentForm = FormDefinition & {
   id: string;
@@ -32,13 +34,15 @@ export default function PublicForm() {
     [loading, setLoading] = useState(true),
     [loadError, setLoadError] = useState(""),
     [pending, setPending] = useState(false),
-    [savedLink, setSavedLink] = useState("");
+    [savedLink, setSavedLink] = useState(""),
+    [accessRequired, setAccessRequired] = useState(false);
   const [tokens] = useState(() => {
     const values = new URLSearchParams(window.location.hash.slice(1));
     return {
       access: values.get("access") || undefined,
       resume: values.get("resume") || undefined,
       edit: values.get("edit") || undefined,
+      upload: values.get("upload") || undefined,
     };
   });
   const definition = form,
@@ -55,6 +59,25 @@ export default function PublicForm() {
   const heading = useRef<HTMLHeadingElement>(null),
     formRef = useRef<HTMLFormElement>(null);
   const responseId = useRef<string | null>(null);
+  const [uploadToken] = useState(() =>
+    tokens.upload && /^[A-Za-z0-9_-]{43}$/.test(tokens.upload)
+      ? tokens.upload
+      : btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))))
+          .replace(/\+/g, "-")
+          .replace(/\//g, "_")
+          .replace(/=/g, ""),
+  );
+  const [uploading, setUploading] = useState<string[]>([]),
+    [fileNames, setFileNames] = useState<Record<string, string>>({});
+  useEffect(() => {
+    if (!uploading.length) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [uploading.length]);
   const formId = form?.id,
     formTitle = form?.title;
   useEffect(() => {
@@ -83,6 +106,7 @@ export default function PublicForm() {
     const controller = new AbortController();
     setLoading(true);
     setLoadError("");
+    setAccessRequired(false);
     const load = async () => {
       if (tokens.edit && !preview) {
         const data = await api<{
@@ -130,7 +154,11 @@ export default function PublicForm() {
     };
     load()
       .catch((e) => {
-        if (!controller.signal.aborted) setLoadError(e.message);
+        if (!controller.signal.aborted) {
+          setLoadError(e.message);
+          if (e instanceof ApiFailure && e.code === "ACCESS_REQUIRED")
+            setAccessRequired(true);
+        }
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
@@ -140,6 +168,69 @@ export default function PublicForm() {
   useEffect(() => {
     if (step) heading.current?.focus();
   }, [step]);
+  if (!loading && accessRequired)
+    return (
+      <div className="gt-public-form-page">
+        <section className="gt-public-form-sheet gt-form">
+          <h1>This form requires private access</h1>
+          <p>
+            Open the chapter’s access link, or sign in if it is an internal
+            form. If email verification is enabled, you can request a private
+            link below.
+          </p>
+          <form
+            className="gt-form"
+            onSubmit={async (event) => {
+              event.preventDefault();
+              const values = new FormData(event.currentTarget);
+              setPending(true);
+              setError("");
+              try {
+                const result = await api<{ message: string }>(
+                  `/forms/${slug}/verify`,
+                  {
+                    method: "POST",
+                    body: {
+                      email: String(values.get("email") || ""),
+                      website: String(values.get("website") || ""),
+                    },
+                  },
+                );
+                setFeedback(result.message);
+              } catch (e) {
+                setError((e as Error).message);
+              } finally {
+                setPending(false);
+              }
+            }}
+          >
+            <Field label="Email address" required>
+              <input
+                name="email"
+                type="email"
+                required
+                autoComplete="email"
+                maxLength={254}
+              />
+            </Field>
+            <div className="gt-honeypot" aria-hidden="true">
+              <label>
+                Website
+                <input name="website" tabIndex={-1} autoComplete="off" />
+              </label>
+            </div>
+            <Button disabled={pending}>Request verification link</Button>
+          </form>
+          {error && (
+            <p className="gt-form-error" role="alert">
+              {error}
+            </p>
+          )}
+          {feedback && <p role="status">{feedback}</p>}
+          <Link to="/contact">Contact the chapter</Link>
+        </section>
+      </div>
+    );
   if (loading || loadError || !form || !definition)
     return (
       <div className="gt-public-form-page">
@@ -153,6 +244,7 @@ export default function PublicForm() {
       </div>
     );
   const settings = definition.settings;
+  const sections = formPath(definition, answers).sections;
   const closed =
     !preview &&
     !submitted &&
@@ -166,22 +258,35 @@ export default function PublicForm() {
         <div className="gt-public-form-sheet">
           <Badge>Not accepting responses</Badge>
           <h1>{definition.title}</h1>
-          <p>This form is not accepting new responses right now.</p>
+          <p>
+            {settings.closedMessage ||
+              "This form is not accepting new responses right now."}
+          </p>
           <Link to="/contact">Contact the chapter</Link>
         </div>
       </div>
     );
-  const section =
-    definition.sections[Math.min(step, definition.sections.length - 1)];
-  const fields = visibleFields(definition.fields, answers).filter(
-    (field) => field.sectionId === section.id,
-  );
-  const review = step >= definition.sections.length;
+  const section = sections[Math.min(step, sections.length - 1)];
+  const fields = visibleFields(
+    definition.fields,
+    answers,
+    definition.sections,
+  ).filter((field) => field.sectionId === section.id);
+  const review = step >= sections.length;
+  const finalStep =
+    review || (settings.review === false && step >= sections.length - 1);
   const next = async (event: FormEvent) => {
     event.preventDefault();
+    if (uploading.length) {
+      setError("Wait for file uploads and security checks to finish.");
+      return;
+    }
     setError("");
     const errors = Object.fromEntries(
-      (review ? visibleFields(definition.fields, answers) : fields)
+      (finalStep
+        ? visibleFields(definition.fields, answers, definition.sections)
+        : fields
+      )
         .map((field) => [field.id, validateAnswer(field, answers[field.id])])
         .filter(([, message]) => !!message),
     ) as Record<string, string>;
@@ -189,18 +294,16 @@ export default function PublicForm() {
     const missing = definition.fields.find((field) => !!errors[field.id]);
     if (missing) {
       setError(`Check “${missing.label}”: ${errors[missing.id]}`);
-      if (review)
+      if (finalStep)
         setStep(
-          definition.sections.findIndex(
-            (section) => section.id === missing.sectionId,
-          ),
+          sections.findIndex((section) => section.id === missing.sectionId),
         );
       requestAnimationFrame(() =>
         document.getElementById(`field-${missing.id}`)?.focus(),
       );
       return;
     }
-    if (!review) {
+    if (!finalStep) {
       setStep(step + 1);
       return;
     }
@@ -216,7 +319,11 @@ export default function PublicForm() {
       );
       return;
     }
-    const visible = visibleFields(definition.fields, answers);
+    const visible = visibleFields(
+      definition.fields,
+      answers,
+      definition.sections,
+    );
     const submittedAnswers = Object.fromEntries(
       Object.entries(answers).filter(([id]) =>
         visible.some((field) => field.id === id),
@@ -236,6 +343,7 @@ export default function PublicForm() {
           website: "",
           ...(tokens.access ? { accessToken: tokens.access } : {}),
           ...(resumeToken.current ? { resumeToken: resumeToken.current } : {}),
+          uploadToken,
         };
     const payload = JSON.stringify(body);
     if (submission.current?.payload !== payload)
@@ -273,7 +381,11 @@ export default function PublicForm() {
     setPending(true);
     setError("");
     try {
-      const visible = visibleFields(definition.fields, answers),
+      const visible = visibleFields(
+          definition.fields,
+          answers,
+          definition.sections,
+        ),
         safe = Object.fromEntries(
           Object.entries(answers).filter(([id]) =>
             visible.some((f) => f.id === id),
@@ -289,6 +401,7 @@ export default function PublicForm() {
             ...(resumeToken.current
               ? { resumeToken: resumeToken.current }
               : {}),
+            uploadToken,
             ...(tokens.access ? { accessToken: tokens.access } : {}),
           },
         },
@@ -296,6 +409,7 @@ export default function PublicForm() {
       resumeToken.current = result.resumeToken;
       const fragment = new URLSearchParams({
         resume: result.resumeToken,
+        upload: uploadToken,
         ...(tokens.access ? { access: tokens.access } : {}),
       });
       setSavedLink(
@@ -356,7 +470,7 @@ export default function PublicForm() {
                 <span>
                   {review
                     ? "Review your response"
-                    : `Section ${step + 1} of ${definition.sections.length}`}
+                    : `Section ${step + 1} of ${sections.length}`}
                 </span>
                 <Badge tone="success">
                   {preview ? "Draft preview" : "Chapter form"}
@@ -369,14 +483,12 @@ export default function PublicForm() {
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-valuenow={Math.round(
-                  (Math.min(step + 1, definition.sections.length) /
-                    definition.sections.length) *
-                    100,
+                  (Math.min(step + 1, sections.length) / sections.length) * 100,
                 )}
               >
                 <span
                   style={{
-                    width: `${(Math.min(step + 1, definition.sections.length) / definition.sections.length) * 100}%`,
+                    width: `${(Math.min(step + 1, sections.length) / sections.length) * 100}%`,
                   }}
                 />
               </div>
@@ -402,7 +514,11 @@ export default function PublicForm() {
               )}
               {review ? (
                 <div className="gt-response-answers">
-                  {visibleFields(definition.fields, answers)
+                  {visibleFields(
+                    definition.fields,
+                    answers,
+                    definition.sections,
+                  )
                     .filter(
                       (field) =>
                         !["divider", "title", "description", "image"].includes(
@@ -414,7 +530,13 @@ export default function PublicForm() {
                         <strong>{field.label}</strong>
                         <p>
                           {Array.isArray(answers[field.id])
-                            ? (answers[field.id] as string[]).join(", ")
+                            ? (answers[field.id] as string[])
+                                .map((value) =>
+                                  field.type === "file"
+                                    ? fileNames[value] || "Private attachment"
+                                    : value,
+                                )
+                                .join(", ")
                             : typeof answers[field.id] === "object"
                               ? JSON.stringify(answers[field.id])
                               : String(answers[field.id] || "Not answered")}
@@ -429,6 +551,45 @@ export default function PublicForm() {
                     field={field}
                     value={answers[field.id]}
                     error={fieldErrors[field.id]}
+                    fileControl={
+                      field.type === "file" && !preview ? (
+                        <RespondentFileField
+                          field={field}
+                          value={
+                            Array.isArray(answers[field.id])
+                              ? (answers[field.id] as string[])
+                              : []
+                          }
+                          context={{
+                            slug: slug!,
+                            versionId: form.versionId,
+                            uploadToken,
+                            accessToken: tokens.access,
+                          }}
+                          readOnly={!!editToken.current}
+                          onBusy={(busy) =>
+                            setUploading((previous) =>
+                              busy
+                                ? [...new Set([...previous, field.id])]
+                                : previous.filter((id) => id !== field.id),
+                            )
+                          }
+                          onName={(id, name) =>
+                            setFileNames((previous) =>
+                              previous[id] === name
+                                ? previous
+                                : { ...previous, [id]: name },
+                            )
+                          }
+                          onChange={(value) =>
+                            setAnswers((previous) => ({
+                              ...previous,
+                              [field.id]: value,
+                            }))
+                          }
+                        />
+                      ) : undefined
+                    }
                     onChange={(value) => {
                       setFieldErrors((previous) => ({
                         ...previous,
@@ -447,6 +608,7 @@ export default function PublicForm() {
                   <Button
                     type="button"
                     variant="secondary"
+                    disabled={pending || uploading.length > 0}
                     onClick={() => {
                       setStep(step - 1);
                       setError("");
@@ -457,14 +619,19 @@ export default function PublicForm() {
                 ) : (
                   <span />
                 )}
-                <Button type="submit" disabled={pending || (preview && review)}>
-                  {pending ? "Saving…" : review ? "Submit response" : "Next"}
+                <Button
+                  type="submit"
+                  disabled={
+                    pending || uploading.length > 0 || (preview && finalStep)
+                  }
+                >
+                  {pending ? "Saving…" : finalStep ? "Submit response" : "Next"}
                   <ArrowRight size={17} />
                 </Button>
               </div>
               {settings.resume && !preview && !editToken.current && (
                 <button
-                  disabled={pending}
+                  disabled={pending || uploading.length > 0}
                   type="button"
                   className="gt-save-resume"
                   onClick={save}

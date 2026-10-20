@@ -78,6 +78,14 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    UPLOAD_QUOTA: [
+      409,
+      "This response or field has reached its file limit. Remove an unused file before trying again.",
+    ],
+    RESEND_COOLDOWN: [
+      429,
+      "Wait at least one minute before resending this invitation.",
+    ],
     FORM_CLOSED: [409, "This form is not accepting responses."],
     FORM_FULL: [409, "This form has reached its response limit."],
     RETENTION_HOLD: [

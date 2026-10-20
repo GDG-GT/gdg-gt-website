@@ -1,0 +1,149 @@
+{
+  "note": "Real signed local Storage PUT, database jobs, native ClamAV and HTTP authorization. Only fictional files and the harmless standard antivirus test string.",
+  "tests": [
+    {
+      "name": "create file-field fixture",
+      "passed": true
+    },
+    {
+      "name": "configured scanner enables file-field publication",
+      "passed": true
+    },
+    {
+      "name": "SVG upload declarations are rejected",
+      "passed": true
+    },
+    {
+      "name": "filenames cannot select object paths",
+      "passed": true
+    },
+    {
+      "name": "unknown file field IDs are rejected",
+      "passed": true
+    },
+    {
+      "name": "intent returns a short-lived one-object upload capability",
+      "passed": true
+    },
+    {
+      "name": "completion rejects missing object bytes",
+      "passed": true
+    },
+    {
+      "name": "the browser-compatible signed PUT uploads directly to private storage",
+      "passed": true
+    },
+    {
+      "name": "anonymous reads cannot retrieve quarantined bytes",
+      "passed": true
+    },
+    {
+      "name": "upload signature cannot write another object key",
+      "passed": true
+    },
+    {
+      "name": "a different respondent capability cannot inspect an upload",
+      "passed": true
+    },
+    {
+      "name": "completion queues scanning without returning a clean file",
+      "passed": true
+    },
+    {
+      "name": "mail workers cannot claim file-scanning jobs",
+      "passed": true
+    },
+    {
+      "name": "pending files cannot associate with a response",
+      "passed": true
+    },
+    {
+      "name": "the real scanner validates and promotes a clean file",
+      "passed": true
+    },
+    {
+      "name": "respondent sees clean status only after the scan transaction commits",
+      "passed": true
+    },
+    {
+      "name": "promotion uses an immutable destination outside the upload capability",
+      "passed": true
+    },
+    {
+      "name": "replayed direct PUT cannot alter approved bytes",
+      "passed": true
+    },
+    {
+      "name": "saving a draft cannot claim files owned by another upload capability",
+      "passed": true
+    },
+    {
+      "name": "a private resume draft preserves its validated uploaded files",
+      "passed": true
+    },
+    {
+      "name": "resume-file ownership is bound in the draft transaction",
+      "passed": true
+    },
+    {
+      "name": "a response cannot attach another respondent file",
+      "passed": true
+    },
+    {
+      "name": "a clean owned file associates atomically with its final response",
+      "passed": true
+    },
+    {
+      "name": "submitted attachments cannot be removed through an upload capability",
+      "passed": true
+    },
+    {
+      "name": "anonymous callers cannot obtain response-file download links",
+      "passed": true
+    },
+    {
+      "name": "authorized response review receives a short-lived attachment download",
+      "passed": true
+    },
+    {
+      "name": "approved download is an attachment containing only promoted bytes",
+      "passed": true
+    },
+    {
+      "name": "real antivirus rejects the harmless EICAR test signature",
+      "passed": true
+    },
+    {
+      "name": "rejected files never become downloadable",
+      "passed": true
+    },
+    {
+      "name": "detected HTML is rejected despite a plain-text declaration",
+      "passed": true
+    },
+    {
+      "name": "scanner recomputes the checksum instead of trusting client metadata",
+      "passed": true
+    },
+    {
+      "name": "approved images are decoded and re-encoded after scanning",
+      "passed": true
+    },
+    {
+      "name": "image promotion strips private metadata",
+      "passed": true
+    },
+    {
+      "name": "unused clean uploads can be removed by their respondent",
+      "passed": true
+    },
+    {
+      "name": "removed uploads are immediately unavailable",
+      "passed": true
+    },
+    {
+      "name": "file download audit contains identifiers, never upload capabilities",
+      "passed": true
+    }
+  ]
+}

@@ -13,7 +13,13 @@
     "202610190010_forms_core.sql",
     "202610190011_forms_drafts_edits_and_access.sql",
     "202610190012_form_response_workspace.sql",
-    "202610190013_failed_gate_limits.sql"
+    "202610190013_failed_gate_limits.sql",
+    "202610200014_form_access_delivery.sql",
+    "202610200015_private_upload_workers.sql",
+    "202610200016_upload_removal_fencing.sql",
+    "202610200017_form_upload_drafts_cleanup.sql",
+    "202610200018_draft_upload_binding_fix.sql",
+    "202610200019_scheduled_forms_jobs.sql"
   ],
   "tests": [
     {
@@ -73,6 +79,30 @@
       "passed": true
     },
     {
+      "name": "202610200014_form_access_delivery.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200015_private_upload_workers.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200016_upload_removal_fencing.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200017_form_upload_drafts_cleanup.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200018_draft_upload_binding_fix.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200019_scheduled_forms_jobs.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -106,6 +136,14 @@
     },
     {
       "name": "013_gate_failures.sql",
+      "passed": true
+    },
+    {
+      "name": "014_form_access_uploads.sql",
+      "passed": true
+    },
+    {
+      "name": "019_scheduled_jobs.sql",
       "passed": true
     },
     {

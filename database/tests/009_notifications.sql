@@ -22,7 +22,7 @@ DO $$ BEGIN
  EXCEPTION WHEN insufficient_privilege THEN NULL;END;
  INSERT INTO public.delivery_jobs(kind,deduplication_key,state,attempt_count,locked_until,lease_token)
  VALUES('system','exhausted-lease-fixture','running',8,now()-interval '1 minute',gen_random_uuid());
- PERFORM public.claim_delivery_jobs(1);
+ PERFORM public.claim_worker_jobs(1,ARRAY['system']);
  IF NOT EXISTS(SELECT 1 FROM public.delivery_jobs WHERE deduplication_key='exhausted-lease-fixture' AND state='dead' AND lease_token IS NULL) THEN RAISE EXCEPTION 'Final crashed attempt not recovered';END IF;
 END $$;
 ROLLBACK;

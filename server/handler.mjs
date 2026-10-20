@@ -19,6 +19,9 @@ import { publicSubmissionRoutes } from "./public-submissions.mjs";
 import { workspaceRoutes } from "./workspace.mjs";
 import { formRoutes } from "./forms.mjs";
 import { formResponseRoutes } from "./form-responses.mjs";
+import { formAccessRoutes } from "./form-access.mjs";
+import { uploadRoutes } from "./uploads.mjs";
+import { jobRoutes } from "./jobs.mjs";
 
 export function applicationHandler({ store, config, db, log } = {}) {
   const auth = createAuthHandler({ store, config, log });
@@ -29,6 +32,10 @@ export function applicationHandler({ store, config, db, log } = {}) {
       request,
       response,
       async (requestId) => {
+        if (
+          await jobRoutes(request, response, { db, store, config, requestId })
+        )
+          return;
         checkOrigin(request, config.origin, {
           mutation: !["GET", "HEAD"].includes(request.method),
         });
@@ -74,6 +81,24 @@ export function applicationHandler({ store, config, db, log } = {}) {
           return;
         if (
           await formResponseRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
+        if (
+          await formAccessRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
+        if (
+          await uploadRoutes(request, response, {
             db,
             store,
             config,

@@ -1,7 +1,10 @@
 import { readFile } from "node:fs/promises";
 import { parseEnv } from "node:util";
 import { serverDatabase } from "../../server/db/client.mjs";
+let shared;
 export async function localHttp() {
+  const reuse = process.env.GDG_LOCAL_TEST_SHARED_SESSION === "true";
+  if (reuse && shared) return shared;
   const env = parseEnv(
     await readFile(new URL("../../.env.server.local", import.meta.url), "utf8"),
   );
@@ -23,7 +26,14 @@ export async function localHttp() {
   let csrf;
   async function call(
     path,
-    { method = "GET", body, key, anonymous = false, redirect = "follow" } = {},
+    {
+      method = "GET",
+      body,
+      key,
+      anonymous = false,
+      redirect = "follow",
+      accessToken,
+    } = {},
   ) {
     const response = await fetch(env.APP_ORIGIN + "/api/v1" + path, {
       method,
@@ -38,6 +48,7 @@ export async function localHttp() {
           : {}),
         ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
         ...(key ? { "Idempotency-Key": key } : {}),
+        ...(accessToken ? { "X-Form-Access": accessToken } : {}),
       },
       ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
       signal: AbortSignal.timeout(15000),
@@ -67,6 +78,10 @@ export async function localHttp() {
     };
   }
   async function login() {
+    if (reuse && cookies.size) {
+      const existing = await call("/auth/session");
+      if (existing.status === 200) return existing.json.data;
+    }
     let r = await call("/auth/gate", {
       method: "POST",
       body: { code: credentials.gateCode },
@@ -81,5 +96,16 @@ export async function localHttp() {
       throw new Error("Local login unavailable: " + r.status);
     return r.json.data;
   }
-  return { env, credentials, call, login, db: serverDatabase(env) };
+  const result = {
+    env,
+    credentials,
+    call,
+    login,
+    db: serverDatabase(env),
+    logout: async (force = false) => {
+      if (!reuse || force) await call("/auth/session", { method: "DELETE" });
+    },
+  };
+  if (reuse) shared = result;
+  return result;
 }

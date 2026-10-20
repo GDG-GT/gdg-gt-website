@@ -10,6 +10,7 @@ import {
 import { Button, Field, EmptyState, Badge } from "../primitives";
 import { useServerForm, formsApi } from "./api";
 import type { FormResponse } from "./store";
+import ResponseFileLinks from "./ResponseFileLinks";
 type Result = {
   items: FormResponse[];
   total: number;
@@ -542,8 +543,16 @@ export default function ResponseWorkspace() {
           }
         }}
       >
-        <DialogContent className="gt-notification-dialog">
-          <DialogTitle>Individual response · v{selected?.version}</DialogTitle>
+        <DialogContent
+          className="gt-notification-dialog"
+          onOpenAutoFocus={(event) => {
+            event.preventDefault();
+            document.getElementById("individual-response-heading")?.focus();
+          }}
+        >
+          <DialogTitle id="individual-response-heading" tabIndex={-1}>
+            Individual response · v{selected?.version}
+          </DialogTitle>
           <DialogDescription>
             Submitted{" "}
             {selected && new Date(selected.submittedAt).toLocaleString()}.
@@ -566,19 +575,28 @@ export default function ResponseWorkspace() {
                         {field.label}
                         {field.sensitive ? " · Sensitive" : ""}
                       </strong>
-                      <p>
-                        {field.sensitive &&
-                        !Object.prototype.hasOwnProperty.call(
-                          selected.answers,
-                          field.id,
-                        )
-                          ? "Hidden by default"
-                          : typeof selected.answers[field.id] === "object"
-                            ? JSON.stringify(selected.answers[field.id])
-                            : String(
-                                selected.answers[field.id] ?? "Not answered",
-                              )}
-                      </p>
+                      {field.type === "file" &&
+                      Array.isArray(selected.answers[field.id]) ? (
+                        <ResponseFileLinks
+                          formId={form.id}
+                          responseId={selected.id}
+                          ids={selected.answers[field.id] as string[]}
+                        />
+                      ) : (
+                        <p>
+                          {field.sensitive &&
+                          !Object.prototype.hasOwnProperty.call(
+                            selected.answers,
+                            field.id,
+                          )
+                            ? "Hidden by default"
+                            : typeof selected.answers[field.id] === "object"
+                              ? JSON.stringify(selected.answers[field.id])
+                              : String(
+                                  selected.answers[field.id] ?? "Not answered",
+                                )}
+                        </p>
+                      )}
                     </div>
                   ))}
               </div>

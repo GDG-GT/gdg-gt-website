@@ -1,5 +1,5 @@
-import { ArrowDown, ArrowUp, Star, Upload } from "lucide-react";
-import { useState } from "react";
+import { ArrowDown, ArrowUp, Star } from "lucide-react";
+import type { ReactNode } from "react";
 import type { Answer, FormField } from "./store";
 
 export default function FieldRenderer({
@@ -8,15 +8,16 @@ export default function FieldRenderer({
   onChange,
   preview = false,
   error,
+  fileControl,
 }: {
   field: FormField;
   value?: Answer;
   onChange: (value: Answer) => void;
   preview?: boolean;
   error?: string;
+  fileControl?: ReactNode;
 }) {
   const inputId = `field-${field.id}`;
-  const [fileError, setFileError] = useState("");
   const text = typeof value === "string" ? value : "";
   const choices = Array.isArray(value) ? value : [];
   const toggle = (option: string) =>
@@ -312,51 +313,12 @@ export default function FieldRenderer({
           ))}
         </select>
       ) : field.type === "file" ? (
-        <>
-          <label className="gt-upload-drop" htmlFor={inputId}>
-            <Upload size={23} />
-            <strong>{text || "Choose a file"}</strong>
-            <span>PDF, document, or image · Up to 25 MB</span>
-            <input
-              {...shared}
-              type="file"
-              accept=".pdf,.docx,.txt,.png,.jpg,.jpeg,.webp"
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                if (file && file.size > 25 * 1024 * 1024) {
-                  setFileError("Choose a file smaller than 25 MB.");
-                  onChange("");
-                  event.target.value = "";
-                  return;
-                }
-                if (
-                  file &&
-                  !/\.(pdf|docx|txt|png|jpe?g|webp)$/i.test(file.name)
-                ) {
-                  setFileError(
-                    "Choose a PDF, DOCX, TXT, PNG, JPEG, or WebP file.",
-                  );
-                  onChange("");
-                  event.target.value = "";
-                  return;
-                }
-                setFileError("");
-                onChange(file?.name || "");
-              }}
-            />
-          </label>
-          {fileError && (
-            <p role="alert" className="gt-form-error">
-              {fileError}
-            </p>
-          )}
-          {text && (
-            <small className="gt-helper">
-              Selected locally. Files are not uploaded or scanned in this UI
-              preview.
-            </small>
-          )}
-        </>
+        fileControl || (
+          <p className="gt-helper">
+            File uploads are disabled in this preview. Respondents upload
+            privately on the published form.
+          </p>
+        )
       ) : (
         <input
           {...shared}

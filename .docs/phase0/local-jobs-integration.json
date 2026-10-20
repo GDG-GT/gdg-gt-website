@@ -1,0 +1,45 @@
+{
+  "note": "Actual local HTTP jobs use a separate server-only cron secret; no external scheduler or cloud service was changed.",
+  "tests": [
+    {
+      "name": "jobs require a separate bearer credential",
+      "passed": true
+    },
+    {
+      "name": "invalid job keys are rejected",
+      "passed": true
+    },
+    {
+      "name": "browser origins are rejected even with a correct key",
+      "passed": true
+    },
+    {
+      "name": "browser cookies are not accepted for scheduled jobs",
+      "passed": true
+    },
+    {
+      "name": "job endpoints enforce their allowed method",
+      "passed": true
+    },
+    {
+      "name": "the scheduler cannot invoke arbitrary actions",
+      "passed": true
+    },
+    {
+      "name": "authorized schedule execution returns a run identifier or safe deduplication",
+      "passed": true
+    },
+    {
+      "name": "the same completed schedule occurrence does not run twice",
+      "passed": true
+    },
+    {
+      "name": "authenticated cleanup runs through the fenced scheduler",
+      "passed": true
+    },
+    {
+      "name": "scheduler outcomes and counters persist without sensitive payloads",
+      "passed": true
+    }
+  ]
+}

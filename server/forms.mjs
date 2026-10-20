@@ -301,6 +301,7 @@ export async function formRoutes(
                 answers: z.record(uuid, answer),
                 resumeToken: tokenSchema.optional(),
                 accessToken: tokenSchema.optional(),
+                uploadToken: tokenSchema.optional(),
               })
               .strict(),
         512 * 1024,
@@ -503,6 +504,7 @@ export async function formRoutes(
           p_answers: body.answers,
           p_access: access?.id || null,
           p_actor: session?.user.id || null,
+          p_upload_hash: body.uploadToken ? tokenHash(body.uploadToken) : null,
         }),
       );
       sendJson(
@@ -918,7 +920,11 @@ export async function formRoutes(
       "VALIDATION_ERROR",
       "A draft definition is required.",
     );
-  if (action === "publish" && definition.fields.some((f) => f.type === "file"))
+  if (
+    action === "publish" &&
+    definition.fields.some((f) => f.type === "file") &&
+    process.env.UPLOADS_ENABLED !== "true"
+  )
     throw new ApiError(
       409,
       "UPLOADS_NOT_READY",

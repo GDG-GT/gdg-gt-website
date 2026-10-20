@@ -140,6 +140,42 @@ export async function deliveryMessage(job, db, config, mail) {
       subject = "New chapter inquiry: " + contact.inquiry_type;
       content = `${contact.name} (${contact.email}) sent an inquiry.\n\n${contact.message}\n\nReview securely: ${config.origin}/admin/communications`;
     }
+  } else if (job.kind === "form_access") {
+    const access = checked(
+      await db
+        .from("form_access_tokens")
+        .select("revoked_at,expires_at,token_hash")
+        .eq("id", job.payload.tokenId)
+        .maybeSingle(),
+    );
+    if (
+      !access ||
+      access.revoked_at ||
+      access.token_hash !== job.payload.tokenHash ||
+      new Date(access.expires_at) <= new Date()
+    )
+      return null;
+    const form = checked(
+      await db
+        .from("forms")
+        .select("title,slug,state")
+        .eq("id", job.payload.formId)
+        .single(),
+    );
+    if (form.state === "Archived") return null;
+    const secret = decryptPayload(job.secret_payload, config.encryptionSecret);
+    to = secret.email;
+    subject = "Your private form link: " + form.title;
+    content =
+      "Open your private chapter form link:\n" +
+      config.origin +
+      "/forms/" +
+      form.slug +
+      "#access=" +
+      secret.token +
+      "\n\nDo not forward this link. It grants access to this form and expires " +
+      new Date(access.expires_at).toUTCString() +
+      ".";
   } else if (job.kind === "form_response_notification") {
     const form = checked(
       await db
@@ -159,20 +195,18 @@ export async function deliveryMessage(job, db, config, mail) {
       )
     )
       checked(
-        await db
-          .from("notifications")
-          .upsert(
-            {
-              user_id: form.owner_id,
-              type: "system",
-              title: "New form response",
-              message: "A response to " + form.title + " is ready for review.",
-              link: "/admin/forms/" + form.id + "/responses",
-              delivery_key:
-                "form-response:" + job.payload.responseId + ":" + form.owner_id,
-            },
-            { onConflict: "delivery_key", ignoreDuplicates: true },
-          ),
+        await db.from("notifications").upsert(
+          {
+            user_id: form.owner_id,
+            type: "system",
+            title: "New form response",
+            message: "A response to " + form.title + " is ready for review.",
+            link: "/admin/forms/" + form.id + "/responses",
+            delivery_key:
+              "form-response:" + job.payload.responseId + ":" + form.owner_id,
+          },
+          { onConflict: "delivery_key", ignoreDuplicates: true },
+        ),
       );
     return null;
   } else
@@ -259,6 +293,18 @@ export async function runDelivery({
       result.lostLease++;
       continue;
     }
+    if (success && providerId && job.kind === "form_access")
+      checked(
+        await db
+          .from("form_access_tokens")
+          .update({
+            delivery_state: "sent",
+            last_sent_at: new Date().toISOString(),
+          })
+          .eq("id", job.payload.tokenId)
+          .eq("token_hash", job.payload.tokenHash)
+          .is("revoked_at", null),
+      );
     if (success) result.completed++;
     else result.retried++;
   }
