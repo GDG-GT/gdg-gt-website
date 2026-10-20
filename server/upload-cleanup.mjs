@@ -7,15 +7,24 @@ export async function cleanupUploads({
   limit = 50,
 } = {}) {
   const storage = objectStorage(env),
-    records = checked(await db.rpc("claim_upload_cleanup", { p_limit: limit })),
+    records = [
+      ...checked(await db.rpc("claim_upload_cleanup", { p_limit: limit })),
+      ...checked(
+        await db.rpc("claim_finance_upload_cleanup", { p_limit: limit }),
+      ),
+    ],
     result = { claimed: records.length, purged: 0, retried: 0 };
   try {
     for (const record of records) {
       try {
         // Only server-generated intent keys can be selected; no caller-supplied path.
         if (
-          record.purpose !== "form" ||
-          record.bucket !== "form-uploads" ||
+          !(
+            (record.purpose === "form" && record.bucket === "form-uploads") ||
+            (record.purpose === "finance" &&
+              record.bucket === "finance-attachments" &&
+              record.state !== "clean")
+          ) ||
           !record.quarantine_key.startsWith("quarantine/") ||
           (record.clean_key && !record.clean_key.startsWith("clean/"))
         )

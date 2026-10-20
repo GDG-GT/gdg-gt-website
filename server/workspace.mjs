@@ -308,17 +308,16 @@ export async function workspaceRoutes(
       checked(count);
       return { count: count.count, items: checked(upcoming) };
     };
-  if (has("finances"))
+  if (has("finances") || session.user.role === "team_member")
     work.finances = async () => {
-      const r = await scoped(
-        db
-          .from("finances")
-          .select("id", { head: true, count: "exact" })
-          .eq("status", "pending"),
-        "finances",
+      const r = checked(
+        await db.rpc("list_finances", {
+          p_actor: session.user.id,
+          p_page: 1,
+          p_filter: {},
+        }),
       );
-      checked(r);
-      return { pending: r.count };
+      return { pending: r.summary.awaitingApproval };
     };
   if (has("team_profiles"))
     work.profiles = async () => {

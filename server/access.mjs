@@ -145,6 +145,11 @@ export async function accessRoutes(
     .map(([route]) => route);
   if (
     session.user.role === "team_member" &&
+    !accessibleRoutes.includes("/admin/finances")
+  )
+    accessibleRoutes.push("/admin/finances"); // Own requests only unless separately granted team scope.
+  if (
+    session.user.role === "team_member" &&
     !accessibleRoutes.includes("/admin/forms")
   ) {
     const visible = checked(

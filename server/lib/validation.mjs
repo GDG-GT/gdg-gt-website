@@ -92,6 +92,12 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    BUDGET_UNAVAILABLE: [409, "Choose an active budget in this request's scope and date range."],
+    BUDGET_EXCEEDED: [409, "This change exceeds the budget or conflicts with committed request dates."],
+    BUDGET_IN_USE: [409, "Resolve pending or reserved requests before closing this budget."],
+    FINANCE_RETAINED: [409, "Financial records are retained; deletion is disabled."],
+    FINANCE_IMMUTABLE: [409, "Submitted financial details and final decisions cannot be rewritten."],
+    EXPORT_TOO_LARGE: [409, "Narrow the export filters to at most 1,000 records and a smaller file."],
     TEAM_MANAGED_CHAT: [409,"Team chat access and moderation follow current team memberships. Manage them in Teams."],
     AUDIENCE_LIMIT: [409, "Choose an audience with 1–1,000 active recipients."],
     AUDIENCE_CHANGED: [409, "The audience changed. Preview it again before confirming."],

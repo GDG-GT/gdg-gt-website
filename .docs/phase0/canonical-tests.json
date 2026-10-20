@@ -49,7 +49,10 @@
     "202610200046_announcement_jobs_live.sql",
     "202610200047_announcement_draft_invalidation_guard.sql",
     "202610200048_managed_team_chat.sql",
-    "202610200049_channel_reconnect_cursor.sql"
+    "202610200049_channel_reconnect_cursor.sql",
+    "202610200050_finance_ledger.sql",
+    "202610200051_finance_attachments.sql",
+    "202610200052_finance_inactive_budget_access.sql"
   ],
   "tests": [
     {
@@ -253,6 +256,18 @@
       "passed": true
     },
     {
+      "name": "202610200050_finance_ledger.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200051_finance_attachments.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200052_finance_inactive_budget_access.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -366,6 +381,18 @@
     },
     {
       "name": "049_channel_reconnect_cursor.sql",
+      "passed": true
+    },
+    {
+      "name": "050_finance_ledger.sql",
+      "passed": true
+    },
+    {
+      "name": "051_finance_attachments.sql",
+      "passed": true
+    },
+    {
+      "name": "052_finance_inactive_budgets_cleanup.sql",
       "passed": true
     },
     {

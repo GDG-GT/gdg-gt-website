@@ -1,0 +1,159 @@
+{
+  "note": "Dedicated loopback HTTP checks with fictional isolated accounts/team/allocations. No payment, external email, imported data, quota reset or permanent deletion. Financial records and append-only decisions remain retained; fixture accounts and team recoverably archived.",
+  "retainedFixtureRequestIds": [
+    "88f7231c-a510-4030-bf66-a6751edfe060",
+    "ad3b4744-9c09-439b-9342-186883451eb2",
+    "d9aba6f5-91a4-43ac-9c58-2420529ddb20",
+    "583bc355-9a2c-4542-8bb9-ee19f10c5ba1"
+  ],
+  "tests": [
+    {
+      "name": "anonymous ledger access denied",
+      "passed": true
+    },
+    {
+      "name": "Blog Editor has no finance workspace",
+      "passed": true
+    },
+    {
+      "name": "chapter funding references not disclosed to ordinary members",
+      "passed": true
+    },
+    {
+      "name": "ordinary member cannot create an allocation",
+      "passed": true
+    },
+    {
+      "name": "password-confirmed administrator budget activation",
+      "passed": true
+    },
+    {
+      "name": "outsider cannot read a team budget",
+      "passed": true
+    },
+    {
+      "name": "draft creation retry is idempotent",
+      "passed": true
+    },
+    {
+      "name": "new request is a private exact-cent draft requiring team approval",
+      "passed": true
+    },
+    {
+      "name": "another team lead cannot read a private draft",
+      "passed": true
+    },
+    {
+      "name": "outsider cannot read a private draft",
+      "passed": true
+    },
+    {
+      "name": "outsider counts and totals reveal no private records",
+      "passed": true
+    },
+    {
+      "name": "stale draft edit rejected without overwrite",
+      "passed": true
+    },
+    {
+      "name": "decision requires the current account password",
+      "passed": true
+    },
+    {
+      "name": "typed reference confirmation enforced",
+      "passed": true
+    },
+    {
+      "name": "submission binds the actual actor and locks financial details",
+      "passed": true
+    },
+    {
+      "name": "submitted amount cannot be edited",
+      "passed": true
+    },
+    {
+      "name": "administrator cannot skip required team approval",
+      "passed": true
+    },
+    {
+      "name": "submitter cannot approve their own request",
+      "passed": true
+    },
+    {
+      "name": "confirmed approval retry does not duplicate the transition",
+      "passed": true
+    },
+    {
+      "name": "approval reserves exact cents in the linked allocation",
+      "passed": true
+    },
+    {
+      "name": "allocation cannot close around committed requests",
+      "passed": true
+    },
+    {
+      "name": "completion moves reservation to spent without a payment operation",
+      "passed": true
+    },
+    {
+      "name": "append-only note retry is unique and all four state decisions are retained",
+      "passed": true
+    },
+    {
+      "name": "completed records cannot be hard-deleted",
+      "passed": true
+    },
+    {
+      "name": "completed decisions cannot be rewritten",
+      "passed": true
+    },
+    {
+      "name": "simultaneous approvals cannot overbook the same budget",
+      "passed": true
+    },
+    {
+      "name": "concurrent reservation remains within exact available funding",
+      "passed": true
+    },
+    {
+      "name": "only the winning approved request contributes to completed spend",
+      "passed": true
+    },
+    {
+      "name": "global administrator cannot self-approve a chapter request",
+      "passed": true
+    },
+    {
+      "name": "reports exclude rejected requests and preserve exact scoped totals",
+      "passed": true
+    },
+    {
+      "name": "monthly completed report agrees with the exact ledger",
+      "passed": true
+    },
+    {
+      "name": "authorized export contains cents and names, not account emails",
+      "passed": true
+    },
+    {
+      "name": "outsider export returns only headers, not team records",
+      "passed": true
+    },
+    {
+      "name": "financial export is audited",
+      "passed": true
+    },
+    {
+      "name": "membership removal revokes historical team finance access immediately",
+      "passed": true
+    },
+    {
+      "name": "revocation clears scoped counts as well as details",
+      "passed": true
+    },
+    {
+      "name": "allocation closes only after all requests leave approval and reserved states",
+      "passed": true
+    }
+  ]
+}

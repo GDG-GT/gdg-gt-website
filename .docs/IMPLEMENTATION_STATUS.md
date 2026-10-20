@@ -5,6 +5,70 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Private finance ledger, allocations and scanned receipts — 2026-10-20
+
+- Replaced the legacy browser-database finance screen with protected APIs and a
+  scoped request/budget/report workspace. Money crosses JSON as decimal strings;
+  browser availability calculations use integer cents. No PSU transactions,
+  budgets or approvals were imported. PRD funding reference cards and the source
+  chart are explicitly labeled planning references, not live balances or spend
+  authority; requested workshop funding is not included in approved funding.
+- Implemented private draft editing, submission, required own-team lead/co-lead
+  approval, independent administrator approval, rejection with a reason,
+  completion, cancellation and append-only notes/history. Decisions require a
+  current opaque session, CSRF, password, exact request reference, revision and
+  idempotency key. Self-approval is denied even to global administrators.
+  Submitted amounts/scope cannot be rewritten, and final records cannot be
+  changed except for retained notes under the implemented policy.
+- Current ordinary members see their own records and explicitly granted team
+  scope; another team lead cannot see a private draft. Removed members lose
+  historical team access, counts, chart data and exports. Blog Editors are denied.
+  Financial data has no Realtime publication or browser table/RPC grant.
+- Administrators manage scoped allocations with typed/password confirmation and
+  revision checks. Approvals atomically reserve exact funds; completion moves
+  reservation to spent without initiating a payment. Simultaneous approvals
+  cannot overbook a budget. Committed requests prevent budget closure or invalid
+  reductions. Inactive-team history remains readable to administrators but is
+  not writable. Reports, filters, pagination, scoped state charts and audited,
+  formula-safe CSV exports are implemented (1,000-record/2.5 MB export bound).
+- Supporting PDF/PNG/JPEG/WebP files use signed direct upload into the private
+  `finance-attachments` quarantine, a 10 MB/file and ten-active-file/request
+  bound, checksum/content verification, real malware scanning and image metadata
+  stripping. Completion is idempotent. Promotion rechecks current request
+  revision, uploader permission and session; stale uploads are rejected rather
+  than attached. Only authorized readers of clean files can obtain an audited
+  60-second signed attachment download. Keys/checksums are absent from list DTOs.
+- Conservative attachment policy: add files only to authorized draft/pending
+  requests; no clean-file replacement or deletion, and no new attachments on
+  terminal requests. Financial records, receipt metadata and clean receipt bytes
+  remain retained until chapter leadership defines retention. Cleanup may remove
+  only abandoned/rejected quarantine bytes after a day, never clean receipts.
+- Verification: complete SQL suite through 52 canonical migrations, both existing
+  100-client capacity regressions, 192 unit tests, TypeScript, scoped lint and
+  production build pass; existing large-chunk warnings remain. Evidence:
+  `phase0/local-finances-integration.json` (37 actual isolated HTTP checks) and
+  `phase0/local-finance-uploads-integration.json` (22 real local storage/scanner
+  checks). Valid images lose private metadata; the standard harmless antivirus
+  test signature is rejected. No real payments, external messages or user-file
+  uploads were performed. Fictional financial evidence is retained, and fixture
+  accounts/teams are recoverably archived. Earlier failed fixture runs also left
+  clearly labeled financial test records; retention was not bypassed to erase them.
+- Browser checks: actual draft save, request details, allocation usage, reports,
+  clean/rejected file states and a declined unsaved-note navigation warning.
+  At 375 px the document and editor fit the viewport; a native wheel scroll moved
+  812 px. Mobile funding cards use a compact two-column layout. Proofs:
+  `ui-review/real-finance-*.png`; temporary viewport overrides were reset and the
+  fictional browser-created draft was cancelled through the protected API.
+  Browser file selection is not certified: the Chrome extension needs file-URL
+  access, which was not granted. The actual upload pipeline was tested over HTTP.
+- A repeat of the existing Forms-upload HTTP regression hit the shared login
+  quota before setup. It was not bypassed or reset; rerun after natural expiry.
+  The existing Forms upload/scan/removal/draft-cleanup SQL regressions pass with
+  the new shared scanner completion function. Hosted storage, scanner operations,
+  long-running load, comprehensive accessibility and production acceptance remain
+  unverified. This is an implementation checkpoint, not full FIN sign-off or
+  complete-PRD certification.
+
 ### Normal gate submission and planned Georgia Tech SSO — 2026-10-20
 
 - The footer accepts the configured gate using ordinary Enter or Subscribe,
@@ -77,7 +141,7 @@ incremental implementation tracker, not a completion or launch claim.
   longer-running reconnect/load checks remain unverified.
 
 This completes this implementation milestone, **not the complete PRD**. Remaining
-work includes private attachments/media workflows, finance, private editorial
+work includes remaining private attachments/media workflows, private editorial
 workflows, newsletter campaigns/scoped mail, member-management gaps, Linktree,
 remaining Forms export/receipt/retention contracts, global unsaved-navigation
 protection, PWA/offline/push, dependency/strictness/performance remediation, CI,

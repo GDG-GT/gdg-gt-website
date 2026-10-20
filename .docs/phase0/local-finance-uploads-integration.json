@@ -1,0 +1,94 @@
+{
+  "note": "Actual signed local object uploads, malware scanning, metadata-stripping image normalization, signed private download and retained financial evidence. Synthetic images and the standard harmless antivirus test string only; no user files or external services. Fictional accounts recoverably archived; receipt evidence retained.",
+  "retainedFixtureRequestId": "c7353fe3-fece-4849-afb9-d87f6cc3222b",
+  "tests": [
+    {
+      "name": "outsider cannot list private receipt metadata",
+      "passed": true
+    },
+    {
+      "name": "receipt intent enforces the 10 MB limit",
+      "passed": true
+    },
+    {
+      "name": "SVG and unapproved finance types are rejected",
+      "passed": true
+    },
+    {
+      "name": "declared extension and MIME must agree",
+      "passed": true
+    },
+    {
+      "name": "intent retry reuses one quarantined financial file",
+      "passed": true
+    },
+    {
+      "name": "an unuploaded or unscanned receipt cannot be downloaded",
+      "passed": true
+    },
+    {
+      "name": "completion verifies that the quarantine object actually exists",
+      "passed": true
+    },
+    {
+      "name": "actual receipt bytes upload through the signed private quarantine URL",
+      "passed": true
+    },
+    {
+      "name": "simultaneous completion retries are idempotent",
+      "passed": true
+    },
+    {
+      "name": "real malware scanner and image normalization promote a valid receipt",
+      "passed": true
+    },
+    {
+      "name": "attachment metadata does not expose object keys or checksums",
+      "passed": true
+    },
+    {
+      "name": "authorized receipt download is signed for only sixty seconds",
+      "passed": true
+    },
+    {
+      "name": "downloaded receipt is normalized and strips private image metadata",
+      "passed": true
+    },
+    {
+      "name": "outsider cannot obtain a signed receipt URL",
+      "passed": true
+    },
+    {
+      "name": "private receipt bucket has no anonymous public-file path",
+      "passed": true
+    },
+    {
+      "name": "standard harmless antivirus test bytes enter quarantine, not public media",
+      "passed": true
+    },
+    {
+      "name": "actual scanner rejects the standard harmless EICAR test file",
+      "passed": true
+    },
+    {
+      "name": "rejected malware-test file never receives a download URL",
+      "passed": true
+    },
+    {
+      "name": "idempotent completion created exactly one scanner job",
+      "passed": true
+    },
+    {
+      "name": "download audit records file identity without receipt filenames or URLs",
+      "passed": true
+    },
+    {
+      "name": "cancelled requests cannot gain new receipts",
+      "passed": true
+    },
+    {
+      "name": "server enforces terminal-state attachment policy independently of the UI",
+      "passed": true
+    }
+  ]
+}

@@ -35,6 +35,8 @@ import { taskRoutes } from "./tasks.mjs";
 import { directMessageRoutes } from "./direct-messages.mjs";
 import { chapterAnnouncementRoutes } from "./chapter-announcements.mjs";
 import { teamChatRoutes } from "./team-chat.mjs";
+import { financeRoutes } from "./finances.mjs";
+import { financeUploadRoutes } from "./finance-uploads.mjs";
 
 export function applicationHandler({ store, config, db, log } = {}) {
   const auth = createAuthHandler({ store, config, log });
@@ -56,6 +58,21 @@ export function applicationHandler({ store, config, db, log } = {}) {
         checkOrigin(request, config.origin, {
           mutation: !["GET", "HEAD"].includes(request.method),
         });
+        if (
+          (await financeUploadRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })) ||
+          (await financeRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          }))
+        )
+          return;
         if (
           await userRoutes(request, response, { db, store, config, requestId })
         )
