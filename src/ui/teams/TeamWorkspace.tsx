@@ -11,6 +11,7 @@ import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import TeamInvitations from "./TeamInvitations";
 import TeamAnnouncements from "./TeamAnnouncements";
 import TeamChat from "./TeamChat";
+import FormIntegrations from "../forms/FormIntegrations";
 import { teamGrantOptions, type TeamGrant } from "../../../shared/teams";
 type Team = {
   id: string;
@@ -754,6 +755,7 @@ export default function TeamWorkspace() {
               </span>
             </div>
             <div className="gt-button-row">
+              <FormIntegrations kind="team" resourceId={workspace.team.id} disabled={!!mode || busy} />
               {workspace.actions.settings && (
                 <>
                   <Button

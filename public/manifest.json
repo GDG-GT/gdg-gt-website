@@ -2,27 +2,38 @@
   "name": "Google Developer Group on Campus at Georgia Institute of Technology",
   "short_name": "GDG@GT",
   "description": "Build, learn, and grow with the developer community at Georgia Tech.",
+  "id": "/",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#fff2c7",
-  "theme_color": "#fff2c7",
-  "orientation": "portrait-primary",
+  "background_color": "#f7f6f5",
+  "theme_color": "#e6705f",
   "scope": "/",
   "icons": [
     {
-      "src": "/favicon.png",
-      "sizes": "32x32",
+      "src": "/icons/pwa-192.png",
+      "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/logo.png",
-      "sizes": "204x126",
+      "src": "/icons/pwa-512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/icons/pwa-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "categories": ["education", "developer tools", "social"],
   "lang": "en",
   "dir": "ltr",
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "shortcuts": [
+    { "name": "Upcoming events", "url": "/events" },
+    { "name": "Chapter resources", "url": "/resources" },
+    { "name": "Offline help", "url": "/offline" }
+  ]
 }

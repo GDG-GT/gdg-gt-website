@@ -65,6 +65,7 @@ type SiteEvent = Event & {
   end_at?: string;
   status?: string;
   accurate_attendee_count?: number;
+  linked_forms?: ChapterEvent["linked_forms"];
 };
 const slugFor = (event: SiteEvent) =>
   event.slug ||
@@ -884,6 +885,7 @@ export function EventDetailPage() {
         <article className="gt-prose">
           <h2>About this event</h2>
           <p>{event.description.replace(/<[^>]*>/g, "")}</p>
+          {!!event.linked_forms?.length && <section aria-label="Event forms"><h3>Event forms</h3><div className="gt-inline-actions">{event.linked_forms.map((form) => <ActionLink key={form.href} to={form.href} arrow>{form.label}</ActionLink>)}</div><p className="gt-helper">Each form has its own access and verification requirements.</p></section>}
           {event.what_youll_learn && (
             <>
               <h3>What you’ll learn</h3>

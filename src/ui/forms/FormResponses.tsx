@@ -131,7 +131,7 @@ export default function FormResponses() {
           : responseCsv(exported);
     const anchor = document.createElement("a");
     anchor.href = URL.createObjectURL(
-      new Blob([content], {
+      new Blob([typeof content === "string" ? content : new Uint8Array(content).buffer], {
         type:
           format === "json"
             ? "application/json"

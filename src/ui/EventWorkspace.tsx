@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
 import { Button, Field, Badge, EmptyState, SearchBox } from "./primitives";
 import type { ChapterEvent } from "./events";
+import FormIntegrations from "./forms/FormIntegrations";
 type Attendee = {
   id: string;
   attendee_name: string;
@@ -423,6 +424,8 @@ export default function EventWorkspace() {
         </>
       )}
       {mode === "edit" && draft && (
+        <>
+        {selected && <div className="gt-inline-actions"><FormIntegrations kind="event" resourceId={selected.id} disabled={busy || dirty} /><span className="gt-helper">Save event changes before managing linked forms.</span></div>}
         <form onSubmit={save} className="gt-form gt-panel gt-event-editor">
           {selected && (
             <div className="gt-inline-actions">
@@ -702,6 +705,7 @@ export default function EventWorkspace() {
             </span>
           </div>
         </form>
+        </>
       )}
       {mode === "attendees" && selected && (
         <section>

@@ -1,0 +1,82 @@
+{
+  "generatedAt": "2026-10-21T18:11:15.423Z",
+  "environment": "fictional loopback form, response and accounts only; no real chapter data erased",
+  "tests": [
+    {
+      "name": "anonymous deletion review is denied",
+      "passed": true
+    },
+    {
+      "name": "ordinary Admin cannot inspect permanent-deletion review",
+      "passed": true
+    },
+    {
+      "name": "review rejects caller-supplied retention waivers",
+      "passed": true
+    },
+    {
+      "name": "permanent deletion requires prior recoverable archive",
+      "passed": true
+    },
+    {
+      "name": "review counts the actual original-version retained response",
+      "passed": true
+    },
+    {
+      "name": "archive alone cannot bypass a live response's retention period",
+      "passed": true
+    },
+    {
+      "name": "deletion counters expose no answer values or respondent email",
+      "passed": true
+    },
+    {
+      "name": "eligible archived form receives a short-lived session-bound review",
+      "passed": true
+    },
+    {
+      "name": "irreversible commit requires the current password",
+      "passed": true
+    },
+    {
+      "name": "another valid session cannot use the review capability",
+      "passed": true
+    },
+    {
+      "name": "stale form revision cannot pass deletion review",
+      "passed": true
+    },
+    {
+      "name": "actual local HTTP commit permanently erases only the fictional reviewed form",
+      "passed": true
+    },
+    {
+      "name": "a lost-response retry returns the same deletion result without repeated erasure",
+      "passed": true
+    },
+    {
+      "name": "purged draft and immutable-version contents are concealed even from Super Admin",
+      "passed": true
+    },
+    {
+      "name": "the former public respondent URL is unavailable",
+      "passed": true
+    },
+    {
+      "name": "purged response history is not recoverable through review APIs",
+      "passed": true
+    },
+    {
+      "name": "normal restore cannot resurrect permanently deleted content",
+      "passed": true
+    },
+    {
+      "name": "actual database retains identifier/hash tombstones but no question definitions or answer values",
+      "passed": true
+    },
+    {
+      "name": "one identifier-only permanent-deletion audit survives replay",
+      "passed": true
+    }
+  ]
+}

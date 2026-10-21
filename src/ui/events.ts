@@ -20,6 +20,7 @@ export type ChapterEvent = {
   registration_type: "internal" | "external" | "both";
   registration_enabled: boolean;
   registration_state?: "open" | "closed" | "ended" | "full";
+  linked_forms?: { label: string; href: string }[];
   publication_status: "draft" | "published" | "cancelled" | "archived";
   max_participants: number | null;
   external_attendees: number;

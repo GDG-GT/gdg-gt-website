@@ -31,9 +31,13 @@ import {
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import { createTemplate, type PreviewForm, type FormTemplate } from "./store";
 import { formsApi, useFormLibrary } from "./api";
+import { useAdmin } from "@/contexts/AdminContext";
+import FormDeletionReview from "./FormDeletionReview";
 
 export default function FormsLibrary() {
   const navigate = useNavigate();
+  const { isSuperAdmin } = useAdmin();
+  const [deletion, setDeletion] = useState<PreviewForm | null>(null);
   const [page, setPage] = useState(1),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
@@ -316,6 +320,7 @@ export default function FormsLibrary() {
                                 ? "Restore draft"
                                 : "Archive form"}
                             </DropdownMenuItem>
+                            {isSuperAdmin && form.status === "Archived" && <DropdownMenuItem disabled={busy} onClick={() => setDeletion(form)}>Review permanent deletion…</DropdownMenuItem>}
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </td>
@@ -399,6 +404,7 @@ export default function FormsLibrary() {
           </div>
         </aside>
       </div>
+      {deletion && <FormDeletionReview formId={deletion.id} title={deletion.title} onClose={() => setDeletion(null)} onDeleted={() => { setDeletion(null); library.reload(); }} />}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent>
           <DialogTitle>What are you creating?</DialogTitle>

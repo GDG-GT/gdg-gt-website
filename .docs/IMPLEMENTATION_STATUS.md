@@ -5,6 +5,52 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### PWA foundation — 2026-10-21 (continuing)
+
+- Production-only Workbox worker/manifest/icons, GT offline fallback, strict
+  static-asset cache allowlist and draft-guarded update/install guidance are now
+  implemented. No API/private-page/form/signed-storage runtime caching. See
+  `PWA_OPERATIONS.md`; offline queue/Push/device acceptance remain open.
+- **297 unit tests**, typecheck, changed-UI lint and production worker build pass.
+  New dependencies are pinned/locked. Production-only audit remains **31 findings
+  (16 high, 14 moderate, 1 low; zero critical)**; full dev-inclusive audit differs.
+  Cache footprint (~7.1 MiB), bundle warnings and real-device/hosted checks remain
+  explicit acceptance work. Existing local API/UI were restarted after restoring
+  the exact lockfile dependency install; both are running on loopback again.
+
+### Permanent deletion and compact public navigation — 2026-10-21
+
+- Added Super Admin-only permanent form deletion, separate from ordinary archive:
+  current-password/typed confirmation, export warning, short session-bound review,
+  retention/hold/reference blockers, immutable audit tombstones, irreversible
+  question/answer erasure and retryable physical-byte cleanup. **19 real local
+  HTTP/database checks** pass. See `FORM_PERMANENT_DELETION_OPERATIONS.md`.
+- Corrected draft-expiry day rounding for small database/server clock differences;
+  the absolute stored deadline remains authoritative. Privacy and reviewed-mail
+  harnesses both pass 20 checks, and the full existing Forms suite passes again.
+- Replaced the public hamburger’s centered modal with a compact header-anchored
+  dropdown. No backdrop, focus trap or page-scroll lock. Native/DOM browser checks
+  verify Escape/focus return, keyboard opening, outside click, link close and a
+  375px phone viewport without overflow. Screenshots: `ui-review/real-header-dropdown-{tablet,mobile}.png`.
+- **72 migrations**, canonical SQL/both concurrency tests and **291 unit tests**
+  pass. Typecheck, changed-UI lint and build pass. Remaining production dependency,
+  bundle and hosted acceptance findings are not waived; continuing the original
+  PRD backlog.
+
+### Forms references and identity derivatives — 2026-10-21
+
+- Added published-form reference contracts for events, teams and draft campaigns,
+  event/team management dialogs and public event CTAs that exclude restricted
+  modes. Current source/form authorization, revisions and idempotency are checked
+  server-side. See `FORM_INTEGRATION_OPERATIONS.md`.
+- Response erasure also removes encrypted identity derivatives and original file
+  names after actual object deletion. Real storage cleanup and retry are tested.
+- **71 migrations**, full canonical SQL and both 100-client tests pass. **15 real
+  integration checks**, **40 real upload checks**, **283 unit tests**, typecheck,
+  changed-UI lint and build pass. Native browser verifies the link dialog and
+  draft preservation. Permanent-deletion safeguards are the next implementation
+  item; the original backlog and hosted acceptance are not complete.
+
 ### Directory transfers, inbox clearing and Forms retention — 2026-10-21
 
 - Tejas clarified import/export means `/admin/members`. Added CSV template/file/

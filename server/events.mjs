@@ -335,6 +335,7 @@ export async function eventRoutes(
     event = {
       ...event,
       registration_state: await registrationState(db, event),
+      linked_forms: checked(await db.rpc("public_event_form_integrations", { p_event: event.id })),
     };
     const related = checked(
       await db

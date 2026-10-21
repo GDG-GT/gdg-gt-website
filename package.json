@@ -9,7 +9,7 @@
     "local:start": "node scripts/local-stack.mjs start",
     "local:stop": "node scripts/local-stack.mjs stop",
     "local:status": "node scripts/local-stack.mjs status",
-    "build": "node scripts/prepare-whiteboard-assets.mjs && vite build",
+    "build": "node scripts/prepare-whiteboard-assets.mjs && node scripts/prepare-pwa-icons.mjs && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "lint:ui": "eslint src/ui src/App.tsx scripts/local-preview.ts",
@@ -28,6 +28,8 @@
     "test:local-form-history": "node scripts/test-local-form-history.mjs",
     "test:local-form-delivery": "node scripts/test-local-form-delivery.mjs",
     "test:local-form-privacy": "node scripts/test-local-form-privacy.mjs",
+    "test:local-form-integrations": "node scripts/test-local-form-integrations.mjs",
+    "test:local-form-deletion": "node scripts/test-local-form-deletion.mjs",
     "jobs:local": "node --env-file=.env.server.local scripts/local-delivery.mjs",
     "scanner:local": "node scripts/local-scanner.mjs start",
     "scanner:update": "node scripts/local-scanner.mjs update",
@@ -165,6 +167,8 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
     "vite": "^7.1.5",
-    "vitest": "4.1.12"
+    "vite-plugin-pwa": "2.0.0",
+    "vitest": "4.1.12",
+    "workbox-precaching": "7.4.1"
   }
 }

@@ -1,8 +1,9 @@
 # Forms retention and operational holds
 
 Local implementation: 2026-10-21. This document covers response/draft retention
-and hold controls, not the still-pending Super Admin permanent form deletion,
-internal reference workflows or complete cross-system privacy requirements.
+and hold controls. Separate implemented workflows are documented in
+`FORM_PERMANENT_DELETION_OPERATIONS.md` and `FORM_INTEGRATION_OPERATIONS.md`;
+complete cross-system privacy requirements remain open.
 
 Responses → Retention & holds shows current form-wide policy and counters.
 An individual response → Review response retention & hold shows its exact stored
@@ -46,3 +47,14 @@ otherwise it skips that global operation rather than erase unrelated fixtures.
 `ui-review/real-form-privacy-desktop.png` shows the live 1,001-response review.
 Migration 066 is applied locally and immutable. All fixtures are fictional; no
 production respondent or external service was changed.
+
+Migration 070 also clears respondent identity copies in receipt-recipient records
+and encrypted form-access outbox payloads during response redaction/deletion.
+Form upload cleanup removes original filenames in the same database transaction
+as its physical-purge acknowledgement, only after object deletion succeeds. Failed
+acknowledgement leaves the file eligible for idempotent cleanup retry. Holds are
+rechecked during claiming; a later hold cannot recall an in-flight deletion.
+Canonical SQL 070 and the actual local upload harness verify these derivatives,
+including real promoted-file removal and retry. The storage test supplies only its
+own fictional deleted upload to the real cleanup implementation; it does not
+claim another local user's files.

@@ -92,6 +92,8 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    FORM_DELETION_BLOCKED: [409, "Archive the form, resolve active references, and complete its retention/hold review before permanent deletion."],
+    FORM_DELETION_REVIEW: [409, "The deletion review expired or belongs to another session. Start a new review."],
     FORM_RECEIPT_IDENTITY: [409, "Receipts require verified email, an individual invitation, or a signed-in chapter account."],
     FORM_DELIVERY_REVIEW_REQUIRED: [409, "Save this draft and review its delivery settings before enabling receipts."],
     FORM_EXPORT_QUOTA: [429, "Up to three exports may run at once and twenty may be created per day. Wait or cancel an unused export."],

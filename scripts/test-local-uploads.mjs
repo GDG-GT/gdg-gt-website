@@ -6,6 +6,7 @@ import { createTemplate, newField } from "../shared/forms.ts";
 import { token, tokenHash } from "../server/lib/security.mjs";
 import { runUploadWorker } from "../server/upload-worker.mjs";
 import { objectStorage } from "../server/lib/object-storage.mjs";
+import { cleanupUploads } from "../server/upload-cleanup.mjs";
 const { call, login, db, env, logout } = await localHttp(),
   evidence = [],
   group = token(),
@@ -359,6 +360,30 @@ try {
     audit.data.length === 1 && !JSON.stringify(audit.data).includes(group),
     "file download audit contains identifiers, never upload capabilities",
   );
+  r = await call(`/admin/forms/${form.id}/responses/${responseId}`, {
+    method: "PATCH", body: { action: "redact" },
+  });
+  check(r.status === 200, "response redaction queues its attachment for physical deletion");
+  // Exercise the real cleanup implementation and local object store, but feed
+  // only this invocation's deleted fixture. Canonical SQL tests cover claiming;
+  // this test must never claim or erase another local user's deleted files.
+  const scopedCleanupDb = {
+    rpc: (name, args) => name === "claim_upload_cleanup"
+      ? db.from("upload_intents").select("*").eq("id", uploadId).not("deleted_at", "is", null).is("purged_at", null)
+      : ["claim_finance_upload_cleanup", "claim_blog_upload_cleanup"].includes(name)
+        ? Promise.resolve({ data: [], error: null }) : db.rpc(name, args),
+  };
+  await cleanupUploads({ env, db: scopedCleanupDb });
+  const removed = await db.from("upload_intents").select("filename,purged_at").eq("id", uploadId).single(),
+    removedFile = await db.from("form_uploads").select("original_filename").eq("id", uploadId).single();
+  check(!removed.error && !removedFile.error && removed.data.purged_at && removed.data.filename === "[Removed file]" && removedFile.data.original_filename === "[Removed file]",
+    "actual cleanup acknowledges physical deletion and atomically clears original filenames");
+  let missing = false;
+  try { await storage.bytes(record.data.bucket, record.data.clean_key, 1000); }
+  catch { missing = true; }
+  check(missing, "redacted fixture's real promoted bytes are no longer in local private storage");
+  check((await cleanupUploads({ env, db: scopedCleanupDb })).claimed === 0,
+    "physical cleanup retry does not reclaim the acknowledged fixture");
 } finally {
   storage.close();
   if (form) {

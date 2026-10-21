@@ -36,12 +36,12 @@ export async function cleanupUploads({
         await storage.delete(record.bucket, record.quarantine_key);
         if (record.clean_key)
           await storage.delete(record.bucket, record.clean_key);
-        checked(
-          await db
-            .from("upload_intents")
-            .update({ purged_at: new Date().toISOString() })
-            .eq("id", record.id)
-            .not("deleted_at", "is", null),
+        if (record.purpose === "form") {
+          if (!checked(await db.rpc("finish_form_upload_cleanup", { p_upload: record.id })))
+            throw new Error("Cleanup acknowledgement did not commit");
+        } else checked(
+          await db.from("upload_intents").update({ purged_at: new Date().toISOString() })
+            .eq("id", record.id).not("deleted_at", "is", null),
         );
         result.purged++;
       } catch {

@@ -19,6 +19,7 @@ import SiteShell from "@/ui/SiteShell";
 import AdminShell from "@/ui/AdminShell";
 import RouteErrorBoundary from "@/ui/RouteErrorBoundary";
 import NavigationSafety from "@/ui/NavigationSafety";
+import { PwaUpdateNotice } from "@/pwa/PwaControls";
 import { MaintenancePage } from "@/ui/status/SiteAvailability";
 import {
   HomePage,
@@ -128,6 +129,7 @@ function protectedPage(children: ReactNode) {
 function RoutedApplication() {
   return (
     <NavigationSafety>
+      <PwaUpdateNotice />
       <SiteStatusRedirect>
         <Frame>
           <Suspense fallback={<LoadingPage />}>

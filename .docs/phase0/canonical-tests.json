@@ -69,7 +69,10 @@
     "202610210066_form_retention_holds.sql",
     "202610210067_notification_dismiss_all.sql",
     "202610210068_community_member_transfer.sql",
-    "202610210069_notification_read_state.sql"
+    "202610210069_notification_read_state.sql",
+    "202610210070_form_identity_derivatives.sql",
+    "202610210071_form_integrations.sql",
+    "202610210072_form_permanent_deletion.sql"
   ],
   "tests": [
     {
@@ -353,6 +356,18 @@
       "passed": true
     },
     {
+      "name": "202610210070_form_identity_derivatives.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210071_form_integrations.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210072_form_permanent_deletion.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -538,6 +553,18 @@
     },
     {
       "name": "068_community_member_transfer.sql",
+      "passed": true
+    },
+    {
+      "name": "070_form_identity_derivatives.sql",
+      "passed": true
+    },
+    {
+      "name": "071_form_integrations.sql",
+      "passed": true
+    },
+    {
+      "name": "072_form_permanent_deletion.sql",
       "passed": true
     },
     {

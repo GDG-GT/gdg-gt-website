@@ -23,6 +23,8 @@ import { formExportRoutes } from "./form-exports.mjs";
 import { formHistoryRoutes } from "./form-history.mjs";
 import { formDeliveryRoutes } from "./form-delivery.mjs";
 import { formPrivacyRoutes } from "./form-privacy.mjs";
+import { formIntegrationRoutes } from "./form-integrations.mjs";
+import { formDeletionRoutes } from "./form-deletion.mjs";
 import { formAccessRoutes } from "./form-access.mjs";
 import { uploadRoutes } from "./uploads.mjs";
 import { jobRoutes } from "./jobs.mjs";
@@ -248,6 +250,12 @@ export function applicationHandler({ store, config, db, log } = {}) {
           })
         )
           return;
+        if (
+          await formDeletionRoutes(request, response, { db, store, config, requestId })
+        ) return;
+        if (
+          await formIntegrationRoutes(request, response, { db, store, config, requestId })
+        ) return;
         if (
           await formPrivacyRoutes(request, response, { db, store, config, requestId })
         ) return;

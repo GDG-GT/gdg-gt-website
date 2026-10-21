@@ -1883,14 +1883,43 @@ img {
 }
 .gt-menu-button {
   display: none;
+  margin-left: auto;
+  flex-shrink: 0;
 }
+.gt-nav-login + .gt-menu-button { margin-left: 0; }
+.gt-pwa-update { position: fixed; z-index: var(--layer-feedback); bottom: 16px; left: 16px; right: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); }
+.gt-pwa-update p { margin: 0; flex: 1 1 240px; }
+.gt-install-help { margin-bottom: 24px; max-width: 65ch; }
+.gt-install-help summary { cursor: pointer; min-height: 44px; display: list-item; padding-block: 10px; font-weight: 650; }
+.gt-install-help summary:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
 .gt-mobile-nav {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: max(20px, calc((100% - 1240px) / 2));
+  width: min(320px, calc(100% - 40px));
+  max-height: calc(100dvh - 118px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   pointer-events: auto;
   background: var(--surface);
-  margin: 12px 20px 0;
-  border-radius: 16px;
-  padding: 12px;
-  box-shadow: var(--warm-shadow);
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px;
+  animation: gt-nav-reveal 140ms ease-out;
+}
+@keyframes gt-nav-reveal {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (min-width: 1024px) {
+  .gt-mobile-nav { display: none; }
+}
+@media (max-width: 600px) {
+  .gt-mobile-nav { right: 16px; width: calc(100% - 32px); max-height: calc(100dvh - 100px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gt-mobile-nav { animation: none; }
 }
 .gt-section-note.gt-full-identity {
   max-width: 65ch;
@@ -1926,10 +1955,16 @@ img {
 .gt-mobile-nav > a {
   display: flex;
   justify-content: space-between;
-  padding: 14px;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 14px;
   border-radius: 8px;
   color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 550;
+  text-decoration: none;
 }
+.gt-mobile-nav > a:hover { background: var(--surface-2, #f1f0ef); }
 .gt-mobile-nav > a.active {
   background: #fff0e6;
   color: var(--coral);
@@ -1937,25 +1972,6 @@ img {
 .gt-mobile-nav > button {
   width: 100%;
   margin-top: 6px;
-}
-.gt-public-menu.gt-mobile-nav {
-  margin: 0;
-  gap: 0;
-  padding: 28px 18px 18px;
-  width: calc(100% - 32px);
-  max-width: 420px;
-}
-.gt-public-menu h2 {
-  padding: 0 14px 8px;
-}
-.gt-public-menu > p {
-  padding: 0 14px 12px;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-}
-.gt-public-menu > button.absolute {
-  width: auto;
-  margin: 0;
 }
 .gt-home-hero {
   position: relative;
@@ -5298,8 +5314,8 @@ img {
     display: none;
   }
   .gt-menu-button {
-    width: 34px;
-    height: 38px;
+    width: 44px;
+    height: 44px;
   }
   .gt-home-hero,
   .gt-hero-layout {
@@ -6091,6 +6107,21 @@ img {
   max-height: min(48rem, 90dvh);
   overflow-y: auto;
 }
+.gt-form-integration-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.gt-form-integration-list > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.gt-form-integration-list > li > div { min-width: 0; overflow-wrap: anywhere; }
 .gt-notification-list {
   list-style: none;
   padding: 0;

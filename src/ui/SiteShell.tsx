@@ -22,17 +22,12 @@ import { useAdmin } from "@/contexts/AdminContext";
 import AdminLoginModal from "@/components/AdminLoginModal";
 import { PublicNewsletterService as NewsletterService } from "@/services/publicWorkflows";
 import { Brand, Button } from "./primitives";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { chapterName, localPreviewEnabled, publicLinks } from "./preview-data";
 import { useContent } from "@/contexts/ContentContext";
 import { newsletterEntryIntent } from "./newsletter-entry";
 import { MaintenanceBanner } from "./status/SiteAvailability";
 import { useSiteAvailability } from "@/contexts/SiteAvailabilityContext";
+import { InstallApp } from "@/pwa/PwaControls";
 
 export default function SiteShell({ children }: { children: ReactNode }) {
   const { status: availability } = useSiteAvailability();
@@ -55,12 +50,36 @@ export default function SiteShell({ children }: { children: ReactNode }) {
     footerNewsletter = footerContent.newsletter || {},
     footerCopyright = footerContent.copyright || {};
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const navigationRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLElement>(null);
   const subscriptionRequest = useRef({ email: "", key: crypto.randomUUID() });
 
   useEffect(() => {
     setMenuOpen(false);
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [location.pathname]);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const closeOutside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !navigationRef.current?.contains(event.target)) setMenuOpen(false);
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      setMenuOpen(false);
+      menuButtonRef.current?.focus();
+    };
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const closeDesktop = () => { if (desktop.matches) setMenuOpen(false); };
+    document.addEventListener("pointerdown", closeOutside);
+    document.addEventListener("keydown", escape);
+    desktop.addEventListener("change", closeDesktop);
+    return () => {
+      document.removeEventListener("pointerdown", closeOutside);
+      document.removeEventListener("keydown", escape);
+      desktop.removeEventListener("change", closeDesktop);
+    };
+  }, [menuOpen]);
   const previewWorkspace = async () => {
     if (isAuthenticated) {
       navigate("/admin");
@@ -145,7 +164,9 @@ export default function SiteShell({ children }: { children: ReactNode }) {
       <a href="#main-content" className="gt-skip">
         Skip to content
       </a>
-      <div className="gt-nav-wrap">
+      <div className="gt-nav-wrap" ref={navigationRef} onBlur={(event) => {
+        if (menuOpen && event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) setMenuOpen(false);
+      }}>
         <nav className="gt-nav" aria-label="Main navigation">
           <Brand compact />
           <div className="gt-nav-links">
@@ -172,23 +193,22 @@ export default function SiteShell({ children }: { children: ReactNode }) {
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
             onClick={() => setMenuOpen(!menuOpen)}
+            onKeyDown={(event) => {
+              if (event.key !== "ArrowDown") return;
+              event.preventDefault();
+              setMenuOpen(true);
+              requestAnimationFrame(() => mobileMenuRef.current?.querySelector<HTMLAnchorElement>("a")?.focus());
+            }}
           >
             {menuOpen ? <X /> : <Menu />}
           </button>
         </nav>
-        <Dialog open={menuOpen} onOpenChange={setMenuOpen}>
-          <DialogContent
+        {menuOpen && <nav
             id="mobile-navigation"
-            className="gt-mobile-nav gt-public-menu"
-            onCloseAutoFocus={(event) => {
-              event.preventDefault();
-              menuButtonRef.current?.focus();
-            }}
+            className="gt-mobile-nav"
+            aria-label="Mobile navigation"
+            ref={mobileMenuRef}
           >
-            <DialogTitle>Explore GDG@GT</DialogTitle>
-            <DialogDescription>
-              Find your next event, resource, or connection.
-            </DialogDescription>
             {navigation.map(([label, href]) => (
               <NavLink
                 key={href}
@@ -197,7 +217,6 @@ export default function SiteShell({ children }: { children: ReactNode }) {
                 onClick={() => setMenuOpen(false)}
               >
                 {label}
-                <ArrowUpRight size={17} />
               </NavLink>
             ))}
             {(localPreviewEnabled || isAuthenticated) && (
@@ -210,19 +229,13 @@ export default function SiteShell({ children }: { children: ReactNode }) {
                 Open workspace
               </Button>
             )}
-            <button
-              className="gt-button gt-button-ghost"
-              onClick={() => setMenuOpen(false)}
-            >
-              Close menu
-            </button>
-          </DialogContent>
-        </Dialog>
+          </nav>}
       </div>
       <main id="main-content" tabIndex={-1}>
         {children}
       </main>
       <footer className="gt-footer">
+        <div className="gt-container"><InstallApp /></div>
         <div className="gt-container gt-footer-grid">
           <div>
             <Brand inverse compact />

@@ -18,6 +18,7 @@ import {
 import { token, tokenHash, validToken, riskHash } from "./lib/security.mjs";
 import { encryptPayload, decryptPayload } from "./lib/encryption.mjs";
 import { mailConfig } from "./delivery.mjs";
+import { draftDaysRemaining } from "./lib/form-lifetime.mjs";
 
 const pageSchema = z
   .object({
@@ -508,13 +509,13 @@ export async function formRoutes(
           p_upload_hash: body.uploadToken ? tokenHash(body.uploadToken) : null,
         }),
       );
-      const lifetime = checked(await db.from("form_response_drafts").select("expires_at")
+      const lifetime = checked(await db.from("form_response_drafts").select("expires_at,created_at")
         .eq("form_id", form.id).eq("resume_token_hash", tokenHash(resume)).single());
       sendJson(
         response,
         200,
         { resumeToken: resume, expiresAt: lifetime.expires_at,
-          expiresInDays: Math.max(0, Math.ceil((new Date(lifetime.expires_at).getTime() - Date.now()) / 86400000)) },
+          expiresInDays: draftDaysRemaining(lifetime.created_at, lifetime.expires_at) },
         requestId,
       );
       return true;

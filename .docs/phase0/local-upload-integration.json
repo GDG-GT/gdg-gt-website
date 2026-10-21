@@ -144,6 +144,22 @@
     {
       "name": "file download audit contains identifiers, never upload capabilities",
       "passed": true
+    },
+    {
+      "name": "response redaction queues its attachment for physical deletion",
+      "passed": true
+    },
+    {
+      "name": "actual cleanup acknowledges physical deletion and atomically clears original filenames",
+      "passed": true
+    },
+    {
+      "name": "redacted fixture's real promoted bytes are no longer in local private storage",
+      "passed": true
+    },
+    {
+      "name": "physical cleanup retry does not reclaim the acknowledged fixture",
+      "passed": true
     }
   ]
 }

@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { localPreview } from "./scripts/local-preview";
+import { VitePWA } from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -9,6 +10,7 @@ export default defineConfig(({ mode }) => ({
     host: "127.0.0.1",
     port: 8080,
     strictPort: true,
+    watch: { ignored: ["**/node_modules.offloaded-backup/**", "**/excalidraw.offloaded-backup/**"] },
     fs: {
       strict: true,
       // These files belong to local/server operations, never the browser.
@@ -31,6 +33,22 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
+    VitePWA({
+      strategies: "injectManifest",
+      srcDir: "src/pwa",
+      filename: "sw.js",
+      injectRegister: false,
+      registerType: "prompt",
+      manifest: false,
+      devOptions: { enabled: false },
+      injectManifest: {
+        globPatterns: ["index.html", "offline.html", "manifest.json", "favicon.png", "logo.png", "icons/*.png", "assets/*.{js,css,woff2}"],
+        globIgnores: ["assets/subset-shared.chunk-*.js", "assets/percentages-*.js"],
+        // Heavy editors/3D chunks can stay network-only. They are never needed
+        // to show the public offline fallback or review queued public actions.
+        maximumFileSizeToCacheInBytes: 1024 * 1024,
+      },
+    }),
     ...(mode === "development" &&
     loadEnv(mode, process.cwd(), "").VITE_LOCAL_UI === "true" &&
     loadEnv(mode, process.cwd(), "").VITE_REAL_API !== "true"
