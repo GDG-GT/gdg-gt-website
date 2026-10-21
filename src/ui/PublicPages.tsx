@@ -1905,9 +1905,9 @@ export function InfoPage({
   const copy = {
     privacy: [
       "Your information, handled with care.",
-      "Privacy notice",
-      "This local UI preview stores only the sample data you enter in this browser. It does not send email or connect to a production database. Please use fictional information while testing.",
-      "The chapter’s final privacy notice will describe how registrations, newsletter subscriptions, contact requests, forms, and uploads are collected, retained, and removed before production launch.",
+      "Development privacy notice",
+      "Submitted test data can be stored in this installation’s database and private file storage, not only in your browser. Please use fictional information during local development.",
+      "Registrations, newsletter signups, contact requests, Forms answers and uploads have separate access and retention controls. A final chapter privacy notice and institutional review are still required before collecting real participant data.",
     ],
     accessibility: [
       "A community everyone can take part in.",

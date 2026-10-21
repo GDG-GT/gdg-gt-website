@@ -19,6 +19,7 @@ import SiteShell from "@/ui/SiteShell";
 import AdminShell from "@/ui/AdminShell";
 import RouteErrorBoundary from "@/ui/RouteErrorBoundary";
 import NavigationSafety from "@/ui/NavigationSafety";
+import { MaintenancePage } from "@/ui/status/SiteAvailability";
 import {
   HomePage,
   EventsPage,
@@ -157,10 +158,7 @@ function RoutedApplication() {
                 element={<InfoPage kind="accessibility" />}
               />
               <Route path="/offline" element={<InfoPage kind="offline" />} />
-              <Route
-                path="/maintenance"
-                element={<InfoPage kind="maintenance" />}
-              />
+              <Route path="/maintenance" element={<MaintenancePage />} />
               <Route path="/admin" element={protectedPage(<Overview />)} />
               {adminRoutes.map(([path, Component]) => (
                 <Route

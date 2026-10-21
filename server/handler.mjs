@@ -39,6 +39,7 @@ import { financeRoutes } from "./finances.mjs";
 import { financeUploadRoutes } from "./finance-uploads.mjs";
 import { linktreeRoutes } from "./linktree.mjs";
 import { projectRoutes } from "./projects.mjs";
+import { siteStatusRoutes } from "./site-status.mjs";
 
 export function applicationHandler({ store, config, db, log } = {}) {
   const auth = createAuthHandler({ store, config, log });
@@ -61,6 +62,12 @@ export function applicationHandler({ store, config, db, log } = {}) {
           mutation: !["GET", "HEAD"].includes(request.method),
         });
         if (
+          (await siteStatusRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })) ||
           (await projectRoutes(request, response, {
             db,
             store,

@@ -5,6 +5,40 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Site availability and maintenance controls — 2026-10-20
+
+- Replaced the legacy status manager with password/typed-confirmed protected
+  GET/PATCH APIs and a responsive editor/preview. Current Admin/Super Admin or an
+  explicit current-team site-status read/update grant is required. Read-only
+  grants, Blog Editors and removed operators cannot change state. Revision,
+  idempotency, current-session/password rechecks and metadata-only audit records
+  fence state changes. No operational row is seeded; initial live state is a
+  virtual default until the first authorized change.
+- Public destinations are restricted to an active local Linktree or exact approved
+  Georgia Tech/GDG HTTPS hosts, without private query parameters. Automatic
+  routing is local-only; inactive local destinations fall back to maintenance.
+  Admin/gate/login, liveness health, Linktree and necessary privacy/token/setup
+  routes remain reachable. Maintenance does not act as an authorization bypass
+  or blanket API shutdown. Public status DTOs omit operator identity/permissions
+  and are no-store. Revalidated public-only offline snapshots have a 30-day bound
+  and a five-second initial-fetch timeout; full PWA offline support is still open.
+- Added the configured maintenance page/banner, safe manual link, preview,
+  stale-input protection and navigation guard. Removed obsolete legacy status
+  manager and PSU/global-window testing utility (recoverable in Git). Corrected
+  privacy copy that incorrectly claimed all local test data stayed in-browser;
+  approved production privacy content remains a launch dependency.
+- Verification: **57 migrations**, all SQL/capacity regressions, **227 unit
+  tests**, TypeScript, UI/scoped lint and production build pass. **21 actual HTTP
+  checks** are in `phase0/local-site-status-integration.json`. Browser checks
+  cover normal maintenance routing, active local redirection, deactivation
+  fallback, privacy access, stale-input retention/disabled save and actual
+  confirmed UI saving of unchanged live settings. At 375 px the document and
+  339 px editor fit. Proofs: `ui-review/real-maintenance-*.png`.
+  The exact original availability was restored and the site is live. Fictional
+  fixtures were recoverably archived, temporary viewports reset, and no external
+  provider or email used. Full accessibility, multibrowser/hosted operations and
+  PWA/offline acceptance remain pending. See `SITE_STATUS_OPERATIONS.md`.
+
 ### Private Projects CRUD and participants — 2026-10-20
 
 - Replaced legacy direct-browser database calls with protected scoped APIs and a

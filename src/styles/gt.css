@@ -57,6 +57,17 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
 }
+.gt-site-is-maintenance .gt-nav-wrap { top: 80px; }
+.gt-maintenance-content { padding-block: 150px 36px; max-width: 920px; }
+.gt-maintenance-content h1 { font-size: clamp(2rem, 5vw, 3.6rem); font-weight: 750; max-width: 740px; margin: 16px 0 28px; }
+.gt-maintenance-content p { line-height: 1.7; max-width: 740px; margin-block: 20px; color: var(--text-secondary); }
+.gt-maintenance-content .gt-inline-actions { margin-top: 28px; gap: 24px; }
+.gt-maintenance-content .gt-inline-actions a { text-decoration: underline; text-underline-offset: 4px; }
+.gt-maintenance-check { max-width: 920px; padding-bottom: 64px; }
+.gt-maintenance-check p { line-height: 1.7; margin-bottom: 18px; color: var(--text-secondary); }
+.gt-status-workspace details .gt-maintenance-content { padding-block: 24px; }
+@media(max-width: 640px) { .gt-maintenance-content { padding-top: 125px; }.gt-maintenance-content h1 { font-size: 2.2rem; }.gt-maintenance-content .gt-button { white-space: normal; text-align: center; } }
+.gt-maintenance-banner { padding: 10px 20px; background: #f4e0cf; color: #43362e; position: relative; z-index: 42; text-align: center; }.gt-maintenance-banner a { text-decoration: underline; text-underline-offset: 3px; }.gt-status-workspace > .gt-panel { padding: 24px; margin-block: 24px; }.gt-status-workspace h2 { font-size: 1.2rem; font-weight: 650; margin-bottom: 16px; }.gt-status-workspace p { line-height: 1.6; margin-block: 16px; }.gt-status-workspace .gt-plain-fieldset { min-width: 0; margin: 0; border: 0; padding: 0; }.gt-status-check { display: flex; align-items: center; gap: 10px; min-height: 44px; }.gt-status-workspace details { margin-top: 24px; }.gt-status-workspace details .gt-container { padding: 24px 0; }.gt-status-workspace details h1 { font-size: 1.4rem; }
 .gt-projects-workspace { min-width: 0; }
 .gt-projects-workspace > .gt-panel { padding: 24px; margin-block: 24px; }
 .gt-projects-workspace .gt-plain-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }

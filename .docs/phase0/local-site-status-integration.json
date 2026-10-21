@@ -1,0 +1,89 @@
+{
+  "note": "Actual dedicated loopback HTTP checks with fictional operators/team/Linktree. Public maintenance was temporarily enabled and the exact original configuration restored with revision fencing. No external destination or provider was loaded and no email was sent. Fixture accounts/team/profile recoverably archived. Rate limits and jobs were not reset.",
+  "tests": [
+    {
+      "name": "anonymous access to operator configuration denied",
+      "passed": true
+    },
+    {
+      "name": "ungranted and Blog Editor accounts denied",
+      "passed": true
+    },
+    {
+      "name": "read grant does not imply global update authority",
+      "passed": true
+    },
+    {
+      "name": "read-only team operator cannot change the site",
+      "passed": true
+    },
+    {
+      "name": "incorrect confirmation password denied",
+      "passed": true
+    },
+    {
+      "name": "non-allowlisted external destinations rejected",
+      "passed": true
+    },
+    {
+      "name": "automatic off-site redirects rejected",
+      "passed": true
+    },
+    {
+      "name": "typed mode must match the selected state",
+      "passed": true
+    },
+    {
+      "name": "maintenance redirect loops rejected",
+      "passed": true
+    },
+    {
+      "name": "unpublished local destinations rejected",
+      "passed": true
+    },
+    {
+      "name": "availability changes replay without another revision",
+      "passed": true
+    },
+    {
+      "name": "stale status changes cannot overwrite a newer revision",
+      "passed": true
+    },
+    {
+      "name": "public state excludes operator identity and permissions",
+      "passed": true
+    },
+    {
+      "name": "health endpoint remains available during maintenance",
+      "passed": true
+    },
+    {
+      "name": "authenticated operator route remains available during maintenance",
+      "passed": true
+    },
+    {
+      "name": "normal footer entry still recognizes the configured gate during maintenance",
+      "passed": true
+    },
+    {
+      "name": "active local Linktree can be an automatic escape destination",
+      "passed": true
+    },
+    {
+      "name": "deactivated Linktree falls back to maintenance rather than redirecting to a missing page",
+      "passed": true
+    },
+    {
+      "name": "explicit current team update grant is honored",
+      "passed": true
+    },
+    {
+      "name": "membership removal revokes operator access immediately",
+      "passed": true
+    },
+    {
+      "name": "exact original availability configuration restored",
+      "passed": true
+    }
+  ]
+}

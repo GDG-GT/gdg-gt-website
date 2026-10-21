@@ -31,8 +31,11 @@ import {
 import { chapterName, localPreviewEnabled, publicLinks } from "./preview-data";
 import { useContent } from "@/contexts/ContentContext";
 import { newsletterEntryIntent } from "./newsletter-entry";
+import { MaintenanceBanner } from "./status/SiteAvailability";
+import { useSiteAvailability } from "@/contexts/SiteAvailabilityContext";
 
 export default function SiteShell({ children }: { children: ReactNode }) {
+  const { status: availability } = useSiteAvailability();
   const [menuOpen, setMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -125,13 +128,20 @@ export default function SiteShell({ children }: { children: ReactNode }) {
         if (result.success) setEmail("");
       }
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "We could not save your signup. Please try again.");
+      setNotice(
+        error instanceof Error
+          ? error.message
+          : "We could not save your signup. Please try again.",
+      );
     } finally {
       setSending(false);
     }
   };
   return (
-    <div className="gt-site">
+    <div
+      className={`gt-site${availability?.is_live === false ? " gt-site-is-maintenance" : ""}`}
+    >
+      <MaintenanceBanner />
       <a href="#main-content" className="gt-skip">
         Skip to content
       </a>

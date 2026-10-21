@@ -185,27 +185,6 @@ export async function publicContentRoutes(
     );
     return true;
   }
-  if (resource === "site-status") {
-    allowMethod(request, response, ["GET"]);
-    const row = checked(
-      await db
-        .from("site_status")
-        .select("is_live,message")
-        .order("updated_at", { ascending: false })
-        .limit(1)
-        .maybeSingle(),
-    );
-    publicJson(
-      request,
-      response,
-      {
-        is_live: row?.is_live ?? true,
-        message: row?.is_live === false ? row.message : null,
-      },
-      requestId,
-    );
-    return true;
-  }
   if (select[resource]) {
     allowMethod(request, response, ["GET"]);
     const p = queryValues(

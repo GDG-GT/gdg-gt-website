@@ -56,7 +56,8 @@
     "202610200053_linktree_workflows.sql",
     "202610200054_linktree_team_publication_guard.sql",
     "202610200055_private_projects.sql",
-    "202610200056_project_star_projection.sql"
+    "202610200056_project_star_projection.sql",
+    "202610200057_site_status_control.sql"
   ],
   "tests": [
     {
@@ -288,6 +289,10 @@
       "passed": true
     },
     {
+      "name": "202610200057_site_status_control.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -425,6 +430,10 @@
     },
     {
       "name": "055_private_projects.sql",
+      "passed": true
+    },
+    {
+      "name": "057_site_status_control.sql",
       "passed": true
     },
     {
