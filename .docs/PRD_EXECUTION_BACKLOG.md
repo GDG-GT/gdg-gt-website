@@ -13,13 +13,18 @@ do not perform authentication or verification. No external integration is enable
 
 ## Feature implementation still required
 
-1. Forms: internal event/team/campaign form-reference contracts, comprehensive retention
-   and operational-hold workflows, safe Super Admin permanent-deletion controls,
+Additional requests on 2026-10-21 are implemented locally: community directory
+(`/admin/members`) CSV import/export and notification Mark all read → Dismiss all.
+See `MEMBER_TRANSFER_OPERATIONS.md` for scope, limits and real test evidence.
+
+1. Forms: internal event/team/campaign form-reference contracts, safe Super Admin permanent-deletion controls,
    remaining library/builder/runtime edge cases and complete accessibility tests.
    Background exports, response-history review and published-definition inspection
    are now implemented locally; reviewed receipts and explicit recipient delivery
    are also implemented (`FORM_DELIVERY_OPERATIONS.md`). Their hosted acceptance
-   remains open.
+   remains open. Response/draft expiry and independent form/response holds are
+   implemented locally (`FORM_PRIVACY_OPERATIONS.md`); cross-system privacy and
+   full retention/operational acceptance remain open.
 2. General private media library: folders, files, tags/star/usage, scanned uploads,
    metadata, scoped private previews, safe move/bulk/delete, size/quota checks,
    explicit approved public image delivery and gallery publication/event/lightbox

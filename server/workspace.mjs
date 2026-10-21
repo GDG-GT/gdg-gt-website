@@ -68,7 +68,7 @@ export async function workspaceRoutes(
     notification
       ? notification[1]
         ? ["PATCH", "DELETE"]
-        : ["GET", "PATCH"]
+        : ["GET", "PATCH", "DELETE"]
       : ["GET"],
   );
   const session = await requireSession(request, store, config);
@@ -119,18 +119,21 @@ export async function workspaceRoutes(
       return true;
     }
     const id = notification[1] ? parse(uuid, notification[1]) : null;
+    queryValues(url.searchParams, z.object({}).strict());
     if (request.method === "PATCH")
       await jsonBody(
         request,
         z.object({ is_read: z.literal(true) }).strict(),
         1024,
       );
+    if (request.method === "DELETE" && !id)
+      await jsonBody(request, z.object({ readOnly: z.literal(true) }).strict(), 1024);
     checked(
       await db.rpc("mutate_own_notification", {
         p_actor: session.user.id,
         p_id: id,
         p_action:
-          request.method === "DELETE" ? "delete" : id ? "read" : "read_all",
+          request.method === "DELETE" ? id ? "delete" : "dismiss_all_read" : id ? "read" : "read_all",
         p_request_id: requestId,
       }),
     );

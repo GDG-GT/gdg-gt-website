@@ -1,0 +1,94 @@
+{
+  "generatedAt": "2026-10-21T17:32:27.610Z",
+  "environment": "loopback fictional accounts, teams and community records only",
+  "tests": [
+    {
+      "name": "anonymous member export denied",
+      "passed": true
+    },
+    {
+      "name": "import rejects caller-defined actor authority",
+      "passed": true
+    },
+    {
+      "name": "import cannot target another team's directory",
+      "passed": true
+    },
+    {
+      "name": "duplicate emails in direct API input are rejected",
+      "passed": true
+    },
+    {
+      "name": "preview identifies two new records and one unavailable/existing email without overwriting it",
+      "passed": true
+    },
+    {
+      "name": "duplicate preview does not disclose another team's member details",
+      "passed": true
+    },
+    {
+      "name": "stored import review retains hashes and scope, not raw source contacts or review token",
+      "passed": true
+    },
+    {
+      "name": "bulk import requires the current password",
+      "passed": true
+    },
+    {
+      "name": "bulk import requires the displayed eligible-count confirmation",
+      "passed": true
+    },
+    {
+      "name": "review proof cannot authorize edited file contents",
+      "passed": true
+    },
+    {
+      "name": "another sign-in of the same account cannot consume this import review",
+      "passed": true
+    },
+    {
+      "name": "reviewed import atomically commits its eligible new records",
+      "passed": true
+    },
+    {
+      "name": "retrying a committed import returns the same IDs without duplicates",
+      "passed": true
+    },
+    {
+      "name": "committed records preserve parsed interests and the explicitly selected team scope",
+      "passed": true
+    },
+    {
+      "name": "import creates no login accounts, privileges or public profiles",
+      "passed": true
+    },
+    {
+      "name": "default export includes all matching own-scope records but omits private fields",
+      "passed": true
+    },
+    {
+      "name": "CSV export neutralizes spreadsheet formula prefixes",
+      "passed": true
+    },
+    {
+      "name": "explicit private export preserves authorized contacts while excluding another team's records",
+      "passed": true
+    },
+    {
+      "name": "CSV export applies directory category filters on the server",
+      "passed": true
+    },
+    {
+      "name": "export rejects forged scope filters",
+      "passed": true
+    },
+    {
+      "name": "revoking team read access immediately prevents new private exports",
+      "passed": true
+    },
+    {
+      "name": "transfer audits contain counts and hashes, not source contacts or academic values",
+      "passed": true
+    }
+  ]
+}

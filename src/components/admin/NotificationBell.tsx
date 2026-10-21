@@ -29,6 +29,7 @@ export function NotificationInbox({
   const [data, setData] = useState<Inbox>(),
     [page, setPage] = useState(1),
     [busy, setBusy] = useState(false),
+    [notice, setNotice] = useState(""),
     [error, setError] = useState("");
   const load = useCallback(async () => {
     setBusy(true);
@@ -36,6 +37,10 @@ export function NotificationInbox({
       const result = await api<Inbox>(
         `/admin/notifications?page=${page}&pageSize=20`,
       );
+      if (page > 1 && result.total <= (page - 1) * 20) {
+        setPage(Math.max(1, Math.ceil(result.total / 20)));
+        return;
+      }
       setData(result);
       onChange?.(result.unreadCount);
       setError("");
@@ -54,14 +59,20 @@ export function NotificationInbox({
     return () =>
       window.removeEventListener("gdg:notifications-updated", refresh);
   }, [load]);
-  const mutate = async (path: string, method = "PATCH") => {
+  const mutate = async (path: string, method = "PATCH", dismissAll = false) => {
     setBusy(true);
+    setNotice("");
     try {
       await api(path, {
         method,
         protected: true,
         ...(method === "PATCH" ? { body: { is_read: true } } : {}),
+        ...(dismissAll ? { body: { readOnly: true } } : {}),
       });
+      if (dismissAll) {
+        setNotice("Read notifications dismissed. New unread notifications are kept.");
+        if (page !== 1) { setPage(1); return; }
+      }
       await load();
     } catch (e) {
       setError((e as Error).message);
@@ -74,12 +85,13 @@ export function NotificationInbox({
         <p>{data ? `${data.unreadCount} unread` : "Loading notifications…"}</p>
         <Button
           variant="secondary"
-          disabled={busy || !data?.unreadCount}
-          onClick={() => mutate("/admin/notifications")}
+          disabled={busy || !data?.total}
+          onClick={() => data?.unreadCount ? mutate("/admin/notifications") : mutate("/admin/notifications", "DELETE", true)}
         >
-          Mark all read
+          {data?.unreadCount ? "Mark all read" : "Dismiss all"}
         </Button>
       </div>
+      {notice && <p role="status">{notice}</p>}
       {error && (
         <p className="gt-form-error" role="alert">
           {error} <button onClick={() => void load()}>Try again</button>

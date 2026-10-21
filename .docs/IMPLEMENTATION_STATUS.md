@@ -5,6 +5,29 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Directory transfers, inbox clearing and Forms retention — 2026-10-21
+
+- Tejas clarified import/export means `/admin/members`. Added CSV template/file/
+  paste validation, preview, fixed destination, five-minute session-bound review,
+  current-password/typed-confirmation commit, atomic create-only batches and
+  existing-email skipping. No account/grant/public-profile side effects. Filtered
+  exports span all matching pages, honor scope, omit private fields by default
+  and escape spreadsheet formulas. See `MEMBER_TRANSFER_OPERATIONS.md`.
+- Mark all read switches to Dismiss all after unread count becomes zero. Bulk
+  dismissal affects only own read rows; a concurrently arrived unread item stays.
+  Native browser verified real CSV download and in-app import discard/stay paths;
+  screenshots include desktop/mobile review. Operator inbox was not cleared.
+- Added independent form/response holds, Admin-only release, original-version
+  response deadlines, bounded retention erasure and configurable incomplete-draft
+  expiry with truthful runtime deadlines. Password/revision/confirmation controls
+  and privacy review UI are implemented. See `FORM_PRIVACY_OPERATIONS.md`.
+- **69 migrations**, full canonical SQL and both 100-client tests pass. **283 unit
+  tests**, typecheck, clean UI lint and build pass; full lint remains zero errors
+  and 276 warnings. **22 actual member-transfer**, **7 bulk-inbox** and **20 Forms
+  privacy** checks pass. Remaining build/dependency/hosted acceptance warnings are
+  not waived. Continuing with permanent form deletion and internal references,
+  then general media/gallery/campaigns and the other original backlog items.
+
 ### Reviewed Forms mail — 2026-10-21
 
 - Receipts and explicit chapter notifications now have a password-confirmed,

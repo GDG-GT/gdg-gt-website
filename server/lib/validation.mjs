@@ -99,6 +99,8 @@ export function databaseResult({ data, error }) {
     FORM_EXPORT_CHANGED: [409, "A response was edited, redacted or deleted. Create a new export of the current data."],
     BLOG_RETAINED: [409, "Archive or restore editorial records; permanent deletion is disabled."],
     MEMBER_RETAINED: [409, "Archive community records; permanent deletion is disabled."],
+    MEMBER_IMPORT_REVIEW: [409, "This import review expired, was used or no longer matches. Review the same file and destination again."],
+    MEMBER_EXPORT_RANGE: [409, "Narrow your member filters to at most 1,000 records and a smaller export."],
     MEMBER_LINK_REVIEW: [409, "Review and remove active project memberships and archive linked public profiles before merging this source."],
     MEMBER_REVIEW_EXPIRED: [409, "This merge review expired or was used. Generate a new review."],
     PROJECT_RETAINED: [409, "Archive or restore projects; permanent deletion is disabled."],

@@ -508,10 +508,13 @@ export async function formRoutes(
           p_upload_hash: body.uploadToken ? tokenHash(body.uploadToken) : null,
         }),
       );
+      const lifetime = checked(await db.from("form_response_drafts").select("expires_at")
+        .eq("form_id", form.id).eq("resume_token_hash", tokenHash(resume)).single());
       sendJson(
         response,
         200,
-        { resumeToken: resume, expiresInDays: 7 },
+        { resumeToken: resume, expiresAt: lifetime.expires_at,
+          expiresInDays: Math.max(0, Math.ceil((new Date(lifetime.expires_at).getTime() - Date.now()) / 86400000)) },
         requestId,
       );
       return true;

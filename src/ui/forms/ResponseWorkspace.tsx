@@ -13,6 +13,8 @@ import type { FormResponse } from "./store";
 import ResponseFileLinks from "./ResponseFileLinks";
 import ResponseExports from "./ResponseExports";
 import ResponseHistory from "./ResponseHistory";
+import PrivacyPanel from "./PrivacyPanel";
+import { useNavigationSafety } from "@/hooks/useDraftGuard";
 type Result = {
   items: FormResponse[];
   total: number;
@@ -40,6 +42,7 @@ type View = {
   columns: string[];
 };
 export default function ResponseWorkspace() {
+  const navigationSafety = useNavigationSafety();
   const { formId } = useParams(),
     server = useServerForm(formId),
     form = server.form,
@@ -59,7 +62,19 @@ export default function ResponseWorkspace() {
     [action, setAction] = useState<"delete" | "redact">(),
     [confirm, setConfirm] = useState(""),
     [busy, setBusy] = useState(false);
+  const [privacyTarget, setPrivacyTarget] = useState<{ responseId?: string }>(),
+    [privacyState, setPrivacyState] = useState({ dirty: false, busy: false }),
+    [formHeld, setFormHeld] = useState<boolean>(), [holdError, setHoldError] = useState(false);
   const query = params.toString();
+  const mayReviewPrivacy = !!form?.actions?.includes("delete");
+  useEffect(() => {
+    if (!formId || !mayReviewPrivacy) { setFormHeld(undefined); return; }
+    const controller = new AbortController(); setFormHeld(undefined); setHoldError(false);
+    api<{ held: boolean }>(`/admin/forms/${formId}/privacy`, { signal: controller.signal }).then((p) => {
+      if (!controller.signal.aborted) setFormHeld(p.held);
+    }).catch(() => { if (!controller.signal.aborted) setHoldError(true); });
+    return () => controller.abort();
+  }, [formId, mayReviewPrivacy, refresh]);
   useEffect(() => {
     if (!formId) return;
     const controller = new AbortController();
@@ -171,6 +186,7 @@ export default function ResponseWorkspace() {
           <Button variant="secondary" onClick={() => setRefresh((v) => v + 1)}>
             Refresh
           </Button>
+          {mayReviewPrivacy && <Button variant="secondary" onClick={() => setPrivacyTarget({})}>Retention &amp; holds</Button>}
         </div>
       </header>
       {(error || server.error) && (
@@ -588,13 +604,15 @@ export default function ResponseWorkspace() {
               </div>
               <p className="gt-helper">
                 Reference {selected.id}.{" "}
-                {form.settings.hold
+                {formHeld || selected.status === "held"
                   ? "Operational hold: destructive actions are disabled."
-                  : `Retention: ${form.settings.retentionDays || 365} days.`}
+                  : `Original version retention: ${form.versions.find((v) => v.version === selected.version)?.settings.retentionDays || 365} days.`}
               </p>
+              {mayReviewPrivacy && <Button variant="secondary" onClick={() => setPrivacyTarget({ responseId: selected.id })}>Review response retention &amp; hold</Button>}
+              {holdError && <p role="alert">Hold status could not be checked. Refresh before a destructive action.</p>}
               <ResponseHistory key={selected.id} formId={form.id} responseId={selected.id}
                 canSensitive={!!form.actions?.includes("view_sensitive_responses")} />
-              {form.actions?.includes("delete") && !form.settings.hold && (
+              {form.actions?.includes("delete") && formHeld === false && selected.status !== "held" && (
                 <div className="gt-actions">
                   <Button
                     variant="secondary"
@@ -660,6 +678,18 @@ export default function ResponseWorkspace() {
               )}
             </>
           )}
+        </DialogContent>
+      </Dialog>
+      <Dialog open={!!privacyTarget} onOpenChange={(open) => {
+        if (open || privacyState.busy) return;
+        const close = () => { setPrivacyTarget(undefined); setPrivacyState({ dirty: false, busy: false }); };
+        if (privacyState.dirty) navigationSafety?.request(close); else close();
+      }}>
+        <DialogContent className="gt-notification-dialog">
+          <DialogTitle>{privacyTarget?.responseId ? "Response retention & hold" : "Form retention & holds"}</DialogTitle>
+          <DialogDescription>Review current deadlines and operational holds separately from the form definition.</DialogDescription>
+          <PrivacyPanel formId={form.id} responseId={privacyTarget?.responseId} onStateChange={setPrivacyState}
+            onSaved={() => setRefresh((v) => v + 1)} />
         </DialogContent>
       </Dialog>
     </div>

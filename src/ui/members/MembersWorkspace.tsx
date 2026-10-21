@@ -22,6 +22,7 @@ import {
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import MemberFields from "./MemberFields";
 import MergeReview from "./MergeReview";
+import MemberTransfers from "./MemberTransfers";
 import {
   memberFields,
   type Member,
@@ -386,6 +387,9 @@ export default function MembersWorkspace() {
           </Button>
         </div>
       </header>
+      <MemberTransfers cap={cap} disabled={busy || !!mode} onImported={() => setTick((v) => v + 1)}
+        filters={{ q, state, ...(category ? { category } : {}), ...(year ? { year } : {}),
+          ...(active ? { active: active === "true" } : {}), ...(core ? { core: core === "true" } : {}) }} />
       {notice && <p role="status">{notice}</p>}
       {error && (
         <p className="gt-form-error" role="alert">

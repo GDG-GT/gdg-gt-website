@@ -405,7 +405,7 @@ export default function PublicForm() {
             visible.some((f) => f.id === id),
           ),
         );
-      const result = await api<{ resumeToken: string; expiresInDays: number }>(
+      const result = await api<{ resumeToken: string; expiresInDays: number; expiresAt: string }>(
         `/forms/${slug}/drafts`,
         {
           method: "POST",
@@ -431,7 +431,7 @@ export default function PublicForm() {
         window.location.origin + window.location.pathname + "#" + fragment,
       );
       setFeedback(
-        `Draft saved securely for ${result.expiresInDays} days. Keep your private resume link.`,
+        `Draft saved securely until ${new Date(result.expiresAt).toLocaleString()}. Keep your private resume link.`,
       );
     } catch (e) {
       setError((e as Error).message);

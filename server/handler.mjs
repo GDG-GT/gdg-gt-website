@@ -22,6 +22,7 @@ import { formResponseRoutes } from "./form-responses.mjs";
 import { formExportRoutes } from "./form-exports.mjs";
 import { formHistoryRoutes } from "./form-history.mjs";
 import { formDeliveryRoutes } from "./form-delivery.mjs";
+import { formPrivacyRoutes } from "./form-privacy.mjs";
 import { formAccessRoutes } from "./form-access.mjs";
 import { uploadRoutes } from "./uploads.mjs";
 import { jobRoutes } from "./jobs.mjs";
@@ -44,6 +45,7 @@ import { linktreeRoutes } from "./linktree.mjs";
 import { projectRoutes } from "./projects.mjs";
 import { siteStatusRoutes } from "./site-status.mjs";
 import { memberRoutes } from "./members.mjs";
+import { memberTransferRoutes } from "./member-transfer.mjs";
 import { blogRoutes } from "./blog.mjs";
 import { blogUploadRoutes } from "./blog-uploads.mjs";
 
@@ -80,6 +82,7 @@ export function applicationHandler({ store, config, db, log } = {}) {
             config,
             requestId,
           })) ||
+          (await memberTransferRoutes(request, response, { db, store, config, requestId })) ||
           (await memberRoutes(request, response, {
             db,
             store,
@@ -245,6 +248,9 @@ export function applicationHandler({ store, config, db, log } = {}) {
           })
         )
           return;
+        if (
+          await formPrivacyRoutes(request, response, { db, store, config, requestId })
+        ) return;
         if (
           await formDeliveryRoutes(request, response, { db, store, config, requestId })
         )

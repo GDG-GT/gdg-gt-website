@@ -1,0 +1,34 @@
+{
+  "generatedAt": "2026-10-21T17:32:28.115Z",
+  "environment": "dedicated loopback fictional inboxes",
+  "tests": [
+    {
+      "name": "anonymous bulk dismissal denied",
+      "passed": true
+    },
+    {
+      "name": "bulk dismissal rejects recipient substitution and unread deletion",
+      "passed": true
+    },
+    {
+      "name": "mark all read reaches zero unread for the signed-in account",
+      "passed": true
+    },
+    {
+      "name": "dismiss all removes read items and preserves a concurrently arrived unread item",
+      "passed": true
+    },
+    {
+      "name": "bulk dismissal leaves another account's notifications unchanged",
+      "passed": true
+    },
+    {
+      "name": "read-all then dismiss-all leaves a genuine empty inbox",
+      "passed": true
+    },
+    {
+      "name": "repeating dismissal of an empty inbox is safe",
+      "passed": true
+    }
+  ]
+}

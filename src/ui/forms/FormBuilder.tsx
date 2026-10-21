@@ -1117,7 +1117,10 @@ export default function FormBuilder() {
       </Dialog>
       <Dialog open={deliveryOpen} onOpenChange={(open) => {
         if (deliveryState.busy) return;
-        if (!open && deliveryState.dirty && !window.confirm("Discard the unsaved delivery review?")) return;
+        if (!open && deliveryState.dirty) {
+          navigationSafety?.request(() => { setDeliveryOpen(false); setDeliveryState({ dirty: false, busy: false }); });
+          return;
+        }
         setDeliveryOpen(open);
         if (!open) setDeliveryState({ dirty: false, busy: false });
       }}>
