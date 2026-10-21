@@ -51,6 +51,8 @@ import { memberTransferRoutes } from "./member-transfer.mjs";
 import { blogRoutes } from "./blog.mjs";
 import { blogUploadRoutes } from "./blog-uploads.mjs";
 import { mediaRoutes } from "./media.mjs";
+import { mediaUploadRoutes } from "./media-uploads.mjs";
+import { mediaPublicationRoutes } from "./media-publication.mjs";
 
 export function applicationHandler({ store, config, db, log } = {}) {
   const auth = createAuthHandler({ store, config, log });
@@ -72,6 +74,8 @@ export function applicationHandler({ store, config, db, log } = {}) {
         checkOrigin(request, config.origin, {
           mutation: !["GET", "HEAD"].includes(request.method),
         });
+        if (await mediaPublicationRoutes(request, response, { db, store, config, requestId })) return;
+        if (await mediaUploadRoutes(request, response, { db, store, config, requestId })) return;
         if (
           (await blogUploadRoutes(request, response, {
             db,

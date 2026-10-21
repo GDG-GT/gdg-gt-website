@@ -51,7 +51,7 @@ const sections = [
     title: "Organize media",
     href: "/admin/media",
     description:
-      "Use the media library for files and folders. Gallery uploads are public-facing: use approved photos with clear captions and appropriate consent. Never treat a preview upload as a security-scanned production file.",
+      "Choose a scope in the media library, then upload privately. Wait for a clean scan before preview or download. Gallery images need meaningful alt text and a separate password-confirmed public approval; original files remain private. Revoke publication before changing approved metadata, moving or archiving. Archived files remain restorable for 30 days unless cleanup has begun. Resolve retained usage references before removal.",
   },
   {
     title: "Track chapter finances",

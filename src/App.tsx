@@ -83,14 +83,21 @@ const adminRoutes = [
     "communications",
     lazy(() => import("@/ui/communications/CommunicationsWorkspace")),
   ],
-  ["media", lazy(() => import("@/pages/admin/AdminMedia"))],
+  ["media", lazy(() => import("@/ui/media/MediaWorkspace"))],
   ["guide", lazy(() => import("@/ui/WorkspaceGuide"))],
   ["linktree", lazy(() => import("@/pages/admin/AdminLinktree"))],
   ["site-status", lazy(() => import("@/pages/admin/AdminSiteStatus"))],
   ["teams", lazy(() => import("@/ui/teams/TeamWorkspace"))],
   ["channels", lazy(() => import("@/ui/channels/ChannelWorkspace"))],
   ["whiteboard", lazy(() => import("@/ui/whiteboards/WhiteboardWorkspace"))],
-  ["gallery", lazy(() => import("@/pages/admin/AdminGallery"))],
+  [
+    "gallery",
+    lazy(() =>
+      import("@/ui/media/MediaWorkspace").then((module) => ({
+        default: module.GalleryWorkspace,
+      })),
+    ),
+  ],
   ["finances", lazy(() => import("@/pages/admin/AdminFinances"))],
   ["audit-log", lazy(() => import("@/ui/AuditWorkspace"))],
   ["team/:teamId", lazy(() => import("@/ui/teams/TeamWorkspace"))],
@@ -183,7 +190,9 @@ function RoutedApplication() {
               <Route path="/admin/invite/:token" element={<AcceptInvite />} />
               <Route
                 path="/admin/blog-comments"
-                element={<Navigate to="/admin/blog?collection=comments" replace />}
+                element={
+                  <Navigate to="/admin/blog?collection=comments" replace />
+                }
               />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>

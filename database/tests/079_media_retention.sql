@@ -1,0 +1,32 @@
+BEGIN;
+INSERT INTO public.admin_users(id,email,password_hash,role,is_active) VALUES('f7900000-0000-4000-8000-000000000001','media-retention@example.test','test-only','admin',true);
+INSERT INTO public.admin_sessions(id,admin_user_id,token_hash) VALUES('f7900000-0000-4000-8000-000000000002','f7900000-0000-4000-8000-000000000001',repeat('1',64));
+DO $$ DECLARE actor uuid:='f7900000-0000-4000-8000-000000000001';sid uuid:='f7900000-0000-4000-8000-000000000002';t uuid;v jsonb;u uuid;f uuid;p uuid;d uuid;claimed integer;BEGIN
+ IF has_function_privilege('anon','public.claim_media_upload_cleanup(integer)','EXECUTE') OR has_table_privilege('authenticated','public.media_scan_objects','SELECT') THEN RAISE EXCEPTION 'Browser cleanup grant';END IF;
+ INSERT INTO public.admin_teams(name,slug,created_by) VALUES('Fictional retention scope','fictional-retention-scope',actor) RETURNING id INTO t;
+ v:=public.mutate_media_upload(actor,sid,NULL,'create',jsonb_build_object('teamId',t,'folderId',NULL,'filename','fictional-retention.txt','mime','text/plain','bytes',100,'sha256',repeat('a',64),'key','quarantine/'||gen_random_uuid()||'/'||gen_random_uuid()),repeat('1',64),repeat('2',64),gen_random_uuid());u:=(v->>'uploadId')::uuid;f:=(v->>'fileId')::uuid;
+ IF public.finish_media_upload_cleanup(u) THEN RAISE EXCEPTION 'Live file cleanup ack accepted';END IF;
+ UPDATE public.upload_intents SET expires_at=now()-interval '25 hours' WHERE id=u;
+ INSERT INTO public.media_usage(file_id,usage_type,reference_id,reference_table) VALUES(f,'fixture',gen_random_uuid(),'fictional_fixture');
+ SELECT count(*) INTO claimed FROM public.claim_media_upload_cleanup(100) WHERE id=u;
+ IF claimed<>0 THEN RAISE EXCEPTION 'Referenced upload claimed for removal';END IF;
+ DELETE FROM public.media_usage WHERE file_id=f;
+ SELECT count(*) INTO claimed FROM public.claim_media_upload_cleanup(100) WHERE id=u;
+ IF claimed<>1 OR(SELECT cleanup_started_at IS NULL FROM public.media_files WHERE id=f) THEN RAISE EXCEPTION 'Expired orphan not claimed';END IF;
+ BEGIN UPDATE public.media_files SET deleted_at=NULL WHERE id=f;RAISE EXCEPTION 'Restore raced cleanup';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'MEDIA_CLEANUP_STARTED' THEN RAISE;END IF;END;
+ IF NOT public.finish_media_upload_cleanup(u) THEN RAISE EXCEPTION 'Cleanup acknowledgement failed';END IF;
+ IF(SELECT original_name<>'' OR file_path<>'' OR purged_at IS NULL OR file_size<>0 FROM public.media_files WHERE id=f) OR(SELECT filename<>'' OR purged_at IS NULL FROM public.upload_intents WHERE id=u) THEN RAISE EXCEPTION 'Filename or byte reservation survived removal';END IF;
+ IF EXISTS(SELECT 1 FROM public.idempotency_keys WHERE scope LIKE 'media.%' AND strpos(result::text,f::text)>0) THEN RAISE EXCEPTION 'Removed filename retained in retry response';END IF;
+ -- Only a current approved publication protects derivatives from cleanup.
+ INSERT INTO public.media_files(name,original_name,file_type,mime_type,file_size,file_path,uploaded_by,team_id,scan_state,is_public) VALUES('Fixture','fixture.png','image','image/png',100,'clean/fixture',actor,t,'unverified',true) RETURNING id INTO f;
+ INSERT INTO public.media_publications(file_id,actor_id,session_id,source_revision,state) VALUES(f,actor,sid,1,'published') RETURNING id INTO p;
+ UPDATE public.media_files SET publication_id=p WHERE id=f;
+ INSERT INTO public.media_derivatives(publication_id,lease_token,object_key,width_key,state,created_at) VALUES(p,gen_random_uuid(),'public/'||f||'/'||p||'/'||gen_random_uuid()||'/960.webp',960,'approved',now()-interval '25 hours') RETURNING id INTO d;
+ v:=public.claim_media_object_cleanup(100);
+ IF EXISTS(SELECT 1 FROM jsonb_array_elements(v) item WHERE item->>'id'=d::text) OR public.finish_media_object_cleanup(d,'derivative') THEN RAISE EXCEPTION 'Live approved image cleanup';END IF;
+ UPDATE public.media_files SET is_public=false,publication_id=NULL WHERE id=f;UPDATE public.media_publications SET state='revoked' WHERE id=p;
+ v:=public.claim_media_object_cleanup(100);
+ IF NOT EXISTS(SELECT 1 FROM jsonb_array_elements(v) item WHERE item->>'id'=d::text) THEN RAISE EXCEPTION 'Revoked derivative not eligible';END IF;
+ IF NOT public.finish_media_object_cleanup(d,'derivative') THEN RAISE EXCEPTION 'Derivative acknowledgement failed';END IF;
+END $$;
+ROLLBACK;

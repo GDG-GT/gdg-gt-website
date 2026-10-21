@@ -47,6 +47,8 @@ export function objectStorage(env = process.env) {
     requestChecksumCalculation: "WHEN_REQUIRED",
     responseChecksumValidation: "WHEN_REQUIRED",
   });
+  const send = (command) =>
+    client.send(command, { abortSignal: AbortSignal.timeout(120000) });
   return {
     close: () => client.destroy(),
     putUrl: (bucket, key, mime, bytes, sha256) =>
@@ -78,10 +80,28 @@ export function objectStorage(env = process.env) {
         }),
         { expiresIn: 60 },
       ),
+    previewUrl: (bucket, key, mime) => {
+      if (!["image/png", "image/jpeg", "image/webp"].includes(mime))
+        throw new ApiError(
+          400,
+          "UNSAFE_FILE",
+          "Only clean raster images can be previewed inline.",
+        );
+      return getSignedUrl(
+        client,
+        new GetObjectCommand({
+          Bucket: bucket,
+          Key: key,
+          ResponseContentDisposition: "inline",
+          ResponseContentType: mime,
+        }),
+        { expiresIn: 60 },
+      );
+    },
     head: (bucket, key) =>
-      client.send(new HeadObjectCommand({ Bucket: bucket, Key: key })),
+      send(new HeadObjectCommand({ Bucket: bucket, Key: key })),
     async bytes(bucket, key, maxBytes) {
-      const value = await client.send(
+      const value = await send(
         new GetObjectCommand({ Bucket: bucket, Key: key }),
       );
       if (!value.ContentLength || value.ContentLength > maxBytes) {
@@ -109,7 +129,7 @@ export function objectStorage(env = process.env) {
       return Buffer.concat(chunks, length);
     },
     put: (bucket, key, bytes, mime) =>
-      client.send(
+      send(
         new PutObjectCommand({
           Bucket: bucket,
           Key: key,
@@ -119,6 +139,6 @@ export function objectStorage(env = process.env) {
         }),
       ),
     delete: (bucket, key) =>
-      client.send(new DeleteObjectCommand({ Bucket: bucket, Key: key })),
+      send(new DeleteObjectCommand({ Bucket: bucket, Key: key })),
   };
 }

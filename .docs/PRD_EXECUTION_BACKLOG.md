@@ -29,10 +29,11 @@ See `MEMBER_TRANSFER_OPERATIONS.md` for scope, limits and real test evidence.
    full retention/operational acceptance remain open.
    Internal event/team/campaign references, event/team controls and safe public
    event CTAs are implemented locally (`FORM_INTEGRATION_OPERATIONS.md`).
-2. General private media library: folders, files, tags/star/usage, scanned uploads,
-   metadata, scoped private previews, safe move/bulk/delete, size/quota checks,
-   explicit approved public image delivery and gallery publication/event/lightbox
-   behavior. Existing legacy screens are not proof of secure server parity.
+2. Media/gallery full supported-device, manual accessibility, hosted scanner/
+   storage/CORS/header/retention/load and visual acceptance. The local folder/
+   file/tag/star/usage/upload/metadata/private-preview/bulk/quota/publication/
+   cleanup and public gallery workflows are implemented and tested; legacy media
+   routes have been replaced. See `MEDIA_OPERATIONS.md` for boundaries/evidence.
 3. Newsletter: subscribers, templates, campaign preview, immutable authorized
    recipient snapshot, confirmation, scheduling/cancellation, test sends,
    idempotent bounded delivery, callbacks, hard bounce/complaint suppression and
@@ -86,7 +87,7 @@ See `MEMBER_TRANSFER_OPERATIONS.md` for scope, limits and real test evidence.
 
 ## Next implementation checkpoint
 
-Complete the remaining Forms privacy and reference controls, then the
-general media/gallery migration and campaigns. Keep unrelated historical source
+Complete newsletter/campaigns and remaining scoped mail/attachments, Push and
+cross-system privacy/operations. Keep unrelated historical source
 files and user edits intact. Track implementation separately from verified
 acceptance; do not label the complete PRD finished until its launch gates pass.

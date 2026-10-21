@@ -2,6 +2,7 @@ import { ApiError, allowMethod, sendJson } from "./lib/http.mjs";
 import { tokenHash, equalHashes } from "./lib/security.mjs";
 import { databaseResult as checked } from "./lib/validation.mjs";
 import { cleanupUploads } from "./upload-cleanup.mjs";
+import { cleanupMedia } from "./media-cleanup.mjs";
 import { runDelivery } from "./delivery.mjs";
 export function authorizeJob(request, env = process.env) {
   if (
@@ -73,10 +74,13 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
       const drafts = checked(
           await db.rpc("expire_form_drafts", { p_limit: 1000 }),
         ),
-        responses = checked(await db.rpc("expire_form_responses", { p_limit: 500 })),
-        files = await cleanupUploads({ db, limit: 50 });
-      counts = { drafts, ...responses, ...files };
-      if (files.retried)
+        responses = checked(
+          await db.rpc("expire_form_responses", { p_limit: 500 }),
+        ),
+        files = await cleanupUploads({ db, limit: 50 }),
+        media = await cleanupMedia({ db, limit: 50 });
+      counts = { drafts, ...responses, ...files, media };
+      if (files.retried || media.retried)
         throw new ApiError(
           503,
           "CLEANUP_RETRY",

@@ -5,6 +5,23 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Private media and gallery workflows — 2026-10-21
+
+- Replaced legacy media/gallery screens with scoped folder/file workflows,
+  direct private quarantine/scanning, metadata/SEO and bulk tags/star/move/
+  archive/restore. Gallery-only permissions are image-only; general Media CRUD
+  never grants publishing. Explicit password-confirmed approval creates bounded
+  responsive WebP derivatives; revoke immediately denies new asset requests.
+- Added private preview/download, usage guards, quotas, durable artifact tracking,
+  30-day recoverable archive and retryable physical cleanup/filename erasure.
+  Public gallery has event filtering, pagination, dimensions/srcset, caption/alt,
+  keyboard lightbox and allowed-only download controls.
+- **81 migrations**, canonical SQL/both concurrency tests, **314 unit tests**,
+  typecheck, changed-UI lint and build pass. Real media harness has **43 normal
+  checks / 44 with browser fixtures**, plus 12 folder and 40 Forms-upload checks.
+  Browser desktop/mobile/draft/keyboard verification is recorded. See
+  `MEDIA_OPERATIONS.md`; hosted/security/performance/visual acceptance stays open.
+
 ### Private media core — 2026-10-21 (in progress)
 
 - Added scoped inventory DTOs and current-session folder create/rename/move/

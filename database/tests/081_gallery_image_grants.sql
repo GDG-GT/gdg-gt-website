@@ -1,0 +1,21 @@
+BEGIN;
+INSERT INTO public.admin_users(id,email,password_hash,role,is_active) VALUES('f8100000-0000-4000-8000-000000000001','gallery-only@example.test','test-only','team_member',true);
+INSERT INTO public.admin_sessions(id,admin_user_id,token_hash) VALUES('f8100000-0000-4000-8000-000000000002','f8100000-0000-4000-8000-000000000001',repeat('1',64));
+DO $$ DECLARE actor uuid:='f8100000-0000-4000-8000-000000000001';sid uuid:='f8100000-0000-4000-8000-000000000002';t uuid;f uuid;v jsonb;doc jsonb;BEGIN
+ INSERT INTO public.admin_teams(name,slug,created_by) VALUES('Fictional gallery scope','fictional-gallery-only',actor) RETURNING id INTO t;
+ INSERT INTO public.team_memberships(team_id,admin_user_id,role) VALUES(t,actor,'member');
+ INSERT INTO public.team_page_access(team_id,page_path,can_access) VALUES(t,'/admin/gallery',true);
+ INSERT INTO public.team_permissions(team_id,resource_type,permission,can_read,can_create,can_update,can_delete) VALUES(t,'gallery','crud',true,true,true,true),(t,'gallery','publish',false,false,true,false);
+ IF public.can_operate_media_file(actor,t,'document','read') OR NOT public.can_operate_media_file(actor,t,'image','create') OR public.can_operate_media(actor,t,'read') THEN RAISE EXCEPTION 'Gallery broadened private media scope';END IF;
+ doc:=jsonb_build_object('teamId',t,'folderId',NULL,'filename','fixture.png','mime','image/png','bytes',100,'sha256',repeat('a',64),'key','quarantine/'||gen_random_uuid()||'/'||gen_random_uuid());
+ v:=public.mutate_media_upload(actor,sid,NULL,'create',doc,repeat('1',64),repeat('2',64),gen_random_uuid());f:=(v->>'fileId')::uuid;
+ INSERT INTO public.media_files(name,original_name,file_type,mime_type,file_size,file_path,uploaded_by,team_id) VALUES('Secret document','secret.txt','document','text/plain',100,'clean/private-secret',actor,t);
+ v:=public.read_media_workspace(actor,sid,jsonb_build_object('teamId',t,'view','gallery'),1,30);
+ IF(v->>'total')::integer<>1 OR v::text LIKE '%Secret document%' OR NOT(v->'teams'->0->>'canCreate')::boolean OR(v->'teams'->0->>'canManageFolders')::boolean THEN RAISE EXCEPTION 'Gallery inventory leaked nonimages or misrepresented capabilities';END IF;
+ BEGIN PERFORM public.mutate_media_upload(actor,sid,NULL,'create',doc||jsonb_build_object('mime','text/plain','filename','secret.txt'),repeat('3',64),repeat('2',64),gen_random_uuid());RAISE EXCEPTION 'Gallery uploaded private document';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ v:=public.mutate_media_files(actor,sid,'star',jsonb_build_array(jsonb_build_object('id',f,'revision',1)),'{"starred":true}',repeat('4',64),repeat('2',64),gen_random_uuid());
+ IF NOT(v->'items'->0->>'starred')::boolean THEN RAISE EXCEPTION 'Gallery image edit failed';END IF;
+ UPDATE public.team_page_access SET can_access=false WHERE team_id=t;
+ IF gdg_security.media_file_record(actor,f) IS NOT NULL THEN RAISE EXCEPTION 'Revoked gallery metadata readable';END IF;
+END $$;
+ROLLBACK;

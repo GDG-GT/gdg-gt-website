@@ -1,5 +1,16 @@
 # Media migration work in progress
 
+Update: the local media/gallery implementation now includes migrations 074–081,
+private direct uploads, metadata/SEO, tags/star/bulk movement/archive/restore,
+private previews/downloads, responsive explicit WebP publication/revocation,
+30-day trash retention and retryable object cleanup. Both legacy routes are
+replaced by `src/ui/media/MediaWorkspace.tsx`; public gallery uses approved
+derivatives, event filters, real dimensions, pagination and keyboard lightbox.
+Gallery-only grants allow images, never private documents/audio/video. Folder
+mutation still requires general Media permission because folders are shared.
+See `MEDIA_OPERATIONS.md` for the current contract and evidence. Historical
+implementation sequence below is retained as chronology, not a pending list.
+
 2026-10-21: migration 073 is applied locally and must not be rewritten. It adds
 team/revision/deletion/scan metadata, scoped safe inventory DTOs, current-session
 folder CRUD, name collision checks, cycle/depth protection and conservative usage

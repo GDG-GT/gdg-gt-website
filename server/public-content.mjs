@@ -266,32 +266,24 @@ export async function publicContentRoutes(
       z
         .object({
           event: uuid.optional(),
-          page: z.coerce.number().int().min(1).default(1),
+          page: z.coerce.number().int().min(1).max(10000).default(1),
         })
         .strict(),
     );
-    let query = db
-      .from("media_files")
-      .select("id,alt_text,description,width,height,event_id,created_at", {
-        count: "exact",
-      })
-      .eq("is_public", true)
-      .in("mime_type", ["image/png", "image/jpeg", "image/webp"])
-      .order("created_at", { ascending: false });
-    if (p.event) query = query.eq("event_id", p.event);
-    const result = await query.range((p.page - 1) * 30, p.page * 30 - 1);
-    checked(result);
+    const result = checked(await db.rpc("read_public_gallery", { p_event: p.event ?? null, p_page: p.page }));
     publicJson(
       request,
       response,
       {
-        items: result.data.map((row) => ({
+        items: result.items.map((row) => ({
           ...row,
           url: "/api/v1/media/public/" + row.id,
+          srcSet: [360, 960, 1920].map((width) => `/api/v1/media/public/${row.id}?width=${width} ${Math.min(width, row.width)}w`).filter((value, index, all) => all.findIndex((v) => v.split(" ").at(-1) === value.split(" ").at(-1)) === index).join(", "),
+          downloadUrl: row.allow_download ? `/api/v1/media/public/${row.id}?width=1920&download=true` : null,
         })),
         page: p.page,
         pageSize: 30,
-        total: result.count,
+        total: result.total,
       },
       requestId,
     );

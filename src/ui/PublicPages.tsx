@@ -58,6 +58,7 @@ import {
 } from "./primitives";
 import { chapterName, localPreviewEnabled } from "./preview-data";
 import { useInitialLoad } from "./useInitialLoad";
+import PublicGallery from "./media/PublicGallery";
 import type { PageCopy } from "../../shared/site-content";
 const HeroObjects = lazy(() => import("./HeroObjects"));
 
@@ -657,7 +658,11 @@ export function EventDetailPage() {
     [busy, setBusy] = useState(false),
     [feedback, setFeedback] = useState("");
   const [registrationDirty, setRegistrationDirty] = useState(false);
-  const [queueCandidate, setQueueCandidate] = useState<{ body: Record<string, unknown>; key: string }>(), [pendingReference, setPendingReference] = useState("");
+  const [queueCandidate, setQueueCandidate] = useState<{
+      body: Record<string, unknown>;
+      key: string;
+    }>(),
+    [pendingReference, setPendingReference] = useState("");
   useDraftGuard(registrationDirty && !submitted, {
     busy,
     label: "Event registration details",
@@ -789,24 +794,31 @@ export function EventDetailPage() {
             website: String(form.get("website") || ""),
           };
         const serialized = JSON.stringify(body);
-        setQueueCandidate(undefined); setPendingReference("");
+        setQueueCandidate(undefined);
+        setPendingReference("");
         if (registrationRequest.current?.body !== serialized)
           registrationRequest.current = {
             body: serialized,
             key: crypto.randomUUID(),
           };
-        try { await api(
-          "/events/" +
-            encodeURIComponent(event.slug || slug || "") +
-            "/registrations",
-          {
-            method: "POST",
-            body,
-            idempotencyKey: registrationRequest.current.key,
-          },
-        ); } catch (e) {
+        try {
+          await api(
+            "/events/" +
+              encodeURIComponent(event.slug || slug || "") +
+              "/registrations",
+            {
+              method: "POST",
+              body,
+              idempotencyKey: registrationRequest.current.key,
+            },
+          );
+        } catch (e) {
           const status = (e as { status?: number }).status;
-          if (status === undefined || status >= 500) setQueueCandidate({ body: { ...body, slug: event.slug || slug }, key: registrationRequest.current.key });
+          if (status === undefined || status >= 500)
+            setQueueCandidate({
+              body: { ...body, slug: event.slug || slug },
+              key: registrationRequest.current.key,
+            });
           throw e;
         }
         setSubmitted(true);
@@ -893,7 +905,21 @@ export function EventDetailPage() {
         <article className="gt-prose">
           <h2>About this event</h2>
           <p>{event.description.replace(/<[^>]*>/g, "")}</p>
-          {!!event.linked_forms?.length && <section aria-label="Event forms"><h3>Event forms</h3><div className="gt-inline-actions">{event.linked_forms.map((form) => <ActionLink key={form.href} to={form.href} arrow>{form.label}</ActionLink>)}</div><p className="gt-helper">Each form has its own access and verification requirements.</p></section>}
+          {!!event.linked_forms?.length && (
+            <section aria-label="Event forms">
+              <h3>Event forms</h3>
+              <div className="gt-inline-actions">
+                {event.linked_forms.map((form) => (
+                  <ActionLink key={form.href} to={form.href} arrow>
+                    {form.label}
+                  </ActionLink>
+                ))}
+              </div>
+              <p className="gt-helper">
+                Each form has its own access and verification requirements.
+              </p>
+            </section>
+          )}
           {event.what_youll_learn && (
             <>
               <h3>What you’ll learn</h3>
@@ -1002,7 +1028,10 @@ export function EventDetailPage() {
                 <form
                   onSubmit={register}
                   className="gt-form"
-                  onChange={() => { setRegistrationDirty(true); setQueueCandidate(undefined); }}
+                  onChange={() => {
+                    setRegistrationDirty(true);
+                    setQueueCandidate(undefined);
+                  }}
                 >
                   <label className="gt-honeypot" aria-hidden="true">
                     Leave this empty
@@ -1051,11 +1080,45 @@ export function EventDetailPage() {
                       {feedback}
                     </p>
                   )}
-                  {queueCandidate && !pendingReference && <div className="gt-form"><p className="gt-helper">You can save these details on this device for up to 48 hours and retry automatically when online. This does not reserve a place. Do not use this on a shared device.</p><Button type="button" variant="secondary" disabled={busy} onClick={async () => {
-                    setBusy(true); try { const reference = await savePendingSubmission("event", queueCandidate.body, queueCandidate.key); setPendingReference(reference); setRegistrationDirty(false); setQueueCandidate(undefined); }
-                    catch (e) { setFeedback((e as Error).message); } finally { setBusy(false); }
-                  }}>Save pending registration on this device</Button></div>}
-                  {pendingReference && <p role="status">Pending submission saved—not registered yet. <Link to="/offline">Review, retry or discard it</Link>.</p>}
+                  {queueCandidate && !pendingReference && (
+                    <div className="gt-form">
+                      <p className="gt-helper">
+                        You can save these details on this device for up to 48
+                        hours and retry automatically when online. This does not
+                        reserve a place. Do not use this on a shared device.
+                      </p>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        disabled={busy}
+                        onClick={async () => {
+                          setBusy(true);
+                          try {
+                            const reference = await savePendingSubmission(
+                              "event",
+                              queueCandidate.body,
+                              queueCandidate.key,
+                            );
+                            setPendingReference(reference);
+                            setRegistrationDirty(false);
+                            setQueueCandidate(undefined);
+                          } catch (e) {
+                            setFeedback((e as Error).message);
+                          } finally {
+                            setBusy(false);
+                          }
+                        }}
+                      >
+                        Save pending registration on this device
+                      </Button>
+                    </div>
+                  )}
+                  {pendingReference && (
+                    <p role="status">
+                      Pending submission saved—not registered yet.{" "}
+                      <Link to="/offline">Review, retry or discard it</Link>.
+                    </p>
+                  )}
                 </form>
               )}
             </>
@@ -1453,169 +1516,7 @@ export function SponsorsPage() {
 
 export function GalleryPage() {
   usePageTitle("Community in motion");
-  const [filter, setFilter] = useState("All moments"),
-    [selected, setSelected] = useState<number | null>(null);
-  const [publishedPhotos, setPublishedPhotos] = useState<
-    { src: string; category: string; caption: string }[]
-  >([]);
-  const [galleryLoading, setGalleryLoading] = useState(true);
-  useInitialLoad(async () => {
-    try {
-      const media = (
-        await api<{
-          items: {
-            url: string;
-            alt_text?: string;
-            description?: string;
-            id: string;
-          }[];
-        }>("/gallery")
-      ).items;
-      setPublishedPhotos(
-        media.map((photo) => ({
-          src: photo.url,
-          category: "Chapter photos",
-          caption:
-            photo.alt_text || photo.description || "Chapter community photo",
-        })),
-      );
-    } finally {
-      setGalleryLoading(false);
-    }
-  });
-  const photos = [
-    ...publishedPhotos,
-    ...(localPreviewEnabled
-      ? [
-          {
-            src: "/assets/event-workshop.jpg",
-            category: "Workshops",
-            caption: "Learning starts with a conversation.",
-          },
-          {
-            src: "/assets/event-hackathon.jpg",
-            category: "Hackathons",
-            caption: "Better ideas, built together.",
-          },
-          {
-            src: "/assets/event-community.jpg",
-            category: "Community",
-            caption: "Making room for new perspectives.",
-          },
-        ]
-      : []),
-  ];
-  const filtered = photos.filter(
-    (photo) => filter === "All moments" || photo.category === filter,
-  );
-  return (
-    <>
-      <PageHeader
-        title="Community in"
-        accent="motion."
-        description="Workshops, hackathons, demos, and the people behind them."
-      />
-      <section className="gt-container gt-section">
-        <div className="gt-filter-row">
-          {[
-            "All moments",
-            ...new Set(photos.map((photo) => photo.category)),
-          ].map((value) => (
-            <button
-              className={`gt-filter-pill ${filter === value ? "is-active" : ""}`}
-              aria-pressed={filter === value}
-              key={value}
-              onClick={() => setFilter(value)}
-            >
-              {value}
-            </button>
-          ))}
-        </div>
-        {galleryLoading ? (
-          <div
-            className="gt-skeleton gt-detail-skeleton"
-            role="status"
-            aria-label="Loading gallery"
-          />
-        ) : filtered.length ? (
-          <>
-            <div className="gt-gallery">
-              {filtered.map((photo) => (
-                <button
-                  className="gt-gallery-photo"
-                  key={photo.src}
-                  onClick={() => setSelected(photos.indexOf(photo))}
-                >
-                  <img
-                    src={photo.src}
-                    alt={photo.caption}
-                    width="1000"
-                    height="650"
-                    loading="lazy"
-                  />
-                  <span>
-                    <span>{photo.category}</span>
-                    <strong>{photo.caption}</strong>
-                    <span>
-                      View photo <ArrowUpRight size={17} />
-                    </span>
-                  </span>
-                </button>
-              ))}
-            </div>
-            {localPreviewEnabled && (
-              <p className="gt-data-note">
-                Illustrative development photos. Official chapter photography
-                will replace these before launch.
-              </p>
-            )}
-          </>
-        ) : (
-          <EmptyState title="More moments are on the way">
-            Chapter event photography will appear here once it is approved.
-          </EmptyState>
-        )}
-      </section>
-      <Dialog
-        open={selected !== null}
-        onOpenChange={(open) => {
-          if (!open) setSelected(null);
-        }}
-      >
-        <DialogContent className="gt-lightbox">
-          {selected !== null && photos[selected] && (
-            <>
-              <DialogTitle>{photos[selected].caption}</DialogTitle>
-              <DialogDescription>
-                {localPreviewEnabled ? "Local preview · " : ""}
-                {photos[selected].category}
-              </DialogDescription>
-              <img src={photos[selected].src} alt={photos[selected].caption} />
-              <div className="gt-lightbox-actions">
-                <Button
-                  variant="secondary"
-                  onClick={() =>
-                    setSelected((selected + photos.length - 1) % photos.length)
-                  }
-                >
-                  ← Previous
-                </Button>
-                <span>
-                  {selected + 1} / {photos.length}
-                </span>
-                <Button
-                  variant="secondary"
-                  onClick={() => setSelected((selected + 1) % photos.length)}
-                >
-                  Next →
-                </Button>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-    </>
-  );
+  return <PublicGallery />;
 }
 
 export function ContactPage() {

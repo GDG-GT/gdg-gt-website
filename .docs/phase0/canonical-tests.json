@@ -73,7 +73,15 @@
     "202610210070_form_identity_derivatives.sql",
     "202610210071_form_integrations.sql",
     "202610210072_form_permanent_deletion.sql",
-    "202610210073_private_media_core.sql"
+    "202610210073_private_media_core.sql",
+    "202610210074_private_media_mutations.sql",
+    "202610210075_private_media_uploads.sql",
+    "202610210076_media_metadata_scope_fix.sql",
+    "202610210077_media_publication.sql",
+    "202610210078_media_event_options.sql",
+    "202610210079_media_retention.sql",
+    "202610210080_media_catalog_metadata.sql",
+    "202610210081_gallery_image_grants.sql"
   ],
   "tests": [
     {
@@ -373,6 +381,38 @@
       "passed": true
     },
     {
+      "name": "202610210074_private_media_mutations.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210075_private_media_uploads.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210076_media_metadata_scope_fix.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210077_media_publication.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210078_media_event_options.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210079_media_retention.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210080_media_catalog_metadata.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210081_gallery_image_grants.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -574,6 +614,30 @@
     },
     {
       "name": "073_private_media_core.sql",
+      "passed": true
+    },
+    {
+      "name": "074_private_media_mutations.sql",
+      "passed": true
+    },
+    {
+      "name": "075_private_media_uploads.sql",
+      "passed": true
+    },
+    {
+      "name": "077_media_publication.sql",
+      "passed": true
+    },
+    {
+      "name": "079_media_retention.sql",
+      "passed": true
+    },
+    {
+      "name": "080_media_catalog_metadata.sql",
+      "passed": true
+    },
+    {
+      "name": "081_gallery_image_grants.sql",
       "passed": true
     },
     {

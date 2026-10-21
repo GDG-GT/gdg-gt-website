@@ -5,17 +5,19 @@ import { tokenHash } from "./lib/security.mjs";
 import { objectStorage } from "./lib/object-storage.mjs";
 import { scanBuffer } from "./lib/scanner.mjs";
 import { normalizeUpload } from "./lib/upload-content.mjs";
+import { normalizeMedia } from "./lib/media-content.mjs";
 import { ApiError } from "./lib/http.mjs";
 export async function runUploadWorker({
   env = process.env,
   db = serverDatabase(env),
   limit = 5,
+  media = false,
 } = {}) {
   const storage = objectStorage(env),
     jobs = checked(
       await db.rpc("claim_worker_jobs", {
         p_limit: limit,
-        p_kinds: ["upload_scan"],
+        p_kinds: [media ? "media_upload_scan" : "upload_scan"],
       }),
     ),
     result = {
@@ -69,12 +71,24 @@ export async function runUploadWorker({
             "MALWARE_DETECTED",
             "The uploaded file failed scanning.",
           );
-        const normalized = await normalizeUpload(
+        const normalized = await (media ? normalizeMedia : normalizeUpload)(
           bytes,
           record.filename,
           record.declared_mime,
+          env,
         );
-        cleanKey = "clean/" + record.id + "/" + randomUUID();
+        cleanKey = media
+          ? checked(
+              await db.rpc("reserve_media_scan_object", {
+                p_job: job.id,
+                p_lease: job.lease_token,
+              }),
+            )
+          : "clean/" + record.id + "/" + randomUUID();
+        if (!cleanKey) {
+          result.lostLease++;
+          continue;
+        }
         await storage.put(
           record.bucket,
           cleanKey,
@@ -82,15 +96,27 @@ export async function runUploadWorker({
           normalized.mime,
         );
         const committed = checked(
-          await db.rpc("finish_upload_scan", {
-            p_job: job.id,
-            p_lease: job.lease_token,
-            p_clean_key: cleanKey,
-            p_mime: normalized.mime,
-            p_bytes: normalized.bytes.length,
-            p_sha256: tokenHash(normalized.bytes),
-            p_reject: null,
-          }),
+          await db.rpc(
+            media ? "finish_media_upload_scan" : "finish_upload_scan",
+            {
+              p_job: job.id,
+              p_lease: job.lease_token,
+              p_clean_key: cleanKey,
+              p_mime: normalized.mime,
+              p_bytes: normalized.bytes.length,
+              p_sha256: tokenHash(normalized.bytes),
+              p_reject: null,
+              ...(media
+                ? {
+                    p_metadata: {
+                      width: normalized.width,
+                      height: normalized.height,
+                      duration: normalized.duration,
+                    },
+                  }
+                : {}),
+            },
+          ),
         );
         if (!committed) {
           await storage.delete(record.bucket, cleanKey);
@@ -102,15 +128,19 @@ export async function runUploadWorker({
         let committed;
         if (permanent)
           committed = checked(
-            await db.rpc("finish_upload_scan", {
-              p_job: job.id,
-              p_lease: job.lease_token,
-              p_clean_key: null,
-              p_mime: null,
-              p_bytes: null,
-              p_sha256: null,
-              p_reject: code,
-            }),
+            await db.rpc(
+              media ? "finish_media_upload_scan" : "finish_upload_scan",
+              {
+                p_job: job.id,
+                p_lease: job.lease_token,
+                p_clean_key: null,
+                p_mime: null,
+                p_bytes: null,
+                p_sha256: null,
+                p_reject: code,
+                ...(media ? { p_metadata: {} } : {}),
+              },
+            ),
           );
         else
           committed = checked(

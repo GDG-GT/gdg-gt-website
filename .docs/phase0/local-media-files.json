@@ -1,0 +1,178 @@
+{
+  "generatedAt": "2026-10-21T23:34:43.498Z",
+  "note": "Real loopback signed private S3 PUT, ClamAV, sharp, ffprobe and HTTP/scoped SQL using generated fictional files only. Only a generated rejected antivirus fixture is physically removed in a scoped cleanup test; other own files are recoverably archived and local synthetic image publication is revoked. No real user asset or external provider is used.",
+  "tests": [
+    {
+      "name": "anonymous media uploads denied",
+      "passed": true
+    },
+    {
+      "name": "upload request cannot publish a file or forge ownership",
+      "passed": true
+    },
+    {
+      "name": "image upload size limit is twenty MiB",
+      "passed": true
+    },
+    {
+      "name": "active SVG is rejected before a storage capability exists",
+      "passed": true
+    },
+    {
+      "name": "media intent retry creates exactly one file and object capability",
+      "passed": true
+    },
+    {
+      "name": "quarantine file cannot be downloaded",
+      "passed": true
+    },
+    {
+      "name": "completion requires the actual uploaded object",
+      "passed": true
+    },
+    {
+      "name": "real signed PUT, ClamAV and image normalization produce a private clean file",
+      "passed": true
+    },
+    {
+      "name": "private signed download expires after sixty seconds and strips image metadata",
+      "passed": true
+    },
+    {
+      "name": "authorized image preview is a bounded direct-storage inline raster capability",
+      "passed": true
+    },
+    {
+      "name": "foreign account cannot read inventory or authorize a clean file download",
+      "passed": true
+    },
+    {
+      "name": "media bucket remains private even after a clean scan",
+      "passed": true
+    },
+    {
+      "name": "inventory never exposes private storage paths",
+      "passed": true
+    },
+    {
+      "name": "star mutation retry is idempotent",
+      "passed": true
+    },
+    {
+      "name": "stale file revision cannot overwrite current metadata",
+      "passed": true
+    },
+    {
+      "name": "search filters preserve current star, tag and type metadata",
+      "passed": true
+    },
+    {
+      "name": "ordinary media CRUD never grants public gallery publishing",
+      "passed": true
+    },
+    {
+      "name": "publication requires the current account password",
+      "passed": true
+    },
+    {
+      "name": "publication requires the exact displayed confirmation",
+      "passed": true
+    },
+    {
+      "name": "publication approval freezes the file revision and replays idempotently",
+      "passed": true
+    },
+    {
+      "name": "unapproved derivative bytes cannot be served publicly",
+      "passed": true
+    },
+    {
+      "name": "real isolated worker creates and commits three bounded WebP derivatives",
+      "passed": true
+    },
+    {
+      "name": "public image endpoint emits only bounded checked WebP bytes with nosniff",
+      "passed": true
+    },
+    {
+      "name": "public gallery returns responsive approved metadata and no private object paths",
+      "passed": true
+    },
+    {
+      "name": "direct image download is denied without explicit permission",
+      "passed": true
+    },
+    {
+      "name": "public asset selectors reject arbitrary widths and storage keys",
+      "passed": true
+    },
+    {
+      "name": "published files cannot be archived until publication is revoked",
+      "passed": true
+    },
+    {
+      "name": "revoke immediately disables new public asset and gallery requests",
+      "passed": true
+    },
+    {
+      "name": "a referenced file cannot be archived",
+      "passed": true
+    },
+    {
+      "name": "archived file cannot authorize new download capabilities",
+      "passed": true
+    },
+    {
+      "name": "restore retains private state and requires new public approval",
+      "passed": true
+    },
+    {
+      "name": "real scanner rejects harmless standard antivirus test bytes and denies download",
+      "passed": true
+    },
+    {
+      "name": "detected content must match declared media MIME",
+      "passed": true
+    },
+    {
+      "name": "safe bounded ZIP archives pass isolated scanning",
+      "passed": true
+    },
+    {
+      "name": "archives never receive inline preview capabilities",
+      "passed": true
+    },
+    {
+      "name": "actual native ffprobe validates WAV streams and duration",
+      "passed": true
+    },
+    {
+      "name": "real scan and native container validation accept video/mp4",
+      "passed": true
+    },
+    {
+      "name": "real scan and native container validation accept video/webm",
+      "passed": true
+    },
+    {
+      "name": "real scan and native container validation accept audio/mpeg",
+      "passed": true
+    },
+    {
+      "name": "real scan and native container validation accept audio/ogg",
+      "passed": true
+    },
+    {
+      "name": "media scanner independently verifies actual object checksum",
+      "passed": true
+    },
+    {
+      "name": "real scoped cleanup deletes only the generated antivirus fixture and atomically erases its filename/reservation",
+      "passed": true
+    },
+    {
+      "name": "current page revocation prevents further signed downloads",
+      "passed": true
+    }
+  ]
+}

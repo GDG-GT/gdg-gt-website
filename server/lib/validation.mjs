@@ -92,6 +92,10 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    MEDIA_CLEANUP_STARTED: [409, "Physical cleanup has begun for this archived file. Its original bytes can no longer be restored."],
+    MEDIA_PUBLICATION_BLOCKED: [409, "Only a clean private raster image with meaningful alt text, an active scope and a published associated event can be approved for the gallery."],
+    MEDIA_QUOTA: [409, "Media limits reached: five active uploads, 25 files/500 MiB per account per day, or 1 GiB/1,000 retained files per scope. Wait or ask an administrator to review retention."],
+    MEDIA_IN_USE: [409, "Revoke publication and resolve usage references or active uploads before moving, editing or archiving this file."],
     MEDIA_FOLDER_CYCLE: [409, "Choose a destination outside this folder’s descendants and within eight levels."],
     MEDIA_FOLDER_NOT_EMPTY: [409, "Move or finish removing the folder’s files and child folders first."],
     FORM_DELETION_BLOCKED: [409, "Archive the form, resolve active references, and complete its retention/hold review before permanent deletion."],
