@@ -33,6 +33,7 @@ export async function localHttp() {
       anonymous = false,
       redirect = "follow",
       accessToken,
+      sessionBinding,
     } = {},
   ) {
     const response = await fetch(env.APP_ORIGIN + "/api/v1" + path, {
@@ -49,6 +50,7 @@ export async function localHttp() {
         ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
         ...(key ? { "Idempotency-Key": key } : {}),
         ...(accessToken ? { "X-Form-Access": accessToken } : {}),
+        ...(sessionBinding ? { "X-Session-Binding": sessionBinding } : {}),
       },
       ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
       signal: AbortSignal.timeout(15000),

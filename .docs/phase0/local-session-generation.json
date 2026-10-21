@@ -1,0 +1,29 @@
+{
+  "note": "Two isolated loopback sessions of the configured local account; only test-owned sessions revoked. No passwords, bindings, tokens or private response bodies retained.",
+  "tests": [
+    {
+      "name": "same-account sign-ins receive distinct non-bearer generation bindings",
+      "passed": true
+    },
+    {
+      "name": "same-session validation preserves the generation binding",
+      "passed": true
+    },
+    {
+      "name": "replacement cookie rejects a prior generation's private read",
+      "passed": true
+    },
+    {
+      "name": "even valid replacement-session CSRF cannot authorize stale logout intent",
+      "passed": true
+    },
+    {
+      "name": "rejected stale intent leaves the replacement session usable",
+      "passed": true
+    },
+    {
+      "name": "generation binding without a session cookie grants no access",
+      "passed": true
+    }
+  ]
+}

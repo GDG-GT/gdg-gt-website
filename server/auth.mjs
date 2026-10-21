@@ -39,6 +39,9 @@ const failure = () =>
     "AUTH_REQUIRED",
     "We couldn’t sign you in. Please try again.",
   );
+// A domain-separated digest identifies the cookie generation, never authorizes
+// requests and cannot be used as the opaque session cookie itself.
+const sessionBinding = (raw) => tokenHash("gdg:session-binding:v1:" + raw);
 function clearCookies(response, config) {
   appendCookie(
     response,
@@ -94,7 +97,17 @@ export async function requireSession(request, store, config) {
       "AUTH_REQUIRED",
       "Your session has ended. Please sign in again.",
     );
-  return session;
+  const binding = sessionBinding(raw);
+  if (
+    request.headers["x-session-binding"] !== undefined &&
+    !equalHashes(request.headers["x-session-binding"], binding)
+  )
+    throw new ApiError(
+      409,
+      "SESSION_CHANGED",
+      "Your sign-in changed. Reload the workspace before continuing.",
+    );
+  return { ...session, sessionBinding: binding };
 }
 export async function requireCsrf(request, session, store) {
   const raw = request.headers["x-csrf-token"];
@@ -250,6 +263,7 @@ export function createAuthHandler({
                 created_at: account.created_at,
               },
               csrfToken: csrf,
+              sessionBinding: sessionBinding(raw),
             },
             requestId,
           );
@@ -296,7 +310,11 @@ export function createAuthHandler({
           return sendJson(
             response,
             200,
-            { changed: true, csrfToken: csrf },
+            {
+              changed: true,
+              csrfToken: csrf,
+              sessionBinding: sessionBinding(raw),
+            },
             requestId,
           );
         }
@@ -333,6 +351,7 @@ export function createAuthHandler({
               memberships: await store.memberships(session.user.id),
               permissionVersion: session.user.permission_version,
               csrfToken: csrf,
+              sessionBinding: session.sessionBinding,
             },
             requestId,
           );

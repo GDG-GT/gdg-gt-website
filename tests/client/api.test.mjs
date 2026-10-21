@@ -13,13 +13,22 @@ describe("browser API session transport", () => {
     const fetch = vi
       .fn()
       .mockResolvedValueOnce(
+        json({
+          data: { csrfToken: "stale-token", sessionBinding: "a".repeat(64) },
+        }),
+      )
+      .mockResolvedValueOnce(
         json({ error: { code: "CSRF_INVALID", message: "Refresh" } }, 403),
       )
-      .mockResolvedValueOnce(json({ data: { csrfToken: "fresh-token" } }))
+      .mockResolvedValueOnce(
+        json({
+          data: { csrfToken: "fresh-token", sessionBinding: "a".repeat(64) },
+        }),
+      )
       .mockResolvedValueOnce(json({ data: { saved: true } }));
     vi.stubGlobal("fetch", fetch);
-    const { api, acceptCsrf } = await import("../../src/lib/api.ts");
-    acceptCsrf("stale-token");
+    const { api } = await import("../../src/lib/api.ts");
+    await api("/auth/session");
     await expect(
       api("/admin/example", {
         method: "POST",
@@ -28,10 +37,10 @@ describe("browser API session transport", () => {
         idempotencyKey: "stable-test-request-key",
       }),
     ).resolves.toEqual({ saved: true });
-    expect(fetch).toHaveBeenCalledTimes(3);
-    expect(fetch.mock.calls[1][0]).toBe("/api/v1/auth/session");
-    expect(fetch.mock.calls[0][1].body).toBe(fetch.mock.calls[2][1].body);
-    expect(fetch.mock.calls[2][1].headers).toMatchObject({
+    expect(fetch).toHaveBeenCalledTimes(4);
+    expect(fetch.mock.calls[2][0]).toBe("/api/v1/auth/session");
+    expect(fetch.mock.calls[1][1].body).toBe(fetch.mock.calls[3][1].body);
+    expect(fetch.mock.calls[3][1].headers).toMatchObject({
       "X-CSRF-Token": "fresh-token",
       "Idempotency-Key": "stable-test-request-key",
     });
@@ -39,8 +48,13 @@ describe("browser API session transport", () => {
   it("never loops on repeated CSRF failures or retries business failures", async () => {
     const fetch = vi
       .fn()
+      .mockResolvedValueOnce(
+        json({ data: { csrfToken: "old", sessionBinding: "a".repeat(64) } }),
+      )
       .mockResolvedValueOnce(json({ error: { code: "CSRF_INVALID" } }, 403))
-      .mockResolvedValueOnce(json({ data: { csrfToken: "fresh" } }))
+      .mockResolvedValueOnce(
+        json({ data: { csrfToken: "fresh", sessionBinding: "a".repeat(64) } }),
+      )
       .mockResolvedValueOnce(
         json(
           { error: { code: "CSRF_INVALID", message: "Reload required" } },
@@ -48,12 +62,12 @@ describe("browser API session transport", () => {
         ),
       );
     vi.stubGlobal("fetch", fetch);
-    const { api, acceptCsrf } = await import("../../src/lib/api.ts");
-    acceptCsrf("old");
+    const { api } = await import("../../src/lib/api.ts");
+    await api("/auth/session");
     await expect(
       api("/admin/example", { method: "PATCH", body: {} }),
     ).rejects.toMatchObject({ code: "CSRF_INVALID" });
-    expect(fetch).toHaveBeenCalledTimes(3);
+    expect(fetch).toHaveBeenCalledTimes(4);
     fetch
       .mockReset()
       .mockResolvedValue(

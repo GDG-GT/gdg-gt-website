@@ -178,6 +178,50 @@ function fixture() {
   return { store, call, verify, log, login, cookie };
 }
 describe("auth API boundary", () => {
+  it("session generation bindings reject stale intent even with valid replacement CSRF", async () => {
+    const f = fixture(),
+      first = await f.login(),
+      second = await f.login();
+    const a = first.result.body.data.sessionBinding,
+      b = second.result.body.data.sessionBinding;
+    expect(a).toMatch(/^[a-f0-9]{64}$/);
+    expect(b).not.toBe(a);
+    const changed = await f.call("/api/v1/auth/session", "DELETE", undefined, {
+      cookie: second.cookie,
+      "x-csrf-token": second.csrf,
+      "x-session-binding": a,
+    });
+    expect(changed.statusCode).toBe(409);
+    expect(changed.body.error.code).toBe("SESSION_CHANGED");
+    const current = await f.call("/api/v1/auth/session", "GET", undefined, {
+      cookie: second.cookie,
+      "x-csrf-token": second.csrf,
+      "x-session-binding": b,
+    });
+    expect(current.statusCode).toBe(200);
+    expect(current.body.data.sessionBinding).toBe(b);
+  });
+  it("CSRF refresh preserves generation binding and malformed bindings cannot authenticate", async () => {
+    const f = fixture(),
+      signed = await f.login();
+    const binding = signed.result.body.data.sessionBinding;
+    const refreshed = await f.call("/api/v1/auth/session", "GET", undefined, {
+      cookie: signed.cookie,
+      "x-session-binding": binding,
+    });
+    expect(refreshed.statusCode).toBe(200);
+    expect(refreshed.body.data.sessionBinding).toBe(binding);
+    expect(refreshed.body.data.csrfToken).not.toBe(signed.csrf);
+    const malformed = await f.call("/api/v1/auth/session", "GET", undefined, {
+      cookie: signed.cookie,
+      "x-session-binding": "bad",
+    });
+    expect(malformed.statusCode).toBe(409);
+    const anonymous = await f.call("/api/v1/auth/session", "GET", undefined, {
+      "x-session-binding": binding,
+    });
+    expect(anonymous.statusCode).toBe(401);
+  });
   it("successful gate opens do not consume the five-failure allowance", async () => {
     const f = fixture();
     for (let n = 0; n < 8; n++)

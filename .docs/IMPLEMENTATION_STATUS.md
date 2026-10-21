@@ -5,6 +5,23 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Session-generation safety — 2026-10-21
+
+- Private requests now carry a non-authorizing in-memory generation digest, checked
+  centrally against the current cookie. Changed/malformed bindings return 409
+  before private access; stale writes cannot refresh CSRF into another session.
+  Session clear/login cancel pending private fetches and fence late decoded/error
+  results. Password rotation abandons other in-flight generation results. Private
+  identity/team state clears alongside editors; public Form-access failures do
+  not sign out an unrelated admin or supply new CSRF material.
+- **252 unit tests** and **six actual two-session HTTP checks** pass. Existing
+  browser login still loads, and actual UI create/confirmed recoverable archive
+  succeeds with the hardened transport. Fictional record retained inactive; only
+  test-owned HTTP sessions revoked. Proof: `real-session-bound-*.png`. No new
+  database migration, external provider, permission or private cache was added.
+  See `SESSION_TRANSPORT_SAFETY.md`. Already-accepted writes still rely on server
+  transaction fences; this is not a complete race/Realtime/hosted security pass.
+
 ### Private community members and local file protection — 2026-10-21
 
 - Replaced legacy direct-browser member management with scoped protected CRUD,

@@ -72,4 +72,5 @@ previously returned HTTP 200 on the loopback server; it now returns 403, includi
 the direct filesystem route. No response body was printed or retained by the
 probe, and there is no evidence of outside access. `test:local-dev-security`
 records 11 file-policy and app-health checks. This is not a production security
-certification; session-switch transport hardening remains the next focused review.
+certification. Session-switch transport hardening is separately recorded in
+`SESSION_TRANSPORT_SAFETY.md`; final system-wide security acceptance remains open.

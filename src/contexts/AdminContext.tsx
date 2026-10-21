@@ -80,6 +80,16 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
     [currentTeam, setCurrentTeam] = useState<AdminTeam | null>(null);
   const [isLoading, setIsLoading] = useState(true),
     [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    const clear = () => {
+      setCurrentAdmin(null);
+      setMergedProfile(null);
+      setUserTeams([]);
+      setCurrentTeam(null);
+    };
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
   const load = useCallback(async () => {
     const result = await api<Me>("/admin/me");
     setCurrentAdmin(result.user);
