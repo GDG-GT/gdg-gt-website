@@ -1,0 +1,9 @@
+{
+  "note": "Actual loopback read-only check of explicitly fictional fixture records. Only summary fields are present in lists; private fields remain in separately authorized details. No record values, credentials or tokens retained here.",
+  "tests": [
+    {
+      "name": "private detail-only member fields omitted from directory responses",
+      "passed": true
+    }
+  ]
+}

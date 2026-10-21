@@ -57,7 +57,10 @@
     "202610200054_linktree_team_publication_guard.sql",
     "202610200055_private_projects.sql",
     "202610200056_project_star_projection.sql",
-    "202610200057_site_status_control.sql"
+    "202610200057_site_status_control.sql",
+    "202610200058_community_members.sql",
+    "202610200059_member_list_minimization.sql",
+    "202610200060_member_review_session_cleanup.sql"
   ],
   "tests": [
     {
@@ -293,6 +296,18 @@
       "passed": true
     },
     {
+      "name": "202610200058_community_members.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200059_member_list_minimization.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200060_member_review_session_cleanup.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -434,6 +449,18 @@
     },
     {
       "name": "057_site_status_control.sql",
+      "passed": true
+    },
+    {
+      "name": "058_community_members.sql",
+      "passed": true
+    },
+    {
+      "name": "059_member_list_minimization.sql",
+      "passed": true
+    },
+    {
+      "name": "060_member_review_session_cleanup.sql",
       "passed": true
     },
     {

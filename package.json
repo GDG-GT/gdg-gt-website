@@ -53,6 +53,8 @@
     "test:local-linktree": "node scripts/test-local-linktree.mjs",
     "test:local-projects": "node scripts/test-local-projects.mjs",
     "test:local-site-status": "node scripts/test-local-site-status.mjs",
+    "test:local-members": "node scripts/test-local-members.mjs",
+    "test:local-dev-security": "node scripts/test-local-dev-security.mjs",
     "test:local-site-content": "node scripts/test-local-site-content.mjs",
     "test:local-form-branches": "node scripts/test-local-form-branches.mjs",
     "test:local-forms-suite": "node scripts/test-local-forms-suite.mjs",

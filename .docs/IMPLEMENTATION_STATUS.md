@@ -5,6 +5,31 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Private community members and local file protection — 2026-10-21
+
+- Replaced legacy direct-browser member management with scoped protected CRUD,
+  filtered/minimized lists, individual private details/activity, category/academic/
+  interests/core/active fields and recoverable archive/restore. Community people
+  remain separate from officer accounts. Current team page/action grants, current
+  session, revision, CSRF, idempotency and metadata-only auditing fence changes.
+- Public-profile synchronization is separately authorized and always draft-only.
+  Identity/deactivation/team archival revoke publication atomically; reactivation
+  never republishes. Merge is an administrator-reviewed, same-scope retained alias,
+  with session-bound expiring proof, two revisions/references and current password.
+  Current project/profile links require prior review. Canonical fields and private
+  histories are not destructively combined. Explicit unmerge restores inactive.
+- **60 migrations**, full SQL/capacity regressions and **238 unit tests** pass.
+  **45 actual HTTP checks** plus a minimized-list check are recorded in phase0.
+  Browser verification covers actual saving, conflict/input retention, merge and
+  unmerge, Stay/discard, mobile fit and native scrolling. Fictional fixtures are
+  recoverably archived. See `MEMBERS_OPERATIONS.md` and `real-members-*.png`.
+- Closed confirmed loopback Vite file exposure of ignored local credentials;
+  private documentation, server/database/infrastructure and secret-file patterns
+  now deny browser serving. **11 HTTP checks** verify denial and functioning app/
+  modules/assets/health. Probe retained no file contents; no outside access is
+  evidenced. Full security certification is not claimed. Session-switch transport
+  review is next, followed by remaining media/editorial/campaign/Forms/PWA work.
+
 ### Site availability and maintenance controls — 2026-10-20
 
 - Replaced the legacy status manager with password/typed-confirmed protected

@@ -1,0 +1,185 @@
+{
+  "note": "Actual isolated loopback HTTP checks with fictional community people, accounts/team, public profiles and private project history. Merge review is session-bound and sources/history retained. Exact fixtures recoverably archived; no real person, officer access, external provider or email used. Rate limits and job history were not reset.",
+  "tests": [
+    {
+      "name": "anonymous community inventory denied",
+      "passed": true
+    },
+    {
+      "name": "Blog Editor cannot read community records",
+      "passed": true
+    },
+    {
+      "name": "community creation rejects account linkage injection",
+      "passed": true
+    },
+    {
+      "name": "community create retries return the same record",
+      "passed": true
+    },
+    {
+      "name": "community emails are normalized server-side",
+      "passed": true
+    },
+    {
+      "name": "changed create payload conflicts with a reused key",
+      "passed": true
+    },
+    {
+      "name": "case-insensitive duplicate email creation is blocked",
+      "passed": true
+    },
+    {
+      "name": "outsiders cannot infer private community details or counts",
+      "passed": true
+    },
+    {
+      "name": "community filters and statistics honor the permitted scope",
+      "passed": true
+    },
+    {
+      "name": "duplicate community filter keys rejected",
+      "passed": true
+    },
+    {
+      "name": "core-community flag does not implicitly create a public profile",
+      "passed": true
+    },
+    {
+      "name": "creating community people does not create officer accounts",
+      "passed": true
+    },
+    {
+      "name": "member edit authority does not imply public-profile authority",
+      "passed": true
+    },
+    {
+      "name": "profile synchronization replays without duplicating a profile",
+      "passed": true
+    },
+    {
+      "name": "profile synchronization creates only a linked unpublished draft",
+      "passed": true
+    },
+    {
+      "name": "profile permission revocation also fences synchronization replays",
+      "passed": true
+    },
+    {
+      "name": "profile publication still needs its separate action grant",
+      "passed": true
+    },
+    {
+      "name": "approved public profile omits private contact and academic data",
+      "passed": true
+    },
+    {
+      "name": "private phone-only updates do not unpublish unchanged public identity",
+      "passed": true
+    },
+    {
+      "name": "stale member updates cannot overwrite a newer revision",
+      "passed": true
+    },
+    {
+      "name": "community deactivation atomically unpublishes linked profiles",
+      "passed": true
+    },
+    {
+      "name": "an inactive community member cannot be republished through content APIs",
+      "passed": true
+    },
+    {
+      "name": "reactivating a community record does not republish a profile",
+      "passed": true
+    },
+    {
+      "name": "profile revision fences independent public-profile edits",
+      "passed": true
+    },
+    {
+      "name": "ordinary team accounts cannot review identity merges",
+      "passed": true
+    },
+    {
+      "name": "cross-scope identity merging is rejected",
+      "passed": true
+    },
+    {
+      "name": "current linked public profiles must be reviewed before merge",
+      "passed": true
+    },
+    {
+      "name": "project relationship counts do not cross project-read scope",
+      "passed": true
+    },
+    {
+      "name": "active project roles must be reviewed before merging a person",
+      "passed": true
+    },
+    {
+      "name": "merge review retries preserve the session-bound opaque proof",
+      "passed": true
+    },
+    {
+      "name": "merge confirmation requires the current password",
+      "passed": true
+    },
+    {
+      "name": "both exact member references are required",
+      "passed": true
+    },
+    {
+      "name": "a merge proof cannot be used by another session of the same administrator",
+      "passed": true
+    },
+    {
+      "name": "retained merges are idempotent",
+      "passed": true
+    },
+    {
+      "name": "merge retains source fields and keeps canonical data unchanged",
+      "passed": true
+    },
+    {
+      "name": "merged records require an explicit unmerge rather than restore",
+      "passed": true
+    },
+    {
+      "name": "unmerge recovers an independent inactive record without publication",
+      "passed": true
+    },
+    {
+      "name": "identity review does not rewrite retained project membership history",
+      "passed": true
+    },
+    {
+      "name": "community archive appears only in scoped retained inventory",
+      "passed": true
+    },
+    {
+      "name": "restoring a member leaves the person inactive",
+      "passed": true
+    },
+    {
+      "name": "team archival revokes community access and unpublishes linked people",
+      "passed": true
+    },
+    {
+      "name": "team restoration never republishes member profiles",
+      "passed": true
+    },
+    {
+      "name": "revoked member update authority is enforced immediately",
+      "passed": true
+    },
+    {
+      "name": "team removal revokes private history and filtered totals",
+      "passed": true
+    },
+    {
+      "name": "DELETE supports only password-confirmed recoverable archive",
+      "passed": true
+    }
+  ]
+}

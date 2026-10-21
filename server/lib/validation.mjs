@@ -92,6 +92,9 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    MEMBER_RETAINED: [409, "Archive community records; permanent deletion is disabled."],
+    MEMBER_LINK_REVIEW: [409, "Review and remove active project memberships and archive linked public profiles before merging this source."],
+    MEMBER_REVIEW_EXPIRED: [409, "This merge review expired or was used. Generate a new review."],
     PROJECT_RETAINED: [409, "Archive or restore projects; permanent deletion is disabled."],
     PROJECT_MEMBER_LIMIT: [409, "A project supports up to 100 active participants."],
     LINKTREE_RETAINED: [409, "Archive or restore this profile/link; permanent deletion is disabled."],
@@ -153,6 +156,8 @@ export function databaseResult({ data, error }) {
       "A file is not ready or does not belong to this response.",
     ],
   });
+  if (["40P01", "40001"].includes(error.code))
+    throw new ApiError(409, "CONFLICT", "A concurrent change interrupted this operation. Reload before retrying.");
   const name =
     error.code === "23505"
       ? "DUPLICATE"

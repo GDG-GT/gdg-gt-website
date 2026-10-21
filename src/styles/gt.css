@@ -57,6 +57,9 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
 }
+/* Headings are focus anchors for announcements, not interactive Tab stops. */
+.gt-admin-page :is(h1,h2,h3)[tabindex="-1"]:focus { outline: none; }
+.gt-members-workspace { min-width: 0; }.gt-members-workspace > .gt-panel { padding: 24px; margin-block: 24px; }.gt-members-workspace .gt-plain-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }.gt-member-check { display: flex; align-items: center; gap: 10px; min-height: 44px; margin-block: 12px; }.gt-members-workspace h2,.gt-members-workspace h3 { font-weight: 650; font-size: 1.2rem; margin-block: 16px; }.gt-members-workspace p { margin-block: 16px; line-height: 1.65; overflow-wrap: anywhere; }.gt-members-workspace .gt-button-row { margin-block: 18px; }.gt-members-workspace details { margin-block: 20px; }.gt-members-workspace dl > div { display: grid; grid-template-columns: minmax(110px,1fr) 2fr; gap: 16px; padding-block: 10px; border-bottom: 1px solid var(--line); }.gt-members-workspace dd,.gt-members-workspace .gt-field small { overflow-wrap: anywhere; }.gt-members-workspace .gt-table-scroll { margin-block: 16px; }.gt-members-workspace .gt-search { flex: 1 1 240px; }.gt-members-workspace .gt-panel-heading { flex-wrap: wrap; gap: 12px; }@media(max-width:767px){.gt-members-workspace > .gt-panel { padding: 18px; }.gt-members-workspace dl > div { grid-template-columns: 1fr; gap: 6px; }}
 .gt-site-is-maintenance .gt-nav-wrap { top: 80px; }
 .gt-maintenance-content { padding-block: 150px 36px; max-width: 920px; }
 .gt-maintenance-content h1 { font-size: clamp(2rem, 5vw, 3.6rem); font-weight: 750; max-width: 740px; margin: 16px 0 28px; }

@@ -1,0 +1,60 @@
+{
+  "note": "Loopback development-file policy; no response contents retained.",
+  "tests": [
+    {
+      "path": "/.docs/local-auth.local",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "path": "/@fs/Users/tejas/Desktop/gdg-gt-website/.docs/local-auth.local",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "path": "/.env.server.local",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "path": "/server/handler.mjs",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "path": "/database/migrations/202610200058_community_members.sql",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "path": "/infra/supabase/config.toml",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/src/main.tsx",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/shared/members.mjs",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/assets/hero-campus.webp",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/api/v1/health",
+      "status": 200,
+      "passed": true
+    }
+  ]
+}

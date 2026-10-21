@@ -9,6 +9,22 @@ export default defineConfig(({ mode }) => ({
     host: "127.0.0.1",
     port: 8080,
     strictPort: true,
+    fs: {
+      strict: true,
+      // These files belong to local/server operations, never the browser.
+      // Keep Vite's default secret exclusions when extending this list.
+      deny: [
+        ".env",
+        ".env.*",
+        "*.{crt,pem,key,local}",
+        "**/.git/**",
+        "**/.docs/**",
+        "**/server/**",
+        "**/database/**",
+        "**/infra/**",
+        "**/supabase/**",
+      ],
+    },
     proxy: {
       "/api/v1": { target: "http://127.0.0.1:8081", changeOrigin: false },
     },
