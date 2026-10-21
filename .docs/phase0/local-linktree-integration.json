@@ -1,0 +1,154 @@
+{
+  "note": "Actual dedicated loopback HTTP checks with fictional isolated accounts/team/profile/links. No provider iframe, external site, email or real visitor data was loaded. Rate limits and jobs were not reset. Profile/team/accounts recoverably archived and username/history preserved.",
+  "profileId": "407e30b4-6534-4917-9084-ed1336b7e259",
+  "tests": [
+    {
+      "name": "anonymous callers cannot read the Linktree manager",
+      "passed": true
+    },
+    {
+      "name": "Blog Editor cannot access Linktree management",
+      "passed": true
+    },
+    {
+      "name": "browser cannot forge publication state",
+      "passed": true
+    },
+    {
+      "name": "profile creation retry is idempotent",
+      "passed": true
+    },
+    {
+      "name": "draft profile is not available publicly",
+      "passed": true
+    },
+    {
+      "name": "outsider cannot read a private profile",
+      "passed": true
+    },
+    {
+      "name": "unauthorized profile counts reveal no team records",
+      "passed": true
+    },
+    {
+      "name": "stale profile edits cannot overwrite a newer revision",
+      "passed": true
+    },
+    {
+      "name": "page and CRUD grants do not imply publication authority",
+      "passed": true
+    },
+    {
+      "name": "public activation requires the current password",
+      "passed": true
+    },
+    {
+      "name": "public profile returns plain text without private ownership fields",
+      "passed": true
+    },
+    {
+      "name": "a draft link stays private even on an active profile",
+      "passed": true
+    },
+    {
+      "name": "hidden public click counts are absent from the public value",
+      "passed": true
+    },
+    {
+      "name": "single-link endpoint authorizes through its actual parent",
+      "passed": true
+    },
+    {
+      "name": "repeated clicks from one risk/target are bounded by the real shared rate window",
+      "passed": true
+    },
+    {
+      "name": "public analytics never accepts arbitrary counts or visitor metadata",
+      "passed": true
+    },
+    {
+      "name": "daily aggregate counts agree without invalidating editor revisions",
+      "passed": true
+    },
+    {
+      "name": "analytics is scoped to current profile authority",
+      "passed": true
+    },
+    {
+      "name": "stored analytics contains daily aggregates and no raw visitor metadata",
+      "passed": true
+    },
+    {
+      "name": "live link edits require typed/password confirmation",
+      "passed": true
+    },
+    {
+      "name": "explicit public click-count preference is honored",
+      "passed": true
+    },
+    {
+      "name": "only canonical approved provider embed URLs are serialized",
+      "passed": true
+    },
+    {
+      "name": "arbitrary iframe destinations are rejected at the write boundary",
+      "passed": true
+    },
+    {
+      "name": "confirmed link reordering is atomic and visible publicly",
+      "passed": true
+    },
+    {
+      "name": "archived links disappear from the public projection",
+      "passed": true
+    },
+    {
+      "name": "restoring a link does not silently reactivate it",
+      "passed": true
+    },
+    {
+      "name": "browser-review fixture is active and contains only explicit fictional links",
+      "passed": true
+    },
+    {
+      "name": "independent-session update delivered during browser review",
+      "passed": true
+    },
+    {
+      "name": "team archival automatically unpublishes its Linktree and fences its revision",
+      "passed": true
+    },
+    {
+      "name": "inactive-team members lose private Linktree access",
+      "passed": true
+    },
+    {
+      "name": "team restoration does not silently republish a profile",
+      "passed": true
+    },
+    {
+      "name": "username rename activates only the new URL",
+      "passed": true
+    },
+    {
+      "name": "a former username cannot be taken over by a different profile",
+      "passed": true
+    },
+    {
+      "name": "inactive and unknown public profiles have the same branded-not-found API contract",
+      "passed": true
+    },
+    {
+      "name": "restoring a profile leaves it inactive",
+      "passed": true
+    },
+    {
+      "name": "membership removal revokes details and counts immediately",
+      "passed": true
+    },
+    {
+      "name": "unsupported permanent deletion is not available through the API",
+      "passed": true
+    }
+  ]
+}

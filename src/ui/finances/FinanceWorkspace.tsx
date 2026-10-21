@@ -420,7 +420,7 @@ export default function FinanceWorkspace() {
                 </p>
                 {list.items.length ? (
                   <div className="gt-table-wrap">
-                    <table className="gt-finance-table">
+                    <table className="gt-data-table gt-finance-table">
                       <caption className="sr-only">Finance requests</caption>
                       <thead>
                         <tr>
@@ -551,7 +551,7 @@ export default function FinanceWorkspace() {
           </p>
           {budgets?.items.length ? (
             <div className="gt-table-wrap">
-              <table>
+              <table className="gt-data-table">
                 <caption className="sr-only">
                   Budget allocations and exact utilization
                 </caption>
@@ -653,7 +653,7 @@ export default function FinanceWorkspace() {
             <section className="gt-panel">
               <h3>Completed activity by month</h3>
               {report.months.length ? (
-                <table>
+                <table className="gt-data-table">
                   <thead>
                     <tr>
                       <th>Month</th>
@@ -678,7 +678,7 @@ export default function FinanceWorkspace() {
             <section className="gt-panel">
               <h3>Completed totals by category</h3>
               {report.categories.length ? (
-                <table>
+                <table className="gt-data-table">
                   <thead>
                     <tr>
                       <th>Category</th>

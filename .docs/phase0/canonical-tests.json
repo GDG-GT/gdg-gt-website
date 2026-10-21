@@ -52,7 +52,9 @@
     "202610200049_channel_reconnect_cursor.sql",
     "202610200050_finance_ledger.sql",
     "202610200051_finance_attachments.sql",
-    "202610200052_finance_inactive_budget_access.sql"
+    "202610200052_finance_inactive_budget_access.sql",
+    "202610200053_linktree_workflows.sql",
+    "202610200054_linktree_team_publication_guard.sql"
   ],
   "tests": [
     {
@@ -268,6 +270,14 @@
       "passed": true
     },
     {
+      "name": "202610200053_linktree_workflows.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200054_linktree_team_publication_guard.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -393,6 +403,14 @@
     },
     {
       "name": "052_finance_inactive_budgets_cleanup.sql",
+      "passed": true
+    },
+    {
+      "name": "053_linktree_workflows.sql",
+      "passed": true
+    },
+    {
+      "name": "054_linktree_team_publication_guard.sql",
       "passed": true
     },
     {

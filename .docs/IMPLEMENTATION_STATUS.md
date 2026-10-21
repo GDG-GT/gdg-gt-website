@@ -5,6 +5,40 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Scoped Linktree management and public link pages — 2026-10-20
+
+- Replaced the legacy browser-table Linktree screens with protected APIs and a
+  scoped profile/link editor. New profiles and links are private drafts. Current
+  team membership plus explicit CRUD/page grants are required; publication has a
+  separate grant. Live changes, activation, deactivation, archive and restore
+  require typed confirmation and a current password. Aggregate revisions,
+  idempotency, immutable audit records and reserved former usernames prevent
+  stale overwrites, duplicate actions and abandoned-URL takeover.
+- Active public profiles expose only active, ordered links from active teams.
+  Team archival unpublishes profiles and fences revisions; restoration does not
+  republish them. Unknown/inactive profiles share the branded 404. Public DTOs
+  exclude ownership, scope, private counters and archived content. URL validation
+  rejects unsafe protocols, credentials, private token parameters and local URLs.
+- Only canonical Google Forms and privacy-enhanced YouTube embeds are allowed.
+  They load only after explicit visitor consent; other destinations are native
+  external links. Native first-party form/event links remain on the chapter site.
+  Embedded Google Forms warn before abandoning potentially entered answers.
+- Rate-limited click/view tracking accepts only a target, not arbitrary counter
+  values. Analytics retain daily UTC aggregate counts without raw IP, user agent,
+  referrer or visitor identifiers. Counts are approximate, not unique visitors.
+- Verification: 54 canonical migrations and all SQL/concurrency regressions,
+  **210 unit tests**, TypeScript, `lint:ui` and production build pass. Actual local
+  HTTP evidence contains **37 checks** in `phase0/local-linktree-integration.json`.
+  Browser checks cover draft profile/link creation, unsaved-text preservation
+  under an independent revision update, disabled stale save, desktop/mobile
+  layouts, provider opt-in with zero pre-consent iframes and branded inactive 404.
+  Proofs: `ui-review/real-linktree-*.png`. Fictional profiles/teams/accounts are
+  recoverably archived; the browser-created draft was never published. Temporary
+  viewport overrides were reset. No external provider page or iframe was loaded.
+- Remaining acceptance: actual approved provider rendering, hosted CSP,
+  exhaustive accessibility and multibrowser/load testing. This is a subsystem
+  checkpoint, not complete-PRD or launch certification. See `LINKTREE_OPERATIONS.md`.
+
 ### Shared unsaved-work navigation protection — 2026-10-20
 
 - Added a data-router-backed navigation boundary for ordinary links, browser
@@ -183,7 +217,7 @@ incremental implementation tracker, not a completion or launch claim.
 
 This completes this implementation milestone, **not the complete PRD**. Remaining
 work includes remaining private attachments/media workflows, private editorial
-workflows, newsletter campaigns/scoped mail, member-management gaps, Linktree,
+workflows, newsletter campaigns/scoped mail, member-management gaps,
 remaining Forms export/receipt/retention contracts, remaining navigation-guard
 integration and acceptance, PWA/offline/push, dependency/strictness/performance remediation, CI,
 and comprehensive accessibility/security/multibrowser acceptance. Existing UI

@@ -92,6 +92,8 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    LINKTREE_RETAINED: [409, "Archive or restore this profile/link; permanent deletion is disabled."],
+    LINKTREE_LIMIT: [409, "A profile supports up to 100 current links. Archive an unused link first."],
     BUDGET_UNAVAILABLE: [409, "Choose an active budget in this request's scope and date range."],
     BUDGET_EXCEEDED: [409, "This change exceeds the budget or conflicts with committed request dates."],
     BUDGET_IN_USE: [409, "Resolve pending or reserved requests before closing this budget."],
