@@ -6269,6 +6269,55 @@ img {
   padding: 1rem 0;
   border-bottom: 1px solid var(--blog-rule);
 }
+.gt-export-jobs {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.gt-export-jobs > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--blog-rule, #d5d3d2);
+  overflow-wrap: anywhere;
+}
+.gt-export-jobs > li > div {
+  min-width: 0;
+  max-width: 100%;
+}
+.gt-export-jobs .gt-inline-confirm {
+  flex-basis: 100%;
+}
+.gt-export-jobs p {
+  margin-block: 0.35rem;
+}
+.gt-response-history,
+.gt-history-section {
+  padding-block: 1rem;
+  border-top: 1px solid #d5d3d2;
+}
+.gt-response-history h3,
+.gt-form-version-history h3,
+.gt-form-version-history h4 {
+  font-size: 1rem;
+  font-weight: 650;
+  margin-block: 0.8rem 0.4rem;
+}
+.gt-history-field {
+  padding-block: 0.8rem;
+  border-bottom: 1px solid #dedcda;
+}
+.gt-form-version-history pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.8rem;
+}
+.gt-form-version-history small {
+  overflow-wrap: anywhere;
+}
 .gt-blog-thread p,
 .gt-blog-comment-copy {
   white-space: pre-wrap;

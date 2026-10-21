@@ -92,6 +92,9 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    FORM_EXPORT_QUOTA: [429, "Up to three exports may run at once and twenty may be created per day. Wait or cancel an unused export."],
+    FORM_EXPORT_RANGE: [409, "Choose at most 20,000 responses. Exports above 10,000 also need both start and end date filters."],
+    FORM_EXPORT_CHANGED: [409, "A response was edited, redacted or deleted. Create a new export of the current data."],
     BLOG_RETAINED: [409, "Archive or restore editorial records; permanent deletion is disabled."],
     MEMBER_RETAINED: [409, "Archive community records; permanent deletion is disabled."],
     MEMBER_LINK_REVIEW: [409, "Review and remove active project memberships and archive linked public profiles before merging this source."],

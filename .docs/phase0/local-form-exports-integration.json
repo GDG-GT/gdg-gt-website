@@ -1,0 +1,118 @@
+{
+  "generatedAt": "2026-10-21T09:04:09.557Z",
+  "environment": "loopback development only",
+  "tests": [
+    {
+      "name": "anonymous export inventory denied",
+      "passed": true
+    },
+    {
+      "name": "export rejects forged requester and unknown fields",
+      "passed": true
+    },
+    {
+      "name": "export rejects reversed date filters",
+      "passed": true
+    },
+    {
+      "name": "background export queues 1001 actual stored responses without an API file body",
+      "passed": true
+    },
+    {
+      "name": "export queue retry returns the same job",
+      "passed": true
+    },
+    {
+      "name": "export idempotency key rejects a different format",
+      "passed": true
+    },
+    {
+      "name": "job serialization excludes credentials, filters and answer values",
+      "passed": true
+    },
+    {
+      "name": "pending export cannot download",
+      "passed": true
+    },
+    {
+      "name": "CSV worker stores a ready private artifact",
+      "passed": true
+    },
+    {
+      "name": "CSV download is authorized for sixty seconds",
+      "passed": true
+    },
+    {
+      "name": "CSV direct private download matches committed byte size",
+      "passed": true
+    },
+    {
+      "name": "large CSV preserves version labels, escapes formulas and omits sensitive answers",
+      "passed": true
+    },
+    {
+      "name": "XLSX worker stores a ready private artifact",
+      "passed": true
+    },
+    {
+      "name": "XLSX download is authorized for sixty seconds",
+      "passed": true
+    },
+    {
+      "name": "XLSX direct private download matches committed byte size",
+      "passed": true
+    },
+    {
+      "name": "XLSX cells are literal and sensitive answers remain absent",
+      "passed": true
+    },
+    {
+      "name": "JSON worker stores a ready private artifact",
+      "passed": true
+    },
+    {
+      "name": "JSON download is authorized for sixty seconds",
+      "passed": true
+    },
+    {
+      "name": "JSON direct private download matches committed byte size",
+      "passed": true
+    },
+    {
+      "name": "explicit sensitive JSON export includes only authorized selected answers",
+      "passed": true
+    },
+    {
+      "name": "same-account different session cannot inspect an old export",
+      "passed": true
+    },
+    {
+      "name": "same-account different session cannot authorize an old export download",
+      "passed": true
+    },
+    {
+      "name": "export cancellation commits without deleting source responses",
+      "passed": true
+    },
+    {
+      "name": "cancelled export cannot download",
+      "passed": true
+    },
+    {
+      "name": "public response edit commits a real new revision",
+      "passed": true
+    },
+    {
+      "name": "response edits invalidate previously ready exports",
+      "passed": true
+    },
+    {
+      "name": "redaction before worker execution rejects the frozen response snapshot",
+      "passed": true
+    },
+    {
+      "name": "export audit contains identifiers and counters, never answer values",
+      "passed": true
+    }
+  ]
+}

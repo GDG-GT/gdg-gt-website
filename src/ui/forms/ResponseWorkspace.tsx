@@ -11,6 +11,8 @@ import { Button, Field, EmptyState, Badge } from "../primitives";
 import { useServerForm, formsApi } from "./api";
 import type { FormResponse } from "./store";
 import ResponseFileLinks from "./ResponseFileLinks";
+import ResponseExports from "./ResponseExports";
+import ResponseHistory from "./ResponseHistory";
 type Result = {
   items: FormResponse[];
   total: number;
@@ -130,16 +132,6 @@ export default function ResponseWorkspace() {
       form.versions.flatMap((v) => v.fields.map((f) => [f.id, f] as const)),
     ),
     visibleColumns = columns.map((id) => fieldMap.get(id)).filter(Boolean);
-  const download = (format: string) => {
-    const p = new URLSearchParams(params);
-    p.delete("page");
-    p.delete("pageSize");
-    p.set("sensitive", "false");
-    p.set("format", format);
-    if (checked.length) p.set("selected", checked.join(","));
-    if (columns.length) p.set("columns", columns.join(","));
-    return `/api/v1/admin/forms/${formId}/responses/export?${p}`;
-  };
   return (
     <div className="gt-admin-page" aria-busy={loading || busy}>
       <header className="gt-admin-page-heading">
@@ -427,27 +419,21 @@ export default function ResponseWorkspace() {
         <section className="gt-panel gt-event-editor">
           <div className="gt-panel-heading">
             <h2>{data.total.toLocaleString()} matching responses</h2>
-            {form.actions?.includes("export_responses") && (
-              <div className="gt-actions">
-                {["csv", "xlsx", "json"].map((format) => (
-                  <a
-                    key={format}
-                    className="gt-button gt-button-secondary"
-                    href={download(format)}
-                  >
-                    Export {format.toUpperCase()}
-                  </a>
-                ))}
-              </div>
-            )}
           </div>
           <p className="gt-helper">
-            Downloads exclude sensitive answers, include stable field IDs and
-            version labels, and are audited.{" "}
+            Exports include stable field IDs and version labels, and are audited.{" "}
             {checked.length
               ? `${checked.length} selected.`
               : "All filtered responses selected for export."}
           </p>
+          {form.actions?.includes("export_responses") && <ResponseExports
+            key={form.id}
+            formId={form.id}
+            filters={Object.fromEntries([...params].filter(([key]) => ["q", "version", "from", "to", "status"].includes(key)))}
+            selected={checked}
+            columns={columns}
+            canSensitive={!!form.actions?.includes("view_sensitive_responses")}
+          />}
           {data.items.length ? (
             <div className="gt-table-wrap">
               <table className="gt-data-table">
@@ -606,6 +592,8 @@ export default function ResponseWorkspace() {
                   ? "Operational hold: destructive actions are disabled."
                   : `Retention: ${form.settings.retentionDays || 365} days.`}
               </p>
+              <ResponseHistory key={selected.id} formId={form.id} responseId={selected.id}
+                canSensitive={!!form.actions?.includes("view_sensitive_responses")} />
               {form.actions?.includes("delete") && !form.settings.hold && (
                 <div className="gt-actions">
                   <Button

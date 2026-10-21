@@ -9,14 +9,15 @@ import {
   text,
 } from "./lib/validation.mjs";
 import { tokenHash } from "./lib/security.mjs";
-import { responseCsv, responseXlsx } from "../shared/form-export.ts";
-const filterShape = {
+import { responseCsv, responseXlsx, safeCell } from "../shared/form-export.ts";
+export const formResponseFilterShape = {
   q: text(100).optional(),
   version: z.coerce.number().int().min(1).optional(),
   from: z.string().datetime({ offset: true }).optional(),
   to: z.string().datetime({ offset: true }).optional(),
   status: z.enum(["complete", "redacted", "held"]).optional(),
 };
+const filterShape = formResponseFilterShape;
 const pagination = {
   page: z.coerce.number().int().min(1).max(10000).default(1),
   pageSize: z.coerce.number().int().min(1).max(100).default(30),
@@ -321,7 +322,7 @@ export async function formResponseRoutes(
       .eq("form_id", id)
       .order("version"),
   );
-  await store.audit({
+  const auditResult = () => store.audit({
     actorId: session.user.id,
     action: exported
       ? sensitive
@@ -338,6 +339,7 @@ export async function formResponseRoutes(
     },
   });
   if (!exported) {
+    await auditResult();
     sendJson(response, 200, summarizeResponses(items, versions), requestId);
     return true;
   }
@@ -362,12 +364,19 @@ export async function formResponseRoutes(
       ),
     };
   });
+  if (p.format === "xlsx" && rows.some((row) => Object.entries(row).some(([key, value]) => key.length > 32767 || safeCell(value).length > 32767)))
+    throw new ApiError(413, "PAYLOAD_TOO_LARGE", "A cell exceeds Excel's text limit. Use CSV or JSON instead.");
   const content =
     p.format === "xlsx"
       ? responseXlsx(rows)
       : p.format === "json"
         ? JSON.stringify(rows, null, 2)
         : "\uFEFF" + responseCsv(rows);
+  // Keep lightweight API responses below the serverless transport ceiling.
+  // Background exports use private object storage instead of this response.
+  if (Buffer.byteLength(content) > 3 * 1024 * 1024)
+    throw new ApiError(413, "PAYLOAD_TOO_LARGE", "Use a background export for this response set.");
+  await auditResult();
   response.statusCode = 200;
   response.setHeader(
     "Content-Type",

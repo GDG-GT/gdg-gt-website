@@ -5,6 +5,7 @@ const { db, env } = await localHttp();
 await scannerHealth(env);
 for (const [id, max] of [
   ["form-uploads", 26214400],
+  ["form-exports", 67108864],
   ["contact-attachments", 10485760],
   ["finance-attachments", 10485760],
   ["blog-submissions", 20971520],

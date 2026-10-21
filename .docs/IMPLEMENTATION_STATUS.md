@@ -5,6 +5,46 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Forms background exports and historical review — 2026-10-21
+
+- Re-read the full v1.5 specification, including sections 21–33. SSO and
+  Bevy/Engage are deferred per Tejas. `PRD_EXECUTION_BACKLOG.md` separates remaining
+  feature work from all required acceptance/launch gates; the complete PRD is
+  **not finished**. Historical checkpoints below are not current pending lists.
+- Added durable background CSV/XLSX/JSON export jobs, frozen response membership
+  and revision fingerprints, server-derived requester/session, idempotency,
+  account quotas, bounded worker leases/retry/recovery, private artifacts and
+  24-hour expiry/cleanup. Recheck current permissions and source changes during
+  processing, promotion and 60-second download authorization. Sensitive answers
+  require explicit separate permission; audit metadata never contains answers.
+- Response workspace now has final export review, job state, cancellation and
+  short-lived in-memory download links. Individual response review has paginated
+  historical snapshots, original version labels, masking and audited sensitive
+  reveal. Redaction affects history and invalidates export snapshots; deleted
+  responses cannot be reviewed. Published-version inspection and draft/version
+  comparison are read-only and preserve stable field identities.
+- **64 migrations**, full canonical SQL suite, both 100-client capacity tests,
+  **270 unit tests**, TypeScript checks, UI/scoped lint and production build pass.
+  **28 actual export checks** include 1,001 stored responses, all three
+  formats and direct private Storage downloads; **15 actual history checks**
+  include two edits, immutable labels, redaction and deletion. Browser verified
+  real queue → ready → download authorization/link clearing, mobile widths and
+  history/version review. Fixed version-dialog height/overflow and verified
+  actual native scrolling. See `FORM_EXPORT_HISTORY_OPERATIONS.md`.
+- The existing complete local Forms regression suite also passes after these
+  changes: builder/submission/edit/redaction, token invitations/verification,
+  branching and 36 actual private upload/scanner/storage checks. Local mail
+  remains restricted to the SMTP sink, never an external recipient.
+- Added a least-privilege, SHA-pinned GitHub CI foundation for lint, current type
+  checking, unit tests, reproducible SQL/concurrency tests, build and a separate
+  blocking production audit. No remote workflow was run or code pushed. Local
+  repository lint reports **zero errors and 276 warnings**. Production-only
+  dependency audit still reports **31 findings (16 high)**; strict app TypeScript,
+  browser/coverage/visual/hosted/security acceptance remain open.
+- Receipts/notifications, retention, integration references, general media/gallery,
+  campaigns/scoped mail, PWA/offline/push and final quality gates remain in scope.
+  No real provider mail, external publication, deployment or user data was used.
+
 ### Private Blog file scanning and downloads — 2026-10-21
 
 - Added session/owner/scoped idempotent editorial uploads, one-object two-minute

@@ -27,7 +27,7 @@ const sections = [
     title: "Review responses",
     href: "/admin/forms",
     description:
-      "Open a form’s Responses view to search, filter by published version, inspect individual answers, and export local samples. Sensitive fields are masked by default and excluded from exports.",
+      "Open a form’s Responses view to search and filter by published version. Individual responses include read-only revision history. Background CSV, XLSX and JSON exports use expiring private downloads; sensitive answers require a separate explicit permission and are excluded by default. Review published questions and compare versions from the builder’s history.",
   },
   {
     title: "Manage the community",

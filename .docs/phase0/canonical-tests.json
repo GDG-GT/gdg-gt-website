@@ -62,7 +62,9 @@
     "202610200059_member_list_minimization.sql",
     "202610200060_member_review_session_cleanup.sql",
     "202610210061_private_blog.sql",
-    "202610210062_private_blog_uploads.sql"
+    "202610210062_private_blog_uploads.sql",
+    "202610210063_form_background_exports.sql",
+    "202610210064_form_response_history.sql"
   ],
   "tests": [
     {
@@ -318,6 +320,14 @@
       "passed": true
     },
     {
+      "name": "202610210063_form_background_exports.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210064_form_response_history.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -479,6 +489,14 @@
     },
     {
       "name": "062_private_blog_uploads.sql",
+      "passed": true
+    },
+    {
+      "name": "063_form_background_exports.sql",
+      "passed": true
+    },
+    {
+      "name": "064_form_response_history.sql",
       "passed": true
     },
     {

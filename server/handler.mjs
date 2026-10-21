@@ -19,6 +19,8 @@ import { publicSubmissionRoutes } from "./public-submissions.mjs";
 import { workspaceRoutes } from "./workspace.mjs";
 import { formRoutes } from "./forms.mjs";
 import { formResponseRoutes } from "./form-responses.mjs";
+import { formExportRoutes } from "./form-exports.mjs";
+import { formHistoryRoutes } from "./form-history.mjs";
 import { formAccessRoutes } from "./form-access.mjs";
 import { uploadRoutes } from "./uploads.mjs";
 import { jobRoutes } from "./jobs.mjs";
@@ -240,6 +242,14 @@ export function applicationHandler({ store, config, db, log } = {}) {
             config,
             requestId,
           })
+        )
+          return;
+        if (
+          await formHistoryRoutes(request, response, { db, store, config, requestId })
+        )
+          return;
+        if (
+          await formExportRoutes(request, response, { db, store, config, requestId })
         )
           return;
         if (

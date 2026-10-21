@@ -42,6 +42,7 @@ import FieldRenderer from "./FieldRenderer";
 import { formsApi, useServerForm } from "./api";
 import AccessPanel from "./AccessPanel";
 import SectionLogic from "./SectionLogic";
+import VersionHistory from "./VersionHistory";
 const signature = (value: PreviewForm) =>
   JSON.stringify([
     value.slug,
@@ -1107,25 +1108,14 @@ export default function FormBuilder() {
         </DialogContent>
       </Dialog>
       <Dialog open={historyOpen} onOpenChange={setHistoryOpen}>
-        <DialogContent>
+        <DialogContent className="gt-notification-dialog">
           <DialogTitle>Published versions</DialogTitle>
           <DialogDescription>
             Publishing preserves a snapshot. Existing responses keep their
             original question labels.
           </DialogDescription>
           {form.versions.length ? (
-            form.versions.map((version) => (
-              <div className="gt-version-entry" key={version.version}>
-                <Badge tone="coral">v{version.version}</Badge>
-                <div>
-                  <strong>{version.title}</strong>
-                  <p>
-                    {version.fields.length} fields ·{" "}
-                    {new Date(version.publishedAt).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            ))
+            <VersionHistory form={form} />
           ) : (
             <EmptyState title="Your first version is still a draft">
               Publish when your form is ready.

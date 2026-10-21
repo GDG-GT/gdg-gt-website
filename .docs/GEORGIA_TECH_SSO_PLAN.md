@@ -1,5 +1,9 @@
 # Planned Georgia Tech SSO
 
+Deferred by Tejas on 2026-10-21. Do not implement or enable this integration as
+part of the current remaining-PRD pass. The disabled placeholders below do not
+authenticate anyone and are not a launch dependency for original v1.5 scope.
+
 User-requested addition on 2026-10-20. This is a planned integration, not a claim
 that Georgia Tech has approved an application or that SSO authentication works.
 

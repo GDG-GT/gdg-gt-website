@@ -1,0 +1,66 @@
+{
+  "generatedAt": "2026-10-21T09:09:10.677Z",
+  "environment": "loopback development only",
+  "tests": [
+    {
+      "name": "anonymous history inventory denied",
+      "passed": true
+    },
+    {
+      "name": "response substitution cannot cross form scope",
+      "passed": true
+    },
+    {
+      "name": "history rejects unknown query controls",
+      "passed": true
+    },
+    {
+      "name": "revision inventory contains metadata, not answers",
+      "passed": true
+    },
+    {
+      "name": "two real respondent edits produce three correctly numbered review revisions",
+      "passed": true
+    },
+    {
+      "name": "original revision uses immutable-version labels and original answers",
+      "passed": true
+    },
+    {
+      "name": "sensitive history is masked by default",
+      "passed": true
+    },
+    {
+      "name": "intermediate history is not off by one",
+      "passed": true
+    },
+    {
+      "name": "current revision uses current committed answers",
+      "passed": true
+    },
+    {
+      "name": "explicit permitted sensitive history reveal works",
+      "passed": true
+    },
+    {
+      "name": "unknown revision is concealed",
+      "passed": true
+    },
+    {
+      "name": "later publication cannot rewrite prior response labels",
+      "passed": true
+    },
+    {
+      "name": "redaction removes identity from historical snapshots too",
+      "passed": true
+    },
+    {
+      "name": "history audits contain references, not historical answers",
+      "passed": true
+    },
+    {
+      "name": "deleted response has no readable historical answers",
+      "passed": true
+    }
+  ]
+}
