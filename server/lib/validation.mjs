@@ -92,6 +92,8 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    FORM_RECEIPT_IDENTITY: [409, "Receipts require verified email, an individual invitation, or a signed-in chapter account."],
+    FORM_DELIVERY_REVIEW_REQUIRED: [409, "Save this draft and review its delivery settings before enabling receipts."],
     FORM_EXPORT_QUOTA: [429, "Up to three exports may run at once and twenty may be created per day. Wait or cancel an unused export."],
     FORM_EXPORT_RANGE: [409, "Choose at most 20,000 responses. Exports above 10,000 also need both start and end date filters."],
     FORM_EXPORT_CHANGED: [409, "A response was edited, redacted or deleted. Create a new export of the current data."],

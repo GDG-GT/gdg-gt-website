@@ -5,6 +5,26 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Reviewed Forms mail — 2026-10-21
+
+- Receipts and explicit chapter notifications now have a password-confirmed,
+  version-matched recipient review in the builder. Atomic, deduplicated outbox
+  creation and leased workers recheck current authorization, response privacy and
+  review validity. Sensitive answers/files are never mailed; non-sensitive answers
+  require Admin review and oversized sets fall back to metadata-only delivery.
+- **65 migrations**, full canonical SQL and both 100-client tests pass. **274 unit
+  tests**, typecheck, UI lint and build pass. **20 actual HTTP/database/local-SMTP
+  checks** pass. Desktop/mobile review and real keyboard scrolling verified.
+  See `FORM_DELIVERY_OPERATIONS.md`. Real external provider acceptance remains open.
+- Repaired macOS iCloud-offloaded dependencies without deleting the old copies:
+  installed the locked dependencies in `/Users/tejas/.cache/gdg-gt-deps.2bjp3O`,
+  linked project `node_modules`, preserved ignored `node_modules.offloaded-backup`
+  and `excalidraw.offloaded-backup`, regenerated local fonts outside public backup
+  paths, and downloaded the existing source/version-history folders. API/frontend
+  run on the same loopback ports. No global iCloud setting was changed.
+- Continuing with retention/holds/deletion and the other feature/acceptance work
+  in `PRD_EXECUTION_BACKLOG.md`; this is not a full PRD completion claim.
+
 ### Forms background exports and historical review — 2026-10-21
 
 - Re-read the full v1.5 specification, including sections 21–33. SSO and

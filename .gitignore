@@ -8,6 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+node_modules.offloaded-backup/
 dist
 dist-ssr
 *.local
@@ -38,3 +39,4 @@ infra/supabase/migrations/
 infra/supabase/.temp/
 infra/supabase/.branches/
 public/assets/excalidraw/
+excalidraw.offloaded-backup/

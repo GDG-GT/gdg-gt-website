@@ -1,0 +1,86 @@
+{
+  "generatedAt": "2026-10-21T17:08:14.000Z",
+  "environment": "loopback development and local SMTP only",
+  "tests": [
+    {
+      "name": "anonymous delivery settings denied",
+      "passed": true
+    },
+    {
+      "name": "receipt-enabled publication requires a current review",
+      "passed": true
+    },
+    {
+      "name": "new form has no implicit email approval",
+      "passed": true
+    },
+    {
+      "name": "delivery settings expose candidate identities, not private email addresses or credentials",
+      "passed": true
+    },
+    {
+      "name": "arbitrary email recipients cannot be supplied",
+      "passed": true
+    },
+    {
+      "name": "delivery review requires the actual current password",
+      "passed": true
+    },
+    {
+      "name": "delivery review rejects a stale draft revision",
+      "passed": true
+    },
+    {
+      "name": "explicit recipient and non-sensitive answer review commits",
+      "passed": true
+    },
+    {
+      "name": "review retry is idempotent",
+      "passed": true
+    },
+    {
+      "name": "review key cannot approve a changed recipient set",
+      "passed": true
+    },
+    {
+      "name": "saved approval matches the exact canonical draft",
+      "passed": true
+    },
+    {
+      "name": "real internal submission retry returns the committed response",
+      "passed": true
+    },
+    {
+      "name": "one respondent receipt and one explicit chapter notification are queued exactly once",
+      "passed": true
+    },
+    {
+      "name": "both durable messages are delivered through actual loopback SMTP",
+      "passed": true
+    },
+    {
+      "name": "outbox payloads contain references, not recipient addresses or answers",
+      "passed": true
+    },
+    {
+      "name": "local mail sink contains exactly the receipt and authorized notification",
+      "passed": true
+    },
+    {
+      "name": "actual email includes reviewed non-sensitive answers and excludes sensitive answers",
+      "passed": true
+    },
+    {
+      "name": "actual email includes reviewed non-sensitive answers and excludes sensitive answers",
+      "passed": true
+    },
+    {
+      "name": "editing a saved definition invalidates its review match",
+      "passed": true
+    },
+    {
+      "name": "new receipt-enabled version cannot reuse an older definition approval",
+      "passed": true
+    }
+  ]
+}

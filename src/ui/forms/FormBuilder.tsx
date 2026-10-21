@@ -43,6 +43,7 @@ import { formsApi, useServerForm } from "./api";
 import AccessPanel from "./AccessPanel";
 import SectionLogic from "./SectionLogic";
 import VersionHistory from "./VersionHistory";
+import DeliveryPanel from "./DeliveryPanel";
 const signature = (value: PreviewForm) =>
   JSON.stringify([
     value.slug,
@@ -71,6 +72,8 @@ export default function FormBuilder() {
     [paletteOpen, setPaletteOpen] = useState(false),
     [inspectorOpen, setInspectorOpen] = useState(false),
     [historyOpen, setHistoryOpen] = useState(false),
+    [deliveryOpen, setDeliveryOpen] = useState(false),
+    [deliveryState, setDeliveryState] = useState({ dirty: false, busy: false }),
     [publishOpen, setPublishOpen] = useState(false),
     [saveError, setSaveError] = useState(""),
     [publishing, setPublishing] = useState(false);
@@ -730,6 +733,11 @@ export default function FormBuilder() {
             private invitation. An anonymous form cannot reliably identify
             respondents.
           </p>
+          {form.actions?.includes("manage_access") && form.actions?.includes("view_responses") && (
+            <Button variant="secondary" disabled={saveStatus !== "Saved"}
+              onClick={() => setDeliveryOpen(true)}>Review receipts &amp; notifications</Button>
+          )}
+          <p className="gt-helper">Receipts require a separate delivery review of the saved draft before publication. Notifications only go to explicitly reviewed chapter recipients.</p>
           <Field
             label="Response retention (days)"
             hint="1–365 days. Historical responses and files follow the published privacy policy."
@@ -1105,6 +1113,19 @@ export default function FormBuilder() {
             Edit the selected field or form settings.
           </DialogDescription>
           {inspector}
+        </DialogContent>
+      </Dialog>
+      <Dialog open={deliveryOpen} onOpenChange={(open) => {
+        if (deliveryState.busy) return;
+        if (!open && deliveryState.dirty && !window.confirm("Discard the unsaved delivery review?")) return;
+        setDeliveryOpen(open);
+        if (!open) setDeliveryState({ dirty: false, busy: false });
+      }}>
+        <DialogContent className="gt-notification-dialog">
+          <DialogTitle>Receipts &amp; notifications</DialogTitle>
+          <DialogDescription>Explicit recipient approval for this form, with private answers protected.</DialogDescription>
+          <DeliveryPanel formId={form.id} saved={saveStatus === "Saved"}
+            receiptSetting={!!form.settings.receipts} access={form.settings.access} onStateChange={setDeliveryState} />
         </DialogContent>
       </Dialog>
       <Dialog open={historyOpen} onOpenChange={setHistoryOpen}>

@@ -305,6 +305,19 @@ export async function deliveryMessage(job, db, config, mail) {
       "\n\nDo not forward this link. It grants access to this form and expires " +
       new Date(access.expires_at).toUTCString() +
       ".";
+  } else if (job.kind === "form_reviewed_email") {
+    const notice = checked(await db.rpc("prepare_form_reviewed_email", { p_job: job.id, p_lease: job.lease_token }));
+    if (!notice) return null;
+    to = notice.chapterInbox ? mail.chapter : notice.email || (notice.emailEncrypted ? decryptPayload(notice.emailEncrypted, config.encryptionSecret).email : null);
+    if (!to || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to))
+      throw new ApiError(503, "MAIL_NOT_CONFIGURED", "An authorized chapter delivery address is unavailable.");
+    const receipt = notice.purpose === "receipt";
+    subject = receipt ? "Your form response was received" : "New chapter form response";
+    content = `${receipt ? "Your response has been received." : "A committed response is ready for authorized review."}\n\nForm: ${notice.title}\nForm version: ${notice.version}\nSubmitted: ${new Date(notice.submittedAt).toUTCString()}\nReference: ${notice.responseId}`;
+    if (!receipt) content += `\n\nReview securely: ${config.origin}/admin/forms/${notice.formId}/responses`;
+    if (notice.answers?.length) content += "\n\nReviewed non-sensitive answers:\n" + notice.answers.map((answer) => `${answer.label}: ${typeof answer.value === "object" ? JSON.stringify(answer.value) : String(answer.value ?? "")}`).join("\n");
+    if (notice.answersOmitted) content += "\n\nAnswers were omitted because this response exceeds the safe email size limit. Review the response in the protected workspace.";
+    content += "\n\nSensitive answers and files are never included. Downloaded or delivered copies cannot be recalled.";
   } else if (job.kind === "form_response_notification") {
     const form = checked(
       await db

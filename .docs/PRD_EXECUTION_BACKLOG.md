@@ -13,12 +13,13 @@ do not perform authentication or verification. No external integration is enable
 
 ## Feature implementation still required
 
-1. Forms: reviewed response receipts and owner notifications, approved recipients,
-   internal event/team/campaign form-reference contracts, comprehensive retention
+1. Forms: internal event/team/campaign form-reference contracts, comprehensive retention
    and operational-hold workflows, safe Super Admin permanent-deletion controls,
    remaining library/builder/runtime edge cases and complete accessibility tests.
    Background exports, response-history review and published-definition inspection
-   are now implemented locally; their hosted acceptance remains open.
+   are now implemented locally; reviewed receipts and explicit recipient delivery
+   are also implemented (`FORM_DELIVERY_OPERATIONS.md`). Their hosted acceptance
+   remains open.
 2. General private media library: folders, files, tags/star/usage, scanned uploads,
    metadata, scoped private previews, safe move/bulk/delete, size/quota checks,
    explicit approved public image delivery and gallery publication/event/lightbox
@@ -73,7 +74,7 @@ do not perform authentication or verification. No external integration is enable
 
 ## Next implementation checkpoint
 
-Complete the remaining Forms notification/receipt and privacy controls, then the
+Complete the remaining Forms privacy and reference controls, then the
 general media/gallery migration and campaigns. Keep unrelated historical source
 files and user edits intact. Track implementation separately from verified
 acceptance; do not label the complete PRD finished until its launch gates pass.

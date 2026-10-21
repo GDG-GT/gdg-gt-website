@@ -64,7 +64,8 @@
     "202610210061_private_blog.sql",
     "202610210062_private_blog_uploads.sql",
     "202610210063_form_background_exports.sql",
-    "202610210064_form_response_history.sql"
+    "202610210064_form_response_history.sql",
+    "202610210065_form_reviewed_delivery.sql"
   ],
   "tests": [
     {
@@ -328,6 +329,10 @@
       "passed": true
     },
     {
+      "name": "202610210065_form_reviewed_delivery.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -497,6 +502,10 @@
     },
     {
       "name": "064_form_response_history.sql",
+      "passed": true
+    },
+    {
+      "name": "065_form_reviewed_delivery.sql",
       "passed": true
     },
     {

@@ -1,4 +1,32 @@
-# Local UI development
+# Local development — current setup
+
+The current implementation uses the isolated `gdg-gt` local Supabase profile,
+opaque server sessions, the real Node API and private scanned uploads. Run
+`npm run local:start`, then `npm run dev:api` and `npm run dev` in separate
+terminals. Open <http://127.0.0.1:8080>; the API is loopback-only on port 8081.
+Private configuration is in ignored `.env.server.local`; development sign-in
+details are in ignored `.docs/local-auth.local`. Do not commit, print or deploy
+those files. The old public preview credentials below do not authenticate here.
+
+The local scheduler, upload scanner/worker and export worker have separate
+commands: `npm run jobs:scheduler -- --watch`, `npm run jobs:uploads -- --watch`
+and `npm run jobs:form-exports -- --watch`. See the operations documents in
+`.docs` for required scanner/storage setup and exact workflow limitations.
+Mail goes only to local Mailpit, never an external provider by default.
+
+On this Mac, `node_modules` currently links to the locked installation at
+`/Users/tejas/.cache/gdg-gt-deps.2bjp3O/node_modules`, outside iCloud Desktop.
+Ignored `node_modules.offloaded-backup` and `excalidraw.offloaded-backup` preserve
+the previous offloaded generated files. They are not source and are never served
+as public assets. This avoids repeatedly hydrating development binaries.
+
+Current feature evidence and actual remaining work are recorded in
+`.docs/IMPLEMENTATION_STATUS.md` and `.docs/PRD_EXECUTION_BACKLOG.md`.
+`npm test`, `npm run typecheck`, `npm run lint:ui`, `npm run test:db` and
+`npm run build` are local checks, not complete hosted acceptance. Database tools
+require `DOCKER_CONTEXT=colima-gdg-gt`. SSO and Bevy/Engage remain deferred.
+
+## Historical UI-only prototype — obsolete setup, not current instructions
 
 Run `npm ci`, then `npm run dev`. Open <http://127.0.0.1:8080>.
 

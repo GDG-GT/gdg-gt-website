@@ -17,6 +17,7 @@ import {
 } from "./lib/validation.mjs";
 import { token, tokenHash, validToken, riskHash } from "./lib/security.mjs";
 import { encryptPayload, decryptPayload } from "./lib/encryption.mjs";
+import { mailConfig } from "./delivery.mjs";
 
 const pageSchema = z
   .object({
@@ -930,12 +931,13 @@ export async function formRoutes(
       "UPLOADS_NOT_READY",
       "File fields can be published after the private upload scanner is configured.",
     );
-  if (action === "publish" && definition.settings.receipts)
-    throw new ApiError(
-      409,
-      "RECEIPTS_NOT_READY",
-      "Response receipts require verified-email delivery configuration.",
-    );
+  if (action === "publish" && definition.settings.receipts) {
+    mailConfig(process.env);
+    if (!["verified", "invited", "internal"].includes(definition.settings.access))
+      throw new ApiError(409, "FORM_RECEIPT_IDENTITY", "Receipts require verified email, an individual invitation, or a signed-in chapter account.");
+    if (!checked(await db.rpc("form_receipt_ready", { p_form: id, p_hash: tokenHash(JSON.stringify(definition)) })))
+      throw new ApiError(409, "FORM_DELIVERY_REVIEW_REQUIRED", "Save this draft, then review its delivery settings before publishing receipts.");
+  }
   const changed = await mutate(
     session,
     id,

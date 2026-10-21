@@ -21,6 +21,7 @@ import { formRoutes } from "./forms.mjs";
 import { formResponseRoutes } from "./form-responses.mjs";
 import { formExportRoutes } from "./form-exports.mjs";
 import { formHistoryRoutes } from "./form-history.mjs";
+import { formDeliveryRoutes } from "./form-delivery.mjs";
 import { formAccessRoutes } from "./form-access.mjs";
 import { uploadRoutes } from "./uploads.mjs";
 import { jobRoutes } from "./jobs.mjs";
@@ -242,6 +243,10 @@ export function applicationHandler({ store, config, db, log } = {}) {
             config,
             requestId,
           })
+        )
+          return;
+        if (
+          await formDeliveryRoutes(request, response, { db, store, config, requestId })
         )
           return;
         if (

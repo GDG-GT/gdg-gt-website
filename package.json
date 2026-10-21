@@ -26,6 +26,7 @@
     "test:local-forms": "node scripts/test-local-forms.mjs",
     "test:local-form-exports": "node scripts/test-local-form-exports.mjs",
     "test:local-form-history": "node scripts/test-local-form-history.mjs",
+    "test:local-form-delivery": "node scripts/test-local-form-delivery.mjs",
     "jobs:local": "node --env-file=.env.server.local scripts/local-delivery.mjs",
     "scanner:local": "node scripts/local-scanner.mjs start",
     "scanner:update": "node scripts/local-scanner.mjs update",
