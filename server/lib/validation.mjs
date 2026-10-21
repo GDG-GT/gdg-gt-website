@@ -92,6 +92,7 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    BLOG_RETAINED: [409, "Archive or restore editorial records; permanent deletion is disabled."],
     MEMBER_RETAINED: [409, "Archive community records; permanent deletion is disabled."],
     MEMBER_LINK_REVIEW: [409, "Review and remove active project memberships and archive linked public profiles before merging this source."],
     MEMBER_REVIEW_EXPIRED: [409, "This merge review expired or was used. Generate a new review."],

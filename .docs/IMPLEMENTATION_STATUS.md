@@ -5,6 +5,32 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Private Blog editorial workflows — 2026-10-21
+
+- Replaced direct-browser Blog/admin/editor screens with protected scoped
+  article/category/submission/comment APIs and a neutral responsive workspace.
+  Ownership/explicit assignment and current-team grants fence details/counts.
+  Editors cannot approve/publish/moderate; administrator-only submission notes/
+  discussion/contact and storage paths are excluded from editor DTOs.
+- Proposed article changes preserve the retained base until administrator review.
+  Approval, internal publication, rejection/resubmission, assignment and retained
+  moderation are revision/idempotency/CSRF/session-fenced. Sensitive operations
+  require current password/full reference. Soft archive/restore preserves history
+  and never automatically republishes. Markdown uses shared AST write/render
+  sanitization, no raw HTML or automatic image loads; literal code is escaped.
+- **61 migrations**, full SQL/capacity regressions and **260 unit tests** pass.
+  **35 real HTTP checks** are recorded. Browser checks cover actual proposal/
+  approval/discussion, stale-input retention, Stay/discard, unchanged close and
+  375 px/339 px mobile fit. Exact fictional fixtures recoverably archived, no real
+  files/provider/mail/public Blog created. See BLOG_OPERATIONS.md and
+  ui-review/real-blog-*.png.
+- Blog/media quarantine, scan promotion and short-lived file downloads are next;
+  unverified legacy file paths remain denied. This does not complete BLOG-005,
+  all editorial media, or the full PRD. Campaigns/scoped mail, remaining Forms
+  export/receipt/retention contracts, PWA/offline/push and final quality/security
+  gates remain open. npm reported 42 audit findings, including 25 high; safe
+  dependency remediation and hosted operational acceptance are still required.
+
 ### Session-generation safety — 2026-10-21
 
 - Private requests now carry a non-authorizing in-memory generation digest, checked

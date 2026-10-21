@@ -54,6 +54,7 @@
     "test:local-projects": "node scripts/test-local-projects.mjs",
     "test:local-site-status": "node scripts/test-local-site-status.mjs",
     "test:local-members": "node scripts/test-local-members.mjs",
+    "test:local-blog": "node scripts/test-local-blog.mjs",
     "test:local-dev-security": "node scripts/test-local-dev-security.mjs",
     "test:local-session-generation": "node scripts/test-local-session-generation.mjs",
     "test:local-site-content": "node scripts/test-local-site-content.mjs",
@@ -127,12 +128,15 @@
     "rehype-highlight": "^7.0.2",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
+    "remark-parse": "11.0.0",
+    "remark-stringify": "11.0.0",
     "resend": "^6.0.3",
     "sharp": "0.35.5",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.168.0",
+    "unified": "11.0.5",
     "zod": "^3.25.76"
   },
   "devDependencies": {

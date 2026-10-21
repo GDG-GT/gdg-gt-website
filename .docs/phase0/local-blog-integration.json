@@ -1,0 +1,145 @@
+{
+  "note": "Actual loopback private-editorial workflows with fictional isolated accounts, team, writing, unverified submission metadata, comments and likes. Exact fixtures recoverably archived. No real file uploaded, public Blog, external provider or email.",
+  "tests": [
+    {
+      "name": "anonymous Blog inventory denied",
+      "passed": true
+    },
+    {
+      "name": "editor cannot inject publishing state",
+      "passed": true
+    },
+    {
+      "name": "editorial creation replays without duplication",
+      "passed": true
+    },
+    {
+      "name": "changed editorial payload conflicts with reused key",
+      "passed": true
+    },
+    {
+      "name": "editor article starts as an approval-required private draft",
+      "passed": true
+    },
+    {
+      "name": "write sanitization removes raw HTML unsafe links and remote-image loads",
+      "passed": true
+    },
+    {
+      "name": "article summary omits body private email and proposed changes",
+      "passed": true
+    },
+    {
+      "name": "other editors cannot infer unassigned article details or totals",
+      "passed": true
+    },
+    {
+      "name": "editor cannot approve or publish own article",
+      "passed": true
+    },
+    {
+      "name": "publication requires approval of the current proposal",
+      "passed": true
+    },
+    {
+      "name": "administrator approval and internal publication preserve the explicit lifecycle",
+      "passed": true
+    },
+    {
+      "name": "published base content survives an editor proposal unchanged",
+      "passed": true
+    },
+    {
+      "name": "stale editorial approval cannot overwrite newer work",
+      "passed": true
+    },
+    {
+      "name": "rejection preserves both retained base and proposal",
+      "passed": true
+    },
+    {
+      "name": "reviewed proposal becomes the retained base version",
+      "passed": true
+    },
+    {
+      "name": "editors cannot administer chapter taxonomy",
+      "passed": true
+    },
+    {
+      "name": "category recovery does not silently reactivate taxonomy",
+      "passed": true
+    },
+    {
+      "name": "team grant scopes editorial lists and totals",
+      "passed": true
+    },
+    {
+      "name": "explicit assignment grants only the assigned editorial record",
+      "passed": true
+    },
+    {
+      "name": "editorial reassignment immediately revokes former assignee",
+      "passed": true
+    },
+    {
+      "name": "assigned submission view excludes administrator-only thread notes contact and storage path",
+      "passed": true
+    },
+    {
+      "name": "editors cannot create administrator-only discussion",
+      "passed": true
+    },
+    {
+      "name": "unassigned submission access is denied",
+      "passed": true
+    },
+    {
+      "name": "unverified legacy submission has no download bypass",
+      "passed": true
+    },
+    {
+      "name": "administrator submission review persists with revision",
+      "passed": true
+    },
+    {
+      "name": "editor comment DTO omits private contact",
+      "passed": true
+    },
+    {
+      "name": "editor cannot moderate retained comments",
+      "passed": true
+    },
+    {
+      "name": "administrator comment moderation preserves separate approval and flag states",
+      "passed": true
+    },
+    {
+      "name": "editor analytics count retained likes without exposing identifiers",
+      "passed": true
+    },
+    {
+      "name": "editorial revisions are retained separately from audit metadata",
+      "passed": true
+    },
+    {
+      "name": "independent editorial change delivered during browser review",
+      "passed": true
+    },
+    {
+      "name": "team archival revokes team and assigned-editor private access",
+      "passed": true
+    },
+    {
+      "name": "soft archival retains scoped article history",
+      "passed": true
+    },
+    {
+      "name": "article restore never republishes",
+      "passed": true
+    },
+    {
+      "name": "editor deactivation revokes the next private request",
+      "passed": true
+    }
+  ]
+}

@@ -179,7 +179,7 @@ function RoutedApplication() {
               <Route path="/admin/invite/:token" element={<AcceptInvite />} />
               <Route
                 path="/admin/blog-comments"
-                element={<Navigate to="/admin/blog?tab=comments" replace />}
+                element={<Navigate to="/admin/blog?collection=comments" replace />}
               />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
