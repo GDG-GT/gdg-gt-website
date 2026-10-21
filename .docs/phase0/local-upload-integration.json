@@ -50,7 +50,7 @@
       "passed": true
     },
     {
-      "name": "mail workers cannot claim file-scanning jobs",
+      "name": "owned upload uses the separate file-scanning job kind",
       "passed": true
     },
     {

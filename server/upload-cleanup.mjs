@@ -12,6 +12,7 @@ export async function cleanupUploads({
       ...checked(
         await db.rpc("claim_finance_upload_cleanup", { p_limit: limit }),
       ),
+      ...checked(await db.rpc("claim_blog_upload_cleanup", { p_limit: limit })),
     ],
     result = { claimed: records.length, purged: 0, retried: 0 };
   try {
@@ -23,6 +24,9 @@ export async function cleanupUploads({
             (record.purpose === "form" && record.bucket === "form-uploads") ||
             (record.purpose === "finance" &&
               record.bucket === "finance-attachments" &&
+              record.state !== "clean") ||
+            (record.purpose === "blog" &&
+              record.bucket === "blog-submissions" &&
               record.state !== "clean")
           ) ||
           !record.quarantine_key.startsWith("quarantine/") ||

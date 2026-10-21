@@ -12,6 +12,7 @@ import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import BlogFields from "./BlogFields";
 import { initialValues, string, type Values } from "./fields";
 import BlogMarkdown from "./BlogMarkdown";
+import { BlogFileUpload, BlogFileDownload } from "./BlogFiles";
 type Kind = "posts" | "categories" | "submissions" | "comments";
 type Row = Values & {
   id: string;
@@ -142,6 +143,13 @@ export default function BlogWorkspace({
     busy,
     label: "Private editorial changes",
   });
+  useEffect(() => {
+    if (kind !== "submissions" || record?.scan_status !== "pending") return;
+    const timer = window.setInterval(() => {
+      if (!document.hidden) setTick((v) => v + 1);
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, [kind, record?.scan_status]);
   const reset = () => {
     setMode(null);
     setValues({});
@@ -280,7 +288,7 @@ export default function BlogWorkspace({
         setParams(p);
       }),
     );
-  const open = (action: string) => {
+  const begin = (action: string) => {
     const initial = initialValues(
         kind,
         action === "create" ? undefined : pending || record,
@@ -320,6 +328,8 @@ export default function BlogWorkspace({
     });
     setMode(action);
   };
+  const open = (action: string) =>
+    navigation.request(() => navigation.allow(() => begin(action)));
   const submit = async (event: FormEvent) => {
     event.preventDefault();
     if (!mode || busy || stale || conflict || denied) return;
@@ -695,6 +705,20 @@ export default function BlogWorkspace({
           </div>
         </form>
       )}
+      {kind === "submissions" &&
+        !mode &&
+        cap &&
+        (cap.globalCreate || cap.teams.some((t) => t.canCreate)) && (
+          <BlogFileUpload
+            key={selected}
+            globalCreate={cap.globalCreate}
+            teams={cap.teams.filter((t) => t.canCreate)}
+            onCreated={(id) => {
+              select(id);
+              setTick((v) => v + 1);
+            }}
+          />
+        )}
       <section aria-label="Editorial inventory">
         <div className="gt-blog-filters">
           <SearchBox
@@ -786,6 +810,9 @@ export default function BlogWorkspace({
                             <small>
                               Review: {string(r, "approval_status")}
                             </small>
+                          )}
+                          {kind === "submissions" && (
+                            <small>File: {string(r, "scan_status")}</small>
                           )}
                         </td>
                         <td>
@@ -914,6 +941,14 @@ export default function BlogWorkspace({
                 paths are not exposed; private downloads require verified clean
                 scanning.
               </p>
+              {record.scan_status === "clean" &&
+                typeof record.upload_id === "string" && (
+                  <BlogFileDownload
+                    key={record.upload_id}
+                    uploadId={record.upload_id}
+                    filename={string(record, "original_name")}
+                  />
+                )}
               {cap?.admin && (
                 <details>
                   <summary>Private administrator review</summary>

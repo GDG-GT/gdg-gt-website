@@ -6186,7 +6186,8 @@ img {
   border-radius: 12px;
   min-width: 0;
 }
-.gt-blog-editor fieldset {
+.gt-blog-editor fieldset,
+.gt-blog-detail fieldset {
   border: 0;
   padding: 0;
   min-width: 0;

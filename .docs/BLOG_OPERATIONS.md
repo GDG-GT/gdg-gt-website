@@ -44,12 +44,13 @@ no referrer and safe external-link attributes. Rich preview never uses raw HTML
 rendering. Discussions/notes render as plain escaped text. Remote image/avatar
 URLs remain metadata and are not auto-loaded in this private preview.
 
-The new workspace does **not** mark legacy file paths safe. Submission metadata
-starts unverified and provides no download bypass. The remaining Blog/media file
-pipeline must add real quarantine, checksum/MIME/ClamAV verification, current-
-scope promotion rechecks and short-lived audited downloads. Dedicated local
-blog-submissions storage is already private; hosted bucket verification is still
-a deployment gate. Do not claim BLOG-005 or all media work complete yet.
+The workspace does **not** mark legacy file paths safe. Submission metadata
+starts unverified and provides no download bypass. The forward file checkpoint
+adds real quarantine, checksum/MIME/ClamAV verification, current-scope promotion
+rechecks and short-lived audited downloads for newly scanned editorial files;
+see BLOG_FILE_OPERATIONS.md. Dedicated local blog-submissions storage is private.
+Legacy-file import, hosted bucket verification, the browser-picker handoff and
+general media/gallery acceptance remain open; this is not a full launch claim.
 
 ## Local verification
 

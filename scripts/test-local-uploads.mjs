@@ -80,6 +80,20 @@ try {
       body: { ...base, ...overrides },
     });
   }
+  async function scanned(id) {
+    const until = Date.now() + 25000;
+    while (Date.now() < until) {
+      const response = await operation(id, "status");
+      if (response.status !== 200)
+        throw new Error("Owned upload status unavailable");
+      if (["clean", "rejected"].includes(response.json.data.scanState))
+        return response.json.data.scanState;
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+    throw new Error(
+      "Owned upload did not finish scanning; no jobs or quotas reset",
+    );
+  }
   const clean = Buffer.from(
     "Fictional upload verification. No real personal information.",
   );
@@ -130,19 +144,15 @@ try {
     r.status === 200 && r.json.data.state === "queued",
     "completion queues scanning without returning a clean file",
   );
-  const emails = await db.rpc("claim_delivery_jobs", { p_limit: 100 });
+  const scanJob = await db
+    .from("delivery_jobs")
+    .select("kind")
+    .eq("kind", "upload_scan")
+    .eq("payload->>uploadId", uploadId);
   check(
-    !emails.error && !emails.data.some((j) => j.kind === "upload_scan"),
-    "mail workers cannot claim file-scanning jobs",
+    !scanJob.error && scanJob.data.length === 1,
+    "owned upload uses the separate file-scanning job kind",
   );
-  for (const job of emails.data)
-    await db.rpc("finish_delivery_job", {
-      p_id: job.id,
-      p_lease: job.lease_token,
-      p_success: false,
-      p_provider_id: null,
-      p_error_code: "TEST_RELEASE",
-    });
   const answers = {
     [f.fields[0].id]: "Fictional File Reviewer",
     [f.fields[1].id]: "upload-" + randomUUID() + "@example.test",
@@ -159,9 +169,9 @@ try {
     r.status === 400 && r.json.error.code === "INVALID_UPLOAD",
     "pending files cannot associate with a response",
   );
-  let scan = await runUploadWorker({ env, db });
+  await runUploadWorker({ env, db });
   check(
-    scan.clean === 1 && scan.rejected === 0 && scan.retried === 0,
+    (await scanned(uploadId)) === "clean",
     "the real scanner validates and promotes a clean file",
   );
   r = await operation(uploadId, "status");
@@ -271,9 +281,9 @@ try {
   const bad = r.json.data;
   await put(bad, eicar);
   await operation(bad.uploadId, "complete");
-  scan = await runUploadWorker({ env, db });
+  await runUploadWorker({ env, db });
   check(
-    scan.rejected === 1 && scan.clean === 0,
+    (await scanned(bad.uploadId)) === "rejected",
     "real antivirus rejects the harmless EICAR test signature",
   );
   r = await operation(bad.uploadId, "status");
@@ -286,9 +296,9 @@ try {
   const spoof = r.json.data;
   await put(spoof, html);
   await operation(spoof.uploadId, "complete");
-  scan = await runUploadWorker({ env, db });
+  await runUploadWorker({ env, db });
   check(
-    scan.rejected === 1,
+    (await scanned(spoof.uploadId)) === "rejected",
     "detected HTML is rejected despite a plain-text declaration",
   );
   const wrong = Buffer.from("Same length but different content!!!");
@@ -298,9 +308,9 @@ try {
   const mismatch = r.json.data;
   await put(mismatch, wrong);
   await operation(mismatch.uploadId, "complete");
-  scan = await runUploadWorker({ env, db });
+  await runUploadWorker({ env, db });
   check(
-    scan.rejected === 1,
+    (await scanned(mismatch.uploadId)) === "rejected",
     "scanner recomputes the checksum instead of trusting client metadata",
   );
   const image = await sharp({
@@ -313,9 +323,9 @@ try {
   const picture = r.json.data;
   await put(picture, image);
   await operation(picture.uploadId, "complete");
-  scan = await runUploadWorker({ env, db });
+  await runUploadWorker({ env, db });
   check(
-    scan.clean === 1,
+    (await scanned(picture.uploadId)) === "clean",
     "approved images are decoded and re-encoded after scanning",
   );
   const pictureRecord = await db

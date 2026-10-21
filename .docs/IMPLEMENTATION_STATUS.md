@@ -5,6 +5,30 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Private Blog file scanning and downloads — 2026-10-21
+
+- Added session/owner/scoped idempotent editorial uploads, one-object two-minute
+  quarantine capabilities, bounded file/account quotas, actual-object completion
+  verification and real checksum/MIME/ClamAV/image normalization. Promotion repeats
+  current session/account/team/grant/revision checks; clean files are immutable.
+  Authorized readers receive audited 60-second downloads, held only in UI memory.
+  Review approval never bypasses file safety; unverified legacy paths remain denied.
+- Added private upload/download controls, separate file-safety labels and scan
+  refresh. File selection and busy operations use shared navigation protection.
+  Non-clean quarantine cleanup is bounded and skips active leases; clean evidence
+  is retained through record archival. Existing Forms/Finance scanning is delegated
+  without new browser table/worker grants.
+- **62 migrations**, full SQL/capacity suite, **261 unit tests**, TypeScript,
+  UI/scoped lint and build pass. **23 real Blog file checks**, **36 Forms** and
+  **22 Finance** regression checks pass. Browser verified clean-file authorization/
+  link clearing and 375 px/339 px mobile upload fit. Exact fictional fixtures
+  recoverably archived; no real user files/provider/mail. See BLOG_FILE_OPERATIONS.md.
+- The native file-picker handoff is still blocked by the previously reported
+  extension permission restriction; no protections were weakened. Legacy-file
+  import, crash-orphan inventory reconciliation, hosted storage/CORS/scanner,
+  accessibility/multibrowser/load and general media/gallery remain open. The
+  complete PRD is not finished.
+
 ### Private Blog editorial workflows — 2026-10-21
 
 - Replaced direct-browser Blog/admin/editor screens with protected scoped

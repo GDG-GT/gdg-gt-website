@@ -55,6 +55,7 @@
     "test:local-site-status": "node scripts/test-local-site-status.mjs",
     "test:local-members": "node scripts/test-local-members.mjs",
     "test:local-blog": "node scripts/test-local-blog.mjs",
+    "test:local-blog-uploads": "node scripts/test-local-blog-uploads.mjs",
     "test:local-dev-security": "node scripts/test-local-dev-security.mjs",
     "test:local-session-generation": "node scripts/test-local-session-generation.mjs",
     "test:local-site-content": "node scripts/test-local-site-content.mjs",

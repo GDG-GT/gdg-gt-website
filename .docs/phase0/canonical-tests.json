@@ -61,7 +61,8 @@
     "202610200058_community_members.sql",
     "202610200059_member_list_minimization.sql",
     "202610200060_member_review_session_cleanup.sql",
-    "202610210061_private_blog.sql"
+    "202610210061_private_blog.sql",
+    "202610210062_private_blog_uploads.sql"
   ],
   "tests": [
     {
@@ -313,6 +314,10 @@
       "passed": true
     },
     {
+      "name": "202610210062_private_blog_uploads.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -470,6 +475,10 @@
     },
     {
       "name": "061_private_blog.sql",
+      "passed": true
+    },
+    {
+      "name": "062_private_blog_uploads.sql",
       "passed": true
     },
     {

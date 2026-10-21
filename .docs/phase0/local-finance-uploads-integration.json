@@ -1,6 +1,6 @@
 {
   "note": "Actual signed local object uploads, malware scanning, metadata-stripping image normalization, signed private download and retained financial evidence. Synthetic images and the standard harmless antivirus test string only; no user files or external services. Fictional accounts recoverably archived; receipt evidence retained.",
-  "retainedFixtureRequestId": "c7353fe3-fece-4849-afb9-d87f6cc3222b",
+  "retainedFixtureRequestId": "7bc0a9b4-c1c3-4fa1-a088-dcc5ee9693be",
   "tests": [
     {
       "name": "outsider cannot list private receipt metadata",

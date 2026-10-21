@@ -9,6 +9,7 @@ import {
   blogReference,
 } from "../../shared/blog.mjs";
 import BlogMarkdown from "../../src/ui/blog/BlogMarkdown.tsx";
+import { blogFileIntent, blogFileTypes } from "../../shared/blog-uploads.mjs";
 const record = {
   title: "Fictional article",
   slug: "fictional-article",
@@ -16,6 +17,29 @@ const record = {
   author_name: "Fictional author",
 };
 describe("private editorial data contracts", () => {
+  it("accepts only bounded allowlisted Blog upload metadata without caller-owned identity or paths", () => {
+    const doc = {
+      teamId: null,
+      filename: "fictional.txt",
+      mime: "text/plain",
+      bytes: 20,
+      sha256: "a".repeat(64),
+    };
+    expect(blogFileIntent.safeParse(doc).success).toBe(true);
+    expect(blogFileTypes).toHaveLength(6);
+    for (const extra of [
+      { bytes: 20971521 },
+      { bytes: 0 },
+      { sha256: "bad" },
+      { mime: "image/svg+xml" },
+      { owner_id: "forged" },
+      { key: "clean/forged" },
+      { submissionId: "forged" },
+    ])
+      expect(blogFileIntent.safeParse({ ...doc, ...extra }).success).toBe(
+        false,
+      );
+  });
   it("removes raw HTML, executable destinations and automatically loaded images on write", () => {
     const result = safeBlogMarkdown(
       '# Safe heading\n\n<script>alert("x")</script>\n\n[bad](javascript:alert)\n\n![tracking](https://example.com/pixel.png)',

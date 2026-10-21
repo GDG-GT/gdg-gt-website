@@ -42,6 +42,7 @@ import { projectRoutes } from "./projects.mjs";
 import { siteStatusRoutes } from "./site-status.mjs";
 import { memberRoutes } from "./members.mjs";
 import { blogRoutes } from "./blog.mjs";
+import { blogUploadRoutes } from "./blog-uploads.mjs";
 
 export function applicationHandler({ store, config, db, log } = {}) {
   const auth = createAuthHandler({ store, config, log });
@@ -64,6 +65,12 @@ export function applicationHandler({ store, config, db, log } = {}) {
           mutation: !["GET", "HEAD"].includes(request.method),
         });
         if (
+          (await blogUploadRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })) ||
           (await blogRoutes(request, response, {
             db,
             store,

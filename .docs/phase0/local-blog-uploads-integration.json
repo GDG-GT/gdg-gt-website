@@ -1,0 +1,97 @@
+{
+  "note": "Real private S3 quarantine, ClamAV, metadata normalization and sixty-second download using synthetic images and the harmless standard antivirus test string. Exact fictional submissions/accounts recoverably archived; clean evidence retained. No real person, user file, external provider or mail.",
+  "tests": [
+    {
+      "name": "anonymous Blog file upload denied",
+      "passed": true
+    },
+    {
+      "name": "Blog file creation rejects forged ownership",
+      "passed": true
+    },
+    {
+      "name": "Blog file limit is twenty MB",
+      "passed": true
+    },
+    {
+      "name": "Blog uploads reject active SVG",
+      "passed": true
+    },
+    {
+      "name": "file extension and MIME must agree before signing",
+      "passed": true
+    },
+    {
+      "name": "Blog intent replay reuses one private submission and upload",
+      "passed": true
+    },
+    {
+      "name": "quarantined Blog file cannot be downloaded",
+      "passed": true
+    },
+    {
+      "name": "completion verifies the private object exists",
+      "passed": true
+    },
+    {
+      "name": "actual Blog image bytes enter signed private quarantine",
+      "passed": true
+    },
+    {
+      "name": "Blog completion is idempotent",
+      "passed": true
+    },
+    {
+      "name": "actual ClamAV scan and normalization promote a valid Blog file",
+      "passed": true
+    },
+    {
+      "name": "submission DTO never exposes storage paths",
+      "passed": true
+    },
+    {
+      "name": "Blog download authorization expires in sixty seconds",
+      "passed": true
+    },
+    {
+      "name": "downloaded Blog image strips private metadata",
+      "passed": true
+    },
+    {
+      "name": "unassigned editor cannot obtain a clean-file URL",
+      "passed": true
+    },
+    {
+      "name": "Blog storage has no public clean-file path",
+      "passed": true
+    },
+    {
+      "name": "real scanner rejects harmless standard antivirus test bytes",
+      "passed": true
+    },
+    {
+      "name": "rejected Blog file never receives a download URL",
+      "passed": true
+    },
+    {
+      "name": "worker rejects bytes with a forged checksum",
+      "passed": true
+    },
+    {
+      "name": "content inspection rejects a MIME-spoofed Blog file",
+      "passed": true
+    },
+    {
+      "name": "repeated Blog completion schedules one scanner job",
+      "passed": true
+    },
+    {
+      "name": "file download audit excludes filenames and signed URLs",
+      "passed": true
+    },
+    {
+      "name": "deactivated uploader cannot authorize another download",
+      "passed": true
+    }
+  ]
+}
