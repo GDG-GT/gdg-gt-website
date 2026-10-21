@@ -64,6 +64,7 @@ export default defineConfig(({ mode }) => ({
     minify: true,
     sourcemap: mode === "development",
     rollupOptions: {
+      input: { main: path.resolve(__dirname, "index.html"), offline: path.resolve(__dirname, "offline.html") },
       output: {
         manualChunks: {
           // Separate vendor chunks for better caching

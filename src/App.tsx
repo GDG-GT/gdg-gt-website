@@ -20,6 +20,7 @@ import AdminShell from "@/ui/AdminShell";
 import RouteErrorBoundary from "@/ui/RouteErrorBoundary";
 import NavigationSafety from "@/ui/NavigationSafety";
 import { PwaUpdateNotice } from "@/pwa/PwaControls";
+import { QueueRuntime } from "@/pwa/SubmissionQueue";
 import { MaintenancePage } from "@/ui/status/SiteAvailability";
 import {
   HomePage,
@@ -130,6 +131,7 @@ function RoutedApplication() {
   return (
     <NavigationSafety>
       <PwaUpdateNotice />
+      <QueueRuntime />
       <SiteStatusRedirect>
         <Frame>
           <Suspense fallback={<LoadingPage />}>

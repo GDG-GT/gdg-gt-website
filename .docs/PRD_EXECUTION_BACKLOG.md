@@ -41,9 +41,12 @@ See `MEMBER_TRANSFER_OPERATIONS.md` for scope, limits and real test evidence.
    fan-out, general private collaboration attachments, optional scanned contact
    attachments. Current contact text submission and restricted transactional mail
    do not complete the optional contact-file flow in section 22.9.
-5. PWA installation/service-worker lifecycle, strict private-cache exclusions,
-   update handling, IndexedDB event/newsletter queue, pending/failure/retry/discard,
-   48-hour expiry, logout clearing and platform-specific instructions.
+5. PWA full supported-device/upgrade/cache-inspection and queue edge-case
+   acceptance. Production worker/manifest/icons, public-only cache rules,
+   draft-guarded updates, install guidance and IndexedDB event/newsletter queue
+   (pending/failure/retry/discard, 48-hour expiry and logout epoch clearing) are
+   implemented locally. Actual browser verifies public offline fallback, private
+   route refusal and a real fictional queued signup; see `PWA_OPERATIONS.md`.
 6. Push: server-bound verified ownership, encrypted endpoint/key retention,
    subscribe/unsubscribe, VAPID configuration, reminder scheduling/deduplication,
    provider failure cleanup and real supported-device delivery.

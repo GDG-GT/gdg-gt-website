@@ -235,7 +235,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
         {children}
       </main>
       <footer className="gt-footer">
-        <div className="gt-container"><InstallApp /></div>
+        <div className="gt-container"><InstallApp /><Link to="/offline">Offline help &amp; pending submissions</Link></div>
         <div className="gt-container gt-footer-grid">
           <div>
             <Brand inverse compact />

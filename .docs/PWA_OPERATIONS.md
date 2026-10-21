@@ -34,13 +34,58 @@ rewrite exclusions are configured, but no hosted deployment was performed.
 Evidence: 6 policy/actual-worker unit tests cover denied routes, filtered build
 entries, credential omission, Set-Cookie rejection, public-only fallback and
 explicit activation. Production build generates the worker with 197 public asset
-entries (~7.1 MiB); this is not a performance acceptance pass. A separate loopback
+entries (~7.1 MiB; 199 after adding the standalone queue); this is not a performance acceptance pass. A separate loopback
 preview runs on port 8082 for production-worker testing without controlling the
-development origin. Real offline/cache/upgrade/device checks remain in progress.
+development origin. Actual browser testing reports the ready worker, activates a
+waiting update explicitly, then stops only that preview process: `/events` still
+loads the cached standalone fallback and queue UI, while `/admin/members` fails
+with connection refused. Preview is restarted after the test. Screenshot:
+`ui-review/real-pwa-network-fallback.png`. Complete cache inspection, upgrades with
+multiple dirty tabs, logout/storage-error and supported-device checks remain open.
 
-Not complete yet: IndexedDB submission queue and review UI, background/manual
-replay/48-hour expiry/logout tests, Push ownership/reminders and supported-device
-installation/push acceptance. No claim of a confirmed offline registration is made.
+## Public submission queue
+
+`shared/public-queue.mjs` stores at most 50 minimal event-registration/newsletter
+entries in IndexedDB, never localStorage. Forms, authentication, uploads and
+caller-supplied identity/capability fields are rejected. Event registration offers
+explicit device storage only after a network/5xx failure; ordinary 4xx failures
+do not become queued actions. Changing the input invalidates the old unsaved
+candidate. `/offline` and the independently built/cached `offline.html` list device
+entries even when the public application cannot reach the server. A separate
+newsletter form requires explicit device-storage/replay consent; officer access
+codes and passwords must never be entered there.
+
+An item is pending, not registered, until the actual server response confirms it.
+Newsletter server acceptance still requires email confirmation. The original
+client idempotency key is preserved across replay and lost-response retries.
+Leases are claimed in an IndexedDB write transaction, fencing concurrent tabs and
+workers; the request uses no session credentials and only exact public endpoints.
+Network/5xx failures retry with bounded exponential backoff (30 seconds to
+30 minutes), at most eight attempts. Every 4xx and unconfirmed success response
+becomes a permanent failure with a reason and original-page recovery action.
+Pending items have manual retry/discard; accepted entries can be dismissed.
+
+Payloads are erased on acceptance/permanent failure and at 48-hour expiry. Expired
+identifier-only entries remain visible until discarded; expired entries are not
+replayed. Signing out clears the queue and increments its epoch so a late network
+result cannot resurrect an entry. A request already sent cannot be recalled.
+Startup, the browser online event, a 30-second open-app timer, manual retry,
+worker activation and an explicit worker-ready message attempt bounded replay.
+There is no promise of background execution while an iOS app is closed.
+
+Eight engine/boundary unit tests cover minimal fields, allowed outcomes, exact
+idempotency/endpoint selection, concurrent replay, expiry, bounded backoff, 4xx
+failure, clear-during-flight fencing and payload substitution. Actual browser
+testing saves `fictional-browser-queue-20261021@example.test` in real IndexedDB,
+observes Pending → server-accepted signup, reloads and sees the persisted result.
+The local database has exactly one matching **pending/inactive/unconfirmed**
+subscriber, not a fabricated active subscription. Only fictional data was used.
+Screenshot: `ui-review/real-public-queue-accepted.png`. An identifier-only accepted
+device record remains for inspection; no operator data or inbox was erased.
+
+Still open: complete real-browser offline event-capacity/lost-response/expiry/
+multi-tab/logout/storage-error cases, privacy cache inspection across upgrades,
+Push ownership/reminders and supported-device installation/push acceptance.
 
 Implementation references: [Vite PWA injectManifest guide](https://vite-pwa-org.netlify.app/guide/inject-manifest)
 and [Workbox precaching](https://developer.chrome.com/docs/workbox/modules/workbox-precaching).

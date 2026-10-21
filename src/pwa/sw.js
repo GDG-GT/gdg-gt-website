@@ -1,5 +1,6 @@
 import { PrecacheController } from "workbox-precaching";
 import { approvedPrecacheAsset, publicNavigationFallback } from "../../shared/pwa-policy.mjs";
+import { publicQueue } from "../../shared/public-queue.mjs";
 const origin = self.location.origin;
 const precache = new PrecacheController({
   cacheName: "gdg-gt-public-assets-v1",
@@ -12,10 +13,11 @@ const entries = self.__WB_MANIFEST.filter((entry) => approvedPrecacheAsset(typeo
 precache.addToCacheList(entries);
 const assetPaths = new Set(entries.map((entry) => new URL(typeof entry === "string" ? entry : entry.url, origin).pathname));
 self.addEventListener("install", (event) => event.waitUntil(precache.install(event)));
-self.addEventListener("activate", (event) => event.waitUntil(precache.activate(event)));
+self.addEventListener("activate", (event) => event.waitUntil(Promise.all([precache.activate(event), publicQueue.replay().catch(() => {})])));
 self.addEventListener("message", (event) => {
   // A waiting build is activated only by an explicit, draft-guarded UI action.
   if (event.data?.type === "GDG_ACTIVATE_UPDATE") event.waitUntil(self.skipWaiting());
+  if (event.data?.type === "GDG_REPLAY_PUBLIC_QUEUE") event.waitUntil(publicQueue.replay().catch(() => {}));
 });
 self.addEventListener("fetch", (event) => {
   const { request } = event, url = new URL(request.url);

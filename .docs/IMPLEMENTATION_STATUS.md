@@ -5,6 +5,21 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### IndexedDB public submission queue — 2026-10-21 (continuing)
+
+- Added explicit event/newsletter device queue, bounded leased/idempotent replay,
+  48-hour expiry, network/5xx-only backoff, permanent 4xx failure, manual retry/
+  discard and logout epoch clearing. Final native Forms submissions are excluded.
+- Standalone offline fallback now includes real queue controls without needing
+  live API data. Browser verifies actual IndexedDB save → local API acceptance →
+  persistence after reload; the fictional newsletter remains unconfirmed/inactive.
+  A stopped-preview test verifies real public offline fallback and private route
+  refusal; the production worker’s waiting update is activated explicitly.
+- **305 unit tests**, typecheck, relevant lint and worker build pass. Latest build
+  has 199 public precache entries (~7.1 MiB). Full device/cache/queue/logout/error
+  acceptance remains open; see `PWA_OPERATIONS.md`. Main development UI/API remain
+  running on 8080/8081 and the isolated production preview is restored on 8082.
+
 ### PWA foundation — 2026-10-21 (continuing)
 
 - Production-only Workbox worker/manifest/icons, GT offline fallback, strict

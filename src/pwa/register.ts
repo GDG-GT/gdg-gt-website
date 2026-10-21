@@ -11,7 +11,7 @@ export async function registerPublicWorker() {
       worker?.addEventListener("statechange", () => { if (worker.state === "installed" && navigator.serviceWorker.controller) announce(); });
     });
     window.addEventListener("online", () => { void registration?.update().catch(() => {}); });
-    void navigator.serviceWorker.ready.then(() => { ready = true; window.dispatchEvent(new Event("gdg:pwa-ready")); });
+    void navigator.serviceWorker.ready.then((active) => { ready = true; active.active?.postMessage({ type: "GDG_REPLAY_PUBLIC_QUEUE" }); window.dispatchEvent(new Event("gdg:pwa-ready")); });
   } catch { window.dispatchEvent(new Event("gdg:pwa-unavailable")); }
 }
 export function hasWaitingUpdate() { return !!registration?.waiting; }

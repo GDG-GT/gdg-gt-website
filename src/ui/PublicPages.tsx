@@ -44,6 +44,8 @@ import { useContent } from "@/contexts/ContentContext";
 import { ContactService } from "@/services/contactService";
 import { api } from "@/lib/api";
 import { eventForPage, type ChapterEvent } from "./events";
+import SubmissionQueue from "@/pwa/SubmissionQueue";
+import { savePendingSubmission } from "@/pwa/queue-actions";
 import type { Event } from "@/services/eventsService";
 import {
   ActionLink,
@@ -655,6 +657,7 @@ export function EventDetailPage() {
     [busy, setBusy] = useState(false),
     [feedback, setFeedback] = useState("");
   const [registrationDirty, setRegistrationDirty] = useState(false);
+  const [queueCandidate, setQueueCandidate] = useState<{ body: Record<string, unknown>; key: string }>(), [pendingReference, setPendingReference] = useState("");
   useDraftGuard(registrationDirty && !submitted, {
     busy,
     label: "Event registration details",
@@ -786,12 +789,13 @@ export function EventDetailPage() {
             website: String(form.get("website") || ""),
           };
         const serialized = JSON.stringify(body);
+        setQueueCandidate(undefined); setPendingReference("");
         if (registrationRequest.current?.body !== serialized)
           registrationRequest.current = {
             body: serialized,
             key: crypto.randomUUID(),
           };
-        await api(
+        try { await api(
           "/events/" +
             encodeURIComponent(event.slug || slug || "") +
             "/registrations",
@@ -800,7 +804,11 @@ export function EventDetailPage() {
             body,
             idempotencyKey: registrationRequest.current.key,
           },
-        );
+        ); } catch (e) {
+          const status = (e as { status?: number }).status;
+          if (status === undefined || status >= 500) setQueueCandidate({ body: { ...body, slug: event.slug || slug }, key: registrationRequest.current.key });
+          throw e;
+        }
         setSubmitted(true);
         setFeedback("");
       }
@@ -994,7 +1002,7 @@ export function EventDetailPage() {
                 <form
                   onSubmit={register}
                   className="gt-form"
-                  onChange={() => setRegistrationDirty(true)}
+                  onChange={() => { setRegistrationDirty(true); setQueueCandidate(undefined); }}
                 >
                   <label className="gt-honeypot" aria-hidden="true">
                     Leave this empty
@@ -1043,6 +1051,11 @@ export function EventDetailPage() {
                       {feedback}
                     </p>
                   )}
+                  {queueCandidate && !pendingReference && <div className="gt-form"><p className="gt-helper">You can save these details on this device for up to 48 hours and retry automatically when online. This does not reserve a place. Do not use this on a shared device.</p><Button type="button" variant="secondary" disabled={busy} onClick={async () => {
+                    setBusy(true); try { const reference = await savePendingSubmission("event", queueCandidate.body, queueCandidate.key); setPendingReference(reference); setRegistrationDirty(false); setQueueCandidate(undefined); }
+                    catch (e) { setFeedback((e as Error).message); } finally { setBusy(false); }
+                  }}>Save pending registration on this device</Button></div>}
+                  {pendingReference && <p role="status">Pending submission saved—not registered yet. <Link to="/offline">Review, retry or discard it</Link>.</p>}
                 </form>
               )}
             </>
@@ -1921,7 +1934,7 @@ export function InfoPage({
       "You’re offline. We’re still here.",
       "Offline",
       "You can explore pages already open in this browser. New data, registrations, and final form submissions need an internet connection.",
-      "Background submissions and push notifications are not connected in this UI preview. Reconnect before submitting a real response.",
+      "Event registrations and newsletter signups saved to the device queue remain pending until the server accepts them. Final native Forms responses are never background queued.",
     ],
     maintenance: [
       "A little work behind the scenes.",
@@ -1938,6 +1951,7 @@ export function InfoPage({
         <h2>{copy[0]}</h2>
         <p>{copy[2]}</p>
         <p>{copy[3]}</p>
+        {kind === "offline" && <SubmissionQueue />}
         <div className="gt-inline-actions">
           <ActionLink to="/" arrow>
             Home
