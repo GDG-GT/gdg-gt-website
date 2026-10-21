@@ -72,7 +72,8 @@
     "202610210069_notification_read_state.sql",
     "202610210070_form_identity_derivatives.sql",
     "202610210071_form_integrations.sql",
-    "202610210072_form_permanent_deletion.sql"
+    "202610210072_form_permanent_deletion.sql",
+    "202610210073_private_media_core.sql"
   ],
   "tests": [
     {
@@ -368,6 +369,10 @@
       "passed": true
     },
     {
+      "name": "202610210073_private_media_core.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -565,6 +570,10 @@
     },
     {
       "name": "072_form_permanent_deletion.sql",
+      "passed": true
+    },
+    {
+      "name": "073_private_media_core.sql",
       "passed": true
     },
     {

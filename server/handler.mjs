@@ -50,6 +50,7 @@ import { memberRoutes } from "./members.mjs";
 import { memberTransferRoutes } from "./member-transfer.mjs";
 import { blogRoutes } from "./blog.mjs";
 import { blogUploadRoutes } from "./blog-uploads.mjs";
+import { mediaRoutes } from "./media.mjs";
 
 export function applicationHandler({ store, config, db, log } = {}) {
   const auth = createAuthHandler({ store, config, log });
@@ -210,6 +211,9 @@ export function applicationHandler({ store, config, db, log } = {}) {
           await teamRoutes(request, response, { db, store, config, requestId })
         )
           return;
+        if (
+          await mediaRoutes(request, response, { db, store, config, requestId })
+        ) return;
         if (
           await eventRoutes(request, response, { db, store, config, requestId })
         )

@@ -30,6 +30,7 @@
     "test:local-form-privacy": "node scripts/test-local-form-privacy.mjs",
     "test:local-form-integrations": "node scripts/test-local-form-integrations.mjs",
     "test:local-form-deletion": "node scripts/test-local-form-deletion.mjs",
+    "test:local-media-core": "node scripts/test-local-media-core.mjs",
     "jobs:local": "node --env-file=.env.server.local scripts/local-delivery.mjs",
     "scanner:local": "node scripts/local-scanner.mjs start",
     "scanner:update": "node scripts/local-scanner.mjs update",

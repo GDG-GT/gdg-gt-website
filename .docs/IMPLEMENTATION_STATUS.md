@@ -5,6 +5,17 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Private media core — 2026-10-21 (in progress)
+
+- Added scoped inventory DTOs and current-session folder create/rename/move/
+  archive APIs with collision/cycle/depth/revision checks. Private object keys
+  are excluded from inventory responses. **73 migrations**, canonical SQL and
+  both 100-client tests pass; **308 unit tests** and **12 actual local media-core
+  checks** pass. No files were published or removed by these tests.
+- This is not the complete media/gallery module: quarantine uploads, metadata/
+  bulk actions, publication/cleanup and the replacement UI remain. See
+  `MEDIA_IMPLEMENTATION_NOTES.md` for the active implementation sequence.
+
 ### IndexedDB public submission queue — 2026-10-21 (continuing)
 
 - Added explicit event/newsletter device queue, bounded leased/idempotent replay,

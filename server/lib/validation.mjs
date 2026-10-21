@@ -92,6 +92,8 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    MEDIA_FOLDER_CYCLE: [409, "Choose a destination outside this folder’s descendants and within eight levels."],
+    MEDIA_FOLDER_NOT_EMPTY: [409, "Move or finish removing the folder’s files and child folders first."],
     FORM_DELETION_BLOCKED: [409, "Archive the form, resolve active references, and complete its retention/hold review before permanent deletion."],
     FORM_DELETION_REVIEW: [409, "The deletion review expired or belongs to another session. Start a new review."],
     FORM_RECEIPT_IDENTITY: [409, "Receipts require verified email, an individual invitation, or a signed-in chapter account."],
