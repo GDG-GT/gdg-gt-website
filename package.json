@@ -51,6 +51,7 @@
     "test:local-finances": "node scripts/test-local-finances.mjs",
     "test:local-finance-uploads": "node scripts/test-local-finance-uploads.mjs",
     "test:local-linktree": "node scripts/test-local-linktree.mjs",
+    "test:local-projects": "node scripts/test-local-projects.mjs",
     "test:local-site-content": "node scripts/test-local-site-content.mjs",
     "test:local-form-branches": "node scripts/test-local-form-branches.mjs",
     "test:local-forms-suite": "node scripts/test-local-forms-suite.mjs",

@@ -92,6 +92,8 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    PROJECT_RETAINED: [409, "Archive or restore projects; permanent deletion is disabled."],
+    PROJECT_MEMBER_LIMIT: [409, "A project supports up to 100 active participants."],
     LINKTREE_RETAINED: [409, "Archive or restore this profile/link; permanent deletion is disabled."],
     LINKTREE_LIMIT: [409, "A profile supports up to 100 current links. Archive an unused link first."],
     BUDGET_UNAVAILABLE: [409, "Choose an active budget in this request's scope and date range."],

@@ -5,6 +5,42 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Private Projects CRUD and participants — 2026-10-20
+
+- Replaced legacy direct-browser database calls with protected scoped APIs and a
+  neutral, responsive workspace. Preserved project fields, internal featured
+  state, categories/statuses, technology/tag arrays, links, planned capacity and
+  dates. `/projects` remains the branded 404, with no anonymous project API or
+  browser table/function grants. No data becomes public through featuring.
+- Current team page/action grants are enforced for lists, totals, filtered
+  statistics, details and mutations. Blog Editors are denied. Account/team
+  removal revokes ordinary access; global administrators retain read-only
+  inactive-team history. Transactions require current session, CSRF,
+  idempotency and aggregate revisions; action revocation also fences replays.
+- Participant management matches only an exact unambiguous active community
+  email, without exposing a whole directory or participant contact data. Project
+  roles do not grant chapter access or send invitations. Removal retains inactive
+  history; rejoining reuses it. Star rows/identities remain private; actual retained
+  counts are reported separately from the preserved legacy cached counter.
+- Archive/restore require current password and exact title. Hard deletion is
+  disabled, preserving participant/star history and finance references. Editor
+  input survives independent updates; stale saves are disabled. Async private
+  reads/results are fenced against session clear, and navigation is guarded.
+- Verification: **56 migrations**, all SQL/capacity regressions, **217 unit
+  tests**, TypeScript, UI/scoped lint and production build pass; existing bundle
+  warnings remain. **28 actual local HTTP checks** are recorded in
+  `phase0/local-projects-integration.json`. Browser review covers actual edit/save,
+  stale revision/input preservation, discard dialog, 375 px editor fit, 1440 px
+  desktop, 432 px native wheel scrolling and public 404. Proofs:
+  `ui-review/real-projects-*.png`. Fictional fixtures are recoverably archived,
+  participant/star history retained, and viewport overrides reset. No external
+  provider, real invitation, mail or payment was used.
+- Remaining acceptance includes exhaustive accessibility, multibrowser/load and
+  hosted operations. Full PRD work is still open, including private Blog/media,
+  campaigns/scoped mail, member-management gaps, remaining Forms export/receipt/
+  retention contracts, PWA/offline/push and final quality/security gates. See
+  `PROJECTS_OPERATIONS.md`.
+
 ### Scoped Linktree management and public link pages — 2026-10-20
 
 - Replaced the legacy browser-table Linktree screens with protected APIs and a

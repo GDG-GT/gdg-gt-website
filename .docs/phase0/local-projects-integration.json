@@ -1,0 +1,118 @@
+{
+  "note": "Actual loopback HTTP checks with fictional scoped accounts, team, project and participant. No external links, invitations, mail or providers used. Project/member/star history retained; exact fixture accounts/team archived and community participant deactivated. Rate limits and jobs were not reset.",
+  "projectId": "e8a2f677-0b1a-41f4-b35d-6f1463425a4d",
+  "tests": [
+    {
+      "name": "anonymous private project listing denied",
+      "passed": true
+    },
+    {
+      "name": "Blog Editor has no project access",
+      "passed": true
+    },
+    {
+      "name": "client ownership injection rejected",
+      "passed": true
+    },
+    {
+      "name": "create replay returns the same project",
+      "passed": true
+    },
+    {
+      "name": "changed idempotency payload conflicts",
+      "passed": true
+    },
+    {
+      "name": "outsiders cannot infer private details or counts",
+      "passed": true
+    },
+    {
+      "name": "filtered statistics include only currently authorized projects",
+      "passed": true
+    },
+    {
+      "name": "duplicate filter keys rejected",
+      "passed": true
+    },
+    {
+      "name": "star counters are not client writable",
+      "passed": true
+    },
+    {
+      "name": "unsafe project URLs rejected",
+      "passed": true
+    },
+    {
+      "name": "participant endpoint rejects unrelated actions",
+      "passed": true
+    },
+    {
+      "name": "participant management omits contact details",
+      "passed": true
+    },
+    {
+      "name": "participant removal preserves inactive history",
+      "passed": true
+    },
+    {
+      "name": "rejoining reuses the retained participant record",
+      "passed": true
+    },
+    {
+      "name": "absent community member is not created or invited",
+      "passed": true
+    },
+    {
+      "name": "stale project updates cannot overwrite a newer revision",
+      "passed": true
+    },
+    {
+      "name": "incorrect archive confirmation password is denied",
+      "passed": true
+    },
+    {
+      "name": "archiving moves the record to scoped trash",
+      "passed": true
+    },
+    {
+      "name": "archived project cannot be silently rewritten",
+      "passed": true
+    },
+    {
+      "name": "restoring keeps participants and does not publish",
+      "passed": true
+    },
+    {
+      "name": "private star records remain retained",
+      "passed": true
+    },
+    {
+      "name": "independent project update delivered during browser review",
+      "passed": true
+    },
+    {
+      "name": "inactive team revokes ordinary access and keeps admin history read-only",
+      "passed": true
+    },
+    {
+      "name": "team restoration restores only explicitly granted private access",
+      "passed": true
+    },
+    {
+      "name": "action revocation denies project mutations",
+      "passed": true
+    },
+    {
+      "name": "membership removal revokes project history and counts",
+      "passed": true
+    },
+    {
+      "name": "permanent deletion has no application endpoint",
+      "passed": true
+    },
+    {
+      "name": "no anonymous project API is exposed",
+      "passed": true
+    }
+  ]
+}

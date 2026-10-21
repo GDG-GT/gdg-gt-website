@@ -54,7 +54,9 @@
     "202610200051_finance_attachments.sql",
     "202610200052_finance_inactive_budget_access.sql",
     "202610200053_linktree_workflows.sql",
-    "202610200054_linktree_team_publication_guard.sql"
+    "202610200054_linktree_team_publication_guard.sql",
+    "202610200055_private_projects.sql",
+    "202610200056_project_star_projection.sql"
   ],
   "tests": [
     {
@@ -278,6 +280,14 @@
       "passed": true
     },
     {
+      "name": "202610200055_private_projects.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200056_project_star_projection.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -411,6 +421,10 @@
     },
     {
       "name": "054_linktree_team_publication_guard.sql",
+      "passed": true
+    },
+    {
+      "name": "055_private_projects.sql",
       "passed": true
     },
     {

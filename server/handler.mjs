@@ -38,6 +38,7 @@ import { teamChatRoutes } from "./team-chat.mjs";
 import { financeRoutes } from "./finances.mjs";
 import { financeUploadRoutes } from "./finance-uploads.mjs";
 import { linktreeRoutes } from "./linktree.mjs";
+import { projectRoutes } from "./projects.mjs";
 
 export function applicationHandler({ store, config, db, log } = {}) {
   const auth = createAuthHandler({ store, config, log });
@@ -60,12 +61,18 @@ export function applicationHandler({ store, config, db, log } = {}) {
           mutation: !["GET", "HEAD"].includes(request.method),
         });
         if (
-          await linktreeRoutes(request, response, {
+          (await projectRoutes(request, response, {
             db,
             store,
             config,
             requestId,
-          })
+          })) ||
+          (await linktreeRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          }))
         )
           return;
         if (
