@@ -33,12 +33,15 @@ import { reconcileOptionIds } from "./store";
 import {
   fieldTypes,
   newField,
+  formImageId,
   validateDefinition,
   duplicateSection,
   type FieldType,
   type PreviewForm,
 } from "./store";
 import FieldRenderer from "./FieldRenderer";
+import FormImage from './FormImage';
+import FormImagePicker from './FormImagePicker';
 import { formsApi, useServerForm } from "./api";
 import AccessPanel from "./AccessPanel";
 import SectionLogic from "./SectionLogic";
@@ -286,12 +289,16 @@ export default function FormBuilder() {
             <Badge tone="coral">
               {fieldTypes.find((item) => item[0] === field.type)?.[1]}
             </Badge>
-            <Field label="Question label" required>
+            <Field label={field.type === 'image' ? 'Image description (alt text)' : 'Question label'} required>
               <input
                 value={field.label}
                 onChange={(event) => updateField({ label: event.target.value })}
               />
             </Field>
+            {field.type === 'image' && <FormImagePicker label="Published image" selected={field.imageMediaId} onChange={photo => updateField({
+              imageMediaId: photo?.id, imageWidth: photo?.width, imageHeight: photo?.height,
+              ...(photo ? { label: photo.alt_text || photo.description || field.label } : {}),
+            })} />}
             <Field label="Description">
               <textarea
                 rows={3}
@@ -301,7 +308,7 @@ export default function FormBuilder() {
                 }
               />
             </Field>
-            <label className="gt-toggle-row">
+            {!["image", "title", "description", "divider"].includes(field.type) && <><label className="gt-toggle-row">
               Required question
               <input
                 type="checkbox"
@@ -322,7 +329,7 @@ export default function FormBuilder() {
                   updateField({ sensitive: event.target.checked })
                 }
               />
-            </label>
+            </label></>}
             {[
               "radio",
               "checkbox",
@@ -661,6 +668,10 @@ export default function FormBuilder() {
             unverified unless an existing access method verifies them. Georgia
             Tech SSO (preferred) and Google sign-in are planned, not connected.
           </p>
+          <FormImagePicker label="Header image" selected={formImageId(form.settings.headerMedia)} onChange={photo => update({ ...form,
+            settings: { ...form.settings, headerMedia: photo ? `/api/v1/media/public/${photo.id}` : '', headerAlt: photo?.alt_text || photo?.description || '' },
+          })} />
+          {form.settings.headerMedia && <Field label="Header image description (alt text)" required><input value={form.settings.headerAlt || ''} onChange={event => update({ ...form, settings: { ...form.settings, headerAlt: event.target.value } })} /></Field>}
           <Field label="Response limit" hint="0 means no configured limit">
             <input
               type="number"
@@ -939,6 +950,7 @@ export default function FormBuilder() {
               <span className="gt-section-note">
                 GDG on Campus · Georgia Tech
               </span>
+              {form.settings.headerMedia && <FormImage header id={formImageId(form.settings.headerMedia)} alt={form.settings.headerAlt || ''} />}
               <h1>{form.title || "Untitled form"}</h1>
               <textarea
                 aria-label="Form description"

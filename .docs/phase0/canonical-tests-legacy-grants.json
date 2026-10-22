@@ -98,7 +98,8 @@
     "202610210094_person_privacy_erasure.sql",
     "202610210095_privacy_certificate_grants.sql",
     "202610220096_operational_retention.sql",
-    "202610220097_operational_monitoring.sql"
+    "202610220097_operational_monitoring.sql",
+    "202610220098_form_published_images.sql"
   ],
   "tests": [
     {
@@ -498,6 +499,10 @@
       "passed": true
     },
     {
+      "name": "202610220098_form_published_images.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -775,6 +780,10 @@
     },
     {
       "name": "097_operational_monitoring.sql",
+      "passed": true
+    },
+    {
+      "name": "098_form_published_images.sql",
       "passed": true
     },
     {

@@ -17,6 +17,8 @@ import {
   type FormDefinition,
 } from "./store";
 import FieldRenderer from "./FieldRenderer";
+import FormImage from './FormImage';
+import { formImageId } from './store';
 import RespondentFileField from "./RespondentFileField";
 import { api, ApiFailure } from "@/lib/api";
 import GeorgiaTechSsoOption from "../auth/GeorgiaTechSsoOption";
@@ -589,6 +591,7 @@ function RespondentFormRuntime() {
         ) : (
           <>
             <div className="gt-public-form-intro">
+              {settings.headerMedia && <FormImage header id={formImageId(settings.headerMedia)} alt={settings.headerAlt || ''} />}
               <span className="gt-section-note">
                 GDG on Campus · Georgia Tech
               </span>

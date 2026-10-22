@@ -198,6 +198,8 @@ export function databaseResult({ data, error }) {
       409,
       "Revoke publication and resolve usage references or active uploads before moving, editing or archiving this file.",
     ],
+    FORM_IMAGE_REQUIRED: [409, 'Choose a published image and descriptive alternative text for every image block and header.'],
+    FORM_IMAGE_UNAVAILABLE: [409, 'A selected image is no longer published. Choose an available public image before saving or publishing.'],
     MEDIA_FOLDER_CYCLE: [
       409,
       "Choose a destination outside this folder’s descendants and within eight levels.",

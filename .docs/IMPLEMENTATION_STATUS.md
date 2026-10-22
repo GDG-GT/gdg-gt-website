@@ -5,6 +5,19 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Actual native Forms images and header media — 2026-10-22
+
+- Replaced illustrative image blocks with approved published-media selection,
+  alternative text and responsive actual rendering. Header selection/preview/
+  rendering now work. No remote tracking URLs or automatic publication.
+- Transactional current-publication checks and exact indexed draft/historical
+  usage prevent unsafe reference/erasure. Privacy withdrawal remains immediate.
+- 98 migrations/both grant-default replays/two 100-client races, 387 units,
+  strict types/lint/build, 13 actual new HTTP/storage/scanner checks and existing
+  Forms/upload regressions pass. Desktop/375px verifies actual images and builder
+  controls. See `FORM_IMAGE_OPERATIONS.md`. Theme/progress/safe shuffling and
+  remaining broad quality gates still need completion; work continues.
+
 ### Strict types, dependency/build hardening and measured quality gaps — 2026-10-22
 
 - Application/build strict TypeScript passes. Corrected nullable data, async
@@ -22,8 +35,8 @@ incremental implementation tracker, not a completion or launch claim.
   branches 98.52%, security/authorization/HTTP primitives 100%; remaining global
   70% and critical-file 90% gates fail honestly. Full automated UI/integration
   coverage remains substantial work; CI has an independent gate.
-- The audit found real Forms image-block/header-media gaps, explicitly open
-  rather than certified by the field-type schema. See `QUALITY_HARDENING.md`.
+- The audit found real Forms image-block/header-media gaps, subsequently addressed
+  in the checkpoint above. See `QUALITY_HARDENING.md` for the historical finding.
   Full PRD completion/launch is not claimed.
 
 ### Daily retention and sanitized operational monitoring — 2026-10-22

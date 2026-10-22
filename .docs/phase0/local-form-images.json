@@ -1,0 +1,58 @@
+{
+  "generatedAt": "2026-10-22T11:40:49.307Z",
+  "note": "Real loopback signed storage, scanner, derivative publication and Forms HTTP checks using a generated coral rectangle and fictional account/form only. Publication revoked and form/account recoverably archived; historical media remains private and retained. No real chapter photo or external provider.",
+  "tests": [
+    {
+      "name": "generated fictional image uploads through one-object private capability",
+      "passed": true
+    },
+    {
+      "name": "actual local scanner approves the generated raster before use",
+      "passed": true
+    },
+    {
+      "name": "only explicitly published derivative bytes are publicly readable",
+      "passed": true
+    },
+    {
+      "name": "form schema rejects external tracking images",
+      "passed": true
+    },
+    {
+      "name": "database rejects nonexistent/unpublished image identities before draft creation",
+      "passed": true
+    },
+    {
+      "name": "real draft preserves selected media identity, dimensions and alternative text",
+      "passed": true
+    },
+    {
+      "name": "immutable public version delivers selected block/header media without private paths",
+      "passed": true
+    },
+    {
+      "name": "public form excludes private storage keys and scanner capabilities",
+      "passed": true
+    },
+    {
+      "name": "draft media removal does not rewrite its published definition",
+      "passed": true
+    },
+    {
+      "name": "published historical image remains unchanged after a draft edit",
+      "passed": true
+    },
+    {
+      "name": "privacy revocation immediately removes public bytes even when a form references the image",
+      "passed": true
+    },
+    {
+      "name": "published historical form references block media erasure even after draft removal",
+      "passed": true
+    },
+    {
+      "name": "removing withdrawn media permits publishing a clean replacement version",
+      "passed": true
+    }
+  ]
+}

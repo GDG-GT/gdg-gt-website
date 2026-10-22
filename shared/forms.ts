@@ -34,6 +34,9 @@ export interface FormField {
   options: string[];
   sectionId: string;
   sensitive: boolean;
+  imageMediaId?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   min?: number;
   max?: number;
   minLength?: number;
@@ -74,6 +77,7 @@ export interface FormSettings {
   indexable?: boolean;
   review?: boolean;
   headerMedia?: string;
+  headerAlt?: string;
   shuffleQuestions?: boolean;
   shuffleOptions?: boolean;
 }
@@ -590,8 +594,10 @@ export function validateDefinition(form: PreviewForm): string[] {
       issues.push(`“${field.label}” needs at least two grid columns.`);
     if (!form.sections.some((section) => section.id === field.sectionId))
       issues.push(`“${field.label}” needs a valid section.`);
-    if (!field.label.trim() && !["divider", "image"].includes(field.type))
+    if (!field.label.trim() && field.type !== "divider")
       issues.push("Every question needs a visible label.");
+    if (field.type === 'image' && !field.imageMediaId)
+      issues.push('Choose an approved published image for every image block.');
     if (
       ["radio", "checkbox", "dropdown", "likert", "grid", "ranking"].includes(
         field.type,
@@ -863,17 +869,9 @@ const timestamp = z.union([
   z.literal(""),
   z.string().datetime({ offset: true }),
 ]);
-const webUrl = z.union([
-  z.literal(""),
-  z
-    .string()
-    .url()
-    .max(2048)
-    .refine((v) => {
-      const url = new URL(v);
-      return url.protocol === "https:" && !url.username && !url.password;
-    }),
-]);
+export function formImageId(path?: string): string | undefined {
+  return path?.match(/^\/api\/v1\/media\/public\/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})$/)?.[1];
+}
 const fieldSchema = z
   .object({
     id: z.string().uuid(),
@@ -882,6 +880,9 @@ const fieldSchema = z
     description: bounded(3000),
     required: z.boolean(),
     sensitive: z.boolean(),
+    imageMediaId: z.string().uuid().optional(),
+    imageWidth: z.number().int().min(1).max(20000).optional(),
+    imageHeight: z.number().int().min(1).max(20000).optional(),
     sectionId: z.string().uuid(),
     options: z.array(bounded(300)).max(100),
     columns: z.array(bounded(300)).max(30).optional(),
@@ -979,7 +980,8 @@ export const formDraftDefinitionSchema = z
         ),
         indexable: z.boolean().default(false),
         review: z.boolean().default(true),
-        headerMedia: webUrl.optional(),
+        headerMedia: z.union([z.literal(''), z.string().regex(/^\/api\/v1\/media\/public\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/)]).optional(),
+        headerAlt: bounded(500).optional(),
         shuffleQuestions: z.boolean().default(false),
         shuffleOptions: z.boolean().default(false),
       })
@@ -1049,6 +1051,10 @@ export const formDefinitionSchema = formDraftDefinitionSchema.superRefine(
       (fields.some((f) => f.condition) || sections.some((s) => s.rules?.length))
     )
       issues.push("Conditional questions cannot be shuffled.");
+    if (definition.settings.headerMedia && !definition.settings.headerAlt?.trim())
+      issues.push('Describe the header image for respondents who cannot see it.');
+    if (fields.filter(field => field.type === 'image').length > 20)
+      issues.push('Use at most twenty image blocks in a form.');
     for (const message of new Set(issues))
       context.addIssue({ code: z.ZodIssueCode.custom, message });
   },

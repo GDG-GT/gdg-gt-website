@@ -4823,11 +4823,17 @@ img {
   margin-block: 30px;
 }
 .gt-form-image-block {
-  margin-bottom: 22px;
+  margin: 0 0 22px;
 }
 .gt-form-image-block img {
+  display: block;
   width: 100%;
+  height: auto;
   border-radius: 8px;
+}
+.gt-form-header-image img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 .gt-form-image-block small {
   font-size: 0.6rem;

@@ -1,6 +1,7 @@
 import { ArrowDown, ArrowUp, Star } from "lucide-react";
 import type { ReactNode } from "react";
 import type { Answer, FormField } from "./store";
+import FormImage from './FormImage';
 
 export default function FieldRenderer({
   field,
@@ -33,13 +34,7 @@ export default function FieldRenderer({
     return <p className="gt-helper">{field.label}</p>;
   if (field.type === "image")
     return (
-      <div className="gt-form-image-block">
-        <img
-          src="/assets/event-hackathon.jpg"
-          alt={field.label || "Illustrative development image"}
-        />
-        <small>Illustrative development image</small>
-      </div>
+      <FormImage id={field.imageMediaId} alt={field.label} width={field.imageWidth} height={field.imageHeight} />
     );
   const label = (
     <>

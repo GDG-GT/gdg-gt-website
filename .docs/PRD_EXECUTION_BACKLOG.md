@@ -24,9 +24,9 @@ email confirmation. File bytes/private links are excluded. See
 `FORM_RESPONDENT_OPERATIONS.md`. Georgia Tech SSO and Google sign-in stay deferred.
 
 1. Forms: remaining library/builder/runtime edge cases and complete accessibility tests.
-   The audit found incomplete image blocks (hardcoded sample) and unused header
-   media. Implement approved-media selection/rendering/alt text and publication/
-   usage safeguards; verify theme/shuffling/preview behavior too.
+   Image blocks/header media now use real approved media with alt text and
+   transactional publication/usage safeguards (`FORM_IMAGE_OPERATIONS.md`).
+   Complete theme/progress/safe shuffling and verify remaining preview behavior.
    Safe Super Admin permanent-deletion review and erasure are implemented locally
    (`FORM_PERMANENT_DELETION_OPERATIONS.md`); hosted retention/security acceptance
    remains open.
@@ -110,7 +110,7 @@ email confirmation. File bytes/private links are excluded. See
 
 ## Next implementation checkpoint
 
-Complete Forms image/header workflows and remaining quality/coverage/device
+Complete Forms theme/progress/shuffling and remaining quality/coverage/device
 acceptance; review scoped attachment contracts. Keep unrelated historical source
 files and user edits intact. Track implementation separately from verified
 acceptance; do not label the complete PRD finished until its launch gates pass.
