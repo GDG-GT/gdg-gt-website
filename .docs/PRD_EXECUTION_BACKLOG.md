@@ -24,6 +24,8 @@ email confirmation. File bytes/private links are excluded. See
 `FORM_RESPONDENT_OPERATIONS.md`. Georgia Tech SSO and Google sign-in stay deferred.
 
 1. Forms: remaining library/builder/runtime edge cases and complete accessibility tests.
+   Owner/team/date/template-origin library filters and scoped paginated options
+   now work (`FORM_LIBRARY_OPERATIONS.md`).
    Image blocks/header media now use real approved media with alt text and
    transactional publication/usage safeguards (`FORM_IMAGE_OPERATIONS.md`).
    Theme/progress/safe shuffling and distinct immutable/draft preview now work

@@ -106,6 +106,8 @@ export interface PreviewForm {
   team: string;
   teamId?: string | null;
   ownerId?: string;
+  ownerLabel?: string;
+  templateKey?: FormTemplate | null;
   revision?: number;
   responseCount?: number;
   actions?: string[];
@@ -331,6 +333,7 @@ export function createTemplate(
     settings,
     versions: [],
     team: "Chapter",
+    templateKey: kind,
   };
 }
 

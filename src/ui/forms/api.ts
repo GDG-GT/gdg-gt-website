@@ -46,6 +46,7 @@ export const formsApi = {
         body: {
           slug: form.slug,
           teamId: form.teamId || null,
+          ...(form.templateKey ? { template: form.templateKey } : {}),
           definition: draftDefinition(form),
         },
       })
@@ -119,7 +120,7 @@ export const formsApi = {
     }>("/admin/forms/" + id + "/responses?" + params);
   },
 };
-export function useFormLibrary(params: string) {
+export function useFormLibrary(params: string, enabled = true) {
   const { currentAdmin } = useAdmin();
   const [data, setData] = useState<Library>({
       items: [],
@@ -135,8 +136,14 @@ export function useFormLibrary(params: string) {
     setLoading(true);
     setError("");
     setData({ items: [], total: 0, page: 1, pageSize: 30 });
+    if (!enabled) {
+      setLoading(false);
+      return () => controller.abort();
+    }
     api<Library>("/admin/forms?" + params, { signal: controller.signal })
-      .then(setData)
+      .then((result) => {
+        if (!controller.signal.aborted) setData(result);
+      })
       .catch((e) => {
         if (!controller.signal.aborted) setError(e.message);
       })
@@ -144,7 +151,7 @@ export function useFormLibrary(params: string) {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [params, refresh, currentAdmin?.id, currentAdmin?.role]);
+  }, [params, enabled, refresh, currentAdmin?.id, currentAdmin?.role]);
   return { ...data, error, loading, reload: () => setRefresh((v) => v + 1) };
 }
 export function useServerForm(id: string | undefined) {

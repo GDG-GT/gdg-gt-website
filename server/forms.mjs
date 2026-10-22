@@ -12,7 +12,6 @@ import {
   queryValues,
   uuid,
   slug,
-  text,
   idempotency,
 } from "./lib/validation.mjs";
 import { token, tokenHash, validToken, riskHash } from "./lib/security.mjs";
@@ -20,23 +19,17 @@ import { encryptPayload, decryptPayload } from "./lib/encryption.mjs";
 import { mailConfig } from "./delivery.mjs";
 import { draftDaysRemaining } from "./lib/form-lifetime.mjs";
 import { formRespondentSchema } from "../shared/form-respondent.mjs";
+import {
+  formLibraryQuerySchema,
+  formLibraryOptionsSchema,
+  formTemplateSchema,
+} from "../shared/form-library.mjs";
 
-const pageSchema = z
-  .object({
-    page: z.coerce.number().int().min(1).max(10000).default(1),
-    pageSize: z.coerce.number().int().min(1).max(100).default(30),
-    q: text(100).optional(),
-    team: uuid.optional(),
-    owner: uuid.optional(),
-    state: z
-      .enum(["Draft", "Open", "Scheduled", "Closed", "Archived"])
-      .optional(),
-  })
-  .strict();
 const draftSchema = z
   .object({
     slug,
     teamId: uuid.nullable().optional(),
+    template: formTemplateSchema.optional(),
     definition: formDraftDefinitionSchema,
   })
   .strict();
@@ -146,9 +139,11 @@ export async function formRoutes(
     slug: row.slug,
     status: row.state,
     updatedAt: row.updated_at,
-    team: row.team_id ? "Team-scoped" : "Chapter",
+    team: row.team_label || (row.team_id ? "Team-scoped" : "Chapter"),
     teamId: row.team_id,
     ownerId: row.owner_id,
+    ownerLabel: row.owner_label || undefined,
+    templateKey: row.template_key ?? null,
     revision: row.draft_revision,
     responseCount:
       row.response_count ??
@@ -743,6 +738,22 @@ export async function formRoutes(
     );
     return true;
   }
+  if (admin[1] === "filters" && !admin[2]) {
+    allowMethod(request, response, ["GET"]);
+    const session = await requireSession(request, store, config);
+    const p = queryValues(url.searchParams, formLibraryOptionsSchema);
+    const result = checked(
+      await db.rpc("list_form_library_options", {
+        p_actor: session.user.id,
+        p_kind: p.kind,
+        p_page: p.page,
+        p_size: p.pageSize,
+        p_query: p.q || null,
+      }),
+    );
+    sendJson(response, 200, result, requestId);
+    return true;
+  }
   const [, rawId, operation, childId] = admin,
     id = rawId ? parse(uuid, rawId) : null;
   allowMethod(
@@ -770,16 +781,20 @@ export async function formRoutes(
   if (request.method !== "GET") await requireCsrf(request, session, store);
   if (!id) {
     if (request.method === "GET") {
-      const p = queryValues(url.searchParams, pageSchema),
+      const p = queryValues(url.searchParams, formLibraryQuerySchema),
         data = checked(
-          await db.rpc("list_forms", {
+          await db.rpc("list_form_library", {
             p_actor: session.user.id,
             p_page: p.page,
             p_size: p.pageSize,
             p_query: p.q || null,
-            p_team: p.team || null,
+            p_team: p.team && p.team !== "chapter" ? p.team : null,
+            p_chapter: p.team === "chapter",
             p_owner: p.owner || null,
             p_state: p.state || null,
+            p_from: p.updatedFrom || null,
+            p_to: p.updatedTo || null,
+            p_template: p.template || null,
           }),
         );
       data.items = await Promise.all(
@@ -789,11 +804,18 @@ export async function formRoutes(
       return true;
     }
     const body = await jsonBody(request, draftSchema, 512 * 1024),
-      row = await mutate(session, null, "create", null, {
-        slug: body.slug,
-        team_id: body.teamId || null,
-        definition: body.definition,
-      });
+      row = checked(
+        await db.rpc("create_form_from_template", {
+          p_actor: session.user.id,
+          p_request_id: requestId,
+          p_template: body.template || null,
+          p_document: {
+            slug: body.slug,
+            team_id: body.teamId || null,
+            definition: body.definition,
+          },
+        }),
+      );
     sendJson(
       response,
       200,
@@ -963,11 +985,21 @@ export async function formRoutes(
   }
   if (operation === "duplicate") {
     const body = await jsonBody(request, z.object({ slug }).strict(), 1024),
-      copy = await mutate(session, null, "create", null, {
-        slug: body.slug,
-        team_id: row.team_id,
-        definition: { ...row.draft_definition, title: row.title + " (copy)" },
-      });
+      copy = checked(
+        await db.rpc("create_form_from_template", {
+          p_actor: session.user.id,
+          p_request_id: requestId,
+          p_template: row.template_key,
+          p_document: {
+            slug: body.slug,
+            team_id: row.team_id,
+            definition: {
+              ...row.draft_definition,
+              title: row.title + " (copy)",
+            },
+          },
+        }),
+      );
     sendJson(
       response,
       200,

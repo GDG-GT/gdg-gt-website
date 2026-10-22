@@ -4047,6 +4047,41 @@ img {
 .gt-forms-inventory .gt-search {
   width: 260px;
 }
+.gt-form-library-filters {
+  margin: 0 22px 16px;
+  padding-block: 12px;
+  border-block: 1px solid var(--line);
+}
+.gt-form-library-filters > summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding-block: 8px;
+}
+.gt-form-library-filters > summary:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 3px;
+}
+.gt-form-library-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: 20px;
+  margin-block: 16px;
+}
+.gt-form-library-scope {
+  min-width: 0;
+}
+.gt-form-library-scope .gt-field {
+  margin-block: 0 12px;
+}
+.gt-form-library-scope select,
+.gt-form-library-scope input {
+  min-width: 0;
+  width: 100%;
+}
+.gt-forms-inventory > .gt-helper,
+.gt-forms-inventory > .gt-form-error {
+  margin-inline: 22px;
+}
 .gt-table-scroll {
   overflow-x: auto;
   width: 100%;

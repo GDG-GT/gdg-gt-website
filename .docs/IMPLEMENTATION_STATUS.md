@@ -5,6 +5,19 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Complete authorized Forms library filters — 2026-10-22
+
+- Added owner/team/chapter, updated-date and template-origin filters alongside
+  title/state, applied before server pagination/counts. Searchable owner/team
+  options expose only currently accessible form references, never account emails.
+  Historical unknown template origins stay unknown; creation/duplication now
+  preserve explicit provenance without altering immutable definitions.
+- 99 migrations/both grant-default replays/two 100-client races, 402 units,
+  strict types/lint/build, 18 actual new local HTTP/DB checks and existing 124
+  Forms/upload checks pass. Desktop/375px verifies combined filters and empty/
+  reset states. See `FORM_LIBRARY_OPERATIONS.md`. Broader Forms/quality/device
+  and full PRD acceptance remain open; work continues.
+
 ### Private capability context and router-safe cleanup — 2026-10-22
 
 - Private-link replacement and Forms preview transitions now isolate component

@@ -33,8 +33,18 @@ import { createTemplate, type PreviewForm, type FormTemplate } from "./store";
 import { formsApi, useFormLibrary } from "./api";
 import { useAdmin } from "@/contexts/AdminContext";
 import FormDeletionReview from "./FormDeletionReview";
+import FormLibraryScopeFilter, {
+  type FormScopeOption,
+} from "./FormLibraryScopeFilter";
+import { formTemplateLabels } from "../../../shared/form-library.mjs";
 
 export default function FormsLibrary() {
+  const { currentAdmin } = useAdmin();
+  return (
+    <FormsLibraryWorkspace key={`${currentAdmin?.id}:${currentAdmin?.role}`} />
+  );
+}
+function FormsLibraryWorkspace() {
   const navigate = useNavigate();
   const { isSuperAdmin } = useAdmin();
   const [deletion, setDeletion] = useState<PreviewForm | null>(null);
@@ -47,12 +57,46 @@ export default function FormsLibrary() {
     [title, setTitle] = useState(""),
     [share, setShare] = useState<PreviewForm | null>(null),
     [copied, setCopied] = useState(false);
+  const [owner, setOwner] = useState<FormScopeOption>(),
+    [team, setTeam] = useState<FormScopeOption>(),
+    [template, setTemplate] = useState(""),
+    [updatedFrom, setUpdatedFrom] = useState(""),
+    [updatedTo, setUpdatedTo] = useState(""),
+    [filtersOpen, setFiltersOpen] = useState(false),
+    [filterEpoch, setFilterEpoch] = useState(0);
+  const dateError = !!updatedFrom && !!updatedTo && updatedFrom > updatedTo;
+  const hasFilters = !!(
+    query ||
+    status !== "All states" ||
+    owner ||
+    team ||
+    template ||
+    updatedFrom ||
+    updatedTo
+  );
+  const resetFilters = () => {
+    setQuery("");
+    setStatus("All states");
+    setOwner(undefined);
+    setTeam(undefined);
+    setTemplate("");
+    setUpdatedFrom("");
+    setUpdatedTo("");
+    setPage(1);
+    setFilterEpoch((value) => value + 1);
+  };
   const library = useFormLibrary(
       new URLSearchParams({
         page: String(page),
         q: query,
         ...(status !== "All states" ? { state: status } : {}),
+        ...(owner ? { owner: owner.id } : {}),
+        ...(team ? { team: team.id } : {}),
+        ...(template ? { template } : {}),
+        ...(updatedFrom ? { updatedFrom } : {}),
+        ...(updatedTo ? { updatedTo } : {}),
       }).toString(),
+      !dateError,
     ),
     forms = library.items;
   const work = async (action: () => Promise<unknown>) => {
@@ -91,11 +135,7 @@ export default function FormsLibrary() {
       const form = await formsApi.create(createTemplate(name, kind));
       navigate(`/admin/forms/${form.id}/edit`);
     });
-  const filtered = forms.filter(
-    (form) =>
-      form.title.toLowerCase().includes(query.toLowerCase()) &&
-      (status === "All states" ? true : status === form.status),
-  );
+  const filtered = forms;
   return (
     <div className="gt-admin-page">
       <div className="gt-admin-page-heading">
@@ -177,6 +217,115 @@ export default function FormsLibrary() {
               </select>
             </label>
           </div>
+          <details
+            className="gt-form-library-filters"
+            open={filtersOpen}
+            onToggle={(event) => setFiltersOpen(event.currentTarget.open)}
+          >
+            <summary>
+              More filters
+              {owner || team || template || updatedFrom || updatedTo
+                ? " · active"
+                : ""}
+            </summary>
+            <p className="gt-helper">
+              Narrow the full authorized library, not just the current page.
+              Date bounds include the entire selected UTC day.
+            </p>
+            {filtersOpen && (
+              <div className="gt-form-library-filter-grid">
+                <FormLibraryScopeFilter
+                  key={`owner:${filterEpoch}`}
+                  kind="owner"
+                  value={owner}
+                  onChange={(value) => {
+                    setOwner(value);
+                    setPage(1);
+                  }}
+                />
+                <FormLibraryScopeFilter
+                  key={`team:${filterEpoch}`}
+                  kind="team"
+                  value={team}
+                  onChange={(value) => {
+                    setTeam(value);
+                    setPage(1);
+                  }}
+                />
+                <div className="gt-form-library-scope">
+                  <Field label="Template origin">
+                    <select
+                      value={template}
+                      onChange={(event) => {
+                        setTemplate(event.target.value);
+                        setPage(1);
+                      }}
+                    >
+                      <option value="">All template origins</option>
+                      {Object.entries(formTemplateLabels).map(
+                        ([key, label]) => (
+                          <option key={key} value={key}>
+                            {label}
+                          </option>
+                        ),
+                      )}
+                      <option value="unspecified">
+                        Unspecified (older forms)
+                      </option>
+                    </select>
+                  </Field>
+                  <Field label="Updated from (UTC)">
+                    <input
+                      type="date"
+                      value={updatedFrom}
+                      max={updatedTo || "9999-12-31"}
+                      onChange={(event) => {
+                        setUpdatedFrom(event.target.value);
+                        setPage(1);
+                      }}
+                    />
+                  </Field>
+                  <Field label="Updated through (UTC)">
+                    <input
+                      type="date"
+                      value={updatedTo}
+                      min={updatedFrom || undefined}
+                      max="9999-12-31"
+                      aria-invalid={dateError}
+                      aria-describedby={
+                        dateError ? "form-library-date-error" : undefined
+                      }
+                      onChange={(event) => {
+                        setUpdatedTo(event.target.value);
+                        setPage(1);
+                      }}
+                    />
+                  </Field>
+                </div>
+              </div>
+            )}
+          </details>
+          {dateError && (
+            <p
+              id="form-library-date-error"
+              role="alert"
+              className="gt-form-error"
+            >
+              The end date must be on or after the start date.
+            </p>
+          )}
+          {hasFilters && (
+            <Button variant="ghost" onClick={resetFilters}>
+              Reset all filters
+            </Button>
+          )}
+          {!library.loading && !library.error && !dateError && (
+            <p role="status" className="gt-helper">
+              {library.total}{" "}
+              {library.total === 1 ? "form matches" : "forms match"} your
+              filters.
+            </p>
+          )}
           {filtered.length ? (
             <div className="gt-table-scroll">
               <table className="gt-table">
@@ -206,7 +355,11 @@ export default function FormsLibrary() {
                           <span>
                             <strong>{form.title}</strong>
                             <small>
-                              {form.team} · Owner {form.ownerId}
+                              {form.team} ·{" "}
+                              {form.ownerLabel || "Owner " + form.ownerId}
+                              {form.templateKey && (
+                                <> · {formTemplateLabels[form.templateKey]}</>
+                              )}
                             </small>
                           </span>
                         </Link>
@@ -320,7 +473,14 @@ export default function FormsLibrary() {
                                 ? "Restore draft"
                                 : "Archive form"}
                             </DropdownMenuItem>
-                            {isSuperAdmin && form.status === "Archived" && <DropdownMenuItem disabled={busy} onClick={() => setDeletion(form)}>Review permanent deletion…</DropdownMenuItem>}
+                            {isSuperAdmin && form.status === "Archived" && (
+                              <DropdownMenuItem
+                                disabled={busy}
+                                onClick={() => setDeletion(form)}
+                              >
+                                Review permanent deletion…
+                              </DropdownMenuItem>
+                            )}
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </td>
@@ -329,10 +489,10 @@ export default function FormsLibrary() {
                 </tbody>
               </table>
             </div>
-          ) : (
+          ) : !library.loading && !library.error && !dateError ? (
             <EmptyState
               title={
-                query || status !== "All states"
+                hasFilters
                   ? "No forms match your filters"
                   : "Create your first form"
               }
@@ -340,20 +500,18 @@ export default function FormsLibrary() {
                 <Button
                   variant="secondary"
                   onClick={() =>
-                    query || status !== "All states"
-                      ? (setQuery(""), setStatus("All states"))
-                      : setCreateOpen(true)
+                    hasFilters ? resetFilters() : setCreateOpen(true)
                   }
                 >
-                  {query || status !== "All states"
-                    ? "Reset filters"
-                    : "Create a form"}
+                  {hasFilters ? "Reset filters" : "Create a form"}
                 </Button>
               }
             >
-              Start with a blank page or a helpful template.
+              {hasFilters
+                ? "Try widening the date, owner, team or template filters."
+                : "Start with a blank page or a helpful template."}
             </EmptyState>
-          )}
+          ) : null}
           <div className="gt-table-footer">
             <span>{library.total} matching forms</span>
             <div className="gt-actions">
@@ -404,7 +562,17 @@ export default function FormsLibrary() {
           </div>
         </aside>
       </div>
-      {deletion && <FormDeletionReview formId={deletion.id} title={deletion.title} onClose={() => setDeletion(null)} onDeleted={() => { setDeletion(null); library.reload(); }} />}
+      {deletion && (
+        <FormDeletionReview
+          formId={deletion.id}
+          title={deletion.title}
+          onClose={() => setDeletion(null)}
+          onDeleted={() => {
+            setDeletion(null);
+            library.reload();
+          }}
+        />
+      )}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent>
           <DialogTitle>What are you creating?</DialogTitle>

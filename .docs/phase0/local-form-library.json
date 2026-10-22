@@ -1,0 +1,77 @@
+{
+  "note": "Actual loopback HTTP and PostgreSQL fixtures; generated dates/names only, forms/accounts/teams recoverably archived. No external sends.",
+  "tests": [
+    {
+      "name": "anonymous clients cannot read forms or filter options",
+      "passed": true
+    },
+    {
+      "name": "actual creation persists explicit template origin and preserves unknown legacy origin",
+      "passed": true
+    },
+    {
+      "name": "duplication preserves provenance but never copies response data",
+      "passed": true
+    },
+    {
+      "name": "inclusive UTC day filters and server pagination include both boundaries, not the next day",
+      "passed": true
+    },
+    {
+      "name": "the next filtered page retains the full matching total and deterministic order",
+      "passed": true
+    },
+    {
+      "name": "owner, team and template filters combine on the server with safe display labels",
+      "passed": true
+    },
+    {
+      "name": "chapter-only and unspecified historical origin filters remain distinct",
+      "passed": true
+    },
+    {
+      "name": "invalid library query rejected: updatedFrom",
+      "passed": true
+    },
+    {
+      "name": "invalid library query rejected: updatedFrom",
+      "passed": true
+    },
+    {
+      "name": "invalid library query rejected: owner",
+      "passed": true
+    },
+    {
+      "name": "invalid library query rejected: template",
+      "passed": true
+    },
+    {
+      "name": "invalid library query rejected: team",
+      "passed": true
+    },
+    {
+      "name": "invalid library query rejected: pageSize",
+      "passed": true
+    },
+    {
+      "name": "invalid library query rejected: owner",
+      "passed": true
+    },
+    {
+      "name": "actual Team Member session sees only current permitted forms even with a guessed team filter",
+      "passed": true
+    },
+    {
+      "name": "filter options disclose only referenced accessible teams/owners, without email addresses",
+      "passed": true
+    },
+    {
+      "name": "filter option pagination does not repeat the first page",
+      "passed": true
+    },
+    {
+      "name": "membership revocation immediately removes both inventory and owner filter options",
+      "passed": true
+    }
+  ]
+}
