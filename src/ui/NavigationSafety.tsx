@@ -15,6 +15,7 @@ import {
   type DraftState,
 } from "@/contexts/NavigationSafetyContext";
 import { Button } from "./primitives";
+import { navigationChangesContext } from '../../shared/capability-navigation';
 export default function NavigationSafety({
   children,
 }: {
@@ -29,8 +30,7 @@ export default function NavigationSafety({
   const changed = useCallback(() => setVersion((v) => v + 1), []);
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      (currentLocation.pathname !== nextLocation.pathname ||
-        currentLocation.search !== nextLocation.search) &&
+      navigationChangesContext(currentLocation,nextLocation) &&
       registry.shouldBlock(),
   );
   const states = registry.states() as DraftState[],

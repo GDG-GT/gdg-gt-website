@@ -27,7 +27,9 @@ email confirmation. File bytes/private links are excluded. See
    Image blocks/header media now use real approved media with alt text and
    transactional publication/usage safeguards (`FORM_IMAGE_OPERATIONS.md`).
    Theme/progress/safe shuffling and distinct immutable/draft preview now work
-   (`FORM_PRESENTATION_OPERATIONS.md`); remaining field/runtime/accessibility
+   (`FORM_PRESENTATION_OPERATIONS.md`). Private-link context replacement,
+   render-pure capture and router-safe cleanup are implemented and verified
+   locally (`CAPABILITY_NAVIGATION_OPERATIONS.md`); remaining field/runtime/accessibility
    edge cases and broader acceptance remain open.
    Safe Super Admin permanent-deletion review and erasure are implemented locally
    (`FORM_PERMANENT_DELETION_OPERATIONS.md`); hosted retention/security acceptance

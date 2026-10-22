@@ -4,20 +4,14 @@ import { CheckCircle2, Loader2, Mail, CircleAlert } from "lucide-react";
 import { PublicNewsletterService as NewsletterService } from "@/services/publicWorkflows";
 import { Badge } from "./primitives";
 import { localPreviewEnabled } from "./preview-data";
+import { useUrlCapability } from '@/hooks/useUrlCapability';
 
 export default function NewsletterTokenPage({
   kind,
 }: {
   kind: "confirm" | "unsubscribe";
 }) {
-  const [token] = useState(() => {
-    const current = new URL(window.location.href),
-      value =
-        new URLSearchParams(current.hash.slice(1)).get("token") ||
-        current.searchParams.get("token");
-    if (value) window.history.replaceState(null, "", current.pathname);
-    return value;
-  });
+  const [token] = useUrlCapability('token',true);
   const [state, setState] = useState<
     "loading" | "success" | "error" | "preview"
   >("loading");

@@ -19,6 +19,8 @@ import SiteShell from "@/ui/SiteShell";
 import AdminShell from "@/ui/AdminShell";
 import RouteErrorBoundary from "@/ui/RouteErrorBoundary";
 import NavigationSafety from "@/ui/NavigationSafety";
+import CapabilityBoundary from '@/ui/CapabilityBoundary';
+import { formCapabilityNames } from '../shared/capability-navigation';
 import { PwaUpdateNotice } from "@/pwa/PwaControls";
 import { QueueRuntime } from "@/pwa/SubmissionQueue";
 import { MaintenancePage } from "@/ui/status/SiteAvailability";
@@ -147,23 +149,23 @@ function RoutedApplication() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/events" element={<EventsPage />} />
-              <Route path="/events/:slug" element={<EventDetailPage />} />
+              <Route path="/events/:slug" element={<CapabilityBoundary names={['reminder']}><EventDetailPage /></CapabilityBoundary>} />
               <Route path="/team" element={<TeamPage />} />
-              <Route path="/team/join" element={<AcceptInvite />} />
+              <Route path="/team/join" element={<CapabilityBoundary names={['invite']}><AcceptInvite /></CapabilityBoundary>} />
               <Route path="/resources" element={<ResourcesPage />} />
               <Route path="/sponsors" element={<SponsorsPage />} />
               <Route path="/gallery" element={<GalleryPage />} />
               <Route path="/contact" element={<ContactPage />} />
-              <Route path="/forms/:slug" element={<PublicForm />} />
-              <Route path="/account/setup" element={<AccountSetup />} />
+              <Route path="/forms/:slug" element={<CapabilityBoundary names={formCapabilityNames} previewSensitive><PublicForm /></CapabilityBoundary>} />
+              <Route path="/account/setup" element={<CapabilityBoundary names={['token']}><AccountSetup /></CapabilityBoundary>} />
               <Route path="/l/:username" element={<Linktree />} />
               <Route
                 path="/newsletter/confirm"
-                element={<NewsletterTokenPage kind="confirm" />}
+                element={<CapabilityBoundary names={['token']} allowQuery><NewsletterTokenPage kind="confirm" /></CapabilityBoundary>}
               />
               <Route
                 path="/newsletter/unsubscribe"
-                element={<NewsletterTokenPage kind="unsubscribe" />}
+                element={<CapabilityBoundary names={['token']} allowQuery><NewsletterTokenPage kind="unsubscribe" /></CapabilityBoundary>}
               />
               <Route path="/privacy" element={<InfoPage kind="privacy" />} />
               <Route

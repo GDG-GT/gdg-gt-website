@@ -20,6 +20,7 @@ import FieldRenderer from "./FieldRenderer";
 import FormImage from "./FormImage";
 import { formImageId } from "./store";
 import { presentationFields } from "../../../shared/form-presentation";
+import { stripUrlCapabilities, formCapabilityNames } from '../../../shared/capability-navigation';
 import RespondentFileField from "./RespondentFileField";
 import { api, ApiFailure } from "@/lib/api";
 import GeorgiaTechSsoOption from "../auth/GeorgiaTechSsoOption";
@@ -141,11 +142,7 @@ function RespondentFormRuntime() {
     };
   }, []);
   useEffect(() => {
-    window.history.replaceState(
-      null,
-      "",
-      window.location.pathname + window.location.search,
-    );
+    stripUrlCapabilities(window.history, window.location, formCapabilityNames);
     const controller = new AbortController();
     setLoading(true);
     setLoadError("");

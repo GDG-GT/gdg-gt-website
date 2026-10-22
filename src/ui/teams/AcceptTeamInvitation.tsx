@@ -2,17 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "@/lib/api";
 import { Button, Field } from "../primitives";
-let fragmentToken = "";
-function capture() {
-  const token = new URLSearchParams(window.location.hash.slice(1)).get(
-    "invite",
-  );
-  if (token) {
-    fragmentToken = token;
-    window.history.replaceState(null, "", window.location.pathname);
-  }
-  return fragmentToken;
-}
+import { useUrlCapability } from '@/hooks/useUrlCapability';
 type Info = {
   teamName: string;
   role: string;
@@ -20,8 +10,8 @@ type Info = {
   requiresSignIn: boolean;
 };
 export default function AcceptTeamInvitation() {
-  const [token, setToken] = useState(capture),
-    [email, setEmail] = useState(""),
+  const [token, setToken] = useUrlCapability('invite');
+  const [email, setEmail] = useState(""),
     [info, setInfo] = useState<Info>(),
     [name, setName] = useState(""),
     [password, setPassword] = useState(""),
@@ -32,9 +22,6 @@ export default function AcceptTeamInvitation() {
     [needsSignIn, setNeedsSignIn] = useState(false);
   useEffect(() => {
     document.title = "Team invitation · GDG at Georgia Tech";
-    return () => {
-      fragmentToken = "";
-    };
   }, []);
   return (
     <section className="gt-token-page">
@@ -111,7 +98,6 @@ export default function AcceptTeamInvitation() {
                   setNeedsSignIn(r.requiresSignIn);
                   setDone(true);
                   setToken("");
-                  fragmentToken = "";
                 }
               } catch (e) {
                 setError(

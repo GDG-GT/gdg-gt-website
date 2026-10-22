@@ -30,6 +30,7 @@
     "test:local-forms": "node scripts/test-local-forms.mjs",
     "test:local-form-images": "node scripts/test-local-form-images.mjs",
     "test:local-form-presentation": "node scripts/test-local-form-images.mjs --presentation",
+    "test:local-form-navigation": "node scripts/test-local-form-images.mjs --navigation",
     "test:local-form-exports": "node scripts/test-local-form-exports.mjs",
     "test:local-form-history": "node scripts/test-local-form-history.mjs",
     "test:local-form-delivery": "node scripts/test-local-form-delivery.mjs",

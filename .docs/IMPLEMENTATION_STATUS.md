@@ -5,6 +5,18 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Private capability context and router-safe cleanup — 2026-10-22
+
+- Private-link replacement and Forms preview transitions now isolate component
+  state. Cleanup preserves router history metadata and unrelated anchors/query
+  values. Setup/invitation/newsletter capture no longer mutates history in render.
+- 397 units and 15 actual new local HTTP/storage/scanner/Form checks pass;
+  existing team-invitation regression passes. Chrome verifies isolated Alpha/Beta
+  resumes, anchor preservation, unsaved-work Stay/Leave and Back/Forward without
+  resurrecting stripped private answers. See
+  `CAPABILITY_NAVIGATION_OPERATIONS.md`. Broader navigation/device/quality and
+  full PRD acceptance remain open; work continues.
+
 ### Actual Forms theme, progress and safe shuffling — 2026-10-22
 
 - Implemented approved theme accents, optional progress bar and deterministic

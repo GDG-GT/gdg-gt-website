@@ -1,5 +1,5 @@
 import { randomUUID, createHash } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { writeFile, unlink } from "node:fs/promises";
 import { createInterface } from "node:readline";
 import sharp from "sharp";
 import { localHttp } from "./lib/local-http.mjs";
@@ -36,7 +36,7 @@ const post = (path, body) =>
   call(path, { method: "POST", body, key: randomUUID() });
 const fileRow = async (id) =>
   checked(await db.from("media_files").select("*").eq("id", id).single());
-let file, form;
+let file, form, navigationFixture;
 async function publication(action) {
   file = await fileRow(file.id);
   return post(`/admin/media/files/${file.id}/publication`, {
@@ -191,6 +191,7 @@ try {
       shuffleOptions: true,
     });
   }
+  if (process.argv.includes('--navigation')) definition.title='Fictional private-link navigation';
   const slug = "fictional-image-" + actor.slice(0, 8);
   check(
     (
@@ -282,6 +283,19 @@ try {
       "stable original field IDs and option values still submit through the actual server validation",
     );
   }
+  if (process.argv.includes('--navigation')) {
+    const field=definition.fields[1], records=[];
+    for(const label of ['Alpha','Beta']) {
+      const saved=data(await post(`/forms/${slug}/drafts`,{versionId:publicForm.versionId,answers:{[field.id]:'Fictional '+label+' note'},
+        respondent:{name:'Fictional '+label,email:`fictional-${label.toLowerCase()}-${actor}@example.test`}}));
+      const loaded=data(await post(`/forms/${slug}/drafts/load`,{resumeToken:saved.resumeToken}));
+      check(loaded.respondent.name==='Fictional '+label,'private resume capability restores only its own '+label+' identity');
+      records.push({name:'Fictional '+label,note:'Fictional '+label+' note',url:env.APP_ORIGIN+`/forms/${slug}#resume=`+saved.resumeToken});
+    }
+    const target=new URL(`../.docs/form-navigation-${actor}.local`,import.meta.url);
+    await writeFile(target,JSON.stringify({records}),{mode:0o600,flag:'wx'});navigationFixture=target;
+    console.info('BROWSER_FORM_NAVIGATION_FILE '+target.pathname);
+  }
   if (process.argv.includes("--hold-for-browser")) {
     if (!process.stdin.isTTY)
       throw Error("Browser review requires a terminal.");
@@ -348,6 +362,7 @@ try {
   );
   form = data(await call(`/admin/forms/${form.id}`)).form;
 } finally {
+  if(navigationFixture) await unlink(navigationFixture);
   if (file) {
     file = await fileRow(file.id);
     if (file.is_public) data(await publication("revoke"));
@@ -368,7 +383,7 @@ try {
 }
 await writeFile(
   new URL(
-    process.argv.includes("--presentation")
+    process.argv.includes('--navigation') ? '../.docs/phase0/local-form-navigation.json' : process.argv.includes("--presentation")
       ? "../.docs/phase0/local-form-presentation.json"
       : "../.docs/phase0/local-form-images.json",
     import.meta.url,

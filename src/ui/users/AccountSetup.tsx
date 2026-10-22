@@ -2,24 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "@/lib/api";
 import { Button, Field } from "../primitives";
-// Fragment capabilities never enter server access logs or browser storage.
-let accessToken = "";
-function capture() {
-  const params = new URLSearchParams(window.location.hash.slice(1));
-  const raw = params.get("token");
-  if (raw) {
-    accessToken = raw;
-    window.history.replaceState(
-      null,
-      "",
-      window.location.pathname + window.location.search,
-    );
-  }
-  return accessToken;
-}
+import { useUrlCapability } from '@/hooks/useUrlCapability';
 export default function AccountSetup() {
-  const [token] = useState(capture),
-    [email, setEmail] = useState(""),
+  const [token,setToken] = useUrlCapability('token');
+  const [email, setEmail] = useState(""),
     [password, setPassword] = useState(""),
     [confirm, setConfirm] = useState(""),
     [busy, setBusy] = useState(false),
@@ -27,9 +13,6 @@ export default function AccountSetup() {
     [error, setError] = useState("");
   useEffect(() => {
     document.title = "Account setup · GDG at Georgia Tech";
-    return () => {
-      accessToken = "";
-    };
   }, []);
   return (
     <div className="gt-container gt-contact-grid">
@@ -69,7 +52,7 @@ export default function AccountSetup() {
                   method: "POST",
                   body: { token, email, newPassword: secret },
                 });
-                accessToken = "";
+                setToken('');
                 setDone(true);
               } catch (e) {
                 setError(
