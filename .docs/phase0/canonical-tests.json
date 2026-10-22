@@ -91,7 +91,8 @@
     "202610210088_contact_attachment_workflows.sql",
     "202610210089_event_mail_review.sql",
     "202610210090_verified_event_push.sql",
-    "202610210091_push_quota_and_retry_fences.sql"
+    "202610210091_push_quota_and_retry_fences.sql",
+    "202610210092_identified_form_responses.sql"
   ],
   "tests": [
     {
@@ -463,6 +464,10 @@
       "passed": true
     },
     {
+      "name": "202610210092_identified_form_responses.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -724,6 +729,10 @@
     },
     {
       "name": "091_push_fences.sql",
+      "passed": true
+    },
+    {
+      "name": "092_identified_forms.sql",
       "passed": true
     },
     {

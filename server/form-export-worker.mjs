@@ -9,6 +9,8 @@ export function flattenExportResponse(r) {
   return {
     formId: r.formId, version: r.version, responseId: r.responseId,
     submittedAt: r.submittedAt, completionState: r.completionState,
+    respondentName: r.respondent?.name ?? "", respondentEmail: r.respondent?.email ?? "",
+    respondentSource: r.respondent?.source || "legacy_unknown",
     ...Object.fromEntries(Object.entries(r.answers).map(([id, answer]) => [
       `${answer.label || id} [${id}] v${r.version}`, answer.value,
     ])),
@@ -42,7 +44,7 @@ export async function runFormExportWorker({
           if (!batch.length) throw new ApiError(409, "FORM_EXPORT_CHANGED", "The responses changed.");
           sourceBytes += Buffer.byteLength(JSON.stringify(batch));
           for (const row of batch) {
-            cells += Object.keys(row.answers).length + 5;
+            cells += Object.keys(row.answers).length + 8;
             rows.push(flattenExportResponse(row));
           }
           if (sourceBytes > 32 * 1024 * 1024 || cells > 200000)

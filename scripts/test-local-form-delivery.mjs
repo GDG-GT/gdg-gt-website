@@ -42,11 +42,11 @@ try {
   check(data(await call(base)).matchesDraft, "saved approval matches the exact canonical draft");
   form = data(await post(`/admin/forms/${form.id}/publish`, { revision: form.revision })).form;
   const versionId = data(await call(`/forms/${form.slug}`)).form.versionId;
-  const submission = { versionId, answers: { [fields[0].id]: "Fictional email-safe answer", [fields[1].id]: "never-mail-this-answer@example.test" }, website: "" }, key = randomUUID();
+  const submission = { respondent: { name: "Fictional Internal Respondent", email }, versionId, answers: { [fields[0].id]: "Fictional email-safe answer", [fields[1].id]: "never-mail-this-answer@example.test" }, website: "" }, key = randomUUID();
   const committed = data(await post(`/forms/${form.slug}/submissions`, submission, key));
   check(data(await post(`/forms/${form.slug}/submissions`, submission, key)).responseId === committed.responseId, "real internal submission retry returns the committed response");
   const deliveries = await db.from("form_response_deliveries").select("id,purpose").eq("response_id", committed.responseId);
-  check(!deliveries.error && deliveries.data.length === 2, "one respondent receipt and one explicit chapter notification are queued exactly once");
+  check(!deliveries.error && deliveries.data.length === 1, "unchecked copy option suppresses automatic receipts while preserving the reviewed chapter notification");
   const deliveryIds = deliveries.data.map((d) => d.id);
   let jobs;
   for (let attempt = 0; attempt < 6; attempt++) {
@@ -54,13 +54,13 @@ try {
     const rows = await db.from("delivery_jobs").select("id,state,provider_message_id,payload").eq("kind", "form_reviewed_email");
     if (rows.error) throw Error("Delivery job verification failed");
     jobs = rows.data.filter((j) => deliveryIds.includes(j.payload.deliveryId));
-    if (jobs.length === 2 && jobs.every((j) => j.state === "completed")) break;
+    if (jobs.length === 1 && jobs.every((j) => j.state === "completed")) break;
   }
-  check(jobs.length === 2 && jobs.every((j) => j.state === "completed" && j.provider_message_id), "both durable messages are delivered through actual loopback SMTP");
+  check(jobs.length === 1 && jobs.every((j) => j.state === "completed" && j.provider_message_id), "reviewed notification is delivered through actual loopback SMTP");
   check(!JSON.stringify(jobs).includes("never-mail-this-answer") && !JSON.stringify(jobs).includes(email), "outbox payloads contain references, not recipient addresses or answers");
   const messages = await fetch("http://127.0.0.1:54364/api/v1/messages").then((r) => r.json());
   const own = messages.messages.filter((m) => m.To?.some((to) => to.Address === email));
-  check(own.length === 2, "local mail sink contains exactly the receipt and authorized notification");
+  check(own.length === 1, "local mail sink contains only the authorized notification, no unrequested receipt");
   for (const message of own) {
     const detail = await fetch(`http://127.0.0.1:54364/api/v1/message/${message.ID}`).then((r) => r.json());
     check(detail.Text.includes("Fictional email-safe answer") && !JSON.stringify(detail).includes("never-mail-this-answer"), "actual email includes reviewed non-sensitive answers and excludes sensitive answers");

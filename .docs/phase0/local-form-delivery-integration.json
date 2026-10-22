@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-22T00:07:32.417Z",
+  "generatedAt": "2026-10-22T01:23:15.766Z",
   "environment": "loopback development and local SMTP only",
   "tests": [
     {
@@ -51,11 +51,11 @@
       "passed": true
     },
     {
-      "name": "one respondent receipt and one explicit chapter notification are queued exactly once",
+      "name": "unchecked copy option suppresses automatic receipts while preserving the reviewed chapter notification",
       "passed": true
     },
     {
-      "name": "both durable messages are delivered through actual loopback SMTP",
+      "name": "reviewed notification is delivered through actual loopback SMTP",
       "passed": true
     },
     {
@@ -63,11 +63,7 @@
       "passed": true
     },
     {
-      "name": "local mail sink contains exactly the receipt and authorized notification",
-      "passed": true
-    },
-    {
-      "name": "actual email includes reviewed non-sensitive answers and excludes sensitive answers",
+      "name": "local mail sink contains only the authorized notification, no unrequested receipt",
       "passed": true
     },
     {

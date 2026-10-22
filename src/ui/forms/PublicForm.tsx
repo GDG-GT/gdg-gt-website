@@ -20,15 +20,33 @@ import FieldRenderer from "./FieldRenderer";
 import RespondentFileField from "./RespondentFileField";
 import { api, ApiFailure } from "@/lib/api";
 import GeorgiaTechSsoOption from "../auth/GeorgiaTechSsoOption";
+import {
+  formRespondentSchema,
+  respondentLabel,
+} from "../../../shared/form-respondent.mjs";
 type RespondentForm = FormDefinition & {
   id: string;
   slug: string;
   status: string;
   versionId: string;
   version: number;
+  respondentContext?: {
+    name?: string;
+    email?: string;
+    source: string;
+    locked?: boolean;
+  };
+  copyAvailable?: boolean;
 };
 
 export default function PublicForm() {
+  const { slug } = useParams();
+  // A different form must never inherit another form's answers, identity or
+  // private resume/edit/upload capabilities after an approved navigation.
+  return <RespondentFormRuntime key={slug} />;
+}
+
+function RespondentFormRuntime() {
   const { slug } = useParams(),
     [params] = useSearchParams(),
     preview = params.get("preview") === "1";
@@ -58,10 +76,19 @@ export default function PublicForm() {
     [feedback, setFeedback] = useState(""),
     [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [respondent, setRespondent] = useState({ name: "", email: "" }),
+    [copyRequested, setCopyRequested] = useState(false),
+    [copyQueued, setCopyQueued] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null),
     formRef = useRef<HTMLFormElement>(null);
   const responseId = useRef<string | null>(null);
-  const savedAnswers = useRef("{}");
+  const savedAnswers = useRef(
+    JSON.stringify({
+      answers: {},
+      respondent: { name: "", email: "" },
+      copyRequested: false,
+    }),
+  );
   const [uploadToken] = useState(() =>
     tokens.upload && /^[A-Za-z0-9_-]{43}$/.test(tokens.upload)
       ? tokens.upload
@@ -73,7 +100,9 @@ export default function PublicForm() {
   const [uploading, setUploading] = useState<string[]>([]),
     [fileNames, setFileNames] = useState<Record<string, string>>({});
   useDraftGuard(
-    !submitted && JSON.stringify(answers) !== savedAnswers.current,
+    !submitted &&
+      JSON.stringify({ answers, respondent, copyRequested }) !==
+        savedAnswers.current,
     {
       busy: pending || uploading.length > 0,
       label: "Form answers or files not yet saved",
@@ -125,6 +154,7 @@ export default function PublicForm() {
           responseId: string;
           revision: number;
           answers: Record<string, Answer>;
+          respondent: { name: string; email: string };
         }>(`/forms/${slug}/edits/load`, {
           method: "POST",
           body: {
@@ -134,8 +164,13 @@ export default function PublicForm() {
           signal: controller.signal,
         });
         setForm(data.form);
-        savedAnswers.current = JSON.stringify(data.answers);
+        savedAnswers.current = JSON.stringify({
+          answers: data.answers,
+          respondent: data.respondent,
+          copyRequested: false,
+        });
         setAnswers(data.answers);
+        setRespondent(data.respondent);
         responseId.current = data.responseId;
         editRevision.current = data.revision;
         setFeedback(
@@ -147,20 +182,37 @@ export default function PublicForm() {
           { formAccessToken: tokens.access, signal: controller.signal },
         );
         setForm(data.form);
+        const initial = {
+          name: data.form.respondentContext?.name || "",
+          email: data.form.respondentContext?.email || "",
+        };
+        setRespondent(initial);
+        savedAnswers.current = JSON.stringify({
+          answers: {},
+          respondent: initial,
+          copyRequested: false,
+        });
         if (tokens.resume && !preview) {
-          const draft = await api<{ answers: Record<string, Answer> }>(
-            `/forms/${slug}/drafts/load`,
-            {
-              method: "POST",
-              body: {
-                resumeToken: tokens.resume,
-                ...(tokens.access ? { accessToken: tokens.access } : {}),
-              },
-              signal: controller.signal,
+          const draft = await api<{
+            answers: Record<string, Answer>;
+            respondent: { name: string; email: string };
+            copyRequested: boolean;
+          }>(`/forms/${slug}/drafts/load`, {
+            method: "POST",
+            body: {
+              resumeToken: tokens.resume,
+              ...(tokens.access ? { accessToken: tokens.access } : {}),
             },
-          );
-          savedAnswers.current = JSON.stringify(draft.answers);
+            signal: controller.signal,
+          });
+          savedAnswers.current = JSON.stringify({
+            answers: draft.answers,
+            respondent: draft.respondent,
+            copyRequested: draft.copyRequested,
+          });
           setAnswers(draft.answers);
+          setRespondent(draft.respondent);
+          setCopyRequested(draft.copyRequested);
           setFeedback("Your saved draft was restored.");
         }
       }
@@ -179,8 +231,8 @@ export default function PublicForm() {
     return () => controller.abort();
   }, [slug, preview, tokens]);
   useEffect(() => {
-    if (step) heading.current?.focus();
-  }, [step]);
+    if (step || submitted) heading.current?.focus();
+  }, [step, submitted]);
   if (!loading && accessRequired)
     return (
       <div className="gt-public-form-page">
@@ -296,6 +348,20 @@ export default function PublicForm() {
       return;
     }
     setError("");
+    const identity = formRespondentSchema.safeParse(respondent);
+    if (!identity.success) {
+      const field = identity.error.issues[0].path[0];
+      setError(
+        field === "name"
+          ? "Enter your name (2–100 characters)."
+          : "Enter a valid email address.",
+      );
+      setStep(0);
+      requestAnimationFrame(() =>
+        document.getElementById(`respondent-${field}`)?.focus(),
+      );
+      return;
+    }
     const errors = Object.fromEntries(
       (finalStep
         ? visibleFields(definition.fields, answers, definition.sections)
@@ -347,6 +413,8 @@ export default function PublicForm() {
       ? {
           versionId: form.versionId,
           answers: submittedAnswers,
+          respondent: identity.data,
+          copyRequested,
           editToken: editToken.current,
           revision: editRevision.current,
           ...(tokens.access ? { accessToken: tokens.access } : {}),
@@ -354,6 +422,8 @@ export default function PublicForm() {
       : {
           versionId: form.versionId,
           answers: submittedAnswers,
+          respondent: identity.data,
+          copyRequested,
           website: "",
           ...(tokens.access ? { accessToken: tokens.access } : {}),
           ...(resumeToken.current ? { resumeToken: resumeToken.current } : {}),
@@ -368,12 +438,27 @@ export default function PublicForm() {
         responseId: string;
         editToken?: string;
         revision?: number;
+        copyQueued?: boolean;
       }>(`/forms/${slug}/${editToken.current ? "edits" : "submissions"}`, {
         method: "POST",
         body,
         idempotencyKey: submission.current.key,
       });
       responseId.current = result.responseId;
+      setCopyQueued(!!result.copyQueued);
+      setRespondent(identity.data);
+      setForm(
+        (previous) =>
+          previous && {
+            ...previous,
+            respondentContext: {
+              ...previous.respondentContext,
+              ...identity.data,
+              source: previous.respondentContext?.source || "self_reported",
+              locked: true,
+            },
+          },
+      );
       editToken.current = result.editToken || editToken.current;
       if (result.revision !== undefined) editRevision.current = result.revision;
       if (editToken.current)
@@ -392,6 +477,19 @@ export default function PublicForm() {
     }
   };
   const save = async () => {
+    const identity = formRespondentSchema.safeParse(respondent);
+    if (!identity.success) {
+      setError(
+        "Enter your name and a valid email address before saving your draft.",
+      );
+      setStep(0);
+      requestAnimationFrame(() =>
+        document
+          .getElementById(`respondent-${identity.error.issues[0].path[0]}`)
+          ?.focus(),
+      );
+      return;
+    }
     setPending(true);
     setError("");
     try {
@@ -405,23 +503,29 @@ export default function PublicForm() {
             visible.some((f) => f.id === id),
           ),
         );
-      const result = await api<{ resumeToken: string; expiresInDays: number; expiresAt: string }>(
-        `/forms/${slug}/drafts`,
-        {
-          method: "POST",
-          body: {
-            versionId: form.versionId,
-            answers: safe,
-            ...(resumeToken.current
-              ? { resumeToken: resumeToken.current }
-              : {}),
-            uploadToken,
-            ...(tokens.access ? { accessToken: tokens.access } : {}),
-          },
+      const result = await api<{
+        resumeToken: string;
+        expiresInDays: number;
+        expiresAt: string;
+      }>(`/forms/${slug}/drafts`, {
+        method: "POST",
+        body: {
+          versionId: form.versionId,
+          answers: safe,
+          respondent: identity.data,
+          copyRequested,
+          ...(resumeToken.current ? { resumeToken: resumeToken.current } : {}),
+          uploadToken,
+          ...(tokens.access ? { accessToken: tokens.access } : {}),
         },
-      );
+      });
       resumeToken.current = result.resumeToken;
-      savedAnswers.current = JSON.stringify(answers);
+      setRespondent(identity.data);
+      savedAnswers.current = JSON.stringify({
+        answers,
+        respondent: identity.data,
+        copyRequested,
+      });
       const fragment = new URLSearchParams({
         resume: result.resumeToken,
         upload: uploadToken,
@@ -453,11 +557,20 @@ export default function PublicForm() {
         {submitted ? (
           <div className="gt-success">
             <CheckCircle2 size={48} />
-            <h1>Response submitted.</h1>
+            <h1 ref={heading} tabIndex={-1}>
+              Response submitted.
+            </h1>
             <p>{settings.confirmation}</p>
             <p className="gt-helper">
               Your response is saved securely. Reference: {responseId.current}
             </p>
+            {copyRequested && (
+              <p role="status">
+                {copyQueued
+                  ? `A copy of your questions and answers is queued for ${respondent.email}. No confirmation step is needed.`
+                  : "Your response is saved, but an email copy could not be queued. Email may be unavailable or the copy limit reached."}
+              </p>
+            )}
             {settings.editing && editToken.current && (
               <Button
                 variant="secondary"
@@ -527,8 +640,61 @@ export default function PublicForm() {
                   {error}
                 </div>
               )}
+              {step === 0 && (
+                <fieldset className="gt-form">
+                  <legend>Your details</legend>
+                  <p className="gt-helper">
+                    Name and email are required.{" "}
+                    {respondentLabel(
+                      form.respondentContext?.source || "self_reported",
+                    )}
+                    .
+                  </p>
+                  <Field label="Your name *">
+                    <input
+                      id="respondent-name"
+                      autoComplete="name"
+                      required
+                      minLength={2}
+                      maxLength={100}
+                      value={respondent.name}
+                      readOnly={!!form.respondentContext?.locked}
+                      disabled={pending}
+                      onChange={(e) =>
+                        setRespondent((v) => ({ ...v, name: e.target.value }))
+                      }
+                    />
+                  </Field>
+                  <Field
+                    label="Your email *"
+                    hint="If you request a copy, it goes only to this address. Check it carefully."
+                  >
+                    <input
+                      id="respondent-email"
+                      type="email"
+                      autoComplete="email"
+                      required
+                      maxLength={254}
+                      value={respondent.email}
+                      readOnly={!!form.respondentContext?.email}
+                      disabled={pending}
+                      onChange={(e) =>
+                        setRespondent((v) => ({ ...v, email: e.target.value }))
+                      }
+                    />
+                  </Field>
+                </fieldset>
+              )}
               {review ? (
                 <div className="gt-response-answers">
+                  <div>
+                    <strong>Your details</strong>
+                    <p>
+                      {respondent.name}
+                      <br />
+                      {respondent.email}
+                    </p>
+                  </div>
                   {visibleFields(
                     definition.fields,
                     answers,
@@ -618,6 +784,24 @@ export default function PublicForm() {
                   />
                 ))
               )}
+              {finalStep && (
+                <div className="gt-form">
+                  <label className="gt-check">
+                    <input
+                      type="checkbox"
+                      checked={copyRequested}
+                      disabled={pending || (!preview && !form.copyAvailable)}
+                      onChange={(e) => setCopyRequested(e.target.checked)}
+                    />
+                    Email me a copy of my completed response
+                  </label>
+                  <p className="gt-helper">
+                    {!preview && !form.copyAvailable
+                      ? "Email copies are currently unavailable; you can still submit your response."
+                      : `Sent only to ${respondent.email || "the email you enter above"}, including all questions and answers you provide, even sensitive answers. No extra verification. Files are listed by name, not attached. Email copies cannot be recalled.`}
+                  </p>
+                </div>
+              )}
               <div className="gt-form-step-actions">
                 {step > 0 ? (
                   <Button
@@ -664,7 +848,8 @@ export default function PublicForm() {
         <div className="gt-public-form-privacy">
           <ShieldCheck size={15} />
           <span>
-            Your answers are shared only with authorized chapter reviewers.{" "}
+            Your answers are available to authorized chapter reviewers and, if
+            requested, emailed to the address you entered.{" "}
             <Link to="/privacy">Privacy notice</Link>
           </span>
         </div>

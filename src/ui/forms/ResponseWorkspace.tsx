@@ -64,15 +64,27 @@ export default function ResponseWorkspace() {
     [busy, setBusy] = useState(false);
   const [privacyTarget, setPrivacyTarget] = useState<{ responseId?: string }>(),
     [privacyState, setPrivacyState] = useState({ dirty: false, busy: false }),
-    [formHeld, setFormHeld] = useState<boolean>(), [holdError, setHoldError] = useState(false);
+    [formHeld, setFormHeld] = useState<boolean>(),
+    [holdError, setHoldError] = useState(false);
   const query = params.toString();
   const mayReviewPrivacy = !!form?.actions?.includes("delete");
   useEffect(() => {
-    if (!formId || !mayReviewPrivacy) { setFormHeld(undefined); return; }
-    const controller = new AbortController(); setFormHeld(undefined); setHoldError(false);
-    api<{ held: boolean }>(`/admin/forms/${formId}/privacy`, { signal: controller.signal }).then((p) => {
-      if (!controller.signal.aborted) setFormHeld(p.held);
-    }).catch(() => { if (!controller.signal.aborted) setHoldError(true); });
+    if (!formId || !mayReviewPrivacy) {
+      setFormHeld(undefined);
+      return;
+    }
+    const controller = new AbortController();
+    setFormHeld(undefined);
+    setHoldError(false);
+    api<{ held: boolean }>(`/admin/forms/${formId}/privacy`, {
+      signal: controller.signal,
+    })
+      .then((p) => {
+        if (!controller.signal.aborted) setFormHeld(p.held);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setHoldError(true);
+      });
     return () => controller.abort();
   }, [formId, mayReviewPrivacy, refresh]);
   useEffect(() => {
@@ -186,7 +198,11 @@ export default function ResponseWorkspace() {
           <Button variant="secondary" onClick={() => setRefresh((v) => v + 1)}>
             Refresh
           </Button>
-          {mayReviewPrivacy && <Button variant="secondary" onClick={() => setPrivacyTarget({})}>Retention &amp; holds</Button>}
+          {mayReviewPrivacy && (
+            <Button variant="secondary" onClick={() => setPrivacyTarget({})}>
+              Retention &amp; holds
+            </Button>
+          )}
         </div>
       </header>
       {(error || server.error) && (
@@ -225,7 +241,7 @@ export default function ResponseWorkspace() {
         }}
       >
         <div className="gt-form-grid">
-          <Field label="Search non-sensitive answers">
+          <Field label="Search respondents and non-sensitive answers">
             <input
               type="search"
               name="q"
@@ -437,19 +453,28 @@ export default function ResponseWorkspace() {
             <h2>{data.total.toLocaleString()} matching responses</h2>
           </div>
           <p className="gt-helper">
-            Exports include stable field IDs and version labels, and are audited.{" "}
+            Exports include stable field IDs and version labels, and are
+            audited.{" "}
             {checked.length
               ? `${checked.length} selected.`
               : "All filtered responses selected for export."}
           </p>
-          {form.actions?.includes("export_responses") && <ResponseExports
-            key={form.id}
-            formId={form.id}
-            filters={Object.fromEntries([...params].filter(([key]) => ["q", "version", "from", "to", "status"].includes(key)))}
-            selected={checked}
-            columns={columns}
-            canSensitive={!!form.actions?.includes("view_sensitive_responses")}
-          />}
+          {form.actions?.includes("export_responses") && (
+            <ResponseExports
+              key={form.id}
+              formId={form.id}
+              filters={Object.fromEntries(
+                [...params].filter(([key]) =>
+                  ["q", "version", "from", "to", "status"].includes(key),
+                ),
+              )}
+              selected={checked}
+              columns={columns}
+              canSensitive={
+                !!form.actions?.includes("view_sensitive_responses")
+              }
+            />
+          )}
           {data.items.length ? (
             <div className="gt-table-wrap">
               <table className="gt-data-table">
@@ -457,6 +482,7 @@ export default function ResponseWorkspace() {
                   <tr>
                     <th>Select</th>
                     <th>Submitted</th>
+                    <th>Respondent</th>
                     <th>Version</th>
                     <th>Status</th>
                     {visibleColumns.map((f) => (
@@ -483,6 +509,12 @@ export default function ResponseWorkspace() {
                         />
                       </td>
                       <td>{new Date(row.submittedAt).toLocaleString()}</td>
+                      <td>
+                        {row.respondent?.name ||
+                          "Historical identity unavailable"}
+                        <br />
+                        {row.respondent?.email}
+                      </td>
                       <td>v{row.version}</td>
                       <td>{row.status}</td>
                       {visibleColumns.map((f) => (
@@ -562,6 +594,22 @@ export default function ResponseWorkspace() {
           </DialogDescription>
           {selected && (
             <>
+              <p>
+                <strong>
+                  {selected.respondent?.name ||
+                    "Historical identity unavailable"}
+                </strong>
+                <br />
+                {selected.respondent?.email}
+                <br />
+                {selected.respondent?.source === "self_reported"
+                  ? "Entered details · unverified"
+                  : selected.respondent?.source === "email_verified"
+                    ? "Email access link"
+                    : selected.respondent?.source === "account"
+                      ? "Chapter account"
+                      : "Identity unavailable"}
+              </p>
               <div className="gt-response-answers">
                 {form.versions
                   .find((v) => v.version === selected.version)
@@ -608,32 +656,52 @@ export default function ResponseWorkspace() {
                   ? "Operational hold: destructive actions are disabled."
                   : `Original version retention: ${form.versions.find((v) => v.version === selected.version)?.settings.retentionDays || 365} days.`}
               </p>
-              {mayReviewPrivacy && <Button variant="secondary" onClick={() => setPrivacyTarget({ responseId: selected.id })}>Review response retention &amp; hold</Button>}
-              {holdError && <p role="alert">Hold status could not be checked. Refresh before a destructive action.</p>}
-              <ResponseHistory key={selected.id} formId={form.id} responseId={selected.id}
-                canSensitive={!!form.actions?.includes("view_sensitive_responses")} />
-              {form.actions?.includes("delete") && formHeld === false && selected.status !== "held" && (
-                <div className="gt-actions">
-                  <Button
-                    variant="secondary"
-                    onClick={() => {
-                      setAction("redact");
-                      setConfirm("");
-                    }}
-                  >
-                    Redact identity
-                  </Button>
-                  <Button
-                    variant="danger"
-                    onClick={() => {
-                      setAction("delete");
-                      setConfirm("");
-                    }}
-                  >
-                    Delete response
-                  </Button>
-                </div>
+              {mayReviewPrivacy && (
+                <Button
+                  variant="secondary"
+                  onClick={() => setPrivacyTarget({ responseId: selected.id })}
+                >
+                  Review response retention &amp; hold
+                </Button>
               )}
+              {holdError && (
+                <p role="alert">
+                  Hold status could not be checked. Refresh before a destructive
+                  action.
+                </p>
+              )}
+              <ResponseHistory
+                key={selected.id}
+                formId={form.id}
+                responseId={selected.id}
+                canSensitive={
+                  !!form.actions?.includes("view_sensitive_responses")
+                }
+              />
+              {form.actions?.includes("delete") &&
+                formHeld === false &&
+                selected.status !== "held" && (
+                  <div className="gt-actions">
+                    <Button
+                      variant="secondary"
+                      onClick={() => {
+                        setAction("redact");
+                        setConfirm("");
+                      }}
+                    >
+                      Redact identity
+                    </Button>
+                    <Button
+                      variant="danger"
+                      onClick={() => {
+                        setAction("delete");
+                        setConfirm("");
+                      }}
+                    >
+                      Delete response
+                    </Button>
+                  </div>
+                )}
               {action && (
                 <div className="gt-inline-confirm">
                   <p>
@@ -680,16 +748,34 @@ export default function ResponseWorkspace() {
           )}
         </DialogContent>
       </Dialog>
-      <Dialog open={!!privacyTarget} onOpenChange={(open) => {
-        if (open || privacyState.busy) return;
-        const close = () => { setPrivacyTarget(undefined); setPrivacyState({ dirty: false, busy: false }); };
-        if (privacyState.dirty) navigationSafety?.request(close); else close();
-      }}>
+      <Dialog
+        open={!!privacyTarget}
+        onOpenChange={(open) => {
+          if (open || privacyState.busy) return;
+          const close = () => {
+            setPrivacyTarget(undefined);
+            setPrivacyState({ dirty: false, busy: false });
+          };
+          if (privacyState.dirty) navigationSafety?.request(close);
+          else close();
+        }}
+      >
         <DialogContent className="gt-notification-dialog">
-          <DialogTitle>{privacyTarget?.responseId ? "Response retention & hold" : "Form retention & holds"}</DialogTitle>
-          <DialogDescription>Review current deadlines and operational holds separately from the form definition.</DialogDescription>
-          <PrivacyPanel formId={form.id} responseId={privacyTarget?.responseId} onStateChange={setPrivacyState}
-            onSaved={() => setRefresh((v) => v + 1)} />
+          <DialogTitle>
+            {privacyTarget?.responseId
+              ? "Response retention & hold"
+              : "Form retention & holds"}
+          </DialogTitle>
+          <DialogDescription>
+            Review current deadlines and operational holds separately from the
+            form definition.
+          </DialogDescription>
+          <PrivacyPanel
+            formId={form.id}
+            responseId={privacyTarget?.responseId}
+            onStateChange={setPrivacyState}
+            onSaved={() => setRefresh((v) => v + 1)}
+          />
         </DialogContent>
       </Dialog>
     </div>

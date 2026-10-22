@@ -19,6 +19,7 @@ import { token, tokenHash, validToken, riskHash } from "./lib/security.mjs";
 import { encryptPayload, decryptPayload } from "./lib/encryption.mjs";
 import { mailConfig } from "./delivery.mjs";
 import { draftDaysRemaining } from "./lib/form-lifetime.mjs";
+import { formRespondentSchema } from "../shared/form-respondent.mjs";
 
 const pageSchema = z
   .object({
@@ -52,6 +53,8 @@ const responseSchema = z
   .object({
     versionId: uuid,
     answers: z.record(uuid, answer),
+    respondent: formRespondentSchema,
+    copyRequested: z.boolean().default(false),
     accessToken: tokenSchema.optional(),
     resumeToken: tokenSchema.optional(),
     uploadToken: tokenSchema.optional(),
@@ -94,6 +97,11 @@ export function projectResponse(
     submittedAt: response.submitted_at,
     redacted: !!response.redacted_at,
     status: response.status,
+    respondent: {
+      name: response.respondent_name ?? null,
+      email: response.respondent_email ?? null,
+      source: response.respondent_source || "legacy_unknown",
+    },
     answers: Object.fromEntries(
       answers
         .filter((a) => permitted.has(a.field_id))
@@ -273,6 +281,14 @@ export async function formRoutes(
           {
             responseId: existing.id,
             submittedAt: existing.submitted_at,
+            copyQueued: !!checked(
+              await db
+                .from("form_respondent_copies")
+                .select("id")
+                .eq("response_id", existing.id)
+                .eq("revision", 0)
+                .maybeSingle(),
+            ),
             ...(existing.edit_secret_encrypted
               ? {
                   editToken: decryptPayload(
@@ -301,6 +317,8 @@ export async function formRoutes(
               .object({
                 versionId: uuid,
                 answers: z.record(uuid, answer),
+                respondent: formRespondentSchema,
+                copyRequested: z.boolean().default(false),
                 resumeToken: tokenSchema.optional(),
                 accessToken: tokenSchema.optional(),
                 uploadToken: tokenSchema.optional(),
@@ -324,6 +342,8 @@ export async function formRoutes(
                 versionId: uuid,
                 revision: z.number().int().min(0),
                 answers: z.record(uuid, answer),
+                respondent: formRespondentSchema,
+                copyRequested: z.boolean().default(false),
                 accessToken: tokenSchema.optional(),
               })
               .strict(),
@@ -332,7 +352,9 @@ export async function formRoutes(
       editResponse = checked(
         await db
           .from("form_responses")
-          .select("id,version_id,revision,access_token_id")
+          .select(
+            "id,version_id,revision,access_token_id,respondent_name,respondent_email,respondent_source",
+          )
           .eq("form_id", form.id)
           .eq("edit_token_hash", tokenHash(body.editToken))
           .is("deleted_at", null)
@@ -398,7 +420,7 @@ export async function formRoutes(
       access = checked(
         await db
           .from("form_access_tokens")
-          .select("id,email_hash,used_count,use_limit")
+          .select("id,email_hash,used_count,use_limit,intended_email_encrypted")
           .eq("form_id", form.id)
           .eq("token_type", form.access_mode)
           .eq("token_hash", tokenHash(rawAccess))
@@ -421,6 +443,57 @@ export async function formRoutes(
         .single(),
     );
     const definition = parse(formDefinitionSchema, published.definition);
+    const email =
+      editResponse?.respondent_email ||
+      (session
+        ? session.user.email
+        : ["verified", "invited"].includes(form.access_mode) &&
+            access?.intended_email_encrypted
+          ? decryptPayload(
+              access.intended_email_encrypted,
+              config.encryptionSecret,
+            ).email
+          : undefined);
+    const respondentContext = {
+      ...(email ? { email } : {}),
+      ...(editResponse?.respondent_name
+        ? { name: editResponse.respondent_name, locked: true }
+        : {}),
+      source:
+        editResponse?.respondent_source ||
+        (session
+          ? "account"
+          : ["verified", "invited"].includes(form.access_mode) &&
+              access?.intended_email_encrypted
+            ? "email_verified"
+            : "self_reported"),
+    };
+    let copyAvailable = false;
+    try {
+      copyAvailable = !!mailConfig(process.env);
+    } catch {
+      /* Submission remains available without SMTP. */
+    }
+    if (
+      body?.respondent &&
+      email &&
+      body.respondent.email !== email.toLowerCase()
+    )
+      throw new ApiError(
+        400,
+        "VALIDATION_ERROR",
+        "Use the email address associated with this form's access or original response.",
+      );
+    const identityDocument = body?.respondent
+      ? {
+          respondent: body.respondent,
+          respondentHash: riskHash(
+            "form-recipient:" + form.id + ":" + body.respondent.email,
+            config.riskSecret,
+          ),
+          copyRequested: body.copyRequested && copyAvailable,
+        }
+      : {};
     if (!operation) {
       // No owner, collaborator, token, private rule, or response-count projection.
       const settings = { ...definition.settings, access: "public" };
@@ -439,6 +512,8 @@ export async function formRoutes(
             settings,
             versionId: published.id,
             version: published.version,
+            respondentContext,
+            copyAvailable,
           },
         },
         requestId,
@@ -456,7 +531,9 @@ export async function formRoutes(
         const draft = checked(
           await db
             .from("form_response_drafts")
-            .select("answers,version_id")
+            .select(
+              "answers,version_id,respondent_name,respondent_email,copy_requested",
+            )
             .eq("form_id", form.id)
             .eq("resume_token_hash", tokenHash(body.resumeToken))
             .is("completed_at", null)
@@ -478,7 +555,15 @@ export async function formRoutes(
         sendJson(
           response,
           200,
-          { answers: draft.answers, versionId: draft.version_id },
+          {
+            answers: draft.answers,
+            versionId: draft.version_id,
+            respondent: {
+              name: draft.respondent_name || "",
+              email: draft.respondent_email || email || "",
+            },
+            copyRequested: draft.copy_requested,
+          },
           requestId,
         );
         return true;
@@ -499,23 +584,38 @@ export async function formRoutes(
         );
       const resume = body.resumeToken || token();
       checked(
-        await db.rpc("save_form_draft", {
-          p_form: form.id,
-          p_version: published.id,
-          p_hash: tokenHash(resume),
-          p_answers: body.answers,
-          p_access: access?.id || null,
-          p_actor: session?.user.id || null,
-          p_upload_hash: body.uploadToken ? tokenHash(body.uploadToken) : null,
+        await db.rpc("save_identified_form_draft", {
+          p_document: {
+            ...identityDocument,
+            form: form.id,
+            version: published.id,
+            hash: tokenHash(resume),
+            answers: body.answers,
+            access: access?.id || null,
+            actor: session?.user.id || null,
+            uploadHash: body.uploadToken ? tokenHash(body.uploadToken) : null,
+          },
         }),
       );
-      const lifetime = checked(await db.from("form_response_drafts").select("expires_at,created_at")
-        .eq("form_id", form.id).eq("resume_token_hash", tokenHash(resume)).single());
+      const lifetime = checked(
+        await db
+          .from("form_response_drafts")
+          .select("expires_at,created_at")
+          .eq("form_id", form.id)
+          .eq("resume_token_hash", tokenHash(resume))
+          .single(),
+      );
       sendJson(
         response,
         200,
-        { resumeToken: resume, expiresAt: lifetime.expires_at,
-          expiresInDays: draftDaysRemaining(lifetime.created_at, lifetime.expires_at) },
+        {
+          resumeToken: resume,
+          expiresAt: lifetime.expires_at,
+          expiresInDays: draftDaysRemaining(
+            lifetime.created_at,
+            lifetime.expires_at,
+          ),
+        },
         requestId,
       );
       return true;
@@ -537,6 +637,10 @@ export async function formRoutes(
             answers: Object.fromEntries(
               answers.map((a) => [a.field_id, a.value]),
             ),
+            respondent: {
+              name: editResponse.respondent_name || "",
+              email: editResponse.respondent_email || email || "",
+            },
             form: {
               id: form.id,
               slug: form.slug,
@@ -544,6 +648,8 @@ export async function formRoutes(
               ...definition,
               versionId: published.id,
               version: published.version,
+              respondentContext,
+              copyAvailable,
             },
           },
           requestId,
@@ -559,16 +665,20 @@ export async function formRoutes(
           errors,
         );
       const result = checked(
-        await db.rpc("edit_form_response", {
-          p_form: form.id,
-          p_response: editResponse.id,
-          p_version: body.versionId,
-          p_schema_hash: published.schema_hash,
-          p_token_hash: tokenHash(body.editToken),
-          p_revision: body.revision,
-          p_answers: body.answers,
-          p_key_hash: tokenHash(idempotency(request)),
-          p_request_hash: tokenHash(JSON.stringify(body)),
+        await db.rpc("edit_identified_form_response", {
+          p_document: {
+            ...identityDocument,
+            form: form.id,
+            response: editResponse.id,
+            version: body.versionId,
+            schemaHash: published.schema_hash,
+            tokenHash: tokenHash(body.editToken),
+            revision: body.revision,
+            answers: body.answers,
+            keyHash: tokenHash(idempotency(request)),
+            requestHash: tokenHash(JSON.stringify(body)),
+            actor: session?.user.id || null,
+          },
         }),
       );
       sendJson(response, 200, result, requestId);
@@ -590,24 +700,27 @@ export async function formRoutes(
       );
     const edit = definition.settings.editing ? token() : null;
     const result = checked(
-      await db.rpc("submit_form_response", {
-        p_form: form.id,
-        p_version: published.id,
-        p_schema_hash: published.schema_hash,
-        p_answers: body.answers,
-        p_key_hash: tokenHash(key),
-        p_request_hash: hash,
-        p_access_hash: rawAccess ? tokenHash(rawAccess) : null,
-        p_identity_hash: session
-          ? riskHash("form-identity:" + session.user.id, config.riskSecret)
-          : access?.email_hash || null,
-        p_actor: session?.user.id || null,
-        p_edit_hash: edit ? tokenHash(edit) : null,
-        p_edit_secret: edit
-          ? encryptPayload({ token: edit }, config.encryptionSecret)
-          : null,
-        p_resume_hash: body.resumeToken ? tokenHash(body.resumeToken) : null,
-        p_upload_hash: body.uploadToken ? tokenHash(body.uploadToken) : null,
+      await db.rpc("submit_identified_form_response", {
+        p_document: {
+          ...identityDocument,
+          form: form.id,
+          version: published.id,
+          schemaHash: published.schema_hash,
+          answers: body.answers,
+          keyHash: tokenHash(key),
+          requestHash: hash,
+          accessHash: rawAccess ? tokenHash(rawAccess) : null,
+          identityHash: session
+            ? riskHash("form-identity:" + session.user.id, config.riskSecret)
+            : access?.email_hash || null,
+          actor: session?.user.id || null,
+          editHash: edit ? tokenHash(edit) : null,
+          editSecret: edit
+            ? encryptPayload({ token: edit }, config.encryptionSecret)
+            : null,
+          resumeHash: body.resumeToken ? tokenHash(body.resumeToken) : null,
+          uploadHash: body.uploadToken ? tokenHash(body.uploadToken) : null,
+        },
       }),
     );
     sendJson(
@@ -616,6 +729,7 @@ export async function formRoutes(
       {
         responseId: result.responseId,
         submittedAt: result.submittedAt,
+        copyQueued: result.copyQueued,
         ...(result.editSecret
           ? {
               editToken: decryptPayload(
@@ -937,10 +1051,27 @@ export async function formRoutes(
     );
   if (action === "publish" && definition.settings.receipts) {
     mailConfig(process.env);
-    if (!["verified", "invited", "internal"].includes(definition.settings.access))
-      throw new ApiError(409, "FORM_RECEIPT_IDENTITY", "Receipts require verified email, an individual invitation, or a signed-in chapter account.");
-    if (!checked(await db.rpc("form_receipt_ready", { p_form: id, p_hash: tokenHash(JSON.stringify(definition)) })))
-      throw new ApiError(409, "FORM_DELIVERY_REVIEW_REQUIRED", "Save this draft, then review its delivery settings before publishing receipts.");
+    if (
+      !["verified", "invited", "internal"].includes(definition.settings.access)
+    )
+      throw new ApiError(
+        409,
+        "FORM_RECEIPT_IDENTITY",
+        "Receipts require verified email, an individual invitation, or a signed-in chapter account.",
+      );
+    if (
+      !checked(
+        await db.rpc("form_receipt_ready", {
+          p_form: id,
+          p_hash: tokenHash(JSON.stringify(definition)),
+        }),
+      )
+    )
+      throw new ApiError(
+        409,
+        "FORM_DELIVERY_REVIEW_REQUIRED",
+        "Save this draft, then review its delivery settings before publishing receipts.",
+      );
   }
   const changed = await mutate(
     session,

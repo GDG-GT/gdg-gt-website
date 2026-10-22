@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-10-22T01:20:41.564Z",
+  "environment": "loopback SMTP; fictional identities only",
+  "tests": [
+    {
+      "name": "public form requires declared identity without pretending it is verified",
+      "passed": true
+    },
+    {
+      "name": "missing system identity rejected even if questions contain name and email",
+      "passed": true
+    },
+    {
+      "name": "client cannot forge identity verification",
+      "passed": true
+    },
+    {
+      "name": "private saved draft restores name, email and copy preference",
+      "passed": true
+    },
+    {
+      "name": "unchecked copy option queues no respondent email",
+      "passed": true
+    },
+    {
+      "name": "copy queues immediately to entered email without email confirmation or sign-in",
+      "passed": true
+    },
+    {
+      "name": "ambiguous submission retry returns the same committed response",
+      "passed": true
+    },
+    {
+      "name": "submission retries create only one copy job",
+      "passed": true
+    },
+    {
+      "name": "edit link restores and locks the original respondent identity",
+      "passed": true
+    },
+    {
+      "name": "edit capability cannot redirect copies to another email address",
+      "passed": true
+    },
+    {
+      "name": "authorized review can search the captured respondent without marking it verified",
+      "passed": true
+    },
+    {
+      "name": "JSON export includes declared name, email and truthful provenance",
+      "passed": true
+    },
+    {
+      "name": "local SMTP receives exactly one respondent-requested copy",
+      "passed": true
+    },
+    {
+      "name": "copy contains the exact submitted revision including its sensitive answer even after an edit",
+      "passed": true
+    },
+    {
+      "name": "copy goes only to entered recipient with no chapter CC, BCC or private review link",
+      "passed": true
+    },
+    {
+      "name": "legacy anonymous RPC execution denied to API service",
+      "passed": true
+    }
+  ]
+}

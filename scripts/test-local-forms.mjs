@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+const respondent = { name: "Fictional Fixture Respondent", email: `fictional-identity-${randomUUID()}@example.test` };
 import { writeFile } from "node:fs/promises";
 import { localHttp } from "./lib/local-http.mjs";
 import { createTemplate, newField } from "../shared/forms.ts";
@@ -82,7 +83,7 @@ try {
   r = await call("/forms/" + form.slug + "/drafts", {
     anonymous: true,
     method: "POST",
-    body: { versionId: version, answers },
+    body: { respondent, versionId: version, answers },
   });
   check(
     r.status === 200 && r.json.data.resumeToken.length === 43,
@@ -115,13 +116,14 @@ try {
     method: "POST",
     key: randomUUID(),
     body: {
+      respondent,
       versionId: version,
       answers: { ...answers, [randomUUID()]: "unknown" },
     },
   });
   check(r.status === 400, "submission rejects unknown field IDs");
   const key = randomUUID(),
-    body = { versionId: version, answers, resumeToken: resume, website: "" };
+    body = { respondent, versionId: version, answers, resumeToken: resume, website: "" };
   r = await call("/forms/" + form.slug + "/submissions", {
     anonymous: true,
     method: "POST",
@@ -270,6 +272,7 @@ try {
     method: "POST",
     key: randomUUID(),
     body: {
+      respondent,
       editToken: submitted.editToken,
       versionId: version,
       revision: 0,

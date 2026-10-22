@@ -634,7 +634,7 @@ export default function FormBuilder() {
               }
             >
               {[
-                ["public", "Public · anonymous"],
+                ["public", "Public · name and email required"],
                 ["verified", "Verified email"],
                 ["unlisted", "Unlisted link"],
                 ["invited", "Invitation only"],
@@ -657,9 +657,9 @@ export default function FormBuilder() {
             </p>
           )}
           <p className="gt-helper">
-            Georgia Tech SSO verification is planned but not connected yet. It
-            cannot be enabled on this form. Use Verified email when email
-            verification is needed.
+            Every respondent must enter a name and email. Entered details are
+            unverified unless an existing access method verifies them. Georgia
+            Tech SSO (preferred) and Google sign-in are planned, not connected.
           </p>
           <Field label="Response limit" hint="0 means no configured limit">
             <input
@@ -705,39 +705,57 @@ export default function FormBuilder() {
             [
               ["resume", "Save & resume"],
               ["editing", "Allow response edits"],
-              ["receipts", "Response receipt"],
+              ["receipts", "Legacy receipt publication review"],
               ["review", "Final answer review"],
               ["oneResponse", "One response per verified identity"],
             ] as const
-          ).map(([key, label]) => (
-            <label className="gt-toggle-row" key={key}>
-              {label}
-              <input
-                type="checkbox"
-                role="switch"
-                checked={form.settings[key] ?? key === "review"}
-                disabled={
-                  key === "oneResponse" && form.settings.access === "public"
-                }
-                onChange={(event) =>
-                  update({
-                    ...form,
-                    settings: { ...form.settings, [key]: event.target.checked },
-                  })
-                }
-              />
-            </label>
-          ))}
+          )
+            .filter(([key]) => key !== "receipts" || form.settings.receipts)
+            .map(([key, label]) => (
+              <label className="gt-toggle-row" key={key}>
+                {label}
+                <input
+                  type="checkbox"
+                  role="switch"
+                  checked={form.settings[key] ?? key === "review"}
+                  disabled={
+                    key === "oneResponse" && form.settings.access === "public"
+                  }
+                  onChange={(event) =>
+                    update({
+                      ...form,
+                      settings: {
+                        ...form.settings,
+                        [key]: event.target.checked,
+                      },
+                    })
+                  }
+                />
+              </label>
+            ))}
           <p className="gt-helper">
             One-response enforcement requires a verified identity or unique
-            private invitation. An anonymous form cannot reliably identify
-            respondents.
+            private invitation. A public form with entered details cannot
+            reliably identify respondents.
           </p>
-          {form.actions?.includes("manage_access") && form.actions?.includes("view_responses") && (
-            <Button variant="secondary" disabled={saveStatus !== "Saved"}
-              onClick={() => setDeliveryOpen(true)}>Review receipts &amp; notifications</Button>
-          )}
-          <p className="gt-helper">Receipts require a separate delivery review of the saved draft before publication. Notifications only go to explicitly reviewed chapter recipients.</p>
+          {form.actions?.includes("manage_access") &&
+            form.actions?.includes("view_responses") && (
+              <Button
+                variant="secondary"
+                disabled={saveStatus !== "Saved"}
+                onClick={() => setDeliveryOpen(true)}
+              >
+                Review chapter notifications
+              </Button>
+            )}
+          <p className="gt-helper">
+            Respondents can request their own complete copy at submission, sent
+            only to their entered email without confirmation. Chapter
+            notifications are separate and only go to explicitly reviewed
+            recipients. Older receipt-enabled drafts keep their existing
+            publication-review requirement until that legacy setting is turned
+            off.
+          </p>
           <Field
             label="Response retention (days)"
             hint="1–365 days. Historical responses and files follow the published privacy policy."
@@ -1115,20 +1133,34 @@ export default function FormBuilder() {
           {inspector}
         </DialogContent>
       </Dialog>
-      <Dialog open={deliveryOpen} onOpenChange={(open) => {
-        if (deliveryState.busy) return;
-        if (!open && deliveryState.dirty) {
-          navigationSafety?.request(() => { setDeliveryOpen(false); setDeliveryState({ dirty: false, busy: false }); });
-          return;
-        }
-        setDeliveryOpen(open);
-        if (!open) setDeliveryState({ dirty: false, busy: false });
-      }}>
+      <Dialog
+        open={deliveryOpen}
+        onOpenChange={(open) => {
+          if (deliveryState.busy) return;
+          if (!open && deliveryState.dirty) {
+            navigationSafety?.request(() => {
+              setDeliveryOpen(false);
+              setDeliveryState({ dirty: false, busy: false });
+            });
+            return;
+          }
+          setDeliveryOpen(open);
+          if (!open) setDeliveryState({ dirty: false, busy: false });
+        }}
+      >
         <DialogContent className="gt-notification-dialog">
           <DialogTitle>Receipts &amp; notifications</DialogTitle>
-          <DialogDescription>Explicit recipient approval for this form, with private answers protected.</DialogDescription>
-          <DeliveryPanel formId={form.id} saved={saveStatus === "Saved"}
-            receiptSetting={!!form.settings.receipts} access={form.settings.access} onStateChange={setDeliveryState} />
+          <DialogDescription>
+            Explicit recipient approval for this form, with private answers
+            protected.
+          </DialogDescription>
+          <DeliveryPanel
+            formId={form.id}
+            saved={saveStatus === "Saved"}
+            receiptSetting={!!form.settings.receipts}
+            access={form.settings.access}
+            onStateChange={setDeliveryState}
+          />
         </DialogContent>
       </Dialog>
       <Dialog open={historyOpen} onOpenChange={setHistoryOpen}>

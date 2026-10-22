@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+const respondent = { name: "Fictional Fixture Respondent", email: `fictional-identity-${randomUUID()}@example.test` };
 import { writeFile } from "node:fs/promises";
 import { localHttp } from "./lib/local-http.mjs";
 import { createTemplate } from "../shared/forms.ts";
@@ -28,7 +29,7 @@ try {
   check((await call(reviewPath + "?ignoreRetention=true")).status === 400, "review rejects caller-supplied retention waivers");
   check((await post(reviewPath, { revision: form.revision })).json?.error?.code === "FORM_DELETION_BLOCKED", "permanent deletion requires prior recoverable archive");
   const published = data(await call(`/forms/${form.slug}`, { anonymous: true })).form,
-    committed = data(await call(`/forms/${form.slug}/submissions`, { anonymous: true, method: "POST", key: randomUUID(), body: { versionId: published.versionId,
+    committed = data(await call(`/forms/${form.slug}/submissions`, { anonymous: true, method: "POST", key: randomUUID(), body: { respondent, versionId: published.versionId,
       answers: { [t.fields[0].id]: "Fictional deletion respondent", [t.fields[1].id]: "fictional-deletion@example.test" }, website: "" } }));
   data(await call(path, { method: "DELETE", body: { revision: form.revision } }));
   form = data(await call(path)).form;

@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+const respondent = { name: "Fictional Fixture Respondent", email: `fictional-identity-${randomUUID()}@example.test` };
 import { writeFile } from "node:fs/promises";
 import { unzipSync, strFromU8 } from "fflate";
 import { localHttp } from "./lib/local-http.mjs";
@@ -25,7 +26,8 @@ try {
   const pub = data(await call(`/forms/${form.slug}`, { anonymous: true })),
     version = pub.form.versionId;
   const response = data(await call(`/forms/${form.slug}/submissions`, { anonymous: true, method: "POST", key: randomUUID(), body: {
-    versionId: version, answers: { [fields[0].id]: "=SUM(1,2)", [fields[1].id]: "fictional-export-secret@example.test" }, website: "",
+    respondent,
+      versionId: version, answers: { [fields[0].id]: "=SUM(1,2)", [fields[1].id]: "fictional-export-secret@example.test" }, website: "",
   } }));
   // Load fixture rows are inserted into this invocation's fictional form only.
   // Actual public validation is exercised above, not claimed for these rows.
@@ -73,7 +75,8 @@ try {
   check((await call(`${base}/${cancelled.id}`, { method: "DELETE" })).status === 200, "export cancellation commits without deleting source responses");
   check((await post(`${base}/${cancelled.id}/download`, {})).status === 404, "cancelled export cannot download");
   const edited = await call(`/forms/${form.slug}/edits`, { anonymous: true, method: "POST", key: randomUUID(), body: {
-    versionId: version, editToken: response.editToken, revision: 0,
+    respondent,
+      versionId: version, editToken: response.editToken, revision: 0,
     answers: { [fields[0].id]: "Updated fictional export row", [fields[1].id]: "fictional-export-secret@example.test" },
   } });
   check(edited.status === 200, "public response edit commits a real new revision");

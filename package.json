@@ -27,6 +27,7 @@
     "test:local-form-exports": "node scripts/test-local-form-exports.mjs",
     "test:local-form-history": "node scripts/test-local-form-history.mjs",
     "test:local-form-delivery": "node scripts/test-local-form-delivery.mjs",
+    "test:local-form-respondent": "node scripts/test-local-form-respondent.mjs",
     "test:local-form-privacy": "node scripts/test-local-form-privacy.mjs",
     "test:local-form-integrations": "node scripts/test-local-form-integrations.mjs",
     "test:local-form-deletion": "node scripts/test-local-form-deletion.mjs",

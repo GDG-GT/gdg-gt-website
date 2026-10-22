@@ -162,7 +162,7 @@ try {
     anonymous: true,
     method: "POST",
     key: randomUUID(),
-    body: { versionId, answers, accessToken: raw },
+    body: { respondent: { name: "Fictional Invitee", email: recipient }, versionId, answers, accessToken: raw },
   });
   check(
     r.status === 200,

@@ -114,6 +114,7 @@ export interface FormResponse {
   versionId?: string;
   status?: string;
   revisions?: { editedAt: string; answers: Record<string, Answer> }[];
+  respondent?: { name: string | null; email: string | null; source: string };
 }
 const id = () => crypto.randomUUID();
 // Keep exact-label matches first; reserve their IDs before reusing a positional

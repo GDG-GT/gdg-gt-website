@@ -354,6 +354,9 @@ export async function formResponseRoutes(
       responseId: r.id,
       submittedAt: r.submittedAt,
       completionState: r.status,
+      respondentName: r.respondent?.name ?? "",
+      respondentEmail: r.respondent?.email ?? "",
+      respondentSource: r.respondent?.source || "legacy_unknown",
       ...Object.fromEntries(
         Object.entries(r.answers)
           .filter(([field]) => !columns || columns.includes(field))

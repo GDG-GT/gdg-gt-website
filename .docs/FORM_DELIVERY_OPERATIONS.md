@@ -1,5 +1,14 @@
 # Reviewed Forms mail
 
+Update 2026-10-21 / migration 092: respondent copies now require the respondent's
+explicit checkbox and are sent directly to their entered email without another
+confirmation step. They include their own exact questions/answers, including
+sensitive answers, but no private file links or file bytes. No automatic receipt
+is sent on the new identified submission path. Chapter notifications retain the
+reviewed, non-sensitive policy below. Legacy receipt approval/publication controls
+are compatibility-only; the historical receipt restrictions below do not limit
+the new respondent-requested copy. See `FORM_RESPONDENT_OPERATIONS.md`.
+
 Local implementation: 2026-10-21. SSO and Bevy/Engage remain deferred. This does
 not certify the remaining Forms workflows, hosted providers or full PRD acceptance.
 

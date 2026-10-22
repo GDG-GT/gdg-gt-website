@@ -5,6 +5,26 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Required respondent identity and direct opt-in response copies — 2026-10-21
+
+- New submissions/saved drafts require name/email, including older published
+  forms. Entered details are explicitly unverified; historical records stay
+  unknown. Private access fixes the authorized email; editing cannot redirect it.
+  Reviewer search and all export formats include the captured identity/provenance.
+- Respondent checkbox queues only their own complete questions/answers, directly
+  to the entered address without another confirmation step. Exact revision,
+  transaction/idempotency/lease/privacy fences and a recipient-wide spam quota
+  apply. Sensitive own answers are included as requested; files are filenames
+  only. No chapter CC/BCC or private link. Separately reviewed chapter notices
+  retain their non-sensitive restrictions; no unrequested receipt is sent.
+- **92 migrations**, canonical SQL/both concurrency tests, **345 scoped unit tests**,
+  typecheck, changed-UI lint, build and **16 actual new local
+  HTTP/DB/SMTP checks**, Forms/access/branch/upload regressions and the separate
+  chapter-delivery/history/privacy/export/permanent-erasure suites pass. Browser
+  desktop/375px verifies validation, keyboard opt-in, review, submission and
+  scrolling without horizontal overflow. See `FORM_RESPONDENT_OPERATIONS.md`.
+  SSO/Google, real provider sends and full PRD/hosted acceptance remain open.
+
 ### Verified event Push — 2026-10-21
 
 - Added per-event explicit opt-in, account-session or emailed registration proof,

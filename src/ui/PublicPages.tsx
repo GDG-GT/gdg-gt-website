@@ -1935,7 +1935,7 @@ export function InfoPage({
       "Your information, handled with care.",
       "Development privacy notice",
       "Submitted test data can be stored in this installation’s database and private file storage, not only in your browser. Please use fictional information during local development.",
-      "Registrations, newsletter signups, contact requests, Forms answers and uploads have separate access and retention controls. A final chapter privacy notice and institutional review are still required before collecting real participant data.",
+      "Registrations, newsletter signups, contact requests, Forms answers and uploads have separate access and retention controls. Forms require name and email; entered details alone are not verified. If you request an email copy, your own questions and answers (including sensitive answers) are sent directly to the address you enter, without separate confirmation. Check that address carefully. File contents and private download links are not emailed; delivered copies cannot be recalled. A final chapter privacy notice and institutional review are still required before collecting real participant data.",
     ],
     accessibility: [
       "A community everyone can take part in.",

@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+const respondent = { name: "Fictional Fixture Respondent", email: `fictional-identity-${randomUUID()}@example.test` };
 import { writeFile } from "node:fs/promises";
 import { localHttp } from "./lib/local-http.mjs";
 import { createTemplate } from "../shared/forms.ts";
@@ -28,7 +29,7 @@ try {
   check(data(await post(base, hold, holdKey)).revision === 1 && data(await post(base, hold, holdKey)).revision === 1, "operational hold commits once under an idempotency key");
   let versionId = data(await call(`/forms/${form.slug}`, { anonymous: true })).form.versionId;
   const answers = { [fields[0].id]: "Fictional privacy respondent", [fields[1].id]: "fictional-privacy-respondent@example.test" },
-    committed = data(await post(`/forms/${form.slug}/submissions`, { versionId, answers, website: "" }, randomUUID(), true)),
+    committed = data(await post(`/forms/${form.slug}/submissions`, { respondent, versionId, answers, website: "" }, randomUUID(), true)),
     responsePath = `/admin/forms/${form.id}/responses/${committed.responseId}`;
   const original = data(await call(responsePath + "/privacy"));
   check(original.effectiveResponseHold && new Date(original.responseExpiresAt) - new Date(committed.submittedAt) === 86400000, "new response retains the original one-day policy and current form-wide hold");
@@ -39,7 +40,7 @@ try {
   form = data(await post(`/admin/forms/${form.id}/publish`, { revision: form.revision })).form;
   check(data(await call(base)).held && data(await call(responsePath + "/privacy")).responseExpiresAt === original.responseExpiresAt, "republication cannot release the independent hold or rewrite historical retention");
   versionId = data(await call(`/forms/${form.slug}`, { anonymous: true })).form.versionId;
-  const draft = data(await post(`/forms/${form.slug}/drafts`, { versionId, answers }, randomUUID(), true));
+  const draft = data(await post(`/forms/${form.slug}/drafts`, { respondent, versionId, answers }, randomUUID(), true));
   check(draft.expiresInDays === 2 && new Date(draft.expiresAt) > new Date(Date.now() + 47 * 3600000), "real save-and-resume returns its configured two-day deadline rather than a fabricated seven-day promise");
   const individual = { revision: 0, held: true, reason: "Fictional individual retention review", confirmation: `HOLD ${committed.responseId}`, currentPassword: password };
   check(data(await post(responsePath + "/privacy", individual)).revision === 1, "an individual response hold can be reviewed separately");

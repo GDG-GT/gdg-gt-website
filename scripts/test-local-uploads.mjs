@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+const respondent = { name: "Fictional Fixture Respondent", email: `fictional-identity-${randomUUID()}@example.test` };
 import { writeFile } from "node:fs/promises";
 import sharp from "sharp";
 import { localHttp } from "./lib/local-http.mjs";
@@ -164,7 +165,7 @@ try {
     anonymous: true,
     method: "POST",
     key: randomUUID(),
-    body: { versionId, answers, uploadToken: group },
+    body: { respondent, versionId, answers, uploadToken: group },
   });
   check(
     r.status === 400 && r.json.error.code === "INVALID_UPLOAD",
@@ -204,7 +205,7 @@ try {
   r = await call("/forms/" + form.slug + "/drafts", {
     anonymous: true,
     method: "POST",
-    body: { versionId, answers, uploadToken: token() },
+    body: { respondent, versionId, answers, uploadToken: token() },
   });
   check(
     r.status === 400,
@@ -213,7 +214,7 @@ try {
   r = await call("/forms/" + form.slug + "/drafts", {
     anonymous: true,
     method: "POST",
-    body: { versionId, answers, uploadToken: group },
+    body: { respondent, versionId, answers, uploadToken: group },
   });
   check(
     r.status === 200 && r.json.data.resumeToken,
@@ -232,14 +233,14 @@ try {
     anonymous: true,
     method: "POST",
     key: randomUUID(),
-    body: { versionId, answers, uploadToken: token() },
+    body: { respondent, versionId, answers, uploadToken: token() },
   });
   check(r.status === 400, "a response cannot attach another respondent file");
   r = await call("/forms/" + form.slug + "/submissions", {
     anonymous: true,
     method: "POST",
     key: randomUUID(),
-    body: { versionId, answers, uploadToken: group },
+    body: { respondent, versionId, answers, uploadToken: group },
   });
   check(
     r.status === 200,

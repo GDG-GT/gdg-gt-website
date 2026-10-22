@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+const respondent = { name: "Fictional Fixture Respondent", email: `fictional-identity-${randomUUID()}@example.test` };
 import { writeFile } from "node:fs/promises";
 import { localHttp } from "./lib/local-http.mjs";
 import { createTemplate } from "../shared/forms.ts";
@@ -23,7 +24,7 @@ try {
   form = data(await call(`/admin/forms/${form.id}/publish`, { method: "POST", body: { revision: form.revision } })).form;
   const versionId = data(await call(`/forms/${form.slug}`, { anonymous: true })).form.versionId;
   const answers = { [fields[0].id]: "Original fictional person", [fields[1].id]: "historical-private@example.test" };
-  const committed = data(await call(`/forms/${form.slug}/submissions`, { anonymous: true, method: "POST", key: randomUUID(), body: { versionId, answers, website: "" } }));
+  const committed = data(await call(`/forms/${form.slug}/submissions`, { anonymous: true, method: "POST", key: randomUUID(), body: { respondent, versionId, answers, website: "" } }));
   const base = `/admin/forms/${form.id}/responses/${committed.responseId}/history`;
   check((await call(base, { anonymous: true })).status === 401, "anonymous history inventory denied");
   check((await call(`/admin/forms/${randomUUID()}/responses/${committed.responseId}/history`)).status === 404, "response substitution cannot cross form scope");
@@ -31,6 +32,7 @@ try {
   check(!JSON.stringify(data(await call(base))).includes("Original fictional person"), "revision inventory contains metadata, not answers");
   for (let revision = 0; revision < 2; revision++) {
     data(await call(`/forms/${form.slug}/edits`, { anonymous: true, method: "POST", key: randomUUID(), body: {
+      respondent,
       versionId, editToken: committed.editToken, revision, answers: { ...answers, [fields[0].id]: `Updated fictional person ${revision + 1}` },
     } }));
   }

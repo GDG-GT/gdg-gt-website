@@ -6,6 +6,8 @@ import { databaseResult as checked } from "./lib/validation.mjs";
 import { decryptPayload } from "./lib/encryption.mjs";
 import { ApiError } from "./lib/http.mjs";
 import { tokenHash } from "./lib/security.mjs";
+import { visibleFields } from "../shared/forms.ts";
+import { responseCopyText } from "../shared/form-respondent.mjs";
 const escape = (v) =>
   String(v || "").replace(
     /[&<>"']/g,
@@ -298,6 +300,34 @@ export async function deliveryMessage(job, db, config, mail) {
       "\n\nDo not forward this link. It grants access to this form and expires " +
       new Date(access.expires_at).toUTCString() +
       ".";
+  } else if (job.kind === "form_respondent_copy") {
+    const notice = checked(
+      await db.rpc("prepare_form_respondent_copy", {
+        p_job: job.id,
+        p_lease: job.lease_token,
+      }),
+    );
+    if (!notice) return null;
+    to = notice.email;
+    subject = "Your response: " + notice.title;
+    const answers = visibleFields(
+      notice.definition.fields,
+      notice.values,
+      notice.definition.sections,
+    )
+      .filter(
+        (f) => !["title", "description", "image", "divider"].includes(f.type),
+      )
+      .map((f) => ({
+        label: f.label,
+        value:
+          f.type === "file"
+            ? (notice.values[f.id] || []).map(
+                (id) => notice.files[id] || "Private attachment",
+              )
+            : notice.values[f.id],
+      }));
+    content = responseCopyText({ ...notice, answers });
   } else if (job.kind === "form_reviewed_email") {
     const notice = checked(
       await db.rpc("prepare_form_reviewed_email", {

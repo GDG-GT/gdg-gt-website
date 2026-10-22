@@ -17,6 +17,12 @@ Additional requests on 2026-10-21 are implemented locally: community directory
 (`/admin/members`) CSV import/export and notification Mark all read → Dismiss all.
 See `MEMBER_TRANSFER_OPERATIONS.md` for scope, limits and real test evidence.
 
+Latest Forms decisions are implemented locally: mandatory name/email (no new
+anonymous responses), truthful declared/verified provenance and opt-in copies of
+the exact own questions/answers sent only to the entered address, with no separate
+email confirmation. File bytes/private links are excluded. See
+`FORM_RESPONDENT_OPERATIONS.md`. Georgia Tech SSO and Google sign-in stay deferred.
+
 1. Forms: remaining library/builder/runtime edge cases and complete accessibility tests.
    Safe Super Admin permanent-deletion review and erasure are implemented locally
    (`FORM_PERMANENT_DELETION_OPERATIONS.md`); hosted retention/security acceptance
