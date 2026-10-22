@@ -8,7 +8,6 @@ import {
   safePattern,
   reconcileOptionIds,
 } from "../../shared/forms.ts";
-import { projectResponse } from "../../server/forms.mjs";
 const definition = () => {
   const f = createTemplate("Validation fixture");
   return {
@@ -143,28 +142,5 @@ describe("shared first-party form contract", () => {
     const d = definition();
     d.settings.oneResponse = true;
     expect(formDefinitionSchema.safeParse(d).success).toBe(false);
-  });
-  it("omits sensitive answers and all response tokens from default projections", () => {
-    const d = definition();
-    d.fields[0].sensitive = true;
-    const response = {
-      id: "r",
-      form_id: "f",
-      version_id: "v",
-      version: 1,
-      status: "complete",
-      submitted_at: "now",
-      edit_token_hash: "never-expose",
-    };
-    const answers = [
-      { field_id: d.fields[0].id, value: "Private Name" },
-      { field_id: d.fields[1].id, value: "sample@example.test" },
-    ];
-    const hidden = projectResponse(response, answers, d);
-    expect(hidden.answers).not.toHaveProperty(d.fields[0].id);
-    expect(JSON.stringify(hidden)).not.toContain("never-expose");
-    expect(
-      projectResponse(response, answers, d, true).answers[d.fields[0].id],
-    ).toBe("Private Name");
   });
 });

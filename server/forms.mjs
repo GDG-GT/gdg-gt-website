@@ -73,35 +73,6 @@ function definitionBody(form) {
     settings: form.settings,
   };
 }
-export function projectResponse(
-  response,
-  answers,
-  definition,
-  sensitive = false,
-) {
-  const permitted = new Set(
-    definition.fields.filter((f) => sensitive || !f.sensitive).map((f) => f.id),
-  );
-  return {
-    id: response.id,
-    formId: response.form_id,
-    versionId: response.version_id,
-    version: response.version,
-    submittedAt: response.submitted_at,
-    redacted: !!response.redacted_at,
-    status: response.status,
-    respondent: {
-      name: response.respondent_name ?? null,
-      email: response.respondent_email ?? null,
-      source: response.respondent_source || "legacy_unknown",
-    },
-    answers: Object.fromEntries(
-      answers
-        .filter((a) => permitted.has(a.field_id))
-        .map((a) => [a.field_id, a.value]),
-    ),
-  };
-}
 export async function formRoutes(
   request,
   response,
@@ -109,8 +80,10 @@ export async function formRoutes(
 ) {
   const url = new URL(request.url, config.origin),
     path = url.pathname;
+  // Responses/analytics/views belong to formResponseRoutes, dispatched before
+  // this handler. Keep one scoped reader rather than a shadowed legacy path.
   const admin = path.match(
-    /^\/api\/v1\/admin\/forms(?:\/([^/]+)(?:\/(draft|validate|versions|publish|state|duplicate|restore|responses|collaborators)(?:\/([^/]+))?)?)?$/,
+    /^\/api\/v1\/admin\/forms(?:\/([^/]+)(?:\/(draft|validate|versions|publish|state|duplicate|restore|collaborators))?)?$/,
   );
   const publicRoute = path.match(
     /^\/api\/v1\/forms\/([^/]+)(?:\/(submissions|preview|drafts|edits)(?:\/(load))?)?$/,
@@ -754,28 +727,26 @@ export async function formRoutes(
     sendJson(response, 200, result, requestId);
     return true;
   }
-  const [, rawId, operation, childId] = admin,
+  const [, rawId, operation] = admin,
     id = rawId ? parse(uuid, rawId) : null;
   allowMethod(
     request,
     response,
-    operation === "responses"
-      ? ["GET"]
-      : operation === "collaborators"
-        ? ["GET", "PATCH", "DELETE"]
-        : operation === "draft"
-          ? ["GET", "PATCH"]
-          : operation === "validate" ||
-              operation === "publish" ||
-              operation === "state" ||
-              operation === "duplicate" ||
-              operation === "restore"
-            ? ["POST"]
-            : operation === "versions"
-              ? ["GET"]
-              : id
-                ? ["GET", "PATCH", "DELETE"]
-                : ["GET", "POST"],
+    operation === "collaborators"
+      ? ["GET", "PATCH", "DELETE"]
+      : operation === "draft"
+        ? ["GET", "PATCH"]
+        : operation === "validate" ||
+            operation === "publish" ||
+            operation === "state" ||
+            operation === "duplicate" ||
+            operation === "restore"
+          ? ["POST"]
+          : operation === "versions"
+            ? ["GET"]
+            : id
+              ? ["GET", "PATCH", "DELETE"]
+              : ["GET", "POST"],
   );
   const session = await requireSession(request, store, config);
   if (request.method !== "GET") await requireCsrf(request, session, store);
@@ -827,104 +798,6 @@ export async function formRoutes(
   if (!(await can(session.user.id, id, "view")))
     throw new ApiError(404, "NOT_FOUND", "This form is not available.");
   const row = checked(await db.from("forms").select("*").eq("id", id).single());
-  if (operation === "responses") {
-    if (!(await can(session.user.id, id, "view_responses")))
-      throw new ApiError(
-        403,
-        "FORBIDDEN",
-        "You do not have access to these responses.",
-      );
-    const p = queryValues(
-      url.searchParams,
-      z
-        .object({
-          page: z.coerce.number().int().min(1).max(10000).default(1),
-          pageSize: z.coerce.number().int().min(1).max(100).default(30),
-          version: z.coerce.number().int().min(1).optional(),
-          sensitive: z.enum(["true", "false"]).default("false"),
-        })
-        .strict(),
-    );
-    const sensitive = p.sensitive === "true";
-    if (
-      sensitive &&
-      !(await can(session.user.id, id, "view_sensitive_responses"))
-    )
-      throw new ApiError(
-        403,
-        "FORBIDDEN",
-        "Sensitive answers require a separate permission.",
-      );
-    const defs = await versions(id),
-      versionIds = defs
-        .filter((v) => !p.version || v.version === p.version)
-        .map((v) => v.id);
-    if (!versionIds.length) {
-      sendJson(
-        response,
-        200,
-        { items: [], total: 0, page: p.page, pageSize: p.pageSize },
-        requestId,
-      );
-      return true;
-    }
-    let query = db
-      .from("form_responses")
-      .select(
-        "id,form_id,version_id,submitted_at,status,redacted_at,last_edited_at",
-        { count: "exact" },
-      )
-      .eq("form_id", id)
-      .in("version_id", versionIds)
-      .is("deleted_at", null);
-    if (childId) query = query.eq("id", parse(uuid, childId));
-    const result = await query
-      .order("submitted_at", { ascending: false })
-      .order("id")
-      .range((p.page - 1) * p.pageSize, p.page * p.pageSize - 1);
-    checked(result);
-    if (childId && !result.data.length)
-      throw new ApiError(404, "NOT_FOUND", "This response was not found.");
-    const answers = result.data.length
-      ? checked(
-          await db
-            .from("form_answers")
-            .select("response_id,field_id,value")
-            .in(
-              "response_id",
-              result.data.map((r) => r.id),
-            ),
-        )
-      : [];
-    const items = result.data.map((r) => {
-      const v = defs.find((v) => v.id === r.version_id);
-      return projectResponse(
-        { ...r, version: v.version },
-        answers.filter((a) => a.response_id === r.id),
-        v.definition,
-        sensitive,
-      );
-    });
-    await store.audit({
-      actorId: session.user.id,
-      action: sensitive ? "forms.sensitive_viewed" : "forms.responses_viewed",
-      targetType: "form",
-      targetId: id,
-      requestId,
-      metadata: {
-        responseId: childId || null,
-        version: p.version || null,
-        count: items.length,
-      },
-    });
-    sendJson(
-      response,
-      200,
-      { items, total: result.count, page: p.page, pageSize: p.pageSize },
-      requestId,
-    );
-    return true;
-  }
   if (request.method === "GET") {
     if (operation === "versions") {
       sendJson(response, 200, { items: await versions(id) }, requestId);

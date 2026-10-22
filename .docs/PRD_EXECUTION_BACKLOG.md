@@ -95,8 +95,9 @@ email confirmation. File bytes/private links are excluded. See
   findings in the Tailwind/braces chain.
 - Strict application/build TypeScript now passes. Lint remediation remains:
   zero errors/245 warnings; conditional-hook violations were fixed.
-- Coverage gates now exist and fail honestly: 11.47% overall unit lines;
-  10 of 17 critical files pass individually, seven route modules remain below 90%.
+- All 17 individual critical-file 90%-branch gates now pass. Overall unit
+  coverage is still 13.86% lines/14.26% branches, below the global 70% gate;
+  531 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
   Remaining test-ID traceability. The original
   machine-readable requirement inventory is not a completion percentage and its
@@ -127,6 +128,7 @@ email confirmation. File bytes/private links are excluded. See
 ## Next implementation checkpoint
 
 Complete remaining Forms/runtime/navigation and quality/coverage/device
-acceptance; complete remaining critical-route test coverage. Keep unrelated historical source
+acceptance and overall coverage beyond the now-passing 17 critical-file gates.
+Keep unrelated historical source
 files and user edits intact. Track implementation separately from verified
 acceptance; do not label the complete PRD finished until its launch gates pass.
