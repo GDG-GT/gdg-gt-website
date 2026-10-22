@@ -5,6 +5,21 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Critical transport tests and source attachment review — 2026-10-22
+
+- Added 27 unit tests; 437 pass. Encryption, private storage, scanner transport,
+  shared validation and upload content now meet their individual branch gates.
+  Ten of seventeen critical-file gates pass; seven route modules and global
+  coverage remain red. Overall unit lines are 11.47%, branches 11.44%, not a PRD
+  completion percentage. See `CRITICAL_TRANSPORT_TESTING.md`.
+- Actual 124 Forms/upload and 16 respondent-copy checks pass after natural
+  submission-quota expiry; no limiter reset or spoofing. Copy delivery remains
+  loopback SMTP only. Source collaboration attachment review found latent columns/
+  types but no operational source uploader; target remains explicitly text-only
+  with strict property rejection (`COLLABORATION_ATTACHMENT_REVIEW.md`).
+- Strict types/lint/build and byte gates pass; 245 lint warnings and broad
+  security/accessibility/performance/device/hosted acceptance remain open.
+
 ### Precise Forms fields, accessible focus and pending safety — 2026-10-22
 
 - Added timezone-independent strict local date-time/range checks, canonical

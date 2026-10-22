@@ -58,8 +58,11 @@ email confirmation. File bytes/private links are excluded. See
    schedule/cancel/self-test, bounded delivery, verified callbacks/suppression,
    export, recoverable bulk cleanup and retention are implemented and tested.
    See `NEWSLETTER_OPERATIONS.md`. No real provider sends were enabled.
-4. Remaining mail acceptance and any private collaboration attachment contracts
-   required by the preserved source. Event mail now has exact audience/content
+4. Remaining mail acceptance. Source collaboration attachment-contract review is
+   complete (`COLLABORATION_ATTACHMENT_REVIEW.md`): latent columns/types did not
+   provide an operational source uploader, and the target remains explicitly
+   text-only with strict attachment-property rejection. No new public-file shortcut
+   was introduced. Event mail now has exact audience/content
    review and current authorization/registration checks at delivery; existing
    chapter/team/DM notices use their scoped preparation paths. See
    `EVENT_MAIL_OPERATIONS.md`; hosted fan-out/retry/load acceptance remains open.
@@ -92,8 +95,9 @@ email confirmation. File bytes/private links are excluded. See
   findings in the Tailwind/braces chain.
 - Strict application/build TypeScript now passes. Lint remediation remains:
   zero errors/245 warnings; conditional-hook violations were fixed.
-- Coverage gates now exist and fail honestly: about 10.5% overall unit lines;
-  some critical auth/security files pass individually, others remain below 90%.
+- Coverage gates now exist and fail honestly: 11.47% overall unit lines;
+  10 of 17 critical files pass individually, seven route modules remain below 90%.
+  See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
   Remaining test-ID traceability. The original
   machine-readable requirement inventory is not a completion percentage and its
   `unverified` statuses must not be bulk-promoted from local build success.
@@ -120,6 +124,6 @@ email confirmation. File bytes/private links are excluded. See
 ## Next implementation checkpoint
 
 Complete remaining Forms/runtime/navigation and quality/coverage/device
-acceptance; review scoped attachment contracts. Keep unrelated historical source
+acceptance; complete remaining critical-route test coverage. Keep unrelated historical source
 files and user edits intact. Track implementation separately from verified
 acceptance; do not label the complete PRD finished until its launch gates pass.

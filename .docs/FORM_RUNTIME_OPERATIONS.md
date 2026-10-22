@@ -50,7 +50,9 @@ and complete PRD acceptance remain open.
 - The existing 124-check native Forms/upload regression passes. An earlier rerun
   reached the persistent submission quota (verified HTTP 429); the rerun passed
   after slots expired naturally. No rate reset, forwarded-IP spoofing or limiter
-  exception was used. Separate respondent-copy regression is tracked independently.
+  exception was used. The separate respondent-copy regression also passes all
+  16 actual identity/HTTP/DB/local SMTP checks after natural quota expiry, including
+  exact own revision, one intended recipient, no CC/BCC and no private review link.
 
 These are local functional/keyboard checks, not manual screen-reader, all-browser,
 hosted scanner/storage, load, institutional or launch certification.
