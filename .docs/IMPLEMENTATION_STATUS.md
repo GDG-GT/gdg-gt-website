@@ -5,6 +5,18 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Exact event email audience review — 2026-10-21
+
+- Replaced count-only approval with a five-minute session-bound exact audience/
+  content/event-revision review, current-password/typed approval and immutable
+  single-use batches. Delivery rechecks current sender grants/password generation,
+  publication, recipient identity/removal and processing deadline under its lease.
+- **89 migrations**, canonical SQL/both concurrency tests and **333 unit tests**
+  pass. **22 actual local event-mail checks** pass; exactly one fictional valid
+  address received SMTP and its changed peer was skipped. Desktop/375px keyboard,
+  focus and draft safeguards verified; typecheck, changed-UI lint and build pass.
+  See `EVENT_MAIL_OPERATIONS.md`. Complete PRD/hosted acceptance remains open.
+
 ### Contact inbox and private attachments — 2026-10-21
 
 - Added private capability-bound quarantine uploads, actual scanner/normalization,

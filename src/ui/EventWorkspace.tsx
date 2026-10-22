@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { useDraftGuard } from "@/hooks/useDraftGuard";
+import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
 import { Link } from "react-router-dom";
 import { Plus, ArrowLeft, Save, Users, Copy, ExternalLink } from "lucide-react";
 import { api } from "@/lib/api";
@@ -7,6 +7,7 @@ import { useAdmin } from "@/contexts/AdminContext";
 import { Button, Field, Badge, EmptyState, SearchBox } from "./primitives";
 import type { ChapterEvent } from "./events";
 import FormIntegrations from "./forms/FormIntegrations";
+import EventMailPanel from "./EventMailPanel";
 type Attendee = {
   id: string;
   attendee_name: string;
@@ -86,13 +87,8 @@ export default function EventWorkspace() {
     [attendeeTotal, setAttendeeTotal] = useState(0);
   const [confirmation, setConfirmation] = useState<string | null>(null),
     [dirty, setDirty] = useState(false);
-  const [mail, setMail] = useState<{
-    count: number;
-    subject: string;
-    message: string;
-    confirmed: boolean;
-    key: string;
-  } | null>(null);
+  const [showMail, setShowMail] = useState(false),
+    navigation = useNavigationSafety();
   const load = useCallback(async () => {
     setLoading(true);
     try {
@@ -120,7 +116,7 @@ export default function EventWorkspace() {
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty]);
-  useDraftGuard(dirty || !!mail?.subject || !!mail?.message, {
+  useDraftGuard(dirty, {
     busy,
     label: "Event changes or unsent event mail",
   });
@@ -260,7 +256,12 @@ export default function EventWorkspace() {
                 setConfirmation("discard");
                 return;
               }
-              setMode("list");
+              const leave = () => {
+                setShowMail(false);
+                setMode("list");
+              };
+              if (navigation) navigation.request(leave);
+              else leave();
             }}
           >
             <ArrowLeft size={17} />
@@ -425,286 +426,299 @@ export default function EventWorkspace() {
       )}
       {mode === "edit" && draft && (
         <>
-        {selected && <div className="gt-inline-actions"><FormIntegrations kind="event" resourceId={selected.id} disabled={busy || dirty} /><span className="gt-helper">Save event changes before managing linked forms.</span></div>}
-        <form onSubmit={save} className="gt-form gt-panel gt-event-editor">
           {selected && (
             <div className="gt-inline-actions">
-              <Badge
-                tone={
-                  selected.publication_status === "published"
-                    ? "success"
-                    : "neutral"
-                }
-              >
-                {selected.publication_status}
-              </Badge>
-              <Button
-                type="button"
-                variant="secondary"
+              <FormIntegrations
+                kind="event"
+                resourceId={selected.id}
                 disabled={busy || dirty}
-                onClick={() =>
-                  action(
-                    selected.publication_status === "published"
-                      ? "unpublish"
-                      : "publish",
-                  )
-                }
-              >
-                {selected.publication_status === "published"
-                  ? "Unpublish"
-                  : "Publish"}
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                disabled={busy || dirty}
-                onClick={() => action("duplicate")}
-              >
-                <Copy size={16} />
-                Duplicate
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                disabled={busy || dirty}
-                onClick={() => setConfirmation("cancel")}
-              >
-                Cancel event
-              </Button>
-              <Button
-                type="button"
-                variant="danger"
-                disabled={busy || dirty}
-                onClick={() => setConfirmation("archive")}
-              >
-                Archive
-              </Button>
+              />
+              <span className="gt-helper">
+                Save event changes before managing linked forms.
+              </span>
             </div>
           )}
-          <div className="gt-form-grid">
-            <Field label="Event title" required>
-              <input
+          <form onSubmit={save} className="gt-form gt-panel gt-event-editor">
+            {selected && (
+              <div className="gt-inline-actions">
+                <Badge
+                  tone={
+                    selected.publication_status === "published"
+                      ? "success"
+                      : "neutral"
+                  }
+                >
+                  {selected.publication_status}
+                </Badge>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={busy || dirty}
+                  onClick={() =>
+                    action(
+                      selected.publication_status === "published"
+                        ? "unpublish"
+                        : "publish",
+                    )
+                  }
+                >
+                  {selected.publication_status === "published"
+                    ? "Unpublish"
+                    : "Publish"}
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  disabled={busy || dirty}
+                  onClick={() => action("duplicate")}
+                >
+                  <Copy size={16} />
+                  Duplicate
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  disabled={busy || dirty}
+                  onClick={() => setConfirmation("cancel")}
+                >
+                  Cancel event
+                </Button>
+                <Button
+                  type="button"
+                  variant="danger"
+                  disabled={busy || dirty}
+                  onClick={() => setConfirmation("archive")}
+                >
+                  Archive
+                </Button>
+              </div>
+            )}
+            <div className="gt-form-grid">
+              <Field label="Event title" required>
+                <input
+                  required
+                  minLength={2}
+                  maxLength={200}
+                  value={draft.title || ""}
+                  onChange={(e) => change("title", e.target.value)}
+                />
+              </Field>
+              <Field
+                label="URL slug"
+                hint="Lowercase words separated by hyphens. Previous slugs redirect after a rename."
+                required
+              >
+                <input
+                  required
+                  pattern="[a-z0-9]+(-[a-z0-9]+)*"
+                  maxLength={150}
+                  value={draft.slug || ""}
+                  onChange={(e) => change("slug", e.target.value)}
+                />
+              </Field>
+              <Field label="Start (UTC)" required>
+                <input
+                  type="datetime-local"
+                  required
+                  value={dateInput(draft.start_at)}
+                  onChange={(e) =>
+                    change(
+                      "start_at",
+                      e.target.value ? e.target.value + ":00Z" : "",
+                    )
+                  }
+                />
+              </Field>
+              <Field label="End (UTC)">
+                <input
+                  type="datetime-local"
+                  value={dateInput(draft.end_at)}
+                  onChange={(e) =>
+                    change(
+                      "end_at",
+                      e.target.value ? e.target.value + ":00Z" : null,
+                    )
+                  }
+                />
+              </Field>
+              <Field label="Display timezone" required>
+                <input
+                  required
+                  value={draft.timezone || ""}
+                  onChange={(e) => change("timezone", e.target.value)}
+                />
+              </Field>
+              <Field label="Venue or online label" required>
+                <input
+                  required
+                  maxLength={500}
+                  value={draft.location || ""}
+                  onChange={(e) => change("location", e.target.value)}
+                />
+              </Field>
+              <Field label="Room">
+                <input
+                  maxLength={200}
+                  value={draft.room || ""}
+                  onChange={(e) => change("room", e.target.value)}
+                />
+              </Field>
+              <Field label="Event type">
+                <input
+                  required
+                  maxLength={50}
+                  value={draft.type || ""}
+                  onChange={(e) => change("type", e.target.value)}
+                />
+              </Field>
+              <Field label="Experience level">
+                <select
+                  value={draft.level}
+                  onChange={(e) => change("level", e.target.value)}
+                >
+                  {["open_for_all", "beginner", "intermediate", "advanced"].map(
+                    (v) => (
+                      <option key={v} value={v}>
+                        {v.replace(/_/g, " ")}
+                      </option>
+                    ),
+                  )}
+                </select>
+              </Field>
+              <Field label="Registration mode">
+                <select
+                  value={draft.registration_type}
+                  onChange={(e) => change("registration_type", e.target.value)}
+                >
+                  {["internal", "external", "both"].map((v) => (
+                    <option key={v}>{v}</option>
+                  ))}
+                </select>
+              </Field>
+              <Field
+                label="Total capacity"
+                hint="Includes internal registrations plus the external attendee count. Empty means uncapped."
+              >
+                <input
+                  type="number"
+                  min={1}
+                  value={draft.max_participants ?? ""}
+                  onChange={(e) =>
+                    change(
+                      "max_participants",
+                      e.target.value ? Number(e.target.value) : null,
+                    )
+                  }
+                />
+              </Field>
+              <Field label="External attendee count">
+                <input
+                  type="number"
+                  min={0}
+                  value={draft.external_attendees ?? 0}
+                  onChange={(e) =>
+                    change("external_attendees", Number(e.target.value))
+                  }
+                />
+              </Field>
+              <Field label="Owning team">
+                <select
+                  value={draft.team_id || ""}
+                  onChange={(e) => change("team_id", e.target.value || null)}
+                >
+                  <option value="">Chapter-wide (Admins only)</option>
+                  {userTeams.map((m) => (
+                    <option key={m.team_id} value={m.team_id}>
+                      {m.team?.name || m.team_id}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+            </div>
+            <Field label="Short summary">
+              <textarea
+                maxLength={500}
+                rows={2}
+                value={draft.short_description || ""}
+                onChange={(e) => change("short_description", e.target.value)}
+              />
+            </Field>
+            <Field label="Description" required>
+              <textarea
                 required
                 minLength={2}
-                maxLength={200}
-                value={draft.title || ""}
-                onChange={(e) => change("title", e.target.value)}
+                maxLength={40000}
+                rows={6}
+                value={draft.description || ""}
+                onChange={(e) => change("description", e.target.value)}
               />
             </Field>
-            <Field
-              label="URL slug"
-              hint="Lowercase words separated by hyphens. Previous slugs redirect after a rename."
-              required
-            >
-              <input
-                required
-                pattern="[a-z0-9]+(-[a-z0-9]+)*"
-                maxLength={150}
-                value={draft.slug || ""}
-                onChange={(e) => change("slug", e.target.value)}
-              />
-            </Field>
-            <Field label="Start (UTC)" required>
-              <input
-                type="datetime-local"
-                required
-                value={dateInput(draft.start_at)}
-                onChange={(e) =>
-                  change(
-                    "start_at",
-                    e.target.value ? e.target.value + ":00Z" : "",
-                  )
-                }
-              />
-            </Field>
-            <Field label="End (UTC)">
-              <input
-                type="datetime-local"
-                value={dateInput(draft.end_at)}
-                onChange={(e) =>
-                  change(
-                    "end_at",
-                    e.target.value ? e.target.value + ":00Z" : null,
-                  )
-                }
-              />
-            </Field>
-            <Field label="Display timezone" required>
-              <input
-                required
-                value={draft.timezone || ""}
-                onChange={(e) => change("timezone", e.target.value)}
-              />
-            </Field>
-            <Field label="Venue or online label" required>
-              <input
-                required
-                maxLength={500}
-                value={draft.location || ""}
-                onChange={(e) => change("location", e.target.value)}
-              />
-            </Field>
-            <Field label="Room">
-              <input
-                maxLength={200}
-                value={draft.room || ""}
-                onChange={(e) => change("room", e.target.value)}
-              />
-            </Field>
-            <Field label="Event type">
-              <input
-                required
-                maxLength={50}
-                value={draft.type || ""}
-                onChange={(e) => change("type", e.target.value)}
-              />
-            </Field>
-            <Field label="Experience level">
-              <select
-                value={draft.level}
-                onChange={(e) => change("level", e.target.value)}
-              >
-                {["open_for_all", "beginner", "intermediate", "advanced"].map(
-                  (v) => (
-                    <option key={v} value={v}>
-                      {v.replace(/_/g, " ")}
-                    </option>
-                  ),
-                )}
-              </select>
-            </Field>
-            <Field label="Registration mode">
-              <select
-                value={draft.registration_type}
-                onChange={(e) => change("registration_type", e.target.value)}
-              >
-                {["internal", "external", "both"].map((v) => (
-                  <option key={v}>{v}</option>
-                ))}
-              </select>
-            </Field>
-            <Field
-              label="Total capacity"
-              hint="Includes internal registrations plus the external attendee count. Empty means uncapped."
-            >
-              <input
-                type="number"
-                min={1}
-                value={draft.max_participants ?? ""}
-                onChange={(e) =>
-                  change(
-                    "max_participants",
-                    e.target.value ? Number(e.target.value) : null,
-                  )
-                }
-              />
-            </Field>
-            <Field label="External attendee count">
-              <input
-                type="number"
-                min={0}
-                value={draft.external_attendees ?? 0}
-                onChange={(e) =>
-                  change("external_attendees", Number(e.target.value))
-                }
-              />
-            </Field>
-            <Field label="Owning team">
-              <select
-                value={draft.team_id || ""}
-                onChange={(e) => change("team_id", e.target.value || null)}
-              >
-                <option value="">Chapter-wide (Admins only)</option>
-                {userTeams.map((m) => (
-                  <option key={m.team_id} value={m.team_id}>
-                    {m.team?.name || m.team_id}
-                  </option>
-                ))}
-              </select>
-            </Field>
-          </div>
-          <Field label="Short summary">
-            <textarea
-              maxLength={500}
-              rows={2}
-              value={draft.short_description || ""}
-              onChange={(e) => change("short_description", e.target.value)}
-            />
-          </Field>
-          <Field label="Description" required>
-            <textarea
-              required
-              minLength={2}
-              maxLength={40000}
-              rows={6}
-              value={draft.description || ""}
-              onChange={(e) => change("description", e.target.value)}
-            />
-          </Field>
-          <div className="gt-form-grid">
+            <div className="gt-form-grid">
+              {(
+                [
+                  ["image_url", "Image URL"],
+                  ["event_link", "Online event URL"],
+                  ["registration_url", "External registration URL"],
+                  ["google_form_url", "Additional registration URL"],
+                  ["google_event_url", "External calendar URL"],
+                ] as const
+              ).map(([key, label]) => (
+                <Field key={key} label={label}>
+                  <input
+                    maxLength={2000}
+                    value={draft[key] || ""}
+                    onChange={(e) => change(key, e.target.value)}
+                  />
+                </Field>
+              ))}
+            </div>
             {(
               [
-                ["image_url", "Image URL"],
-                ["event_link", "Online event URL"],
-                ["registration_url", "External registration URL"],
-                ["google_form_url", "Additional registration URL"],
-                ["google_event_url", "External calendar URL"],
+                ["prerequisites", "Prerequisites"],
+                ["what_youll_learn", "Learning outcomes"],
+                ["what_to_bring", "What to bring"],
+                ["schedule", "Schedule"],
+                ["additional_info", "Additional information"],
+                ["contact_info", "Contact information"],
               ] as const
             ).map(([key, label]) => (
               <Field key={key} label={label}>
-                <input
-                  maxLength={2000}
+                <textarea
+                  rows={3}
+                  maxLength={20000}
                   value={draft[key] || ""}
                   onChange={(e) => change(key, e.target.value)}
                 />
               </Field>
             ))}
-          </div>
-          {(
-            [
-              ["prerequisites", "Prerequisites"],
-              ["what_youll_learn", "Learning outcomes"],
-              ["what_to_bring", "What to bring"],
-              ["schedule", "Schedule"],
-              ["additional_info", "Additional information"],
-              ["contact_info", "Contact information"],
-            ] as const
-          ).map(([key, label]) => (
-            <Field key={key} label={label}>
-              <textarea
-                rows={3}
-                maxLength={20000}
-                value={draft[key] || ""}
-                onChange={(e) => change(key, e.target.value)}
+            <label className="gt-check">
+              <input
+                type="checkbox"
+                checked={draft.registration_enabled ?? true}
+                onChange={(e) =>
+                  change("registration_enabled", e.target.checked)
+                }
               />
-            </Field>
-          ))}
-          <label className="gt-check">
-            <input
-              type="checkbox"
-              checked={draft.registration_enabled ?? true}
-              onChange={(e) => change("registration_enabled", e.target.checked)}
-            />
-            Registration enabled
-          </label>
-          <label className="gt-check">
-            <input
-              type="checkbox"
-              checked={draft.is_featured ?? false}
-              onChange={(e) => change("is_featured", e.target.checked)}
-            />
-            Feature this event
-          </label>
-          <div className="gt-inline-actions">
-            <Button disabled={busy} type="submit">
-              <Save size={17} />
-              {busy ? "Saving…" : "Save draft changes"}
-            </Button>
-            <span className="gt-helper">
-              {dirty ? "Unsaved changes" : "All changes saved"}
-            </span>
-          </div>
-        </form>
+              Registration enabled
+            </label>
+            <label className="gt-check">
+              <input
+                type="checkbox"
+                checked={draft.is_featured ?? false}
+                onChange={(e) => change("is_featured", e.target.checked)}
+              />
+              Feature this event
+            </label>
+            <div className="gt-inline-actions">
+              <Button disabled={busy} type="submit">
+                <Save size={17} />
+                {busy ? "Saving…" : "Save draft changes"}
+              </Button>
+              <span className="gt-helper">
+                {dirty ? "Unsaved changes" : "All changes saved"}
+              </span>
+            </div>
+          </form>
         </>
       )}
       {mode === "attendees" && selected && (
@@ -723,116 +737,24 @@ export default function EventWorkspace() {
             </a>
             <Button
               variant="secondary"
-              onClick={async () => {
-                try {
-                  const result = await api<{ recipientCount: number }>(
-                    `/admin/events/${selected.id}/email`,
-                  );
-                  setMail({
-                    count: result.recipientCount,
-                    subject: "",
-                    message: "",
-                    confirmed: false,
-                    key: crypto.randomUUID(),
-                  });
-                } catch (e) {
-                  setError((e as Error).message);
-                }
-              }}
+              disabled={showMail}
+              onClick={() => setShowMail(true)}
             >
               Email registered attendees
             </Button>
           </div>
-          {mail && (
-            <form
-              className="gt-form gt-panel gt-event-editor"
-              onSubmit={async (e) => {
-                e.preventDefault();
-                setBusy(true);
-                try {
-                  await api(`/admin/events/${selected.id}/email`, {
-                    method: "POST",
-                    protected: true,
-                    idempotencyKey: mail.key,
-                    body: {
-                      subject: mail.subject,
-                      message: mail.message,
-                      expectedRecipientCount: mail.count,
-                      confirmed: mail.confirmed,
-                    },
-                  });
-                  setNotice(
-                    "Audience-bound messages are queued. Delivery runs separately.",
-                  );
-                  setMail(null);
-                } catch (error) {
-                  setError((error as Error).message);
-                } finally {
-                  setBusy(false);
-                }
+          {showMail && (
+            <EventMailPanel
+              key={selected.id}
+              eventId={selected.id}
+              onClose={() => setShowMail(false)}
+              onQueued={(count) => {
+                setShowMail(false);
+                setNotice(
+                  `${count} audience-bound messages are queued. Delivery runs separately; queued is not delivered.`,
+                );
               }}
-            >
-              <h3>Message {mail.count} registered attendees</h3>
-              <p>
-                Recipients are snapshotted when you confirm. No arbitrary
-                recipient addresses are accepted.
-              </p>
-              <Field label="Subject" required>
-                <input
-                  required
-                  minLength={2}
-                  maxLength={200}
-                  value={mail.subject}
-                  onChange={(e) =>
-                    setMail({
-                      ...mail,
-                      subject: e.target.value,
-                      key: crypto.randomUUID(),
-                    })
-                  }
-                />
-              </Field>
-              <Field label="Message" required>
-                <textarea
-                  required
-                  minLength={10}
-                  maxLength={10000}
-                  rows={5}
-                  value={mail.message}
-                  onChange={(e) =>
-                    setMail({
-                      ...mail,
-                      message: e.target.value,
-                      key: crypto.randomUUID(),
-                    })
-                  }
-                />
-              </Field>
-              <label className="gt-check">
-                <input
-                  type="checkbox"
-                  required
-                  checked={mail.confirmed}
-                  onChange={(e) =>
-                    setMail({ ...mail, confirmed: e.target.checked })
-                  }
-                />
-                I confirm this message is for all {mail.count} registered
-                attendees.
-              </label>
-              <div className="gt-inline-actions">
-                <Button disabled={busy || !mail.count || mail.count > 1000}>
-                  Queue {mail.count} messages
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => setMail(null)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
+            />
           )}
           {loading ? (
             <div className="gt-skeleton gt-detail-skeleton" />

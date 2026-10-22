@@ -92,6 +92,22 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    EVENT_MAIL_REVIEW_REQUIRED: [
+      409,
+      "Review the exact event audience and message again. The review expired, changed, was used or belongs to another session.",
+    ],
+    EVENT_MAIL_AUDIENCE_LIMIT: [
+      409,
+      "Event mail requires between 1 and 1,000 current registered attendees.",
+    ],
+    EVENT_MAIL_REVIEW_LIMIT: [
+      429,
+      "Wait before generating more event email reviews.",
+    ],
+    EVENT_MAIL_SEND_LIMIT: [
+      429,
+      "Up to ten event email approvals may be created per account per day.",
+    ],
     CONTACT_UPLOAD_QUOTA: [
       429,
       "Up to three contact files may upload at once and ten may be requested per network per day. Wait or send your message without an attachment.",

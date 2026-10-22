@@ -12,7 +12,7 @@ import {
   imageUrl,
   idempotency,
 } from "./lib/validation.mjs";
-import { riskHash, tokenHash } from "./lib/security.mjs";
+import { riskHash, tokenHash, verifySecret } from "./lib/security.mjs";
 import { createHash } from "node:crypto";
 import { csvRow } from "./lib/csv.mjs";
 
@@ -72,6 +72,16 @@ export const registrationInput = z
     notes: text(2000).optional(),
     consent: z.literal(true),
     website: z.string().max(200).default(""),
+  })
+  .strict();
+export const eventMailReview = z
+  .object({ subject: text(200, 2), message: text(10000, 10) })
+  .strict();
+export const eventMailApproval = z
+  .object({
+    reviewId: uuid,
+    currentPassword: z.string().min(1).max(1024),
+    confirmation: z.string().regex(/^SEND [1-9][0-9]{0,3}$/),
   })
   .strict();
 const publicColumns =
@@ -169,7 +179,7 @@ export async function eventRoutes(
     /^\/api\/v1\/events(?:\/([^/]+)(?:\/(registrations|calendar\.ics))?)?$/,
   );
   const adminMatch = path.match(
-    /^\/api\/v1\/admin\/events(?:\/([^/]+)(?:\/(publish|unpublish|cancel|duplicate|attendees|email)(?:\/([^/]+))?)?)?$/,
+    /^\/api\/v1\/admin\/events(?:\/([^/]+)(?:\/(publish|unpublish|cancel|duplicate|attendees|email|email-review)(?:\/([^/]+))?)?)?$/,
   );
   if (!publicMatch && !adminMatch) return false;
   const rate = async (scope, key, limit) => {
@@ -335,7 +345,9 @@ export async function eventRoutes(
     event = {
       ...event,
       registration_state: await registrationState(db, event),
-      linked_forms: checked(await db.rpc("public_event_form_integrations", { p_event: event.id })),
+      linked_forms: checked(
+        await db.rpc("public_event_form_integrations", { p_event: event.id }),
+      ),
     };
     const related = checked(
       await db
@@ -386,7 +398,10 @@ export async function eventRoutes(
     )
       throw new ApiError(404, "NOT_FOUND", "This event was not found.");
   }
-  if (operation === "email") {
+  if (operation === "email" || operation === "email-review") {
+    if (attendeeId)
+      throw new ApiError(404, "NOT_FOUND", "This email action was not found.");
+    queryValues(url.searchParams, z.object({}).strict());
     if (
       !checked(
         await db.rpc("can_event_audience", {
@@ -416,29 +431,51 @@ export async function eventRoutes(
       );
       return true;
     }
-    const body = await jsonBody(
-      request,
-      z
-        .object({
-          subject: text(200, 2),
-          message: text(10000, 10),
-          expectedRecipientCount: z.number().int().min(1).max(1000),
-          confirmed: z.literal(true),
-        })
-        .strict(),
-      32768,
-    );
+    if (operation === "email-review") {
+      const body = await jsonBody(request, eventMailReview, 65536);
+      await rate("events.email-review", session.user.id, 30);
+      sendJson(
+        response,
+        200,
+        checked(
+          await db.rpc("review_event_mail", {
+            p_actor: session.user.id,
+            p_session: session.sessionId,
+            p_event: id,
+            p_subject: body.subject,
+            p_message: body.message,
+            p_request_id: requestId,
+          }),
+        ),
+        requestId,
+      );
+      return true;
+    }
+    const body = await jsonBody(request, eventMailApproval, 8192);
     const key = idempotency(request);
     await rate("events.email", session.user.id, 10);
+    const account = await store.accountByEmail(session.user.email);
+    if (!(await verifySecret(body.currentPassword, account?.password_hash)))
+      throw new ApiError(
+        403,
+        "PASSWORD_REQUIRED",
+        "Confirm your current password before sending event mail.",
+      );
     const result = checked(
-      await db.rpc("queue_event_message", {
+      await db.rpc("commit_event_mail", {
         p_actor: session.user.id,
+        p_session: session.sessionId,
         p_event: id,
-        p_subject: body.subject,
-        p_message: body.message,
-        p_expected_count: body.expectedRecipientCount,
+        p_review: body.reviewId,
+        p_verified_hash: account.password_hash,
+        p_confirmation: body.confirmation,
         p_key_hash: tokenHash(key),
-        p_request_hash: tokenHash(JSON.stringify(body)),
+        p_request_hash: tokenHash(
+          JSON.stringify({
+            reviewId: body.reviewId,
+            confirmation: body.confirmation,
+          }),
+        ),
         p_request_id: requestId,
       }),
     );

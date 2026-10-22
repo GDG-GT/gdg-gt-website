@@ -15,7 +15,7 @@ const sections = [
     title: "Plan an event",
     href: "/admin/events",
     description:
-      "Set a date, venue, audience level, and registration details. Check the public event page before sharing. Unknown times and venues should stay marked as to be announced.",
+      "Set a date, venue, audience level, and registration details. Check the public event page before sharing. Unknown times and venues should stay marked as to be announced. From Attendance, review the exact registered recipients and message before approving email with your current password and SEND plus the final count. Reviews expire after five minutes; recipient or event changes require another review. Queued is not delivered, and accepted mail cannot be recalled.",
   },
   {
     title: "Build a form",

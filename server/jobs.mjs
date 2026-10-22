@@ -108,6 +108,9 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
         mediaClaimed: media.claimed,
         mediaPurged: media.purged,
         mediaRetried: media.retried,
+        eventMailReviewsExpired: checked(
+          await db.rpc("cleanup_event_mail_reviews"),
+        ),
       };
       if (files.retried || media.retried)
         throw new ApiError(

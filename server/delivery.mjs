@@ -37,25 +37,16 @@ export async function deliveryMessage(job, db, config, mail) {
     subject = "Your registration: " + event.title;
     content = `Hi ${registration.attendee_name},\n\nYour place at ${event.title} is confirmed.\n${new Date(event.start_at).toLocaleString("en-US", { timeZone: event.timezone })} (${event.timezone})\n${event.location}\n\nDetails: ${config.origin}/events/${event.slug}`;
   } else if (job.kind === "event_message") {
-    const recipient = checked(
-      await db
-        .from("event_message_recipients")
-        .select("recipient_email")
-        .eq("message_id", job.payload.messageId)
-        .eq("registration_id", job.payload.registrationId)
-        .maybeSingle(),
+    const notice = checked(
+      await db.rpc("prepare_event_mail", {
+        p_job: job.id,
+        p_lease: job.lease_token,
+      }),
     );
-    if (!recipient) return null;
-    const message = checked(
-      await db
-        .from("event_messages")
-        .select("subject,message")
-        .eq("id", job.payload.messageId)
-        .single(),
-    );
-    to = recipient.recipient_email;
-    subject = message.subject;
-    content = message.message;
+    if (!notice) return null;
+    to = notice.email;
+    subject = notice.subject;
+    content = notice.message;
   } else if (job.kind === "newsletter_confirmation") {
     const record = checked(
       await db

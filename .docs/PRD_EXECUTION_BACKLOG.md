@@ -40,8 +40,11 @@ See `MEMBER_TRANSFER_OPERATIONS.md` for scope, limits and real test evidence.
    schedule/cancel/self-test, bounded delivery, verified callbacks/suppression,
    export, recoverable bulk cleanup and retention are implemented and tested.
    See `NEWSLETTER_OPERATIONS.md`. No real provider sends were enabled.
-4. Remaining scoped mail contracts: event/team/communications fan-out and any
-   private collaboration attachment contracts required by the preserved source.
+4. Remaining mail acceptance and any private collaboration attachment contracts
+   required by the preserved source. Event mail now has exact audience/content
+   review and current authorization/registration checks at delivery; existing
+   chapter/team/DM notices use their scoped preparation paths. See
+   `EVENT_MAIL_OPERATIONS.md`; hosted fan-out/retry/load acceptance remains open.
    Optional scanned contact attachments and the restricted chapter inbox are now
    implemented locally, including resolution retention/holds/physical cleanup.
    See `CONTACT_OPERATIONS.md`; full hosted/browser acceptance remains open.

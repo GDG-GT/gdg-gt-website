@@ -1,0 +1,63 @@
+BEGIN;
+INSERT INTO public.admin_users(id,email,password_hash,role,is_active) VALUES
+ ('f8900000-0000-4000-8000-000000000001','event-mail-admin@example.test','test-only','admin',true),
+ ('f8900000-0000-4000-8000-000000000002','event-mail-member@example.test','test-only','team_member',true);
+INSERT INTO public.admin_sessions(id,admin_user_id,token_hash) VALUES
+ ('f8900000-0000-4000-8000-000000000003','f8900000-0000-4000-8000-000000000001',repeat('1',64)),
+ ('f8900000-0000-4000-8000-000000000004','f8900000-0000-4000-8000-000000000001',repeat('2',64));
+DO $$ DECLARE actor uuid:='f8900000-0000-4000-8000-000000000001';sid uuid:='f8900000-0000-4000-8000-000000000003';other uuid:='f8900000-0000-4000-8000-000000000004';member uuid:='f8900000-0000-4000-8000-000000000002';
+ e uuid;t uuid;a uuid;r uuid;v jsonb;first_result jsonb;mid uuid;j public.delivery_jobs;BEGIN
+ IF has_table_privilege('anon','public.event_mail_reviews','SELECT') OR has_function_privilege('authenticated','public.prepare_event_mail(uuid,uuid)','EXECUTE') THEN RAISE EXCEPTION 'Browser event mail access';END IF;
+ INSERT INTO public.admin_teams(name,slug,created_by) VALUES('Fictional event mail team','fictional-event-mail-team',actor) RETURNING id INTO t;
+ v:=public.mutate_event(actor,NULL,'create',NULL,jsonb_build_object('title','Fictional event mail','slug','fictional-event-mail','description','Fixture only','start_at',now()+interval '3 days','location','Fixture','team_id',t),gen_random_uuid());e:=(v->>'id')::uuid;
+ BEGIN PERFORM public.review_event_mail(actor,sid,e,'Subject','Fictional message only',gen_random_uuid());RAISE EXCEPTION 'Draft event emailed';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'INVALID_STATE' THEN RAISE;END IF;END;
+ PERFORM public.mutate_event(actor,e,'publish',1,'{}',gen_random_uuid());
+ PERFORM public.register_event_atomic('fictional-event-mail','Fictional attendee','event-mail-attendee@example.test',NULL,true,repeat('a',64),repeat('b',64));
+ SELECT id INTO a FROM public.event_attendance WHERE event_id=e;
+ IF public.can_event_audience(member,e,'send_email') THEN RAISE EXCEPTION 'General event access implies email';END IF;
+ INSERT INTO public.team_memberships(team_id,admin_user_id,is_active) VALUES(t,member,true);
+ INSERT INTO public.team_page_access(team_id,page_path,can_access) VALUES(t,'/admin/events',true);
+ INSERT INTO public.team_permissions(team_id,resource_type,permission,can_read) VALUES(t,'events','crud',true);
+ IF public.can_event_audience(member,e,'send_email') THEN RAISE EXCEPTION 'CRUD implies email';END IF;
+ INSERT INTO public.team_permissions(team_id,resource_type,permission,can_read) VALUES(t,'events','send_email',true);
+ IF NOT public.can_event_audience(member,e,'send_email') THEN RAISE EXCEPTION 'Explicit scoped send not usable';END IF;
+ v:=public.review_event_mail(actor,sid,e,'Fictional subject','Fictional message only',gen_random_uuid());r:=(v->>'reviewId')::uuid;
+ BEGIN PERFORM public.commit_event_mail(actor,other,e,r,'test-only','SEND 1',repeat('1',64),repeat('2',64),gen_random_uuid());RAISE EXCEPTION 'Foreign session review';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'EVENT_MAIL_REVIEW_REQUIRED' THEN RAISE;END IF;END;
+ BEGIN PERFORM public.commit_event_mail(actor,sid,e,r,'wrong','SEND 1',repeat('1',64),repeat('2',64),gen_random_uuid());RAISE EXCEPTION 'Unchecked password';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ BEGIN PERFORM public.commit_event_mail(actor,sid,e,r,'test-only','SEND 2',repeat('1',64),repeat('2',64),gen_random_uuid());RAISE EXCEPTION 'Wrong typed count';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'VALIDATION_ERROR' THEN RAISE;END IF;END;
+ UPDATE public.event_attendance SET attendee_email='event-mail-changed@example.test' WHERE id=a;
+ BEGIN PERFORM public.commit_event_mail(actor,sid,e,r,'test-only','SEND 1',repeat('1',64),repeat('2',64),gen_random_uuid());RAISE EXCEPTION 'Same-count identity replacement';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'AUDIENCE_CHANGED' THEN RAISE;END IF;END;
+ UPDATE public.event_attendance SET attendee_email='event-mail-attendee@example.test' WHERE id=a;
+ UPDATE public.events SET revision=revision+1 WHERE id=e;
+ BEGIN PERFORM public.commit_event_mail(actor,sid,e,r,'test-only','SEND 1',repeat('1',64),repeat('2',64),gen_random_uuid());RAISE EXCEPTION 'Changed event accepted';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ v:=public.review_event_mail(actor,sid,e,'Fictional subject','Fictional message only',gen_random_uuid());r:=(v->>'reviewId')::uuid;
+ UPDATE public.event_mail_reviews SET expires_at=now()-interval '1 second' WHERE id=r;
+ BEGIN PERFORM public.commit_event_mail(actor,sid,e,r,'test-only','SEND 1',repeat('1',64),repeat('2',64),gen_random_uuid());RAISE EXCEPTION 'Expired review';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'EVENT_MAIL_REVIEW_REQUIRED' THEN RAISE;END IF;END;
+ v:=public.review_event_mail(actor,sid,e,'Fictional subject','Fictional message only',gen_random_uuid());r:=(v->>'reviewId')::uuid;
+ first_result:=public.commit_event_mail(actor,sid,e,r,'test-only','SEND 1',repeat('1',64),repeat('2',64),gen_random_uuid());mid:=(first_result->>'messageId')::uuid;
+ IF public.commit_event_mail(actor,sid,e,r,'test-only','SEND 1',repeat('1',64),repeat('2',64),gen_random_uuid()) IS DISTINCT FROM first_result THEN RAISE EXCEPTION 'Approval retry';END IF;
+ IF(SELECT count(*) FROM public.delivery_jobs WHERE kind='event_message' AND payload->>'messageId'=mid::text)<>1 THEN RAISE EXCEPTION 'Duplicate event jobs';END IF;
+ BEGIN PERFORM public.commit_event_mail(actor,sid,e,r,'test-only','SEND 1',repeat('3',64),repeat('2',64),gen_random_uuid());RAISE EXCEPTION 'Consumed review reused';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'EVENT_MAIL_REVIEW_REQUIRED' THEN RAISE;END IF;END;
+ BEGIN PERFORM public.queue_event_message(actor,e,'Old bypass','Fictional message',1,repeat('4',64),repeat('5',64),gen_random_uuid());RAISE EXCEPTION 'Count-only bypass';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'EVENT_MAIL_REVIEW_REQUIRED' THEN RAISE;END IF;END;
+ SELECT * INTO j FROM public.claim_worker_jobs(100,ARRAY['event_message']) WHERE payload->>'messageId'=mid::text;
+ IF public.prepare_event_mail(j.id,gen_random_uuid()) IS NOT NULL THEN RAISE EXCEPTION 'Forged delivery lease';END IF;
+ v:=public.prepare_event_mail(j.id,j.lease_token);IF v->>'email'<>'event-mail-attendee@example.test' OR v->>'subject'<>'Fictional subject' THEN RAISE EXCEPTION 'Reviewed delivery changed';END IF;
+ UPDATE public.event_attendance SET attendee_email='event-mail-replaced@example.test' WHERE id=a;
+ IF public.prepare_event_mail(j.id,j.lease_token) IS NOT NULL THEN RAISE EXCEPTION 'Changed address receives old send';END IF;
+ UPDATE public.event_attendance SET attendee_email='event-mail-attendee@example.test',deleted_at=now() WHERE id=a;
+ IF public.prepare_event_mail(j.id,j.lease_token) IS NOT NULL THEN RAISE EXCEPTION 'Removed attendee receives mail';END IF;
+ UPDATE public.event_attendance SET deleted_at=NULL WHERE id=a;
+ UPDATE public.admin_users SET password_hash='rotated' WHERE id=actor;
+ IF public.prepare_event_mail(j.id,j.lease_token) IS NOT NULL THEN RAISE EXCEPTION 'Password generation ignored';END IF;
+ UPDATE public.admin_users SET password_hash='test-only',is_active=false WHERE id=actor;
+ IF public.prepare_event_mail(j.id,j.lease_token) IS NOT NULL THEN RAISE EXCEPTION 'Revoked sender receives old authorization';END IF;
+ UPDATE public.admin_users SET is_active=true WHERE id=actor;
+ UPDATE public.admin_teams SET is_active=false WHERE id=t;
+ IF public.can_event_audience(member,e,'send_email') OR public.prepare_event_mail(j.id,j.lease_token) IS NOT NULL THEN RAISE EXCEPTION 'Inactive team sends';END IF;
+ UPDATE public.admin_teams SET is_active=true WHERE id=t;
+ UPDATE public.events SET publication_status='archived' WHERE id=e;
+ IF public.prepare_event_mail(j.id,j.lease_token) IS NOT NULL THEN RAISE EXCEPTION 'Archived event sends';END IF;
+ UPDATE public.event_mail_reviews SET expires_at=now()-interval '25 hours';
+ IF public.cleanup_event_mail_reviews()<3 THEN RAISE EXCEPTION 'Review retention';END IF;
+END $$;
+ROLLBACK;

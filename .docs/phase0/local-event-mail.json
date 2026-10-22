@@ -1,0 +1,94 @@
+{
+  "generatedAt": "2026-10-22T00:43:56.114Z",
+  "environment": "Fictional loopback event/accounts/recipients; real protected HTTP, PostgreSQL and SMTP. Only suite-owned event is recoverably archived. No external provider call.",
+  "tests": [
+    {
+      "name": "event mail tests cannot use an external email provider",
+      "passed": true
+    },
+    {
+      "name": "draft events cannot queue attendee email",
+      "passed": true
+    },
+    {
+      "name": "server computes the current event-only audience count",
+      "passed": true
+    },
+    {
+      "name": "anonymous callers cannot review an event audience",
+      "passed": true
+    },
+    {
+      "name": "unrelated team members cannot inspect chapter recipient identities",
+      "passed": true
+    },
+    {
+      "name": "audience review is an explicit protected POST action",
+      "passed": true
+    },
+    {
+      "name": "reviews reject arbitrary recipient injection",
+      "passed": true
+    },
+    {
+      "name": "retired count-only approvals cannot send mail",
+      "passed": true
+    },
+    {
+      "name": "review returns exact saved identities, count, content and expiry",
+      "passed": true
+    },
+    {
+      "name": "a second session cannot reuse the first session's send review",
+      "passed": true
+    },
+    {
+      "name": "current password is required before event fan-out",
+      "passed": true
+    },
+    {
+      "name": "typed final count must match the reviewed audience",
+      "passed": true
+    },
+    {
+      "name": "same-count recipient identity changes invalidate approval",
+      "passed": true
+    },
+    {
+      "name": "expired audience reviews cannot queue mail",
+      "passed": true
+    },
+    {
+      "name": "approved content queues a bounded frozen event audience",
+      "passed": true
+    },
+    {
+      "name": "an ambiguous approval retry returns the same message without fan-out duplication",
+      "passed": true
+    },
+    {
+      "name": "consumed reviews cannot queue another batch with a new key",
+      "passed": true
+    },
+    {
+      "name": "durable jobs store only record references, not message bodies or recipient addresses",
+      "passed": true
+    },
+    {
+      "name": "actual delivery rechecks and safely completes the changed-recipient skip",
+      "passed": true
+    },
+    {
+      "name": "only the still-authorized frozen address receives a provider-accepted message",
+      "passed": true
+    },
+    {
+      "name": "real loopback SMTP captured exactly one event email for the valid recipient",
+      "passed": true
+    },
+    {
+      "name": "server-rendered event mail escapes stored untrusted HTML",
+      "passed": true
+    }
+  ]
+}
