@@ -66,9 +66,12 @@ email confirmation. File bytes/private links are excluded. See
    controls, bounded reminders/retries/deduplication/provider cleanup and generic
    safe click handlers are implemented/tested locally. See `PUSH_OPERATIONS.md`.
    Real sending is disabled; browser notification permission was not requested.
-7. Cross-system privacy/operations: person-data export/redaction/deletion subject
-   to holds, remaining scheduled retention/cleanup jobs, sanitized production
-   telemetry/alerts, and user-facing operating guide accuracy throughout.
+7. Cross-system privacy/operations: reviewed person-data export/redaction/deletion
+   subject to holds is implemented locally (`PERSON_PRIVACY_OPERATIONS.md`).
+   Daily operational retention, sanitized telemetry, local threshold alerts and
+   read-only status are now implemented (`OPERATIONS_RETENTION_MONITORING.md`).
+   Hosted watchdog/log/alert delivery, backlog recovery, load and institutional
+   policy acceptance remain open. Continue checking operating-guide accuracy.
 
 ## Acceptance and infrastructure still required
 

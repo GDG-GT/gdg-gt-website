@@ -1,0 +1,58 @@
+{
+  "generatedAt": "2026-10-22T05:27:09.916Z",
+  "note": "Actual local HTTP/DB checks with fictional report contents and an invocation-owned ordinary Admin. No external alert, mail, provider or deployment enabled.",
+  "tests": [
+    {
+      "name": "anonymous callers cannot inspect job/alert/retention status",
+      "passed": true
+    },
+    {
+      "name": "ordinary Admin cannot read operational monitoring",
+      "passed": true
+    },
+    {
+      "name": "operations navigation uses server-owned Super Admin eligibility",
+      "passed": true
+    },
+    {
+      "name": "status refuses query-based identity and scope controls",
+      "passed": true
+    },
+    {
+      "name": "CSP reports reject foreign origins",
+      "passed": true
+    },
+    {
+      "name": "CSP endpoint cannot enable debugging through a query",
+      "passed": true
+    },
+    {
+      "name": "unrecognized report types/directives are rejected",
+      "passed": true
+    },
+    {
+      "name": "actual legacy CSP report is acknowledged without reflecting private URLs or source samples",
+      "passed": true
+    },
+    {
+      "name": "actual Reporting API format works without requiring a browser Origin header",
+      "passed": true
+    },
+    {
+      "name": "report batches are bounded to ten items",
+      "passed": true
+    },
+    {
+      "name": "actual monitor evaluates through a separate authenticated job lease",
+      "passed": true
+    },
+    {
+      "name": "actual Super Admin status shows persisted monitoring freshness and job outcomes",
+      "passed": true
+    },
+    {
+      "name": "operational status is no-store and excludes participant identity, credentials and job capabilities",
+      "passed": true
+    }
+  ]
+}

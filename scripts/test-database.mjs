@@ -7,6 +7,9 @@ import {
 } from "./lib/disposable-postgres.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
+const legacyDefaults = process.argv.includes("--legacy-defaults");
+if (process.argv.slice(2).some((arg) => arg !== "--legacy-defaults"))
+  throw new Error("Unknown database test option.");
 const database = await disposablePostgres("canonical-test");
 const evidence = [];
 let passed = false;
@@ -22,6 +25,13 @@ try {
     "isolated test roles",
     "CREATE ROLE anon NOLOGIN; CREATE ROLE authenticated NOLOGIN; CREATE ROLE service_role NOLOGIN BYPASSRLS;",
   );
+  if (legacyDefaults)
+    await execute(
+      "legacy Supabase automatic grants (before October 30, 2026)",
+      `ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO anon,authenticated,service_role;
+       ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO anon,authenticated,service_role;
+       ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO anon,authenticated,service_role;`,
+    );
   const migrations = (await readdir(path.join(root, "database/migrations")))
     .filter((file) => file.endsWith(".sql"))
     .sort();
@@ -94,10 +104,16 @@ try {
   );
   await mkdir(path.join(root, ".docs/phase0"), { recursive: true });
   await writeFile(
-    path.join(root, ".docs/phase0/canonical-tests.json"),
+    path.join(
+      root,
+      `.docs/phase0/canonical-tests${legacyDefaults ? "-legacy-grants" : ""}.json`,
+    ),
     JSON.stringify(
       {
         note: "Executed against network-isolated PostgreSQL 17. Not certification of Supabase Storage/Realtime or hosted deployment.",
+        tableGrantDefaults: legacyDefaults
+          ? "legacy automatic API grants"
+          : "no automatic API grants",
         migrations,
         tests: evidence,
       },

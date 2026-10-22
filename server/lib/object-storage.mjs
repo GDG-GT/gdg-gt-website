@@ -7,6 +7,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { ApiError } from "./http.mjs";
+import { timeDependency } from "./telemetry.mjs";
 export function objectStorage(env = process.env) {
   let endpoint;
   try {
@@ -48,7 +49,9 @@ export function objectStorage(env = process.env) {
     responseChecksumValidation: "WHEN_REQUIRED",
   });
   const send = (command) =>
-    client.send(command, { abortSignal: AbortSignal.timeout(120000) });
+    timeDependency("storage", () =>
+      client.send(command, { abortSignal: AbortSignal.timeout(120000) }),
+    );
   return {
     close: () => client.destroy(),
     putUrl: (bucket, key, mime, bytes, sha256) =>

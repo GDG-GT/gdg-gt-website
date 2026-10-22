@@ -1,0 +1,59 @@
+{
+  "generatedAt": "2026-10-22T05:15:27.035Z",
+  "note": "Actual loopback HTTP/DB checks. Only invocation-owned fictional records are seeded/removed; no finance evidence, audit history or files are deleted. Repeat within a completed UTC occurrence verifies deduplication, not a fresh mutation.",
+  "freshFixtureMutation": false,
+  "tests": [
+    {
+      "name": "session-cleanup rejects browser-origin requests",
+      "passed": true
+    },
+    {
+      "name": "session-cleanup rejects caller-selected retention windows",
+      "passed": true
+    },
+    {
+      "name": "session-cleanup runs through the real authenticated API or reports an already-completed occurrence",
+      "passed": true
+    },
+    {
+      "name": "session-cleanup deduplicates the current UTC daily occurrence",
+      "passed": true
+    },
+    {
+      "name": "notification-cleanup rejects browser-origin requests",
+      "passed": true
+    },
+    {
+      "name": "notification-cleanup rejects caller-selected retention windows",
+      "passed": true
+    },
+    {
+      "name": "notification-cleanup runs through the real authenticated API or reports an already-completed occurrence",
+      "passed": true
+    },
+    {
+      "name": "notification-cleanup deduplicates the current UTC daily occurrence",
+      "passed": true
+    },
+    {
+      "name": "report-cache-cleanup rejects browser-origin requests",
+      "passed": true
+    },
+    {
+      "name": "report-cache-cleanup rejects caller-selected retention windows",
+      "passed": true
+    },
+    {
+      "name": "report-cache-cleanup runs through the real authenticated API or reports an already-completed occurrence",
+      "passed": true
+    },
+    {
+      "name": "report-cache-cleanup deduplicates the current UTC daily occurrence",
+      "passed": true
+    },
+    {
+      "name": "daily jobs persist identifier-free numeric outcome counters",
+      "passed": true
+    }
+  ]
+}

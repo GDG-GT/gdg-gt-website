@@ -1,0 +1,789 @@
+{
+  "note": "Executed against network-isolated PostgreSQL 17. Not certification of Supabase Storage/Realtime or hosted deployment.",
+  "tableGrantDefaults": "legacy automatic API grants",
+  "migrations": [
+    "202610190001_canonical_structure.sql",
+    "202610190002_security_foundation.sql",
+    "202610190003_events_and_public_workflows.sql",
+    "202610190004_password_and_lockout.sql",
+    "202610190005_event_operations.sql",
+    "202610190006_profile_operations.sql",
+    "202610190007_public_submissions_and_delivery.sql",
+    "202610190008_event_audience.sql",
+    "202610190009_notifications_and_job_recovery.sql",
+    "202610190010_forms_core.sql",
+    "202610190011_forms_drafts_edits_and_access.sql",
+    "202610190012_form_response_workspace.sql",
+    "202610190013_failed_gate_limits.sql",
+    "202610200014_form_access_delivery.sql",
+    "202610200015_private_upload_workers.sql",
+    "202610200016_upload_removal_fencing.sql",
+    "202610200017_form_upload_drafts_cleanup.sql",
+    "202610200018_draft_upload_binding_fix.sql",
+    "202610200019_scheduled_forms_jobs.sql",
+    "202610200020_content_operations.sql",
+    "202610200021_content_revision_publication_guard.sql",
+    "202610200022_site_content_editor.sql",
+    "202610200023_account_management.sql",
+    "202610200024_account_revision_guard.sql",
+    "202610200025_team_administration.sql",
+    "202610200026_team_explicit_action_grants.sql",
+    "202610200027_team_invitations.sql",
+    "202610200028_team_announcements.sql",
+    "202610200029_channels_core.sql",
+    "202610200030_scoped_realtime.sql",
+    "202610200031_realtime_restrictive_scope.sql",
+    "202610200032_realtime_reauthorization.sql",
+    "202610200033_realtime_membership_change_filter.sql",
+    "202610200034_whiteboards_core.sql",
+    "202610200035_whiteboard_idempotency_scope.sql",
+    "202610200036_whiteboard_scoped_realtime.sql",
+    "202610200037_whiteboard_policy_topic.sql",
+    "202610200038_tasks_core.sql",
+    "202610200039_task_overdue_notifications.sql",
+    "202610200040_task_job_cadence.sql",
+    "202610200041_task_activity_projection.sql",
+    "202610200042_task_private_assignment_guard.sql",
+    "202610200043_direct_messages.sql",
+    "202610200044_direct_messages_realtime.sql",
+    "202610200045_chapter_announcements.sql",
+    "202610200046_announcement_jobs_live.sql",
+    "202610200047_announcement_draft_invalidation_guard.sql",
+    "202610200048_managed_team_chat.sql",
+    "202610200049_channel_reconnect_cursor.sql",
+    "202610200050_finance_ledger.sql",
+    "202610200051_finance_attachments.sql",
+    "202610200052_finance_inactive_budget_access.sql",
+    "202610200053_linktree_workflows.sql",
+    "202610200054_linktree_team_publication_guard.sql",
+    "202610200055_private_projects.sql",
+    "202610200056_project_star_projection.sql",
+    "202610200057_site_status_control.sql",
+    "202610200058_community_members.sql",
+    "202610200059_member_list_minimization.sql",
+    "202610200060_member_review_session_cleanup.sql",
+    "202610210061_private_blog.sql",
+    "202610210062_private_blog_uploads.sql",
+    "202610210063_form_background_exports.sql",
+    "202610210064_form_response_history.sql",
+    "202610210065_form_reviewed_delivery.sql",
+    "202610210066_form_retention_holds.sql",
+    "202610210067_notification_dismiss_all.sql",
+    "202610210068_community_member_transfer.sql",
+    "202610210069_notification_read_state.sql",
+    "202610210070_form_identity_derivatives.sql",
+    "202610210071_form_integrations.sql",
+    "202610210072_form_permanent_deletion.sql",
+    "202610210073_private_media_core.sql",
+    "202610210074_private_media_mutations.sql",
+    "202610210075_private_media_uploads.sql",
+    "202610210076_media_metadata_scope_fix.sql",
+    "202610210077_media_publication.sql",
+    "202610210078_media_event_options.sql",
+    "202610210079_media_retention.sql",
+    "202610210080_media_catalog_metadata.sql",
+    "202610210081_gallery_image_grants.sql",
+    "202610210082_newsletter_workspace.sql",
+    "202610210083_newsletter_send_review.sql",
+    "202610210084_newsletter_delivery.sql",
+    "202610210085_newsletter_results_cleanup.sql",
+    "202610210086_newsletter_job_cadence.sql",
+    "202610210087_newsletter_token_bulk_cleanup.sql",
+    "202610210088_contact_attachment_workflows.sql",
+    "202610210089_event_mail_review.sql",
+    "202610210090_verified_event_push.sql",
+    "202610210091_push_quota_and_retry_fences.sql",
+    "202610210092_identified_form_responses.sql",
+    "202610210093_person_privacy_review.sql",
+    "202610210094_person_privacy_erasure.sql",
+    "202610210095_privacy_certificate_grants.sql",
+    "202610220096_operational_retention.sql",
+    "202610220097_operational_monitoring.sql"
+  ],
+  "tests": [
+    {
+      "name": "isolated test roles",
+      "passed": true
+    },
+    {
+      "name": "legacy Supabase automatic grants (before October 30, 2026)",
+      "passed": true
+    },
+    {
+      "name": "202610190001_canonical_structure.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190002_security_foundation.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190003_events_and_public_workflows.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190004_password_and_lockout.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190005_event_operations.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190006_profile_operations.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190007_public_submissions_and_delivery.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190008_event_audience.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190009_notifications_and_job_recovery.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190010_forms_core.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190011_forms_drafts_edits_and_access.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190012_form_response_workspace.sql",
+      "passed": true
+    },
+    {
+      "name": "202610190013_failed_gate_limits.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200014_form_access_delivery.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200015_private_upload_workers.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200016_upload_removal_fencing.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200017_form_upload_drafts_cleanup.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200018_draft_upload_binding_fix.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200019_scheduled_forms_jobs.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200020_content_operations.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200021_content_revision_publication_guard.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200022_site_content_editor.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200023_account_management.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200024_account_revision_guard.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200025_team_administration.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200026_team_explicit_action_grants.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200027_team_invitations.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200028_team_announcements.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200029_channels_core.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200030_scoped_realtime.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200031_realtime_restrictive_scope.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200032_realtime_reauthorization.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200033_realtime_membership_change_filter.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200034_whiteboards_core.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200035_whiteboard_idempotency_scope.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200036_whiteboard_scoped_realtime.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200037_whiteboard_policy_topic.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200038_tasks_core.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200039_task_overdue_notifications.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200040_task_job_cadence.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200041_task_activity_projection.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200042_task_private_assignment_guard.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200043_direct_messages.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200044_direct_messages_realtime.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200045_chapter_announcements.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200046_announcement_jobs_live.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200047_announcement_draft_invalidation_guard.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200048_managed_team_chat.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200049_channel_reconnect_cursor.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200050_finance_ledger.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200051_finance_attachments.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200052_finance_inactive_budget_access.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200053_linktree_workflows.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200054_linktree_team_publication_guard.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200055_private_projects.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200056_project_star_projection.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200057_site_status_control.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200058_community_members.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200059_member_list_minimization.sql",
+      "passed": true
+    },
+    {
+      "name": "202610200060_member_review_session_cleanup.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210061_private_blog.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210062_private_blog_uploads.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210063_form_background_exports.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210064_form_response_history.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210065_form_reviewed_delivery.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210066_form_retention_holds.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210067_notification_dismiss_all.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210068_community_member_transfer.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210069_notification_read_state.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210070_form_identity_derivatives.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210071_form_integrations.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210072_form_permanent_deletion.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210073_private_media_core.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210074_private_media_mutations.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210075_private_media_uploads.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210076_media_metadata_scope_fix.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210077_media_publication.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210078_media_event_options.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210079_media_retention.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210080_media_catalog_metadata.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210081_gallery_image_grants.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210082_newsletter_workspace.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210083_newsletter_send_review.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210084_newsletter_delivery.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210085_newsletter_results_cleanup.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210086_newsletter_job_cadence.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210087_newsletter_token_bulk_cleanup.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210088_contact_attachment_workflows.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210089_event_mail_review.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210090_verified_event_push.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210091_push_quota_and_retry_fences.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210092_identified_form_responses.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210093_person_privacy_review.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210094_person_privacy_erasure.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210095_privacy_certificate_grants.sql",
+      "passed": true
+    },
+    {
+      "name": "202610220096_operational_retention.sql",
+      "passed": true
+    },
+    {
+      "name": "202610220097_operational_monitoring.sql",
+      "passed": true
+    },
+    {
+      "name": "001_security_foundation.sql",
+      "passed": true
+    },
+    {
+      "name": "002_event_registration.sql",
+      "passed": true
+    },
+    {
+      "name": "003_event_concurrency.sql",
+      "passed": true
+    },
+    {
+      "name": "004_password_and_lockout.sql",
+      "passed": true
+    },
+    {
+      "name": "005_event_operations.sql",
+      "passed": true
+    },
+    {
+      "name": "007_public_submissions.sql",
+      "passed": true
+    },
+    {
+      "name": "009_notifications.sql",
+      "passed": true
+    },
+    {
+      "name": "010_forms.sql",
+      "passed": true
+    },
+    {
+      "name": "013_gate_failures.sql",
+      "passed": true
+    },
+    {
+      "name": "014_form_access_uploads.sql",
+      "passed": true
+    },
+    {
+      "name": "019_scheduled_jobs.sql",
+      "passed": true
+    },
+    {
+      "name": "020_content_operations.sql",
+      "passed": true
+    },
+    {
+      "name": "022_site_content.sql",
+      "passed": true
+    },
+    {
+      "name": "023_accounts.sql",
+      "passed": true
+    },
+    {
+      "name": "024_account_revisions.sql",
+      "passed": true
+    },
+    {
+      "name": "025_teams.sql",
+      "passed": true
+    },
+    {
+      "name": "026_explicit_team_actions.sql",
+      "passed": true
+    },
+    {
+      "name": "027_team_invitations.sql",
+      "passed": true
+    },
+    {
+      "name": "028_team_announcements.sql",
+      "passed": true
+    },
+    {
+      "name": "029_channels.sql",
+      "passed": true
+    },
+    {
+      "name": "030_scoped_realtime.sql",
+      "passed": true
+    },
+    {
+      "name": "034_whiteboards.sql",
+      "passed": true
+    },
+    {
+      "name": "036_whiteboard_realtime.sql",
+      "passed": true
+    },
+    {
+      "name": "038_tasks.sql",
+      "passed": true
+    },
+    {
+      "name": "039_task_jobs.sql",
+      "passed": true
+    },
+    {
+      "name": "043_direct_messages.sql",
+      "passed": true
+    },
+    {
+      "name": "045_chapter_announcements.sql",
+      "passed": true
+    },
+    {
+      "name": "048_managed_team_chat.sql",
+      "passed": true
+    },
+    {
+      "name": "049_channel_reconnect_cursor.sql",
+      "passed": true
+    },
+    {
+      "name": "050_finance_ledger.sql",
+      "passed": true
+    },
+    {
+      "name": "051_finance_attachments.sql",
+      "passed": true
+    },
+    {
+      "name": "052_finance_inactive_budgets_cleanup.sql",
+      "passed": true
+    },
+    {
+      "name": "053_linktree_workflows.sql",
+      "passed": true
+    },
+    {
+      "name": "054_linktree_team_publication_guard.sql",
+      "passed": true
+    },
+    {
+      "name": "055_private_projects.sql",
+      "passed": true
+    },
+    {
+      "name": "057_site_status_control.sql",
+      "passed": true
+    },
+    {
+      "name": "058_community_members.sql",
+      "passed": true
+    },
+    {
+      "name": "059_member_list_minimization.sql",
+      "passed": true
+    },
+    {
+      "name": "060_member_review_session_cleanup.sql",
+      "passed": true
+    },
+    {
+      "name": "061_private_blog.sql",
+      "passed": true
+    },
+    {
+      "name": "062_private_blog_uploads.sql",
+      "passed": true
+    },
+    {
+      "name": "063_form_background_exports.sql",
+      "passed": true
+    },
+    {
+      "name": "064_form_response_history.sql",
+      "passed": true
+    },
+    {
+      "name": "065_form_reviewed_delivery.sql",
+      "passed": true
+    },
+    {
+      "name": "066_form_retention_holds.sql",
+      "passed": true
+    },
+    {
+      "name": "067_notification_dismiss_all.sql",
+      "passed": true
+    },
+    {
+      "name": "068_community_member_transfer.sql",
+      "passed": true
+    },
+    {
+      "name": "070_form_identity_derivatives.sql",
+      "passed": true
+    },
+    {
+      "name": "071_form_integrations.sql",
+      "passed": true
+    },
+    {
+      "name": "072_form_permanent_deletion.sql",
+      "passed": true
+    },
+    {
+      "name": "073_private_media_core.sql",
+      "passed": true
+    },
+    {
+      "name": "074_private_media_mutations.sql",
+      "passed": true
+    },
+    {
+      "name": "075_private_media_uploads.sql",
+      "passed": true
+    },
+    {
+      "name": "077_media_publication.sql",
+      "passed": true
+    },
+    {
+      "name": "079_media_retention.sql",
+      "passed": true
+    },
+    {
+      "name": "080_media_catalog_metadata.sql",
+      "passed": true
+    },
+    {
+      "name": "081_gallery_image_grants.sql",
+      "passed": true
+    },
+    {
+      "name": "082_newsletter_workspace.sql",
+      "passed": true
+    },
+    {
+      "name": "083_newsletter_send_review.sql",
+      "passed": true
+    },
+    {
+      "name": "084_newsletter_delivery.sql",
+      "passed": true
+    },
+    {
+      "name": "085_newsletter_results_cleanup.sql",
+      "passed": true
+    },
+    {
+      "name": "087_newsletter_token_bulk_cleanup.sql",
+      "passed": true
+    },
+    {
+      "name": "088_contact_attachments.sql",
+      "passed": true
+    },
+    {
+      "name": "089_event_mail_review.sql",
+      "passed": true
+    },
+    {
+      "name": "090_event_push.sql",
+      "passed": true
+    },
+    {
+      "name": "091_push_fences.sql",
+      "passed": true
+    },
+    {
+      "name": "092_identified_forms.sql",
+      "passed": true
+    },
+    {
+      "name": "094_person_privacy.sql",
+      "passed": true
+    },
+    {
+      "name": "096_operational_retention.sql",
+      "passed": true
+    },
+    {
+      "name": "097_operational_monitoring.sql",
+      "passed": true
+    },
+    {
+      "name": "EVT concurrency: 100 clients, exactly one last-seat registration",
+      "passed": true
+    },
+    {
+      "name": "FORM concurrency: 100 clients, exactly one remaining response",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "generatedAt": "2026-10-22T05:06:12.406Z",
+  "environment": "loopback only; invocation-owned synthetic identity and storage; scanner separately verified",
+  "tests": [
+    {
+      "name": "anonymous callers cannot discover person-data privacy requests",
+      "passed": true
+    },
+    {
+      "name": "ordinary Admin is denied both the privacy route and API",
+      "passed": true
+    },
+    {
+      "name": "Super Admin privacy navigation is server-authorized",
+      "passed": true
+    },
+    {
+      "name": "malformed privacy request IDs are validation errors, not server crashes",
+      "passed": true
+    },
+    {
+      "name": "privacy inventory rejects email and unrecognized query controls",
+      "passed": true
+    },
+    {
+      "name": "actual invocation-owned private attachment bytes exist before privacy review",
+      "passed": true
+    },
+    {
+      "name": "real sensitive response export artifact exists before privacy review",
+      "passed": true
+    },
+    {
+      "name": "scope review requires independent ownership attestation",
+      "passed": true
+    },
+    {
+      "name": "scope disclosure requires the actual current password",
+      "passed": true
+    },
+    {
+      "name": "exact review resolves seven own workflow records including legacy HMAC access",
+      "passed": true
+    },
+    {
+      "name": "review DTO excludes cryptographic state, storage keys and encrypted capabilities",
+      "passed": true
+    },
+    {
+      "name": "typed approval cannot change the reviewed action",
+      "passed": true
+    },
+    {
+      "name": "another valid same-account session cannot reuse a privacy capability",
+      "passed": true
+    },
+    {
+      "name": "actual privacy JSON contains only the independently reviewed person's records",
+      "passed": true
+    },
+    {
+      "name": "default privacy export masks sensitive answers and omits private capabilities and file URLs",
+      "passed": true
+    },
+    {
+      "name": "separate explicit sensitive export reveals only the own authorized response answer",
+      "passed": true
+    },
+    {
+      "name": "a contact operational hold blocks the entire cross-workflow erasure",
+      "passed": true
+    },
+    {
+      "name": "blocked erasure made no partial changes to another workflow",
+      "passed": true
+    },
+    {
+      "name": "a real concurrent response edit invalidates the frozen privacy review",
+      "passed": true
+    },
+    {
+      "name": "real erasure commits seven records and truthfully reports private file/export cleanup pending",
+      "passed": true
+    },
+    {
+      "name": "lost-response erasure retry returns the committed result without another mutation",
+      "passed": true
+    },
+    {
+      "name": "old generated export cannot be downloaded after person-data erasure",
+      "passed": true
+    },
+    {
+      "name": "redaction removes full free-text content and historical answers, not just name fields",
+      "passed": true
+    },
+    {
+      "name": "unrelated participant identity remains unchanged",
+      "passed": true
+    },
+    {
+      "name": "API service cannot forge a cleanup request or transaction erasure certificate",
+      "passed": true
+    },
+    {
+      "name": "operational status reads actual pending private bytes, not a fabricated erasure success",
+      "passed": true
+    },
+    {
+      "name": "contact file cleanup acknowledgement follows actual physical deletion",
+      "passed": true
+    },
+    {
+      "name": "actual private attachment HEAD is 404 after cleanup",
+      "passed": true
+    },
+    {
+      "name": "cleanup status reaches zero only after actual file and generated-export removal",
+      "passed": true
+    },
+    {
+      "name": "privacy review and single commit retain only safe audit fingerprints and counters",
+      "passed": true
+    },
+    {
+      "name": "private recent-request recovery shows counters without exposing requester identity",
+      "passed": true
+    }
+  ]
+}

@@ -20,6 +20,10 @@ const due = new Map(),
     ["announcements", 300000],
     ["newsletter-campaigns", 300000],
     ["event-push", 300000],
+    ["session-cleanup", 86400000],
+    ["notification-cleanup", 86400000],
+    ["report-cache-cleanup", 86400000],
+    ["operations-monitor", 300000],
   ];
 do {
   for (const [name, cadence] of jobs) {

@@ -60,6 +60,9 @@ import { newsletterResultRoutes } from "./newsletter-results.mjs";
 import { contactUploadRoutes } from "./contact-uploads.mjs";
 import { contactInboxRoutes } from "./contact-inbox.mjs";
 import { pushRoutes } from "./push.mjs";
+import { personPrivacyRoutes } from "./person-privacy.mjs";
+import { createTelemetryLogger } from "./lib/telemetry.mjs";
+import { operationsRoutes } from "./operations.mjs";
 
 export function applicationHandler({
   store,
@@ -94,9 +97,27 @@ export function applicationHandler({
           })
         )
           return;
+        if (
+          await operationsRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
         checkOrigin(request, config.origin, {
           mutation: !["GET", "HEAD"].includes(request.method),
         });
+        if (
+          await personPrivacyRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
         if (
           await pushRoutes(request, response, { db, store, config, requestId })
         )
@@ -488,13 +509,18 @@ export default async function handler(request, response) {
         config: serverConfig(),
         db,
         store: new SecurityStore(db),
-        log: (record) => console.info(JSON.stringify(record)),
+        log: createTelemetryLogger({ db }),
       });
     }
   } catch (error) {
-    return apiBoundary(request, response, async () => {
-      throw error;
-    });
+    return apiBoundary(
+      request,
+      response,
+      async () => {
+        throw error;
+      },
+      { log: createTelemetryLogger() },
+    );
   }
   return configured(request, response);
 }

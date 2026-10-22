@@ -98,6 +98,12 @@ const groups: { title: string; links: Destination[] }[] = [
       { label: "Users & security", href: "/admin/users", icon: Shield },
       { label: "Site status", href: "/admin/site-status", icon: Settings2 },
       { label: "Audit history", href: "/admin/audit-log", icon: Activity },
+      { label: "Person-data privacy", href: "/admin/privacy", icon: Shield },
+      {
+        label: "Operations & retention",
+        href: "/admin/operations",
+        icon: Activity,
+      },
       { label: "Operating guide", href: "/admin/guide", icon: BookOpen },
       { label: "My profile", href: "/admin/profile", icon: Users },
     ],

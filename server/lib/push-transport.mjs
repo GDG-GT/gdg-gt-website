@@ -2,6 +2,7 @@ import webPush from "web-push";
 import { ECDH, createECDH } from "node:crypto";
 import { browserPushSubscription } from "../../shared/push.mjs";
 import { ApiError } from "./http.mjs";
+import { timeDependency } from "./telemetry.mjs";
 export function validatePushSubscription(value) {
   const data = browserPushSubscription.parse(value);
   const key = Buffer.from(data.keys.p256dh, "base64url"),
@@ -80,13 +81,15 @@ export function createPushTransport(env = process.env, fetcher = fetch) {
             contentEncoding: "aes128gcm",
           },
         );
-      const result = await fetcher(details.endpoint, {
-        method: details.method,
-        headers: details.headers,
-        body: details.body,
-        redirect: "error",
-        signal: AbortSignal.timeout(15000),
-      });
+      const result = await timeDependency("push", () =>
+        fetcher(details.endpoint, {
+          method: details.method,
+          headers: details.headers,
+          body: details.body,
+          redirect: "error",
+          signal: AbortSignal.timeout(15000),
+        }),
+      );
       // Never retain raw provider bodies, headers or endpoint URLs in logs/errors.
       await result.body?.cancel();
       return result.status;

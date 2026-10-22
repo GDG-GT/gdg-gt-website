@@ -357,6 +357,27 @@
 .gt-members-workspace {
   min-width: 0;
 }
+.gt-privacy-workspace > .gt-panel,
+.gt-operations-workspace > .gt-panel {
+  margin-block: 24px;
+}
+.gt-privacy-workspace h2 {
+  scroll-margin-top: 100px;
+}
+.gt-privacy-workspace .gt-panel-heading {
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.gt-privacy-workspace fieldset {
+  min-width: 0;
+}
+.gt-privacy-workspace .gt-data-table td {
+  overflow-wrap: anywhere;
+}
+.gt-operations-workspace .gt-data-table td {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
 .gt-members-workspace > .gt-panel {
   padding: 24px;
   margin-block: 24px;

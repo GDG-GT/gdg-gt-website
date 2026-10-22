@@ -2,6 +2,11 @@ import { z } from "zod";
 import { ApiError } from "./http.mjs";
 import { isIP } from "node:net";
 export const uuid = z.string().uuid();
+export const hasControlCharacters = (value) =>
+  Array.from(value).some(
+    (character) =>
+      character.codePointAt(0) < 32 || character.codePointAt(0) === 127,
+  );
 export const slug = z
   .string()
   .min(1)
@@ -92,6 +97,27 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    JOB_LEASE_LOST: [
+      409,
+      "This scheduled job no longer owns its processing lease.",
+    ],
+    PRIVACY_REVIEW_REQUIRED: [
+      409,
+      "Generate a new privacy review. This approval expired, was used, or belongs to another session.",
+    ],
+    PRIVACY_REVIEW_CHANGED: [
+      409,
+      "The person's records or holds changed. Generate and inspect a fresh privacy review before proceeding.",
+    ],
+    PRIVACY_RECORD_LIMIT: [
+      409,
+      "This request exceeds the bounded 500-record privacy review. No incomplete operation was performed.",
+    ],
+    PRIVACY_EXPORT_LIMIT: [
+      413,
+      "This privacy export exceeds the safe response-size limit. No partial download was returned.",
+    ],
+    PRIVACY_REVIEW_LIMIT: [429, "Wait before creating more privacy reviews."],
     PUSH_VERIFICATION_REQUIRED: [
       403,
       "Verify this event registration through your private email link before enabling reminders.",

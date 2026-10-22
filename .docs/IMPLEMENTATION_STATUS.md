@@ -5,6 +5,43 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Daily retention and sanitized operational monitoring — 2026-10-22
+
+- Added authenticated daily session/security, notification and expired-report-cache
+  jobs. Expired session references no longer pin authentication rows through
+  retained business evidence; finance and audit are not deleted.
+- Added isolated allowlisted request/dependency telemetry, identifier-free metric
+  buckets, worker failure observations, bounded CSP reports and leased threshold/
+  missed/duplicate-job monitoring. A Super Admin-only read-only status page shows
+  actual freshness, outcomes and retention policies without dangerous controls.
+- **97 migrations**, full canonical SQL/two 100-client races under both Supabase
+  grant defaults, **362 unit tests**, typecheck and changed-file lint pass.
+  **13 actual retention HTTP checks**, **13 monitoring HTTP/DB checks** and real
+  scanner health/clean/EICAR tests pass. Desktop/375px live browser verifies
+  scrolling, layout and persisted status. Separate local workers/scheduler run;
+  external sending remains disabled. See `OPERATIONS_RETENTION_MONITORING.md`.
+  Hosted watchdog/alert delivery, quality and other full PRD gates remain open.
+  Full lint now has zero errors and 276 inherited warnings; strict checking and
+  warning remediation remain open. Expanded the development privacy notice to
+  cover all public workflows, device queues, retention and administrator requests.
+
+### Reviewed cross-system person-data privacy — 2026-10-22
+
+- Super Admin exact-email review/export/redaction/deletion spans attributable
+  public workflows and legacy Forms access HMACs. Current password/session,
+  independent ownership attestation, frozen five-minute scope, typed count,
+  transactional hold/source checks and idempotency protect approval.
+- Sensitive exports are explicitly opt-in; no storage/capability/peer leakage.
+  Erasure invalidates access, queued sends and generated exports, removes full
+  answer/message/history payloads, and tracks actual private-byte cleanup.
+  Finance, audit and private collaboration are retained.
+- **95 migrations** replay under both new no-automatic-grants and old Supabase
+  defaults, canonical SQL/two 100-client races, **351 unit tests**, typecheck,
+  **31 actual HTTP/DB/storage checks** and **19 Forms purge regressions** pass.
+  Desktop/375px verifies review/export, focus/navigation protection and scrolling
+  without horizontal page overflow. See `PERSON_PRIVACY_OPERATIONS.md`.
+  Full PRD, hosted and institutional acceptance remain open; work continues.
+
 ### Required respondent identity and direct opt-in response copies — 2026-10-21
 
 - New submissions/saved drafts require name/email, including older published

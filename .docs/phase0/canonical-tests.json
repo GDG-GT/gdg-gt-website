@@ -1,5 +1,6 @@
 {
   "note": "Executed against network-isolated PostgreSQL 17. Not certification of Supabase Storage/Realtime or hosted deployment.",
+  "tableGrantDefaults": "no automatic API grants",
   "migrations": [
     "202610190001_canonical_structure.sql",
     "202610190002_security_foundation.sql",
@@ -92,7 +93,12 @@
     "202610210089_event_mail_review.sql",
     "202610210090_verified_event_push.sql",
     "202610210091_push_quota_and_retry_fences.sql",
-    "202610210092_identified_form_responses.sql"
+    "202610210092_identified_form_responses.sql",
+    "202610210093_person_privacy_review.sql",
+    "202610210094_person_privacy_erasure.sql",
+    "202610210095_privacy_certificate_grants.sql",
+    "202610220096_operational_retention.sql",
+    "202610220097_operational_monitoring.sql"
   ],
   "tests": [
     {
@@ -468,6 +474,26 @@
       "passed": true
     },
     {
+      "name": "202610210093_person_privacy_review.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210094_person_privacy_erasure.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210095_privacy_certificate_grants.sql",
+      "passed": true
+    },
+    {
+      "name": "202610220096_operational_retention.sql",
+      "passed": true
+    },
+    {
+      "name": "202610220097_operational_monitoring.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -733,6 +759,18 @@
     },
     {
       "name": "092_identified_forms.sql",
+      "passed": true
+    },
+    {
+      "name": "094_person_privacy.sql",
+      "passed": true
+    },
+    {
+      "name": "096_operational_retention.sql",
+      "passed": true
+    },
+    {
+      "name": "097_operational_monitoring.sql",
       "passed": true
     },
     {

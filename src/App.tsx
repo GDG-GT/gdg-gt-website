@@ -100,6 +100,8 @@ const adminRoutes = [
   ],
   ["finances", lazy(() => import("@/pages/admin/AdminFinances"))],
   ["audit-log", lazy(() => import("@/ui/AuditWorkspace"))],
+  ["privacy", lazy(() => import("@/ui/PrivacyWorkspace"))],
+  ["operations", lazy(() => import("@/ui/OperationsWorkspace"))],
   ["team/:teamId", lazy(() => import("@/ui/teams/TeamWorkspace"))],
   ["blog-editor", lazy(() => import("@/pages/admin/BlogEditorDashboard"))],
   ["blog-media", lazy(() => import("@/pages/admin/BlogEditorMedia"))],

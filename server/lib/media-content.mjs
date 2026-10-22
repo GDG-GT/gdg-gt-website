@@ -7,6 +7,7 @@ import { unzipSync } from "fflate";
 import { ApiError } from "./http.mjs";
 import { normalizeUpload } from "./upload-content.mjs";
 import { mediaTypes } from "../../shared/media.mjs";
+import { hasControlCharacters } from "./validation.mjs";
 const unsafe = (
   message = "The file does not match its permitted media type.",
 ) => {
@@ -22,7 +23,8 @@ export function validateMediaFile(filename, mime, bytes) {
     typeof filename !== "string" ||
     filename.length > 180 ||
     !filename.trim() ||
-    /[/\\\x00-\x1f\x7f]/.test(filename) ||
+    /[/\\]/.test(filename) ||
+    hasControlCharacters(filename) ||
     !rule.extensions.includes(filename.split(".").at(-1)?.toLowerCase())
   )
     unsafe("Choose a supported media extension, MIME type and size.");
@@ -251,7 +253,8 @@ export async function normalizeMedia(bytes, filename, mime, env = process.env) {
             entry.originalSize > 26214400 ||
             entry.originalSize > Math.max(entry.size * 200, 1048576) ||
             name.length > 240 ||
-            /(^|\/)\.\.(\/|$)|^\/|\\|:|[\x00-\x1f\x7f]/.test(name) ||
+            /(^|\/)\.\.(\/|$)|^\/|\\|:/.test(name) ||
+            hasControlCharacters(name) ||
             names.has(name.toLowerCase()) ||
             (!name.endsWith("/") &&
               !allowed.has(name.split(".").at(-1)?.toLowerCase()))

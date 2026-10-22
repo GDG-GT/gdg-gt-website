@@ -39,12 +39,17 @@ export function authorizeJob(request, env = process.env) {
     );
 }
 export async function jobRoutes(request, response, { db, config, requestId }) {
-  const match = new URL(request.url, config.origin).pathname.match(
-    /^\/api\/v1\/jobs\/([a-z-]+)$/,
-  );
+  const url = new URL(request.url, config.origin),
+    match = url.pathname.match(/^\/api\/v1\/jobs\/([a-z-]+)$/);
   if (!match) return false;
   allowMethod(request, response, ["POST"]);
   authorizeJob(request);
+  if (url.search)
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Scheduled jobs do not accept query controls.",
+    );
   if (
     ![
       "form-schedules",
@@ -54,6 +59,10 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
       "announcements",
       "newsletter-campaigns",
       "event-push",
+      "session-cleanup",
+      "notification-cleanup",
+      "report-cache-cleanup",
+      "operations-monitor",
     ].includes(match[1])
   )
     throw new ApiError(404, "NOT_FOUND", "This job is not available.");
@@ -69,7 +78,28 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
   }
   let counts;
   try {
-    if (match[1] === "form-schedules")
+    if (match[1] === "operations-monitor")
+      counts = checked(
+        await db.rpc("evaluate_operational_alerts", {
+          p_run: run.runId,
+          p_lease: run.lease,
+        }),
+      );
+    else if (
+      [
+        "session-cleanup",
+        "notification-cleanup",
+        "report-cache-cleanup",
+      ].includes(match[1])
+    )
+      counts = checked(
+        await db.rpc("run_operational_retention", {
+          p_run: run.runId,
+          p_lease: run.lease,
+          p_limit: 1000,
+        }),
+      );
+    else if (match[1] === "form-schedules")
       counts = checked(await db.rpc("advance_form_schedules"));
     else if (match[1] === "task-overdue")
       counts = checked(await db.rpc("advance_overdue_tasks"));
@@ -128,6 +158,9 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
         mediaRetried: media.retried,
         eventMailReviewsExpired: checked(
           await db.rpc("cleanup_event_mail_reviews"),
+        ),
+        privacyReviewsExpired: checked(
+          await db.rpc("cleanup_person_privacy_reviews"),
         ),
       };
       if (files.retried || media.retried)

@@ -9,7 +9,7 @@ export const routes={
   '/admin/channels':'channels', '/admin/whiteboard':'whiteboards', '/admin/gallery':'gallery',
   '/admin/media':'media', '/admin/linktree':'linktree', '/admin/forms':'forms',
   '/admin/site-status':'site_status', '/admin/teams':'teams', '/admin/finances':'finances',
-  '/admin/audit-log':'audit', '/admin/blog-editor':'blog_editor', '/admin/blog-media':'blog_media',
+  '/admin/audit-log':'audit', '/admin/privacy':'privacy', '/admin/operations':'operations', '/admin/blog-editor':'blog_editor', '/admin/blog-media':'blog_media',
 };
 const baseMember=new Set(['dashboard','profile','guide','team_dashboard','channels']);
 const editor=new Set(['dashboard','profile','guide','blog_editor','blog_media']);
@@ -25,7 +25,7 @@ export function isAuthorized({user,resource,action='view',route,teamId,ownerId,g
   if (!resources.has(resource) || !actions.has(action)) return false;
   if (resource==='audit' && !['view','list','read','export'].includes(action)) return false;
   if (user.role==='super_admin') return true;
-  if (resource==='users' || resource==='security') return false;
+  if (resource==='users' || resource==='security' || resource==='privacy' || resource==='operations') return false;
   if (user.role==='admin') return true;
   if (resource==='teams' && ['view','list','read'].includes(action) && memberships.some(m=>m.is_active && m.team?.is_active)) return true;
   if (user.role==='blog_editor') {

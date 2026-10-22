@@ -1,5 +1,6 @@
 import net from "node:net";
 import { ApiError } from "./http.mjs";
+import { timeDependency } from "./telemetry.mjs";
 function endpoint(env = process.env) {
   const host = env.CLAMD_HOST || "127.0.0.1",
     port = Number(env.CLAMD_PORT || 13310);
@@ -20,61 +21,65 @@ function endpoint(env = process.env) {
 }
 async function command(name, bytes, env) {
   const { host, port } = endpoint(env);
-  return new Promise((resolve, reject) => {
-    const socket = net.createConnection({ host, port }),
-      chunks = [];
-    let size = 0,
-      settled = false;
-    const finish = (error, value) => {
-      if (settled) return;
-      settled = true;
-      socket.destroy();
-      error ? reject(error) : resolve(value);
-    };
-    const unavailable = () =>
-      new ApiError(
-        503,
-        "SCANNER_UNAVAILABLE",
-        "The private upload scanner is unavailable.",
-      );
-    socket.setTimeout(65000, () => finish(unavailable()));
-    socket.on("error", () => finish(unavailable()));
-    socket.on("end", () => {
-      if (!settled) finish(unavailable());
-    });
-    socket.on("data", (chunk) => {
-      size += chunk.length;
-      if (size > 4096) {
-        finish(unavailable());
-        return;
-      }
-      chunks.push(chunk);
-      const response = Buffer.concat(chunks).toString("utf8");
-      if (response.includes("\0") || response.includes("\n"))
-        finish(null, response.replace(/[\0\r\n]+$/, ""));
-    });
-    socket.once("connect", async () => {
-      try {
-        const write = (data) =>
-          new Promise((done, fail) => {
-            socket.write(data, (error) => (error ? fail(error) : done()));
-          });
-        await write(Buffer.from("z" + name + "\0"));
-        if (bytes) {
-          for (let offset = 0; offset < bytes.length; offset += 65536) {
-            const part = bytes.subarray(offset, offset + 65536),
-              header = Buffer.alloc(4);
-            header.writeUInt32BE(part.length);
-            await write(header);
-            await write(part);
+  return timeDependency(
+    "scanner",
+    () =>
+      new Promise((resolve, reject) => {
+        const socket = net.createConnection({ host, port }),
+          chunks = [];
+        let size = 0,
+          settled = false;
+        const finish = (error, value) => {
+          if (settled) return;
+          settled = true;
+          socket.destroy();
+          error ? reject(error) : resolve(value);
+        };
+        const unavailable = () =>
+          new ApiError(
+            503,
+            "SCANNER_UNAVAILABLE",
+            "The private upload scanner is unavailable.",
+          );
+        socket.setTimeout(65000, () => finish(unavailable()));
+        socket.on("error", () => finish(unavailable()));
+        socket.on("end", () => {
+          if (!settled) finish(unavailable());
+        });
+        socket.on("data", (chunk) => {
+          size += chunk.length;
+          if (size > 4096) {
+            finish(unavailable());
+            return;
           }
-          await write(Buffer.alloc(4));
-        }
-      } catch {
-        finish(unavailable());
-      }
-    });
-  });
+          chunks.push(chunk);
+          const response = Buffer.concat(chunks).toString("utf8");
+          if (response.includes("\0") || response.includes("\n"))
+            finish(null, response.replace(/[\0\r\n]+$/, ""));
+        });
+        socket.once("connect", async () => {
+          try {
+            const write = (data) =>
+              new Promise((done, fail) => {
+                socket.write(data, (error) => (error ? fail(error) : done()));
+              });
+            await write(Buffer.from("z" + name + "\0"));
+            if (bytes) {
+              for (let offset = 0; offset < bytes.length; offset += 65536) {
+                const part = bytes.subarray(offset, offset + 65536),
+                  header = Buffer.alloc(4);
+                header.writeUInt32BE(part.length);
+                await write(header);
+                await write(part);
+              }
+              await write(Buffer.alloc(4));
+            }
+          } catch {
+            finish(unavailable());
+          }
+        });
+      }),
+  );
 }
 export async function scannerHealth(env = process.env) {
   const version = await command("VERSION", null, env);

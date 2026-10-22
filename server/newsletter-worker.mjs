@@ -1,7 +1,10 @@
 import { serverDatabase } from "./db/client.mjs";
 import { serverConfig } from "./config.mjs";
 import { createMailTransport } from "./lib/mail-transport.mjs";
-import { databaseResult as checked } from "./lib/validation.mjs";
+import {
+  databaseResult as checked,
+  hasControlCharacters,
+} from "./lib/validation.mjs";
 import { token, tokenHash } from "./lib/security.mjs";
 import { encryptPayload, decryptPayload } from "./lib/encryption.mjs";
 import { newsletterPreview } from "../shared/newsletter.mjs";
@@ -52,7 +55,7 @@ export async function runNewsletterWorker({
         }
         if (
           !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(prepared.email) ||
-          /[\r\n\x00-\x1f\x7f]/.test(prepared.subject) ||
+          hasControlCharacters(prepared.subject) ||
           prepared.subject.length > 210 ||
           prepared.content.length > 30000
         ) {

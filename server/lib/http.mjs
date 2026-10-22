@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { withRequestTelemetry, requestRecord } from "./telemetry.mjs";
 
 export class ApiError extends Error {
   constructor(status, code, message, fields) {
@@ -34,11 +35,17 @@ export function allowMethod(request, response, methods) {
     );
   }
 }
-export async function jsonBody(request, schema, limit = 1024 * 1024) {
+export async function jsonBody(
+  request,
+  schema,
+  limit = 1024 * 1024,
+  { contentTypes = [] } = {},
+) {
   const contentType = request.headers["content-type"];
   if (
     typeof contentType !== "string" ||
-    !/^application\/json(?:\s*;\s*charset=utf-8)?$/i.test(contentType)
+    (!/^application\/json(?:\s*;\s*charset=utf-8)?$/i.test(contentType) &&
+      !contentTypes.includes(contentType.split(";")[0].toLowerCase().trim()))
   ) {
     throw new ApiError(
       415,
@@ -117,49 +124,50 @@ export async function apiBoundary(
   work,
   { log = () => {} } = {},
 ) {
-  const requestId = randomUUID(),
-    started = performance.now();
-  response.setHeader("X-Request-ID", requestId);
-  response.setHeader("Cache-Control", "no-store");
-  response.setHeader("X-Content-Type-Options", "nosniff");
-  try {
-    await work(requestId);
-  } catch (error) {
-    if (response.headersSent) {
-      response.destroy?.();
-      return;
-    }
-    const safe =
-      error instanceof ApiError
-        ? error
-        : new ApiError(
-            500,
-            "INTERNAL_ERROR",
-            "Something went wrong. Please try again.",
-          );
-    response.statusCode = safe.status;
-    response.setHeader("Content-Type", "application/json; charset=utf-8");
-    response.end(
-      JSON.stringify({
-        error: {
-          code: safe.code,
-          message: safe.message,
-          ...(safe.fields ? { fields: safe.fields } : {}),
-        },
-        meta: { requestId },
-      }),
-    );
-  } finally {
-    // Intentionally no raw URL/query, headers, body, error object, or tokens.
+  return withRequestTelemetry(async () => {
+    const requestId = randomUUID(),
+      started = performance.now();
+    let errorCode;
+    response.setHeader("X-Request-ID", requestId);
+    response.setHeader("Cache-Control", "no-store");
+    response.setHeader("X-Content-Type-Options", "nosniff");
     try {
-      log({
-        requestId,
-        method: request.method,
-        status: response.statusCode,
-        latencyMs: Math.round(performance.now() - started),
-      });
-    } catch {
-      /* A telemetry outage must not replace an already completed response. */
+      await work(requestId);
+    } catch (error) {
+      if (response.headersSent) {
+        response.destroy?.();
+        return;
+      }
+      const safe =
+        error instanceof ApiError
+          ? error
+          : new ApiError(
+              500,
+              "INTERNAL_ERROR",
+              "Something went wrong. Please try again.",
+            );
+      errorCode = safe.code;
+      response.statusCode = safe.status;
+      response.setHeader("Content-Type", "application/json; charset=utf-8");
+      response.end(
+        JSON.stringify({
+          error: {
+            code: safe.code,
+            message: safe.message,
+            ...(safe.fields ? { fields: safe.fields } : {}),
+          },
+          meta: { requestId },
+        }),
+      );
+    } finally {
+      // Intentionally no raw URL/query, headers, body, error object, or tokens.
+      try {
+        await log(
+          requestRecord(request, response, requestId, started, errorCode),
+        );
+      } catch {
+        /* A telemetry outage must not replace an already completed response. */
+      }
     }
-  }
+  });
 }

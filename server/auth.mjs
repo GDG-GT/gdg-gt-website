@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { recordActor } from "./lib/telemetry.mjs";
 import {
   ApiError,
   apiBoundary,
@@ -107,6 +108,7 @@ export async function requireSession(request, store, config) {
       "SESSION_CHANGED",
       "Your sign-in changed. Reload the workspace before continuing.",
     );
+  recordActor(session.user.id);
   return { ...session, sessionBinding: binding };
 }
 export async function requireCsrf(request, session, store) {
@@ -243,6 +245,7 @@ export function createAuthHandler({
             passwordHash: account.password_hash,
             requestId,
           });
+          recordActor(account.id);
           appendCookie(
             response,
             authCookie(config.sessionCookie, raw, {

@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import nodemailer from "nodemailer";
 import { ApiError } from "./http.mjs";
+import { timeDependency } from "./telemetry.mjs";
 export function mailConfig(env) {
   const local = env.MAIL_MODE === "local";
   if (
@@ -52,45 +53,51 @@ export function createMailTransport(env) {
   return {
     config,
     async send(message, { jobId, idempotencyKey }) {
-      const {
-        from: ignoredFrom,
-        replyTo: ignoredReply,
-        messageId: ignoredId,
-        ...content
-      } = message;
-      void ignoredFrom;
-      void ignoredReply;
-      void ignoredId;
-      const send = {
-        ...content,
-        from: config.from,
-        ...(config.replyTo ? { replyTo: config.replyTo } : {}),
-      };
-      if (smtp)
-        return String(
-          (await smtp.sendMail({ ...send, messageId: `<${jobId}@gdg.local>` }))
-            .messageId,
-        );
-      const response = await resend.emails.send(send, {
-        idempotencyKey,
-        signal: AbortSignal.timeout(20000),
+      return timeDependency("mail", async () => {
+        const {
+          from: ignoredFrom,
+          replyTo: ignoredReply,
+          messageId: ignoredId,
+          ...content
+        } = message;
+        void ignoredFrom;
+        void ignoredReply;
+        void ignoredId;
+        const send = {
+          ...content,
+          from: config.from,
+          ...(config.replyTo ? { replyTo: config.replyTo } : {}),
+        };
+        if (smtp)
+          return String(
+            (
+              await smtp.sendMail({
+                ...send,
+                messageId: `<${jobId}@gdg.local>`,
+              })
+            ).messageId,
+          );
+        const response = await resend.emails.send(send, {
+          idempotencyKey,
+          signal: AbortSignal.timeout(20000),
+        });
+        if (response.error || !response.data?.id) {
+          const error = new ApiError(
+            503,
+            "PROVIDER_RETRY",
+            "Email delivery is unavailable.",
+          );
+          error.permanent = [
+            "validation_error",
+            "invalid_parameter",
+            "missing_required_field",
+            "invalid_idempotency_key",
+            "invalid_access",
+          ].includes(response.error?.name);
+          throw error;
+        }
+        return response.data.id;
       });
-      if (response.error || !response.data?.id) {
-        const error = new ApiError(
-          503,
-          "PROVIDER_RETRY",
-          "Email delivery is unavailable.",
-        );
-        error.permanent = [
-          "validation_error",
-          "invalid_parameter",
-          "missing_required_field",
-          "invalid_idempotency_key",
-          "invalid_access",
-        ].includes(response.error?.name);
-        throw error;
-      }
-      return response.data.id;
     },
     close() {
       smtp?.close();

@@ -72,6 +72,18 @@ const sections = [
       "Choose a scope in the media library, then upload privately. Wait for a clean scan before preview or download. Gallery images need meaningful alt text and a separate password-confirmed public approval; original files remain private. Revoke publication before changing approved metadata, moving or archiving. Archived files remain restorable for 30 days unless cleanup has begun. Resolve retained usage references before removal.",
   },
   {
+    title: "Handle a person-data request",
+    href: "/admin/privacy",
+    description:
+      "Super Admins must independently verify the requester before searching their exact email. Review the frozen record list, then re-enter your password and type the action and count. Sensitive Forms answers are masked in exports unless explicitly selected. Holds block erasure. Redaction removes the complete message/answer payload and linked history, not just name fields. Refresh cleanup status until private files and generated exports are gone. Finance, audit, officer accounts and private collaboration are retained; previously delivered or downloaded copies cannot be recalled.",
+  },
+  {
+    title: "Check operations and retention",
+    href: "/admin/operations",
+    description:
+      "Super Admins can review scheduled-job outcomes, monitor freshness, threshold alerts and retention policies. Refresh before drawing conclusions; stale or unavailable monitoring is not a healthy result. Cleanup runs through a separate authenticated scheduler, never by opening the page. Investigate alert counts without exporting participant data. Hosted operation also requires independent uptime monitoring and a reviewed on-call destination.",
+  },
+  {
     title: "Track chapter finances",
     href: "/admin/finances",
     description:

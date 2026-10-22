@@ -1,3 +1,4 @@
+import PrivacyNoticeDetails from "./PrivacyNoticeDetails";
 import {
   lazy,
   Suspense,
@@ -1130,7 +1131,13 @@ export function EventDetailPage() {
               )}
             </>
           )}
-          {!past && event.status !== "cancelled" && !localPreviewEnabled && <EventReminders key={event.id} eventId={event.id} slug={event.slug || slug || ""} />}
+          {!past && event.status !== "cancelled" && !localPreviewEnabled && (
+            <EventReminders
+              key={event.id}
+              eventId={event.id}
+              slug={event.slug || slug || ""}
+            />
+          )}
         </aside>
       </section>
       <section className="gt-container gt-section gt-related">
@@ -1964,12 +1971,20 @@ export function InfoPage({
         <h2>{copy[0]}</h2>
         <p>{copy[2]}</p>
         <p>{copy[3]}</p>
+        {kind === "privacy" && <PrivacyNoticeDetails />}
         {kind === "offline" && <SubmissionQueue />}
         <div className="gt-inline-actions">
           <ActionLink to="/" arrow>
             Home
           </ActionLink>
-          <ActionLink to="/contact?type=accessibility" variant="secondary">
+          <ActionLink
+            to={
+              kind === "accessibility"
+                ? "/contact?type=accessibility"
+                : "/contact"
+            }
+            variant="secondary"
+          >
             Contact the chapter
           </ActionLink>
         </div>
