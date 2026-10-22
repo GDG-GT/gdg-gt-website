@@ -133,6 +133,7 @@ never a browser session. Times use UTC cadence windows, not browser timezone.
 | Expired form drafts, abandoned/rejected uploads and contact retention | Hourly | Failed object deletion remains retryable; active drafts, response files and held contacts are protected |
 | Local transactional delivery | 1 minute | Per-message fenced leases; bounded backoff and eight-attempt dead state |
 | Newsletter schedules, delivery pass and retention | 5 minutes | Frozen audience, current grants, per-recipient leases; bounded retries and deadline |
+| Event Push schedules, delivery pass and retention | 5 minutes | Verified owners, unique occurrence, six-attempt fenced retry, 30-minute deadline; actual sending disabled locally |
 | Dedicated local newsletter/test delivery | Queue polled every 5 seconds | `npm run jobs:newsletter -- --watch`; local SMTP only |
 | Overdue tasks | 15 minutes, UTC date boundaries | Per-occurrence scheduler lease; one generic notice per task/deadline occurrence |
 | Upload scanning | Queue polled every 2 seconds | Fenced leases; transient scanner failure retries; unsafe content is rejected |

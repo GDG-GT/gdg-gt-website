@@ -53,6 +53,10 @@ r = await call("newsletter-campaigns", headers);
 check(r.status === 200 && (r.json.data.runId || r.json.data.skipped), "newsletter scheduling and retention run through the authenticated scheduler");
 r = await call("newsletter-campaigns", headers);
 check(r.status === 200 && r.json.data.skipped === "already_completed", "completed newsletter occurrences do not enqueue or deliver twice");
+r = await call("event-push", headers);
+check(r.status === 200 && (r.json.data.runId || r.json.data.skipped), "push scheduling and retention run through the separate authenticated job boundary");
+r = await call("event-push", headers);
+check(r.status === 200 && r.json.data.skipped === "already_completed", "the same push scheduling occurrence cannot dispatch twice");
 const rows = await db
   .from("scheduled_job_runs")
   .select("job_name,state,counts,request_id")

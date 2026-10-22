@@ -1,0 +1,114 @@
+{
+  "generatedAt": "2026-10-22T00:57:28.994Z",
+  "environment": "Fictional loopback event/accounts/cryptographic browser keys; real HTTP, PostgreSQL and SMTP. Push delivery uses an explicit in-process fake transport only; no browser permission or external provider was contacted. Synthetic subscriptions are revoked and their event recoverably archived.",
+  "tests": [
+    {
+      "name": "push tests require local mail and disabled real push delivery",
+      "passed": true
+    },
+    {
+      "name": "public configuration exposes readiness and only the VAPID public key",
+      "passed": true
+    },
+    {
+      "name": "verification requests do not enumerate registered email addresses",
+      "passed": true
+    },
+    {
+      "name": "only an existing matching registration can enqueue verification email",
+      "passed": true
+    },
+    {
+      "name": "verification is sent through the actual bounded local SMTP pipeline",
+      "passed": true
+    },
+    {
+      "name": "the actual email contains a private fragment token stored only as a hash",
+      "passed": true
+    },
+    {
+      "name": "guessed verification capabilities cannot claim a registration",
+      "passed": true
+    },
+    {
+      "name": "email capability verifies only its own current event registration",
+      "passed": true
+    },
+    {
+      "name": "anonymous callers cannot invent a subscription owner",
+      "passed": true
+    },
+    {
+      "name": "caller-selected owner identifiers are rejected",
+      "passed": true
+    },
+    {
+      "name": "push endpoints cannot target loopback or arbitrary HTTP services",
+      "passed": true
+    },
+    {
+      "name": "HTTP enrollment rejects invalid elliptic-curve points",
+      "passed": true
+    },
+    {
+      "name": "current officer session can opt into a public event",
+      "passed": true
+    },
+    {
+      "name": "a verified attendee can opt into only their registered event",
+      "passed": true
+    },
+    {
+      "name": "endpoint URLs and browser encryption keys are encrypted at rest",
+      "passed": true
+    },
+    {
+      "name": "the browser's device capability can check its own event opt-in without exposing identity",
+      "passed": true
+    },
+    {
+      "name": "a guessed device auth secret cannot revoke another subscription",
+      "passed": true
+    },
+    {
+      "name": "the scheduler creates one bounded reminder per due event and device",
+      "passed": true
+    },
+    {
+      "name": "the same scheduled occurrence cannot enqueue duplicate reminders",
+      "passed": true
+    },
+    {
+      "name": "leased worker handles acceptance, expiry, transient failure and revoked-device skipping",
+      "passed": true
+    },
+    {
+      "name": "revoked devices never reach even the synthetic transport",
+      "passed": true
+    },
+    {
+      "name": "provider 410 disables the expired endpoint and erases its encryption material",
+      "passed": true
+    },
+    {
+      "name": "transient push failures use delayed backoff instead of an immediate loop",
+      "passed": true
+    },
+    {
+      "name": "a retry reuses the existing occurrence and can become provider accepted",
+      "passed": true
+    },
+    {
+      "name": "a stale worker cannot acknowledge a push delivery",
+      "passed": true
+    },
+    {
+      "name": "turning off one event/device preserves other owned subscriptions",
+      "passed": true
+    },
+    {
+      "name": "the actual local delivery switch prevents all real push sends",
+      "passed": true
+    }
+  ]
+}

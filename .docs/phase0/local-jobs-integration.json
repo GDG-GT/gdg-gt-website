@@ -46,6 +46,14 @@
       "passed": true
     },
     {
+      "name": "push scheduling and retention run through the separate authenticated job boundary",
+      "passed": true
+    },
+    {
+      "name": "the same push scheduling occurrence cannot dispatch twice",
+      "passed": true
+    },
+    {
       "name": "scheduler outcomes and counters persist without sensitive payloads",
       "passed": true
     }

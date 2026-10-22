@@ -92,6 +92,18 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    PUSH_VERIFICATION_REQUIRED: [
+      403,
+      "Verify this event registration through your private email link before enabling reminders.",
+    ],
+    PUSH_DEVICE_BOUND: [
+      409,
+      "This device already follows the event for a different verified identity. Turn off its existing reminder first.",
+    ],
+    PUSH_QUOTA: [
+      429,
+      "This account or device has reached the 50-reminder limit. Turn off unused reminders first.",
+    ],
     EVENT_MAIL_REVIEW_REQUIRED: [
       409,
       "Review the exact event audience and message again. The review expired, changed, was used or belongs to another session.",

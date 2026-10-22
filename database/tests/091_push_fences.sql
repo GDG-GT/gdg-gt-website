@@ -1,0 +1,21 @@
+BEGIN;
+INSERT INTO public.admin_users(id,email,password_hash,role,is_active) VALUES('f9100000-0000-4000-8000-000000000001','push-quota@example.test','test-only','admin',true);
+INSERT INTO public.admin_sessions(id,admin_user_id,token_hash) VALUES('f9100000-0000-4000-8000-000000000002','f9100000-0000-4000-8000-000000000001',repeat('1',64));
+DO $$ DECLARE actor uuid:='f9100000-0000-4000-8000-000000000001';sid uuid:='f9100000-0000-4000-8000-000000000002';e uuid;revoked uuid;s uuid;lid uuid;jid uuid;v jsonb;j public.delivery_jobs;BEGIN
+ v:=public.mutate_event(actor,NULL,'create',NULL,jsonb_build_object('title','Fictional quota event','slug','fictional-push-quota','description','Test only','start_at',now()+interval '2 days','location','Fixture'),gen_random_uuid());e:=(v->>'id')::uuid;PERFORM public.mutate_event(actor,e,'publish',1,'{}',gen_random_uuid());
+ INSERT INTO public.push_subscriptions(event_id,admin_user_id,endpoint_hash,management_hash,revoked_at,endpoint_encrypted) VALUES(e,actor,repeat('f',64),repeat('e',64),now(),NULL) RETURNING id INTO revoked;
+ FOR i IN 1..50 LOOP INSERT INTO public.push_subscriptions(event_id,admin_user_id,endpoint_hash,management_hash,endpoint_encrypted) VALUES(e,actor,lpad(i::text,64,'0'),repeat('a',64),'v1.fixture') RETURNING id INTO s;END LOOP;
+ BEGIN PERFORM public.mutate_push_subscription(actor,sid,NULL,e,repeat('f',64),repeat('e',64),'v1.fixture','subscribe',gen_random_uuid());RAISE EXCEPTION 'Revoked row bypassed quota';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'PUSH_QUOTA' THEN RAISE;END IF;END;
+ v:=public.mutate_push_subscription(actor,sid,NULL,e,lpad('50',64,'0'),repeat('a',64),'v1.fixture','subscribe',gen_random_uuid());IF(v->>'id')::uuid<>s THEN RAISE EXCEPTION 'Idempotent enrollment at cap failed';END IF;
+ INSERT INTO public.push_delivery_log(event_id,subscription_id,event_start) VALUES(e,s,now()+interval '2 days') RETURNING id INTO lid;
+ INSERT INTO public.delivery_jobs(kind,deduplication_key,payload) VALUES('event_push_reminder','fictional-push-early',jsonb_build_object('deliveryId',lid)) RETURNING id INTO jid;
+ SELECT * INTO j FROM public.claim_event_push_jobs(10) WHERE id=jid;
+ IF public.prepare_event_push(j.id,j.lease_token) IS NOT NULL THEN RAISE EXCEPTION 'Early reminder delivered';END IF;
+ PERFORM public.finish_event_push(j.id,j.lease_token,'skipped',NULL);
+ UPDATE public.events SET start_at=now()+interval '23 hours 59 minutes' WHERE id=e;
+ INSERT INTO public.push_delivery_log(event_id,subscription_id,event_start) VALUES(e,s,now()+interval '23 hours 59 minutes') RETURNING id INTO lid;
+ INSERT INTO public.delivery_jobs(kind,deduplication_key,payload,attempt_count,state,locked_until) VALUES('event_push_reminder','fictional-push-exhausted',jsonb_build_object('deliveryId',lid),6,'running',now()-interval '1 minute') RETURNING id INTO jid;
+ PERFORM public.claim_event_push_jobs(10);
+ IF(SELECT state FROM public.delivery_jobs WHERE id=jid)<>'dead' OR(SELECT state FROM public.push_delivery_log WHERE id=lid)<>'failed' THEN RAISE EXCEPTION 'Sixth-attempt crash is retried indefinitely';END IF;
+END $$;
+ROLLBACK;

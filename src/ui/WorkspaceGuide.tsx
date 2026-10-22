@@ -42,6 +42,12 @@ const sections = [
       "Use announcements, tasks, messages, and channels for internal work. Newsletter drafts are a separate, subscriber-facing workflow. Verify recipients before a real send.",
   },
   {
+    title: "Follow an event reminder",
+    href: "/events",
+    description:
+      "An event reminder is a separate opt-in, not part of registration or installing the app. Officers use their current sign-in; other attendees verify their registration through a private emailed link. Only an explicit Enable action requests browser permission. On iPhone/iPad, use the Home Screen app. Turn off an individual reminder from its event page; browser settings can block all notifications. A generic reminder is scheduled around 24 hours before the event, but provider acceptance does not guarantee device display. Local testing keeps real push sending disabled.",
+  },
+  {
     title: "Review chapter inquiries",
     href: "/admin/communications?tab=contact",
     description:

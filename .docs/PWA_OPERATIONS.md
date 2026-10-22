@@ -83,9 +83,13 @@ subscriber, not a fabricated active subscription. Only fictional data was used.
 Screenshot: `ui-review/real-public-queue-accepted.png`. An identifier-only accepted
 device record remains for inspection; no operator data or inbox was erased.
 
+Verified event Push is now implemented locally; see `PUSH_OPERATIONS.md` for
+ownership, encrypted device data, scheduling, failure cleanup and actual evidence.
+No real push provider or browser notification permission was enabled.
+
 Still open: complete real-browser offline event-capacity/lost-response/expiry/
 multi-tab/logout/storage-error cases, privacy cache inspection across upgrades,
-Push ownership/reminders and supported-device installation/push acceptance.
+supported-device installation/push acceptance and hosted operations.
 
 Implementation references: [Vite PWA injectManifest guide](https://vite-pwa-org.netlify.app/guide/inject-manifest)
 and [Workbox precaching](https://developer.chrome.com/docs/workbox/modules/workbox-precaching).

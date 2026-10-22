@@ -9,6 +9,7 @@ import {
 } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
+import EventReminders from "@/pwa/EventReminders";
 import {
   ArrowDown,
   ArrowRight,
@@ -1129,6 +1130,7 @@ export function EventDetailPage() {
               )}
             </>
           )}
+          {!past && event.status !== "cancelled" && !localPreviewEnabled && <EventReminders key={event.id} eventId={event.id} slug={event.slug || slug || ""} />}
         </aside>
       </section>
       <section className="gt-container gt-section gt-related">

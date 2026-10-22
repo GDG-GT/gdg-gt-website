@@ -47,6 +47,19 @@ export async function deliveryMessage(job, db, config, mail) {
     to = notice.email;
     subject = notice.subject;
     content = notice.message;
+  } else if (job.kind === "event_push_verification") {
+    const notice = checked(
+      await db.rpc("prepare_event_push_verification", {
+        p_job: job.id,
+        p_lease: job.lease_token,
+      }),
+    );
+    if (!notice) return null;
+    const secret = decryptPayload(job.secret_payload, config.encryptionSecret);
+    if (tokenHash(secret.token) !== notice.tokenHash) return null;
+    to = notice.email;
+    subject = "Verify your event reminder request";
+    content = `You requested a device reminder for a GDG at Georgia Tech event you registered for. Verify through this private link, then explicitly enable notifications on your device:\n${config.origin}/events/${notice.slug}#reminder=${secret.token}\n\nThis link expires in 24 hours. Opening it does not enable notifications automatically. Do not forward it. If you did not request this, ignore the message.`;
   } else if (job.kind === "newsletter_confirmation") {
     const record = checked(
       await db

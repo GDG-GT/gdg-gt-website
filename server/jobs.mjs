@@ -5,6 +5,8 @@ import { cleanupUploads } from "./upload-cleanup.mjs";
 import { cleanupMedia } from "./media-cleanup.mjs";
 import { runDelivery } from "./delivery.mjs";
 import { runNewsletterWorker } from "./newsletter-worker.mjs";
+import { runPushWorker } from "./push-worker.mjs";
+import { pushConfig } from "./lib/push-transport.mjs";
 export function authorizeJob(request, env = process.env) {
   if (
     request.headers.origin ||
@@ -51,6 +53,7 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
       "task-overdue",
       "announcements",
       "newsletter-campaigns",
+      "event-push",
     ].includes(match[1])
   )
     throw new ApiError(404, "NOT_FOUND", "This job is not available.");
@@ -72,7 +75,22 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
       counts = checked(await db.rpc("advance_overdue_tasks"));
     else if (match[1] === "announcements")
       counts = checked(await db.rpc("advance_chapter_announcements"));
-    else if (match[1] === "newsletter-campaigns") {
+    else if (match[1] === "event-push") {
+      const settings = pushConfig(),
+        queued =
+          settings.enabled && settings.deliveryEnabled
+            ? checked(await db.rpc("advance_event_push"))
+            : { queued: 0 },
+        delivery = await runPushWorker({ db }),
+        cleanup = checked(await db.rpc("cleanup_event_push"));
+      counts = { ...queued, ...delivery, ...cleanup };
+      if (delivery.retried || delivery.lostLease)
+        throw new ApiError(
+          503,
+          "PUSH_RETRY",
+          "Some event reminders need retry.",
+        );
+    } else if (match[1] === "newsletter-campaigns") {
       const schedules = checked(await db.rpc("advance_newsletter_campaigns")),
         delivery = await runNewsletterWorker({ db, limit: 25 }),
         providerEventsApplied = checked(

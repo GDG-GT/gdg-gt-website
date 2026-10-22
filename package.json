@@ -35,6 +35,8 @@
     "test:local-newsletter": "node scripts/test-local-newsletter.mjs",
     "test:local-contact-files": "node scripts/test-local-contact-files.mjs",
     "test:local-event-mail": "node scripts/test-local-event-mail.mjs",
+    "setup:local-push": "node scripts/setup-local-push.mjs",
+    "test:local-push": "node scripts/test-local-push.mjs",
     "jobs:local": "node --env-file=.env.server.local scripts/local-delivery.mjs",
     "scanner:local": "node scripts/local-scanner.mjs start",
     "scanner:update": "node scripts/local-scanner.mjs update",
@@ -154,6 +156,7 @@
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.168.0",
     "unified": "11.0.5",
+    "web-push": "3.6.7",
     "zod": "^3.25.76"
   },
   "devDependencies": {

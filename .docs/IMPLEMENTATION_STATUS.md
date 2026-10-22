@@ -5,6 +5,21 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Verified event Push — 2026-10-21
+
+- Added per-event explicit opt-in, account-session or emailed registration proof,
+  encrypted endpoint/key retention, device-scoped status/revocation, bounded quotas
+  and exact-host/P-256 validation. No account/email ownership comes from the caller.
+- Added five-minute authenticated reminder scheduling, unique occurrences, current
+  owner/event rechecks, six-attempt/deadline/lease fences, provider failure cleanup,
+  generic lock-screen content and canonical clicks that preserve private tabs.
+- **91 migrations**, canonical SQL/both capacity tests, **341 unit tests** and
+  **27 actual local integration checks** pass. Real HTTP/DB/SMTP uses fictional
+  fixtures; push providers use only an explicit fake transport. Desktop/375px
+  verifies truthful disabled controls. Real sending is off and no browser
+  notification permission was requested. Typecheck, changed-UI lint and build
+  pass. See `PUSH_OPERATIONS.md`; actual-device/hosted/full PRD gates remain open.
+
 ### Exact event email audience review — 2026-10-21
 
 - Replaced count-only approval with a five-minute session-bound exact audience/

@@ -54,9 +54,12 @@ See `MEMBER_TRANSFER_OPERATIONS.md` for scope, limits and real test evidence.
    (pending/failure/retry/discard, 48-hour expiry and logout epoch clearing) are
    implemented locally. Actual browser verifies public offline fallback, private
    route refusal and a real fictional queued signup; see `PWA_OPERATIONS.md`.
-6. Push: server-bound verified ownership, encrypted endpoint/key retention,
-   subscribe/unsubscribe, VAPID configuration, reminder scheduling/deduplication,
-   provider failure cleanup and real supported-device delivery.
+6. Push actual supported-device enrollment/permission/delivery/click/expiry,
+   hosted VAPID/provider/scheduler/load/privacy/accessibility acceptance. Verified
+   account/registration ownership, encrypted endpoints/keys, per-event device
+   controls, bounded reminders/retries/deduplication/provider cleanup and generic
+   safe click handlers are implemented/tested locally. See `PUSH_OPERATIONS.md`.
+   Real sending is disabled; browser notification permission was not requested.
 7. Cross-system privacy/operations: person-data export/redaction/deletion subject
    to holds, remaining scheduled retention/cleanup jobs, sanitized production
    telemetry/alerts, and user-facing operating guide accuracy throughout.

@@ -608,6 +608,18 @@
   overflow-wrap: anywhere;
   padding-inline-start: 1.5rem;
 }
+.gt-event-reminders {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color, #d9d9da);
+  display: grid;
+  gap: 1rem;
+  overflow-wrap: anywhere;
+}
+.gt-event-reminders h3 {
+  font-size: 1.125rem;
+  font-weight: 650;
+}
 .gt-account-table td:first-child {
   min-width: 220px;
   max-width: 320px;
