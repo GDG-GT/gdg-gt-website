@@ -1,5 +1,5 @@
-import { Resend } from "resend";
-import nodemailer from "nodemailer";
+import { createMailTransport, mailConfig } from "./lib/mail-transport.mjs";
+export { mailConfig } from "./lib/mail-transport.mjs";
 import { serverDatabase } from "./db/client.mjs";
 import { serverConfig } from "./config.mjs";
 import { databaseResult as checked } from "./lib/validation.mjs";
@@ -14,36 +14,6 @@ const escape = (v) =>
         c
       ],
   );
-export function mailConfig(env) {
-  const local = env.MAIL_MODE === "local";
-  if (
-    local &&
-    (env.NODE_ENV === "production" ||
-      env.SUPABASE_URL !== "http://127.0.0.1:54361")
-  )
-    throw new Error(
-      "Local mail is restricted to the dedicated loopback database.",
-    );
-  if (
-    !local &&
-    (env.MAIL_MODE !== "resend" ||
-      env.EMAIL_SEND_ENABLED !== "true" ||
-      !env.RESEND_API_KEY)
-  )
-    throw new ApiError(
-      503,
-      "MAIL_NOT_CONFIGURED",
-      "Email delivery is not configured.",
-    );
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(env.FROM_EMAIL || ""))
-    throw new Error("A valid configured sender is required.");
-  return {
-    local,
-    from: env.FROM_EMAIL,
-    replyTo: env.REPLY_TO_EMAIL || env.CHAPTER_CONTACT_EMAIL,
-    chapter: env.CHAPTER_CONTACT_EMAIL,
-  };
-}
 export async function deliveryMessage(job, db, config, mail) {
   let to, subject, content;
   if (job.kind === "event_confirmation") {
@@ -103,10 +73,26 @@ export async function deliveryMessage(job, db, config, mail) {
     const subscriber = checked(
       await db
         .from("newsletter_subscribers")
-        .select("email")
+        .select("email,state,deleted_at,suppressed_at,team_id")
         .eq("id", job.payload.subscriberId)
         .single(),
     );
+    if (
+      subscriber.state !== "pending" ||
+      subscriber.deleted_at ||
+      subscriber.suppressed_at
+    )
+      return null;
+    if (subscriber.team_id) {
+      const team = checked(
+        await db
+          .from("admin_teams")
+          .select("is_active,deleted_at")
+          .eq("id", subscriber.team_id)
+          .maybeSingle(),
+      );
+      if (!team?.is_active || team.deleted_at) return null;
+    }
     const secret = decryptPayload(job.secret_payload, config.encryptionSecret);
     to = subscriber.email;
     subject = "Confirm your GDG at Georgia Tech subscription";
@@ -306,18 +292,46 @@ export async function deliveryMessage(job, db, config, mail) {
       new Date(access.expires_at).toUTCString() +
       ".";
   } else if (job.kind === "form_reviewed_email") {
-    const notice = checked(await db.rpc("prepare_form_reviewed_email", { p_job: job.id, p_lease: job.lease_token }));
+    const notice = checked(
+      await db.rpc("prepare_form_reviewed_email", {
+        p_job: job.id,
+        p_lease: job.lease_token,
+      }),
+    );
     if (!notice) return null;
-    to = notice.chapterInbox ? mail.chapter : notice.email || (notice.emailEncrypted ? decryptPayload(notice.emailEncrypted, config.encryptionSecret).email : null);
+    to = notice.chapterInbox
+      ? mail.chapter
+      : notice.email ||
+        (notice.emailEncrypted
+          ? decryptPayload(notice.emailEncrypted, config.encryptionSecret).email
+          : null);
     if (!to || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to))
-      throw new ApiError(503, "MAIL_NOT_CONFIGURED", "An authorized chapter delivery address is unavailable.");
+      throw new ApiError(
+        503,
+        "MAIL_NOT_CONFIGURED",
+        "An authorized chapter delivery address is unavailable.",
+      );
     const receipt = notice.purpose === "receipt";
-    subject = receipt ? "Your form response was received" : "New chapter form response";
+    subject = receipt
+      ? "Your form response was received"
+      : "New chapter form response";
     content = `${receipt ? "Your response has been received." : "A committed response is ready for authorized review."}\n\nForm: ${notice.title}\nForm version: ${notice.version}\nSubmitted: ${new Date(notice.submittedAt).toUTCString()}\nReference: ${notice.responseId}`;
-    if (!receipt) content += `\n\nReview securely: ${config.origin}/admin/forms/${notice.formId}/responses`;
-    if (notice.answers?.length) content += "\n\nReviewed non-sensitive answers:\n" + notice.answers.map((answer) => `${answer.label}: ${typeof answer.value === "object" ? JSON.stringify(answer.value) : String(answer.value ?? "")}`).join("\n");
-    if (notice.answersOmitted) content += "\n\nAnswers were omitted because this response exceeds the safe email size limit. Review the response in the protected workspace.";
-    content += "\n\nSensitive answers and files are never included. Downloaded or delivered copies cannot be recalled.";
+    if (!receipt)
+      content += `\n\nReview securely: ${config.origin}/admin/forms/${notice.formId}/responses`;
+    if (notice.answers?.length)
+      content +=
+        "\n\nReviewed non-sensitive answers:\n" +
+        notice.answers
+          .map(
+            (answer) =>
+              `${answer.label}: ${typeof answer.value === "object" ? JSON.stringify(answer.value) : String(answer.value ?? "")}`,
+          )
+          .join("\n");
+    if (notice.answersOmitted)
+      content +=
+        "\n\nAnswers were omitted because this response exceeds the safe email size limit. Review the response in the protected workspace.";
+    content +=
+      "\n\nSensitive answers and files are never included. Downloaded or delivered copies cannot be recalled.";
   } else if (job.kind === "form_response_notification") {
     const form = checked(
       await db
@@ -376,80 +390,60 @@ export async function runDelivery({
   const config = serverConfig(env),
     mail = mailConfig(env),
     jobs = checked(await db.rpc("claim_delivery_jobs", { p_limit: limit }));
-  const smtp = mail.local
-    ? nodemailer.createTransport({
-        host: "127.0.0.1",
-        port: 54365,
-        secure: false,
-        ignoreTLS: true,
-        connectionTimeout: 10000,
-        socketTimeout: 15000,
-      })
-    : null;
-  const resend = mail.local ? null : new Resend(env.RESEND_API_KEY);
+  const transport = createMailTransport(env);
   const result = {
     claimed: jobs.length,
     completed: 0,
     retried: 0,
     lostLease: 0,
   };
-  for (const job of jobs) {
-    let providerId = null,
-      success = false,
-      errorCode = null;
-    try {
-      const message = await deliveryMessage(job, db, config, mail);
-      if (message) {
-        if (smtp) {
-          const info = await smtp.sendMail(message);
-          providerId = String(info.messageId);
-        } else {
-          const { messageId: unused, ...send } = message;
-          void unused;
-          const response = await resend.emails.send(send, {
+  try {
+    for (const job of jobs) {
+      let providerId = null,
+        success = false,
+        errorCode = null;
+      try {
+        const message = await deliveryMessage(job, db, config, mail);
+        if (message) {
+          providerId = await transport.send(message, {
+            jobId: job.id,
             idempotencyKey: "gdg-job-" + job.id,
           });
-          if (response.error)
-            throw new ApiError(
-              503,
-              "PROVIDER_RETRY",
-              "Delivery is unavailable.",
-            );
-          providerId = response.data.id;
         }
+        success = true;
+      } catch (error) {
+        errorCode = error instanceof ApiError ? error.code : "DELIVERY_RETRY";
       }
-      success = true;
-    } catch (error) {
-      errorCode = error instanceof ApiError ? error.code : "DELIVERY_RETRY";
-    }
-    const finished = checked(
-      await db.rpc("finish_delivery_job", {
-        p_id: job.id,
-        p_lease: job.lease_token,
-        p_success: success,
-        p_provider_id: providerId,
-        p_error_code: errorCode,
-      }),
-    );
-    if (!finished) {
-      result.lostLease++;
-      continue;
-    }
-    if (success && providerId && job.kind === "form_access")
-      checked(
-        await db
-          .from("form_access_tokens")
-          .update({
-            delivery_state: "sent",
-            last_sent_at: new Date().toISOString(),
-          })
-          .eq("id", job.payload.tokenId)
-          .eq("token_hash", job.payload.tokenHash)
-          .is("revoked_at", null),
+      const finished = checked(
+        await db.rpc("finish_delivery_job", {
+          p_id: job.id,
+          p_lease: job.lease_token,
+          p_success: success,
+          p_provider_id: providerId,
+          p_error_code: errorCode,
+        }),
       );
-    if (success) result.completed++;
-    else result.retried++;
+      if (!finished) {
+        result.lostLease++;
+        continue;
+      }
+      if (success && providerId && job.kind === "form_access")
+        checked(
+          await db
+            .from("form_access_tokens")
+            .update({
+              delivery_state: "sent",
+              last_sent_at: new Date().toISOString(),
+            })
+            .eq("id", job.payload.tokenId)
+            .eq("token_hash", job.payload.tokenHash)
+            .is("revoked_at", null),
+        );
+      if (success) result.completed++;
+      else result.retried++;
+    }
+  } finally {
+    transport.close();
   }
-  smtp?.close();
   return result;
 }

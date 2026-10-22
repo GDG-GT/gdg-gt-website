@@ -5,6 +5,24 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Newsletter workspace and delivery — 2026-10-21
+
+- Replaced the legacy browser-service/scheduler screen with scoped subscriber,
+  template and campaign workflows. Saved preview, confirmed custom audiences,
+  five-minute review, current-password/typed approval, immutable snapshot/content,
+  schedule/cancel/self-test, truthful provider-result views, audited CSV and
+  recoverable atomic bulk cleanup are implemented. Send grants remain separate
+  from CRUD. Approved form links cannot be rewritten.
+- Dedicated leased worker, shared server mail transport, stable unsubscribe/retry
+  identities, signed raw-body callbacks, bounce/complaint suppression and bounded
+  retention run locally. Scheduler/worker are running; real Resend/webhook/domain
+  configuration remains disabled. No operator newsletter data was erased.
+- **87 migrations**, canonical SQL/both concurrency tests, **324 unit tests**,
+  typecheck, changed-UI lint and build pass. **31 actual newsletter checks**,
+  public signup/contact and **20 reviewed Forms mail checks** pass. Desktop/375px
+  browser draft/keyboard/preview/review/cleanup checks are recorded. See
+  `NEWSLETTER_OPERATIONS.md`; full PRD and hosted acceptance remain open.
+
 ### Private media and gallery workflows — 2026-10-21
 
 - Replaced legacy media/gallery screens with scoped folder/file workflows,

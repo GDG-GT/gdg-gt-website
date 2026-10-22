@@ -53,8 +53,18 @@ import { blogUploadRoutes } from "./blog-uploads.mjs";
 import { mediaRoutes } from "./media.mjs";
 import { mediaUploadRoutes } from "./media-uploads.mjs";
 import { mediaPublicationRoutes } from "./media-publication.mjs";
+import { newsletterRoutes } from "./newsletter.mjs";
+import { newsletterSendRoutes } from "./newsletter-sends.mjs";
+import { newsletterWebhookRoutes } from "./newsletter-webhook.mjs";
+import { newsletterResultRoutes } from "./newsletter-results.mjs";
 
-export function applicationHandler({ store, config, db, log } = {}) {
+export function applicationHandler({
+  store,
+  config,
+  db,
+  log,
+  webhookEnv,
+} = {}) {
   const auth = createAuthHandler({ store, config, log });
   return async (request, response) => {
     const pathname = new URL(request.url, config.origin).pathname;
@@ -71,11 +81,64 @@ export function applicationHandler({ store, config, db, log } = {}) {
           await jobRoutes(request, response, { db, store, config, requestId })
         )
           return;
+        if (
+          await newsletterWebhookRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+            ...(webhookEnv ? { env: webhookEnv } : {}),
+          })
+        )
+          return;
         checkOrigin(request, config.origin, {
           mutation: !["GET", "HEAD"].includes(request.method),
         });
-        if (await mediaPublicationRoutes(request, response, { db, store, config, requestId })) return;
-        if (await mediaUploadRoutes(request, response, { db, store, config, requestId })) return;
+        if (
+          await newsletterResultRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
+        if (
+          await newsletterSendRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
+        if (
+          await newsletterRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
+        if (
+          await mediaPublicationRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
+        if (
+          await mediaUploadRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
         if (
           (await blogUploadRoutes(request, response, {
             db,
@@ -89,7 +152,12 @@ export function applicationHandler({ store, config, db, log } = {}) {
             config,
             requestId,
           })) ||
-          (await memberTransferRoutes(request, response, { db, store, config, requestId })) ||
+          (await memberTransferRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })) ||
           (await memberRoutes(request, response, {
             db,
             store,
@@ -217,7 +285,8 @@ export function applicationHandler({ store, config, db, log } = {}) {
           return;
         if (
           await mediaRoutes(request, response, { db, store, config, requestId })
-        ) return;
+        )
+          return;
         if (
           await eventRoutes(request, response, { db, store, config, requestId })
         )
@@ -259,24 +328,57 @@ export function applicationHandler({ store, config, db, log } = {}) {
         )
           return;
         if (
-          await formDeletionRoutes(request, response, { db, store, config, requestId })
-        ) return;
-        if (
-          await formIntegrationRoutes(request, response, { db, store, config, requestId })
-        ) return;
-        if (
-          await formPrivacyRoutes(request, response, { db, store, config, requestId })
-        ) return;
-        if (
-          await formDeliveryRoutes(request, response, { db, store, config, requestId })
+          await formDeletionRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
         )
           return;
         if (
-          await formHistoryRoutes(request, response, { db, store, config, requestId })
+          await formIntegrationRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
         )
           return;
         if (
-          await formExportRoutes(request, response, { db, store, config, requestId })
+          await formPrivacyRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
+        if (
+          await formDeliveryRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
+        if (
+          await formHistoryRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
+        if (
+          await formExportRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
         )
           return;
         if (

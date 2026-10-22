@@ -4,6 +4,7 @@ import { databaseResult as checked } from "./lib/validation.mjs";
 import { cleanupUploads } from "./upload-cleanup.mjs";
 import { cleanupMedia } from "./media-cleanup.mjs";
 import { runDelivery } from "./delivery.mjs";
+import { runNewsletterWorker } from "./newsletter-worker.mjs";
 export function authorizeJob(request, env = process.env) {
   if (
     request.headers.origin ||
@@ -49,6 +50,7 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
       "delivery",
       "task-overdue",
       "announcements",
+      "newsletter-campaigns",
     ].includes(match[1])
   )
     throw new ApiError(404, "NOT_FOUND", "This job is not available.");
@@ -70,7 +72,27 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
       counts = checked(await db.rpc("advance_overdue_tasks"));
     else if (match[1] === "announcements")
       counts = checked(await db.rpc("advance_chapter_announcements"));
-    else if (match[1] === "form-cleanup") {
+    else if (match[1] === "newsletter-campaigns") {
+      const schedules = checked(await db.rpc("advance_newsletter_campaigns")),
+        delivery = await runNewsletterWorker({ db, limit: 25 }),
+        providerEventsApplied = checked(
+          await db.rpc("apply_newsletter_provider_events"),
+        ),
+        cleanup = checked(await db.rpc("cleanup_newsletter_records"));
+      counts = {
+        ...schedules,
+        ...delivery,
+        providerEventsApplied,
+        ...cleanup,
+        tokensExpired: checked(await db.rpc("cleanup_newsletter_tokens")),
+      };
+      if (delivery.retried || delivery.lostLease)
+        throw new ApiError(
+          503,
+          "DELIVERY_RETRY",
+          "Some newsletter deliveries need retry.",
+        );
+    } else if (match[1] === "form-cleanup") {
       const drafts = checked(
           await db.rpc("expire_form_drafts", { p_limit: 1000 }),
         ),
@@ -79,7 +101,14 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
         ),
         files = await cleanupUploads({ db, limit: 50 }),
         media = await cleanupMedia({ db, limit: 50 });
-      counts = { drafts, ...responses, ...files, media };
+      counts = {
+        drafts,
+        ...responses,
+        ...files,
+        mediaClaimed: media.claimed,
+        mediaPurged: media.purged,
+        mediaRetried: media.retried,
+      };
       if (files.retried || media.retried)
         throw new ApiError(
           503,

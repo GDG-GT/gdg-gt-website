@@ -1,0 +1,27 @@
+BEGIN;
+INSERT INTO public.admin_users(id,email,password_hash,role,is_active) VALUES('f8500000-0000-4000-8000-000000000001','newsletter-results@example.test','test-only','admin',true);
+INSERT INTO public.admin_sessions(id,admin_user_id,token_hash) VALUES('f8500000-0000-4000-8000-000000000002','f8500000-0000-4000-8000-000000000001',repeat('1',64));
+DO $$ DECLARE actor uuid:='f8500000-0000-4000-8000-000000000001';sid uuid:='f8500000-0000-4000-8000-000000000002';s uuid;c uuid;r uuid;v jsonb;BEGIN
+ IF has_function_privilege('authenticated','public.record_newsletter_provider_event(text,text,text,text,timestamptz)','EXECUTE') THEN RAISE EXCEPTION 'Browser provider callbacks';END IF;
+ INSERT INTO public.newsletter_subscribers(email,state,is_active,consent_at,confirmed_at) VALUES('fictional-results@example.test','active',true,now(),now()) RETURNING id INTO s;
+ INSERT INTO public.newsletter_campaigns(subject,content,created_by,status) VALUES('Fictional results','Fixture',actor,'sent') RETURNING id INTO c;
+ INSERT INTO public.newsletter_campaign_recipients(campaign_id,subscriber_id,recipient_email,subscriber_revision,state,provider_message_id) VALUES(c,s,'fictional-results@example.test',1,'sent','fictional-results-provider') RETURNING id INTO r;
+ PERFORM public.record_newsletter_provider_event(repeat('a',64),repeat('b',64),'fictional-results-provider','email.opened',now()-interval '2 minutes');
+ PERFORM public.record_newsletter_provider_event(repeat('a',64),repeat('b',64),'fictional-results-provider','email.opened',now()-interval '2 minutes');
+ IF(SELECT count(*) FROM public.newsletter_provider_events WHERE event_hash=repeat('a',64))<>1 OR(SELECT open_count FROM public.newsletter_campaigns WHERE id=c)<>1 THEN RAISE EXCEPTION 'Provider duplicate';END IF;
+ BEGIN PERFORM public.record_newsletter_provider_event(repeat('a',64),repeat('c',64),'fictional-results-provider','email.opened',now());RAISE EXCEPTION 'Changed provider event accepted';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ PERFORM public.record_newsletter_provider_event(repeat('d',64),repeat('e',64),'fictional-results-provider','email.complained',now());
+ PERFORM public.record_newsletter_provider_event(repeat('f',64),repeat('e',64),'fictional-results-provider','email.delivered',now()-interval '1 minute');
+ IF(SELECT state FROM public.newsletter_subscribers WHERE id=s)<>'unsubscribed' OR(SELECT suppression_reason FROM public.newsletter_subscribers WHERE id=s)<>'complaint' OR(SELECT provider_state FROM public.newsletter_campaign_recipients WHERE id=r)<>'email.complained' THEN RAISE EXCEPTION 'Suppression overwritten by out of order callback';END IF;
+ BEGIN UPDATE public.newsletter_campaign_recipients SET recipient_email='replacement@example.test' WHERE id=r;RAISE EXCEPTION 'Snapshot changed';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NEWSLETTER_LOCKED' THEN RAISE;END IF;END;
+ v:=public.newsletter_delivery_status(actor,sid,c,1);
+ IF(v->'counts'->>'complained')::integer<>1 OR v::text LIKE '%secret_payload%' THEN RAISE EXCEPTION 'Delivery result privacy';END IF;
+ v:=public.export_newsletter_subscribers(actor,sid,jsonb_build_object('q','fictional-results'),gen_random_uuid());
+ IF jsonb_array_length(v)<>1 OR v->0->>'email'<>'fictional-results@example.test' THEN RAISE EXCEPTION 'Subscriber export';END IF;
+ UPDATE public.newsletter_campaign_recipients SET updated_at=now()-interval '31 days' WHERE id=r;
+ v:=public.cleanup_newsletter_records();
+ IF(v->>'recipientIdentitiesErased')::integer<1 OR(SELECT recipient_email FROM public.newsletter_campaign_recipients WHERE id=r)<>'' THEN RAISE EXCEPTION 'Newsletter retention';END IF;
+ v:=public.begin_scheduled_job('newsletter-campaigns',gen_random_uuid());
+ IF v->>'runId' IS NULL THEN RAISE EXCEPTION 'Newsletter scheduler';END IF;
+END $$;
+ROLLBACK;

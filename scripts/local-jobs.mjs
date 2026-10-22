@@ -18,6 +18,7 @@ const due = new Map(),
     ["delivery", 60000],
     ["task-overdue", 900000],
     ["announcements", 300000],
+    ["newsletter-campaigns", 300000],
   ];
 do {
   for (const [name, cadence] of jobs) {

@@ -42,6 +42,12 @@ const sections = [
       "Use announcements, tasks, messages, and channels for internal work. Newsletter drafts are a separate, subscriber-facing workflow. Verify recipients before a real send.",
   },
   {
+    title: "Send a newsletter",
+    href: "/admin/newsletter",
+    description:
+      "Choose a chapter or team scope. New subscribers must confirm their email. Save a campaign privately, preview it, then review its confirmed audience and approve with your current password and exact recipient count. Scheduling runs on the server; self-only tests do not contact subscribers. Accepted means handed to the provider, not inbox delivery. Cancel stops queued work but cannot recall accepted mail. Restoring archived subscribers leaves them unsubscribed.",
+  },
+  {
     title: "Manage approved content",
     href: "/admin/content",
     description:

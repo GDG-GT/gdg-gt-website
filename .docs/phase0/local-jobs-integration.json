@@ -38,6 +38,14 @@
       "passed": true
     },
     {
+      "name": "newsletter scheduling and retention run through the authenticated scheduler",
+      "passed": true
+    },
+    {
+      "name": "completed newsletter occurrences do not enqueue or deliver twice",
+      "passed": true
+    },
+    {
       "name": "scheduler outcomes and counters persist without sensitive payloads",
       "passed": true
     }

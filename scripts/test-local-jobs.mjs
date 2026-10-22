@@ -47,6 +47,12 @@ check(
   r.status === 200 && (r.json.data.runId || r.json.data.skipped),
   "authenticated cleanup runs through the fenced scheduler",
 );
+// Campaign scheduling uses the same separate bearer/lease boundary, never a
+// tab timer. Repeating a completed occurrence must not enqueue another batch.
+r = await call("newsletter-campaigns", headers);
+check(r.status === 200 && (r.json.data.runId || r.json.data.skipped), "newsletter scheduling and retention run through the authenticated scheduler");
+r = await call("newsletter-campaigns", headers);
+check(r.status === 200 && r.json.data.skipped === "already_completed", "completed newsletter occurrences do not enqueue or deliver twice");
 const rows = await db
   .from("scheduled_job_runs")
   .select("job_name,state,counts,request_id")

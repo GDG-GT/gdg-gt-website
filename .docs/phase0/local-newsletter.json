@@ -1,0 +1,130 @@
+{
+  "generatedAt": "2026-10-22T00:09:00.848Z",
+  "environment": "Fictional loopback accounts/team/recipients; local SMTP only; ephemeral signed callback fixture; one subscriber confirms through actual email, a second is explicitly synthetic preconfirmed data. All fixture records archived, no operator records erased.",
+  "tests": [
+    {
+      "name": "all email tests are restricted to loopback SMTP capture",
+      "passed": true
+    },
+    {
+      "name": "anonymous subscriber listing is denied",
+      "passed": true
+    },
+    {
+      "name": "subscriber creation cannot forge confirmed state",
+      "passed": true
+    },
+    {
+      "name": "actual subscriber request starts pending double opt-in",
+      "passed": true
+    },
+    {
+      "name": "double opt-in confirmation is delivered through real local SMTP",
+      "passed": true
+    },
+    {
+      "name": "public POST token confirmation activates only the intended subscriber",
+      "passed": true
+    },
+    {
+      "name": "saved template preview escapes stored HTML and permits safe HTTPS links",
+      "passed": true
+    },
+    {
+      "name": "test sends require the actual current password",
+      "passed": true
+    },
+    {
+      "name": "self-only test copy is captured at the requesting chapter account address",
+      "passed": true
+    },
+    {
+      "name": "send review resolves only currently confirmed scope recipients",
+      "passed": true
+    },
+    {
+      "name": "audience changes invalidate a previously reviewed send",
+      "passed": true
+    },
+    {
+      "name": "same send idempotency key never duplicates the frozen recipient snapshot",
+      "passed": true
+    },
+    {
+      "name": "approved content cannot be rewritten",
+      "passed": true
+    },
+    {
+      "name": "approved campaign cannot send a second time with a different retry key",
+      "passed": true
+    },
+    {
+      "name": "campaign delivery includes a unique functional unsubscribe link in text and HTML",
+      "passed": true
+    },
+    {
+      "name": "delivery rechecks unsubscribes after approval and reports acceptance separately from inbox delivery",
+      "passed": true
+    },
+    {
+      "name": "scheduled campaigns persist without any browser scheduler",
+      "passed": true
+    },
+    {
+      "name": "password-confirmed cancellation stops queued campaign work",
+      "passed": true
+    },
+    {
+      "name": "actual callback HTTP rejects tampered raw bytes",
+      "passed": true
+    },
+    {
+      "name": "provider callbacks reject browser-origin requests",
+      "passed": true
+    },
+    {
+      "name": "signed provider HTTP callbacks are accepted idempotently",
+      "passed": true
+    },
+    {
+      "name": "verified hard-bounce callback suppresses future sends and updates protected results",
+      "passed": true
+    },
+    {
+      "name": "audited subscriber CSV export is scoped and excludes token material",
+      "passed": true
+    },
+    {
+      "name": "delivery results reject repeated pagination selectors",
+      "passed": true
+    },
+    {
+      "name": "delivery status never exposes stored unsubscribe capabilities",
+      "passed": true
+    },
+    {
+      "name": "public unsubscribe remains safe after provider suppression",
+      "passed": true
+    },
+    {
+      "name": "bulk subscriber cleanup requires the current password",
+      "passed": true
+    },
+    {
+      "name": "stale bulk cleanup rolls back all selected records atomically",
+      "passed": true
+    },
+    {
+      "name": "reviewed bulk archive is idempotent and recoverable",
+      "passed": true
+    },
+    {
+      "name": "bulk restoration never restores consent or silently activates addresses",
+      "passed": true
+    },
+    {
+      "name": "public signup returns a generic response without re-queuing mail for a suppressed address",
+      "passed": true
+    }
+  ]
+}

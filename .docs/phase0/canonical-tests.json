@@ -81,7 +81,13 @@
     "202610210078_media_event_options.sql",
     "202610210079_media_retention.sql",
     "202610210080_media_catalog_metadata.sql",
-    "202610210081_gallery_image_grants.sql"
+    "202610210081_gallery_image_grants.sql",
+    "202610210082_newsletter_workspace.sql",
+    "202610210083_newsletter_send_review.sql",
+    "202610210084_newsletter_delivery.sql",
+    "202610210085_newsletter_results_cleanup.sql",
+    "202610210086_newsletter_job_cadence.sql",
+    "202610210087_newsletter_token_bulk_cleanup.sql"
   ],
   "tests": [
     {
@@ -413,6 +419,30 @@
       "passed": true
     },
     {
+      "name": "202610210082_newsletter_workspace.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210083_newsletter_send_review.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210084_newsletter_delivery.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210085_newsletter_results_cleanup.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210086_newsletter_job_cadence.sql",
+      "passed": true
+    },
+    {
+      "name": "202610210087_newsletter_token_bulk_cleanup.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -638,6 +668,26 @@
     },
     {
       "name": "081_gallery_image_grants.sql",
+      "passed": true
+    },
+    {
+      "name": "082_newsletter_workspace.sql",
+      "passed": true
+    },
+    {
+      "name": "083_newsletter_send_review.sql",
+      "passed": true
+    },
+    {
+      "name": "084_newsletter_delivery.sql",
+      "passed": true
+    },
+    {
+      "name": "085_newsletter_results_cleanup.sql",
+      "passed": true
+    },
+    {
+      "name": "087_newsletter_token_bulk_cleanup.sql",
       "passed": true
     },
     {

@@ -92,39 +92,167 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
-    MEDIA_CLEANUP_STARTED: [409, "Physical cleanup has begun for this archived file. Its original bytes can no longer be restored."],
-    MEDIA_PUBLICATION_BLOCKED: [409, "Only a clean private raster image with meaningful alt text, an active scope and a published associated event can be approved for the gallery."],
-    MEDIA_QUOTA: [409, "Media limits reached: five active uploads, 25 files/500 MiB per account per day, or 1 GiB/1,000 retained files per scope. Wait or ask an administrator to review retention."],
-    MEDIA_IN_USE: [409, "Revoke publication and resolve usage references or active uploads before moving, editing or archiving this file."],
-    MEDIA_FOLDER_CYCLE: [409, "Choose a destination outside this folder’s descendants and within eight levels."],
-    MEDIA_FOLDER_NOT_EMPTY: [409, "Move or finish removing the folder’s files and child folders first."],
-    FORM_DELETION_BLOCKED: [409, "Archive the form, resolve active references, and complete its retention/hold review before permanent deletion."],
-    FORM_DELETION_REVIEW: [409, "The deletion review expired or belongs to another session. Start a new review."],
-    FORM_RECEIPT_IDENTITY: [409, "Receipts require verified email, an individual invitation, or a signed-in chapter account."],
-    FORM_DELIVERY_REVIEW_REQUIRED: [409, "Save this draft and review its delivery settings before enabling receipts."],
-    FORM_EXPORT_QUOTA: [429, "Up to three exports may run at once and twenty may be created per day. Wait or cancel an unused export."],
-    FORM_EXPORT_RANGE: [409, "Choose at most 20,000 responses. Exports above 10,000 also need both start and end date filters."],
-    FORM_EXPORT_CHANGED: [409, "A response was edited, redacted or deleted. Create a new export of the current data."],
-    BLOG_RETAINED: [409, "Archive or restore editorial records; permanent deletion is disabled."],
-    MEMBER_RETAINED: [409, "Archive community records; permanent deletion is disabled."],
-    MEMBER_IMPORT_REVIEW: [409, "This import review expired, was used or no longer matches. Review the same file and destination again."],
-    MEMBER_EXPORT_RANGE: [409, "Narrow your member filters to at most 1,000 records and a smaller export."],
-    MEMBER_LINK_REVIEW: [409, "Review and remove active project memberships and archive linked public profiles before merging this source."],
-    MEMBER_REVIEW_EXPIRED: [409, "This merge review expired or was used. Generate a new review."],
-    PROJECT_RETAINED: [409, "Archive or restore projects; permanent deletion is disabled."],
-    PROJECT_MEMBER_LIMIT: [409, "A project supports up to 100 active participants."],
-    LINKTREE_RETAINED: [409, "Archive or restore this profile/link; permanent deletion is disabled."],
-    LINKTREE_LIMIT: [409, "A profile supports up to 100 current links. Archive an unused link first."],
-    BUDGET_UNAVAILABLE: [409, "Choose an active budget in this request's scope and date range."],
-    BUDGET_EXCEEDED: [409, "This change exceeds the budget or conflicts with committed request dates."],
-    BUDGET_IN_USE: [409, "Resolve pending or reserved requests before closing this budget."],
-    FINANCE_RETAINED: [409, "Financial records are retained; deletion is disabled."],
-    FINANCE_IMMUTABLE: [409, "Submitted financial details and final decisions cannot be rewritten."],
-    EXPORT_TOO_LARGE: [409, "Narrow the export filters to at most 1,000 records and a smaller file."],
-    TEAM_MANAGED_CHAT: [409,"Team chat access and moderation follow current team memberships. Manage them in Teams."],
+    NEWSLETTER_EXPORT_LIMIT: [
+      409,
+      "Narrow your filters to at most 1,000 subscribers before exporting.",
+    ],
+    NEWSLETTER_AUDIENCE_LIMIT: [
+      409,
+      "Choose 1–1,000 confirmed, unsuppressed subscribers in this scope. Use a custom confirmed audience when the full list exceeds the cap.",
+    ],
+    NEWSLETTER_REVIEW_EXPIRED: [
+      409,
+      "This send review expired, was used, changed or belongs to another session. Preview the campaign again.",
+    ],
+    NEWSLETTER_REVIEW_LIMIT: [
+      429,
+      "Wait before generating more campaign reviews.",
+    ],
+    NEWSLETTER_SEND_LIMIT: [
+      429,
+      "Up to ten campaign approvals may be created per account per day. Wait before another send.",
+    ],
+    NEWSLETTER_TEST_LIMIT: [
+      429,
+      "Up to ten self-only test sends may be requested per account per day.",
+    ],
+    NEWSLETTER_LOCKED: [
+      409,
+      "Approved, scheduled or sent campaigns cannot be rewritten. Cancel active work or duplicate it into a new private draft.",
+    ],
+    NEWSLETTER_RETAINED: [
+      409,
+      "Subscriber identity and scope are retained. Deactivate or archive the existing record; a new address needs separate double opt-in.",
+    ],
+    MEDIA_CLEANUP_STARTED: [
+      409,
+      "Physical cleanup has begun for this archived file. Its original bytes can no longer be restored.",
+    ],
+    MEDIA_PUBLICATION_BLOCKED: [
+      409,
+      "Only a clean private raster image with meaningful alt text, an active scope and a published associated event can be approved for the gallery.",
+    ],
+    MEDIA_QUOTA: [
+      409,
+      "Media limits reached: five active uploads, 25 files/500 MiB per account per day, or 1 GiB/1,000 retained files per scope. Wait or ask an administrator to review retention.",
+    ],
+    MEDIA_IN_USE: [
+      409,
+      "Revoke publication and resolve usage references or active uploads before moving, editing or archiving this file.",
+    ],
+    MEDIA_FOLDER_CYCLE: [
+      409,
+      "Choose a destination outside this folder’s descendants and within eight levels.",
+    ],
+    MEDIA_FOLDER_NOT_EMPTY: [
+      409,
+      "Move or finish removing the folder’s files and child folders first.",
+    ],
+    FORM_DELETION_BLOCKED: [
+      409,
+      "Archive the form, resolve active references, and complete its retention/hold review before permanent deletion.",
+    ],
+    FORM_DELETION_REVIEW: [
+      409,
+      "The deletion review expired or belongs to another session. Start a new review.",
+    ],
+    FORM_RECEIPT_IDENTITY: [
+      409,
+      "Receipts require verified email, an individual invitation, or a signed-in chapter account.",
+    ],
+    FORM_DELIVERY_REVIEW_REQUIRED: [
+      409,
+      "Save this draft and review its delivery settings before enabling receipts.",
+    ],
+    FORM_EXPORT_QUOTA: [
+      429,
+      "Up to three exports may run at once and twenty may be created per day. Wait or cancel an unused export.",
+    ],
+    FORM_EXPORT_RANGE: [
+      409,
+      "Choose at most 20,000 responses. Exports above 10,000 also need both start and end date filters.",
+    ],
+    FORM_EXPORT_CHANGED: [
+      409,
+      "A response was edited, redacted or deleted. Create a new export of the current data.",
+    ],
+    BLOG_RETAINED: [
+      409,
+      "Archive or restore editorial records; permanent deletion is disabled.",
+    ],
+    MEMBER_RETAINED: [
+      409,
+      "Archive community records; permanent deletion is disabled.",
+    ],
+    MEMBER_IMPORT_REVIEW: [
+      409,
+      "This import review expired, was used or no longer matches. Review the same file and destination again.",
+    ],
+    MEMBER_EXPORT_RANGE: [
+      409,
+      "Narrow your member filters to at most 1,000 records and a smaller export.",
+    ],
+    MEMBER_LINK_REVIEW: [
+      409,
+      "Review and remove active project memberships and archive linked public profiles before merging this source.",
+    ],
+    MEMBER_REVIEW_EXPIRED: [
+      409,
+      "This merge review expired or was used. Generate a new review.",
+    ],
+    PROJECT_RETAINED: [
+      409,
+      "Archive or restore projects; permanent deletion is disabled.",
+    ],
+    PROJECT_MEMBER_LIMIT: [
+      409,
+      "A project supports up to 100 active participants.",
+    ],
+    LINKTREE_RETAINED: [
+      409,
+      "Archive or restore this profile/link; permanent deletion is disabled.",
+    ],
+    LINKTREE_LIMIT: [
+      409,
+      "A profile supports up to 100 current links. Archive an unused link first.",
+    ],
+    BUDGET_UNAVAILABLE: [
+      409,
+      "Choose an active budget in this request's scope and date range.",
+    ],
+    BUDGET_EXCEEDED: [
+      409,
+      "This change exceeds the budget or conflicts with committed request dates.",
+    ],
+    BUDGET_IN_USE: [
+      409,
+      "Resolve pending or reserved requests before closing this budget.",
+    ],
+    FINANCE_RETAINED: [
+      409,
+      "Financial records are retained; deletion is disabled.",
+    ],
+    FINANCE_IMMUTABLE: [
+      409,
+      "Submitted financial details and final decisions cannot be rewritten.",
+    ],
+    EXPORT_TOO_LARGE: [
+      409,
+      "Narrow the export filters to at most 1,000 records and a smaller file.",
+    ],
+    TEAM_MANAGED_CHAT: [
+      409,
+      "Team chat access and moderation follow current team memberships. Manage them in Teams.",
+    ],
     AUDIENCE_LIMIT: [409, "Choose an audience with 1–1,000 active recipients."],
-    AUDIENCE_CHANGED: [409, "The audience changed. Preview it again before confirming."],
-    PREVIEW_REQUIRED: [409, "A current audience preview from this session is required."],
+    AUDIENCE_CHANGED: [
+      409,
+      "The audience changed. Preview it again before confirming.",
+    ],
+    PREVIEW_REQUIRED: [
+      409,
+      "A current audience preview from this session is required.",
+    ],
     LAST_CHANNEL_OWNER: [
       409,
       "Assign another active room owner before removing the last owner.",
@@ -173,7 +301,11 @@ export function databaseResult({ data, error }) {
     ],
   });
   if (["40P01", "40001"].includes(error.code))
-    throw new ApiError(409, "CONFLICT", "A concurrent change interrupted this operation. Reload before retrying.");
+    throw new ApiError(
+      409,
+      "CONFLICT",
+      "A concurrent change interrupted this operation. Reload before retrying.",
+    );
   const name =
     error.code === "23505"
       ? "DUPLICATE"

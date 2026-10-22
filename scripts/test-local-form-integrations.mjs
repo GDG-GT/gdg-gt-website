@@ -41,7 +41,7 @@ try {
   const campaignPath = `/admin/form-integrations/campaign/${campaign.id}`;
   check((await call(campaignPath + "/primary", { method: "PUT", body: doc, key: randomUUID() })).status === 200, "draft campaign can reference a published form without sending anything");
   sql(await db.from("newsletter_campaigns").update({ status: "scheduled" }).eq("id", campaign.id));
-  check((await call(campaignPath + "/primary", { method: "PUT", body: { ...doc, revision: 1 }, key: randomUUID() })).status === 409, "scheduled campaign cannot silently rewrite its form reference");
+  check((await call(campaignPath + "/primary", { method: "PUT", body: { ...doc, revision: 1 }, key: randomUUID() })).status === 404, "scheduled campaign cannot silently rewrite its form reference");
   sql(await db.from("newsletter_campaigns").update({ status: "failed" }).eq("id", campaign.id));
   definition.settings.access = "invited";
   form = data(await call(`/admin/forms/${form.id}/draft`, { method: "PATCH", body: { revision: form.revision, definition } })).form;
@@ -54,7 +54,7 @@ try {
   if (event) { const current = data(await call(`/admin/events/${event.id}`)).event; data(await call(`/admin/events/${event.id}`, { method: "DELETE", body: { revision: current.revision, event: {} } })); }
   if (form) { const current = data(await call(`/admin/forms/${form.id}`)).form; if (current.status !== "Archived") await call(`/admin/forms/${form.id}`, { method: "DELETE", body: { revision: current.revision } }); }
   if (team) sql(await db.from("admin_teams").update({ is_active: false, deleted_at: new Date().toISOString() }).eq("id", team.id));
-  if (campaign) sql(await db.from("newsletter_campaigns").update({ status: "failed" }).eq("id", campaign.id));
+  if (campaign) sql(await db.from("newsletter_campaigns").update({ status: "failed", deleted_at: new Date().toISOString() }).eq("id", campaign.id));
   await root.logout(); sql(await db.from("admin_users").update({ is_active: false }).eq("id", actor));
 }
 await writeFile(new URL("../.docs/phase0/local-form-integrations.json", import.meta.url), JSON.stringify({ generatedAt: new Date().toISOString(), environment: "loopback fictional form, event, team, campaign and account; no sends", tests: evidence }, null, 2) + "\n");

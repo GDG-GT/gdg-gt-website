@@ -53,7 +53,7 @@ DO $$ DECLARE actor uuid:='f7100000-0000-4000-8000-000000000001';sid uuid:='f710
  UPDATE public.newsletter_campaigns SET status='scheduled' WHERE id=cid;
  BEGIN
   PERFORM public.mutate_form_integration(actor,sid,'campaign',cid,'primary',1,doc,repeat('5',64),repeat('6',64),gen_random_uuid());RAISE EXCEPTION 'Scheduled campaign reference changed';
- EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'INVALID_STATE' THEN RAISE;END IF;END;
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
  IF NOT gdg_security.form_integration_active('campaign',cid) THEN RAISE EXCEPTION 'Scheduled campaign not counted as active';END IF;
  UPDATE public.newsletter_campaigns SET status='sent' WHERE id=cid;
  IF gdg_security.form_integration_active('campaign',cid) THEN RAISE EXCEPTION 'Sent campaign counted as mutable reference';END IF;

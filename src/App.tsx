@@ -67,7 +67,7 @@ const adminRoutes = [
       })),
     ),
   ],
-  ["newsletter", lazy(() => import("@/pages/admin/AdminNewsletter"))],
+  ["newsletter", lazy(() => import("@/ui/newsletter/NewsletterWorkspace"))],
   ["blog", lazy(() => import("@/pages/admin/AdminBlog"))],
   ["users", lazy(() => import("@/ui/users/UserWorkspace"))],
   ["profile", lazy(() => import("@/ui/ProfileWorkspace"))],

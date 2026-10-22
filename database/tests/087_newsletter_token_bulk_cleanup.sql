@@ -1,0 +1,28 @@
+BEGIN;
+INSERT INTO public.admin_users(id,email,password_hash,role,is_active) VALUES('f8700000-0000-4000-8000-000000000001','newsletter-cleanup@example.test','test-only','admin',true);
+INSERT INTO public.admin_sessions(id,admin_user_id,token_hash) VALUES('f8700000-0000-4000-8000-000000000002','f8700000-0000-4000-8000-000000000001',repeat('1',64));
+DO $$ DECLARE actor uuid:='f8700000-0000-4000-8000-000000000001';sid uuid:='f8700000-0000-4000-8000-000000000002';a uuid;b uuid;v jsonb;records jsonb;n integer;BEGIN
+ IF has_function_privilege('authenticated','public.bulk_newsletter_subscribers(uuid,uuid,text,text,jsonb,text,text,text,uuid)','EXECUTE') THEN RAISE EXCEPTION 'Browser bulk RPC';END IF;
+ INSERT INTO public.newsletter_subscribers(email,state,is_active) VALUES('fictional-cleanup-a@example.test','pending',false) RETURNING id INTO a;
+ INSERT INTO public.newsletter_subscribers(email,state,is_active) VALUES('fictional-cleanup-b@example.test','pending',false) RETURNING id INTO b;
+ records:=jsonb_build_array(jsonb_build_object('id',a,'revision',1),jsonb_build_object('id',b,'revision',99));
+ BEGIN PERFORM public.bulk_newsletter_subscribers(actor,sid,'test-only','archive',records,'ARCHIVE 2',repeat('2',64),repeat('3',64),gen_random_uuid());RAISE EXCEPTION 'Stale bulk accepted';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ IF EXISTS(SELECT 1 FROM public.newsletter_subscribers WHERE id IN(a,b) AND deleted_at IS NOT NULL) THEN RAISE EXCEPTION 'Partial bulk mutation';END IF;
+ records:=jsonb_build_array(jsonb_build_object('id',a,'revision',1),jsonb_build_object('id',b,'revision',1));
+ BEGIN PERFORM public.bulk_newsletter_subscribers(actor,sid,'test-only','archive',records,'ARCHIVE 3',repeat('2',64),repeat('3',64),gen_random_uuid());RAISE EXCEPTION 'Wrong confirmation accepted';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'VALIDATION_ERROR' THEN RAISE;END IF;END;
+ v:=public.bulk_newsletter_subscribers(actor,sid,'test-only','archive',records,'ARCHIVE 2',repeat('2',64),repeat('3',64),gen_random_uuid());
+ v:=public.bulk_newsletter_subscribers(actor,sid,'test-only','archive',records,'ARCHIVE 2',repeat('2',64),repeat('3',64),gen_random_uuid());
+ IF(v->>'count')::integer<>2 OR(SELECT revision FROM public.newsletter_subscribers WHERE id=a)<>2 THEN RAISE EXCEPTION 'Bulk idempotency';END IF;
+ records:=jsonb_build_array(jsonb_build_object('id',a,'revision',2),jsonb_build_object('id',b,'revision',2));
+ PERFORM public.bulk_newsletter_subscribers(actor,sid,'test-only','restore',records,'RESTORE 2',repeat('4',64),repeat('5',64),gen_random_uuid());
+ IF EXISTS(SELECT 1 FROM public.newsletter_subscribers WHERE id IN(a,b) AND(state<>'unsubscribed' OR is_active OR deleted_at IS NOT NULL)) THEN RAISE EXCEPTION 'Restore created consent';END IF;
+ UPDATE public.newsletter_subscribers SET suppressed_at=now(),suppression_reason='hard_bounce' WHERE id=a;
+ SELECT count(*) INTO n FROM public.newsletter_tokens WHERE subscriber_id=a;
+ PERFORM public.subscribe_newsletter('fictional-cleanup-a@example.test','Fixture',repeat('6',64),repeat('7',64),repeat('8',64),'encrypted-test-only');
+ IF(SELECT count(*) FROM public.newsletter_tokens WHERE subscriber_id=a)<>n THEN RAISE EXCEPTION 'Suppressed address confirmation queued';END IF;
+ INSERT INTO public.newsletter_tokens(subscriber_id,purpose,token_hash,expires_at) VALUES(a,'confirm',repeat('9',64),now()+interval '1 day');
+ IF public.consume_newsletter_token(repeat('9',64),'confirm') THEN RAISE EXCEPTION 'Suppression bypassed with confirmation token';END IF;
+ UPDATE public.newsletter_tokens SET expires_at=now()-interval '2 days' WHERE token_hash=repeat('9',64);
+ IF public.cleanup_newsletter_tokens()<1 THEN RAISE EXCEPTION 'Expired token not cleaned';END IF;
+END $$;
+ROLLBACK;

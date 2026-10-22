@@ -19,9 +19,11 @@ The source must itself be published. The integration follows republication;
 unpublished drafts do not replace its respondent definition. Public API edge
 caching remains subject to the existing short cache lifetime.
 
-Campaign consumers can use the same HTTP contract. Until the new campaign
-workspace is implemented, campaign references are Admin/Super Admin only and can
-be linked/changed only on drafts. No campaign was sent by this implementation.
+Campaign editors expose the same Linked forms controls. Migration 086 applies
+current newsletter scope/read/update grants, including explicitly permitted team
+members. Approved/scheduled/sent campaigns are read-only, including link removal;
+write attempts are concealed as unavailable. Draft references never send mail by
+themselves or bypass respondent access. See `NEWSLETTER_OPERATIONS.md`.
 
 HTTP contract: `/api/v1/admin/form-integrations/{event|team|campaign}/{id}` GET;
 `/candidates?q=...` GET; `/{slot}` PUT with `revision,formId,versionPolicy,label`,

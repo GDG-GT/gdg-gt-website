@@ -34,10 +34,12 @@ See `MEMBER_TRANSFER_OPERATIONS.md` for scope, limits and real test evidence.
    file/tag/star/usage/upload/metadata/private-preview/bulk/quota/publication/
    cleanup and public gallery workflows are implemented and tested; legacy media
    routes have been replaced. See `MEDIA_OPERATIONS.md` for boundaries/evidence.
-3. Newsletter: subscribers, templates, campaign preview, immutable authorized
-   recipient snapshot, confirmation, scheduling/cancellation, test sends,
-   idempotent bounded delivery, callbacks, hard bounce/complaint suppression and
-   cleanup. Public signup/confirmation/unsubscribe already work locally.
+3. Newsletter supported-device/accessibility, hosted sender/domain/provider/raw
+   callback/worker/retry/load and visual acceptance. Local scoped subscriber/
+   template/campaign UI/APIs, safe previews, immutable send review/audience,
+   schedule/cancel/self-test, bounded delivery, verified callbacks/suppression,
+   export, recoverable bulk cleanup and retention are implemented and tested.
+   See `NEWSLETTER_OPERATIONS.md`. No real provider sends were enabled.
 4. Remaining scoped mail and attachment contracts: event/team/communications
    fan-out, general private collaboration attachments, optional scanned contact
    attachments. Current contact text submission and restricted transactional mail
@@ -87,7 +89,7 @@ See `MEMBER_TRANSFER_OPERATIONS.md` for scope, limits and real test evidence.
 
 ## Next implementation checkpoint
 
-Complete newsletter/campaigns and remaining scoped mail/attachments, Push and
+Complete remaining scoped mail/attachments, Push and
 cross-system privacy/operations. Keep unrelated historical source
 files and user edits intact. Track implementation separately from verified
 acceptance; do not label the complete PRD finished until its launch gates pass.

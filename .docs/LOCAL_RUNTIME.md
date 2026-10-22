@@ -132,13 +132,16 @@ never a browser session. Times use UTC cadence windows, not browser timezone.
 | Open/close scheduled forms | 5 minutes | 30-second local retry; distributed lease and occurrence deduplication |
 | Expired form drafts and abandoned/rejected uploads | Hourly | Failed object deletion remains retryable; active drafts and response files are protected |
 | Local transactional delivery | 1 minute | Per-message fenced leases; bounded backoff and eight-attempt dead state |
+| Newsletter schedules, delivery pass and retention | 5 minutes | Frozen audience, current grants, per-recipient leases; bounded retries and deadline |
+| Dedicated local newsletter/test delivery | Queue polled every 5 seconds | `npm run jobs:newsletter -- --watch`; local SMTP only |
 | Overdue tasks | 15 minutes, UTC date boundaries | Per-occurrence scheduler lease; one generic notice per task/deadline occurrence |
 | Upload scanning | Queue polled every 2 seconds | Fenced leases; transient scanner failure retries; unsafe content is rejected |
 
 Abandoned/rejected uploads wait 24 hours after expiry/rejection. Deleted intent
 cleanup also waits beyond the direct-upload capability's lifetime. Completed
 response files are not treated as abandoned. This does not yet implement every
-PRD retention policy, campaign/event-reminder job, or missed-run alert.
+PRD retention policy, event-reminder job, or missed-run alert. Newsletter campaign
+workflows and retention are documented in `NEWSLETTER_OPERATIONS.md`.
 
 Hosted deployment must choose and configure Supabase Cron or an equivalently
 precise paid scheduler. No Vercel Hobby schedule is used. This local process is
