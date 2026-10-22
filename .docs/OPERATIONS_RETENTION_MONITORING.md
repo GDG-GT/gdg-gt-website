@@ -8,7 +8,11 @@ Three separate daily UTC jobs use the existing server-only `CRON_SECRET`,
 browser-origin/cookie rejection, distributed occurrence locks, bounded leases,
 attempt limits and numeric run counters. Query-supplied retention waivers are
 rejected. Each database cleanup call is bounded to 1,000 selected rows per class;
-large backlogs need supervised repeated batches/recovery, not unbounded deletes.
+each run drains up to twenty batches within a 40-second work budget. Saturated
+runs preserve their numeric progress and finish as retryable failures, never as
+completed cleanup. The scheduler retries after 30 seconds, subject to the existing
+eight-attempt/day bound. Repeated failures raise the operational worker alert.
+Larger backlogs require supervised recovery; no request performs unbounded deletes.
 
 - `session-cleanup`: expired/revoked sessions, gate and CSRF records after 30 days;
   expired risk windows and idempotency results; 90-day identifier-free auth

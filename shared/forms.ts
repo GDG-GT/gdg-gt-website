@@ -628,7 +628,7 @@ export function validateDefinition(form: PreviewForm): string[] {
           dependency?.condition && step < form.fields.length;
           step++
         ) {
-          const condition = dependency.condition;
+          const condition: NonNullable<FormField["condition"]> = dependency.condition;
           if (
             forced.has(condition.fieldId) &&
             forced.get(condition.fieldId) !== condition.value
@@ -1024,7 +1024,8 @@ export const formDefinitionSchema = formDraftDefinitionSchema.superRefine(
       )
         issues.push("Column IDs must be unique and match columns.");
       if (field.condition) {
-        const source = fields.find((f) => f.id === field.condition.fieldId);
+        const condition = field.condition;
+        const source = fields.find((f) => f.id === condition.fieldId);
         if (
           !source ||
           !["radio", "checkbox", "dropdown", "scale", "rating"].includes(

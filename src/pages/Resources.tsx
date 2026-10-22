@@ -133,7 +133,7 @@ const Resources = () => {
                     <p className="text-muted-foreground mb-4">{jam.description}</p>
                     
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {jam.materials.map((material, materialIndex) => (
+                      {jam.materials.map((material: string, materialIndex: number) => (
                         <span 
                           key={materialIndex}
                           className="px-2 py-1 bg-primary/10 text-primary text-xs rounded"
@@ -193,7 +193,7 @@ const Resources = () => {
                   <div className="mb-4">
                     <p className="text-sm font-medium mb-2">Requirements:</p>
                     <ul className="text-sm text-muted-foreground space-y-1">
-                      {credit.requirements.map((req, reqIndex) => (
+                      {credit.requirements.map((req: string, reqIndex: number) => (
                         <li key={reqIndex} className="flex items-center">
                           <span className="w-1 h-1 bg-primary rounded-full mr-2"></span>
                           {req}
@@ -243,7 +243,7 @@ const Resources = () => {
                   <p className="text-muted-foreground mb-4">{doc.description}</p>
                   
                   <div className="flex flex-wrap gap-2">
-                    {doc.tags.map((tag, tagIndex) => (
+                    {doc.tags.map((tag: string, tagIndex: number) => (
                       <span 
                         key={tagIndex}
                         className="px-2 py-1 bg-primary/10 text-primary text-xs rounded"

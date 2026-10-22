@@ -39,11 +39,10 @@ const AdminPageWrapper: React.FC<AdminPageWrapperProps> = ({
         section_name: pageName,
         page_title: pageTitle,
         access_time: new Date().toISOString(),
-        admin_role: currentAdmin.role,
-        admin_email: currentAdmin.email
+        admin_role: currentAdmin.role
       });
     }
-  }, [currentAdmin?.id, pageName, pageTitle, logAction]);
+  }, [currentAdmin?.id, currentAdmin?.role, pageName, pageTitle, logAction]);
 
   return <>{children}</>;
 };

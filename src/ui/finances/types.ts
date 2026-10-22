@@ -1,7 +1,7 @@
 export type Finance = {
   id: string;
   reference: string;
-  transactionType: string;
+  transactionType: "income" | "expense" | "transfer" | "reimbursement";
   category: string;
   amount: string;
   currency: string;

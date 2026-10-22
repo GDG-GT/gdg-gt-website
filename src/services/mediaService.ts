@@ -798,7 +798,7 @@ export class MediaService {
       }
       
     } catch (error) {
-      throw new Error(`Failed to download file: ${error.message}`);
+      throw new Error(`Failed to download file: ${(error instanceof Error ? error.message : "This action could not be completed.")}`);
     }
   }
 

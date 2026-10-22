@@ -11,6 +11,7 @@ node_modules
 node_modules.offloaded-backup/
 dist
 dist-ssr
+coverage/
 *.local
 
 # Environment variables

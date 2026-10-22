@@ -857,7 +857,7 @@ export default function DirectMessageWorkspace() {
               <Button
                 variant="ghost"
                 disabled={!listing?.nextCursor || busy}
-                onClick={() => setListCursor(listing.nextCursor)}
+                onClick={() => setListCursor(listing?.nextCursor || undefined)}
               >
                 Older conversations
               </Button>

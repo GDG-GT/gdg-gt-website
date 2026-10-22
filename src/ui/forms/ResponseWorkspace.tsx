@@ -158,7 +158,7 @@ export default function ResponseWorkspace() {
   const fieldMap = new Map(
       form.versions.flatMap((v) => v.fields.map((f) => [f.id, f] as const)),
     ),
-    visibleColumns = columns.map((id) => fieldMap.get(id)).filter(Boolean);
+    visibleColumns = columns.map((id) => fieldMap.get(id)).filter((field): field is NonNullable<typeof field> => !!field);
   return (
     <div className="gt-admin-page" aria-busy={loading || busy}>
       <header className="gt-admin-page-heading">

@@ -43,7 +43,7 @@ export const useTaskScheduler = (enabled: boolean = true) => {
         marked: 0, 
         notified: 0, 
         message: 'Failed to check overdue tasks',
-        error: error.message || 'Unknown error'
+        error: (error instanceof Error ? error.message : "This action could not be completed.") || 'Unknown error'
       };
     }
   };

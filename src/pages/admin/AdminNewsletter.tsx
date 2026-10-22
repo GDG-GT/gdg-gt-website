@@ -19,7 +19,7 @@ const getTimeAgo = (date: Date): string => {
   return date.toLocaleDateString();
 };
 
-const AdminNewsletter = () => {
+const AdminNewsletterContent = () => {
   const { isAuthenticated, currentAdmin } = useAdmin();
   const [activeTab, setActiveTab] = useState('overview');
   const [subscribers, setSubscribers] = useState<NewsletterSubscriber[]>([]);
@@ -71,9 +71,6 @@ const AdminNewsletter = () => {
 
   
 
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
 
   // Load data on component mount
   useEffect(() => {
@@ -1774,6 +1771,14 @@ const AdminNewsletter = () => {
       )}
     </AdminLayout>
   );
+};
+
+const AdminNewsletter = () => {
+  const { isAuthenticated } = useAdmin();
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+  return <AdminNewsletterContent />;
 };
 
 export default AdminNewsletter;

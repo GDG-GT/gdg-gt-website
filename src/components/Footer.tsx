@@ -150,8 +150,11 @@ const Footer = () => {
   }, [getFooterSection]);
 
   // Use only dynamic content from admin panel
-  const quickLinks = quickLinksData;
-  const resources = resourcesData;
+  const footerLinks = (value: unknown): { name: string; href: string }[] =>
+    Array.isArray(value) ? value.filter((item): item is { name: string; href: string } =>
+      !!item && typeof item === 'object' && typeof item.name === 'string' && typeof item.href === 'string') : [];
+  const quickLinks = footerLinks(quickLinksData);
+  const resources = footerLinks(resourcesData);
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -408,7 +411,7 @@ const Footer = () => {
         onClose={() => setShowAdminModal(false)}
         onLogin={handleAdminLogin}
         isLoading={isLoading}
-        error={error}
+        error={error || undefined}
       />
     </footer>
   );

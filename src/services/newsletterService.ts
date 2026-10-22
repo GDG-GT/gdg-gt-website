@@ -473,7 +473,7 @@ export class NewsletterService {
     } catch (error) {
       return {
         success: false,
-        error: error.message || 'Failed to send newsletter'
+        error: (error instanceof Error ? error.message : "This action could not be completed.") || 'Failed to send newsletter'
       };
     }
   }

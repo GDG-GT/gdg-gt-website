@@ -39,6 +39,8 @@ const safeErrors = new Set([
   "FORM_FULL",
   "FORM_CLOSED",
   "JOB_LEASE_LOST",
+  "RETENTION_BACKLOG_REMAINING",
+  "RESPONSE_INTERRUPTED",
   "DELIVERY_RETRY",
   "PROVIDER_RETRY",
   "PUSH_RETRY",
@@ -320,7 +322,7 @@ export function requestRecord(
 export function requestCounters(record) {
   const counts = { requests: 1 },
     route = record.routeTemplate;
-  if (record.status >= 500) counts.server_failures = 1;
+  if (record.status >= 500 || record.errorCode === 'RESPONSE_INTERRUPTED') counts.server_failures = 1;
   if (
     ["/api/v1/auth/gate", "/api/v1/auth/login"].includes(route) &&
     [401, 429].includes(record.status)

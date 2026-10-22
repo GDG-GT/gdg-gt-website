@@ -11,7 +11,7 @@ export interface Event {
   google_form_url?: string;
   google_event_url?: string;
   registration_type?: 'external' | 'internal' | 'both';
-  max_participants?: number;
+  max_participants?: number | null;
   registration_enabled?: boolean;
   is_featured: boolean;
   level?: 'beginner' | 'intermediate' | 'advanced' | 'open_for_all';

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-22T00:09:00.848Z",
+  "generatedAt": "2026-10-22T06:12:47.170Z",
   "environment": "Fictional loopback accounts/team/recipients; local SMTP only; ephemeral signed callback fixture; one subscriber confirms through actual email, a second is explicitly synthetic preconfirmed data. All fixture records archived, no operator records erased.",
   "tests": [
     {

@@ -54,7 +54,7 @@ const Team = () => {
     // Get page content from database
     const pageHeader = getPageSection('team', 'header') || {};
 
-    const TeamMember = ({ member, isLeadership = false }) => {
+    const TeamMember = ({ member, isLeadership = false }: { member: (typeof transformedMembers)[number] & { year?: string; major?: string; department?: string; company?: string; position?: string; social: { twitter?: string } }; isLeadership?: boolean }) => {
         const [isExpanded, setIsExpanded] = useState(false);
         const maxBioLength = 120; // Characters to show before "read more"
         const shouldTruncate = member.bio && member.bio.length > maxBioLength;

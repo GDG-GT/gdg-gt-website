@@ -4,7 +4,7 @@ import AdminLayout from '@/components/admin/AdminLayout';
 import { AuditService, type AuditLogEntry, type AuditStats, type AuditFilters } from '@/services/auditService';
 
 interface ComprehensiveAuditLogProps {
-  currentAdmin?: any;
+  currentAdmin?: { id: string; role: string } | null;
 }
 
 const ComprehensiveAuditLog: React.FC<ComprehensiveAuditLogProps> = ({ currentAdmin }) => {
@@ -34,19 +34,8 @@ const ComprehensiveAuditLog: React.FC<ComprehensiveAuditLogProps> = ({ currentAd
   // Check if current user is super admin - audit log is super admin only
   const isSuperAdmin = currentAdmin?.role === 'super_admin';
   
-  if (!isSuperAdmin) {
-    return (
-      <div className="bg-card border border-border rounded-lg p-8 text-center">
-        <Activity size={48} className="mx-auto text-muted-foreground mb-4" />
-        <h3 className="text-lg font-semibold text-foreground mb-2">Access Restricted</h3>
-        <p className="text-muted-foreground">
-          Audit log access is restricted to Super Administrators only.
-        </p>
-      </div>
-    );
-  }
-
   const loadAuditData = useCallback(async (filters?: AuditFilters) => {
+    if (!isSuperAdmin) return;
     setIsLoading(true);
     try {
       const [entries, stats, admins] = await Promise.all([
@@ -79,9 +68,10 @@ const ComprehensiveAuditLog: React.FC<ComprehensiveAuditLogProps> = ({ currentAd
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [isSuperAdmin]);
 
   useEffect(() => {
+    if (!isSuperAdmin) return;
     loadAuditData();
     
     // Log that the audit log was viewed
@@ -93,7 +83,7 @@ const ComprehensiveAuditLog: React.FC<ComprehensiveAuditLogProps> = ({ currentAd
         { description: 'Viewed comprehensive audit log' }
       );
     }
-  }, [currentAdmin, loadAuditData]);
+  }, [currentAdmin, isSuperAdmin, loadAuditData]);
 
   const loadAllAdmins = async () => {
     try {
@@ -102,6 +92,14 @@ const ComprehensiveAuditLog: React.FC<ComprehensiveAuditLogProps> = ({ currentAd
       return [];
     }
   };
+
+  if (!isSuperAdmin) return (
+    <div className="bg-card border border-border rounded-lg p-8 text-center">
+      <Activity size={48} className="mx-auto text-muted-foreground mb-4" />
+      <h3 className="text-lg font-semibold text-foreground mb-2">Access Restricted</h3>
+      <p className="text-muted-foreground">Audit log access is restricted to Super Administrators only.</p>
+    </div>
+  );
 
   const applyFilters = async () => {
     setIsFiltering(true);

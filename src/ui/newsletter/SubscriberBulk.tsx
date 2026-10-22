@@ -45,6 +45,7 @@ export default function SubscriberBulk({
       signature = JSON.stringify(document);
     if (retry.current?.signature !== signature)
       retry.current = { signature, key: crypto.randomUUID() };
+    const idempotencyKey = retry.current.key;
     const currentPassword = password;
     setPassword("");
     await work(
@@ -53,7 +54,7 @@ export default function SubscriberBulk({
           method: "POST",
           body: { ...document, currentPassword },
           signal,
-          idempotencyKey: retry.current.key,
+          idempotencyKey,
         }),
       (r) => {
         clear();

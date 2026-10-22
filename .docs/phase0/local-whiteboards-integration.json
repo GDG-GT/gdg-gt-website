@@ -148,10 +148,6 @@
     {
       "name": "removed collaborator cannot mint a replacement whiteboard socket token",
       "passed": true
-    },
-    {
-      "name": "browser review remote version saved through protected API",
-      "passed": true
     }
   ]
 }

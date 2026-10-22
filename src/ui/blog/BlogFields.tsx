@@ -47,7 +47,7 @@ export default function BlogFields({
               onChange={(e) => change("category_id", e.target.value || null)}
             >
               <option value="">Uncategorized</option>
-              {values.category_id &&
+              {!!values.category_id &&
                 !categories.some((c) => c.id === values.category_id) && (
                   <option value={String(values.category_id)}>
                     Retained category

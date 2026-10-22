@@ -252,7 +252,7 @@ const Projects = () => {
                     </p>
                     
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tech_stack?.map((tech, techIndex) => (
+                      {project.tech_stack?.map((tech: string, techIndex: number) => (
                         <span 
                           key={techIndex}
                           className="px-2 py-1 bg-primary/10 text-primary text-xs rounded"

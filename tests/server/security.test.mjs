@@ -1,9 +1,30 @@
 import { describe,it,expect } from 'vitest';
-import { hashSecret,verifySecret,token,tokenHash,readCookie,equalHashes,authCookie } from '../../server/lib/security.mjs';
-import { isAuthorized,accountManagementAllowed } from '../../server/lib/authorization.mjs';
+import { hashSecret,verifySecret,token,tokenHash,readCookie,equalHashes,authCookie,appendCookie,validToken,riskHash } from '../../server/lib/security.mjs';
+import { isAuthorized,accountManagementAllowed,authorize } from '../../server/lib/authorization.mjs';
 import { serverConfig } from '../../server/config.mjs';
 
 describe('security primitives',()=>{
+  it('AUTH-TEST rejects invalid KDF input and malformed cookie boundaries', async () => {
+    for (const input of [null, '', 'x'.repeat(1025)]) await expect(hashSecret(input)).rejects.toThrow();
+    expect(await verifySecret(null, null)).toBe(false);
+    expect(await verifySecret('x'.repeat(1025), null)).toBe(false);
+    expect(validToken(undefined)).toBe(false);
+    expect(validToken(token())).toBe(true);
+    expect(readCookie(undefined, 'session')).toBeNull();
+    expect(readCookie('x'.repeat(16385), 'session')).toBeNull();
+    expect(equalHashes(null, tokenHash('x'))).toBe(false);
+    expect(equalHashes(tokenHash('x'), null)).toBe(false);
+    expect(equalHashes(tokenHash('x'), 'not-a-hash')).toBe(false);
+    expect(() => authCookie('invalid;cookie', token())).toThrow();
+    expect(() => authCookie('session', 'unsigned')).toThrow();
+    expect(authCookie('session', '', { maxAge: 0, secure: false })).toContain('SameSite=Lax');
+    expect(riskHash('person', 'first')).not.toBe(riskHash('person', 'second'));
+    for (const existing of [undefined, 'old=value', ['old=value', 'other=value']]) {
+      const response = { getHeader: () => existing, setHeader(name, value) { this.header = [name, value]; } };
+      appendCookie(response, 'new=value');
+      expect(response.header).toEqual(['Set-Cookie', [...(Array.isArray(existing) ? existing : existing ? [existing] : []), 'new=value']]);
+    }
+  });
   it('hashes passwords with random salts and verifies without trusting encoded work factors',async()=>{
     const [a,b]=await Promise.all([hashSecret('A long unique password!'),hashSecret('A long unique password!')]);
     expect(a).not.toBe(b); expect(a).not.toContain('A long unique password!');
@@ -36,6 +57,32 @@ describe('security primitives',()=>{
 });
 describe('server authorization',()=>{
   const user={id:'one',role:'team_member',is_active:true};
+  it('SEC-TEST checks explicit team, owner, page and collaborator boundaries', () => {
+    expect(isAuthorized({user,resource:'dashboard'})).toBe(true);
+    expect(isAuthorized({user,resource:'teams',memberships:[{is_active:true,team:{is_active:true}}]})).toBe(true);
+    for(const membership of [{is_active:false,team:{is_active:true}}, {is_active:true}, {is_active:true,team:{is_active:false}}])
+      expect(isAuthorized({user,resource:'teams',memberships:[membership]})).toBe(false);
+    expect(isAuthorized({user,resource:'tasks',ownerId:'other'})).toBe(false);
+    expect(isAuthorized({user,resource:'forms',action:'edit',collaboratorActions:['edit']})).toBe(true);
+    expect(isAuthorized({user,resource:'forms',action:'edit',ownerId:'one',collaboratorActions:['edit']})).toBe(true);
+    const membership={team_id:'a',is_active:true,admin_user_id:'one'};
+    expect(isAuthorized({user,resource:'forms',action:'edit',teamId:'a',memberships:[membership],collaboratorActions:['edit']})).toBe(true);
+    expect(isAuthorized({user,resource:'forms',action:'edit',teamId:'b',memberships:[membership],collaboratorActions:['edit']})).toBe(false);
+    const grant={resource:'events',route:'/admin/events',page_access:true,actions:['edit']};
+    expect(isAuthorized({user,resource:'events',route:'/admin/events',action:'edit',grants:[grant]})).toBe(true);
+    expect(isAuthorized({user,resource:'events',route:'/admin/events',action:'edit',grants:[{...grant,actions:undefined}]})).toBe(false);
+    expect(isAuthorized({user,resource:'events',route:'/admin/events',action:'edit',grants:[{...grant,resource:'media'}]})).toBe(false);
+    expect(isAuthorized({user:{...user,role:'blog_editor'},resource:'blog_editor'})).toBe(true);
+    expect(() => authorize({user,resource:'security'})).toThrow();
+    expect(() => authorize({user,resource:'profile'})).not.toThrow();
+    expect(accountManagementAllowed(null,user)).toBe(false);
+    expect(accountManagementAllowed({...user,is_active:false},user)).toBe(false);
+    expect(accountManagementAllowed(user,null)).toBe(false);
+    expect(accountManagementAllowed({...user,role:'super_admin'},{id:'other',role:'admin'})).toBe(true);
+    expect(accountManagementAllowed({...user,role:'super_admin'},{id:'other',role:'unknown'})).toBe(false);
+    expect(accountManagementAllowed({...user,role:'admin'},{id:'other',role:'team_member'})).toBe(true);
+    expect(accountManagementAllowed(user,{id:'other',role:'team_member'})).toBe(false);
+  });
   it('denies inactive accounts, unknown roles, resources, and actions',()=>{
     for(const candidate of [{...user,is_active:false},{...user,role:'owner'},null]) expect(isAuthorized({user:candidate,resource:'events'})).toBe(false);
     expect(isAuthorized({user:{...user,role:'super_admin'},resource:'made_up'})).toBe(false);

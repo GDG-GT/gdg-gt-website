@@ -206,7 +206,7 @@ export default function AnnouncementWorkspace() {
       }
     } catch (e) {
       if (mounted.current && seq === listSeq.current) {
-        setListError(e.message);
+        setListError((e instanceof Error ? e.message : "This action could not be completed."));
         setListing(undefined);
       }
     } finally {
@@ -233,7 +233,7 @@ export default function AnnouncementWorkspace() {
         seq === detailSeq.current &&
         id === selectedRef.current
       ) {
-        setDetailError(e.message);
+        setDetailError((e instanceof Error ? e.message : "This action could not be completed."));
         if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
           setRecord(undefined);
           setMode(undefined);
@@ -294,6 +294,7 @@ export default function AnnouncementWorkspace() {
     setParams(next);
   }
   function start(create = false) {
+    if (!create && (!record || !record.audience)) return;
     if (busy || (dirty && !confirm("Discard unsaved announcement changes?")))
       return;
     setMode(create ? "create" : "edit");
@@ -304,9 +305,8 @@ export default function AnnouncementWorkspace() {
     setConfirmation("");
     setError("");
     setValues(
-      create
-        ? { ...defaults }
-        : {
+      !create && record && record.audience
+        ? {
             title: record.title,
             message: record.message,
             priority: record.priority,
@@ -318,7 +318,8 @@ export default function AnnouncementWorkspace() {
             scheduledFor: localInput(record.scheduledFor),
             expiresAt: localInput(record.expiresAt),
             emailEnabled: record.emailEnabled,
-          },
+          }
+        : { ...defaults },
     );
   }
   async function mutate(path: string, document: Record<string, unknown>) {
@@ -419,7 +420,7 @@ export default function AnnouncementWorkspace() {
       setPassword("");
       setConfirmation("");
     } catch (e) {
-      setError(e.message);
+      setError((e instanceof Error ? e.message : "This action could not be completed."));
     } finally {
       setBusy(false);
     }
@@ -446,7 +447,7 @@ export default function AnnouncementWorkspace() {
       );
       refresh();
     } catch (e) {
-      setError(e.message);
+      setError((e instanceof Error ? e.message : "This action could not be completed."));
       if (
         e instanceof ApiFailure &&
         ["AUDIENCE_CHANGED", "PREVIEW_REQUIRED", "CONFLICT"].includes(e.code)
@@ -459,6 +460,7 @@ export default function AnnouncementWorkspace() {
   }
   async function change(action: string) {
     if (!record || busy) return;
+    if (!["read", "pin"].includes(action) && !operation) return;
     setBusy(true);
     setError("");
     try {
@@ -468,7 +470,7 @@ export default function AnnouncementWorkspace() {
           ? { action, publicationVersion: record.publicationVersion }
           : action === "pin"
             ? { action, revision: record.revision, pinned: !record.pinned }
-            : { action, revision: operation.revision, confirmation },
+            : { action, revision: operation?.revision, confirmation },
       );
       setOperation(undefined);
       setConfirmation("");
@@ -480,7 +482,7 @@ export default function AnnouncementWorkspace() {
       );
       refresh();
     } catch (e) {
-      setError(e.message);
+      setError((e instanceof Error ? e.message : "This action could not be completed."));
     } finally {
       setBusy(false);
     }

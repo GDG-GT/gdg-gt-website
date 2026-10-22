@@ -11,7 +11,7 @@ import { TeamManagementService, type AdminTeam, type TeamAnnouncement } from '@/
 import { TeamStatisticsService, type TeamStats } from '@/services/teamStatisticsService';
 import { TeamActivityService, type TeamActivity } from '@/services/teamActivityService';
 
-const TeamDashboard = () => {
+const TeamDashboardContent = () => {
   const { isAuthenticated, currentAdmin, userTeams, isSuperAdmin, isAdmin } = useAdmin();
   const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
@@ -22,15 +22,9 @@ const TeamDashboard = () => {
   const [recentActivity, setRecentActivity] = useState<TeamActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
 
   // Check if user is a member of this team or is a super admin/admin
   const userTeam = userTeams.find(t => t.team_id === teamId);
-  if (!userTeam && !isSuperAdmin && !isAdmin && teamId) {
-    return <Navigate to="/admin" replace />;
-  }
 
   useEffect(() => {
     if (teamId) {
@@ -327,6 +321,19 @@ const TeamDashboard = () => {
         </div>
     </AdminLayout>
   );
+};
+
+const TeamDashboard = () => {
+  const { isAuthenticated, userTeams, isSuperAdmin, isAdmin } = useAdmin();
+  const { teamId } = useParams<{ teamId: string }>();
+  const userTeam = userTeams.find(t => t.team_id === teamId);
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+  if (!userTeam && !isSuperAdmin && !isAdmin && teamId) {
+    return <Navigate to="/admin" replace />;
+  }
+  return <TeamDashboardContent />;
 };
 
 export default TeamDashboard;

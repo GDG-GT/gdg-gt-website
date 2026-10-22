@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
-import { clearContentCache, clearSpecificCache, forceRefreshContent } from '../utils/serviceWorker';
+import { clearContentCache as clearAllCachedContent, clearSpecificCache, forceRefreshContent } from '../utils/serviceWorker';
 
 export function useCacheInvalidation() {
   const clearAllContentCache = useCallback(async () => {
-    const success = await clearContentCache();
+    const success = await clearAllCachedContent();
     if (success) {
       // Small delay to ensure cache is cleared before refresh
       setTimeout(() => {

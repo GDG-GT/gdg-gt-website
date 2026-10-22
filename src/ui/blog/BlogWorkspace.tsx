@@ -411,7 +411,7 @@ export default function BlogWorkspace({
     } catch (x) {
       if (e !== epoch.current) return;
       setPassword("");
-      setError(x.message);
+      setError((x instanceof Error ? x.message : "This action could not be completed."));
       if (x instanceof ApiFailure) {
         if (x.status === 409) setConflict(true);
         if ([403, 404].includes(x.status) && x.code !== "PASSWORD_REQUIRED") {

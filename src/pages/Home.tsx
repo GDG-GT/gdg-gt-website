@@ -91,7 +91,7 @@ const Home = () => {
   };
   
   // Map dynamic tracks to include proper icon components
-  const tracks = dynamicTracks.map((track: any) => ({
+  const tracks: { id?: string; title: string; description: string; icon: React.ElementType; color: string }[] = dynamicTracks.map((track: any) => ({
     ...track,
     icon: iconMap[track.icon] || iconMap['Code'] // use Code icon if not found
   }));

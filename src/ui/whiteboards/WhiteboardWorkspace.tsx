@@ -353,7 +353,7 @@ export default function WhiteboardWorkspace() {
         setMemberPage(next);
       }
     } catch (e) {
-      setError(e.message);
+      setError((e instanceof Error ? e.message : "This action could not be completed."));
     }
   }
   async function submit(event: FormEvent) {
@@ -431,7 +431,7 @@ export default function WhiteboardWorkspace() {
       }
       setError("");
     } catch (e) {
-      setError(e.message);
+      setError((e instanceof Error ? e.message : "This action could not be completed."));
     }
   }
   return (
@@ -712,7 +712,7 @@ export default function WhiteboardWorkspace() {
                   );
                   downloadBoard(r.name, r.document);
                 } catch (e) {
-                  setError(e.message);
+                  setError((e instanceof Error ? e.message : "This action could not be completed."));
                 }
               }}
             >

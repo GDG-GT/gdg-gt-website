@@ -24,6 +24,9 @@ email confirmation. File bytes/private links are excluded. See
 `FORM_RESPONDENT_OPERATIONS.md`. Georgia Tech SSO and Google sign-in stay deferred.
 
 1. Forms: remaining library/builder/runtime edge cases and complete accessibility tests.
+   The audit found incomplete image blocks (hardcoded sample) and unused header
+   media. Implement approved-media selection/rendering/alt text and publication/
+   usage safeguards; verify theme/shuffling/preview behavior too.
    Safe Super Admin permanent-deletion review and erasure are implemented locally
    (`FORM_PERMANENT_DELETION_OPERATIONS.md`); hosted retention/security acceptance
    remains open.
@@ -75,25 +78,27 @@ email confirmation. File bytes/private links are excluded. See
 
 ## Acceptance and infrastructure still required
 
-- Close high/critical dependency findings through tested remediation, not forced
-  downgrade or unreviewed overrides. Production-only audit on this review reports
-  31 findings: 16 high, 14 moderate, 1 low; zero critical. Full dependency audit
-  numbers differ because development dependencies are included.
-- Strict application TypeScript (currently `strict:false`); lint warning
-  remediation (full repository: zero errors, 276 warnings in this local worktree).
-- Coverage measurement/thresholds and remaining test-ID traceability. The original
+- Production high/critical findings are remediated with tested updates and scoped
+  overrides: 2 moderate/4 low remain. Full audit retains five high development
+  findings in the Tailwind/braces chain.
+- Strict application/build TypeScript now passes. Lint remediation remains:
+  zero errors/245 warnings; conditional-hook violations were fixed.
+- Coverage gates now exist and fail honestly: about 10.5% overall unit lines;
+  some critical auth/security files pass individually, others remain below 90%.
+  Remaining test-ID traceability. The original
   machine-readable requirement inventory is not a completion percentage and its
   `unverified` statuses must not be bulk-promoted from local build success.
 - Complete CI: the committed foundation runs lint/type/unit/canonical SQL/build
   plus a blocking production dependency audit. It has not run on GitHub here;
-  the audit is expected to remain red while those findings are open. Full-stack
-  browser/accessibility/integration, coverage and secret/bundle gates remain.
+  the dependency gate passes locally; the independent coverage gate remains red.
+  Full-stack browser/accessibility/integration, full secret scan and remaining
+  coverage are open. Public byte/artifact gates are implemented and pass locally.
 - Every public/protected route and negative role/team/resource/storage boundary,
   remaining stale-data/navigation states, outage/reconnect recovery, supported
   browsers, keyboard/zoom and manual screen-reader paths.
 - Public route bundles, modern images/font budgets, 3D fallbacks, Lighthouse,
-  LCP/INP/CLS and load tests. Oversized vendor chunks and old Browserslist data
-  remain; a successful build is not a performance pass.
+  LCP/INP/CLS and load tests. Public byte budgets and bounded offline install now
+  pass; runtime profiles and complete lazy-route inspection remain open.
 - Deterministic visual baselines at both PRD desktop sizes, full-page captures,
   reviewed masks, mobile/real-device review and Tejas's explicit visual sign-off.
 - Real GT-owned staging/prod infrastructure, domains, credentials, approved assets
@@ -105,7 +110,7 @@ email confirmation. File bytes/private links are excluded. See
 
 ## Next implementation checkpoint
 
-Complete remaining scoped mail/attachments, Push and
-cross-system privacy/operations. Keep unrelated historical source
+Complete Forms image/header workflows and remaining quality/coverage/device
+acceptance; review scoped attachment contracts. Keep unrelated historical source
 files and user edits intact. Track implementation separately from verified
 acceptance; do not label the complete PRD finished until its launch gates pass.

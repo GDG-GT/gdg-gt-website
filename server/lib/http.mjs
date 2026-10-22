@@ -135,6 +135,7 @@ export async function apiBoundary(
       await work(requestId);
     } catch (error) {
       if (response.headersSent) {
+        errorCode = 'RESPONSE_INTERRUPTED';
         response.destroy?.();
         return;
       }

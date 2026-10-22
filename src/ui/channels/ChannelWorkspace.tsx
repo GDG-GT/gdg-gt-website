@@ -265,8 +265,8 @@ export default function ChannelWorkspace() {
       // Each bounded page is acknowledged only after applying it. Broadcast loss,
       // token renewal, or >50 new messages cannot skip the middle of a reconnect.
       for (let page = 0; page < 10; page++) {
-        const { after, baseline } = changeCursor.current;
-        const delta = await api<Changes>(
+        const { after, baseline }: {after:number;baseline:number} = changeCursor.current;
+        const delta: Changes = await api<Changes>(
           `/admin/channels/${selected}/updates?after=${after}`,
           { signal: controller.signal },
         );

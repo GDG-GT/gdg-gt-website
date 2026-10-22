@@ -6,7 +6,7 @@ import { BookOpen, Plus, Edit3, Trash2, ExternalLink, Search, Filter, Save, X, E
 import AdminLayout from '@/components/admin/AdminLayout';
 import { ResourcesService, type Resource } from '@/services/resourcesService';
 
-const AdminResources = () => {
+const AdminResourcesContent = () => {
   const { isAuthenticated } = useAdmin();
   const [resources, setResources] = useState<Resource[]>([]);
   const [resourceStats, setResourceStats] = useState({
@@ -30,9 +30,6 @@ const AdminResources = () => {
 
   
 
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
 
   // Load resources and stats
   useEffect(() => {
@@ -976,6 +973,14 @@ const AdminResources = () => {
       )}
     </AdminLayout>
   );
+};
+
+const AdminResources = () => {
+  const { isAuthenticated } = useAdmin();
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+  return <AdminResourcesContent />;
 };
 
 export default AdminResources;

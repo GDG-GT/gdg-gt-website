@@ -18,11 +18,11 @@ export interface BlogPost {
   slug: string;
   excerpt?: string;
   content: string;
-  featured_image_url?: string;
+  featured_image_url?: string | null;
   author_name: string;
-  author_email?: string;
+  author_email?: string | null;
   author_avatar_url?: string;
-  category_id?: string;
+  category_id?: string | null;
   category?: BlogCategory;
   tags: string[];
   status: 'draft' | 'published' | 'archived';
@@ -31,7 +31,7 @@ export interface BlogPost {
   views_count: number;
   likes_count: number;
   comments_count?: number;
-  published_at?: string;
+  published_at?: string | null;
   created_at: string;
   updated_at: string;
   created_by?: string;

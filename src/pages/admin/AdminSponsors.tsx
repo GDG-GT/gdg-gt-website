@@ -10,7 +10,7 @@ import { SponsorContentService, type SponsorshipTier, type ImpactStat } from '@/
 import SponsorTiersTab from '@/components/admin/SponsorTiersTab';
 import SponsorStatsTab from '@/components/admin/SponsorStatsTab';
 
-const AdminSponsors = () => {
+const AdminSponsorsContent = () => {
   const { isAuthenticated } = useAdmin();
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
   const [sponsorStats, setSponsorStats] = useState({
@@ -44,9 +44,6 @@ const AdminSponsors = () => {
 
   
 
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
 
   // Load sponsors, stats, and tiers
   useEffect(() => {
@@ -685,6 +682,14 @@ const AdminSponsors = () => {
       )}
     </AdminLayout>
   );
+};
+
+const AdminSponsors = () => {
+  const { isAuthenticated } = useAdmin();
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+  return <AdminSponsorsContent />;
 };
 
 export default AdminSponsors;

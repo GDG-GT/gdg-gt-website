@@ -5,15 +5,12 @@ import { Settings, User, Shield, Bell, Database, Palette, Save, Key, Eye, EyeOff
 import { ContentService } from '@/services/contentService';
 import AdminLayout from '@/components/admin/AdminLayout';
 
-const AdminSettings = () => {
+const AdminSettingsContent = () => {
   const { isAuthenticated, currentAdmin } = useAdmin();
   const [activeTab, setActiveTab] = useState('general');
 
   
 
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
 
   const [settings, setSettings] = useState({
     siteName: 'GDG@PSU',
@@ -772,6 +769,14 @@ const AdminSecretCodeSettings = ({ currentAdmin }: { currentAdmin: any }) => {
       </div>
     </div>
   );
+};
+
+const AdminSettings = () => {
+  const { isAuthenticated } = useAdmin();
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+  return <AdminSettingsContent />;
 };
 
 export default AdminSettings;

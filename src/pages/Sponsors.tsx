@@ -53,7 +53,7 @@ const Sponsors = () => {
       tier: tierName,
       description: `Supporting GDG@PSU through ${tierName} tier partnership.`,
       website: sponsor.website_url,
-      benefits: [], // Could be expanded with a benefits field in the database
+      benefits: [] as string[], // Could be expanded with a benefits field in the database
       partnership: `${tierName} Partner`
     };
   };
@@ -72,7 +72,7 @@ const Sponsors = () => {
   // Get page content from database
   const pageHeader = getPageSection('sponsors', 'header') || {};
 
-  const SponsorCard = ({ sponsor, showBenefits = true }) => (
+  const SponsorCard = ({ sponsor, showBenefits = true }: { sponsor: ReturnType<typeof transformSponsor>; showBenefits?: boolean }) => (
     <div className="bg-card border border-border rounded-lg p-6 hover:shadow-lg transition-shadow">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-4">

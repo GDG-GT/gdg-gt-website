@@ -7,6 +7,7 @@ import { runDelivery } from "./delivery.mjs";
 import { runNewsletterWorker } from "./newsletter-worker.mjs";
 import { runPushWorker } from "./push-worker.mjs";
 import { pushConfig } from "./lib/push-transport.mjs";
+import { drainOperationalRetention } from "./lib/retention-worker.mjs";
 export function authorizeJob(request, env = process.env) {
   if (
     request.headers.origin ||
@@ -92,13 +93,7 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
         "report-cache-cleanup",
       ].includes(match[1])
     )
-      counts = checked(
-        await db.rpc("run_operational_retention", {
-          p_run: run.runId,
-          p_lease: run.lease,
-          p_limit: 1000,
-        }),
-      );
+      counts = await drainOperationalRetention(db, run);
     else if (match[1] === "form-schedules")
       counts = checked(await db.rpc("advance_form_schedules"));
     else if (match[1] === "task-overdue")
@@ -178,6 +173,8 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
           "Some delivery operations need retry.",
         );
     }
+    if (counts?.backlogRemaining)
+      throw new ApiError(503, 'RETENTION_BACKLOG_REMAINING', 'Retention made progress and will retry its remaining backlog.');
     const finished = checked(
       await db.rpc("finish_scheduled_job", {
         p_id: run.runId,

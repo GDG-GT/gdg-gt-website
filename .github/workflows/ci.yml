@@ -25,7 +25,7 @@ jobs:
           package-manager-cache: false
       - run: npm ci
       - name: Lint without increasing the inherited warning budget
-        run: npm run lint -- --max-warnings=276
+        run: npm run lint -- --max-warnings=245
       - run: npm run typecheck
       - run: npm test
       - name: Rebuild the canonical schema, security policies and capacity tests
@@ -33,6 +33,21 @@ jobs:
       - name: Recheck migrations with legacy Supabase automatic API grants
         run: npm run test:db:legacy-grants
       - run: npm run build
+      - run: npm run test:bundles
+
+  coverage-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: npm ci
+      - run: npm run test:coverage
 
   dependency-gate:
     runs-on: ubuntu-24.04
@@ -46,6 +61,5 @@ jobs:
           node-version: '24'
           package-manager-cache: false
       - run: npm ci
-      # Intentionally blocking while known findings remain. No forced downgrade,
-      # continue-on-error or automatic dependency rewrite hides the launch gate.
+      # Blocks known production high/critical findings without forced downgrades.
       - run: npm audit --omit=dev --audit-level=high

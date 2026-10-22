@@ -29,6 +29,30 @@ import { supabase } from '@/lib/supabase';
 import { debouncedCacheInvalidation } from '@/utils/cacheUtils';
 import { toast } from 'sonner';
 
+type ManagedLink = { id: string; name: string; url: string; category: string; description: string };
+type TrackItem = { id: string; title: string; description: string; icon: string; color: string };
+type FooterLink = { name: string; href: string };
+function parseFooterSection<T extends object>(value: unknown, fallback: T): T {
+  try {
+    const parsed: unknown = typeof value === 'string' ? JSON.parse(value) : value;
+    if (Array.isArray(parsed) && 'links' in fallback)
+      return { ...fallback, links: footerLinks(parsed) };
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed as T : fallback;
+  } catch { return fallback; }
+}
+function footerLinks(value: unknown): FooterLink[] {
+  if (value && typeof value === 'object' && 'links' in value) value = value.links;
+  return Array.isArray(value) ? value.filter((item): item is FooterLink =>
+    !!item && typeof item === 'object' && typeof item.name === 'string' && typeof item.href === 'string') : [];
+}
+function managedLinks(value: unknown): ManagedLink[] {
+  if (typeof value === 'string') {
+    try { value = JSON.parse(value); } catch { return []; }
+  }
+  return Array.isArray(value) ? value.filter((item): item is ManagedLink =>
+    !!item && typeof item === 'object' && ['id', 'name', 'url', 'category', 'description'].every(key => typeof item[key] === 'string')) : [];
+}
+
 const AdminContent = () => {
   const { isAuthenticated, currentAdmin } = useAdmin();
   const {
@@ -81,7 +105,7 @@ const AdminContent = () => {
       // What We Build Section
       tracks_title: tracksContent.title || '',
       tracks_description: tracksContent.description || '',
-      tracks_items: tracksContent.items || [],
+      tracks_items: (tracksContent.items || []) as TrackItem[],
 
       // Upcoming Events Section
       events_title: eventsContent.title || '',
@@ -113,12 +137,12 @@ const AdminContent = () => {
     const mainContent = contactContent.main || {};
 
     // Parse contact links if they exist
-    let contactLinks = [];
+    let contactLinks: ManagedLink[] = [];
     try {
       if (mainContent.contact_links && typeof mainContent.contact_links === 'string') {
-        contactLinks = JSON.parse(mainContent.contact_links);
+        contactLinks = managedLinks(mainContent.contact_links);
       } else if (Array.isArray(mainContent.contact_links)) {
-        contactLinks = mainContent.contact_links;
+        contactLinks = managedLinks(mainContent.contact_links);
       }
     } catch (error) {
     // Silently handle errors
@@ -243,7 +267,7 @@ const AdminContent = () => {
 
   // Unified links management - ALL links are manageable
   // Unified links management - ALL links are manageable
-  const [allLinks, setAllLinks] = useState([]);
+  const [allLinks, setAllLinks] = useState<ManagedLink[]>([]);
 
   // Initialize links when siteSettings loads
   React.useEffect(() => {
@@ -252,7 +276,7 @@ const AdminContent = () => {
 
       if (allLinksData && typeof allLinksData === 'string') {
         try {
-          const parsedLinks = JSON.parse(allLinksData);
+          const parsedLinks = managedLinks(allLinksData);
           setAllLinks(parsedLinks);
           return;
         } catch (error) {
@@ -261,7 +285,7 @@ const AdminContent = () => {
       }
 
       if (allLinksData && Array.isArray(allLinksData) && allLinksData.length > 0) {
-        setAllLinks(allLinksData);
+        setAllLinks(managedLinks(allLinksData));
         return;
       }
 
@@ -290,17 +314,6 @@ const AdminContent = () => {
 
   const [footerForm, setFooterForm] = useState(() => {
     // Helper function to safely parse JSON content
-    const parseFooterSection = (sectionData, fallback) => {
-      try {
-        if (typeof sectionData === 'string') {
-          return JSON.parse(sectionData);
-        }
-        return sectionData || fallback;
-      } catch (error) {
-        return fallback;
-      }
-    };
-
     // Parse existing footer content or use defaults
     const quickLinksData = parseFooterSection(footerContent.quick_links, {
       links: [
@@ -337,8 +350,8 @@ const AdminContent = () => {
     return {
       description: footerContent.description || 'A student-led community passionate about Google technologies at Georgia Institute of Technology.',
       copyright: footerContent.copyright || '© 2026 GDG@GT. All rights reserved.',
-      quickLinks: quickLinksData.links || quickLinksData,
-      resources: resourcesData.links || resourcesData,
+      quickLinks: footerLinks(quickLinksData),
+      resources: footerLinks(resourcesData),
       contactInfo: contactInfoData,
       newsletter: newsletterData
       // social_links are now managed in the Links & URLs section
@@ -955,17 +968,6 @@ const AdminContent = () => {
 
   // Update footer form when footerContent changes
   React.useEffect(() => {
-    const parseFooterSection = (sectionData, fallback) => {
-      try {
-        if (typeof sectionData === 'string') {
-          return JSON.parse(sectionData);
-        }
-        return sectionData || fallback;
-      } catch (error) {
-        return fallback;
-      }
-    };
-
     if (footerContent && Object.keys(footerContent).length > 0) {
       const quickLinksData = parseFooterSection(footerContent.quick_links, {
         links: [
@@ -1002,8 +1004,8 @@ const AdminContent = () => {
       setFooterForm({
         description: footerContent.description || 'A student-led community passionate about Google technologies at Georgia Institute of Technology.',
         copyright: footerContent.copyright || '© 2026 GDG@GT. All rights reserved.',
-        quickLinks: quickLinksData.links || quickLinksData,
-        resources: resourcesData.links || resourcesData,
+        quickLinks: footerLinks(quickLinksData),
+        resources: footerLinks(resourcesData),
         contactInfo: contactInfoData,
         newsletter: newsletterData
       });

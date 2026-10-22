@@ -25,13 +25,15 @@ export function useDraftGuard(
   }, [context, dirty, busy]);
 }
 export function useNavigationSafety() {
-  return useContext(NavigationSafetyContext);
+  const context = useContext(NavigationSafetyContext);
+  if (!context) throw new Error("NavigationSafety is required for this workspace.");
+  return context;
 }
 // For an editor's own navigation only AFTER its local discard check or successful
 // commit. Browser Back/Forward and ordinary links still pass through the blocker.
 export function useApprovedSearchParams() {
   const [params, setParams] = useSearchParams(),
-    context = useNavigationSafety();
+    context = useContext(NavigationSafetyContext);
   const approved: typeof setParams = (next, options) => {
     const run = () => setParams(next, options);
     if (context) context.allow(run);

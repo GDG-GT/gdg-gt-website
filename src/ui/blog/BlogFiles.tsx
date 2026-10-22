@@ -274,7 +274,7 @@ export function BlogFileDownload({
             if (n === epoch.current)
               setLink({ url: result.url, expires: Date.now() + 55000 });
           } catch (x) {
-            if (n === epoch.current) setError(x.message);
+            if (n === epoch.current) setError((x instanceof Error ? x.message : "This action could not be completed."));
           } finally {
             if (n === epoch.current) setBusy(false);
           }

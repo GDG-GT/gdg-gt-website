@@ -28,10 +28,12 @@ class CSRFService {
       }
 
       const data = await response.json();
-      this.token = data.csrfToken;
+      const token: unknown = data.csrfToken;
+      if (typeof token !== 'string' || !token) throw new Error('Invalid CSRF token response');
+      this.token = token;
       this.tokenExpiry = now + (50 * 60 * 1000); // 50 minutes
 
-      return this.token;
+      return token;
     } catch (error) {
       console.error('CSRF token fetch error:', error);
       throw error;

@@ -236,7 +236,7 @@ const CyberTechScene = () => {
     geometry.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
 
     return geometry;
-  }, []);
+  }, [gdgColors]);
 
   const particleMaterial = useMemo(() => {
     return new THREE.PointsMaterial({

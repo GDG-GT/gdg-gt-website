@@ -364,7 +364,7 @@ export default function NewsletterWorkspace() {
               </p>
               <div className="gt-inline-actions">
                 <Button
-                  disabled={busy || list?.total > 1000}
+                  disabled={busy || !list || list.total > 1000}
                   onClick={() =>
                     void work(
                       (signal) =>
@@ -403,7 +403,7 @@ export default function NewsletterWorkspace() {
                   Cancel export
                 </Button>
               </div>
-              {list?.total > 1000 && (
+              {list && list.total > 1000 && (
                 <p className="gt-helper">
                   Narrow your filters to 1,000 or fewer records.
                 </p>

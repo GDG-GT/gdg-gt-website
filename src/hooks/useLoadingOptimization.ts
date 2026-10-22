@@ -31,7 +31,7 @@ export const useLoadingOptimization = () => {
         setPreloadProgress(50);
 
         // Preload any hero images or critical assets
-        const criticalImages = [
+        const criticalImages: string[] = [
           // Add any critical images here
         ];
 

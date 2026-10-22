@@ -7,7 +7,7 @@ import { TeamService, type TeamMember } from '@/services/teamService';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { proxyStorageUrl } from '@/lib/urlProxy';
 
-const AdminTeam = () => {
+const AdminTeamContent = () => {
   const { isAuthenticated } = useAdmin();
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [teamStats, setTeamStats] = useState({
@@ -29,9 +29,6 @@ const AdminTeam = () => {
 
   
 
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
 
   // Load team members and stats
   useEffect(() => {
@@ -659,6 +656,14 @@ const AdminTeam = () => {
       )}
     </AdminLayout>
   );
+};
+
+const AdminTeam = () => {
+  const { isAuthenticated } = useAdmin();
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+  return <AdminTeamContent />;
 };
 
 export default AdminTeam;

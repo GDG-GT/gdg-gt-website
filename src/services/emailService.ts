@@ -35,7 +35,7 @@ export class EmailService {
     } catch (error) {
       return {
         success: false,
-        error: error.message || 'Failed to send email'
+        error: (error instanceof Error ? error.message : "This action could not be completed.") || 'Failed to send email'
       };
     }
   }

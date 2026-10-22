@@ -372,7 +372,7 @@ const AdminDashboard = () => {
             <div>
               <h1 className="font-display text-2xl font-bold text-foreground">Admin Dashboard</h1>
               <p className="text-muted-foreground text-sm">
-                Welcome, {currentAdmin.email} ({currentAdmin.role})
+                Welcome, {currentAdmin?.email} ({currentAdmin?.role})
               </p>
             </div>
           </div>

@@ -33,7 +33,7 @@ export default function VersionHistory({ form }: { form: PreviewForm }) {
         <strong>{field.label || "Unlabeled block"}</strong><p>{fieldTypes.find(([type]) => type === field.type)?.[1] || field.type}{field.required ? " · Required" : " · Optional"}{field.sensitive ? " · Sensitive" : ""}</p>
         {field.description && <p>{field.description}</p>}
         {["radio", "dropdown", "checkbox", "likert", "grid", "ranking"].includes(field.type) && field.options.length > 0 && <p>Options: {field.options.join(" · ")}</p>}
-        {field.columns?.length > 0 && <p>Grid columns: {field.columns.join(" · ")}</p>}
+        {field.columns && field.columns.length > 0 && <p>Grid columns: {field.columns.join(" · ")}</p>}
         <small>Field ID {field.id}</small>
         <details><summary>Validation and visibility</summary><pre>{JSON.stringify(Object.fromEntries(Object.entries(field).filter(([key]) => !["id", "label", "description", "options", "optionIds", "columnIds", "columns", "type", "sectionId"].includes(key))), null, 2)}</pre></details>
       </div>)}

@@ -178,6 +178,52 @@ function fixture() {
   return { store, call, verify, log, login, cookie };
 }
 describe("auth API boundary", () => {
+  it('gate status distinguishes absent, forged and current opaque capabilities without disclosing settings', async () => {
+    const f=fixture();
+    expect((await f.call('/api/v1/auth/gate')).body.data).toEqual({gateValid:false});
+    expect((await f.call('/api/v1/auth/gate','GET',undefined,{cookie:config.gateCookie+'='+token()})).body.data).toEqual({gateValid:false});
+    const issued=await f.call('/api/v1/auth/gate','POST',{code:'correct-gate'});
+    expect((await f.call('/api/v1/auth/gate','GET',undefined,{cookie:f.cookie(issued,config.gateCookie)})).body.data).toEqual({gateValid:true});
+  });
+  it('request-volume exhaustion rejects before KDF work, independently of the failed-gate limit', async () => {
+    const f=fixture();
+    f.store.rateLimit=async()=>({allowed:false,retryAfter:47});
+    const result=await f.call('/api/v1/auth/gate','POST',{code:'correct-gate'});
+    expect(result.statusCode).toBe(429);expect(result.getHeader('retry-after')).toBe('47');expect(f.verify).not.toHaveBeenCalled();
+  });
+  it('every disabled, deleted, temporary-expired or locked account state prevents cookie issuance', async () => {
+    for(const state of [{is_active:false},{deleted_at:new Date().toISOString()},{must_change_password:true},
+      {temporary_password_expires_at:new Date(Date.now()-1000).toISOString()}, {locked_until:new Date(Date.now()+60000).toISOString()}]){
+      const f=fixture();Object.assign(f.store.user,state);
+      const gate=await f.call('/api/v1/auth/gate','POST',{code:'correct-gate'});
+      const result=await f.call('/api/v1/auth/login','POST',{email:f.store.user.email,password:'Correct password! 2026'},
+        {cookie:f.cookie(gate,config.gateCookie)});
+      expect(result.statusCode).toBe(401);expect(result.getHeader('set-cookie')).toBeUndefined();
+    }
+  });
+  it('future temporary expiry and expired lock do not reject an otherwise valid account', async () => {
+    const f=fixture();Object.assign(f.store.user,{temporary_password_expires_at:new Date(Date.now()+60000).toISOString(),locked_until:new Date(Date.now()-1000).toISOString()});
+    expect((await f.login()).result.statusCode).toBe(200);
+  });
+  it('login volume throttling uses the same bounded generic failure envelope', async () => {
+    const f=fixture(), original=f.store.rateLimit.bind(f.store);
+    f.store.rateLimit=(scope,...args)=>scope==='auth.login.ip'?Promise.resolve({allowed:false,retryAfter:19}):original(scope,...args);
+    const gate=await f.call('/api/v1/auth/gate','POST',{code:'correct-gate'});
+    const result=await f.call('/api/v1/auth/login','POST',{email:f.store.user.email,password:'Correct password! 2026'},{cookie:f.cookie(gate,config.gateCookie)});
+    expect(result.statusCode).toBe(429);expect(result.getHeader('retry-after')).toBe('19');
+  });
+  it('password reuse, other-session revocation and unexpected CSRF-store outages take distinct safe paths', async () => {
+    const f=fixture(), signed=await f.login(), headers={cookie:signed.cookie,'x-csrf-token':signed.csrf};
+    const reused=await f.call('/api/v1/auth/password','POST',{currentPassword:'Correct password! 2026',newPassword:'Correct password! 2026'},headers);
+    expect(reused.statusCode).toBe(400);expect(reused.body.error.fields.newPassword).toBeTruthy();
+    const revoke=vi.spyOn(f.store,'revokeOtherSessions');
+    expect((await f.call('/api/v1/auth/sessions','DELETE',undefined,headers)).body.data).toEqual({revoked:true});
+    expect(revoke).toHaveBeenCalledOnce();
+    f.store.csrf=async()=>{throw Error('never-return-provider-secret');};
+    const outage=await f.call('/api/v1/auth/session','GET',undefined,headers);
+    expect(outage.statusCode).toBe(500);expect(JSON.stringify(outage.body)).not.toContain('never-return');
+    expect((await f.call('/api/v1/auth/unknown')).statusCode).toBe(404);
+  });
   it("session generation bindings reject stale intent even with valid replacement CSRF", async () => {
     const f = fixture(),
       first = await f.login(),

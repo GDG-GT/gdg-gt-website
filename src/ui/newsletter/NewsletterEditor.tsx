@@ -372,13 +372,14 @@ export default function NewsletterEditor({
     const signature = JSON.stringify(body);
     if (attempt.current?.signature !== signature)
       attempt.current = { signature, key: crypto.randomUUID() };
+    const idempotencyKey = attempt.current.key;
     await work(
       (signal) =>
         api<{ id?: string }>(path, {
           method: "POST",
           body,
           signal,
-          idempotencyKey: attempt.current.key,
+          idempotencyKey,
         }),
       (r) =>
         onSaved(
@@ -390,16 +391,18 @@ export default function NewsletterEditor({
     );
   };
   const mutate = async (name: string) => {
+    if (!record || busy) return;
     const signature = name + record.id + record.revision;
     if (attempt.current?.signature !== signature)
       attempt.current = { signature, key: crypto.randomUUID() };
+    const idempotencyKey = attempt.current.key;
     await work(
       (signal) =>
         api<{ id: string }>(path, {
           method: "POST",
           body: { action: name, revision: record.revision },
           signal,
-          idempotencyKey: attempt.current.key,
+          idempotencyKey,
         }),
       (r) =>
         onSaved(
@@ -746,7 +749,7 @@ export default function NewsletterEditor({
                         Deactivate subscriber
                       </Button>
                     )}
-                  {(!["scheduled", "sending"].includes(record.status) ||
+                  {(!["scheduled", "sending"].includes(record.status || "") ||
                     kind !== "campaigns") && (
                     <Button
                       type="button"

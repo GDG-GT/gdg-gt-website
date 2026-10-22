@@ -47,6 +47,7 @@ export function createPublicQueue({ transact = browserTransaction, fetcher = (..
     }
   };
   return {
+    /** @param {string} [id] */
     async add(kind, input, id = crypto.randomUUID()) {
       const payload = queueDocument(kind, input);
       if (!/^[a-f0-9-]{36}$/.test(id)) throw Error("Use a valid submission reference.");

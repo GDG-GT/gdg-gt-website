@@ -9,7 +9,7 @@ import {
 import AdminLayout from '@/components/admin/AdminLayout';
 import { AuditService, type AuditLogEntry, type AuditFilters, type AuditStats, type AuditActionType } from '@/services/auditService';
 
-const AdminAuditLog = () => {
+const AdminAuditLogContent = () => {
   const { isAuthenticated, currentAdmin, isSuperAdmin, isAdmin } = useAdmin();
   const [logs, setLogs] = useState<AuditLogEntry[]>([]);
   const [stats, setStats] = useState<AuditStats | null>(null);
@@ -21,14 +21,8 @@ const AdminAuditLog = () => {
   const [hasMore, setHasMore] = useState(true);
   const pageSize = 50;
 
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
 
   // Only super admins and admins can view audit logs
-  if (!isAdmin) {
-    return <Navigate to="/admin" replace />;
-  }
 
   useEffect(() => {
     loadData();
@@ -448,6 +442,17 @@ const AdminAuditLog = () => {
       )}
     </AdminLayout>
   );
+};
+
+const AdminAuditLog = () => {
+  const { isAuthenticated, isAdmin } = useAdmin();
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+  if (!isAdmin) {
+    return <Navigate to="/admin" replace />;
+  }
+  return <AdminAuditLogContent />;
 };
 
 export default AdminAuditLog;

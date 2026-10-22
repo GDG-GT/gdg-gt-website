@@ -29,7 +29,7 @@ import { TeamService, type TeamMember } from '@/services/teamService';
 import { AuditService } from '@/services/auditService';
 import type { AdminUser, AdminAction } from '@/lib/supabase';
 
-const AdminUsers = () => {
+const AdminUsersContent = () => {
   const { isAuthenticated, currentAdmin } = useAdmin();
   const [admins, setAdmins] = useState<AdminUser[]>([]);
   const [adminActions, setAdminActions] = useState<AdminAction[]>([]);
@@ -112,9 +112,6 @@ const AdminUsers = () => {
   const { trackOperation } = useAdminOperationTracking();
   const { trackTabChange } = useAdminTabTracking('Admin Users Management');
 
-  if (!isAuthenticated || !isSuperAdmin) {
-    return <Navigate to="/admin" replace />;
-  }
 
   useEffect(() => {
     loadData();
@@ -1489,6 +1486,15 @@ const AdminUsers = () => {
       )}
     </AdminLayout>
   );
+};
+
+const AdminUsers = () => {
+  const { isAuthenticated, currentAdmin } = useAdmin();
+  const isSuperAdmin = AdminService.isSuperAdmin(currentAdmin);
+  if (!isAuthenticated || !isSuperAdmin) {
+    return <Navigate to="/admin" replace />;
+  }
+  return <AdminUsersContent />;
 };
 
 export default AdminUsers;

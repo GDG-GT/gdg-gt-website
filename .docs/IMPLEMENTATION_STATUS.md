@@ -5,6 +5,27 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Strict types, dependency/build hardening and measured quality gaps — 2026-10-22
+
+- Application/build strict TypeScript passes. Corrected nullable data, async
+  retry keys and conditional-hook boundaries; lint is zero errors/245 warnings,
+  down from 276. Unrelated user files remain intact.
+- Production dependency audit has zero high/critical findings (2 moderate,
+  4 low remain). Scoped updates pass 384 units, actual drawing creation/save,
+  whiteboard HTTP/socket, 124 Forms/upload and 31 newsletter checks. Development
+  dependency findings remain separately open.
+- Public entry: 181 KB gzip JS/42 KB CSS/48 KB fonts. Offline install: 11 entries,
+  535 KiB, without editors/3D. Byte/artifact gates and limited-device/interaction
+  gating now protect initial loading. Runtime/device performance remains open.
+- Blocking coverage measurement: about 10.5% overall unit lines, **not feature
+  completion**; separate live HTTP/SQL/browser evidence is not included. Auth
+  branches 98.52%, security/authorization/HTTP primitives 100%; remaining global
+  70% and critical-file 90% gates fail honestly. Full automated UI/integration
+  coverage remains substantial work; CI has an independent gate.
+- The audit found real Forms image-block/header-media gaps, explicitly open
+  rather than certified by the field-type schema. See `QUALITY_HARDENING.md`.
+  Full PRD completion/launch is not claimed.
+
 ### Daily retention and sanitized operational monitoring — 2026-10-22
 
 - Added authenticated daily session/security, notification and expired-report-cache

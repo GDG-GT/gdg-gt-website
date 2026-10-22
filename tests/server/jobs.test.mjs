@@ -78,12 +78,12 @@ describe("scheduled job authentication", () => {
               p_id: "fixture-run",
               p_lease: "fixture-lease",
               p_success: true,
-              p_counts: { expired: 2 },
+              p_counts: { expired: 2, batches: 1, backlogRemaining: 0 },
               p_error: null,
             },
           ],
         ]);
-        expect(response.body.data.counts).toEqual({ expired: 2 });
+        expect(response.body.data.counts).toEqual({ expired: 2, batches: 1, backlogRemaining: 0 });
       }
     } finally {
       vi.unstubAllEnvs();
@@ -128,5 +128,20 @@ describe("scheduled job authentication", () => {
     } finally {
       vi.unstubAllEnvs();
     }
+  });
+  it('records capped retention progress as failed/retryable, never completed', async () => {
+    vi.stubEnv('CRON_SECRET', env.CRON_SECRET);
+    try {
+      const calls = [], db = { rpc: async (name, args) => {
+        calls.push([name, args]);
+        return { data: name === 'begin_scheduled_job' ? { runId: 'run', lease: 'lease' }
+          : name === 'run_operational_retention' ? { notificationsExpired: 1000 } : true };
+      } };
+      await expect(jobRoutes({ url:'/api/v1/jobs/notification-cleanup', method:'POST', headers },
+        { setHeader(){}, end(){} }, { db, config:{ origin:'http://127.0.0.1:8080' }, requestId:'request' }))
+        .rejects.toMatchObject({ status:503, code:'RETENTION_BACKLOG_REMAINING' });
+      expect(calls.at(-1)).toEqual(['finish_scheduled_job', { p_id:'run', p_lease:'lease', p_success:false,
+        p_counts:{ notificationsExpired:20000, batches:20, backlogRemaining:1 }, p_error:'RETENTION_BACKLOG_REMAINING' }]);
+    } finally { vi.unstubAllEnvs(); }
   });
 });

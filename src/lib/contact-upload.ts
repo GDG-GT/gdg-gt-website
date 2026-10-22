@@ -90,6 +90,7 @@ export async function prepareContactAttachment(
     state.uploaded = true;
   }
   if (!state.queued) {
+    if (!state.uploadId) throw Error("Start a fresh attachment upload before sending.");
     await api(`/contact/uploads/${state.uploadId}/complete`, {
       method: "POST",
       body: { uploadToken },
@@ -112,6 +113,7 @@ export async function prepareContactAttachment(
           ? "Confirming the saved message…"
           : "Attachment checked. Saving your message…",
       );
+      if (!state.uploadId) throw Error("This attachment upload is no longer available.");
       return { uploadId: state.uploadId, uploadToken };
     }
     if (["rejected", "expired"].includes(result.state)) {

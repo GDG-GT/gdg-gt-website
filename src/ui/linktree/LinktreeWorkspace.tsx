@@ -1017,7 +1017,7 @@ export default function LinktreeWorkspace() {
           </nav>
         </>
       )}
-      {p && !mode && !pending && (
+      {p && detail && !mode && !pending && (
         <section className="gt-linktree-management">
           <header className="gt-admin-heading">
             <div>

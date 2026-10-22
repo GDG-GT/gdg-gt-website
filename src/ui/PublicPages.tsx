@@ -1,7 +1,6 @@
 import PrivacyNoticeDetails from "./PrivacyNoticeDetails";
+import HeroScene from "./HeroScene";
 import {
-  lazy,
-  Suspense,
   useEffect,
   useMemo,
   useState,
@@ -68,12 +67,11 @@ import { chapterName, localPreviewEnabled } from "./preview-data";
 import { useInitialLoad } from "./useInitialLoad";
 import PublicGallery from "./media/PublicGallery";
 import type { PageCopy } from "../../shared/site-content";
-const HeroObjects = lazy(() => import("./HeroObjects"));
 
 type SiteEvent = Event & {
   slug?: string;
   publication_status?: string;
-  end_at?: string;
+  end_at?: string | null;
   status?: string;
   accurate_attendee_count?: number;
   linked_forms?: ChapterEvent["linked_forms"];
@@ -217,9 +215,7 @@ export function HomePage() {
           height="800"
           alt=""
         />
-        <Suspense fallback={null}>
-          <HeroObjects />
-        </Suspense>
+        <HeroScene />
         <div className="gt-container gt-hero-layout">
           <div className="gt-hero-card">
             <span className="gt-hero-intro">{chapterName}</span>
@@ -1616,7 +1612,7 @@ export function ContactPage() {
           setError("Use up to 20 interests, each at most 100 characters.");
           return;
         }
-        let approvedAttachment: { uploadId: string; uploadToken: string };
+        let approvedAttachment: { uploadId: string; uploadToken: string } | undefined;
         if (file) {
           if (attachment.current?.file !== file)
             attachment.current = contactUpload(file);

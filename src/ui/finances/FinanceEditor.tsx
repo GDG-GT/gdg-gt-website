@@ -186,7 +186,7 @@ export default function FinanceEditor({
             <select
               {...field("transactionType")}
               onChange={(e) => {
-                const type = e.target.value;
+                const type = e.target.value as keyof typeof financeCategories;
                 setValues((v) => ({
                   ...v,
                   transactionType: type,

@@ -56,6 +56,7 @@ export default function NewsletterSend({
   }, [review]);
   if (!record.actions.includes("send_email") || record.deletedAt) return null;
   const request = async () => {
+    if (!mode || busy) return;
     setNotice("");
     if (mode === "send" && (!review || expired)) {
       await work(
@@ -88,11 +89,12 @@ export default function NewsletterSend({
       }
       scheduledAt = value.toISOString();
     }
+    if (mode === "send" && !review) return;
     const document =
       mode === "send"
         ? {
-            reviewId: review.reviewId,
-            reviewToken: review.reviewToken,
+            reviewId: review!.reviewId,
+            reviewToken: review!.reviewToken,
             confirmation,
             scheduledAt,
           }
@@ -100,6 +102,7 @@ export default function NewsletterSend({
     const signature = JSON.stringify({ mode, document });
     if (retry.current?.signature !== signature)
       retry.current = { signature, key: crypto.randomUUID() };
+    const idempotencyKey = retry.current.key;
     const action = mode,
       currentPassword = password;
     setPassword("");
@@ -108,7 +111,7 @@ export default function NewsletterSend({
         api(path + "/" + action, {
           method: "POST",
           body: { ...document, currentPassword },
-          idempotencyKey: retry.current.key,
+          idempotencyKey,
           signal,
         }),
       () => {
@@ -158,7 +161,7 @@ export default function NewsletterSend({
               </Button>
             </>
           )}
-          {["scheduled", "sending"].includes(record.status) && (
+          {["scheduled", "sending"].includes(record.status || "") && (
             <Button
               type="button"
               variant="danger"
@@ -167,7 +170,7 @@ export default function NewsletterSend({
               Cancel remaining sends
             </Button>
           )}
-          {!["draft", "scheduled", "sending"].includes(record.status) && (
+          {!["draft", "scheduled", "sending"].includes(record.status || "") && (
             <p className="gt-helper">
               This campaign is finished. Duplicate it to write a new draft.
             </p>

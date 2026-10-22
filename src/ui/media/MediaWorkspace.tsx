@@ -12,10 +12,7 @@ import {
 import MediaUpload from "./MediaUpload";
 import MediaFileEditor from "./MediaFileEditor";
 import DestinationPicker from "./DestinationPicker";
-type FolderMode = {
-  action: "create" | "update" | "move" | "delete";
-  folder?: MediaFolder;
-};
+type FolderMode = {action:"create";folder?:never} | {action:"update"|"move"|"delete";folder:MediaFolder};
 function FolderEditor({
   mode,
   listing,
@@ -61,19 +58,19 @@ function FolderEditor({
     setError("");
     const controller = new AbortController();
     pending.current = controller;
-    const f = mode.folder,
-      body =
+    const f = mode.folder;
+    const body =
         mode.action === "create"
           ? { name, description, teamId, parentId }
           : mode.action === "update"
-            ? { action: "update", name, description, revision: f.revision }
+            ? { action: "update", name, description, revision: mode.folder.revision }
             : mode.action === "move"
               ? {
                   action: "move",
                   parentId: destination?.folderId ?? null,
-                  revision: f.revision,
+                  revision: mode.folder.revision,
                 }
-              : { revision: f.revision };
+              : { revision: mode.folder.revision };
     try {
       await api("/admin/media/folders" + (f ? "/" + f.id : ""), {
         method:

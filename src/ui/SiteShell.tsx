@@ -374,7 +374,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
           }
         }}
         isLoading={isLoading}
-        error={error}
+        error={error || undefined}
       />
     </div>
   );

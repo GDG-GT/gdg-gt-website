@@ -172,7 +172,7 @@ export default function FormBuilder() {
     redo.current = [];
     setForm(next);
   };
-  const updateField = (values: Partial<typeof field>) => {
+  const updateField = (values: Partial<NonNullable<typeof field>>) => {
     if (field)
       update({
         ...form,

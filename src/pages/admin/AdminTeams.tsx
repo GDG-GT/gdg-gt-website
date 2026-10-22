@@ -31,7 +31,7 @@ const TEAM_COLORS = [
   '#00BCD4', '#795548', '#607D8B', '#E91E63', '#3F51B5', '#009688'
 ];
 
-const AdminTeams = () => {
+const AdminTeamsContent = () => {
   const { isAuthenticated, currentAdmin, isSuperAdmin, isAdmin, userTeams } = useAdmin();
   const [teams, setTeams] = useState<AdminTeam[]>([]);
   const [manageableTeams, setManageableTeams] = useState<AdminTeam[]>([]);
@@ -95,17 +95,11 @@ const AdminTeams = () => {
     scheduled_for: ''
   });
 
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
 
   // Super admins, admins, and any team member can access this page
   // Team leads/co-leads can manage, regular members can view
   const isTeamLead = userTeams.some(t => t.role === 'lead' || t.role === 'co_lead');
   const isTeamMember = userTeams.length > 0;
-  if (!isAdmin && !isTeamMember) {
-    return <Navigate to="/admin" replace />;
-  }
 
   useEffect(() => {
     loadTeams();
@@ -1980,6 +1974,18 @@ const AdminTeams = () => {
       )}
     </AdminLayout>
   );
+};
+
+const AdminTeams = () => {
+  const { isAuthenticated, isAdmin, userTeams } = useAdmin();
+  const isTeamMember = userTeams.length > 0;
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+  if (!isAdmin && !isTeamMember) {
+    return <Navigate to="/admin" replace />;
+  }
+  return <AdminTeamsContent />;
 };
 
 export default AdminTeams;

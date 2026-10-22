@@ -119,7 +119,7 @@ const BlogPostModal: React.FC<BlogPostModalProps> = ({
   };
 
   const getPublishDate = () => {
-    return formatDate(currentPost.published_at);
+    return formatDate(currentPost.published_at || undefined);
   };
 
   const handleLike = async () => {

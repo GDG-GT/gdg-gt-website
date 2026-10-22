@@ -323,7 +323,7 @@ export default function FieldRenderer({
         <input
           {...shared}
           type={
-            {
+            ({
               short: "text",
               email: "email",
               phone: "tel",
@@ -332,7 +332,7 @@ export default function FieldRenderer({
               date: "date",
               time: "time",
               datetime: "datetime-local",
-            }[field.type] || "text"
+            } as Partial<Record<FormField["type"], string>>)[field.type] || "text"
           }
           min={
             ["date", "datetime"].includes(field.type)

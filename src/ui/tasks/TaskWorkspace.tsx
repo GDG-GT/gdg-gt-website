@@ -398,7 +398,7 @@ export default function TaskWorkspace() {
       setTick((v) => v + 1);
       setNotice("Task status saved.");
     } catch (e) {
-      setError(e.message);
+      setError((e instanceof Error ? e.message : "This action could not be completed."));
     } finally {
       setBusy(false);
     }
@@ -442,7 +442,7 @@ export default function TaskWorkspace() {
       commentKey.current = undefined;
       setTick((v) => v + 1);
     } catch (e) {
-      if (id === selectedRef.current) setError(e.message);
+      if (id === selectedRef.current) setError((e instanceof Error ? e.message : "This action could not be completed."));
     } finally {
       setBusy(false);
     }
@@ -480,7 +480,7 @@ export default function TaskWorkspace() {
       setDeleting(null);
       setTick((v) => v + 1);
     } catch (e) {
-      setError(e.message);
+      setError((e instanceof Error ? e.message : "This action could not be completed."));
     } finally {
       setBusy(false);
     }
@@ -505,7 +505,7 @@ export default function TaskWorkspace() {
       });
       setCursor(r.nextCursor);
     } catch (e) {
-      setError(e.message);
+      setError((e instanceof Error ? e.message : "This action could not be completed."));
     } finally {
       setBusy(false);
     }
