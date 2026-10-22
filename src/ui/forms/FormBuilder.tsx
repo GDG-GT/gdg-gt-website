@@ -415,6 +415,9 @@ export default function FormBuilder() {
                   <Field label="Minimum">
                     <input
                       type="number"
+                      min={field.type === "number" ? undefined : 0}
+                      max={field.type === "number" ? undefined : 9}
+                      step={field.type === "number" ? "any" : 1}
                       value={field.min ?? (field.type === "number" ? "" : 1)}
                       onChange={(event) =>
                         updateField({
@@ -429,6 +432,7 @@ export default function FormBuilder() {
                   <Field label="Maximum">
                     <input
                       type="number"
+                      step={field.type === "number" ? "any" : 1}
                       min={field.type === "number" ? undefined : 2}
                       max={field.type === "number" ? undefined : 10}
                       value={field.max ?? (field.type === "number" ? "" : 5)}

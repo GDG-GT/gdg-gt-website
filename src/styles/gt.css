@@ -1866,15 +1866,20 @@ img {
 .gt-skip {
   position: fixed;
   left: 16px;
-  top: -100px;
+  top: 12px;
   z-index: var(--layer-feedback);
   padding: 12px 18px;
   background: var(--ink);
   color: var(--text-on-dark);
   border-radius: 8px;
 }
-.gt-skip:focus {
-  top: 12px;
+.gt-skip:not(:focus) {
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .gt-site main:focus,
 .gt-admin-body:focus {
@@ -4790,21 +4795,42 @@ img {
   gap: 8px;
   flex-wrap: wrap;
 }
-.gt-scale > button {
+.gt-scale > label > span {
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid #ddc3ac;
-  width: 43px;
-  height: 43px;
+  min-width: 44px;
+  height: 44px;
   border-radius: 7px;
-  color: #a47652;
+  color: var(--ink);
   background: var(--surface-raised);
 }
-.gt-scale > button.is-selected {
-  border-color: #b26943;
-  background: #ffe9d5;
-  color: #91542f;
+.gt-scale > label {
+  position: relative;
+  cursor: pointer;
+}
+.gt-scale input:checked + span {
+  border-color: var(--coral);
+  background: var(--coral);
+  color: #f8f8fa;
+}
+.gt-scale input:focus-visible + span {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.gt-scale input:disabled + span {
+  opacity: .6;
+  cursor: not-allowed;
+}
+.gt-form-answer-controls {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.gt-public-form-questions > .gt-form + .gt-form-answer-controls {
+  margin-top: 24px;
 }
 .gt-grid-question {
   overflow-x: auto;
@@ -4881,7 +4907,7 @@ img {
 [data-form-theme="charcoal"] .gt-button-primary:hover {
   background: #47474d;
 }
-[data-form-theme="charcoal"] .gt-scale button.is-selected {
+[data-form-theme="charcoal"] .gt-scale input:checked + span {
   background: #323236;
   color: #f8f8fa;
 }

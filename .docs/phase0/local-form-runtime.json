@@ -1,0 +1,41 @@
+{
+  "note": "Actual local typed response validation; fictional form/account recoverably archived. No provider sends.",
+  "tests": [
+    {
+      "name": "typed runtime fixture publishes through the real immutable schema",
+      "passed": true
+    },
+    {
+      "name": "actual server rejects invalid score value",
+      "passed": true
+    },
+    {
+      "name": "actual server rejects invalid score value",
+      "passed": true
+    },
+    {
+      "name": "actual server rejects invalid local datetime value",
+      "passed": true
+    },
+    {
+      "name": "actual server rejects invalid local datetime value",
+      "passed": true
+    },
+    {
+      "name": "actual server rejects invalid local datetime value",
+      "passed": true
+    },
+    {
+      "name": "actual server rejects invalid numeric value",
+      "passed": true
+    },
+    {
+      "name": "actual server rejects invalid numeric value",
+      "passed": true
+    },
+    {
+      "name": "real server accepts decimal input and equivalent inclusive datetime precision",
+      "passed": true
+    }
+  ]
+}

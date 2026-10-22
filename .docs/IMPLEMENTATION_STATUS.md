@@ -5,6 +5,19 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Precise Forms fields, accessible focus and pending safety — 2026-10-22
+
+- Added timezone-independent strict local date-time/range checks, canonical
+  bounded integer scores and decimal-only numeric syntax. Native rating radios,
+  file/identity error associations and first-invalid/review/success focus now work.
+  Pending operations freeze controls; file checks/removal participate in busy
+  protection. Existing published definitions remain unchanged.
+- Eight new field tests, 410 units at this checkpoint, strict types/lint/build,
+  nine actual local HTTP/DB cases, 124 existing Forms/upload checks and live
+  desktop/375px keyboard/save/submission checks pass. Actual locked-row save
+  verified frozen/re-enabled controls. See `FORM_RUNTIME_OPERATIONS.md`.
+  Full Forms/manual accessibility/device/quality and PRD gates remain open.
+
 ### Complete authorized Forms library filters — 2026-10-22
 
 - Added owner/team/chapter, updated-date and template-origin filters alongside

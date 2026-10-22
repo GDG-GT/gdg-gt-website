@@ -20,7 +20,10 @@ import FieldRenderer from "./FieldRenderer";
 import FormImage from "./FormImage";
 import { formImageId } from "./store";
 import { presentationFields } from "../../../shared/form-presentation";
-import { stripUrlCapabilities, formCapabilityNames } from '../../../shared/capability-navigation';
+import {
+  stripUrlCapabilities,
+  formCapabilityNames,
+} from "../../../shared/capability-navigation";
 import RespondentFileField from "./RespondentFileField";
 import { api, ApiFailure } from "@/lib/api";
 import GeorgiaTechSsoOption from "../auth/GeorgiaTechSsoOption";
@@ -80,6 +83,10 @@ function RespondentFormRuntime() {
     [feedback, setFeedback] = useState(""),
     [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [identityErrors, setIdentityErrors] = useState<Record<string, string>>(
+    {},
+  );
+  const operation = useRef(false);
   const [respondent, setRespondent] = useState({ name: "", email: "" }),
     [copyRequested, setCopyRequested] = useState(false),
     [copyQueued, setCopyQueued] = useState(false);
@@ -103,6 +110,24 @@ function RespondentFormRuntime() {
   );
   const [uploading, setUploading] = useState<string[]>([]),
     [fileNames, setFileNames] = useState<Record<string, string>>({});
+  const rejectIdentity = (issues: { path: (string | number)[] }[]) => {
+    const messages = {
+      name: "Enter your name (2–100 characters).",
+      email: "Enter a valid email address.",
+    };
+    const errors = Object.fromEntries(
+      issues.map((issue) => {
+        const key = issue.path[0] === "name" ? "name" : "email";
+        return [key, messages[key]];
+      }),
+    );
+    setIdentityErrors(errors);
+    setError(Object.values(errors)[0]);
+    setStep(0);
+    requestAnimationFrame(() =>
+      document.getElementById(`respondent-${Object.keys(errors)[0]}`)?.focus(),
+    );
+  };
   useDraftGuard(
     !submitted &&
       JSON.stringify({ answers, respondent, copyRequested }) !==
@@ -247,8 +272,10 @@ function RespondentFormRuntime() {
             className="gt-form"
             onSubmit={async (event) => {
               event.preventDefault();
+              if (operation.current) return;
               const values = new FormData(event.currentTarget);
               setPending(true);
+              operation.current = true;
               setError("");
               try {
                 const result = await api<{ message: string }>(
@@ -265,6 +292,7 @@ function RespondentFormRuntime() {
               } catch (e) {
                 setError((e as Error).message);
               } finally {
+                operation.current = false;
                 setPending(false);
               }
             }}
@@ -276,6 +304,7 @@ function RespondentFormRuntime() {
                 required
                 autoComplete="email"
                 maxLength={254}
+                disabled={pending}
               />
             </Field>
             <div className="gt-honeypot" aria-hidden="true">
@@ -349,6 +378,7 @@ function RespondentFormRuntime() {
     review || (settings.review === false && step >= sections.length - 1);
   const next = async (event: FormEvent) => {
     event.preventDefault();
+    if (operation.current) return;
     if (uploading.length) {
       setError("Wait for file uploads and security checks to finish.");
       return;
@@ -356,18 +386,10 @@ function RespondentFormRuntime() {
     setError("");
     const identity = formRespondentSchema.safeParse(respondent);
     if (!identity.success) {
-      const field = identity.error.issues[0].path[0];
-      setError(
-        field === "name"
-          ? "Enter your name (2–100 characters)."
-          : "Enter a valid email address.",
-      );
-      setStep(0);
-      requestAnimationFrame(() =>
-        document.getElementById(`respondent-${field}`)?.focus(),
-      );
+      rejectIdentity(identity.error.issues);
       return;
     }
+    setIdentityErrors({});
     const errors = Object.fromEntries(
       (finalStep
         ? visibleFields(definition.fields, answers, definition.sections)
@@ -377,7 +399,7 @@ function RespondentFormRuntime() {
         .filter(([, message]) => !!message),
     ) as Record<string, string>;
     setFieldErrors(errors);
-    const missing = definition.fields.find((field) => !!errors[field.id]);
+    const missing = displayFields.find((field) => !!errors[field.id]);
     if (missing) {
       setError(`Check “${missing.label}”: ${errors[missing.id]}`);
       if (finalStep)
@@ -439,6 +461,7 @@ function RespondentFormRuntime() {
     if (submission.current?.payload !== payload)
       submission.current = { payload, key: crypto.randomUUID() };
     setPending(true);
+    operation.current = true;
     try {
       const result = await api<{
         responseId: string;
@@ -477,26 +500,36 @@ function RespondentFormRuntime() {
       setSubmitted(true);
     } catch (e) {
       setError((e as Error).message);
-      if (e instanceof ApiFailure && e.fields) setFieldErrors(e.fields);
+      if (e instanceof ApiFailure && e.fields) {
+        setFieldErrors(e.fields);
+        const invalid = displayFields.find((field) => !!e.fields?.[field.id]);
+        if (invalid) {
+          setStep(
+            Math.max(
+              0,
+              sections.findIndex((section) => section.id === invalid.sectionId),
+            ),
+          );
+          requestAnimationFrame(() =>
+            document.getElementById(`field-${invalid.id}`)?.focus(),
+          );
+        }
+      }
     } finally {
+      operation.current = false;
       setPending(false);
     }
   };
   const save = async () => {
+    if (operation.current) return;
     const identity = formRespondentSchema.safeParse(respondent);
     if (!identity.success) {
-      setError(
-        "Enter your name and a valid email address before saving your draft.",
-      );
-      setStep(0);
-      requestAnimationFrame(() =>
-        document
-          .getElementById(`respondent-${identity.error.issues[0].path[0]}`)
-          ?.focus(),
-      );
+      rejectIdentity(identity.error.issues);
       return;
     }
     setPending(true);
+    operation.current = true;
+    setIdentityErrors({});
     setError("");
     try {
       const visible = visibleFields(
@@ -546,6 +579,7 @@ function RespondentFormRuntime() {
     } catch (e) {
       setError((e as Error).message);
     } finally {
+      operation.current = false;
       setPending(false);
     }
   };
@@ -644,6 +678,7 @@ function RespondentFormRuntime() {
               noValidate
               ref={formRef}
               className="gt-public-form-questions"
+              aria-busy={pending || uploading.length > 0}
               onSubmit={next}
             >
               <h2 tabIndex={-1} ref={heading}>
@@ -679,11 +714,24 @@ function RespondentFormRuntime() {
                       value={respondent.name}
                       readOnly={!!form.respondentContext?.locked}
                       disabled={pending}
-                      onChange={(e) =>
-                        setRespondent((v) => ({ ...v, name: e.target.value }))
+                      aria-invalid={!!identityErrors.name}
+                      aria-describedby={
+                        identityErrors.name
+                          ? "respondent-name-error"
+                          : undefined
                       }
+                      onChange={(e) => {
+                        setError("");
+                        setIdentityErrors((v) => ({ ...v, name: "" }));
+                        setRespondent((v) => ({ ...v, name: e.target.value }));
+                      }}
                     />
                   </Field>
+                  {identityErrors.name && (
+                    <p id="respondent-name-error" className="gt-form-error">
+                      {identityErrors.name}
+                    </p>
+                  )}
                   <Field
                     label="Your email *"
                     hint="If you request a copy, it goes only to this address. Check it carefully."
@@ -697,11 +745,24 @@ function RespondentFormRuntime() {
                       value={respondent.email}
                       readOnly={!!form.respondentContext?.email}
                       disabled={pending}
-                      onChange={(e) =>
-                        setRespondent((v) => ({ ...v, email: e.target.value }))
+                      aria-invalid={!!identityErrors.email}
+                      aria-describedby={
+                        identityErrors.email
+                          ? "respondent-email-error"
+                          : undefined
                       }
+                      onChange={(e) => {
+                        setError("");
+                        setIdentityErrors((v) => ({ ...v, email: "" }));
+                        setRespondent((v) => ({ ...v, email: e.target.value }));
+                      }}
                     />
                   </Field>
+                  {identityErrors.email && (
+                    <p id="respondent-email-error" className="gt-form-error">
+                      {identityErrors.email}
+                    </p>
+                  )}
                 </fieldset>
               )}
               {review ? (
@@ -741,63 +802,71 @@ function RespondentFormRuntime() {
                     ))}
                 </div>
               ) : (
-                fields.map((field) => (
-                  <FieldRenderer
-                    key={field.id}
-                    field={field}
-                    value={answers[field.id]}
-                    error={fieldErrors[field.id]}
-                    fileControl={
-                      field.type === "file" && !preview ? (
-                        <RespondentFileField
-                          field={field}
-                          value={
-                            Array.isArray(answers[field.id])
-                              ? (answers[field.id] as string[])
-                              : []
-                          }
-                          context={{
-                            slug: slug!,
-                            versionId: form.versionId,
-                            uploadToken,
-                            accessToken: tokens.access,
-                          }}
-                          readOnly={!!editToken.current}
-                          onBusy={(busy) =>
-                            setUploading((previous) =>
-                              busy
-                                ? [...new Set([...previous, field.id])]
-                                : previous.filter((id) => id !== field.id),
-                            )
-                          }
-                          onName={(id, name) =>
-                            setFileNames((previous) =>
-                              previous[id] === name
-                                ? previous
-                                : { ...previous, [id]: name },
-                            )
-                          }
-                          onChange={(value) =>
-                            setAnswers((previous) => ({
-                              ...previous,
-                              [field.id]: value,
-                            }))
-                          }
-                        />
-                      ) : undefined
-                    }
-                    onChange={(value) => {
-                      setFieldErrors((previous) => ({
-                        ...previous,
-                        [field.id]: "",
-                      }));
-                      setAnswers((previous) => ({
-                        ...previous,
-                        [field.id]: value,
-                      }));
-                    }}
-                  />
-                ))
+                <fieldset
+                  className="gt-form-answer-controls"
+                  disabled={pending}
+                  aria-label="Form questions"
+                >
+                  {fields.map((field) => (
+                    <FieldRenderer
+                      key={field.id}
+                      field={field}
+                      value={answers[field.id]}
+                      error={fieldErrors[field.id]}
+                      fileControl={
+                        field.type === "file" && !preview ? (
+                          <RespondentFileField
+                            field={field}
+                            value={
+                              Array.isArray(answers[field.id])
+                                ? (answers[field.id] as string[])
+                                : []
+                            }
+                            context={{
+                              slug: slug!,
+                              versionId: form.versionId,
+                              uploadToken,
+                              accessToken: tokens.access,
+                            }}
+                            readOnly={!!editToken.current}
+                            error={fieldErrors[field.id]}
+                            onBusy={(busy) =>
+                              setUploading((previous) =>
+                                busy
+                                  ? [...new Set([...previous, field.id])]
+                                  : previous.filter((id) => id !== field.id),
+                              )
+                            }
+                            onName={(id, name) =>
+                              setFileNames((previous) =>
+                                previous[id] === name
+                                  ? previous
+                                  : { ...previous, [id]: name },
+                              )
+                            }
+                            onChange={(value) =>
+                              setAnswers((previous) => ({
+                                ...previous,
+                                [field.id]: value,
+                              }))
+                            }
+                          />
+                        ) : undefined
+                      }
+                      onChange={(value) => {
+                        setError("");
+                        setFieldErrors((previous) => ({
+                          ...previous,
+                          [field.id]: "",
+                        }));
+                        setAnswers((previous) => ({
+                          ...previous,
+                          [field.id]: value,
+                        }));
+                      }}
+                    />
+                  ))}
+                </fieldset>
               )}
               {finalStep && (
                 <div className="gt-form">

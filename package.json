@@ -32,6 +32,7 @@
     "test:local-form-presentation": "node scripts/test-local-form-images.mjs --presentation",
     "test:local-form-navigation": "node scripts/test-local-form-images.mjs --navigation",
     "test:local-form-library": "node scripts/test-local-form-library.mjs",
+    "test:local-form-runtime": "node scripts/test-local-form-runtime.mjs",
     "test:local-form-exports": "node scripts/test-local-form-exports.mjs",
     "test:local-form-history": "node scripts/test-local-form-history.mjs",
     "test:local-form-delivery": "node scripts/test-local-form-delivery.mjs",

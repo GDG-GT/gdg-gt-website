@@ -1,7 +1,7 @@
 import { ArrowDown, ArrowUp, Star } from "lucide-react";
 import type { ReactNode } from "react";
-import type { Answer, FormField } from "./store";
-import FormImage from './FormImage';
+import { conditionValues, type Answer, type FormField } from "./store";
+import FormImage from "./FormImage";
 
 export default function FieldRenderer({
   field,
@@ -34,7 +34,12 @@ export default function FieldRenderer({
     return <p className="gt-helper">{field.label}</p>;
   if (field.type === "image")
     return (
-      <FormImage id={field.imageMediaId} alt={field.label} width={field.imageWidth} height={field.imageHeight} />
+      <FormImage
+        id={field.imageMediaId}
+        alt={field.label}
+        width={field.imageWidth}
+        height={field.imageHeight}
+      />
     );
   const label = (
     <>
@@ -81,6 +86,7 @@ export default function FieldRenderer({
       "grid",
       "ranking",
       "consent",
+      "file",
     ].includes(field.type)
   )
     return (
@@ -92,8 +98,15 @@ export default function FieldRenderer({
         aria-invalid={!!error}
         aria-describedby={shared["aria-describedby"]}
       >
-        <legend>{label}</legend>
+        <legend id={`${inputId}-label`}>{label}</legend>
         {help}
+        {field.type === "file" &&
+          (fileControl || (
+            <p className="gt-helper">
+              File uploads are disabled in this preview. Respondents upload
+              privately on the published form.
+            </p>
+          ))}
         {["radio", "checkbox"].includes(field.type) && (
           <div className="gt-choice-list">
             {field.options.map((option, i) => (
@@ -101,6 +114,8 @@ export default function FieldRenderer({
                 <input
                   type={field.type}
                   name={inputId}
+                  aria-describedby={shared["aria-describedby"]}
+                  aria-invalid={!!error}
                   checked={
                     field.type === "radio"
                       ? text === option
@@ -119,25 +134,34 @@ export default function FieldRenderer({
           </div>
         )}
         {["scale", "rating"].includes(field.type) && (
-          <div className="gt-scale" role="group" aria-label={field.label}>
-            {Array.from(
-              { length: Math.max(1, (field.max || 5) - (field.min ?? 1) + 1) },
-              (_, i) => {
-                const score = i + (field.min ?? 1);
-                return (
-                  <button
-                    type="button"
-                    className={text === String(score) ? "is-selected" : ""}
-                    key={i}
-                    aria-pressed={text === String(score)}
-                    aria-label={`${score} of ${field.max || 5}`}
-                    onClick={() => onChange(String(score))}
-                  >
-                    {field.type === "rating" ? (
+          <div className="gt-scale">
+            {!conditionValues(field).length && (
+              <p className="gt-helper">
+                Set valid whole-number scale bounds between 0 and 10 in the
+                field settings.
+              </p>
+            )}
+            {conditionValues(field).map((score) => {
+              return (
+                <label key={score}>
+                  <input
+                    type="radio"
+                    name={inputId}
+                    value={score}
+                    className="sr-only"
+                    checked={text === score}
+                    required={field.required && !preview}
+                    aria-label={`${score} of ${field.max ?? 5}`}
+                    aria-describedby={shared["aria-describedby"]}
+                    aria-invalid={!!error}
+                    onChange={() => onChange(score)}
+                  />
+                  <span>
+                    {field.type === "rating" && score !== "0" ? (
                       <Star
                         size={22}
                         fill={
-                          text && Number(text) >= score
+                          text && Number(text) >= Number(score)
                             ? "currentColor"
                             : "none"
                         }
@@ -145,16 +169,18 @@ export default function FieldRenderer({
                     ) : (
                       score
                     )}
-                  </button>
-                );
-              },
-            )}
+                  </span>
+                </label>
+              );
+            })}
           </div>
         )}
         {field.type === "consent" && (
           <label className="gt-check">
             <input
               type="checkbox"
+              aria-describedby={shared["aria-describedby"]}
+              aria-invalid={!!error}
               checked={text === "Agreed"}
               required={field.required && !preview}
               onChange={(event) =>
@@ -169,10 +195,12 @@ export default function FieldRenderer({
             <table>
               <thead>
                 <tr>
-                  <th>Statement</th>
+                  <th scope="col">Statement</th>
                   {(field.columns || ["Disagree", "Neutral", "Agree"]).map(
                     (option) => (
-                      <th key={option}>{option}</th>
+                      <th scope="col" key={option}>
+                        {option}
+                      </th>
                     ),
                   )}
                 </tr>
@@ -192,6 +220,13 @@ export default function FieldRenderer({
                           <td key={option}>
                             <input
                               aria-label={`${row}: ${option}`}
+                              aria-describedby={shared["aria-describedby"]}
+                              aria-invalid={!!error}
+                              required={
+                                field.type === "likert" &&
+                                field.required &&
+                                !preview
+                              }
                               type={
                                 field.type === "likert" ? "radio" : "checkbox"
                               }
@@ -307,27 +342,31 @@ export default function FieldRenderer({
             </option>
           ))}
         </select>
-      ) : field.type === "file" ? (
-        fileControl || (
-          <p className="gt-helper">
-            File uploads are disabled in this preview. Respondents upload
-            privately on the published form.
-          </p>
-        )
       ) : (
         <input
           {...shared}
+          step={
+            field.type === "number"
+              ? "any"
+              : field.type === "datetime"
+                ? "0.001"
+                : field.type === "time"
+                  ? "1"
+                  : undefined
+          }
           type={
-            ({
-              short: "text",
-              email: "email",
-              phone: "tel",
-              number: "number",
-              url: "url",
-              date: "date",
-              time: "time",
-              datetime: "datetime-local",
-            } as Partial<Record<FormField["type"], string>>)[field.type] || "text"
+            (
+              {
+                short: "text",
+                email: "email",
+                phone: "tel",
+                number: "number",
+                url: "url",
+                date: "date",
+                time: "time",
+                datetime: "datetime-local",
+              } as Partial<Record<FormField["type"], string>>
+            )[field.type] || "text"
           }
           min={
             ["date", "datetime"].includes(field.type)

@@ -34,6 +34,7 @@ export default function RespondentFileField({
   readOnly,
   onBusy,
   onName,
+  error: answerError,
 }: {
   field: FormField;
   value: string[];
@@ -42,6 +43,7 @@ export default function RespondentFileField({
   readOnly?: boolean;
   onBusy: (busy: boolean) => void;
   onName: (id: string, name: string) => void;
+  error?: string;
 }) {
   const [records, setRecords] = useState<Record<string, Status>>({}),
     [busy, setBusy] = useState(false),
@@ -69,8 +71,8 @@ export default function RespondentFileField({
     };
   }, []);
   const remember = useCallback((record: Status) => {
-    if (mounted.current)
-      setRecords((previous) => ({ ...previous, [record.uploadId]: record }));
+    if (!mounted.current) return;
+    setRecords((previous) => ({ ...previous, [record.uploadId]: record }));
     onNameRef.current(record.uploadId, record.filename);
   }, []);
   const status = useCallback(
@@ -201,12 +203,23 @@ export default function RespondentFileField({
     <div>
       {!readOnly && (
         <input
-          id={`field-${field.id}`}
+          id={`field-${field.id}-upload`}
           type="file"
           accept={allowed.flatMap((type) => types[type] || []).join(",")}
           multiple={limit > 1}
           disabled={busy || value.length >= limit}
-          aria-describedby={`field-${field.id}-file-help field-${field.id}-file-status`}
+          aria-labelledby={`field-${field.id}-label`}
+          aria-required={field.required}
+          aria-invalid={!!answerError || !!error}
+          aria-describedby={[
+            field.description && `field-${field.id}-help`,
+            answerError && `field-${field.id}-error`,
+            error && `field-${field.id}-upload-error`,
+            `field-${field.id}-file-help`,
+            `field-${field.id}-file-status`,
+          ]
+            .filter(Boolean)
+            .join(" ")}
           onChange={(event) => {
             const files = Array.from(event.target.files || []);
             event.target.value = "";
@@ -243,6 +256,9 @@ export default function RespondentFileField({
                         disabled={busy}
                         variant="secondary"
                         onClick={async () => {
+                          if (busy) return;
+                          setBusy(true);
+                          onBusy(true);
                           try {
                             const r = await status(id);
                             if (r.state === "clean") {
@@ -255,6 +271,9 @@ export default function RespondentFileField({
                               );
                           } catch (e) {
                             setError((e as Error).message);
+                          } finally {
+                            if (mounted.current) setBusy(false);
+                            onBusy(false);
                           }
                         }}
                       >
@@ -266,7 +285,9 @@ export default function RespondentFileField({
                       variant="secondary"
                       disabled={busy}
                       onClick={async () => {
+                        if (busy) return;
                         setBusy(true);
+                        onBusy(true);
                         try {
                           await api(`${prefix}/${id}/remove`, {
                             method: "POST",
@@ -282,7 +303,8 @@ export default function RespondentFileField({
                         } catch (e) {
                           setError((e as Error).message);
                         } finally {
-                          setBusy(false);
+                          if (mounted.current) setBusy(false);
+                          onBusy(false);
                         }
                       }}
                     >
@@ -304,7 +326,11 @@ export default function RespondentFileField({
         {message}
       </p>
       {error && (
-        <p role="alert" className="gt-form-error">
+        <p
+          id={`field-${field.id}-upload-error`}
+          role="alert"
+          className="gt-form-error"
+        >
           {error}
         </p>
       )}

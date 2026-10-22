@@ -26,6 +26,9 @@ email confirmation. File bytes/private links are excluded. See
 1. Forms: remaining library/builder/runtime edge cases and complete accessibility tests.
    Owner/team/date/template-origin library filters and scoped paginated options
    now work (`FORM_LIBRARY_OPERATIONS.md`).
+   Strict typed date-time/score/number runtime validation, native rating keyboard
+   controls, associated errors/focus and pending-operation freezing are verified
+   locally (`FORM_RUNTIME_OPERATIONS.md`), not full manual accessibility acceptance.
    Image blocks/header media now use real approved media with alt text and
    transactional publication/usage safeguards (`FORM_IMAGE_OPERATIONS.md`).
    Theme/progress/safe shuffling and distinct immutable/draft preview now work

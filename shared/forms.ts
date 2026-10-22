@@ -421,6 +421,14 @@ export function conditionValues(field: FormField): string[] {
   if (["scale", "rating"].includes(field.type)) {
     const min = field.min ?? 1,
       max = field.max ?? 5;
+    if (
+      !Number.isInteger(min) ||
+      !Number.isInteger(max) ||
+      min < 0 ||
+      max > 10 ||
+      min >= max
+    )
+      return [];
     return Array.from(
       { length: Math.max(0, Math.min(101, max - min + 1)) },
       (_, i) => String(min + i),
@@ -587,6 +595,29 @@ export function validateDefinition(form: PreviewForm): string[] {
     )
       issues.push(`Review the minimum and maximum for “${field.label}”.`);
     if (
+      ["scale", "rating"].includes(field.type) &&
+      !conditionValues(field).length
+    )
+      issues.push(
+        `“${field.label}” needs whole-number scale bounds from 0 to 10, with the maximum above the minimum.`,
+      );
+    if (["date", "datetime"].includes(field.type)) {
+      const from = field.dateFrom
+          ? formTemporalValue(field.type, field.dateFrom)
+          : undefined,
+        to = field.dateTo
+          ? formTemporalValue(field.type, field.dateTo)
+          : undefined;
+      if (
+        (field.dateFrom && !from) ||
+        (field.dateTo && !to) ||
+        (from && to && from > to)
+      )
+        issues.push(
+          `Review the valid earliest and latest dates for “${field.label}”.`,
+        );
+    }
+    if (
       ["likert", "grid"].includes(field.type) &&
       field.columns &&
       field.columns.filter((column) => column.trim()).length < 2
@@ -676,6 +707,30 @@ export function validateDefinition(form: PreviewForm): string[] {
   return [...new Set(issues)];
 }
 
+/** Calendar/local date-time validation is independent of the server's timezone.
+ * No normalization of February 30, offset-bearing input or trailing text. */
+export function formTemporalValue(
+  type: string,
+  value: string,
+): string | undefined {
+  const date = value.slice(0, 10),
+    parsed = new Date(date + "T00:00:00Z");
+  if (
+    !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+    !Number.isFinite(parsed.valueOf()) ||
+    parsed.toISOString().slice(0, 10) !== date
+  )
+    return undefined;
+  if (type === "date") return value === date ? date : undefined;
+  if (type !== "datetime") return undefined;
+  const time = value
+    .slice(10)
+    .match(/^T([01]\d|2[0-3]):([0-5]\d)(?::([0-5]\d)(?:\.(\d{1,3}))?)?$/);
+  return time
+    ? `${date}T${time[1]}:${time[2]}:${time[3] || "00"}.${(time[4] || "").padEnd(3, "0")}`
+    : undefined;
+}
+
 export function validateAnswer(
   field: FormField,
   value: Answer | undefined,
@@ -759,23 +814,14 @@ export function validateAnswer(
       return "Use the requested format (up to 512 characters).";
     if (field.type === "phone" && !/^[+0-9() .-]{5,32}$/.test(text))
       return "Enter a valid phone number.";
-    if (
-      field.type === "date" &&
-      (!/^\d{4}-\d{2}-\d{2}$/.test(text) ||
-        !Number.isFinite(Date.parse(text)) ||
-        new Date(text).toISOString().slice(0, 10) !== text)
-    )
+    if (field.type === "date" && !formTemporalValue("date", text))
       return "Enter a valid calendar date.";
     if (
       field.type === "time" &&
       !/^([01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/.test(text)
     )
       return "Enter a valid time.";
-    if (
-      field.type === "datetime" &&
-      (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(text) ||
-        !Number.isFinite(Date.parse(text)))
-    )
+    if (field.type === "datetime" && !formTemporalValue("datetime", text))
       return "Enter a valid date and time.";
     if (field.minLength && text.length < field.minLength)
       return `Use at least ${field.minLength} characters.`;
@@ -799,23 +845,34 @@ export function validateAnswer(
       }
     }
     if (
-      ["number", "scale", "rating"].includes(field.type) &&
-      (!Number.isFinite(Number(text)) ||
+      field.type === "number" &&
+      (!/^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/.test(text) ||
+        !Number.isFinite(Number(text)) ||
         Number(text) < (field.min ?? -Infinity) ||
         Number(text) > (field.max ?? Infinity))
     )
       return "Enter a number within the allowed range.";
     if (
+      ["scale", "rating"].includes(field.type) &&
+      !conditionValues(field).includes(value)
+    )
+      return "Choose one of the displayed whole-number scores.";
+    if (
       ["radio", "dropdown"].includes(field.type) &&
-      !field.options.includes(text)
+      !field.options.includes(value)
     )
       return "Choose an available option.";
-    if (
-      ["date", "datetime"].includes(field.type) &&
-      ((field.dateFrom && text < field.dateFrom) ||
-        (field.dateTo && text > field.dateTo))
-    )
-      return "Choose a date within the allowed range.";
+    if (["date", "datetime"].includes(field.type)) {
+      const current = formTemporalValue(field.type, text)!,
+        from = field.dateFrom
+          ? formTemporalValue(field.type, field.dateFrom)
+          : undefined,
+        to = field.dateTo
+          ? formTemporalValue(field.type, field.dateTo)
+          : undefined;
+      if ((from && current < from) || (to && current > to))
+        return "Choose a date within the allowed range.";
+    }
   }
   if (
     Array.isArray(value) &&
