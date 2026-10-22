@@ -57,6 +57,8 @@ import { newsletterRoutes } from "./newsletter.mjs";
 import { newsletterSendRoutes } from "./newsletter-sends.mjs";
 import { newsletterWebhookRoutes } from "./newsletter-webhook.mjs";
 import { newsletterResultRoutes } from "./newsletter-results.mjs";
+import { contactUploadRoutes } from "./contact-uploads.mjs";
+import { contactInboxRoutes } from "./contact-inbox.mjs";
 
 export function applicationHandler({
   store,
@@ -94,6 +96,24 @@ export function applicationHandler({
         checkOrigin(request, config.origin, {
           mutation: !["GET", "HEAD"].includes(request.method),
         });
+        if (
+          await contactUploadRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
+        if (
+          await contactInboxRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
         if (
           await newsletterResultRoutes(request, response, {
             db,

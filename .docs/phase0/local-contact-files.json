@@ -1,0 +1,126 @@
+{
+  "generatedAt": "2026-10-22T00:28:27.601Z",
+  "environment": "Fictional loopback inquiries/accounts; actual private S3, ClamAV and SMTP. Only captured synthetic contact files are purged by the resolution-retention test; unrelated upload cleanup claims are excluded.",
+  "tests": [
+    {
+      "name": "contact tests cannot use an external email provider",
+      "passed": true
+    },
+    {
+      "name": "contact upload intents enforce the 10 MiB limit before signing",
+      "passed": true
+    },
+    {
+      "name": "SVG and unapproved file types cannot receive upload intents",
+      "passed": true
+    },
+    {
+      "name": "callers cannot choose quarantine or clean object keys",
+      "passed": true
+    },
+    {
+      "name": "attachment upload honeypots are enforced",
+      "passed": true
+    },
+    {
+      "name": "upload creation retries keep one scoped intent and object key",
+      "passed": true
+    },
+    {
+      "name": "contact submission refuses a file that has not passed scanning",
+      "passed": true
+    },
+    {
+      "name": "another capability cannot inspect an upload by guessing its identifier",
+      "passed": true
+    },
+    {
+      "name": "completion refuses a quarantine object that has not arrived",
+      "passed": true
+    },
+    {
+      "name": "real direct quarantine upload passes ClamAV and image normalization",
+      "passed": true
+    },
+    {
+      "name": "normalized object is durably reserved before publication to private storage",
+      "passed": true
+    },
+    {
+      "name": "clean contact originals remain unavailable through public storage URLs",
+      "passed": true
+    },
+    {
+      "name": "contact acceptance binds one clean upload atomically and is safe to retry",
+      "passed": true
+    },
+    {
+      "name": "a bound attachment cannot be reused for another inquiry",
+      "passed": true
+    },
+    {
+      "name": "anonymous upload removal cannot erase a submitted attachment",
+      "passed": true
+    },
+    {
+      "name": "anonymous visitors and team members cannot read private chapter inquiries",
+      "passed": true
+    },
+    {
+      "name": "administrator inbox returns approved metadata without storage keys or capability hashes",
+      "passed": true
+    },
+    {
+      "name": "authorized one-minute private download is attachment-only and strips image metadata",
+      "passed": true
+    },
+    {
+      "name": "team members cannot mint private contact download URLs",
+      "passed": true
+    },
+    {
+      "name": "content sniffing rejects HTML forged as an allowed raster image",
+      "passed": true
+    },
+    {
+      "name": "real ClamAV rejects harmless standard antivirus test bytes before any private download",
+      "passed": true
+    },
+    {
+      "name": "server scan rejects byte hashes even when signed object metadata claims a matching digest",
+      "passed": true
+    },
+    {
+      "name": "accepted contact receives an acknowledgment through actual loopback SMTP",
+      "passed": true
+    },
+    {
+      "name": "contact notification jobs retain references rather than email bodies or file URLs",
+      "passed": true
+    },
+    {
+      "name": "chapter notification is captured only in the configured local mail sink",
+      "passed": true
+    },
+    {
+      "name": "inbox status updates reject stale revisions",
+      "passed": true
+    },
+    {
+      "name": "retention holds require the actual current password",
+      "passed": true
+    },
+    {
+      "name": "real retention job preserves an old resolved inquiry and its file under a hold",
+      "passed": true
+    },
+    {
+      "name": "released resolved retention redacts identity and physically cleans the private attachment",
+      "passed": true
+    },
+    {
+      "name": "retention cleanup immediately denies new attachment download capabilities",
+      "passed": true
+    }
+  ]
+}

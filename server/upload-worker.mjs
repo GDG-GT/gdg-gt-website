@@ -17,7 +17,9 @@ export async function runUploadWorker({
     jobs = checked(
       await db.rpc("claim_worker_jobs", {
         p_limit: limit,
-        p_kinds: [media ? "media_upload_scan" : "upload_scan"],
+        p_kinds: media
+          ? ["media_upload_scan"]
+          : ["upload_scan", "contact_upload_scan"],
       }),
     ),
     result = {
@@ -29,6 +31,12 @@ export async function runUploadWorker({
     };
   try {
     for (const job of jobs) {
+      const contact = job.kind === "contact_upload_scan",
+        finish = media
+          ? "finish_media_upload_scan"
+          : contact
+            ? "finish_contact_upload_scan"
+            : "finish_upload_scan";
       let cleanKey;
       try {
         const record = checked(
@@ -50,6 +58,18 @@ export async function runUploadWorker({
           );
           continue;
         }
+        if (contact !== (record.purpose === "contact"))
+          throw new ApiError(
+            400,
+            "INVALID_UPLOAD",
+            "The file does not match its scan queue.",
+          );
+        if (contact && Date.parse(record.expires_at) <= Date.now())
+          throw new ApiError(
+            400,
+            "UPLOAD_EXPIRED",
+            "The contact attachment upload expired.",
+          );
         const bytes = await storage.bytes(
           record.bucket,
           record.quarantine_key,
@@ -77,14 +97,20 @@ export async function runUploadWorker({
           record.declared_mime,
           env,
         );
-        cleanKey = media
-          ? checked(
-              await db.rpc("reserve_media_scan_object", {
-                p_job: job.id,
-                p_lease: job.lease_token,
-              }),
-            )
-          : "clean/" + record.id + "/" + randomUUID();
+        cleanKey =
+          media || contact
+            ? checked(
+                await db.rpc(
+                  media
+                    ? "reserve_media_scan_object"
+                    : "reserve_contact_scan_object",
+                  {
+                    p_job: job.id,
+                    p_lease: job.lease_token,
+                  },
+                ),
+              )
+            : "clean/" + record.id + "/" + randomUUID();
         if (!cleanKey) {
           result.lostLease++;
           continue;
@@ -96,27 +122,24 @@ export async function runUploadWorker({
           normalized.mime,
         );
         const committed = checked(
-          await db.rpc(
-            media ? "finish_media_upload_scan" : "finish_upload_scan",
-            {
-              p_job: job.id,
-              p_lease: job.lease_token,
-              p_clean_key: cleanKey,
-              p_mime: normalized.mime,
-              p_bytes: normalized.bytes.length,
-              p_sha256: tokenHash(normalized.bytes),
-              p_reject: null,
-              ...(media
-                ? {
-                    p_metadata: {
-                      width: normalized.width,
-                      height: normalized.height,
-                      duration: normalized.duration,
-                    },
-                  }
-                : {}),
-            },
-          ),
+          await db.rpc(finish, {
+            p_job: job.id,
+            p_lease: job.lease_token,
+            p_clean_key: cleanKey,
+            p_mime: normalized.mime,
+            p_bytes: normalized.bytes.length,
+            p_sha256: tokenHash(normalized.bytes),
+            p_reject: null,
+            ...(media
+              ? {
+                  p_metadata: {
+                    width: normalized.width,
+                    height: normalized.height,
+                    duration: normalized.duration,
+                  },
+                }
+              : {}),
+          }),
         );
         if (!committed) {
           await storage.delete(record.bucket, cleanKey);
@@ -128,19 +151,16 @@ export async function runUploadWorker({
         let committed;
         if (permanent)
           committed = checked(
-            await db.rpc(
-              media ? "finish_media_upload_scan" : "finish_upload_scan",
-              {
-                p_job: job.id,
-                p_lease: job.lease_token,
-                p_clean_key: null,
-                p_mime: null,
-                p_bytes: null,
-                p_sha256: null,
-                p_reject: code,
-                ...(media ? { p_metadata: {} } : {}),
-              },
-            ),
+            await db.rpc(finish, {
+              p_job: job.id,
+              p_lease: job.lease_token,
+              p_clean_key: null,
+              p_mime: null,
+              p_bytes: null,
+              p_sha256: null,
+              p_reject: code,
+              ...(media ? { p_metadata: {} } : {}),
+            }),
           );
         else
           committed = checked(

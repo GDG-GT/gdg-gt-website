@@ -42,6 +42,12 @@ const sections = [
       "Use announcements, tasks, messages, and channels for internal work. Newsletter drafts are a separate, subscriber-facing workflow. Verify recipients before a real send.",
   },
   {
+    title: "Review chapter inquiries",
+    href: "/admin/communications?tab=contact",
+    description:
+      "Chapter administrators can review contact messages and private scanned attachments in the Contact inbox. Download links expire after one minute. Mark an inquiry resolved only when finished: its identity, message and files are removed after 180 days unless held. Adding or releasing a hold requires your current password and an explicit confirmation; releasing an overdue hold may allow cleanup immediately.",
+  },
+  {
     title: "Send a newsletter",
     href: "/admin/newsletter",
     description:

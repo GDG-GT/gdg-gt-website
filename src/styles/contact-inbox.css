@@ -1,0 +1,82 @@
+.gt-contact-inbox {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+.gt-contact-inbox .gt-admin-page-heading {
+  margin-bottom: 0;
+}
+.gt-contact-inbox .gt-toolbar {
+  align-items: end;
+  flex-wrap: wrap;
+}
+.gt-contact-inbox .gt-toolbar .gt-field {
+  min-width: 160px;
+}
+.gt-contact-inbox table {
+  min-width: 650px;
+}
+.gt-contact-inbox table th[scope="row"] {
+  font-weight: 600;
+  text-align: left;
+  max-width: 320px;
+}
+.gt-contact-inbox table th[scope="row"] .gt-button {
+  white-space: normal;
+  text-align: left;
+  overflow-wrap: anywhere;
+  padding-left: 0;
+  justify-content: start;
+}
+.gt-contact-inbox table small {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+  overflow-wrap: anywhere;
+  margin-top: 5px;
+}
+.gt-contact-inbox-review {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+.gt-contact-inbox-review > header {
+  justify-content: space-between;
+  align-items: start;
+}
+.gt-contact-inbox-review h2 {
+  font-size: 1.35rem;
+  overflow-wrap: anywhere;
+}
+.gt-contact-inbox-review p,
+.gt-contact-inbox-review a {
+  overflow-wrap: anywhere;
+}
+.gt-contact-inbox-review .gt-form {
+  max-width: 760px;
+}
+.gt-contact-inbox-message {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-width: 75ch;
+  line-height: 1.7;
+}
+.gt-contact-inbox-review > section,
+.gt-contact-inbox-review > form {
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+}
+@media (max-width: 600px) {
+  .gt-contact-inbox .gt-toolbar {
+    align-items: stretch;
+  }
+  .gt-contact-inbox .gt-toolbar .gt-field {
+    width: 100%;
+  }
+  .gt-contact-inbox-review {
+    padding: 18px;
+  }
+}

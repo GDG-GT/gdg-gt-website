@@ -40,10 +40,11 @@ See `MEMBER_TRANSFER_OPERATIONS.md` for scope, limits and real test evidence.
    schedule/cancel/self-test, bounded delivery, verified callbacks/suppression,
    export, recoverable bulk cleanup and retention are implemented and tested.
    See `NEWSLETTER_OPERATIONS.md`. No real provider sends were enabled.
-4. Remaining scoped mail and attachment contracts: event/team/communications
-   fan-out, general private collaboration attachments, optional scanned contact
-   attachments. Current contact text submission and restricted transactional mail
-   do not complete the optional contact-file flow in section 22.9.
+4. Remaining scoped mail contracts: event/team/communications fan-out and any
+   private collaboration attachment contracts required by the preserved source.
+   Optional scanned contact attachments and the restricted chapter inbox are now
+   implemented locally, including resolution retention/holds/physical cleanup.
+   See `CONTACT_OPERATIONS.md`; full hosted/browser acceptance remains open.
 5. PWA full supported-device/upgrade/cache-inspection and queue edge-case
    acceptance. Production worker/manifest/icons, public-only cache rules,
    draft-guarded updates, install guidance and IndexedDB event/newsletter queue

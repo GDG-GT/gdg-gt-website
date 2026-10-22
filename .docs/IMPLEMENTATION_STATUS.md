@@ -5,6 +5,18 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Contact inbox and private attachments — 2026-10-21
+
+- Added private capability-bound quarantine uploads, actual scanner/normalization,
+  atomic clean-file binding, reference-only mail jobs and a restricted chapter
+  inbox. Current-revision status and password/typed-confirmed holds protect the
+  180-day post-resolution retention flow; actual byte deletion is retryable.
+- **88 migrations**, canonical SQL/both concurrency tests, **330 unit tests**,
+  typecheck, changed-UI lint and build pass. **30 actual contact checks** and
+  **40 Forms-upload regressions** pass. Desktop/375px browser draft/privacy/layout
+  checks are recorded. Only synthetic fixture files were purged; no real contact
+  was erased. See `CONTACT_OPERATIONS.md`; remaining PRD/hosted gates stay open.
+
 ### Newsletter workspace and delivery — 2026-10-21
 
 - Replaced the legacy browser-service/scheduler screen with scoped subscriber,

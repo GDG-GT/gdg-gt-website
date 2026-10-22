@@ -92,6 +92,10 @@ export function databaseResult({ data, error }) {
     VALIDATION_ERROR: [400, "Check the supplied fields."],
   };
   Object.assign(codes, {
+    CONTACT_UPLOAD_QUOTA: [
+      429,
+      "Up to three contact files may upload at once and ten may be requested per network per day. Wait or send your message without an attachment.",
+    ],
     NEWSLETTER_EXPORT_LIMIT: [
       409,
       "Narrow your filters to at most 1,000 subscribers before exporting.",

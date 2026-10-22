@@ -10,6 +10,7 @@ import {
   useDraftGuard,
 } from "@/hooks/useDraftGuard";
 import { api, ApiFailure } from "@/lib/api";
+import ContactInboxLink from "./ContactInboxLink";
 import { validationMessage } from "@/lib/validationMessage";
 import { useScopedRealtime } from "@/hooks/useScopedRealtime";
 import { chapterAnnouncementRecord } from "../../../shared/announcements.mjs";
@@ -526,6 +527,7 @@ export default function AnnouncementWorkspace() {
         <ActionLink to="/admin/communications?tab=messages" variant="ghost">
           Messages
         </ActionLink>
+        <ContactInboxLink />
       </nav>
       {error && (
         <p className="gt-form-error" role="alert">

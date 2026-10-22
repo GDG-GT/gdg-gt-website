@@ -10,6 +10,7 @@ import {
   useDraftGuard,
 } from "@/hooks/useDraftGuard";
 import { api, ApiFailure } from "@/lib/api";
+import ContactInboxLink from "./ContactInboxLink";
 import { validationMessage } from "@/lib/validationMessage";
 import { useScopedRealtime } from "@/hooks/useScopedRealtime";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -608,6 +609,7 @@ export default function DirectMessageWorkspace() {
         <span className="gt-button" aria-current="page">
           Messages
         </span>
+        <ContactInboxLink />
       </nav>
       {error && (
         <p className="gt-form-error" role="alert">

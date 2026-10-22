@@ -5,8 +5,7 @@ export interface ContactFormData {
   type: string;
   message: string;
   interests?: string[];
-  fileUploadId?: string;
-  fileName?: string;
+  attachment?: { uploadId: string; uploadToken: string };
   website?: string;
 }
 export interface ContactFormResult {
@@ -18,6 +17,7 @@ export class ContactService {
   static async submitContactForm(
     form: ContactFormData,
     key: string = crypto.randomUUID(),
+    signal?: AbortSignal,
   ): Promise<ContactFormResult> {
     try {
       const result = await api<{ accepted: boolean; message: string }>(
@@ -32,7 +32,9 @@ export class ContactService {
             message: form.message,
             interests: form.interests || [],
             website: form.website || "",
+            ...(form.attachment ? { attachment: form.attachment } : {}),
           },
+          signal,
         },
       );
       return { success: result.accepted, message: result.message };

@@ -5,7 +5,7 @@ export default defineConfig({
   resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
   test: {
     environment: "node",
-    include: ["src/ui/**/*.test.ts", "tests/**/*.test.mjs"],
+    include: ["src/ui/**/*.test.ts", "tests/**/*.test.mjs", "tests/**/*.test.ts"],
     clearMocks: true,
   },
 });

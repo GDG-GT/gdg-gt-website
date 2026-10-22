@@ -4,6 +4,7 @@ import "./index.css";
 import "./styles/gt.css";
 import "./styles/media.css";
 import "./styles/newsletter.css";
+import "./styles/contact-inbox.css";
 import { registerPublicWorker } from "./pwa/register";
 // import { SpeedInsights } from "@vercel/speed-insights/react";
 

@@ -14,6 +14,7 @@ import {
 } from "./lib/security.mjs";
 import { encryptPayload } from "./lib/encryption.mjs";
 import { checkGateAttempt, createGateAccess } from "./auth.mjs";
+import { contactSubmission } from "../shared/contact.mjs";
 export async function publicSubmissionRoutes(
   request,
   response,
@@ -128,27 +129,7 @@ export async function publicSubmissionRoutes(
     sendJson(response, 200, { updated: true }, requestId);
     return true;
   }
-  const body = await jsonBody(
-    request,
-    z
-      .object({
-        name: text(100, 2),
-        email: z.string().trim().toLowerCase().email().max(255),
-        type: z.enum([
-          "general",
-          "membership",
-          "event",
-          "sponsorship",
-          "speaker",
-          "accessibility",
-        ]),
-        message: text(5000, 20),
-        interests: z.array(text(100)).max(20).default([]),
-        website: text(200).default(""),
-      })
-      .strict(),
-    32768,
-  );
+  const body = await jsonBody(request, contactSubmission, 32768);
   if (body.website)
     throw new ApiError(
       400,
@@ -162,6 +143,12 @@ export async function publicSubmissionRoutes(
       type: body.type,
       message: body.message,
       interests: body.interests,
+      ...(body.attachment
+        ? {
+            uploadId: body.attachment.uploadId,
+            uploadProof: tokenHash(body.attachment.uploadToken),
+          }
+        : {}),
     };
   checked(
     await db.rpc("submit_contact", {

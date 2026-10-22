@@ -42,6 +42,12 @@ import {
 } from "@/components/ui/dialog";
 import { useContent } from "@/contexts/ContentContext";
 import { ContactService } from "@/services/contactService";
+import {
+  contactUpload,
+  prepareContactAttachment,
+  abandonContactAttachment,
+  type ContactUpload,
+} from "@/lib/contact-upload";
 import { api } from "@/lib/api";
 import { eventForPage, type ChapterEvent } from "./events";
 import SubmissionQueue from "@/pwa/SubmissionQueue";
@@ -1533,6 +1539,19 @@ export function ContactPage() {
     [error, setError] = useState(""),
     [success, setSuccess] = useState(false),
     [busy, setBusy] = useState(false);
+  const [interests, setInterests] = useState(""),
+    [uploadProgress, setUploadProgress] = useState("");
+  const attachment = useRef<ContactUpload>(),
+    contactPending = useRef<AbortController>(),
+    contactActive = useRef(true),
+    contactFileInput = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    contactActive.current = true;
+    return () => {
+      contactActive.current = false;
+      contactPending.current?.abort();
+    };
+  }, []);
   const contactRequest = useRef<{ body: string; key: string } | null>(null);
   const [contactDirty, setContactDirty] = useState(false);
   useDraftGuard(!success && (contactDirty || !!message || !!file), {
@@ -1544,6 +1563,9 @@ export function ContactPage() {
     event.preventDefault();
     setError("");
     setBusy(true);
+    setUploadProgress("");
+    const controller = new AbortController();
+    contactPending.current = controller;
     const data = new FormData(event.currentTarget);
     if (
       file &&
@@ -1569,17 +1591,42 @@ export function ContactPage() {
           }),
         );
         setSuccess(true);
-      } else if (file)
-        setError(
-          "Attachments are not connected in this UI release. Please send your message without an attachment.",
-        );
-      else {
+      } else {
+        if (data.get("website")) {
+          setError("This message could not be accepted.");
+          return;
+        }
+        const parsedInterests = interests
+          .split(",")
+          .map((v) => v.trim())
+          .filter(Boolean);
+        if (
+          parsedInterests.length > 20 ||
+          parsedInterests.some((v) => v.length > 100)
+        ) {
+          setError("Use up to 20 interests, each at most 100 characters.");
+          return;
+        }
+        let approvedAttachment: { uploadId: string; uploadToken: string };
+        if (file) {
+          if (attachment.current?.file !== file)
+            attachment.current = contactUpload(file);
+          approvedAttachment = await prepareContactAttachment(
+            attachment.current,
+            controller.signal,
+            (text) => {
+              if (contactActive.current) setUploadProgress(text);
+            },
+          );
+        }
         const body = {
           name: String(data.get("name")),
           email: String(data.get("email")),
           message,
           type,
           website: String(data.get("website") || ""),
+          interests: parsedInterests,
+          ...(approvedAttachment ? { attachment: approvedAttachment } : {}),
         };
         const fingerprint = JSON.stringify(body);
         if (contactRequest.current?.body !== fingerprint)
@@ -1590,17 +1637,28 @@ export function ContactPage() {
         const result = await ContactService.submitContactForm(
           body,
           contactRequest.current.key,
+          controller.signal,
         );
-        if (result.success) setSuccess(true);
-        else
+        if (!contactActive.current) return;
+        if (result.success) {
+          setSuccess(true);
+          setContactDirty(false);
+          attachment.current = undefined;
+          setUploadProgress("");
+        } else
           setError(
             result.error || "We could not send your message. Please try again.",
           );
       }
-    } catch {
-      setError("We could not send your message. Please try again.");
+    } catch (failure) {
+      if (contactActive.current && !controller.signal.aborted)
+        setError(
+          failure instanceof Error
+            ? failure.message
+            : "We could not send your message. Please try again.",
+        );
     } finally {
-      setBusy(false);
+      if (contactActive.current) setBusy(false);
     }
   };
   return (
@@ -1680,6 +1738,10 @@ export function ContactPage() {
                   setSuccess(false);
                   setMessage("");
                   setFile(null);
+                  setContactDirty(false);
+                  setInterests("");
+                  setUploadProgress("");
+                  contactRequest.current = null;
                 }}
                 variant="secondary"
               >
@@ -1709,6 +1771,7 @@ export function ContactPage() {
                     required
                     minLength={2}
                     maxLength={100}
+                    disabled={busy}
                   />
                 </Field>
                 <Field label="Email address" required>
@@ -1717,12 +1780,15 @@ export function ContactPage() {
                     type="email"
                     autoComplete="email"
                     required
+                    maxLength={254}
+                    disabled={busy}
                   />
                 </Field>
               </div>
               <Field label="What brings you here?" required>
                 <select
                   value={type}
+                  disabled={busy}
                   onChange={(event) => setType(event.target.value)}
                 >
                   {[
@@ -1746,6 +1812,7 @@ export function ContactPage() {
               >
                 <textarea
                   name="message"
+                  disabled={busy}
                   rows={5}
                   minLength={20}
                   maxLength={5000}
@@ -1756,19 +1823,62 @@ export function ContactPage() {
                 />
               </Field>
               <Field
+                label="Interests (optional)"
+                hint="Separate interests with commas. Up to 20; avoid private or sensitive details."
+              >
+                <input
+                  maxLength={2000}
+                  value={interests}
+                  disabled={busy}
+                  onChange={(event) => setInterests(event.target.value)}
+                />
+              </Field>
+              <Field
                 label="Attachment (optional)"
-                hint="PDF, PNG, JPEG, or WebP · Up to 10 MB"
+                hint="PDF, PNG, JPEG, or WebP · Up to 10 MB. Uploaded privately and checked before the message is accepted."
               >
                 <input
                   type="file"
                   accept=".pdf,.png,.jpg,.jpeg,.webp"
-                  onChange={(event) => setFile(event.target.files?.[0] || null)}
+                  ref={contactFileInput}
+                  disabled={busy}
+                  onChange={(event) => {
+                    void abandonContactAttachment(attachment.current);
+                    attachment.current = undefined;
+                    setFile(event.target.files?.[0] || null);
+                    setUploadProgress("");
+                    setError("");
+                  }}
                 />
               </Field>
               {file && (
                 <small>
-                  {file.name} · Selected locally; scanning is not connected.
+                  {file.name} · Selected locally. It stays private after
+                  submission.
                 </small>
+              )}
+              {file && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  disabled={busy}
+                  onClick={() => {
+                    void abandonContactAttachment(attachment.current);
+                    attachment.current = undefined;
+                    setFile(null);
+                    if (contactFileInput.current)
+                      contactFileInput.current.value = "";
+                    setUploadProgress("");
+                    setError("");
+                  }}
+                >
+                  Remove attachment
+                </Button>
+              )}
+              {uploadProgress && (
+                <p role="status" aria-live="polite">
+                  {uploadProgress}
+                </p>
               )}
               {error && (
                 <p className="gt-form-error" role="alert">

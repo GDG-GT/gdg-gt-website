@@ -130,7 +130,7 @@ never a browser session. Times use UTC cadence windows, not browser timezone.
 | Work | Cadence | Retry |
 | --- | --- | --- |
 | Open/close scheduled forms | 5 minutes | 30-second local retry; distributed lease and occurrence deduplication |
-| Expired form drafts and abandoned/rejected uploads | Hourly | Failed object deletion remains retryable; active drafts and response files are protected |
+| Expired form drafts, abandoned/rejected uploads and contact retention | Hourly | Failed object deletion remains retryable; active drafts, response files and held contacts are protected |
 | Local transactional delivery | 1 minute | Per-message fenced leases; bounded backoff and eight-attempt dead state |
 | Newsletter schedules, delivery pass and retention | 5 minutes | Frozen audience, current grants, per-recipient leases; bounded retries and deadline |
 | Dedicated local newsletter/test delivery | Queue polled every 5 seconds | `npm run jobs:newsletter -- --watch`; local SMTP only |
@@ -142,6 +142,9 @@ cleanup also waits beyond the direct-upload capability's lifetime. Completed
 response files are not treated as abandoned. This does not yet implement every
 PRD retention policy, event-reminder job, or missed-run alert. Newsletter campaign
 workflows and retention are documented in `NEWSLETTER_OPERATIONS.md`.
+Private contact files use the ordinary Forms/contact upload worker and the same
+hourly cleanup occurrence. Resolved contacts expire after 180 days unless held;
+see `CONTACT_OPERATIONS.md` for capability, quarantine and private inbox controls.
 
 Hosted deployment must choose and configure Supabase Cron or an equivalently
 precise paid scheduler. No Vercel Hobby schedule is used. This local process is

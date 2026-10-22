@@ -108,10 +108,13 @@ export async function deliveryMessage(job, db, config, mail) {
     const contact = checked(
       await db
         .from("contact_submissions")
-        .select("name,email,inquiry_type,message")
+        .select(
+          "name,email,inquiry_type,message,attachment_upload_id,redacted_at",
+        )
         .eq("id", job.payload.contactId)
         .single(),
     );
+    if (contact.redacted_at) return null;
     if (job.kind === "contact_acknowledgment") {
       to = contact.email;
       subject = "We received your message";
@@ -125,7 +128,7 @@ export async function deliveryMessage(job, db, config, mail) {
         );
       to = mail.chapter;
       subject = "New chapter inquiry: " + contact.inquiry_type;
-      content = `${contact.name} (${contact.email}) sent an inquiry.\n\n${contact.message}\n\nReview securely: ${config.origin}/admin/communications`;
+      content = `${contact.name} (${contact.email}) sent an inquiry.\n\n${contact.message}\n\n${contact.attachment_upload_id ? "A private scanned attachment is available in the protected inbox.\n\n" : ""}Review securely: ${config.origin}/admin/communications?tab=contact&contact=${job.payload.contactId}`;
     }
   } else if (job.kind === "chapter_announcement") {
     const notice = checked(

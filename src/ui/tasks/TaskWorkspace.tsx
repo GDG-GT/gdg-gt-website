@@ -4,6 +4,7 @@ import {
   useDraftGuard,
 } from "@/hooks/useDraftGuard";
 import { api, ApiFailure } from "@/lib/api";
+import ContactInboxLink from "../communications/ContactInboxLink";
 import { validationMessage } from "@/lib/validationMessage";
 import {
   taskCreate,
@@ -541,6 +542,7 @@ export default function TaskWorkspace() {
         <ActionLink to="/admin/communications?tab=messages" variant="ghost">
           Messages
         </ActionLink>
+        <ContactInboxLink />
         {allowedLinks.includes("/admin/teams") && (
           <ActionLink to="/admin/teams" variant="ghost">
             Team announcements
