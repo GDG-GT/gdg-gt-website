@@ -104,8 +104,11 @@ email confirmation. File bytes/private links are excluded. See
 - Complete CI: the committed foundation runs lint/type/unit/canonical SQL/build
   plus a blocking production dependency audit. It has not run on GitHub here;
   the dependency gate passes locally; the independent coverage gate remains red.
-  Full-stack browser/accessibility/integration, full secret scan and remaining
-  coverage are open. Public byte/artifact gates are implemented and pass locally.
+  Full-stack browser/accessibility/integration and remaining coverage are open.
+  Redacted all-local-ref history/current-file secret scanning passes locally
+  (`SECRET_SCAN_OPERATIONS.md`), with two exact reviewed fictional test inputs;
+  hosted credential inventory/rotation remains separate. Public byte/artifact
+  gates are implemented and pass locally.
 - Every public/protected route and negative role/team/resource/storage boundary,
   remaining stale-data/navigation states, outage/reconnect recovery, supported
   browsers, keyboard/zoom and manual screen-reader paths.

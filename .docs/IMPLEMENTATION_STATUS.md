@@ -5,6 +5,18 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Redacted source/history secret gate — 2026-10-22
+
+- Added checksum-pinned official Gitleaks scanning for all local-ref history and
+  current tracked/nonignored files. First run: 55 commits/1,246 current files,
+  zero unreviewed findings, two exact reviewed fictional test inputs. No broad
+  baseline/rule exclusions, inline suppression or data upload; temporary scan
+  copies are removed, local credentials untouched.
+- Added standalone full-history CI gate and four fail-closed policy tests;
+  441 unit tests and lint pass locally. CI execution and broader security/
+  accessibility/performance/hosted acceptance remain open. See
+  `SECRET_SCAN_OPERATIONS.md` for exact boundaries, pins and evidence.
+
 ### Critical transport tests and source attachment review — 2026-10-22
 
 - Added 27 unit tests; 437 pass. Encryption, private storage, scanner transport,
