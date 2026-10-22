@@ -4835,6 +4835,21 @@ img {
   aspect-ratio: 16 / 9;
   object-fit: cover;
 }
+[data-form-theme="charcoal"] .gt-form-peach-band,
+[data-form-theme="charcoal"] .gt-form-progress > span {
+  background: #323236;
+}
+[data-form-theme="charcoal"] .gt-button-primary {
+  background: #323236;
+  color: #f8f8fa;
+}
+[data-form-theme="charcoal"] .gt-button-primary:hover {
+  background: #47474d;
+}
+[data-form-theme="charcoal"] .gt-scale button.is-selected {
+  background: #323236;
+  color: #f8f8fa;
+}
 .gt-form-image-block small {
   font-size: 0.6rem;
   color: #8a6849;

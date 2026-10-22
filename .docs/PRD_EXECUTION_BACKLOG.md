@@ -26,7 +26,9 @@ email confirmation. File bytes/private links are excluded. See
 1. Forms: remaining library/builder/runtime edge cases and complete accessibility tests.
    Image blocks/header media now use real approved media with alt text and
    transactional publication/usage safeguards (`FORM_IMAGE_OPERATIONS.md`).
-   Complete theme/progress/safe shuffling and verify remaining preview behavior.
+   Theme/progress/safe shuffling and distinct immutable/draft preview now work
+   (`FORM_PRESENTATION_OPERATIONS.md`); remaining field/runtime/accessibility
+   edge cases and broader acceptance remain open.
    Safe Super Admin permanent-deletion review and erasure are implemented locally
    (`FORM_PERMANENT_DELETION_OPERATIONS.md`); hosted retention/security acceptance
    remains open.
@@ -110,7 +112,7 @@ email confirmation. File bytes/private links are excluded. See
 
 ## Next implementation checkpoint
 
-Complete Forms theme/progress/shuffling and remaining quality/coverage/device
+Complete remaining Forms/runtime/navigation and quality/coverage/device
 acceptance; review scoped attachment contracts. Keep unrelated historical source
 files and user edits intact. Track implementation separately from verified
 acceptance; do not label the complete PRD finished until its launch gates pass.

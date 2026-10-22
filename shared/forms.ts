@@ -78,6 +78,8 @@ export interface FormSettings {
   review?: boolean;
   headerMedia?: string;
   headerAlt?: string;
+  theme?: "coral" | "charcoal";
+  progress?: boolean;
   shuffleQuestions?: boolean;
   shuffleOptions?: boolean;
 }
@@ -170,12 +172,7 @@ export function newField(type: FieldType, sectionId: string): FormField {
   };
 }
 export type FormTemplate =
-  | "interest"
-  | "feedback"
-  | "volunteer"
-  | "application"
-  | "survey"
-  | "blank";
+  "interest" | "feedback" | "volunteer" | "application" | "survey" | "blank";
 export function createTemplate(
   title = "Untitled form",
   kind: FormTemplate = "interest",
@@ -596,8 +593,8 @@ export function validateDefinition(form: PreviewForm): string[] {
       issues.push(`“${field.label}” needs a valid section.`);
     if (!field.label.trim() && field.type !== "divider")
       issues.push("Every question needs a visible label.");
-    if (field.type === 'image' && !field.imageMediaId)
-      issues.push('Choose an approved published image for every image block.');
+    if (field.type === "image" && !field.imageMediaId)
+      issues.push("Choose an approved published image for every image block.");
     if (
       ["radio", "checkbox", "dropdown", "likert", "grid", "ranking"].includes(
         field.type,
@@ -634,7 +631,8 @@ export function validateDefinition(form: PreviewForm): string[] {
           dependency?.condition && step < form.fields.length;
           step++
         ) {
-          const condition: NonNullable<FormField["condition"]> = dependency.condition;
+          const condition: NonNullable<FormField["condition"]> =
+            dependency.condition;
           if (
             forced.has(condition.fieldId) &&
             forced.get(condition.fieldId) !== condition.value
@@ -870,7 +868,9 @@ const timestamp = z.union([
   z.string().datetime({ offset: true }),
 ]);
 export function formImageId(path?: string): string | undefined {
-  return path?.match(/^\/api\/v1\/media\/public\/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})$/)?.[1];
+  return path?.match(
+    /^\/api\/v1\/media\/public\/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})$/,
+  )?.[1];
 }
 const fieldSchema = z
   .object({
@@ -980,8 +980,19 @@ export const formDraftDefinitionSchema = z
         ),
         indexable: z.boolean().default(false),
         review: z.boolean().default(true),
-        headerMedia: z.union([z.literal(''), z.string().regex(/^\/api\/v1\/media\/public\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/)]).optional(),
+        headerMedia: z
+          .union([
+            z.literal(""),
+            z
+              .string()
+              .regex(
+                /^\/api\/v1\/media\/public\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/,
+              ),
+          ])
+          .optional(),
         headerAlt: bounded(500).optional(),
+        theme: z.enum(["coral", "charcoal"]).optional(),
+        progress: z.boolean().optional(),
         shuffleQuestions: z.boolean().default(false),
         shuffleOptions: z.boolean().default(false),
       })
@@ -1051,10 +1062,15 @@ export const formDefinitionSchema = formDraftDefinitionSchema.superRefine(
       (fields.some((f) => f.condition) || sections.some((s) => s.rules?.length))
     )
       issues.push("Conditional questions cannot be shuffled.");
-    if (definition.settings.headerMedia && !definition.settings.headerAlt?.trim())
-      issues.push('Describe the header image for respondents who cannot see it.');
-    if (fields.filter(field => field.type === 'image').length > 20)
-      issues.push('Use at most twenty image blocks in a form.');
+    if (
+      definition.settings.headerMedia &&
+      !definition.settings.headerAlt?.trim()
+    )
+      issues.push(
+        "Describe the header image for respondents who cannot see it.",
+      );
+    if (fields.filter((field) => field.type === "image").length > 20)
+      issues.push("Use at most twenty image blocks in a form.");
     for (const message of new Set(issues))
       context.addIssue({ code: z.ZodIssueCode.custom, message });
   },

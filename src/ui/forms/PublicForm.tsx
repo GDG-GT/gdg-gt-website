@@ -17,8 +17,9 @@ import {
   type FormDefinition,
 } from "./store";
 import FieldRenderer from "./FieldRenderer";
-import FormImage from './FormImage';
-import { formImageId } from './store';
+import FormImage from "./FormImage";
+import { formImageId } from "./store";
+import { presentationFields } from "../../../shared/form-presentation";
 import RespondentFileField from "./RespondentFileField";
 import { api, ApiFailure } from "@/lib/api";
 import GeorgiaTechSsoOption from "../auth/GeorgiaTechSsoOption";
@@ -312,6 +313,12 @@ function RespondentFormRuntime() {
       </div>
     );
   const settings = definition.settings;
+  const displayFields = presentationFields(
+    definition.fields,
+    definition.sections,
+    settings,
+    tokens.edit || tokens.resume || uploadToken,
+  );
   const sections = formPath(definition, answers).sections;
   const closed =
     !preview &&
@@ -336,7 +343,7 @@ function RespondentFormRuntime() {
     );
   const section = sections[Math.min(step, sections.length - 1)];
   const fields = visibleFields(
-    definition.fields,
+    displayFields,
     answers,
     definition.sections,
   ).filter((field) => field.sectionId === section.id);
@@ -546,7 +553,10 @@ function RespondentFormRuntime() {
     }
   };
   return (
-    <div className="gt-public-form-page">
+    <div
+      className="gt-public-form-page"
+      data-form-theme={settings.theme === "charcoal" ? "charcoal" : "coral"}
+    >
       {preview && (
         <div className="gt-form-preview-note">
           <Badge tone="coral">Preview</Badge> You’re viewing the current draft.
@@ -591,7 +601,13 @@ function RespondentFormRuntime() {
         ) : (
           <>
             <div className="gt-public-form-intro">
-              {settings.headerMedia && <FormImage header id={formImageId(settings.headerMedia)} alt={settings.headerAlt || ''} />}
+              {settings.headerMedia && (
+                <FormImage
+                  header
+                  id={formImageId(settings.headerMedia)}
+                  alt={settings.headerAlt || ""}
+                />
+              )}
               <span className="gt-section-note">
                 GDG on Campus · Georgia Tech
               </span>
@@ -607,22 +623,25 @@ function RespondentFormRuntime() {
                   {preview ? "Draft preview" : "Chapter form"}
                 </Badge>
               </div>
-              <div
-                className="gt-form-progress"
-                role="progressbar"
-                aria-label="Form progress"
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-valuenow={Math.round(
-                  (Math.min(step + 1, sections.length) / sections.length) * 100,
-                )}
-              >
-                <span
-                  style={{
-                    width: `${(Math.min(step + 1, sections.length) / sections.length) * 100}%`,
-                  }}
-                />
-              </div>
+              {settings.progress !== false && (
+                <div
+                  className="gt-form-progress"
+                  role="progressbar"
+                  aria-label="Form progress"
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={Math.round(
+                    (Math.min(step + 1, sections.length) / sections.length) *
+                      100,
+                  )}
+                >
+                  <span
+                    style={{
+                      width: `${(Math.min(step + 1, sections.length) / sections.length) * 100}%`,
+                    }}
+                  />
+                </div>
+              )}
             </div>
             <form
               noValidate
@@ -698,11 +717,7 @@ function RespondentFormRuntime() {
                       {respondent.email}
                     </p>
                   </div>
-                  {visibleFields(
-                    definition.fields,
-                    answers,
-                    definition.sections,
-                  )
+                  {visibleFields(displayFields, answers, definition.sections)
                     .filter(
                       (field) =>
                         !["divider", "title", "description", "image"].includes(

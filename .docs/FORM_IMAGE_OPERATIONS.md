@@ -48,5 +48,6 @@ Permanent reviewed form erasure releases references through the existing policy.
 mail, publishes a real asset, or exposes a private storage key in its evidence.
 
 Full supported-device/manual accessibility and hosted media/security/visual
-acceptance remain open. Theme, progress and safe-shuffling settings are a separate
-remaining FORM-007 checkpoint; image completion does not certify those features.
+acceptance remain open. Theme, progress and safe-shuffling settings have a separate
+implemented checkpoint in `FORM_PRESENTATION_OPERATIONS.md`; neither checkpoint
+certifies broad hosted or full PRD acceptance.

@@ -5,6 +5,20 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Actual Forms theme, progress and safe shuffling — 2026-10-22
+
+- Implemented approved theme accents, optional progress bar and deterministic
+  safe question/choice shuffling without modifying immutable definitions, stable
+  IDs or validation. Content/section anchors and ordinal/conditional semantics
+  are protected. Old absent settings stay backwards-compatible.
+- Builder inspector tabs now support arrow/Home/End, associated panels and proper
+  Settings/Edit targets. Keyboard changes autosave and persist after reload.
+- 392 units, strict types/lint/build, 16 actual storage/scanner/media/Forms checks,
+  existing Forms/upload suite and public byte budgets pass. Desktop/375px verifies
+  changed draft preview versus unchanged publication. See
+  `FORM_PRESENTATION_OPERATIONS.md`. Remaining broad quality/accessibility and
+  full PRD gates remain open; work continues.
+
 ### Actual native Forms images and header media — 2026-10-22
 
 - Replaced illustrative image blocks with approved published-media selection,
