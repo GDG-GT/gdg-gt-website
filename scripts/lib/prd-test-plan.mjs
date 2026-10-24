@@ -18,6 +18,14 @@ const sql = (name) => `database/tests/${name}.sql`;
 const local = (name) =>
   `scripts/test-local-${["form-presentation", "form-navigation"].includes(name) ? "form-images" : name}.mjs`;
 add(
+  "SEC-TEST-030",
+  "",
+  "Browser database isolation and separate HTML entry preservation",
+  ["tests/client-architecture.test.mjs", "tests/phase0-inventory.test.mjs"],
+  ["Hosted source and runtime network inspection"],
+);
+prdTestCases.at(-1).normative = ["26.1", "30", "32"];
+add(
   "AUTH-TEST-001",
   "AUTH-001 AUTH-002 AUTH-003",
   "Newsletter field and officer-entry intent",

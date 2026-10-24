@@ -116,12 +116,14 @@ Their manual/hosted/visual acceptance remains open.
   four low remain. See `ZOD_VALIDATION_UPGRADE.md`. The earlier full development
   audit had five high Tailwind/braces-chain findings; recheck before launch.
 - Strict application/build TypeScript now passes. Lint remediation remains:
-  zero errors/245 warnings; conditional-hook violations were fixed.
+  zero errors/36 warnings after reviewed unused-client retirement;
+  conditional-hook violations in active code were fixed. An existing untracked
+  user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is still 16.30% lines/16.61% branches, below the global
-  70% gate; 609 tests pass, not a percentage of completed PRD features.
+  coverage is still 26.73% lines/25.45% branches, below the global
+  70% gate; 611 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 103 reviewed logical test cases with
+  All 146 numbered requirements now map into 104 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.
@@ -152,6 +154,6 @@ Their manual/hosted/visual acceptance remains open.
 
 Complete remaining Forms/runtime/navigation and quality/coverage/device
 acceptance and overall coverage beyond the now-passing 17 critical-file gates.
-Keep unrelated historical source
-files and user edits intact. Track implementation separately from verified
+Preserve the read-only Git reference and historical SQL for retired clients
+(`LEGACY_CLIENT_RETIREMENT.md`), and keep user edits intact. Track implementation separately from verified
 acceptance; do not label the complete PRD finished until its launch gates pass.

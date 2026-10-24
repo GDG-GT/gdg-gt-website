@@ -5,6 +5,23 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Superseded browser source retirement — 2026-10-24
+
+- Removed 130 unreferenced legacy screens/services after checking both HTML
+  entries, all routed modules, tests/scripts and existing untracked work. The
+  source remains in Git at local tag `reference/psu-client-before-retirement`;
+  historical SQL and original Phase 0 inventory remain untouched. Current hero,
+  offline queue, public/admin routes and design primitives remain.
+- Added public domain types without password hashes and an AST/import-graph
+  regression for browser database isolation and offline entry preservation.
+  611 tests/107 files pass. Strict types, build, traceability and public byte
+  budgets pass; lint falls to 0 errors/36 warnings and CI enforces that ceiling.
+- Global coverage is 26.73% lines/25.45% branches. The denominator changed after
+  source retirement; this is not additional feature acceptance. Global 70% still
+  fails, all 17 critical-file branch gates pass, and full PRD acceptance remains
+  open. The case catalog now has 104 logical cases. See
+  `LEGACY_CLIENT_RETIREMENT.md` and its path/hash manifest.
+
 ### DOM interaction and complete route-frame smoke checks — 2026-10-24
 
 - Added 25 actual-control DOM tests for overview recovery, audit focus/cursors/

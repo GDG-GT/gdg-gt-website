@@ -1,5 +1,5 @@
 import { api, clearApiSession, ApiFailure } from "@/lib/api";
-import type { AdminUser } from "@/lib/supabase";
+import type { AdminUser } from "@/lib/chapter-types";
 import { publicQueue } from "../../shared/public-queue.mjs";
 export default class SessionService {
   static async login(credentials: {

@@ -1,4 +1,4 @@
-import type { AdminUser } from "@/lib/supabase";
+import type { AdminUser } from "@/lib/chapter-types";
 import { api } from "@/lib/api";
 // Permission resource types
 export type ResourceType =

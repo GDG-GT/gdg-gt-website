@@ -47,7 +47,7 @@ import { api } from "@/lib/api";
 import { eventForPage, type ChapterEvent } from "./events";
 import SubmissionQueue from "@/pwa/SubmissionQueue";
 import { savePendingSubmission } from "@/pwa/queue-actions";
-import type { Event } from "@/services/eventsService";
+import type { EventRecord } from "@/lib/chapter-types";
 import {
   ActionLink,
   Badge,
@@ -73,7 +73,7 @@ import {
 import type { PageCopy } from "../../shared/site-content";
 import { usePublicMetadata } from "./usePublicMetadata";
 
-type SiteEvent = Event & {
+type SiteEvent = EventRecord & {
   slug?: string;
   publication_status?: string;
   end_at?: string | null;

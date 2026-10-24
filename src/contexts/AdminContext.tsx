@@ -6,12 +6,12 @@ import React, {
   useCallback,
 } from "react";
 import { api } from "@/lib/api";
-import type { AdminUser } from "@/lib/supabase";
-import type { MergedProfile } from "@/services/profileMergingService";
 import type {
+  AdminUser,
+  MergedProfile,
   AdminTeam,
   TeamMembership,
-} from "@/services/teamManagementService";
+} from "@/lib/chapter-types";
 import {
   PermissionsService,
   type ResourceType,
