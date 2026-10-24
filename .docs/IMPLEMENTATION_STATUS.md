@@ -5,6 +5,22 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### DOM interaction and complete route-frame smoke checks — 2026-10-24
+
+- Added 25 actual-control DOM tests for overview recovery, audit focus/cursors/
+  filters, Forms identity/error/pending/retry/review/preview/offline/copy/resume/
+  edit behavior and editable file/pattern policy. 609 tests/106 files pass;
+  strict types, lint 0 errors/245 warnings and traceability pass.
+- CUA inspected 37 primary route frames at desktop and 375px: no page-wide
+  overflow or body scroll lock, no unnamed initial controls or broken public
+  loaded images. This is initial-frame smoke evidence, not full accessibility,
+  loaded-state/role/workflow testing or visual approval.
+- All 146 numbered requirements now map into 103 logical cases, including these
+  interaction tests; full acceptance remains unverified. Global coverage improves
+  to 16.30% lines/16.61% branches and still fails 70%; all 17 critical-file gates
+  remain green. Production audit still has zero high/critical findings.
+  See `WORKSPACE_DOM_TESTING.md`.
+
 ### Workspace, audit, composition and raw HTML — 2026-10-24
 
 - Added four-metric administrator overview, permission-filtered registration/

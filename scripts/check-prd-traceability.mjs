@@ -62,7 +62,7 @@ export async function validatePrdTestPlan(
       throw Error("Invalid normative section reference");
     for (const file of c.automated) {
       if (
-        !/^(?:tests\/|src\/ui\/|database\/tests\/|scripts\/)[A-Za-z0-9_./-]+\.(?:ts|mjs|sql)$/.test(
+        !/^(?:tests\/|src\/ui\/|database\/tests\/|scripts\/)[A-Za-z0-9_./-]+\.(?:tsx?|mjs|sql)$/.test(
           file,
         ) ||
         file.split("/").includes("..")

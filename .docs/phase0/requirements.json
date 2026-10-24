@@ -889,7 +889,8 @@
       "line": 489,
       "status": "unverified",
       "testIds": [
-        "FORM-TEST-004"
+        "FORM-TEST-004",
+        "FORM-TEST-032"
       ],
       "evidence": []
     },
@@ -919,7 +920,8 @@
       "line": 495,
       "status": "unverified",
       "testIds": [
-        "FORM-TEST-007"
+        "FORM-TEST-007",
+        "FORM-TEST-031"
       ],
       "evidence": [],
       "userOverride": "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy."
@@ -961,7 +963,8 @@
       "line": 503,
       "status": "unverified",
       "testIds": [
-        "FORM-TEST-011"
+        "FORM-TEST-011",
+        "FORM-TEST-031"
       ],
       "evidence": []
     },
@@ -991,7 +994,8 @@
       "line": 509,
       "status": "unverified",
       "testIds": [
-        "FORM-TEST-014"
+        "FORM-TEST-014",
+        "FORM-TEST-031"
       ],
       "evidence": [],
       "userOverride": "Draft expiry/fragment handling remains; respondents are identified by declared name/email under the current no-anonymous decision."
@@ -1002,7 +1006,8 @@
       "line": 511,
       "status": "unverified",
       "testIds": [
-        "FORM-TEST-015"
+        "FORM-TEST-015",
+        "FORM-TEST-031"
       ],
       "evidence": []
     },
@@ -1112,7 +1117,9 @@
       "line": 533,
       "status": "unverified",
       "testIds": [
-        "FORM-TEST-025"
+        "FORM-TEST-025",
+        "FORM-TEST-031",
+        "FORM-TEST-032"
       ],
       "evidence": []
     },
@@ -1312,7 +1319,8 @@
       "line": 591,
       "status": "unverified",
       "testIds": [
-        "SEC-TEST-021"
+        "SEC-TEST-021",
+        "A11Y-TEST-003"
       ],
       "evidence": []
     },

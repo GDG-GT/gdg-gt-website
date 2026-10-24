@@ -118,10 +118,10 @@ Their manual/hosted/visual acceptance remains open.
 - Strict application/build TypeScript now passes. Lint remediation remains:
   zero errors/245 warnings; conditional-hook violations were fixed.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is still approximately 14.88% lines/15.28% branches, below the global
-  70% gate; 584 tests pass, not a percentage of completed PRD features.
+  coverage is still 16.30% lines/16.61% branches, below the global
+  70% gate; 609 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 99 reviewed logical test cases with
+  All 146 numbered requirements now map into 103 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.

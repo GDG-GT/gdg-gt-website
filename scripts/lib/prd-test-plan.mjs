@@ -784,6 +784,39 @@ add(
   ],
 );
 prdTestCases.at(-1).normative = ["16.3", "29", "31.2"];
+add(
+  "A11Y-TEST-002",
+  "",
+  "Overview loading, error, stale snapshot and independent widget interaction",
+  ["tests/client/workspace-ui.test.tsx"],
+  [
+    "JSDOM interaction tests do not measure CSS/layout, screen readers, device behavior or contrast",
+  ],
+);
+prdTestCases.at(-1).normative = ["28.3", "31.2"];
+add(
+  "A11Y-TEST-003",
+  "AUDIT-002",
+  "Audit detail focus/return, cursor history and recoverable filter/detail errors",
+  ["tests/client/workspace-ui.test.tsx"],
+  ["Real screen-reader, keyboard-only browser and supported-device review"],
+);
+add(
+  "FORM-TEST-031",
+  "FORM-007 FORM-011 FORM-014 FORM-015 FORM-026",
+  "Respondent identity, copy, pending/idempotent submit, resume/edit fragments, preview and error focus interactions",
+  ["tests/client/public-form-ui.test.tsx"],
+  [
+    "Transport is injected; real server/storage/scanner integration and manual assistive-technology acceptance remain separate",
+  ],
+);
+add(
+  "FORM-TEST-032",
+  "FORM-004 FORM-026",
+  "File count/byte/type and safe-pattern settings through actual controlled inputs",
+  ["tests/client/form-settings-ui.test.tsx"],
+  ["Real keyboard/screen-reader and published file-policy acceptance"],
+);
 
 export const requirementOverrides = {
   "FORM-007":

@@ -1,0 +1,717 @@
+{
+  "note": "CUA browser inspection of initial rendered page frames with actual local services. Empty/retained local inventory; this is not axe, full loaded-state acceptance, all workflow verification, screen-reader/device testing or visual approval.",
+  "desktopPublic": [
+    {
+      "brokenImages": [],
+      "canonicals": 1,
+      "h1": [
+        "Developer Groups"
+      ],
+      "missingImageAlt": 0,
+      "path": "/",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "brokenImages": [],
+      "canonicals": 1,
+      "h1": [
+        "Make room for what’s next."
+      ],
+      "missingImageAlt": 0,
+      "path": "/events",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "brokenImages": [],
+      "canonicals": 1,
+      "h1": [
+        "Meet the team."
+      ],
+      "missingImageAlt": 0,
+      "path": "/team",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "brokenImages": [],
+      "canonicals": 1,
+      "h1": [
+        "Partners who power student builders."
+      ],
+      "missingImageAlt": 0,
+      "path": "/sponsors",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "brokenImages": [],
+      "canonicals": 1,
+      "h1": [
+        "Community in motion."
+      ],
+      "missingImageAlt": 0,
+      "path": "/gallery",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "brokenImages": [],
+      "canonicals": 1,
+      "h1": [
+        "Let’s buildsomething together."
+      ],
+      "missingImageAlt": 0,
+      "path": "/contact",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "brokenImages": [],
+      "canonicals": 1,
+      "h1": [
+        "Development privacy notice"
+      ],
+      "missingImageAlt": 0,
+      "path": "/privacy",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "brokenImages": [],
+      "canonicals": 1,
+      "h1": [
+        "Accessibility"
+      ],
+      "missingImageAlt": 0,
+      "path": "/accessibility",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    }
+  ],
+  "desktopAdmin": [
+    {
+      "alerts": [],
+      "h1": [
+        "Welcome back, Local."
+      ],
+      "path": "/admin",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Events"
+      ],
+      "path": "/admin/events",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Forms"
+      ],
+      "path": "/admin/forms",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Public team profiles"
+      ],
+      "path": "/admin/team",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Community members"
+      ],
+      "path": "/admin/members",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Teams & permissions"
+      ],
+      "path": "/admin/teams",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Communications"
+      ],
+      "path": "/admin/communications",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Channels"
+      ],
+      "path": "/admin/channels",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Finances"
+      ],
+      "path": "/admin/finances",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Newsletter"
+      ],
+      "path": "/admin/newsletter",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Sponsors"
+      ],
+      "path": "/admin/sponsors",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Site content"
+      ],
+      "path": "/admin/content",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Whiteboards"
+      ],
+      "path": "/admin/whiteboard",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Linktree"
+      ],
+      "path": "/admin/linktree",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Resources"
+      ],
+      "path": "/admin/resources",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Gallery curation"
+      ],
+      "path": "/admin/gallery",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Private media library"
+      ],
+      "path": "/admin/media",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Private editorial workspace"
+      ],
+      "path": "/admin/blog",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Projects"
+      ],
+      "path": "/admin/projects",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "People & account access"
+      ],
+      "path": "/admin/users",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Site availability"
+      ],
+      "path": "/admin/site-status",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Audit log"
+      ],
+      "path": "/admin/audit-log",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Person-data privacy"
+      ],
+      "path": "/admin/privacy",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Operations & retention"
+      ],
+      "path": "/admin/operations",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Chapter operating guide"
+      ],
+      "path": "/admin/guide",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "My profile"
+      ],
+      "path": "/admin/profile",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Private editorial workspace"
+      ],
+      "path": "/admin/blog-editor",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    },
+    {
+      "alerts": [],
+      "h1": [
+        "Private editorial workspace"
+      ],
+      "path": "/admin/blog-media",
+      "unnamedButtons": 0,
+      "unnamedInputs": [],
+      "viewport": 1187,
+      "width": 1187
+    }
+  ],
+  "mobile": [
+    {
+      "path": "/",
+      "scrollHeight": 3298,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/events",
+      "scrollHeight": 2182,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/team",
+      "scrollHeight": 2394,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/resources",
+      "scrollHeight": 2138,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/sponsors",
+      "scrollHeight": 2258,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/gallery",
+      "scrollHeight": 1860,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/contact",
+      "scrollHeight": 2713,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/privacy",
+      "scrollHeight": 5810,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/accessibility",
+      "scrollHeight": 1685,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin",
+      "scrollHeight": 3158,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/events",
+      "scrollHeight": 2653,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/forms",
+      "scrollHeight": 4684,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/team",
+      "scrollHeight": 857,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/members",
+      "scrollHeight": 1189,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/teams",
+      "scrollHeight": 2157,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/communications",
+      "scrollHeight": 1254,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/channels",
+      "scrollHeight": 881,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/finances",
+      "scrollHeight": 3102,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/newsletter",
+      "scrollHeight": 1458,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/sponsors",
+      "scrollHeight": 955,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/content",
+      "scrollHeight": 1012,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/whiteboard",
+      "scrollHeight": 812,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/linktree",
+      "scrollHeight": 920,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/resources",
+      "scrollHeight": 857,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/gallery",
+      "scrollHeight": 1421,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/media",
+      "scrollHeight": 1509,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/blog",
+      "scrollHeight": 1203,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/projects",
+      "scrollHeight": 1254,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/users",
+      "scrollHeight": 4301,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/site-status",
+      "scrollHeight": 812,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/audit-log",
+      "scrollHeight": 5926,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/privacy",
+      "scrollHeight": 3174,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/operations",
+      "scrollHeight": 4264,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/guide",
+      "scrollHeight": 6170,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/profile",
+      "scrollHeight": 4655,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/blog-editor",
+      "scrollHeight": 1990,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    },
+    {
+      "path": "/admin/blog-media",
+      "scrollHeight": 1664,
+      "scrolling": "visible",
+      "viewport": 375,
+      "viewportHeight": 812,
+      "width": 375
+    }
+  ]
+}

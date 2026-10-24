@@ -1662,6 +1662,73 @@
         "29",
         "31.2"
       ]
+    },
+    {
+      "id": "A11Y-TEST-002",
+      "requirements": [],
+      "scope": "Overview loading, error, stale snapshot and independent widget interaction",
+      "automated": [
+        "tests/client/workspace-ui.test.tsx"
+      ],
+      "remaining": [
+        "JSDOM interaction tests do not measure CSS/layout, screen readers, device behavior or contrast",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
+      "id": "A11Y-TEST-003",
+      "requirements": [
+        "AUDIT-002"
+      ],
+      "scope": "Audit detail focus/return, cursor history and recoverable filter/detail errors",
+      "automated": [
+        "tests/client/workspace-ui.test.tsx"
+      ],
+      "remaining": [
+        "Real screen-reader, keyboard-only browser and supported-device review",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-031",
+      "requirements": [
+        "FORM-007",
+        "FORM-011",
+        "FORM-014",
+        "FORM-015",
+        "FORM-026"
+      ],
+      "scope": "Respondent identity, copy, pending/idempotent submit, resume/edit fragments, preview and error focus interactions",
+      "automated": [
+        "tests/client/public-form-ui.test.tsx"
+      ],
+      "remaining": [
+        "Transport is injected; real server/storage/scanner integration and manual assistive-technology acceptance remain separate",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-032",
+      "requirements": [
+        "FORM-004",
+        "FORM-026"
+      ],
+      "scope": "File count/byte/type and safe-pattern settings through actual controlled inputs",
+      "automated": [
+        "tests/client/form-settings-ui.test.tsx"
+      ],
+      "remaining": [
+        "Real keyboard/screen-reader and published file-policy acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
     }
   ],
   "userOverrides": {
