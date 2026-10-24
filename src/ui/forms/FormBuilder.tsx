@@ -42,6 +42,7 @@ import {
 import FieldRenderer from "./FieldRenderer";
 import FormImage from "./FormImage";
 import FormImagePicker from "./FormImagePicker";
+import FieldValidationSettings from "./FieldValidationSettings";
 import { canShuffleQuestions } from "../../../shared/form-presentation";
 import { formsApi, useServerForm } from "./api";
 import AccessPanel from "./AccessPanel";
@@ -560,6 +561,7 @@ export default function FormBuilder() {
                   />
                 </Field>
               )}
+              <FieldValidationSettings field={field} onChange={updateField} />
               <Field label="Section">
                 <select
                   value={field.sectionId}

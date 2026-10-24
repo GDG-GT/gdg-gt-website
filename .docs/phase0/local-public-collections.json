@@ -1,0 +1,45 @@
+{
+  "note": "Actual loopback public HTTP/PostgreSQL read-path verification with invocation-owned fictional fixtures. Does not certify admin publication, hosted cache, accessibility or full PRD acceptance.",
+  "tests": [
+    {
+      "name": "resource pagination reaches records beyond the previous 100-item cap",
+      "passed": true
+    },
+    {
+      "name": "combined tag/type/level/status filters apply before total and pagination",
+      "passed": true
+    },
+    {
+      "name": "unmatched exact tag produces an actual filtered empty state",
+      "passed": true
+    },
+    {
+      "name": "public team paging retains every approved profile",
+      "passed": true
+    },
+    {
+      "name": "public profiles omit private identity and authorship fields",
+      "passed": true
+    },
+    {
+      "name": "tier-ordered sponsor inventory pages without lost or duplicated records",
+      "passed": true
+    },
+    {
+      "name": "sponsor pagination has stable unique identity across pages",
+      "passed": true
+    },
+    {
+      "name": "impact inventory is independent of the four-metric homepage cap",
+      "passed": true
+    },
+    {
+      "name": "resource navigation uses the dedicated no-content view action",
+      "passed": true
+    },
+    {
+      "name": "rapid repeated view actions cannot mutate an arbitrary counter",
+      "passed": true
+    }
+  ]
+}

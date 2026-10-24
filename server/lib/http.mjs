@@ -149,6 +149,9 @@ export async function apiBoundary(
             );
       errorCode = safe.code;
       response.statusCode = safe.status;
+      // A public handler may have selected cache headers before a dependency
+      // failed. Error responses must never inherit that successful-read policy.
+      response.setHeader("Cache-Control", "no-store");
       response.setHeader("Content-Type", "application/json; charset=utf-8");
       response.end(
         JSON.stringify({

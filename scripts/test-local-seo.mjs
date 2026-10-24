@@ -1,0 +1,16 @@
+import {writeFile} from "node:fs/promises";
+import {localHttp} from "./lib/local-http.mjs";
+const {env,call}=await localHttp(),tests=[];
+const check=(ok,name)=>{if(!ok)throw Error("FAIL "+name);tests.push({name,passed:true});console.info("PASS "+name);};
+const map=await fetch(env.APP_ORIGIN+"/sitemap.xml",{signal:AbortSignal.timeout(10000)}),body=await map.text();
+check(map.status===200&&map.headers.get("content-type").includes("application/xml"),"actual local root sitemap serves XML instead of a retired API or SPA shell");
+check(body.includes(`<loc>${env.APP_ORIGIN}/resources</loc>`)&&body.includes(`<loc>${env.APP_ORIGIN}/privacy</loc>`),"canonical sitemap origin comes from this configured installation");
+check(!/gdgpsu|psu\.edu|\/admin|\/blog|\/projects|\/forms\//i.test(body),"sitemap excludes PSU, private and capability-dependent workflows");
+check(!!map.headers.get("x-request-id"),"root sitemap retains the shared request correlation boundary");
+const head=await fetch(env.APP_ORIGIN+"/sitemap.xml",{method:"HEAD",signal:AbortSignal.timeout(10000)});
+check(head.status===200&&(await head.text())==="","sitemap HEAD returns equivalent headers without a body");
+const robots=await fetch(env.APP_ORIGIN+"/robots.txt",{signal:AbortSignal.timeout(10000)}),text=await robots.text();
+check(robots.status===200&&text.includes("Sitemap: "+env.APP_ORIGIN+"/sitemap.xml"),"actual local robots route uses the configured absolute sitemap URL");
+check(!/gdgpsu|psu\.edu|Googlebot|Bingbot/.test(text)&&text.includes("Disallow: /admin"),"robots removes PSU and conflicting crawler-specific overrides");
+check((await call("/public/sitemap.xml",{method:"POST",body:{},anonymous:true})).status===405,"public sitemap refuses mutation methods");
+await writeFile(new URL("../.docs/phase0/local-seo.json",import.meta.url),JSON.stringify({note:"Actual loopback root/proxied HTTP checks. No deployment, search-engine submission, hosted crawler preview or visual approval.",tests},null,2)+"\n");

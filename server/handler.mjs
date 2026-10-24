@@ -63,6 +63,7 @@ import { pushRoutes } from "./push.mjs";
 import { personPrivacyRoutes } from "./person-privacy.mjs";
 import { createTelemetryLogger } from "./lib/telemetry.mjs";
 import { operationsRoutes } from "./operations.mjs";
+import { seoRoutes } from "./seo.mjs";
 
 export function applicationHandler({
   store,
@@ -109,6 +110,7 @@ export function applicationHandler({
         checkOrigin(request, config.origin, {
           mutation: !["GET", "HEAD"].includes(request.method),
         });
+        if (await seoRoutes(request, response, { db, config })) return;
         if (
           await personPrivacyRoutes(request, response, {
             db,

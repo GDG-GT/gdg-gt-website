@@ -5,6 +5,27 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Forms policy controls and public discovery/metadata — 2026-10-24
+
+- Added the missing Forms file count/size/format and restricted-pattern controls,
+  associated errors and readiness validation. Real browser editing/reload/API
+  readback passes; the invocation-owned draft was recoverably archived. See
+  `FORM_VALIDATION_SETTINGS_OPERATIONS.md`.
+- Public lists now page server-side, resources expose status/tag filters and
+  rate-limited view actions, sponsors group by globally ordered tiers, and impact
+  inventory is no longer capped by homepage metrics. Migration 100, canonical
+  SQL and both 100-client races pass under new and legacy grants. Ten real public
+  HTTP/DB checks and desktop/375px browser checks pass; fictional rows archived.
+- Replaced retired sitemap behavior, configured-origin robots and served PSU
+  references; added unique route canonical/social metadata and homepage
+  Organization data. Six SEO units/eight actual HTTP checks pass. Public errors
+  cannot inherit success-cache headers. See `PUBLIC_DISCOVERY_OPERATIONS.md`.
+- 549 units, strict types, zero lint errors/245 warnings, production build and
+  public/offline byte gates pass. All 17 individual critical-file branch gates
+  remain green. Overall lines 14.12%/branches 14.64% remain below 70%; CI coverage
+  must still fail. Manual/device/performance/visual/hosted gates and the other
+  implementation gaps below remain open; full PRD completion is not claimed.
+
 ### Redacted source/history secret gate — 2026-10-22
 
 - Added checksum-pinned official Gitleaks scanning for all local-ref history and

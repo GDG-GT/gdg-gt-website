@@ -1,2 +1,5 @@
-// Retired: historical source behavior is preserved in the baseline Git commit.
-export { default } from '../server/retired.mjs';
+import handler from "../server/handler.mjs";
+export default function sitemap(request, response) {
+  request.url = "/api/v1/public/sitemap.xml";
+  return handler(request, response);
+}

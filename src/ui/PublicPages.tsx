@@ -1,12 +1,6 @@
 import PrivacyNoticeDetails from "./PrivacyNoticeDetails";
 import HeroScene from "./HeroScene";
-import {
-  useEffect,
-  useMemo,
-  useState,
-  useRef,
-  type FormEvent,
-} from "react";
+import { useEffect, useMemo, useState, useRef, type FormEvent } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
 import EventReminders from "@/pwa/EventReminders";
@@ -66,7 +60,18 @@ import {
 import { chapterName, localPreviewEnabled } from "./preview-data";
 import { useInitialLoad } from "./useInitialLoad";
 import PublicGallery from "./media/PublicGallery";
+import { PublicCollectionNotice, PublicPagination } from "./PublicCollection";
+import {
+  usePublicCollection,
+  publicPageNumber,
+  type PublicPerson,
+  type PublicResource,
+  type PublicSponsor,
+  type PublicTier,
+  type PublicMetric,
+} from "./public-collections";
 import type { PageCopy } from "../../shared/site-content";
+import { usePublicMetadata } from "./usePublicMetadata";
 
 type SiteEvent = Event & {
   slug?: string;
@@ -119,12 +124,10 @@ function useEvents() {
     loading: isLoadingEvents,
   };
 }
-function usePageTitle(title: string) {
+function usePageTitle(title: string, description?: string, image?: string) {
   const { getSiteSetting } = useContent(),
     siteTitle = String(getSiteSetting("site_title") || "GDG at Georgia Tech");
-  useEffect(() => {
-    document.title = `${title} · ${siteTitle}`;
-  }, [title, siteTitle]);
+  usePublicMetadata(`${title} · ${siteTitle}`, { description, image });
 }
 
 export function EventTile({ event }: { event: SiteEvent }) {
@@ -672,13 +675,10 @@ export function EventDetailPage() {
     label: "Event registration details",
     privateDraft: false,
   });
-  usePageTitle(event?.title || "Event");
+  usePageTitle(event?.title || "Event", event?.description, event?.image_url);
   useEffect(() => {
     if (!event) return;
-    const canonical = document.createElement("link");
-    canonical.rel = "canonical";
-    canonical.href = window.location.origin + "/events/" + slugFor(event);
-    document.head.append(canonical);
+    const canonicalUrl = window.location.origin + "/events/" + slugFor(event);
     const metadata = document.createElement("script");
     metadata.type = "application/ld+json";
     metadata.textContent = JSON.stringify({
@@ -688,39 +688,17 @@ export function EventDetailPage() {
       description: event.description.replace(/<[^>]*>/g, ""),
       startDate: event.date,
       endDate: event.end_at,
-      url: canonical.href,
-      eventStatus: "https://schema.org/EventScheduled",
+      url: canonicalUrl,
+      eventStatus:
+        event.publication_status === "cancelled"
+          ? "https://schema.org/EventCancelled"
+          : "https://schema.org/EventScheduled",
       location: { "@type": "Place", name: event.location },
       organizer: { "@type": "Organization", name: chapterName },
     }).replace(/</g, "\\u003c");
     document.head.append(metadata);
-    const tags = [
-      ["description", event.description.replace(/<[^>]*>/g, "").slice(0, 160)],
-      ["og:title", event.title],
-      [
-        "og:description",
-        event.description.replace(/<[^>]*>/g, "").slice(0, 160),
-      ],
-      ["og:url", canonical.href],
-      [
-        "og:image",
-        new URL(
-          event.image_url || "/assets/event-community.jpg",
-          location.origin,
-        ).href,
-      ],
-      ["twitter:card", "summary_large_image"],
-    ].map(([key, content]) => {
-      const tag = document.createElement("meta");
-      tag.setAttribute(key.startsWith("og:") ? "property" : "name", key);
-      tag.content = content;
-      document.head.append(tag);
-      return tag;
-    });
     return () => {
-      canonical.remove();
       metadata.remove();
-      tags.forEach((tag) => tag.remove());
     };
   }, [event]);
   if (loading)
@@ -1160,8 +1138,12 @@ export function EventDetailPage() {
 
 export function TeamPage() {
   usePageTitle("Meet the team");
-  const { teamMembers, loadTeamMembers, isLoadingTeam } = useContent();
-  useInitialLoad(loadTeamMembers);
+  const [params, setParams] = useSearchParams(),
+    page = publicPageNumber(params.get("page")),
+    listing = usePublicCollection<PublicPerson>(
+      `/team?page=${page}&pageSize=24`,
+    ),
+    teamMembers = listing.data?.items || [];
   const groups = [
     ...new Set(teamMembers.map((person) => person.team_section || "Our team")),
   ];
@@ -1173,9 +1155,8 @@ export function TeamPage() {
         description="Students building a stronger developer community at Georgia Tech."
       />
       <section className="gt-container gt-section">
-        {isLoadingTeam ? (
-          <div className="gt-skeleton gt-detail-skeleton" />
-        ) : teamMembers.length ? (
+        <PublicCollectionNotice {...listing} />
+        {teamMembers.length ? (
           groups.map((group) => (
             <section className="gt-team-group" key={group}>
               <h2>{group}</h2>
@@ -1192,6 +1173,9 @@ export function TeamPage() {
                             src={person.image_url}
                             alt={person.name}
                             loading="lazy"
+                            width={480}
+                            height={480}
+                            decoding="async"
                           />
                         ) : (
                           <span>
@@ -1233,7 +1217,7 @@ export function TeamPage() {
               </div>
             </section>
           ))
-        ) : (
+        ) : !listing.loading && !listing.error && listing.data?.total === 0 ? (
           <>
             <div className="gt-team-intro">
               <span className="gt-round-icon">
@@ -1260,6 +1244,14 @@ export function TeamPage() {
               ))}
             </div>
           </>
+        ) : null}
+        {listing.data && (
+          <PublicPagination
+            label="Team profile pages"
+            {...listing.data}
+            busy={listing.loading}
+            onPage={(value) => setParams({ page: String(value) })}
+          />
         )}
         <div className="gt-join-strip gt-soft-callout">
           <div>
@@ -1277,19 +1269,39 @@ export function TeamPage() {
 
 export function ResourcesPage() {
   usePageTitle("Resources for builders");
-  const { resources, loadResources, isLoadingResources } = useContent();
-  const [query, setQuery] = useState(""),
-    [type, setType] = useState("all"),
-    [level, setLevel] = useState("all");
-  useInitialLoad(loadResources);
-  const filtered = resources.filter(
-    (resource) =>
-      `${resource.title} ${resource.description} ${(resource.tags || []).join(" ")}`
-        .toLowerCase()
-        .includes(query.toLowerCase()) &&
-      (type === "all" || resource.type === type) &&
-      (level === "all" || resource.level?.toLowerCase() === level),
-  );
+  const [params, setParams] = useSearchParams(),
+    query = params.get("q") || "",
+    type = params.get("type") || "all",
+    level = params.get("level") || "all",
+    status = params.get("status") || "",
+    tag = params.get("tag") || "",
+    page = publicPageNumber(params.get("page"));
+  const search = new URLSearchParams({ page: String(page), pageSize: "12" });
+  for (const [key, value] of [
+    ["q", query],
+    ["type", type],
+    ["level", level],
+    ["status", status],
+    ["tag", tag],
+  ])
+    if (value && value !== "all")
+      search.set(
+        key,
+        key === "level" ? value[0].toUpperCase() + value.slice(1) : value,
+      );
+  const listing = usePublicCollection<PublicResource>("/resources?" + search),
+    filtered = listing.data?.items || [];
+  const change = (key: string, value: string) =>
+    setParams(
+      (previous) => {
+        const next = new URLSearchParams(previous);
+        next.delete("page");
+        if (value && value !== "all") next.set(key, value);
+        else next.delete(key);
+        return next;
+      },
+      { replace: true },
+    );
   return (
     <>
       <PageHeader
@@ -1309,7 +1321,7 @@ export function ResourcesPage() {
             <button
               key={value}
               className={`gt-filter-pill ${type === value ? "is-active" : ""}`}
-              onClick={() => setType(value)}
+              onClick={() => change("type", value)}
               aria-pressed={type === value}
             >
               {label}
@@ -1319,7 +1331,7 @@ export function ResourcesPage() {
         <div className="gt-toolbar">
           <SearchBox
             value={query}
-            onChange={setQuery}
+            onChange={(value) => change("q", value)}
             label="Search resources"
             placeholder="What do you want to learn?"
           />
@@ -1327,7 +1339,7 @@ export function ResourcesPage() {
             Level
             <select
               value={level}
-              onChange={(event) => setLevel(event.target.value)}
+              onChange={(event) => change("level", event.target.value)}
             >
               <option value="all">Any experience</option>
               <option value="beginner">Beginner</option>
@@ -1335,10 +1347,29 @@ export function ResourcesPage() {
               <option value="advanced">Advanced</option>
             </select>
           </label>
+          <Field label="Availability">
+            <select
+              value={status}
+              onChange={(event) => change("status", event.target.value)}
+            >
+              <option value="">Any status</option>
+              <option>Available</option>
+              <option>Coming Soon</option>
+              <option>Archived</option>
+            </select>
+          </Field>
+          <Field label="Tag">
+            <input
+              type="search"
+              value={tag}
+              maxLength={100}
+              placeholder="Exact tag, e.g. Cloud"
+              onChange={(event) => change("tag", event.target.value)}
+            />
+          </Field>
         </div>
-        {isLoadingResources ? (
-          <div className="gt-skeleton gt-detail-skeleton" />
-        ) : filtered.length ? (
+        <PublicCollectionNotice {...listing} />
+        {filtered.length ? (
           <div className="gt-resource-grid">
             {filtered.map((resource, index) => (
               <article
@@ -1370,6 +1401,11 @@ export function ResourcesPage() {
                     className="gt-resource-action"
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => {
+                      void api(`/resources/${resource.id}/view`, {
+                        method: "POST",
+                      }).catch(() => {});
+                    }}
                   >
                     Open resource <ArrowUpRight size={18} />
                     <span className="sr-only"> (opens a new tab)</span>
@@ -1378,16 +1414,14 @@ export function ResourcesPage() {
               </article>
             ))}
           </div>
-        ) : (
+        ) : !listing.loading && !listing.error ? (
           <EmptyState
             title="No resources match just yet"
             action={
               <Button
                 variant="secondary"
                 onClick={() => {
-                  setQuery("");
-                  setType("all");
-                  setLevel("all");
+                  setParams({});
                 }}
               >
                 Reset filters
@@ -1396,6 +1430,20 @@ export function ResourcesPage() {
           >
             Try a broader search or another resource type.
           </EmptyState>
+        ) : null}
+        {listing.data && (
+          <PublicPagination
+            label="Resource pages"
+            {...listing.data}
+            busy={listing.loading}
+            onPage={(value) =>
+              setParams((previous) => {
+                const next = new URLSearchParams(previous);
+                next.set("page", String(value));
+                return next;
+              })
+            }
+          />
         )}
       </section>
     </>
@@ -1404,9 +1452,24 @@ export function ResourcesPage() {
 
 export function SponsorsPage() {
   usePageTitle("Our partners");
-  const { sponsors, loadSponsors, sponsorshipTiers, chapterMetrics } =
-    useContent();
-  useInitialLoad(loadSponsors);
+  const [params, setParams] = useSearchParams(),
+    page = publicPageNumber(params.get("page")),
+    listing = usePublicCollection<PublicSponsor>(
+      `/sponsors?page=${page}&pageSize=24`,
+    ),
+    tiers = usePublicCollection<PublicTier>("/sponsor-tiers?pageSize=100"),
+    metrics = usePublicCollection<PublicMetric>(
+      `/sponsor-stats?page=${publicPageNumber(params.get("impactPage"))}&pageSize=12`,
+    ),
+    sponsors = listing.data?.items || [],
+    sponsorshipTiers = tiers.data?.items || [],
+    chapterMetrics = metrics.data?.items || [];
+  const tierOrder = [
+    ...new Set([
+      ...sponsorshipTiers.map((t) => t.tier_level),
+      ...sponsors.map((s) => s.tier),
+    ]),
+  ];
   return (
     <>
       <PageHeader
@@ -1419,26 +1482,59 @@ export function SponsorsPage() {
         </ActionLink>
       </PageHeader>
       <section className="gt-container gt-section">
+        <PublicCollectionNotice {...listing} />
         {sponsors.length ? (
-          <div className="gt-sponsor-grid">
-            {sponsors.map((sponsor) => (
-              <article className="gt-sponsor" key={sponsor.id}>
-                <Badge tone="coral">{sponsor.tier} partner</Badge>
-                <img src={sponsor.logo_url} alt={sponsor.name} loading="lazy" />
-                <h2>{sponsor.name}</h2>
-                {safePublicUrl(sponsor.website_url) && (
-                  <a
-                    href={safePublicUrl(sponsor.website_url)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Visit partner <ArrowUpRight size={17} />
-                  </a>
-                )}
-              </article>
-            ))}
-          </div>
-        ) : (
+          tierOrder.map(
+            (tier) =>
+              sponsors.some((sponsor) => sponsor.tier === tier) && (
+                <section
+                  key={tier}
+                  className="gt-section"
+                  aria-label={`${sponsorshipTiers.find((t) => t.tier_level === tier)?.tier_name || sponsors.find((s) => s.tier === tier)?.tier_label || tier} partners`}
+                >
+                  <h2>
+                    {sponsorshipTiers.find((t) => t.tier_level === tier)
+                      ?.tier_name ||
+                      sponsors.find((s) => s.tier === tier)?.tier_label ||
+                      tier}{" "}
+                    partners
+                  </h2>
+                  <div className="gt-sponsor-grid">
+                    {sponsors
+                      .filter((sponsor) => sponsor.tier === tier)
+                      .map((sponsor) => (
+                        <article className="gt-sponsor" key={sponsor.id}>
+                          <Badge tone="coral">{sponsor.tier} partner</Badge>
+                          <img
+                            src={sponsor.logo_url}
+                            alt={sponsor.name}
+                            loading="lazy"
+                            width={320}
+                            height={160}
+                            decoding="async"
+                            style={{ objectFit: "contain" }}
+                          />
+                        <h3>{sponsor.name}</h3>
+                          {safePublicUrl(sponsor.website_url) && (
+                            <a
+                              href={safePublicUrl(sponsor.website_url)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              Visit partner <ArrowUpRight size={17} />
+                              <span className="sr-only">
+                                {" "}
+                                (opens a new tab)
+                              </span>
+                            </a>
+                          )}
+                        </article>
+                      ))}
+                  </div>
+                </section>
+              ),
+          )
+        ) : !listing.loading && !listing.error && listing.data?.total === 0 ? (
           <div className="gt-sponsor-invitation">
             <Heart size={38} />
             <h2>
@@ -1454,7 +1550,22 @@ export function SponsorsPage() {
               Start a conversation
             </ActionLink>
           </div>
+        ) : null}
+        {listing.data && (
+          <PublicPagination
+            label="Partner pages"
+            {...listing.data}
+            busy={listing.loading}
+            onPage={(value) =>
+              setParams((previous) => {
+                const next = new URLSearchParams(previous);
+                next.set("page", String(value));
+                return next;
+              })
+            }
+          />
         )}
+        <PublicCollectionNotice {...tiers} />
         {sponsorshipTiers.length > 0 && (
           <section
             className="gt-section"
@@ -1483,6 +1594,7 @@ export function SponsorsPage() {
             </div>
           </section>
         )}
+        <PublicCollectionNotice {...metrics} />
         {chapterMetrics.length > 0 && (
           <section className="gt-section" aria-label="Chapter-approved impact">
             <h2>Impact, with context</h2>
@@ -1498,6 +1610,20 @@ export function SponsorsPage() {
               ))}
             </dl>
           </section>
+        )}
+        {metrics.data && (
+          <PublicPagination
+            label="Impact pages"
+            {...metrics.data}
+            busy={metrics.loading}
+            onPage={(value) =>
+              setParams((previous) => {
+                const next = new URLSearchParams(previous);
+                next.set("impactPage", String(value));
+                return next;
+              })
+            }
+          />
         )}
         <div className="gt-partner-benefits">
           {[
@@ -1612,7 +1738,8 @@ export function ContactPage() {
           setError("Use up to 20 interests, each at most 100 characters.");
           return;
         }
-        let approvedAttachment: { uploadId: string; uploadToken: string } | undefined;
+        let approvedAttachment:
+          { uploadId: string; uploadToken: string } | undefined;
         if (file) {
           if (attachment.current?.file !== file)
             attachment.current = contactUpload(file);

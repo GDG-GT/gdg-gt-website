@@ -36,6 +36,16 @@ export default defineConfig(({ mode }) => ({
     },
     proxy: {
       "/api/v1": { target: "http://127.0.0.1:8081", changeOrigin: false },
+      "/sitemap.xml": {
+        target: "http://127.0.0.1:8081",
+        rewrite: () => "/api/v1/public/sitemap.xml",
+        changeOrigin: false,
+      },
+      "/robots.txt": {
+        target: "http://127.0.0.1:8081",
+        rewrite: () => "/api/v1/public/robots.txt",
+        changeOrigin: false,
+      },
     },
   },
   plugins: [

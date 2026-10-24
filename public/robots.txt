@@ -1,32 +1,9 @@
-# GDG PSU Website - robots.txt
-# https://gdgpsu.dev
-
+# Georgia Tech GDG static fallback; hosting routes this to the configured-origin endpoint.
 User-agent: *
 Allow: /
-Disallow: /admin/
+Disallow: /admin
 Disallow: /api/
+Disallow: /account/
+Disallow: /newsletter/
 Disallow: /offline
 Disallow: /maintenance
-Disallow: /newsletter/confirm
-Disallow: /newsletter/unsubscribe
-
-# Sitemaps
-Sitemap: https://gdgpsu.dev/sitemap.xml
-
-# RSS Feed
-# https://gdgpsu.dev/rss.xml
-
-# Crawl delay for polite crawling
-Crawl-delay: 1
-
-# Google specific
-User-agent: Googlebot
-Allow: /
-Disallow: /admin/
-Disallow: /api/
-
-# Bing specific
-User-agent: Bingbot
-Allow: /
-Disallow: /admin/
-Disallow: /api/

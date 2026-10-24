@@ -1,0 +1,17 @@
+{
+  "note": "Real browser edits/reload plus authenticated local API readback and recoverable archive. Full accessibility/hosted acceptance remains open.",
+  "tests": [
+    {
+      "name": "File count, fractional-MiB byte size and PDF-only policy persisted",
+      "passed": true
+    },
+    {
+      "name": "Supported anchored answer pattern persisted",
+      "passed": true
+    },
+    {
+      "name": "Invocation-owned draft recoverably archived",
+      "passed": true
+    }
+  ]
+}

@@ -100,7 +100,8 @@
     "202610220096_operational_retention.sql",
     "202610220097_operational_monitoring.sql",
     "202610220098_form_published_images.sql",
-    "202610220099_form_library_filters.sql"
+    "202610220099_form_library_filters.sql",
+    "202610240100_public_sponsor_ordering.sql"
   ],
   "tests": [
     {
@@ -504,6 +505,10 @@
       "passed": true
     },
     {
+      "name": "202610240100_public_sponsor_ordering.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -789,6 +794,10 @@
     },
     {
       "name": "099_form_library_filters.sql",
+      "passed": true
+    },
+    {
+      "name": "100_public_sponsor_ordering.sql",
       "passed": true
     },
     {

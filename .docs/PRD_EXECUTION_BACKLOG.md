@@ -23,6 +23,22 @@ the exact own questions/answers sent only to the entered address, with no separa
 email confirmation. File bytes/private links are excluded. See
 `FORM_RESPONDENT_OPERATIONS.md`. Georgia Tech SSO and Google sign-in stay deferred.
 
+### Concrete gaps confirmed by the 2026-10-22 audit
+
+Still required: dashboard chart panels/four-metric composition/unread-message
+overview; audit entry detail/aggregate statistics/retention presentation; CMS
+private composition preview/explicit edge-cache invalidation; invitation decline
+and inviter display; Blog Editor task/communications summaries and editorial
+analytics; remaining image/state/accessibility and hosted HTML/404/crawler/social
+preview contracts. Do not replace these feature gaps with a testing-only claim.
+
+Closed locally on 2026-10-24: missing Forms file-policy/pattern controls; public
+resource status/tag/view controls; team/resource/sponsor pagination beyond 100;
+pre-pagination sponsor tier order and complete impact paging; root sitemap,
+configured-origin robots, served PSU text and basic route canonical/social data.
+See `FORM_VALIDATION_SETTINGS_OPERATIONS.md` and `PUBLIC_DISCOVERY_OPERATIONS.md`.
+Their manual/hosted/visual acceptance remains open.
+
 1. Forms: remaining library/builder/runtime edge cases and complete accessibility tests.
    Owner/team/date/template-origin library filters and scoped paginated options
    now work (`FORM_LIBRARY_OPERATIONS.md`).
@@ -96,8 +112,8 @@ email confirmation. File bytes/private links are excluded. See
 - Strict application/build TypeScript now passes. Lint remediation remains:
   zero errors/245 warnings; conditional-hook violations were fixed.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is still 13.86% lines/14.26% branches, below the global 70% gate;
-  531 tests pass, not a percentage of completed PRD features.
+  coverage is still 14.12% lines/14.64% branches, below the global 70% gate;
+  549 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
   Remaining test-ID traceability. The original
   machine-readable requirement inventory is not a completion percentage and its

@@ -1,0 +1,37 @@
+{
+  "note": "Actual loopback root/proxied HTTP checks. No deployment, search-engine submission, hosted crawler preview or visual approval.",
+  "tests": [
+    {
+      "name": "actual local root sitemap serves XML instead of a retired API or SPA shell",
+      "passed": true
+    },
+    {
+      "name": "canonical sitemap origin comes from this configured installation",
+      "passed": true
+    },
+    {
+      "name": "sitemap excludes PSU, private and capability-dependent workflows",
+      "passed": true
+    },
+    {
+      "name": "root sitemap retains the shared request correlation boundary",
+      "passed": true
+    },
+    {
+      "name": "sitemap HEAD returns equivalent headers without a body",
+      "passed": true
+    },
+    {
+      "name": "actual local robots route uses the configured absolute sitemap URL",
+      "passed": true
+    },
+    {
+      "name": "robots removes PSU and conflicting crawler-specific overrides",
+      "passed": true
+    },
+    {
+      "name": "public sitemap refuses mutation methods",
+      "passed": true
+    }
+  ]
+}

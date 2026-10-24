@@ -627,6 +627,24 @@ export function validateDefinition(form: PreviewForm): string[] {
       issues.push(`“${field.label}” needs a valid section.`);
     if (!field.label.trim() && field.type !== "divider")
       issues.push("Every question needs a visible label.");
+    if (field.pattern && !safePattern(field.pattern))
+      issues.push(
+        `Use a supported anchored answer pattern for “${field.label}”.`,
+      );
+    if (
+      field.type === "file" &&
+      ((field.maxFiles !== undefined &&
+        (!Number.isInteger(field.maxFiles) ||
+          field.maxFiles < 1 ||
+          field.maxFiles > 10)) ||
+        (field.maxFileBytes !== undefined &&
+          (!Number.isInteger(field.maxFileBytes) ||
+            field.maxFileBytes < 1 ||
+            field.maxFileBytes > 26214400)))
+    )
+      issues.push(
+        `Review the file count and size limits for “${field.label}”.`,
+      );
     if (field.type === "image" && !field.imageMediaId)
       issues.push("Choose an approved published image for every image block.");
     if (
