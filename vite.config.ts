@@ -5,6 +5,7 @@ import { localPreview } from "./scripts/local-preview";
 import { VitePWA } from "vite-plugin-pwa";
 import { readFile } from "node:fs/promises";
 import { offlinePrecacheAssets } from "./scripts/lib/build-graph.mjs";
+import { siteDocuments } from "./scripts/site-document-plugin";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -14,6 +15,14 @@ export default defineConfig(({ mode }) => ({
     strictPort: true,
     watch: {
       ignored: [
+        "**/coverage/**",
+        "**/.docs/**",
+        "**/.tmp/**",
+        "**/dist/**",
+        "**/database/**",
+        "**/infra/**",
+        "**/supabase/**",
+        "**/server/**",
         "**/node_modules.offloaded-backup/**",
         "**/excalidraw.offloaded-backup/**",
       ],
@@ -49,6 +58,9 @@ export default defineConfig(({ mode }) => ({
     },
   },
   plugins: [
+    ...(loadEnv(mode, process.cwd(), "").VITE_REAL_API === "true"
+      ? [siteDocuments()]
+      : []),
     react(),
     VitePWA({
       strategies: "injectManifest",

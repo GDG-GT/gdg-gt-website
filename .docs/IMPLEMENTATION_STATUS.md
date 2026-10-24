@@ -5,6 +5,48 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Workspace, audit, composition and raw HTML — 2026-10-24
+
+- Added four-metric administrator overview, permission-filtered registration/
+  funding charts, own unread messages and task visibility revocation. Editorial
+  overview includes actual scoped article states/revision history and personal
+  task/message workspaces. Personal finance/communications route entry now matches
+  Section 24 while underlying SQL keeps record/action scope.
+- Invitations display the current inviter and support recipient decline without
+  creating an identity; existing accounts require their own session/CSRF. Audit
+  review now has safe details, matching aggregates/search, stable composite
+  cursors, full filtered exports and retention inventory. Canonical migration
+  chain through 105 passes both grant defaults and both 100-client races.
+- CMS saved-draft composition uses actual public components, private bounded
+  projections and a read-only canvas. Mutable CMS responses revalidate on every
+  read, eliminating the earlier stale publication window. Fifteen workspace,
+  21 CMS and extended invitation HTTP checks pass; see
+  `WORKSPACE_COMPLETION_OPERATIONS.md` for limitations.
+- Public documents now serve route-specific raw HTML/social tags, factual event
+  data, safe old-slug redirects and genuine 404/noindex responses. Eleven real
+  raw-document checks pass. Vercel function/routing is prepared but unhosted;
+  canonical-domain redirects and provider/crawler acceptance remain open. See
+  `PUBLIC_DOCUMENT_OPERATIONS.md`.
+- Fresh audit found a new high Zod advisory; upgraded to patched 4.6.7 and checked
+  compatibility. 584 units, strict types, zero lint errors/245 warnings, build and
+  byte gates pass. Real 124 Forms/upload/scanner checks and 22 member transfer
+  checks pass. Production audit is again 0 high/critical (2 moderate/4 low).
+  Vite no longer watches generated coverage HTML or backend-only files, avoiding
+  repeated browser reloads. See `ZOD_VALIDATION_UPGRADE.md`.
+- Global coverage remains approximately 14.88% lines/15.28% branches and fails
+  the required 70%; all 17 individual critical-file branch gates pass. Manual/
+  device/performance/visual/hosted acceptance remain open. All 146 numbered
+  requirements now map into 99 reviewed logical cases and real test-source paths;
+  their acceptance stays unverified. CI rejects stale/invalid mappings. This
+  is a local checkpoint, not full PRD completion.
+
+- Added a real isolated backup/restore regression: all 105 migrations, 130 tables,
+  complete row-content fingerprints and schema/grant/constraint/index/RLS/trigger
+  inventories restore identically; foreign keys and append-only audit protection
+  still enforce. Only fictional data in invocation-owned isolated databases was
+  used; successful fixtures removed. Hosted/PITR/object-storage/RPO/RTO proof
+  remains open (`BACKUP_RESTORE_OPERATIONS.md`).
+
 ### Forms policy controls and public discovery/metadata — 2026-10-24
 
 - Added the missing Forms file count/size/format and restricted-pattern controls,

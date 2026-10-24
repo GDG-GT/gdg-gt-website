@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "@/lib/api";
 import { Button, Field } from "../primitives";
-import { useUrlCapability } from '@/hooks/useUrlCapability';
+import { useUrlCapability } from "@/hooks/useUrlCapability";
 type Info = {
   teamName: string;
   role: string;
   expiresAt: string;
   requiresSignIn: boolean;
+  inviterName: string;
 };
 export default function AcceptTeamInvitation() {
-  const [token, setToken] = useUrlCapability('invite');
+  const [token, setToken] = useUrlCapability("invite");
   const [email, setEmail] = useState(""),
     [info, setInfo] = useState<Info>(),
     [name, setName] = useState(""),
@@ -18,17 +19,21 @@ export default function AcceptTeamInvitation() {
     [confirmation, setConfirmation] = useState(""),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
-    [done, setDone] = useState(false),
+    [done, setDone] = useState<"accepted" | "declined" | null>(null),
     [needsSignIn, setNeedsSignIn] = useState(false);
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (done) heading.current?.focus();
+  }, [done]);
   useEffect(() => {
     document.title = "Team invitation · GDG at Georgia Tech";
   }, []);
   return (
     <section className="gt-token-page">
       <div className="gt-token-sheet">
-        <h1>
+        <h1 ref={heading} tabIndex={-1}>
           {done
-            ? "Team invitation accepted"
+            ? `Team invitation ${done}`
             : info
               ? "Join " + info.teamName
               : "Your chapter team invitation"}
@@ -41,15 +46,19 @@ export default function AcceptTeamInvitation() {
         {done ? (
           <>
             <p>
-              {needsSignIn
-                ? "Your account was created with the Team Member role. Use the chapter access entry to sign in; the invitation does not bypass it."
-                : "Your membership is now active. Open your workspace to see the team and its current permissions."}
+              {done === "declined"
+                ? "You declined this invitation. No account or membership was created or changed. Ask your team lead for a new invitation if you change your mind."
+                : needsSignIn
+                  ? "Your account was created with the Team Member role. Use the chapter access entry to sign in; the invitation does not bypass it."
+                  : "Your membership is now active. Open your workspace to see the team and its current permissions."}
             </p>
             <Link
               className="gt-button gt-button-secondary"
-              to={needsSignIn ? "/" : "/admin/teams"}
+              to={needsSignIn || done === "declined" ? "/" : "/admin/teams"}
             >
-              {needsSignIn ? "Chapter website" : "Open teams"}
+              {needsSignIn || done === "declined"
+                ? "Chapter website"
+                : "Open teams"}
             </Link>
           </>
         ) : !token ? (
@@ -96,7 +105,7 @@ export default function AcceptTeamInvitation() {
                     },
                   });
                   setNeedsSignIn(r.requiresSignIn);
-                  setDone(true);
+                  setDone("accepted");
                   setToken("");
                 }
               } catch (e) {
@@ -124,7 +133,8 @@ export default function AcceptTeamInvitation() {
             {info && (
               <>
                 <p>
-                  Team role: {info.role.replace(/_/g, " ")} · expires{" "}
+                  Invited by {info.inviterName}. Team role:{" "}
+                  {info.role.replace(/_/g, " ")} · expires{" "}
                   {new Date(info.expiresAt).toLocaleString()}.
                 </p>
                 {info.requiresSignIn ? (
@@ -185,6 +195,39 @@ export default function AcceptTeamInvitation() {
                     : "Create account & join team"
                   : "Check invitation"}
             </Button>
+            {info && (
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={busy}
+                onClick={async () => {
+                  setBusy(true);
+                  setError("");
+                  try {
+                    await api("/account/team-invitations/decline", {
+                      method: "POST",
+                      protected: info.requiresSignIn,
+                      body: { token, email },
+                    });
+                    setPassword("");
+                    setConfirmation("");
+                    setName("");
+                    setDone("declined");
+                    setToken("");
+                  } catch (e) {
+                    setError(
+                      e instanceof Error
+                        ? e.message
+                        : "This invitation could not be declined.",
+                    );
+                  } finally {
+                    setBusy(false);
+                  }
+                }}
+              >
+                Decline invitation
+              </Button>
+            )}
             {info && (
               <Button
                 type="button"

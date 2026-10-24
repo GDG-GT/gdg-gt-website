@@ -83,7 +83,11 @@ const statusLabel = (value: string) =>
     completed: "Completed",
     overdue: "Overdue",
   })[value] || value;
-export default function TaskWorkspace() {
+export default function TaskWorkspace({
+  personal = false,
+}: {
+  personal?: boolean;
+}) {
   const [params, setParams] = useSearchParams(),
     selected = params.get("task") || "";
   const [listing, setListing] = useState<Listing>(),
@@ -398,7 +402,9 @@ export default function TaskWorkspace() {
       setTick((v) => v + 1);
       setNotice("Task status saved.");
     } catch (e) {
-      setError((e instanceof Error ? e.message : "This action could not be completed."));
+      setError(
+        e instanceof Error ? e.message : "This action could not be completed.",
+      );
     } finally {
       setBusy(false);
     }
@@ -442,7 +448,12 @@ export default function TaskWorkspace() {
       commentKey.current = undefined;
       setTick((v) => v + 1);
     } catch (e) {
-      if (id === selectedRef.current) setError((e instanceof Error ? e.message : "This action could not be completed."));
+      if (id === selectedRef.current)
+        setError(
+          e instanceof Error
+            ? e.message
+            : "This action could not be completed.",
+        );
     } finally {
       setBusy(false);
     }
@@ -480,7 +491,9 @@ export default function TaskWorkspace() {
       setDeleting(null);
       setTick((v) => v + 1);
     } catch (e) {
-      setError((e instanceof Error ? e.message : "This action could not be completed."));
+      setError(
+        e instanceof Error ? e.message : "This action could not be completed.",
+      );
     } finally {
       setBusy(false);
     }
@@ -505,7 +518,9 @@ export default function TaskWorkspace() {
       });
       setCursor(r.nextCursor);
     } catch (e) {
-      setError((e instanceof Error ? e.message : "This action could not be completed."));
+      setError(
+        e instanceof Error ? e.message : "This action could not be completed.",
+      );
     } finally {
       setBusy(false);
     }
@@ -514,7 +529,7 @@ export default function TaskWorkspace() {
     <div className="gt-admin-page">
       <header className="gt-admin-heading">
         <div>
-          <h1>Communications</h1>
+          <h1>{personal ? "Your tasks" : "Communications"}</h1>
           <p>
             Keep chapter work moving with clear ownership, protected
             conversations and reliable deadlines.
@@ -526,34 +541,36 @@ export default function TaskWorkspace() {
           </Button>
         )}
       </header>
-      <nav
-        className="gt-button-row gt-team-tabs"
-        aria-label="Communications workspaces"
-      >
-        <ActionLink
-          to="/admin/communications?tab=announcements"
-          variant="ghost"
+      {!personal && (
+        <nav
+          className="gt-button-row gt-team-tabs"
+          aria-label="Communications workspaces"
         >
-          Announcements
-        </ActionLink>
-        <span className="gt-button" aria-current="page">
-          Tasks
-        </span>
-        <ActionLink to="/admin/communications?tab=messages" variant="ghost">
-          Messages
-        </ActionLink>
-        <ContactInboxLink />
-        {allowedLinks.includes("/admin/teams") && (
-          <ActionLink to="/admin/teams" variant="ghost">
-            Team announcements
+          <ActionLink
+            to="/admin/communications?tab=announcements"
+            variant="ghost"
+          >
+            Announcements
           </ActionLink>
-        )}
-        {allowedLinks.includes("/admin/channels") && (
-          <ActionLink to="/admin/channels" variant="ghost">
-            Channels
+          <span className="gt-button" aria-current="page">
+            Tasks
+          </span>
+          <ActionLink to="/admin/communications?tab=messages" variant="ghost">
+            Messages
           </ActionLink>
-        )}
-      </nav>
+          <ContactInboxLink />
+          {allowedLinks.includes("/admin/teams") && (
+            <ActionLink to="/admin/teams" variant="ghost">
+              Team announcements
+            </ActionLink>
+          )}
+          {allowedLinks.includes("/admin/channels") && (
+            <ActionLink to="/admin/channels" variant="ghost">
+              Channels
+            </ActionLink>
+          )}
+        </nav>
+      )}
       {error && (
         <p className="gt-form-error" role="alert">
           {error}

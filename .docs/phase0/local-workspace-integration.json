@@ -50,7 +50,7 @@
       "passed": true
     },
     {
-      "name": "revoked role immediately removes ungranted dashboard data",
+      "name": "revoked role removes ungranted event and user data while retaining SQL-scoped personal finances and communications",
       "passed": true
     },
     {

@@ -56,6 +56,15 @@ describe('security primitives',()=>{
   });
 });
 describe('server authorization',()=>{
+  it('allows member entry to personal finance and communications while keeping unrelated actions grant-bound',()=>{
+    const user={id:'member',role:'team_member',is_active:true};
+    for(const [route,resource] of [['/admin/communications','communications'],['/admin/finances','finances']]){
+      expect(isAuthorized({user,resource,route})).toBe(true);
+      expect(isAuthorized({user,resource,route,action:'approve'})).toBe(false);
+      expect(isAuthorized({user,resource,route,action:'manage_permissions'})).toBe(false);
+    }
+    expect(isAuthorized({user,resource:'events',route:'/admin/events'})).toBe(false);
+  });
   const user={id:'one',role:'team_member',is_active:true};
   it('SEC-TEST checks explicit team, owner, page and collaborator boundaries', () => {
     expect(isAuthorized({user,resource:'dashboard'})).toBe(true);

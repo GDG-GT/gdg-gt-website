@@ -8,7 +8,9 @@
       "requirement": "The existing newsletter field remains the hidden entry point.",
       "line": 274,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -16,7 +18,9 @@
       "requirement": "A normal email address follows the newsletter subscription flow.",
       "line": 276,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -24,7 +28,9 @@
       "requirement": "A non-email gate entry is submitted to the server-side gate endpoint. The stored secret or hash never reaches the browser.",
       "line": 278,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -32,7 +38,9 @@
       "requirement": "The gate secret is stored only as a strong password hash in server-only configuration or a protected secret store.",
       "line": 280,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -40,7 +48,9 @@
       "requirement": "Secret comparison uses a constant-time password verification library appropriate for the runtime.",
       "line": 282,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -48,7 +58,9 @@
       "requirement": "Five failed attempts from an IP or risk key within 15 minutes trigger a 429 response. Production rate limiting must use shared persistent storage, not process memory.",
       "line": 284,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-013"
+      ],
       "evidence": []
     },
     {
@@ -56,7 +68,9 @@
       "requirement": "Failure responses are generic and never reveal whether the gate secret, email, or admin account exists.",
       "line": 286,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-013"
+      ],
       "evidence": []
     },
     {
@@ -64,7 +78,9 @@
       "requirement": "Success sets a 15-minute HttpOnly, Secure, SameSite=Strict gate cookie.",
       "line": 288,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-011"
+      ],
       "evidence": []
     },
     {
@@ -72,7 +88,9 @@
       "requirement": "The gate cookie reveals the email/password login UI but grants no application or database access.",
       "line": 290,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-011"
+      ],
       "evidence": []
     },
     {
@@ -80,7 +98,9 @@
       "requirement": "`/api/auth/gate-status` returns only `{ gateValid: boolean }` and never returns token contents.",
       "line": 292,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-011"
+      ],
       "evidence": []
     },
     {
@@ -88,7 +108,9 @@
       "requirement": "The login endpoint requires a valid gate cookie.",
       "line": 294,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-012"
+      ],
       "evidence": []
     },
     {
@@ -96,7 +118,9 @@
       "requirement": "Successful login creates an opaque session token. Only a hash of the token is stored server-side.",
       "line": 296,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-014"
+      ],
       "evidence": []
     },
     {
@@ -104,7 +128,9 @@
       "requirement": "Session validation checks token hash, expiry, revocation, account status, and current role on every protected request.",
       "line": 298,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-019"
+      ],
       "evidence": []
     },
     {
@@ -112,7 +138,9 @@
       "requirement": "No unsigned admin identity or role is trusted from a browser cookie.",
       "line": 300,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-015"
+      ],
       "evidence": []
     },
     {
@@ -120,7 +148,9 @@
       "requirement": "Logout revokes the server session and clears gate, session, and CSRF cookies.",
       "line": 302,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-017"
+      ],
       "evidence": []
     },
     {
@@ -128,7 +158,9 @@
       "requirement": "Gate rotation is manual and Super Admin only. Rotation invalidates the prior gate immediately.",
       "line": 304,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-007"
+      ],
       "evidence": []
     },
     {
@@ -136,7 +168,9 @@
       "requirement": "All application data reads and writes use same-origin server APIs. The browser does not query application tables directly with a Supabase publishable or legacy anon key.",
       "line": 316,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-008"
+      ],
       "evidence": []
     },
     {
@@ -144,7 +178,9 @@
       "requirement": "Public writes use dedicated server endpoints. Those endpoints may call narrowly scoped atomic RPCs from the trusted server, but the browser receives no direct RPC execution grant. No public table receives a general anonymous write policy.",
       "line": 318,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -152,7 +188,9 @@
       "requirement": "Protected reads and writes use a trusted server layer.",
       "line": 320,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-008"
+      ],
       "evidence": []
     },
     {
@@ -160,7 +198,9 @@
       "requirement": "Every protected endpoint performs, in order:",
       "line": 322,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-009"
+      ],
       "evidence": []
     },
     {
@@ -168,7 +208,9 @@
       "requirement": "The Supabase secret key or legacy service-role credential appears only in server, worker, and tightly controlled Edge Function environments. The server client is dedicated and cannot inherit or replace its authorization header with a user token.",
       "line": 333,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-010"
+      ],
       "evidence": []
     },
     {
@@ -176,7 +218,9 @@
       "requirement": "Client route guards remain for UX but are never treated as authorization.",
       "line": 335,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-008"
+      ],
       "evidence": []
     },
     {
@@ -184,7 +228,9 @@
       "requirement": "Custom sessions do not use Supabase's `authenticated` role as proof of identity.",
       "line": 337,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -192,7 +238,9 @@
       "requirement": "Authorization must not depend on connection-local `current_setting` state across pooled requests.",
       "line": 339,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -200,7 +248,9 @@
       "requirement": "The final RLS and grant model denies direct browser access to application tables and RPCs. Public content and public mutations are exposed only through documented same-origin server endpoints.",
       "line": 341,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -208,7 +258,9 @@
       "requirement": "Email-sending functions validate the caller and intended email action. Public confirmation emails can be triggered only by a successful, rate-limited workflow.",
       "line": 343,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-011"
+      ],
       "evidence": []
     },
     {
@@ -216,7 +268,9 @@
       "requirement": "The browser may connect directly to Supabase only for Realtime after receiving a short-lived, server-issued Realtime token scoped to the authenticated user.",
       "line": 345,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-012"
+      ],
       "evidence": []
     },
     {
@@ -224,7 +278,9 @@
       "requirement": "Stored Markdown, HTML-capable content, event descriptions, email previews, and embeds use centralized input validation and output sanitization.",
       "line": 347,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-013"
+      ],
       "evidence": []
     },
     {
@@ -232,7 +288,9 @@
       "requirement": "External links and iframe embeds pass a server-side URL allowlist. Private IP ranges, credentials in URLs, non-HTTPS production URLs, `javascript:`, `data:`, and unapproved iframe hosts are rejected.",
       "line": 349,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-014"
+      ],
       "evidence": []
     },
     {
@@ -240,7 +298,9 @@
       "requirement": "Production logs use structured redaction and never record raw credentials, tokens, message bodies, gate attempts, complete authentication responses, or unmasked recipient lists.",
       "line": 351,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "OPS-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -248,7 +308,9 @@
       "requirement": "The server issues a cryptographically random token bound to the current server session.",
       "line": 355,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-016"
+      ],
       "evidence": []
     },
     {
@@ -256,7 +318,9 @@
       "requirement": "State-changing protected requests require the token in a custom header and validate it against the session.",
       "line": 357,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-016"
+      ],
       "evidence": []
     },
     {
@@ -264,7 +328,9 @@
       "requirement": "Tokens expire, rotate on login, and are invalidated on logout.",
       "line": 359,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-016"
+      ],
       "evidence": []
     },
     {
@@ -272,7 +338,9 @@
       "requirement": "SameSite cookies and origin checks are defense in depth, not replacements for token validation.",
       "line": 361,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "AUTH-TEST-018"
+      ],
       "evidence": []
     },
     {
@@ -280,7 +348,9 @@
       "requirement": "Public endpoints use origin checks, idempotency, bot controls, and rate limits appropriate to their threat model.",
       "line": 363,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-015"
+      ],
       "evidence": []
     },
     {
@@ -288,7 +358,9 @@
       "requirement": "Admins with event permission can create, edit, publish, unpublish, feature, cancel, duplicate, and delete events.",
       "line": 367,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "EVT-TEST-003"
+      ],
       "evidence": []
     },
     {
@@ -296,7 +368,9 @@
       "requirement": "Event fields include title, unique slug, summary, description, start and end time, timezone, location, room, type, level, image, registration mode, capacity, prerequisites, learning outcomes, what to bring, schedule, additional information, contact information, external links, publication state, and featured state.",
       "line": 369,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "EVT-TEST-004"
+      ],
       "evidence": []
     },
     {
@@ -304,7 +378,9 @@
       "requirement": "`/events` supports upcoming-first default ordering plus date, newest, title, type, and level filters where data exists.",
       "line": 371,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "EVT-TEST-005"
+      ],
       "evidence": []
     },
     {
@@ -312,7 +388,9 @@
       "requirement": "`/events/:slug` contains event metadata, accessible schedule content, capacity state, registration action, calendar action, and share metadata.",
       "line": 373,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "EVT-TEST-006"
+      ],
       "evidence": []
     },
     {
@@ -320,7 +398,9 @@
       "requirement": "Registration is processed atomically. Capacity check, duplicate check, row insert, and count update occur in one transaction or RPC.",
       "line": 375,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "EVT-TEST-007"
+      ],
       "evidence": []
     },
     {
@@ -328,7 +408,9 @@
       "requirement": "A unique constraint prevents duplicate registration for the same normalized email and event.",
       "line": 377,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "EVT-TEST-008"
+      ],
       "evidence": []
     },
     {
@@ -336,7 +418,9 @@
       "requirement": "Each registration submission carries an idempotency key.",
       "line": 379,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "EVT-TEST-008"
+      ],
       "evidence": []
     },
     {
@@ -344,7 +428,9 @@
       "requirement": "Capacity is never enforced only in JavaScript.",
       "line": 381,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "EVT-TEST-007"
+      ],
       "evidence": []
     },
     {
@@ -352,7 +438,9 @@
       "requirement": "Admin attendance tools support listing, check-in, notes, correction, removal, and summary statistics.",
       "line": 383,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "EVT-TEST-009"
+      ],
       "evidence": []
     },
     {
@@ -360,7 +448,9 @@
       "requirement": "Registration confirmation email is generated only after the registration transaction succeeds.",
       "line": 385,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "EVT-TEST-010"
+      ],
       "evidence": []
     },
     {
@@ -368,7 +458,9 @@
       "requirement": "Event pages include canonical metadata, Open Graph data, and Event structured data based on approved public fields.",
       "line": 387,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "EVT-TEST-011"
+      ],
       "evidence": []
     },
     {
@@ -376,7 +468,9 @@
       "requirement": "The missing `event_attendance` schema and attendee count behavior are reconstructed and tested before event work exits its phase.",
       "line": 389,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "EVT-TEST-012"
+      ],
       "evidence": []
     },
     {
@@ -384,7 +478,9 @@
       "requirement": "Preserve public team profiles separately from internal admin accounts and memberships.",
       "line": 393,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "TEAM-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -392,7 +488,9 @@
       "requirement": "Preserve chapter teams, leads, co-leads, members, active state, membership history, transfers, invitations, page grants, action grants, announcements, statistics, and activity logs.",
       "line": 395,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "TEAM-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -400,7 +498,9 @@
       "requirement": "Invitations use single-use, high-entropy, expiring tokens stored as hashes.",
       "line": 397,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "TEAM-TEST-003"
+      ],
       "evidence": []
     },
     {
@@ -408,7 +508,9 @@
       "requirement": "Accepting an invitation validates email or intended account binding, expiry, revocation, and prior use.",
       "line": 399,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "TEAM-TEST-003"
+      ],
       "evidence": []
     },
     {
@@ -416,7 +518,9 @@
       "requirement": "Team leads can manage only teams and members within their authorized scope.",
       "line": 401,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "TEAM-TEST-004"
+      ],
       "evidence": []
     },
     {
@@ -424,7 +528,9 @@
       "requirement": "The server enforces both route permission and action permission.",
       "line": 403,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "TEAM-TEST-004"
+      ],
       "evidence": []
     },
     {
@@ -432,7 +538,9 @@
       "requirement": "Public team data exposes only approved profile fields.",
       "line": 405,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "TEAM-TEST-005"
+      ],
       "evidence": []
     },
     {
@@ -440,7 +548,9 @@
       "requirement": "Preserve announcements, audience targeting, scheduling, read tracking, internal messages, tasks, task comments, due dates, overdue automation, channels, channel messages, pins, notifications, and whiteboards.",
       "line": 409,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "COMM-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -448,7 +558,9 @@
       "requirement": "Preserve existing realtime behavior for channels, notifications, content refresh, team chat, and whiteboard state where it is currently used.",
       "line": 411,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "COMM-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -456,7 +568,9 @@
       "requirement": "Realtime subscriptions must receive only records the current session is authorized to view.",
       "line": 413,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "COMM-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -464,7 +578,9 @@
       "requirement": "Message and whiteboard mutations require server authorization or a secure token exchange that maps the custom session to a scoped backend action.",
       "line": 415,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "COMM-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -472,7 +588,9 @@
       "requirement": "Email fan-out requires explicit permission, recipient limits, rate limits, and audit logs.",
       "line": 417,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "COMM-TEST-003"
+      ],
       "evidence": []
     },
     {
@@ -480,7 +598,9 @@
       "requirement": "Scheduled jobs use dedicated secrets and cannot be triggered anonymously.",
       "line": 419,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "OPS-TEST-009"
+      ],
       "evidence": []
     },
     {
@@ -488,7 +608,9 @@
       "requirement": "Preserve finance request creation, draft and submitted states, team lead approval, administrator approval, rejection, completion, notes, attachments, budget allocation, utilization, reporting, and export.",
       "line": 423,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FIN-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -496,7 +618,9 @@
       "requirement": "Finance records and attachments are private and never available through anonymous Supabase reads or public storage URLs.",
       "line": 425,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FIN-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -504,7 +628,9 @@
       "requirement": "Approval transitions are validated on the server against current state and caller authority.",
       "line": 427,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FIN-TEST-003"
+      ],
       "evidence": []
     },
     {
@@ -512,7 +638,9 @@
       "requirement": "Every approval, rejection, edit, deletion, and export is audited.",
       "line": 429,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FIN-TEST-003"
+      ],
       "evidence": []
     },
     {
@@ -520,7 +648,9 @@
       "requirement": "Attachment downloads use short-lived signed URLs issued after authorization.",
       "line": 431,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FIN-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -528,7 +658,9 @@
       "requirement": "Public signup validates normalized email, applies rate limits and bot controls, and starts double opt-in.",
       "line": 435,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "NEWS-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -536,7 +668,9 @@
       "requirement": "Confirmation and unsubscribe use random, expiring or revocable tokens stored safely.",
       "line": 437,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "NEWS-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -544,7 +678,9 @@
       "requirement": "Public users cannot list subscribers or infer subscription state from distinct error responses.",
       "line": 439,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "NEWS-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -552,7 +688,9 @@
       "requirement": "Admin tools preserve subscriber management, templates, campaigns, custom recipients, scheduling, test sends, delivery state, and cleanup workflows.",
       "line": 441,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "NEWS-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -560,7 +698,9 @@
       "requirement": "Campaign send operations require server authorization, CSRF, recipient caps, idempotency, and audit logging.",
       "line": 443,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "NEWS-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -568,7 +708,9 @@
       "requirement": "Resend credentials are server-only.",
       "line": 445,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "NEWS-TEST-003"
+      ],
       "evidence": []
     },
     {
@@ -576,7 +718,9 @@
       "requirement": "Contact submissions validate required fields, email format, length, allowed content, honeypot, rate limit, and origin.",
       "line": 449,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-015"
+      ],
       "evidence": []
     },
     {
@@ -584,7 +728,9 @@
       "requirement": "The endpoint sends only to configured chapter recipients and does not accept arbitrary destination addresses from the browser.",
       "line": 451,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-015"
+      ],
       "evidence": []
     },
     {
@@ -592,7 +738,9 @@
       "requirement": "User-supplied content is escaped in HTML email templates.",
       "line": 453,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-015"
+      ],
       "evidence": []
     },
     {
@@ -600,7 +748,9 @@
       "requirement": "Preserve editable site settings, page content, navigation, social links, footer content, resources, sponsors, sponsor tiers, impact statistics, team profiles, gallery, media folders, media files, tags, star state, and usage references.",
       "line": 457,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -608,7 +758,9 @@
       "requirement": "Public queries expose only active or published records and only required columns.",
       "line": 459,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -616,7 +768,9 @@
       "requirement": "Protected media is private. Public media is explicitly published into a public bucket or public namespace.",
       "line": 461,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-003"
+      ],
       "evidence": []
     },
     {
@@ -624,7 +778,9 @@
       "requirement": "The target must separate public assets from private uploads. The existing public `media` behavior cannot be reused for finance, blog submission, or internal attachments.",
       "line": 463,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-003"
+      ],
       "evidence": []
     },
     {
@@ -632,7 +788,9 @@
       "requirement": "File uploads validate MIME type, file signature, size, extension, ownership, and destination.",
       "line": 465,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-004"
+      ],
       "evidence": []
     },
     {
@@ -640,7 +798,9 @@
       "requirement": "SVG uploads are prohibited or sanitized with a documented policy.",
       "line": 467,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-004"
+      ],
       "evidence": []
     },
     {
@@ -648,7 +808,9 @@
       "requirement": "Images use responsive sizes, width and height attributes, modern formats, lazy loading below the fold, and meaningful alt text.",
       "line": 469,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "A11Y-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -656,7 +818,9 @@
       "requirement": "Preserve profiles, links, ordering, active state, embed types, public usernames, click counting, and admin analytics.",
       "line": 473,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-008"
+      ],
       "evidence": []
     },
     {
@@ -664,7 +828,9 @@
       "requirement": "Public profiles expose only active profiles and active links.",
       "line": 475,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-008"
+      ],
       "evidence": []
     },
     {
@@ -672,7 +838,9 @@
       "requirement": "Click tracking is rate-limited and does not accept arbitrary counter mutation.",
       "line": 477,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-008"
+      ],
       "evidence": []
     },
     {
@@ -680,7 +848,9 @@
       "requirement": "External URLs are validated against allowed protocols.",
       "line": 479,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-008"
+      ],
       "evidence": []
     },
     {
@@ -688,7 +858,9 @@
       "requirement": "The product provides a first-party Forms subsystem. Public respondents and administrators remain on the chapter website. An external Google Forms or Microsoft Forms embed is not the implementation.",
       "line": 483,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -696,7 +868,9 @@
       "requirement": "Authorized users can create a blank form, create from an approved template, duplicate, rename, move, archive, restore, and permanently delete a form subject to retention and recent-password controls.",
       "line": 485,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -704,7 +878,9 @@
       "requirement": "The builder supports sections and these field types: short text, long text, email, phone, number, URL, single choice, multiple choice, dropdown, date, time, date and time, linear scale, rating, Likert grid, checkbox grid, ranking, file upload, consent or acknowledgment, and non-answer title, description, image, and divider blocks.",
       "line": 487,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-003"
+      ],
       "evidence": []
     },
     {
@@ -712,7 +888,9 @@
       "requirement": "Every answer field supports a stable internal field ID, label, optional description, required state, accessible help text, and type-appropriate validation. Validation includes length, numeric range, choice limits, date range, allowed domain, safe regular expression, and file count, type, and size.",
       "line": 489,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-004"
+      ],
       "evidence": []
     },
     {
@@ -720,7 +898,9 @@
       "requirement": "The builder supports drag-and-drop ordering, keyboard reordering, section duplication, field duplication, undo and redo for the current editing session, autosave status, desktop preview, mobile preview, and a public preview that cannot submit production responses.",
       "line": 491,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-005"
+      ],
       "evidence": []
     },
     {
@@ -728,7 +908,9 @@
       "requirement": "Conditional behavior supports showing or hiding fields, branching to a section, and ending the form based on prior single-choice, multiple-choice, dropdown, checkbox, rating, or scale answers. The builder rejects cycles, unreachable required fields, invalid targets, and contradictory rules before publication.",
       "line": 493,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-006"
+      ],
       "evidence": []
     },
     {
@@ -736,23 +918,31 @@
       "requirement": "Form settings support description, header media, theme within the approved design system, confirmation message, progress indicator, question or option shuffling where semantically safe, response receipts, response editing, response limits, open and close schedule, and closed-form message. Receipts default to confirmation metadata without answer values; including answers requires an explicit per-form privacy review and excludes file contents and sensitive fields.",
       "line": 495,
       "status": "unverified",
-      "testIds": [],
-      "evidence": []
+      "testIds": [
+        "FORM-TEST-007"
+      ],
+      "evidence": [],
+      "userOverride": "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy."
     },
     {
       "id": "FORM-008",
       "requirement": "Access modes are public anonymous, public with verified email, unlisted token, invited-token only, and authenticated admin or team member. One-response enforcement is available only when the chosen access mode supplies a verifiable identity or unique invite token.",
       "line": 497,
       "status": "unverified",
-      "testIds": [],
-      "evidence": []
+      "testIds": [
+        "FORM-TEST-008"
+      ],
+      "evidence": [],
+      "userOverride": "Tejas removed anonymous forms. Name/email are required now; entered identity is declared, not falsely verified. Georgia Tech SSO and Google login remain deferred."
     },
     {
       "id": "FORM-009",
       "requirement": "Public forms use a unique slug. Unlisted and invited forms use high-entropy access tokens stored only as hashes. Search engines must not index unlisted, invited, internal, draft, closed, or archived forms.",
       "line": 499,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-009"
+      ],
       "evidence": []
     },
     {
@@ -760,7 +950,9 @@
       "requirement": "Draft form definitions are mutable. Every publication creates an immutable `form_version` with a schema hash. A response always references the exact published version it answered. Editing a published form creates a new draft and never changes historical responses or labels.",
       "line": 501,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-010"
+      ],
       "evidence": []
     },
     {
@@ -768,7 +960,9 @@
       "requirement": "Public rendering includes form title, description, section progress, visible field labels, required indicators, inline validation, save-and-resume state when enabled, back and next controls, final review when enabled, privacy text, and a submit action. Conditional rules are evaluated consistently in browser and server code from the same versioned schema.",
       "line": 503,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-011"
+      ],
       "evidence": []
     },
     {
@@ -776,7 +970,9 @@
       "requirement": "The server validates the submitted response against the referenced immutable version. It rejects unknown fields, stale or unpublished versions, answers to hidden fields unless explicitly retained by policy, missing required visible fields, invalid branches, unsafe content, invalid files, and response-limit conflicts.",
       "line": 505,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-012"
+      ],
       "evidence": []
     },
     {
@@ -784,7 +980,9 @@
       "requirement": "Response submission is idempotent and atomic. Response-limit enforcement, one-response enforcement, invite-token consumption, answer persistence, file association, and final status update succeed or fail as one transaction. A respondent never sees `Submitted` until the transaction commits.",
       "line": 507,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-013"
+      ],
       "evidence": []
     },
     {
@@ -792,15 +990,20 @@
       "requirement": "Optional save and resume uses a high-entropy token stored as a hash. Anonymous draft tokens expire after a configurable period no longer than 30 days. The raw token appears only in the respondent's resume link URL fragment, is exchanged through an authorization header or request body, and is never sent as a query string or logged path. Administrators cannot retrieve it.",
       "line": 509,
       "status": "unverified",
-      "testIds": [],
-      "evidence": []
+      "testIds": [
+        "FORM-TEST-014"
+      ],
+      "evidence": [],
+      "userOverride": "Draft expiry/fragment handling remains; respondents are identified by declared name/email under the current no-anonymous decision."
     },
     {
       "id": "FORM-015",
       "requirement": "Optional response editing uses a separate high-entropy edit token stored as a hash. The link uses the same URL-fragment exchange pattern as resume tokens. Editing is available only while the form owner permits it and the form is not locked. Every edit retains an auditable revision history without exposing prior answers publicly.",
       "line": 511,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-015"
+      ],
       "evidence": []
     },
     {
@@ -808,7 +1011,9 @@
       "requirement": "File uploads use a private `form-uploads` bucket and the signed direct-upload workflow in Section 26.7. Files remain quarantined and unavailable to form owners until server validation and malware scanning pass. A rejected or abandoned upload is deleted by scheduled cleanup.",
       "line": 513,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-016"
+      ],
       "evidence": []
     },
     {
@@ -816,7 +1021,9 @@
       "requirement": "Public form endpoints apply origin checks, form-specific and global rate limits, honeypot or challenge controls based on risk, idempotency, payload limits, token validation, and abuse monitoring. Public response APIs never expose response counts, answer data, respondent identity, access rules, or unpublished schema.",
       "line": 515,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-017"
+      ],
       "evidence": []
     },
     {
@@ -824,7 +1031,9 @@
       "requirement": "The form library shows owner, team, state, response count, open or closed state, last edited time, published version, and permitted actions. It supports search, owner, team, status, date, and template filters without exposing inaccessible forms.",
       "line": 517,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-018"
+      ],
       "evidence": []
     },
     {
@@ -832,7 +1041,9 @@
       "requirement": "The response workspace provides Summary, Responses, and Individual views. Summary uses type-appropriate charts and counts. Responses provides a paginated table with search, filters, date range, completion status, selected columns, and saved views. Individual view shows one response with version-aware labels and permitted files.",
       "line": 519,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-019"
+      ],
       "evidence": []
     },
     {
@@ -840,7 +1051,9 @@
       "requirement": "Authorized users can export selected or filtered responses as CSV, XLSX, or JSON. Exports include form ID, form version, response ID, submission time, completion state, and stable field IDs plus the labels from that version. CSV and XLSX generation prevents spreadsheet-formula injection from values beginning with `=`, `+`, `-`, `@`, tab, or carriage return. Large exports run as background jobs and use short-lived authenticated downloads.",
       "line": 521,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-020"
+      ],
       "evidence": []
     },
     {
@@ -848,7 +1061,9 @@
       "requirement": "Form owners can configure notification recipients from authorized chapter users or approved chapter addresses. Notifications include safe metadata and a protected response link, not sensitive answer content, unless an Admin explicitly enables a reviewed template for that form.",
       "line": 523,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-021"
+      ],
       "evidence": []
     },
     {
@@ -856,7 +1071,9 @@
       "requirement": "Permissions are action-based: `forms.view`, `forms.create`, `forms.edit`, `forms.publish`, `forms.manage_access`, `forms.view_responses`, `forms.view_sensitive_responses`, `forms.export_responses`, and `forms.delete`. Team-scoped forms require both the action grant and membership in the owning team. Form collaborators receive only explicitly granted actions.",
       "line": 525,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-022"
+      ],
       "evidence": []
     },
     {
@@ -864,7 +1081,9 @@
       "requirement": "Super Admin and Admin can manage all forms subject to privacy and audit rules. Team Members can manage only owned, collaborating, or team-scoped forms allowed by their grants. Blog Editors receive no Forms access in v1.5.",
       "line": 527,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-022"
+      ],
       "evidence": []
     },
     {
@@ -872,7 +1091,9 @@
       "requirement": "Response view, export, file download, deletion, redaction, collaborator changes, publication, closure, and destructive form actions are audited. Audit metadata contains form, version, response, filter, and result identifiers, never raw answer values or file contents.",
       "line": 529,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-023"
+      ],
       "evidence": []
     },
     {
@@ -880,7 +1101,9 @@
       "requirement": "Form response deletion supports delete, redact identity, or retain under an operational hold. Deleting a field from a later version never deletes historical answers. Deleting a form with responses defaults to archive; permanent deletion requires Super Admin, recent password confirmation, a retention check, and an export warning.",
       "line": 531,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-024"
+      ],
       "evidence": []
     },
     {
@@ -888,7 +1111,9 @@
       "requirement": "Forms meet WCAG 2.1 AA. All builder operations have keyboard equivalents, public errors are announced and associated with fields, grids have accessible row and column labels, progress does not rely on color, and focus moves to the first invalid field or new section heading.",
       "line": 533,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-025"
+      ],
       "evidence": []
     },
     {
@@ -896,7 +1121,9 @@
       "requirement": "The first Forms release includes reusable templates for event interest, event feedback, volunteer signup, team application, and general survey. Templates contain structure only and no real response data.",
       "line": 535,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-026"
+      ],
       "evidence": []
     },
     {
@@ -904,7 +1131,9 @@
       "requirement": "The Forms subsystem exposes an internal integration contract so an event, team, or campaign can reference a published form. Integrations store only the form ID and version policy. They do not duplicate form definitions or bypass form access rules.",
       "line": 537,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-027"
+      ],
       "evidence": []
     },
     {
@@ -912,7 +1141,9 @@
       "requirement": "A field can be marked sensitive. Sensitive answers are masked by default, excluded from activity feeds and notification bodies, omitted from default exports, and visible only with `forms.view_sensitive_responses`. Revealing or exporting them is audited.",
       "line": 539,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-028"
+      ],
       "evidence": []
     },
     {
@@ -920,7 +1151,9 @@
       "requirement": "For invited-token forms, authorized owners can upload or enter an approved recipient list, generate one single-use token per invitation, send a chapter-branded invitation, inspect delivery and response state without seeing raw tokens, resend safely, and revoke unused invitations. Email normalization and uniqueness prevent duplicate invitations.",
       "line": 541,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "FORM-TEST-029"
+      ],
       "evidence": []
     },
     {
@@ -928,7 +1161,9 @@
       "requirement": "Preserve posts, categories, submissions, submission comments, public-comment data, likes, editorial assignments, approval, publishing state, media workflow, moderation, and analytics needed by admin tools.",
       "line": 555,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PRIVATE-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -936,7 +1171,9 @@
       "requirement": "`/blog` and `/blog/:slug` return the normal 404 experience.",
       "line": 557,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PRIVATE-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -944,7 +1181,9 @@
       "requirement": "Blog content is removed from navigation, footer, sitemap, RSS, public search, and homepage modules.",
       "line": 559,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PRIVATE-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -952,7 +1191,9 @@
       "requirement": "Blog tables have no anonymous read or write access in this release.",
       "line": 561,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PRIVATE-TEST-002"
+      ],
       "evidence": []
     },
     {
@@ -960,7 +1201,9 @@
       "requirement": "`blog-submissions` becomes private. Authorized users receive short-lived signed URLs.",
       "line": 563,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PRIVATE-TEST-003"
+      ],
       "evidence": []
     },
     {
@@ -968,7 +1211,9 @@
       "requirement": "Blog Editor scope is enforced by the server, including ownership rules and publishing restrictions.",
       "line": 565,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PRIVATE-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -976,7 +1221,9 @@
       "requirement": "Preserve project CRUD, members, categories or status fields present in the final schema, featured state, links, technology fields, and star data for future use.",
       "line": 569,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PRIVATE-TEST-007"
+      ],
       "evidence": []
     },
     {
@@ -984,7 +1231,9 @@
       "requirement": "`/projects` returns the normal 404 experience.",
       "line": 571,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PRIVATE-TEST-008"
+      ],
       "evidence": []
     },
     {
@@ -992,7 +1241,9 @@
       "requirement": "Projects are removed from public navigation, footer, sitemap, homepage, and search surfaces.",
       "line": 573,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PRIVATE-TEST-008"
+      ],
       "evidence": []
     },
     {
@@ -1000,7 +1251,9 @@
       "requirement": "Project tables have no anonymous access in this release.",
       "line": 575,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PRIVATE-TEST-008"
+      ],
       "evidence": []
     },
     {
@@ -1008,7 +1261,9 @@
       "requirement": "`/admin/projects` remains fully functional for authorized admins.",
       "line": 577,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PRIVATE-TEST-007"
+      ],
       "evidence": []
     },
     {
@@ -1016,7 +1271,9 @@
       "requirement": "Authorized admins can enable and configure maintenance state.",
       "line": 581,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-009"
+      ],
       "evidence": []
     },
     {
@@ -1024,7 +1281,9 @@
       "requirement": "Admin routes and health endpoints remain available to authorized operators during maintenance.",
       "line": 583,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-009"
+      ],
       "evidence": []
     },
     {
@@ -1032,7 +1291,9 @@
       "requirement": "Public maintenance behavior does not create redirect loops and remains available offline where possible.",
       "line": 585,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "CONTENT-TEST-009"
+      ],
       "evidence": []
     },
     {
@@ -1040,7 +1301,9 @@
       "requirement": "Record login success and failure, logout, gate lockout, account changes, permission changes, finance decisions, campaign sends, exports, destructive actions, and security configuration changes.",
       "line": 589,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-021"
+      ],
       "evidence": []
     },
     {
@@ -1048,7 +1311,9 @@
       "requirement": "Audit events contain actor ID, action, target type, target ID, result, timestamp, request correlation ID, and safe metadata.",
       "line": 591,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-021"
+      ],
       "evidence": []
     },
     {
@@ -1056,7 +1321,9 @@
       "requirement": "Never log passwords, gate entries, session tokens, CSRF tokens, service keys, full invitation tokens, or full reset tokens.",
       "line": 593,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "OPS-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -1064,7 +1331,9 @@
       "requirement": "Audit rows are append-only to normal application roles.",
       "line": 595,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "SEC-TEST-005"
+      ],
       "evidence": []
     },
     {
@@ -1072,7 +1341,9 @@
       "requirement": "Use `vite-plugin-pwa` or an equivalent maintained Workbox integration.",
       "line": 880,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PWA-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -1080,7 +1351,9 @@
       "requirement": "Replace the PSU manifest with GT name, short name, description, icons, colors, display behavior, scope, and shortcuts.",
       "line": 882,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PWA-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -1088,7 +1361,9 @@
       "requirement": "Remove service worker unregistration and register the production worker deliberately.",
       "line": 884,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PWA-TEST-001"
+      ],
       "evidence": []
     },
     {
@@ -1096,7 +1371,9 @@
       "requirement": "Installation must work on supported Chromium browsers, Android, and iOS Safari's supported Add to Home Screen flow.",
       "line": 886,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PWA-TEST-004"
+      ],
       "evidence": []
     },
     {
@@ -1104,7 +1381,9 @@
       "requirement": "Permission is requested only after an explicit user action.",
       "line": 937,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PWA-TEST-007"
+      ],
       "evidence": []
     },
     {
@@ -1112,7 +1391,9 @@
       "requirement": "Subscriptions belong to either a valid admin session or a verified event registration token.",
       "line": 939,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PWA-TEST-008"
+      ],
       "evidence": []
     },
     {
@@ -1120,7 +1401,9 @@
       "requirement": "`/api/push/subscribe` derives identity and scope on the server. It does not trust a submitted user ID or email without verification.",
       "line": 941,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PWA-TEST-008"
+      ],
       "evidence": []
     },
     {
@@ -1128,7 +1411,9 @@
       "requirement": "Store endpoint and encryption keys securely with created, updated, revoked, and failure timestamps.",
       "line": 943,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PWA-TEST-009"
+      ],
       "evidence": []
     },
     {
@@ -1136,7 +1421,9 @@
       "requirement": "VAPID public key may be exposed. VAPID private key is server-only.",
       "line": 945,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PWA-TEST-009"
+      ],
       "evidence": []
     },
     {
@@ -1144,7 +1431,9 @@
       "requirement": "Event reminders are sent 24 hours before the event using an idempotent scheduled job.",
       "line": 947,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PWA-TEST-010"
+      ],
       "evidence": []
     },
     {
@@ -1152,7 +1441,9 @@
       "requirement": "Expired or invalid subscriptions are disabled after provider failure.",
       "line": 949,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PWA-TEST-010"
+      ],
       "evidence": []
     },
     {
@@ -1160,7 +1451,9 @@
       "requirement": "Notification clicks open the canonical event page.",
       "line": 951,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PWA-TEST-011"
+      ],
       "evidence": []
     },
     {
@@ -1168,7 +1461,9 @@
       "requirement": "On iOS and iPadOS, the UI explains that Web Push requires the site to be added to the Home Screen. The permission prompt is triggered only by a direct user interaction from the installed web app. Unsupported contexts show instructions, not a broken permission action.",
       "line": 953,
       "status": "unverified",
-      "testIds": [],
+      "testIds": [
+        "PWA-TEST-007"
+      ],
       "evidence": []
     }
   ]

@@ -27,12 +27,53 @@ export const auditQuery = z
     from: z.string().datetime({ offset: true }).optional(),
     to: z.string().datetime({ offset: true }).optional(),
     result: z.enum(["success", "denied", "failure"]).optional(),
+    q: z
+      .string()
+      .trim()
+      .max(100)
+      .regex(/^[A-Za-z0-9_.:-]*$/)
+      .optional(),
+    before: z.string().datetime({ offset: true }).optional(),
+    beforeId: uuid.optional(),
+    at: z.string().datetime({ offset: true }).optional(),
   })
   .strict()
   .refine((p) => !p.from || !p.to || new Date(p.from) <= new Date(p.to), {
     message: "Invalid date range",
     path: ["to"],
+  })
+  .refine((p) => !!p.before === !!p.beforeId, {
+    message: "Provide a complete audit cursor.",
   });
+export function safeAuditMetadata(value) {
+  const safe = {};
+  if (!value || typeof value !== "object" || Array.isArray(value)) return safe;
+  for (const key of [
+    "count",
+    "revision",
+    "page",
+    "pageSize",
+    "recipientCount",
+    "responseCount",
+    "version",
+    "bytes",
+  ])
+    if (Number.isSafeInteger(value[key]) && value[key] >= 0)
+      safe[key] = value[key];
+  for (const key of [
+    "formId",
+    "versionId",
+    "responseId",
+    "teamId",
+    "eventId",
+    "filterId",
+    "exportId",
+  ])
+    if (uuid.safeParse(value[key]).success) safe[key] = value[key];
+  for (const key of ["sensitive", "includedSensitive", "redacted"])
+    if (typeof value[key] === "boolean") safe[key] = value[key];
+  return safe;
+}
 const safeNotification = (row) => ({
   ...row,
   link:
@@ -53,8 +94,10 @@ export async function workspaceRoutes(
   const notification = path.match(
     /^\/api\/v1\/admin\/notifications(?:\/([^/]+))?$/,
   );
+  const auditDetail = path.match(/^\/api\/v1\/admin\/audit\/([0-9a-f-]{36})$/i);
   if (
     !notification &&
+    !auditDetail &&
     ![
       "/api/v1/admin/dashboard",
       "/api/v1/admin/audit",
@@ -127,13 +170,23 @@ export async function workspaceRoutes(
         1024,
       );
     if (request.method === "DELETE" && !id)
-      await jsonBody(request, z.object({ readOnly: z.literal(true) }).strict(), 1024);
+      await jsonBody(
+        request,
+        z.object({ readOnly: z.literal(true) }).strict(),
+        1024,
+      );
     checked(
       await db.rpc("mutate_own_notification", {
         p_actor: session.user.id,
         p_id: id,
         p_action:
-          request.method === "DELETE" ? id ? "delete" : "dismiss_all_read" : id ? "read" : "read_all",
+          request.method === "DELETE"
+            ? id
+              ? "delete"
+              : "dismiss_all_read"
+            : id
+              ? "read"
+              : "read_all",
         p_request_id: requestId,
       }),
     );
@@ -147,13 +200,18 @@ export async function workspaceRoutes(
         "FORBIDDEN",
         "Only chapter administrators can view the audit log.",
       );
-    const p = queryValues(url.searchParams, auditQuery),
-      cutoff = new Date().toISOString();
+    const p = queryValues(
+        url.searchParams,
+        auditDetail ? z.object({}).strict() : auditQuery,
+      ),
+      cutoff = p.at || new Date().toISOString(),
+      detailId = auditDetail ? parse(uuid, auditDetail[1]) : null;
     const base = () => {
       let q = db
         .from("admin_actions")
         .select(
-          "id,actor_id,action,target_type,target_id,result,request_id,created_at",
+          "id,actor_id,action,target_type,target_id,result,request_id,created_at" +
+            (detailId ? ",metadata" : ""),
           { count: "exact" },
         )
         .lte("created_at", cutoff);
@@ -162,12 +220,56 @@ export async function workspaceRoutes(
       if (p.from) q = q.gte("created_at", p.from);
       if (p.to) q = q.lte("created_at", p.to);
       if (p.result) q = q.eq("result", p.result);
-      return q.order("created_at", { ascending: false }).order("id");
+      if (p.q)
+        q = q.or(
+          ["action", "target_type", "target_id", "request_id"]
+            .filter(
+              (key) => !key.endsWith("_id") || uuid.safeParse(p.q).success,
+            )
+            .map((key) =>
+              key.endsWith("_id")
+                ? `${key}.eq.${p.q}`
+                : `${key}.ilike.*${p.q.replace(/_/g, "\\_")}*`,
+            )
+            .join(","),
+        );
+      if (detailId) q = q.eq("id", detailId);
+      return q
+        .order("created_at", { ascending: false })
+        .order("id", { ascending: false });
     };
+    if (detailId) {
+      const row = checked(await base().maybeSingle());
+      if (!row)
+        throw new ApiError(404, "NOT_FOUND", "This audit entry was not found.");
+      await store.audit({
+        actorId: session.user.id,
+        action: "audit.detail_viewed",
+        targetType: "audit",
+        targetId: detailId,
+        requestId,
+      });
+      sendJson(
+        response,
+        200,
+        {
+          record: { ...row, metadata: safeAuditMetadata(row.metadata) },
+          metadataPolicy:
+            "Only approved identifiers, counts and flags are shown. Other metadata is omitted.",
+        },
+        requestId,
+      );
+      return true;
+    }
     const exported = path.endsWith("/export");
-    const result = await base().range(
-      exported ? 0 : (p.page - 1) * p.pageSize,
-      exported ? 0 : p.page * p.pageSize - 1,
+    let listing = base();
+    if (!exported && p.before)
+      listing = listing.or(
+        `created_at.lt.${p.before},and(created_at.eq.${p.before},id.lt.${p.beforeId})`,
+      );
+    const result = await listing.range(
+      exported || p.before ? 0 : (p.page - 1) * p.pageSize,
+      exported ? 0 : p.before ? p.pageSize : p.page * p.pageSize,
     );
     checked(result);
     if (exported && result.count > 10000)
@@ -184,12 +286,33 @@ export async function workspaceRoutes(
       metadata: { filters: p, count: result.count },
     });
     if (!exported) {
+      const stats = checked(
+        await db.rpc("read_audit_statistics", {
+          p_actor: session.user.id,
+          p_filter: {
+            ...Object.fromEntries(
+              ["action", "actor", "from", "to", "result", "q"]
+                .filter((k) => p[k] !== undefined)
+                .map((k) => [k, p[k]]),
+            ),
+            at: cutoff,
+          },
+        }),
+      );
+      const items = result.data.slice(0, p.pageSize),
+        last = items.at(-1);
       sendJson(
         response,
         200,
         {
-          items: result.data,
-          total: result.count,
+          items,
+          total: stats.total,
+          statistics: stats,
+          at: cutoff,
+          nextCursor:
+            result.data.length > p.pageSize
+              ? { before: last.created_at, beforeId: last.id, at: cutoff }
+              : null,
           page: p.page,
           pageSize: p.pageSize,
         },
@@ -275,18 +398,21 @@ export async function workspaceRoutes(
         .filter((m) => m.team?.is_active)
         .map((m) => ({ id: m.team_id, name: m.team.name, role: m.role })),
     }),
-    tasks: async () => ({
-      items: checked(
-        await db
-          .from("communication_tasks")
-          .select("id,title,status,due_date,priority")
-          .eq("assigned_to_id", session.user.id)
-          .neq("status", "completed")
-          .order("due_date", { nullsFirst: false })
-          .limit(8),
-      ),
-    }),
+    tasks: () => readWidget("tasks"),
+    messages: () => readWidget("messages"),
   };
+  async function readWidget(name) {
+    return checked(
+      await db.rpc("read_workspace_widget", {
+        p_actor: session.user.id,
+        p_session: session.sessionId,
+        p_widget: name,
+      }),
+    );
+  }
+  if (has("events")) work.registrations = () => readWidget("registrations");
+  if (has("finances") || session.user.role === "team_member")
+    work.funding = () => readWidget("funding");
   if (has("events"))
     work.events = async () => {
       const [count, upcoming] = await Promise.all([

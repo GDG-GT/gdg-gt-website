@@ -61,8 +61,8 @@ export const siteStatusChange = z
 export const publicSiteStatus = z
   .object({
     revision: z.number().int().min(1),
-    ...siteStatusFields.innerType().shape,
-    message: siteStatusFields.innerType().shape.message.or(z.literal("")),
+    ...siteStatusFields.shape,
+    message: siteStatusFields.shape.message.or(z.literal("")),
   })
   .strict()
   .superRefine((v, ctx) => {

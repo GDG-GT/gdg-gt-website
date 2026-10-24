@@ -48,6 +48,67 @@ export const useContent = () => {
   if (!value) throw new Error("ContentProvider is required.");
   return value;
 };
+export type ContentSnapshot = {
+  settings: Row[];
+  pages: Row[];
+  navigation: Row[];
+  social: Row[];
+  footer: Row[];
+};
+// Private composition previews override only curated CMS content. Real public
+// collections retain their ordinary read paths; no private records are published.
+export function ContentSnapshotProvider({
+  snapshot,
+  children,
+}: {
+  snapshot: ContentSnapshot;
+  children: React.ReactNode;
+}) {
+  const base = useContent(),
+    settings = Object.fromEntries(
+      snapshot.settings.map((row) => [row.key, row.value]),
+    ),
+    footer = Object.fromEntries(
+      snapshot.footer.map((row) => [row.section_key, row.content]),
+    ),
+    pages: Record<string, Record<string, Row>> = {};
+  for (const row of snapshot.pages) {
+    pages[row.page_slug] ||= {};
+    pages[row.page_slug][row.section_key] = row.content;
+  }
+  const allLinks = (category?: string) => {
+    const links: Row[] = Array.isArray(settings.all_links)
+      ? settings.all_links
+      : [];
+    return category ? links.filter((row) => row.category === category) : links;
+  };
+  return (
+    <ContentContext.Provider
+      value={{
+        ...base,
+        siteSettings: settings,
+        pageContent: pages,
+        navigationItems: snapshot.navigation,
+        socialLinks: snapshot.social,
+        footerContent: footer,
+        getSiteSetting: (key) => settings[key] ?? null,
+        getPageSection: (page, section) => pages[page]?.[section] ?? null,
+        getFooterSection: (section) => footer[section] ?? null,
+        getAllLinks: allLinks,
+        getLink: (key) =>
+          allLinks().find(
+            (item) =>
+              item.id === key ||
+              String(item.name).toLowerCase().replace(/\s+/g, "_") === key,
+          )?.url ||
+          settings[key + "_url"] ||
+          "#",
+      }}
+    >
+      {children}
+    </ContentContext.Provider>
+  );
+}
 export const ContentProvider = ({
   children,
 }: {

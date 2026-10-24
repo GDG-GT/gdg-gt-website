@@ -11,7 +11,7 @@ export const routes={
   '/admin/site-status':'site_status', '/admin/teams':'teams', '/admin/finances':'finances',
   '/admin/audit-log':'audit', '/admin/privacy':'privacy', '/admin/operations':'operations', '/admin/blog-editor':'blog_editor', '/admin/blog-media':'blog_media',
 };
-const baseMember=new Set(['dashboard','profile','guide','team_dashboard','channels']);
+const baseMember=new Set(['dashboard','profile','guide','team_dashboard','channels','communications','finances']);
 const editor=new Set(['dashboard','profile','guide','blog_editor','blog_media']);
 const resources=new Set([...Object.values(routes),'team_dashboard','security','messages','tasks']);
 const actions=new Set(['view','list','read','create','update','edit','delete','publish','approve','moderate',

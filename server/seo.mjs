@@ -1,6 +1,10 @@
 import { ApiError, allowMethod } from "./lib/http.mjs";
 import { databaseResult as checked } from "./lib/validation.mjs";
 import { publicIndexPaths } from "../shared/public-metadata.ts";
+import { siteDocument } from "./site-document.mjs";
+import { z } from "zod";
+import { queryValues } from "./lib/validation.mjs";
+import { sendJson } from "./lib/http.mjs";
 const xml = (value) =>
   String(value).replace(
     /[<>&"']/g,
@@ -13,13 +17,31 @@ const xml = (value) =>
         "'": "&apos;",
       })[char],
   );
-export async function seoRoutes(request, response, { db, config }) {
+export async function seoRoutes(request, response, { db, config, requestId }) {
   const path = new URL(request.url, config.origin).pathname;
   if (
-    !["/api/v1/public/sitemap.xml", "/api/v1/public/robots.txt"].includes(path)
+    ![
+      "/api/v1/public/sitemap.xml",
+      "/api/v1/public/robots.txt",
+      "/api/v1/public/document",
+    ].includes(path)
   )
     return false;
   allowMethod(request, response, ["GET", "HEAD"]);
+  if (path.endsWith("/document")) {
+    const p = queryValues(
+      new URL(request.url, config.origin).searchParams,
+      z.object({ path: z.string().max(2048) }).strict(),
+    );
+    const doc = await siteDocument({ db, config, pathname: p.path });
+    response.setHeader("X-Robots-Tag", "noindex, nofollow");
+    if (request.method === "HEAD") {
+      response.statusCode = 200;
+      response.setHeader("Cache-Control", "no-store");
+      response.end();
+    } else sendJson(response, 200, doc, requestId);
+    return true;
+  }
   response.setHeader(
     "Cache-Control",
     "public, max-age=0, s-maxage=60, stale-while-revalidate=60",

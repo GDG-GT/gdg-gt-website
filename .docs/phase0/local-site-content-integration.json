@@ -22,6 +22,14 @@
       "passed": true
     },
     {
+      "name": "private page composition requires a real session",
+      "passed": true
+    },
+    {
+      "name": "private composition includes saved draft copy without exposing editor metadata or caching it",
+      "passed": true
+    },
+    {
       "name": "private CMS values do not enter the public aggregate",
       "passed": true
     },
@@ -31,6 +39,14 @@
     },
     {
       "name": "public aggregate includes published copy without editor identities",
+      "passed": true
+    },
+    {
+      "name": "mutable CMS projections require shared-cache revalidation on every read",
+      "passed": true
+    },
+    {
+      "name": "an old ETag cannot hide newly published copy behind a stale cache window",
       "passed": true
     },
     {
@@ -63,6 +79,10 @@
     },
     {
       "name": "editorial role cannot access site configuration",
+      "passed": true
+    },
+    {
+      "name": "revoked CMS permission also removes private preview access",
       "passed": true
     }
   ]

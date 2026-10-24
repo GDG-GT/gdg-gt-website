@@ -52,7 +52,7 @@ export async function teamInvitationRoutes(
 ) {
   const url = new URL(request.url, config.origin),
     publicMatch = url.pathname.match(
-      /^\/api\/v1\/account\/team-invitations\/(inspect|accept)$/,
+      /^\/api\/v1\/account\/team-invitations\/(inspect|accept|decline)$/,
     );
   if (publicMatch) {
     allowMethod(request, response, ["POST"]);
@@ -72,12 +72,12 @@ export async function teamInvitationRoutes(
     }
     const body = await jsonBody(
         request,
-        publicMatch[1] === "inspect" ? inspect : accept,
+        publicMatch[1] === "accept" ? accept : inspect,
         4096,
       ),
       hash = tokenHash(body.token);
     const info = checked(
-      await db.rpc("inspect_team_invite", {
+      await db.rpc("describe_team_invite", {
         p_hash: hash,
         p_email: body.email,
       }),
@@ -105,11 +105,28 @@ export async function teamInvitationRoutes(
           "VALIDATION_ERROR",
           "An invitation cannot change an existing account's credentials.",
         );
-    } else if (!body.newPassword || !body.displayName)
+    } else if (
+      publicMatch[1] === "accept" &&
+      (!body.newPassword || !body.displayName)
+    )
       throw new ApiError(
         400,
         "VALIDATION_ERROR",
         "Provide your name and a password of at least 14 characters.",
+      );
+    if (publicMatch[1] === "decline")
+      return reply(
+        response,
+        checked(
+          await db.rpc("decline_team_invite", {
+            p_hash: hash,
+            p_email: body.email,
+            p_actor: session?.user.id || null,
+            p_session: session?.sessionId || null,
+            p_request_id: requestId,
+          }),
+        ),
+        requestId,
       );
     const accepted = checked(
       await db.rpc("accept_team_invite", {

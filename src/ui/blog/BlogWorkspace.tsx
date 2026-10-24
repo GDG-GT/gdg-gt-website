@@ -13,6 +13,7 @@ import BlogFields from "./BlogFields";
 import { initialValues, string, type Values } from "./fields";
 import BlogMarkdown from "./BlogMarkdown";
 import { BlogFileUpload, BlogFileDownload } from "./BlogFiles";
+import EditorialOverview from "./EditorialOverview";
 type Kind = "posts" | "categories" | "submissions" | "comments";
 type Row = Values & {
   id: string;
@@ -70,8 +71,10 @@ const actionLabels: Record<string, string> = {
 };
 export default function BlogWorkspace({
   initialCollection = "posts",
+  editorial = false,
 }: {
   initialCollection?: Kind;
+  editorial?: boolean;
 }) {
   const [params, setParams] = useApprovedSearchParams(),
     navigation = useNavigationSafety(),
@@ -411,7 +414,9 @@ export default function BlogWorkspace({
     } catch (x) {
       if (e !== epoch.current) return;
       setPassword("");
-      setError((x instanceof Error ? x.message : "This action could not be completed."));
+      setError(
+        x instanceof Error ? x.message : "This action could not be completed.",
+      );
       if (x instanceof ApiFailure) {
         if (x.status === 409) setConflict(true);
         if ([403, 404].includes(x.status) && x.code !== "PASSWORD_REQUIRED") {
@@ -507,6 +512,7 @@ export default function BlogWorkspace({
           </Button>
         </div>
       </div>
+      {editorial && <EditorialOverview />}
       <nav aria-label="Editorial collections" className="gt-workspace-tabs">
         {kinds.map((k) => (
           <Button

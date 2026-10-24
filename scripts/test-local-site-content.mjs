@@ -79,11 +79,23 @@ try {
   );
   let row = r.json.data.record;
   records.push(["pages", row.id]);
+  r = await call(prefix + "preview?page=" + slot[0], { anonymous: true });
+  check(r.status === 401, "private page composition requires a real session");
+  r = await call(prefix + "preview?page=" + slot[0]);
+  check(
+    r.status === 200 &&
+      r.json.data.pages.some((p) => p.content.title === name) &&
+      r.headers.get("cache-control") === "no-store" &&
+      r.headers.get("x-robots-tag").includes("noindex") &&
+      !r.text.includes("updated_by"),
+    "private composition includes saved draft copy without exposing editor metadata or caching it",
+  );
   r = await call("/public/home", { anonymous: true });
   check(
     r.status === 200 && !r.text.includes(name),
     "private CMS values do not enter the public aggregate",
   );
+  const oldEtag = r.headers.get("etag");
   r = await call(prefix + "pages/" + row.id, {
     method: "POST",
     body: { revision: row.revision, action: "publish" },
@@ -97,6 +109,22 @@ try {
   check(
     r.status === 200 && r.text.includes(name) && !r.text.includes("updated_by"),
     "public aggregate includes published copy without editor identities",
+  );
+  check(
+    r.headers.get("cache-control") ===
+      "public, max-age=0, s-maxage=0, must-revalidate",
+    "mutable CMS projections require shared-cache revalidation on every read",
+  );
+  const conditional = await fetch(
+    new URL("/api/v1/public/home", (await localHttp()).env.APP_ORIGIN),
+    {
+      headers: { "If-None-Match": oldEtag },
+      signal: AbortSignal.timeout(15000),
+    },
+  );
+  check(
+    conditional.status === 200 && (await conditional.text()).includes(name),
+    "an old ETag cannot hide newly published copy behind a stale cache window",
   );
   r = await call(prefix + "pages/" + row.id, {
     method: "PATCH",
@@ -171,6 +199,11 @@ try {
     .eq("id", user.id);
   r = await call(prefix + "pages");
   check(r.status === 403, "editorial role cannot access site configuration");
+  r = await call(prefix + "preview?page=home");
+  check(
+    r.status === 403,
+    "revoked CMS permission also removes private preview access",
+  );
 } finally {
   const restored = await db
     .from("admin_users")

@@ -1,0 +1,42 @@
+{
+  "generatedAt": "2026-10-24T09:39:25.842Z",
+  "note": "Two invocation-owned network-isolated disposable PostgreSQL databases. No project/production data, file storage, provider backup or hosted recovery was accessed. Fictional dump remained in memory and is not persisted.",
+  "migrationCount": 105,
+  "dumpSha256": "b6a96ca769a58e719804dedba948c428b362aad8432c22da1e357d4234563690",
+  "tableCount": 130,
+  "catalog": {
+    "rls": 129,
+    "tables": 130,
+    "indexes": 458,
+    "policies": 0,
+    "triggers": 70,
+    "functions": 350,
+    "constraints": 656
+  },
+  "tests": [
+    {
+      "name": "source restore fixture rebuilds the complete canonical migration chain",
+      "passed": true
+    },
+    {
+      "name": "backup contains fictional retained records and security schema definitions",
+      "passed": true
+    },
+    {
+      "name": "every application/security table restores with identical row count and SHA-256 content fingerprint",
+      "passed": true
+    },
+    {
+      "name": "restored table/function/constraint/index/RLS/policy/trigger inventory matches the source",
+      "passed": true
+    },
+    {
+      "name": "restored browser grants, service function grants, foreign keys and append-only audit protections are enforced",
+      "passed": true
+    },
+    {
+      "name": "negative restore checks leave retained records unchanged",
+      "passed": true
+    }
+  ]
+}

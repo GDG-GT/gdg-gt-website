@@ -1,0 +1,49 @@
+{
+  "note": "Actual loopback raw HTML/HEAD/status/header checks. Only invocation-owned fictional read-path events created then recoverably archived; not admin publication or hosted deployment evidence.",
+  "tests": [
+    {
+      "name": "raw route HTML has a unique title and query-free canonical before JavaScript",
+      "passed": true
+    },
+    {
+      "name": "crawler/no-script content and the real application module coexist",
+      "passed": true
+    },
+    {
+      "name": "unknown routes return real HTML 404 and noindex",
+      "passed": true
+    },
+    {
+      "name": "private workflow HTML is generic, uncached and noindex",
+      "passed": true
+    },
+    {
+      "name": "retired /blog remains an HTTP 404",
+      "passed": true
+    },
+    {
+      "name": "retired /projects remains an HTTP 404",
+      "passed": true
+    },
+    {
+      "name": "published event raw HTML includes current social metadata and factual Event data",
+      "passed": true
+    },
+    {
+      "name": "HTML HEAD matches document status without a body",
+      "passed": true
+    },
+    {
+      "name": "old event slug redirects only to its published canonical event",
+      "passed": true
+    },
+    {
+      "name": "archived event metadata disappears from documents immediately",
+      "passed": true
+    },
+    {
+      "name": "old slug stops redirecting once its event is private",
+      "passed": true
+    }
+  ]
+}

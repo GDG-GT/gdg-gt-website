@@ -151,13 +151,21 @@ export function calendarFile(event, origin) {
       .join("\r\n") + "\r\n"
   );
 }
-export function publicJson(request, response, data, requestId) {
+export function publicJson(
+  request,
+  response,
+  data,
+  requestId,
+  { revalidate = false } = {},
+) {
   const etag =
     '"' + createHash("sha256").update(JSON.stringify(data)).digest("hex") + '"';
   response.setHeader("ETag", etag);
   response.setHeader(
     "Cache-Control",
-    "public, max-age=0, s-maxage=30, stale-while-revalidate=60",
+    revalidate
+      ? "public, max-age=0, s-maxage=0, must-revalidate"
+      : "public, max-age=0, s-maxage=30, stale-while-revalidate=60",
   );
   if (request.headers["if-none-match"] === etag) {
     response.statusCode = 304;

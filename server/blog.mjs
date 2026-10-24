@@ -19,11 +19,11 @@ export async function blogRoutes(
 ) {
   const url = new URL(request.url, config.origin),
     match = url.pathname.match(
-      /^\/api\/v1\/admin\/blog\/(posts|categories|submissions|comments|capabilities)(?:\/([^/]+))?$/,
+      /^\/api\/v1\/admin\/blog\/(posts|categories|submissions|comments|capabilities|overview)(?:\/([^/]+))?$/,
     );
   if (!match) return false;
   const kind = match[1],
-    cap = kind === "capabilities",
+    cap = ["capabilities", "overview"].includes(kind),
     id = match[2] ? parse(uuid, match[2]) : null;
   if (cap && id)
     throw new ApiError(404, "NOT_FOUND", "This endpoint was not found.");
@@ -78,6 +78,23 @@ export async function blogRoutes(
     request.method === "GET" ? 240 : 120,
     60,
   );
+  if (kind === "overview") {
+    queryValues(url.searchParams, z.object({}).strict());
+    if (!["admin", "super_admin", "blog_editor"].includes(actor.role))
+      throw new ApiError(
+        403,
+        "FORBIDDEN",
+        "This overview is restricted to editorial accounts.",
+      );
+    return reply(
+      checked(
+        await db.rpc("read_editorial_overview", {
+          p_actor: actor.id,
+          p_session: session.sessionId,
+        }),
+      ),
+    );
+  }
   if (cap) {
     queryValues(url.searchParams, z.object({}).strict());
     const admin = ["admin", "super_admin"].includes(actor.role),

@@ -1,18 +1,20 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   ArrowUpRight,
   CalendarDays,
   Users,
   Heart,
   Activity,
+  Mail,
 } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { api } from "@/lib/api";
 import { Button, EmptyState } from "./primitives";
+import { RegistrationChart, FundingChart } from "./DashboardCharts";
+import PersonalWork from "./PersonalWork";
 type Widget<T> =
-  | { state: "ready"; data: T }
-  | { state: "error"; message: string };
+  { state: "ready"; data: T } | { state: "error"; message: string };
 type Dashboard = {
   allowedRoutes: string[];
   generatedAt: string;
@@ -29,6 +31,19 @@ type Dashboard = {
     }>;
     profiles?: Widget<{ count: number }>;
     finances?: Widget<{ pending: number }>;
+    messages: Widget<{ unread: number }>;
+    registrations?: Widget<{
+      totalEvents: number;
+      items: {
+        id: string;
+        title: string;
+        internal: number;
+        external: number;
+      }[];
+    }>;
+    funding?: Widget<{
+      items: { status: string; count: number; amount: string }[];
+    }>;
     activity: Widget<{
       items: {
         id: string;
@@ -68,6 +83,15 @@ function Section<T>({
   );
 }
 export default function AdminOverview() {
+  const [params] = useSearchParams(),
+    view = params.get("view");
+  return view === "tasks" || view === "messages" ? (
+    <PersonalWork view={view} />
+  ) : (
+    <Overview />
+  );
+}
+function Overview() {
   const { currentAdmin } = useAdmin();
   const [data, setData] = useState<Dashboard>(),
     [error, setError] = useState(""),
@@ -109,10 +133,36 @@ export default function AdminOverview() {
           {error}
         </p>
       )}
-      {busy && !data && <p role="status">Loading your workspace…</p>}
+      {busy && !data && (
+        <div role="status" aria-label="Loading your workspace">
+          <div className="gt-kpi-grid">
+            {[1, 2, 3, 4].map((key) => (
+              <div className="gt-skeleton gt-overview-placeholder" key={key} />
+            ))}
+          </div>
+          <div className="gt-skeleton gt-detail-skeleton" />
+          <span className="sr-only">Loading your workspace…</span>
+        </div>
+      )}
+      {data && (busy || error) && (
+        <p role="status" className="gt-helper">
+          Showing the overview loaded at{" "}
+          {new Date(data.generatedAt).toLocaleTimeString()} until the current
+          request succeeds.
+        </p>
+      )}
       {data && (
         <>
           <div className="gt-kpi-grid">
+            <Section widget={data.widgets.messages}>
+              {(w) => (
+                <Link to="/admin?view=messages" className="gt-kpi">
+                  <Mail size={20} />
+                  <strong>{w.unread}</strong>
+                  <span>Your unread messages</span>
+                </Link>
+              )}
+            </Section>
             <Section widget={data.widgets.events}>
               {(w) => (
                 <Link to="/admin/events" className="gt-kpi">
@@ -143,6 +193,24 @@ export default function AdminOverview() {
           </div>
           <div className="gt-dashboard-layout">
             <div className="gt-dashboard-main">
+              <div className="gt-dashboard-panels">
+                {data.widgets.registrations && (
+                  <section className="gt-panel">
+                    <h2>Registrations by event</h2>
+                    <Section widget={data.widgets.registrations}>
+                      {(w) => <RegistrationChart {...w} />}
+                    </Section>
+                  </section>
+                )}
+                {data.widgets.funding && (
+                  <section className="gt-panel">
+                    <h2>Funding status</h2>
+                    <Section widget={data.widgets.funding}>
+                      {(w) => <FundingChart {...w} />}
+                    </Section>
+                  </section>
+                )}
+              </div>
               {data.widgets.events && (
                 <section className="gt-panel">
                   <div className="gt-panel-heading">
@@ -253,7 +321,9 @@ export default function AdminOverview() {
                       <ul>
                         {w.items.map((task) => (
                           <li key={task.id}>
-                            <Link to="/admin/communications">{task.title}</Link>
+                            <Link to={"/admin?view=tasks&task=" + task.id}>
+                              {task.title}
+                            </Link>
                             <p>
                               {task.status} · {task.priority}
                               {task.due_date ? ` · Due ${task.due_date}` : ""}

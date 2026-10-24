@@ -81,8 +81,8 @@ export function validateInput<T>(schema: z.ZodSchema<T>, data: unknown): { succe
     return { success: true, data: validated };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const firstError = error.errors[0];
-      return { success: false, error: firstError.message };
+      const firstError = error.issues[0];
+      return { success: false, error: firstError?.message || 'Validation failed' };
     }
     return { success: false, error: 'Validation failed' };
   }

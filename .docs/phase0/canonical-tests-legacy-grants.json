@@ -101,7 +101,12 @@
     "202610220097_operational_monitoring.sql",
     "202610220098_form_published_images.sql",
     "202610220099_form_library_filters.sql",
-    "202610240100_public_sponsor_ordering.sql"
+    "202610240100_public_sponsor_ordering.sql",
+    "202610240101_workspace_overview.sql",
+    "202610240102_team_invitation_decline.sql",
+    "202610240103_unregistered_invitation_decline.sql",
+    "202610240104_editorial_overview.sql",
+    "202610240105_audit_statistics.sql"
   ],
   "tests": [
     {
@@ -513,6 +518,26 @@
       "passed": true
     },
     {
+      "name": "202610240101_workspace_overview.sql",
+      "passed": true
+    },
+    {
+      "name": "202610240102_team_invitation_decline.sql",
+      "passed": true
+    },
+    {
+      "name": "202610240103_unregistered_invitation_decline.sql",
+      "passed": true
+    },
+    {
+      "name": "202610240104_editorial_overview.sql",
+      "passed": true
+    },
+    {
+      "name": "202610240105_audit_statistics.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -802,6 +827,22 @@
     },
     {
       "name": "100_public_sponsor_ordering.sql",
+      "passed": true
+    },
+    {
+      "name": "101_workspace_overview.sql",
+      "passed": true
+    },
+    {
+      "name": "103_invitation_decline.sql",
+      "passed": true
+    },
+    {
+      "name": "104_editorial_overview.sql",
+      "passed": true
+    },
+    {
+      "name": "105_audit_statistics.sql",
       "passed": true
     },
     {

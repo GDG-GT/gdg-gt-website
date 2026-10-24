@@ -38,6 +38,26 @@
       "passed": true
     },
     {
+      "name": "decline fixture is a real manager-created invitation",
+      "passed": true
+    },
+    {
+      "name": "decline rejects the wrong recipient",
+      "passed": true
+    },
+    {
+      "name": "new recipient can decline without creating an account",
+      "passed": true
+    },
+    {
+      "name": "decline does not create a chapter identity",
+      "passed": true
+    },
+    {
+      "name": "declined private link is no longer usable",
+      "passed": true
+    },
+    {
       "name": "new recipient creates an account without bypassing chapter sign-in",
       "passed": true
     },

@@ -127,9 +127,11 @@ try {
   check(
     r.status === 200 &&
       !r.json.data.widgets.events &&
-      !r.json.data.widgets.finances &&
+      r.json.data.widgets.finances?.state === "ready" &&
+      r.json.data.allowedRoutes.includes("/admin/finances") &&
+      r.json.data.allowedRoutes.includes("/admin/communications") &&
       !r.json.data.allowedRoutes.includes("/admin/users"),
-    "revoked role immediately removes ungranted dashboard data",
+    "revoked role removes ungranted event and user data while retaining SQL-scoped personal finances and communications",
   );
   r = await call("/admin/audit");
   check(r.status === 403, "current role is rechecked for audit access");

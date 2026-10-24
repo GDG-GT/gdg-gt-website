@@ -25,12 +25,17 @@ email confirmation. File bytes/private links are excluded. See
 
 ### Concrete gaps confirmed by the 2026-10-22 audit
 
-Still required: dashboard chart panels/four-metric composition/unread-message
-overview; audit entry detail/aggregate statistics/retention presentation; CMS
-private composition preview/explicit edge-cache invalidation; invitation decline
-and inviter display; Blog Editor task/communications summaries and editorial
-analytics; remaining image/state/accessibility and hosted HTML/404/crawler/social
-preview contracts. Do not replace these feature gaps with a testing-only claim.
+Closed locally on 2026-10-24: dashboard chart panels/four-metric administrator
+composition/own unread-message overview; safe audit details/aggregate statistics/
+retention inventory and cursors; CMS private saved-draft composition; invitation
+decline/inviter display; Blog Editor personal tasks/messages and scoped editorial
+revision analytics. Raw HTML/404/social document serving is implemented locally.
+See `WORKSPACE_COMPLETION_OPERATIONS.md` and `PUBLIC_DOCUMENT_OPERATIONS.md`.
+Mutable CMS projections now require edge revalidation on every read; provider-
+specific cache purge is not implemented and hosted freshness/latency acceptance
+remains open. Remaining image/state/accessibility details and hosted routing/
+canonical-domain/crawler/social contracts still require review. Do not convert
+these local implementations into staging, visual or launch sign-off.
 
 Closed locally on 2026-10-24: missing Forms file-policy/pattern controls; public
 resource status/tag/view controls; team/resource/sponsor pagination beyond 100;
@@ -106,18 +111,20 @@ Their manual/hosted/visual acceptance remains open.
 
 ## Acceptance and infrastructure still required
 
-- Production high/critical findings are remediated with tested updates and scoped
-  overrides: 2 moderate/4 low remain. Full audit retains five high development
-  findings in the Tailwind/braces chain.
+- Fresh production audit found a high Zod advisory updated 2026-10-23; migration
+  to patched 4.6.7 restores zero production high/critical findings. Two moderate/
+  four low remain. See `ZOD_VALIDATION_UPGRADE.md`. The earlier full development
+  audit had five high Tailwind/braces-chain findings; recheck before launch.
 - Strict application/build TypeScript now passes. Lint remediation remains:
   zero errors/245 warnings; conditional-hook violations were fixed.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is still 14.12% lines/14.64% branches, below the global 70% gate;
-  549 tests pass, not a percentage of completed PRD features.
+  coverage is still approximately 14.88% lines/15.28% branches, below the global
+  70% gate; 584 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  Remaining test-ID traceability. The original
-  machine-readable requirement inventory is not a completion percentage and its
-  `unverified` statuses must not be bulk-promoted from local build success.
+  All 146 numbered requirements now map into 99 reviewed logical test cases with
+  real source references (`phase0/prd-test-plan.json`). Normative sections and
+  manual/hosted acceptance remain; the inventory is not a completion percentage
+  and its `unverified` statuses are not promoted from local build success.
 - Complete CI: the committed foundation runs lint/type/unit/canonical SQL/build
   plus a blocking production dependency audit. It has not run on GitHub here;
   the dependency gate passes locally; the independent coverage gate remains red.

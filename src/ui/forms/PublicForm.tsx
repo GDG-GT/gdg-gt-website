@@ -110,7 +110,7 @@ function RespondentFormRuntime() {
   );
   const [uploading, setUploading] = useState<string[]>([]),
     [fileNames, setFileNames] = useState<Record<string, string>>({});
-  const rejectIdentity = (issues: { path: (string | number)[] }[]) => {
+  const rejectIdentity = (issues: readonly { path: readonly PropertyKey[] }[]) => {
     const messages = {
       name: "Enter your name (2–100 characters).",
       email: "Enter a valid email address.",

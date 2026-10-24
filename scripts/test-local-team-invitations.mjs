@@ -176,9 +176,54 @@ try {
   check(
     r.status === 200 &&
       !r.json.data.requiresSignIn &&
+      !!r.json.data.inviterName &&
+      r.json.data.state === "pending" &&
       !r.text.includes("userId"),
     "new recipient can inspect only minimal valid invitation details",
   );
+  const declineEmail = `fictional-invite-decline-${suffix}@example.test`;
+  let decline = await call(prefix, {
+    method: "POST",
+    body: {
+      currentPassword: credentials.password,
+      email: declineEmail,
+      role: "member",
+    },
+  });
+  check(
+    decline.status === 200,
+    "decline fixture is a real manager-created invitation",
+  );
+  const declineAccess = await accessFor(decline.json.data.record.id);
+  decline = await call(publicPrefix + "decline", {
+    anonymous: true,
+    method: "POST",
+    body: { token: declineAccess.token, email: "wrong@example.test" },
+  });
+  check(decline.status === 400, "decline rejects the wrong recipient");
+  decline = await call(publicPrefix + "decline", {
+    anonymous: true,
+    method: "POST",
+    body: { token: declineAccess.token, email: declineEmail },
+  });
+  check(
+    decline.status === 200 && decline.json.data.declined,
+    "new recipient can decline without creating an account",
+  );
+  const declinedAccount = await db
+    .from("admin_users")
+    .select("id")
+    .eq("email", declineEmail);
+  check(
+    !declinedAccount.error && declinedAccount.data.length === 0,
+    "decline does not create a chapter identity",
+  );
+  decline = await call(publicPrefix + "inspect", {
+    anonymous: true,
+    method: "POST",
+    body: { token: declineAccess.token, email: declineEmail },
+  });
+  check(decline.status === 400, "declined private link is no longer usable");
   r = await call(publicPrefix + "accept", {
     anonymous: true,
     method: "POST",

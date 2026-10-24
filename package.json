@@ -19,6 +19,8 @@
     "test:e2e": "node scripts/test-local-forms-suite.mjs",
     "test:bundles": "node scripts/check-build-budgets.mjs",
     "test:secrets": "node scripts/scan-secrets.mjs",
+    "test:traceability": "node scripts/check-prd-traceability.mjs",
+    "test:backup-restore": "node scripts/test-backup-restore.mjs",
     "audit:phase0": "node scripts/phase0-inventory.mjs --write",
     "audit:db:source": "node scripts/source-db-audit.mjs",
     "test:db": "node scripts/test-database.mjs",
@@ -68,6 +70,7 @@
     "test:local-content": "node scripts/test-local-content.mjs",
     "test:local-public-collections": "node scripts/test-local-public-collections.mjs",
     "test:local-seo": "node scripts/test-local-seo.mjs",
+    "test:local-documents": "node scripts/test-local-documents.mjs",
     "test:local-users": "node scripts/test-local-users.mjs",
     "test:local-teams": "node scripts/test-local-teams.mjs",
     "test:local-team-invitations": "node scripts/test-local-team-invitations.mjs",
@@ -171,7 +174,7 @@
     "three": "^0.168.0",
     "unified": "11.0.5",
     "web-push": "3.6.7",
-    "zod": "^3.25.76"
+    "zod": "4.6.7"
   },
   "overrides": {
     "@excalidraw/excalidraw": {

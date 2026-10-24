@@ -28,10 +28,13 @@ jobs:
         run: npm run lint -- --max-warnings=245
       - run: npm run typecheck
       - run: npm test
+      - run: npm run test:traceability
       - name: Rebuild the canonical schema, security policies and capacity tests
         run: npm run test:db
       - name: Recheck migrations with legacy Supabase automatic API grants
         run: npm run test:db:legacy-grants
+      - name: Restore an isolated fictional backup and recheck data/security invariants
+        run: npm run test:backup-restore
       - run: npm run build
       - run: npm run test:bundles
 

@@ -1,0 +1,1672 @@
+{
+  "prd": ".docs/GDG_GT_WEBSITE_PRD_v1.5.md",
+  "prdSha256": "b469bd27dd24e17b21f03a61193015214518c72efb62f4dcd982ed3ac606762d",
+  "note": "Reviewed test-source mapping only. Source references are not executed evidence or acceptance. Every requirement remains unverified until its full definition of done, normative sections and phase gates pass.",
+  "cases": [
+    {
+      "id": "AUTH-TEST-001",
+      "requirements": [
+        "AUTH-001",
+        "AUTH-002",
+        "AUTH-003"
+      ],
+      "scope": "Newsletter field and officer-entry intent",
+      "automated": [
+        "src/ui/newsletter-entry.test.ts",
+        "tests/server/newsletter-gate.test.mjs",
+        "scripts/test-local-auth.mjs"
+      ],
+      "remaining": [
+        "Real keyboard Enter/Subscribe/Shift+Enter paths",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "AUTH-TEST-002",
+      "requirements": [
+        "AUTH-004",
+        "AUTH-005"
+      ],
+      "scope": "Protected salted password hashes and constant-time proof",
+      "automated": [
+        "tests/server/security.test.mjs",
+        "database/tests/001_security_foundation.sql",
+        "scripts/test-local-auth.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "AUTH-TEST-013",
+      "requirements": [
+        "AUTH-006",
+        "AUTH-007"
+      ],
+      "scope": "Generic failed gate/login limits and persistent lockout",
+      "automated": [
+        "tests/server/auth.test.mjs",
+        "database/tests/013_gate_failures.sql",
+        "database/tests/004_password_and_lockout.sql"
+      ],
+      "remaining": [
+        "Distributed hosted limiter/load review",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "AUTH-TEST-011",
+      "requirements": [
+        "AUTH-008",
+        "AUTH-009",
+        "AUTH-010"
+      ],
+      "scope": "Opaque 15-minute gate cookie and minimal status",
+      "automated": [
+        "tests/server/auth.test.mjs",
+        "scripts/test-local-auth.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "AUTH-TEST-012",
+      "requirements": [
+        "AUTH-011"
+      ],
+      "scope": "Login cannot bypass the gate",
+      "automated": [
+        "tests/server/auth.test.mjs",
+        "scripts/test-local-auth.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "AUTH-TEST-014",
+      "requirements": [
+        "AUTH-012"
+      ],
+      "scope": "Opaque session issuance and hashed persistence",
+      "automated": [
+        "tests/server/auth.test.mjs",
+        "scripts/test-local-auth.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "AUTH-TEST-019",
+      "requirements": [
+        "AUTH-013"
+      ],
+      "scope": "Current session, account and role revalidation",
+      "automated": [
+        "tests/server/auth.test.mjs",
+        "database/tests/004_password_and_lockout.sql",
+        "scripts/test-local-session-generation.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "AUTH-TEST-015",
+      "requirements": [
+        "AUTH-014"
+      ],
+      "scope": "Unsigned identity and role cookies are ignored",
+      "automated": [
+        "tests/server/auth.test.mjs",
+        "tests/server/entry.test.mjs",
+        "scripts/test-local-auth.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "AUTH-TEST-017",
+      "requirements": [
+        "AUTH-015"
+      ],
+      "scope": "Logout revokes session and private browser state",
+      "automated": [
+        "tests/server/auth.test.mjs",
+        "scripts/test-local-auth.mjs",
+        "tests/server/pwa-worker.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "SEC-TEST-007",
+      "requirements": [
+        "AUTH-016"
+      ],
+      "scope": "Super Admin manual gate rotation and old capability invalidation",
+      "automated": [
+        "tests/server/entry.test.mjs",
+        "database/tests/001_security_foundation.sql"
+      ],
+      "remaining": [
+        "Hosted multi-instance gate invalidation",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "SEC-TEST-008",
+      "requirements": [
+        "SEC-001",
+        "SEC-003",
+        "SEC-006"
+      ],
+      "scope": "Same-origin server boundaries and non-authoritative route guards",
+      "automated": [
+        "tests/server/entry.test.mjs",
+        "tests/server/access.test.mjs",
+        "tests/client/api.test.mjs"
+      ],
+      "remaining": [
+        "Complete active browser import/network inventory",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "SEC-TEST-002",
+      "requirements": [
+        "SEC-002",
+        "SEC-007",
+        "SEC-008",
+        "SEC-009"
+      ],
+      "scope": "No direct browser table/RPC grants or pooled connection identity",
+      "automated": [
+        "database/tests/001_security_foundation.sql",
+        "database/tests/030_scoped_realtime.sql",
+        "scripts/test-local-auth.mjs"
+      ],
+      "remaining": [
+        "Hosted pool/RLS/storage matrix",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "SEC-TEST-009",
+      "requirements": [
+        "SEC-004"
+      ],
+      "scope": "Protected dispatch method/session/action/CSRF/validation boundaries",
+      "automated": [
+        "tests/server/http.test.mjs",
+        "tests/server/auth.test.mjs",
+        "tests/server/users.test.mjs",
+        "tests/server/finance-routes.test.mjs",
+        "tests/server/form-admin-routes.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "SEC-TEST-010",
+      "requirements": [
+        "SEC-005"
+      ],
+      "scope": "Dedicated private server client and fail-closed configuration",
+      "automated": [
+        "tests/server/entry.test.mjs",
+        "tests/server/secret-scan.test.mjs",
+        "scripts/scan-secrets.mjs"
+      ],
+      "remaining": [
+        "Hosted bundle/env isolation",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "SEC-TEST-011",
+      "requirements": [
+        "SEC-010"
+      ],
+      "scope": "Authorized workflow-only email and bounded audiences",
+      "automated": [
+        "tests/server/event-mail.test.mjs",
+        "tests/server/newsletter.test.mjs",
+        "tests/server/form-delivery.test.mjs",
+        "database/tests/089_event_mail_review.sql"
+      ],
+      "remaining": [
+        "Hosted provider delivery/retry/abuse acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "SEC-TEST-012",
+      "requirements": [
+        "SEC-011"
+      ],
+      "scope": "Server-issued short-lived scoped Realtime identity",
+      "automated": [
+        "tests/server/realtime-route.test.mjs",
+        "tests/server/realtime-token.test.mjs",
+        "database/tests/030_scoped_realtime.sql",
+        "scripts/test-local-realtime.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "SEC-TEST-013",
+      "requirements": [
+        "SEC-012"
+      ],
+      "scope": "Stored content and email output sanitization",
+      "automated": [
+        "tests/server/blog.test.mjs",
+        "tests/server/newsletter.test.mjs",
+        "tests/server/upload-content.test.mjs",
+        "tests/server/forms.test.mjs"
+      ],
+      "remaining": [
+        "Full browser stored-XSS corpus across every content surface",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "SEC-TEST-014",
+      "requirements": [
+        "SEC-013"
+      ],
+      "scope": "URL, private fetch and iframe allowlists",
+      "automated": [
+        "tests/server/validation.test.mjs",
+        "tests/server/linktree.test.mjs",
+        "tests/server/site-status.test.mjs",
+        "tests/server/push.test.mjs"
+      ],
+      "remaining": [
+        "Hosted DNS rebinding/redirect SSRF review",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "OPS-TEST-001",
+      "requirements": [
+        "SEC-014",
+        "AUDIT-003"
+      ],
+      "scope": "Structured telemetry and credential/content redaction",
+      "automated": [
+        "tests/server/telemetry.test.mjs",
+        "tests/server/mail-transport.test.mjs",
+        "tests/server/audit-routes.test.mjs"
+      ],
+      "remaining": [
+        "Hosted log collector privacy review",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "AUTH-TEST-016",
+      "requirements": [
+        "CSRF-001",
+        "CSRF-002",
+        "CSRF-003"
+      ],
+      "scope": "Session-bound CSRF, protected mutation, rotation and logout",
+      "automated": [
+        "tests/server/auth.test.mjs",
+        "tests/client/api-session-generation.test.mjs",
+        "scripts/test-local-auth.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "AUTH-TEST-018",
+      "requirements": [
+        "CSRF-004"
+      ],
+      "scope": "Origin and SameSite supplement explicit CSRF",
+      "automated": [
+        "tests/server/auth.test.mjs",
+        "tests/server/http.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "SEC-TEST-015",
+      "requirements": [
+        "CSRF-005"
+      ],
+      "scope": "Public origin, idempotency, honeypot and quota controls",
+      "automated": [
+        "database/tests/007_public_submissions.sql",
+        "tests/server/form-public-routes.test.mjs",
+        "tests/server/contact.test.mjs"
+      ],
+      "remaining": [
+        "Hosted abuse/load behavior",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "EVT-TEST-003",
+      "requirements": [
+        "EVT-001"
+      ],
+      "scope": "Event state/CRUD and current team/action scope",
+      "automated": [
+        "database/tests/005_event_operations.sql",
+        "scripts/test-local-events.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "EVT-TEST-004",
+      "requirements": [
+        "EVT-002"
+      ],
+      "scope": "Complete validated event record fields",
+      "automated": [
+        "tests/server/events.test.mjs",
+        "database/tests/005_event_operations.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "EVT-TEST-005",
+      "requirements": [
+        "EVT-003"
+      ],
+      "scope": "Public event filtering and ordering",
+      "automated": [
+        "scripts/test-local-events.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "EVT-TEST-006",
+      "requirements": [
+        "EVT-004"
+      ],
+      "scope": "Event detail, schedule, capacity, ICS and share",
+      "automated": [
+        "tests/server/events.test.mjs",
+        "scripts/test-local-events.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "EVT-TEST-007",
+      "requirements": [
+        "EVT-005",
+        "EVT-008"
+      ],
+      "scope": "Atomic capacity enforced in PostgreSQL",
+      "automated": [
+        "database/tests/003_event_concurrency.sql",
+        "scripts/test-database.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "EVT-TEST-008",
+      "requirements": [
+        "EVT-006",
+        "EVT-007"
+      ],
+      "scope": "Normalized duplicate prevention and registration idempotency",
+      "automated": [
+        "database/tests/002_event_registration.sql",
+        "scripts/test-local-events.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "EVT-TEST-009",
+      "requirements": [
+        "EVT-009"
+      ],
+      "scope": "Authorized attendance correction/check-in/removal and summary",
+      "automated": [
+        "database/tests/005_event_operations.sql",
+        "scripts/test-local-events.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "EVT-TEST-010",
+      "requirements": [
+        "EVT-010"
+      ],
+      "scope": "Confirmation outbox only after committed registration",
+      "automated": [
+        "database/tests/002_event_registration.sql",
+        "tests/server/mail-transport.test.mjs",
+        "scripts/test-local-events.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "EVT-TEST-011",
+      "requirements": [
+        "EVT-011"
+      ],
+      "scope": "Published canonical/social/Event raw HTML",
+      "automated": [
+        "tests/server/site-document.test.mjs",
+        "scripts/test-local-documents.mjs",
+        "tests/server/seo.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "EVT-TEST-012",
+      "requirements": [
+        "EVT-012"
+      ],
+      "scope": "Reconstructed attendance schema and derived counts",
+      "automated": [
+        "database/tests/002_event_registration.sql",
+        "database/tests/003_event_concurrency.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "TEAM-TEST-001",
+      "requirements": [
+        "TEAM-001"
+      ],
+      "scope": "Public profiles versus private directory/accounts",
+      "automated": [
+        "tests/server/members.test.mjs",
+        "database/tests/058_community_members.sql",
+        "tests/server/public-collections.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "TEAM-TEST-002",
+      "requirements": [
+        "TEAM-002"
+      ],
+      "scope": "Team hierarchy, membership, transfers, statistics, activity and notices",
+      "automated": [
+        "database/tests/025_teams.sql",
+        "database/tests/028_team_announcements.sql",
+        "scripts/test-local-teams.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "TEAM-TEST-003",
+      "requirements": [
+        "TEAM-003",
+        "TEAM-004"
+      ],
+      "scope": "Bound single-use invitation accept/decline/revoke/expiry",
+      "automated": [
+        "database/tests/027_team_invitations.sql",
+        "database/tests/103_invitation_decline.sql",
+        "scripts/test-local-team-invitations.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "TEAM-TEST-004",
+      "requirements": [
+        "TEAM-005",
+        "TEAM-006"
+      ],
+      "scope": "Lead/team scope and separate page/action grants",
+      "automated": [
+        "tests/server/teams.test.mjs",
+        "database/tests/026_explicit_team_actions.sql",
+        "scripts/test-local-teams.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "TEAM-TEST-005",
+      "requirements": [
+        "TEAM-007"
+      ],
+      "scope": "Public profile column minimization",
+      "automated": [
+        "tests/server/public-collections.test.mjs",
+        "scripts/test-local-public-collections.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "COMM-TEST-001",
+      "requirements": [
+        "COMM-001"
+      ],
+      "scope": "Announcements, tasks, private messages, channels, pins and boards",
+      "automated": [
+        "database/tests/038_tasks.sql",
+        "database/tests/043_direct_messages.sql",
+        "database/tests/045_chapter_announcements.sql",
+        "database/tests/029_channels.sql",
+        "database/tests/034_whiteboards.sql",
+        "scripts/test-local-tasks.mjs",
+        "scripts/test-local-direct-messages.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "COMM-TEST-002",
+      "requirements": [
+        "COMM-002",
+        "COMM-003",
+        "COMM-004"
+      ],
+      "scope": "Authorized Realtime and collaboration mutations",
+      "automated": [
+        "database/tests/030_scoped_realtime.sql",
+        "database/tests/036_whiteboard_realtime.sql",
+        "database/tests/048_managed_team_chat.sql",
+        "tests/server/whiteboards.test.mjs",
+        "scripts/test-local-whiteboards.mjs"
+      ],
+      "remaining": [
+        "Hosted reconnect/device/concurrent collaboration",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "COMM-TEST-003",
+      "requirements": [
+        "COMM-005"
+      ],
+      "scope": "Scoped internal email fan-out review",
+      "automated": [
+        "database/tests/045_chapter_announcements.sql",
+        "database/tests/089_event_mail_review.sql",
+        "tests/server/event-mail.test.mjs",
+        "scripts/test-local-announcements.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "OPS-TEST-009",
+      "requirements": [
+        "COMM-006"
+      ],
+      "scope": "Authenticated scheduler, leases, dedupe and bounded retries",
+      "automated": [
+        "tests/server/jobs.test.mjs",
+        "database/tests/019_scheduled_jobs.sql",
+        "database/tests/039_task_jobs.sql",
+        "scripts/test-local-jobs.mjs"
+      ],
+      "remaining": [
+        "Hosted scheduler watchdog/recovery/load",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FIN-TEST-001",
+      "requirements": [
+        "FIN-001"
+      ],
+      "scope": "Exact finance ledger, budgets, reports and state transitions",
+      "automated": [
+        "tests/server/finances.test.mjs",
+        "database/tests/050_finance_ledger.sql",
+        "scripts/test-local-finances.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FIN-TEST-002",
+      "requirements": [
+        "FIN-002",
+        "FIN-005"
+      ],
+      "scope": "Private attachments and authorized short-lived download",
+      "automated": [
+        "tests/server/finance-routes.test.mjs",
+        "database/tests/051_finance_attachments.sql",
+        "scripts/test-local-finance-uploads.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FIN-TEST-003",
+      "requirements": [
+        "FIN-003",
+        "FIN-004"
+      ],
+      "scope": "Current-state authorization, self-approval rejection and audit",
+      "automated": [
+        "tests/server/finance-routes.test.mjs",
+        "database/tests/050_finance_ledger.sql",
+        "scripts/test-local-finances.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "NEWS-TEST-001",
+      "requirements": [
+        "NEWS-001",
+        "NEWS-002",
+        "NEWS-003"
+      ],
+      "scope": "Private double opt-in and revocable individual tokens",
+      "automated": [
+        "database/tests/007_public_submissions.sql",
+        "database/tests/087_newsletter_token_bulk_cleanup.sql",
+        "scripts/test-local-submissions.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "NEWS-TEST-002",
+      "requirements": [
+        "NEWS-004",
+        "NEWS-005"
+      ],
+      "scope": "Campaign/subscriber/template review, snapshots, scheduling and delivery",
+      "automated": [
+        "tests/server/newsletter.test.mjs",
+        "database/tests/082_newsletter_workspace.sql",
+        "database/tests/083_newsletter_send_review.sql",
+        "database/tests/084_newsletter_delivery.sql",
+        "scripts/test-local-newsletter.mjs"
+      ],
+      "remaining": [
+        "Real provider/sender-domain/retry/load acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "NEWS-TEST-003",
+      "requirements": [
+        "NEWS-006"
+      ],
+      "scope": "Private sender credentials and transport configuration",
+      "automated": [
+        "tests/server/mail-transport.test.mjs",
+        "scripts/scan-secrets.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "CONTENT-TEST-015",
+      "requirements": [
+        "CONTACT-001",
+        "CONTACT-002",
+        "CONTACT-003"
+      ],
+      "scope": "Bound contact inputs, fixed destination and escaped template",
+      "automated": [
+        "tests/server/contact.test.mjs",
+        "tests/server/mail-transport.test.mjs",
+        "database/tests/007_public_submissions.sql",
+        "database/tests/088_contact_attachments.sql",
+        "scripts/test-local-contact-files.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "CONTENT-TEST-001",
+      "requirements": [
+        "CONTENT-001"
+      ],
+      "scope": "Managed CMS, libraries and private media operations",
+      "automated": [
+        "tests/server/site-content.test.mjs",
+        "tests/server/site-preview-routes.test.mjs",
+        "database/tests/022_site_content.sql",
+        "database/tests/073_private_media_core.sql",
+        "scripts/test-local-site-content.mjs",
+        "scripts/test-local-media-core.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "CONTENT-TEST-002",
+      "requirements": [
+        "CONTENT-002"
+      ],
+      "scope": "Active public columns, paged resource/team/sponsor inventory",
+      "automated": [
+        "tests/server/public-collections.test.mjs",
+        "database/tests/100_public_sponsor_ordering.sql",
+        "scripts/test-local-public-collections.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "CONTENT-TEST-003",
+      "requirements": [
+        "CONTENT-003",
+        "CONTENT-004"
+      ],
+      "scope": "Private storage separated from explicit public media publication",
+      "automated": [
+        "database/tests/075_private_media_uploads.sql",
+        "database/tests/077_media_publication.sql",
+        "database/tests/081_gallery_image_grants.sql",
+        "scripts/test-local-media-files.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "CONTENT-TEST-004",
+      "requirements": [
+        "CONTENT-005",
+        "CONTENT-006"
+      ],
+      "scope": "Upload MIME/signature/size/ownership/quarantine and SVG policy",
+      "automated": [
+        "tests/server/upload-content.test.mjs",
+        "tests/server/upload-routes.test.mjs",
+        "scripts/test-local-uploads.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "A11Y-TEST-001",
+      "requirements": [
+        "CONTENT-007"
+      ],
+      "scope": "Responsive image dimensions, formats, lazy loading and alt text",
+      "automated": [
+        "tests/form-images.test.ts",
+        "tests/server/media-content.test.mjs"
+      ],
+      "remaining": [
+        "Every public image/breakpoint/assistive-text review; no full browser pass yet",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "CONTENT-TEST-008",
+      "requirements": [
+        "LINK-001",
+        "LINK-002",
+        "LINK-003",
+        "LINK-004"
+      ],
+      "scope": "Active Linktree profiles/links, ordering, safe embeds and bounded tracking",
+      "automated": [
+        "tests/server/linktree.test.mjs",
+        "tests/server/linktree-routes.test.mjs",
+        "database/tests/053_linktree_workflows.sql",
+        "database/tests/054_linktree_team_publication_guard.sql",
+        "scripts/test-local-linktree.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-001",
+      "requirements": [
+        "FORM-001"
+      ],
+      "scope": "Native first-party renderer and authoring",
+      "automated": [
+        "tests/server/forms.test.mjs",
+        "scripts/test-local-forms.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-002",
+      "requirements": [
+        "FORM-002"
+      ],
+      "scope": "Form create/template/duplicate/archive/restore and retained erasure",
+      "automated": [
+        "tests/server/form-admin-routes.test.mjs",
+        "database/tests/072_form_permanent_deletion.sql",
+        "scripts/test-local-form-deletion.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-003",
+      "requirements": [
+        "FORM-003"
+      ],
+      "scope": "Supported field types and blocks",
+      "automated": [
+        "tests/server/forms.test.mjs",
+        "tests/form-runtime-fields.test.ts",
+        "tests/form-images.test.ts"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-004",
+      "requirements": [
+        "FORM-004"
+      ],
+      "scope": "Field identity, help and type-appropriate validation",
+      "automated": [
+        "tests/form-builder-validation.test.ts",
+        "tests/form-runtime-fields.test.ts",
+        "tests/server/forms.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-005",
+      "requirements": [
+        "FORM-005"
+      ],
+      "scope": "Builder ordering/duplication/history/autosave and non-submitting preview",
+      "automated": [
+        "tests/form-presentation.test.ts",
+        "tests/server/form-admin-routes.test.mjs",
+        "scripts/test-local-form-images.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-006",
+      "requirements": [
+        "FORM-006"
+      ],
+      "scope": "Shared branch logic and invalid/cyclic publication refusal",
+      "automated": [
+        "tests/server/form-branches.test.mjs",
+        "scripts/test-local-form-branches.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-007",
+      "requirements": [
+        "FORM-007"
+      ],
+      "scope": "Theme/progress/schedule/editing/receipts and own response copy",
+      "automated": [
+        "tests/form-presentation.test.ts",
+        "tests/server/form-delivery.test.mjs",
+        "tests/server/form-respondent.test.mjs",
+        "scripts/test-local-form-respondent.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-008",
+      "requirements": [
+        "FORM-008"
+      ],
+      "scope": "Current identity/access policy and one-response enforcement",
+      "automated": [
+        "tests/server/form-access-routes.test.mjs",
+        "database/tests/092_identified_forms.sql",
+        "scripts/test-local-form-access.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-009",
+      "requirements": [
+        "FORM-009"
+      ],
+      "scope": "Private slug/capability and noindex discovery boundaries",
+      "automated": [
+        "tests/server/form-public-routes.test.mjs",
+        "tests/server/seo.test.mjs",
+        "tests/server/site-document.test.mjs",
+        "scripts/test-local-form-images.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-010",
+      "requirements": [
+        "FORM-010"
+      ],
+      "scope": "Immutable versions, stable hashes and historical labels",
+      "automated": [
+        "database/tests/010_forms.sql",
+        "database/tests/064_form_response_history.sql",
+        "scripts/test-local-form-history.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-011",
+      "requirements": [
+        "FORM-011"
+      ],
+      "scope": "Runtime labels/progress/errors/review and shared logic parity",
+      "automated": [
+        "tests/form-runtime-fields.test.ts",
+        "tests/server/forms.test.mjs",
+        "scripts/test-local-form-runtime.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-012",
+      "requirements": [
+        "FORM-012"
+      ],
+      "scope": "Exact-version server response validation and hidden/unknown/file rejection",
+      "automated": [
+        "tests/server/form-public-routes.test.mjs",
+        "database/tests/010_forms.sql",
+        "scripts/test-local-forms.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-013",
+      "requirements": [
+        "FORM-013"
+      ],
+      "scope": "Atomic response/identity/invite/limit/file commit and idempotency",
+      "automated": [
+        "database/tests/010_forms.sql",
+        "database/tests/014_form_access_uploads.sql",
+        "scripts/test-database.mjs",
+        "scripts/test-local-uploads.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-014",
+      "requirements": [
+        "FORM-014"
+      ],
+      "scope": "Expiring fragment-only resume capability",
+      "automated": [
+        "tests/capability-navigation.test.ts",
+        "tests/server/form-lifetime.test.mjs",
+        "scripts/test-local-form-images.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-015",
+      "requirements": [
+        "FORM-015"
+      ],
+      "scope": "Distinct response-edit capability and retained revisions",
+      "automated": [
+        "tests/server/form-public-routes.test.mjs",
+        "database/tests/064_form_response_history.sql",
+        "scripts/test-local-form-history.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-016",
+      "requirements": [
+        "FORM-016"
+      ],
+      "scope": "Private scanned direct upload and physical cleanup",
+      "automated": [
+        "tests/server/upload-routes.test.mjs",
+        "tests/server/scanner.test.mjs",
+        "scripts/test-local-uploads.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-017",
+      "requirements": [
+        "FORM-017"
+      ],
+      "scope": "Public abuse/schema/count/identity non-disclosure boundaries",
+      "automated": [
+        "tests/server/form-public-routes.test.mjs",
+        "tests/server/form-access-routes.test.mjs",
+        "scripts/test-local-form-access.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-018",
+      "requirements": [
+        "FORM-018"
+      ],
+      "scope": "Scoped complete library filters and paged options",
+      "automated": [
+        "tests/form-library.test.ts",
+        "database/tests/099_form_library_filters.sql",
+        "scripts/test-local-form-library.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-019",
+      "requirements": [
+        "FORM-019"
+      ],
+      "scope": "Response summary/table/detail/version views",
+      "automated": [
+        "tests/server/form-admin-routes.test.mjs",
+        "database/tests/064_form_response_history.sql",
+        "scripts/test-local-form-history.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-020",
+      "requirements": [
+        "FORM-020"
+      ],
+      "scope": "Safe version-aware CSV/XLSX/JSON and background export",
+      "automated": [
+        "tests/server/form-exports.test.mjs",
+        "database/tests/063_form_background_exports.sql",
+        "scripts/test-local-form-exports.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-021",
+      "requirements": [
+        "FORM-021"
+      ],
+      "scope": "Authorized safe reviewed response notifications",
+      "automated": [
+        "tests/server/form-delivery.test.mjs",
+        "database/tests/065_form_reviewed_delivery.sql",
+        "scripts/test-local-form-delivery.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-022",
+      "requirements": [
+        "FORM-022",
+        "FORM-023"
+      ],
+      "scope": "Explicit form/team/collaborator actions and denied editor access",
+      "automated": [
+        "tests/server/form-admin-routes.test.mjs",
+        "tests/server/form-access-routes.test.mjs",
+        "database/tests/010_forms.sql",
+        "scripts/test-local-forms.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-023",
+      "requirements": [
+        "FORM-024"
+      ],
+      "scope": "Sensitive operations audited without answer/file contents",
+      "automated": [
+        "tests/server/form-admin-routes.test.mjs",
+        "tests/server/form-privacy.test.mjs",
+        "scripts/test-local-uploads.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-024",
+      "requirements": [
+        "FORM-025"
+      ],
+      "scope": "Retained identity redaction, holds, archive and reviewed permanent deletion",
+      "automated": [
+        "tests/server/form-deletion.test.mjs",
+        "database/tests/066_form_retention_holds.sql",
+        "database/tests/072_form_permanent_deletion.sql",
+        "scripts/test-local-form-privacy.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-025",
+      "requirements": [
+        "FORM-026"
+      ],
+      "scope": "Keyboard/error/focus/grid/progress accessibility",
+      "automated": [
+        "tests/form-runtime-fields.test.ts",
+        "tests/form-builder-validation.test.ts"
+      ],
+      "remaining": [
+        "Complete manual WCAG/screen-reader/zoom/contrast and axe review",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-026",
+      "requirements": [
+        "FORM-027"
+      ],
+      "scope": "Five structure-only reusable templates",
+      "automated": [
+        "tests/server/forms.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-027",
+      "requirements": [
+        "FORM-028"
+      ],
+      "scope": "Event/team/campaign references and access-preserving integration",
+      "automated": [
+        "tests/server/form-integrations.test.mjs",
+        "database/tests/071_form_integrations.sql",
+        "scripts/test-local-form-integrations.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-028",
+      "requirements": [
+        "FORM-029"
+      ],
+      "scope": "Sensitive answers masked; separate reveal/export proof and audit",
+      "automated": [
+        "tests/server/form-admin-routes.test.mjs",
+        "tests/server/form-exports.test.mjs",
+        "scripts/test-local-forms.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-029",
+      "requirements": [
+        "FORM-030"
+      ],
+      "scope": "Bound invitation CSV, single-use delivery/rotation/revocation",
+      "automated": [
+        "tests/server/form-access-routes.test.mjs",
+        "database/tests/014_form_access_uploads.sql",
+        "scripts/test-local-form-access.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "PRIVATE-TEST-001",
+      "requirements": [
+        "BLOG-001",
+        "BLOG-006"
+      ],
+      "scope": "Private editorial content, assignments, approvals and scoped analytics",
+      "automated": [
+        "tests/server/blog.test.mjs",
+        "database/tests/061_private_blog.sql",
+        "database/tests/104_editorial_overview.sql",
+        "scripts/test-local-blog.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "PRIVATE-TEST-002",
+      "requirements": [
+        "BLOG-002",
+        "BLOG-003",
+        "BLOG-004"
+      ],
+      "scope": "No public Blog routes/discovery or anonymous table access",
+      "automated": [
+        "tests/server/seo.test.mjs",
+        "tests/server/site-document.test.mjs",
+        "database/tests/061_private_blog.sql",
+        "scripts/test-local-documents.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "PRIVATE-TEST-003",
+      "requirements": [
+        "BLOG-005"
+      ],
+      "scope": "Scanned private editorial files and authorized download",
+      "automated": [
+        "tests/server/blog.test.mjs",
+        "database/tests/062_private_blog_uploads.sql",
+        "scripts/test-local-blog-uploads.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "PRIVATE-TEST-007",
+      "requirements": [
+        "PROJ-001",
+        "PROJ-005"
+      ],
+      "scope": "Preserved private project workflows",
+      "automated": [
+        "tests/server/projects.test.mjs",
+        "database/tests/055_private_projects.sql",
+        "scripts/test-local-projects.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "PRIVATE-TEST-008",
+      "requirements": [
+        "PROJ-002",
+        "PROJ-003",
+        "PROJ-004"
+      ],
+      "scope": "No public Projects/discovery or direct grants",
+      "automated": [
+        "tests/server/seo.test.mjs",
+        "tests/server/site-document.test.mjs",
+        "database/tests/055_private_projects.sql",
+        "scripts/test-local-documents.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "CONTENT-TEST-009",
+      "requirements": [
+        "STATUS-001",
+        "STATUS-002",
+        "STATUS-003"
+      ],
+      "scope": "Authorized maintenance, escape paths, health and safe redirects",
+      "automated": [
+        "tests/server/site-status.test.mjs",
+        "database/tests/057_site_status_control.sql",
+        "scripts/test-local-site-status.mjs"
+      ],
+      "remaining": [
+        "Actual offline/device maintenance behavior",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "SEC-TEST-021",
+      "requirements": [
+        "AUDIT-001",
+        "AUDIT-002"
+      ],
+      "scope": "Protected-action history, identifiers, safe detail and filtered statistics",
+      "automated": [
+        "tests/server/audit-routes.test.mjs",
+        "database/tests/105_audit_statistics.sql",
+        "scripts/test-local-workspace.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "SEC-TEST-005",
+      "requirements": [
+        "AUDIT-004"
+      ],
+      "scope": "Append-only audit rows and no application mutation endpoint",
+      "automated": [
+        "database/tests/001_security_foundation.sql",
+        "tests/server/audit-routes.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "PWA-TEST-001",
+      "requirements": [
+        "PWA-001",
+        "PWA-002",
+        "PWA-003"
+      ],
+      "scope": "Production worker, GT manifest and deliberate lifecycle",
+      "automated": [
+        "tests/server/pwa-policy.test.mjs",
+        "tests/server/pwa-worker.test.mjs",
+        "tests/server/build-graph.test.mjs",
+        "scripts/check-build-budgets.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "PWA-TEST-004",
+      "requirements": [
+        "PWA-004"
+      ],
+      "scope": "Actual installability on supported Chromium/Android/iOS",
+      "automated": [],
+      "remaining": [
+        "Real supported-device installation/uninstall/reinstall acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "PWA-TEST-007",
+      "requirements": [
+        "PUSH-001",
+        "PUSH-009"
+      ],
+      "scope": "User-gesture-only permission and iOS installed-context guidance",
+      "automated": [
+        "tests/server/push.test.mjs"
+      ],
+      "remaining": [
+        "Actual permission UI and supported/unsupported device contexts",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "PWA-TEST-008",
+      "requirements": [
+        "PUSH-002",
+        "PUSH-003"
+      ],
+      "scope": "Session/verified-registration derived push identity",
+      "automated": [
+        "tests/server/push.test.mjs",
+        "database/tests/090_event_push.sql",
+        "database/tests/091_push_fences.sql",
+        "scripts/test-local-push.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "PWA-TEST-009",
+      "requirements": [
+        "PUSH-004",
+        "PUSH-005"
+      ],
+      "scope": "Encrypted provider subscriptions and private VAPID signing",
+      "automated": [
+        "tests/server/push.test.mjs",
+        "database/tests/090_event_push.sql",
+        "scripts/scan-secrets.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "PWA-TEST-010",
+      "requirements": [
+        "PUSH-006",
+        "PUSH-007"
+      ],
+      "scope": "Idempotent scheduled reminder and failed subscription cleanup",
+      "automated": [
+        "tests/server/push.test.mjs",
+        "database/tests/090_event_push.sql",
+        "database/tests/091_push_fences.sql",
+        "scripts/test-local-push.mjs"
+      ],
+      "remaining": [
+        "Real approved provider/device delivery and failure acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "PWA-TEST-011",
+      "requirements": [
+        "PUSH-008"
+      ],
+      "scope": "Safe canonical notification click target",
+      "automated": [
+        "tests/server/push.test.mjs",
+        "tests/server/pwa-worker.test.mjs"
+      ],
+      "remaining": [
+        "Real installed-device notification click",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified"
+    },
+    {
+      "id": "OPS-TEST-010",
+      "requirements": [],
+      "scope": "Fictional full-schema backup restore preserves data, ACLs and enforcement",
+      "automated": [
+        "scripts/test-backup-restore.mjs"
+      ],
+      "remaining": [
+        "Hosted scheduled/PITR database backup and private object-storage restore; measured institutional RPO/RTO; approved recovery runbook",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "16.3",
+        "29",
+        "31.2"
+      ]
+    }
+  ],
+  "userOverrides": {
+    "FORM-007": "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",
+    "FORM-008": "Tejas removed anonymous forms. Name/email are required now; entered identity is declared, not falsely verified. Georgia Tech SSO and Google login remain deferred.",
+    "FORM-014": "Draft expiry/fragment handling remains; respondents are identified by declared name/email under the current no-anonymous decision."
+  }
+}

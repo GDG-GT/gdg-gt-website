@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
+import { useSearchParams } from "react-router-dom";
+import SiteCompositionPreview from "./SiteCompositionPreview";
 import { api, ApiFailure } from "@/lib/api";
 import { useContent } from "@/contexts/ContentContext";
 import { Badge, Button, EmptyState, Field } from "../primitives";
@@ -53,6 +55,14 @@ type Draft = {
   links: { id: string; name: string; url: string; category: string }[];
 };
 export default function SiteContentWorkspace() {
+  const [params] = useSearchParams();
+  return params.get("mode") === "preview" ? (
+    <SiteCompositionPreview />
+  ) : (
+    <ContentEditor />
+  );
+}
+function ContentEditor() {
   const [kind, setKind] = useState<Kind>("pages"),
     [state, setState] = useState("current"),
     [page, setPage] = useState(1),
@@ -263,6 +273,30 @@ export default function SiteContentWorkspace() {
         >
           Create draft
         </Button>
+      </div>
+      <div className="gt-actions" aria-label="Private page previews">
+        <a
+          className="gt-button gt-button-secondary"
+          href="/admin/content?mode=preview&page=home"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Open full-page draft preview
+        </a>
+        <Button
+          variant="secondary"
+          type="button"
+          onClick={() =>
+            window.open(
+              "/admin/content?mode=preview&page=home",
+              "_blank",
+              "noopener,noreferrer,width=390,height=844",
+            )
+          }
+        >
+          Open phone-size preview
+        </Button>
+        <span className="gt-helper">Save changes before previewing.</span>
       </div>
       <div className="gt-actions" aria-label="Content collections">
         {(Object.keys(kinds) as Kind[]).map((value) => (

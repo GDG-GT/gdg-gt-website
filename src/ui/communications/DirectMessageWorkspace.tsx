@@ -75,7 +75,11 @@ const stamp = (v: string) =>
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(v));
-export default function DirectMessageWorkspace() {
+export default function DirectMessageWorkspace({
+  personal = false,
+}: {
+  personal?: boolean;
+}) {
   const { currentAdmin } = useAdmin();
   const [params, setParams] = useSearchParams(),
     selected = params.get("thread") || "";
@@ -407,10 +411,9 @@ export default function DirectMessageWorkspace() {
       setCompose(false);
       setNotice("Message sent.");
       if (result.id !== selected) {
-        const next = new URLSearchParams({
-          tab: "messages",
-          thread: result.id,
-        });
+        const next = new URLSearchParams(params);
+        next.set("tab", "messages");
+        next.set("thread", result.id);
         setParams(next);
       }
       refresh();
@@ -552,7 +555,9 @@ export default function DirectMessageWorkspace() {
         seq.current++;
         setRecord(undefined);
         setHistory(undefined);
-        const next = new URLSearchParams({ tab: "messages" });
+        const next = new URLSearchParams(params);
+        next.set("tab", "messages");
+        next.delete("thread");
         setParams(next);
       }
       window.dispatchEvent(new Event("gdg:access-changed"));
@@ -593,24 +598,26 @@ export default function DirectMessageWorkspace() {
           New message
         </Button>
       </header>
-      <nav
-        className="gt-button-row gt-team-tabs"
-        aria-label="Communications workspaces"
-      >
-        <ActionLink
-          to="/admin/communications?tab=announcements"
-          variant="ghost"
+      {!personal && (
+        <nav
+          className="gt-button-row gt-team-tabs"
+          aria-label="Communications workspaces"
         >
-          Announcements
-        </ActionLink>
-        <ActionLink to="/admin/communications?tab=tasks" variant="ghost">
-          Tasks
-        </ActionLink>
-        <span className="gt-button" aria-current="page">
-          Messages
-        </span>
-        <ContactInboxLink />
-      </nav>
+          <ActionLink
+            to="/admin/communications?tab=announcements"
+            variant="ghost"
+          >
+            Announcements
+          </ActionLink>
+          <ActionLink to="/admin/communications?tab=tasks" variant="ghost">
+            Tasks
+          </ActionLink>
+          <span className="gt-button" aria-current="page">
+            Messages
+          </span>
+          <ContactInboxLink />
+        </nav>
+      )}
       {error && (
         <p className="gt-form-error" role="alert">
           {error}{" "}

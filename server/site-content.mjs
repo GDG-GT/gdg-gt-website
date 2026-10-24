@@ -142,6 +142,13 @@ const tables = {
   social: "social_links",
   footer: "footer_content",
 };
+const recordKeys = {
+  settings: ["key", "value", "description"],
+  pages: ["page_slug", "section_key", "content", "order_index"],
+  navigation: ["label", "href", "icon", "order_index", "parent_id"],
+  social: ["platform", "url", "icon", "order_index"],
+  footer: ["section_key", "content", "order_index"],
+};
 export async function siteContentRoutes(
   request,
   response,
@@ -153,14 +160,15 @@ export async function siteContentRoutes(
     );
   if (!match) return false;
   const kind = match[1],
-    schema = siteContentSchemas[kind];
-  if (!schema)
+    schema = siteContentSchemas[kind],
+    preview = kind === "preview" && !match[2];
+  if (!schema && !preview)
     throw new ApiError(404, "NOT_FOUND", "This collection is not available.");
   const capabilities = match[2] === "capabilities";
   allowMethod(
     request,
     response,
-    capabilities
+    capabilities || preview
       ? ["GET"]
       : match[2]
         ? ["GET", "PATCH", "POST", "DELETE"]
@@ -186,6 +194,94 @@ export async function siteContentRoutes(
     if (await can(action)) actions.push(action);
   if (capabilities) {
     sendJson(response, 200, { actions }, requestId);
+    return true;
+  }
+  if (preview) {
+    const p = queryValues(
+      url.searchParams,
+      z.object({ page: z.enum(managedPublicPages).default("home") }).strict(),
+    );
+    const definitions = {
+      settings: { columns: "key,value,description,is_active", limit: 20 },
+      pages: {
+        columns: "page_slug,section_key,content,order_index,is_active",
+        limit: 100,
+      },
+      navigation: {
+        columns: "id,label,href,icon,order_index,parent_id,is_active",
+        limit: 200,
+      },
+      social: { columns: "platform,url,icon,order_index,is_active", limit: 20 },
+      footer: {
+        columns: "section_key,content,order_index,is_active",
+        limit: 10,
+      },
+    };
+    let omitted = 0,
+      draftCount = 0;
+    const collections = await Promise.all(
+      Object.entries(definitions).map(async ([collection, definition]) => {
+        let query = db
+          .from(tables[collection])
+          .select(definition.columns)
+          .is("deleted_at", null);
+        if (collection === "settings")
+          query = query.in("key", managedSettingKeys);
+        if (collection === "pages")
+          query = query.in("page_slug", managedPublicPages);
+        const rows = checked(await query.limit(definition.limit + 1));
+        if (rows.length > definition.limit)
+          throw new ApiError(
+            400,
+            "PREVIEW_TOO_LARGE",
+            "Reduce the saved content inventory before previewing.",
+          );
+        const items = [];
+        for (const row of rows) {
+          const keys = recordKeys[collection],
+            parsed = siteContentSchemas[collection].safeParse(
+              Object.fromEntries(
+                keys
+                  .filter((key) => row[key] !== null && row[key] !== undefined)
+                  .map((key) => [key, row[key]]),
+              ),
+            );
+          if (!parsed.success) {
+            omitted++;
+            continue;
+          }
+          if (!row.is_active) draftCount++;
+          items.push({
+            ...parsed.data,
+            ...(collection === "navigation" ? { id: row.id } : {}),
+          });
+        }
+        return [
+          collection,
+          items.sort((a, b) => (a.order_index || 0) - (b.order_index || 0)),
+        ];
+      }),
+    );
+    await store.audit({
+      actorId: session.user.id,
+      action: "site_content.previewed",
+      targetType: "site_content",
+      requestId,
+      metadata: { count: draftCount },
+    });
+    response.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
+    sendJson(
+      response,
+      200,
+      {
+        ...Object.fromEntries(collections),
+        page: p.page,
+        draftCount,
+        omitted,
+        generatedAt: new Date().toISOString(),
+      },
+      requestId,
+    );
     return true;
   }
   const id = match[2] ? parse(uuid, match[2]) : null;
@@ -273,13 +369,7 @@ export async function siteContentRoutes(
     if (!existing)
       throw new ApiError(404, "NOT_FOUND", "This content was not found.");
     // Existing legacy rows do not bypass the curated contract at publication.
-    const keys = {
-      settings: ["key", "value", "description"],
-      pages: ["page_slug", "section_key", "content", "order_index"],
-      navigation: ["label", "href", "icon", "order_index", "parent_id"],
-      social: ["platform", "url", "icon", "order_index"],
-      footer: ["section_key", "content", "order_index"],
-    }[kind];
+    const keys = recordKeys[kind];
     parse(
       schema,
       Object.fromEntries(

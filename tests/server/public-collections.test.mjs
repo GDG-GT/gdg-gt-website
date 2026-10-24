@@ -81,6 +81,9 @@ describe("CONTENT-TEST public collection filtering and pagination", () => {
     );
     expect(r.body.data).toMatchObject({ page: 2, pageSize: 12, total: 0 });
     expect(r.headers.get("etag")).toBeTruthy();
+    expect(r.headers.get("cache-control")).toBe(
+      "public, max-age=0, s-maxage=0, must-revalidate",
+    );
   });
   it("routes sponsor inventory through the pre-pagination tier-order transaction", async () => {
     const f = fixture(),

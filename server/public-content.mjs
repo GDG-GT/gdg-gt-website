@@ -6,7 +6,11 @@ import {
   text,
   uuid,
 } from "./lib/validation.mjs";
-import { publicJson } from "./events.mjs";
+import { publicJson as cachedPublicJson } from "./events.mjs";
+// Mutable CMS projections must reach the database before a conditional 304.
+// Shared caches cannot serve an older publication through a stale TTL window.
+const publicJson = (request, response, data, requestId) =>
+  cachedPublicJson(request, response, data, requestId, { revalidate: true });
 const publicPages = [
   "home",
   "events",

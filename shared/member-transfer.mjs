@@ -8,7 +8,7 @@ export const memberTransferFilters = z.object({
   category: z.enum(memberCategories).optional(), year: z.string().trim().max(50).optional(),
   active: z.boolean().optional(), core: z.boolean().optional(),
 }).strict();
-export const memberExportInput = z.object({ filters: memberTransferFilters.default({}), includePrivate: z.boolean().default(false) }).strict();
+export const memberExportInput = z.object({ filters: memberTransferFilters.prefault({}), includePrivate: z.boolean().default(false) }).strict();
 export const memberImportInput = z.object({ teamId: z.string().uuid().nullable(), rows: z.array(communityMemberRecord).min(1).max(200) }).strict()
   .refine((v) => new Set(v.rows.map((r) => r.email)).size === v.rows.length, "Remove duplicate emails from the import.");
 export const memberImportCommit = z.object({ document: memberImportInput, reviewId: z.string().uuid(),

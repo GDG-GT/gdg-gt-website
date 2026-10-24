@@ -53,7 +53,7 @@ const shapeTypes = new Set([
 ]);
 export const boardDocument = z
   .object({
-    elements: z.array(z.record(z.unknown())).max(2000),
+    elements: z.array(z.record(z.string(), z.unknown())).max(2000),
     appState: z.object({ viewBackgroundColor: color }).strict(),
   })
   .strict()

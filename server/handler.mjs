@@ -110,7 +110,8 @@ export function applicationHandler({
         checkOrigin(request, config.origin, {
           mutation: !["GET", "HEAD"].includes(request.method),
         });
-        if (await seoRoutes(request, response, { db, config })) return;
+        if (await seoRoutes(request, response, { db, config, requestId }))
+          return;
         if (
           await personPrivacyRoutes(request, response, {
             db,
