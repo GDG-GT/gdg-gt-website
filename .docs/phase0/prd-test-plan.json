@@ -583,6 +583,32 @@
       ]
     },
     {
+      "id": "EVT-TEST-025",
+      "requirements": [
+        "EVT-002",
+        "EVT-004",
+        "EVT-011"
+      ],
+      "scope": "Derived reschedule history, accurate raw/client metadata, calendar status, canonical sharing and dual registration routes",
+      "automated": [
+        "tests/client/event-ui.test.tsx",
+        "tests/server/events.test.mjs",
+        "tests/server/site-document.test.mjs",
+        "database/tests/107_event_rescheduling.sql",
+        "scripts/test-local-events.mjs"
+      ],
+      "remaining": [
+        "Hosted crawlers/calendar clients and supported-device accessibility review; cancelled events remain private under the published-only contract",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.4",
+        "26.2",
+        "31.2"
+      ]
+    },
+    {
       "id": "TEAM-TEST-001",
       "requirements": [
         "TEAM-001"

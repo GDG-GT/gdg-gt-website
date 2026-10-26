@@ -130,7 +130,7 @@ export async function siteDocument({ db, config, pathname }) {
       await db
         .from("events")
         .select(
-          "id,slug,title,short_description,description,start_at,end_at,timezone,location,image_url,publication_status",
+          "id,slug,title,short_description,description,start_at,end_at,previous_start_at,timezone,location,room,image_url,event_link,publication_status",
         )
         .eq("slug", eventSlug)
         .eq("publication_status", "published")
@@ -185,7 +185,12 @@ export async function siteDocument({ db, config, pathname }) {
         ...(record.end_at ? { endDate: record.end_at } : {}),
         url: doc.canonical,
         image: image(record.image_url, config.origin),
-        eventStatus: "https://schema.org/EventScheduled",
+        eventStatus: record.previous_start_at
+          ? "https://schema.org/EventRescheduled"
+          : "https://schema.org/EventScheduled",
+        ...(record.previous_start_at
+          ? { previousStartDate: record.previous_start_at }
+          : {}),
         location: { "@type": "Place", name: text(record.location, 300) },
       },
     };

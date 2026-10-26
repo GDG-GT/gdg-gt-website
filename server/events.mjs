@@ -85,7 +85,7 @@ export const eventMailApproval = z
   })
   .strict();
 const publicColumns =
-  "id,title,slug,short_description,description,start_at,end_at,timezone,location,room,type,level,image_url,image_media_id,event_link,registration_url,google_form_url,google_event_url,registration_type,registration_enabled,max_participants,is_featured,prerequisites,what_youll_learn,what_to_bring,schedule,additional_info,contact_info,publication_status,published_at,updated_at,created_at,revision";
+  "id,title,slug,short_description,description,start_at,end_at,previous_start_at,timezone,location,room,type,level,image_url,image_media_id,event_link,registration_url,google_form_url,google_event_url,registration_type,registration_enabled,max_participants,is_featured,prerequisites,what_youll_learn,what_to_bring,schedule,additional_info,contact_info,publication_status,published_at,updated_at,created_at,revision";
 const listSchema = z
   .object({
     page: z.coerce.number().int().min(1).max(10000).default(1),
@@ -122,6 +122,8 @@ export function calendarFile(event, origin) {
     "DTSTAMP:" + stamp(event.updated_at),
     "LAST-MODIFIED:" + stamp(event.updated_at),
     "SEQUENCE:" + event.revision,
+    "STATUS:" +
+      (event.publication_status === "cancelled" ? "CANCELLED" : "CONFIRMED"),
     "DTSTART:" + stamp(event.start_at),
     ...(event.end_at ? ["DTEND:" + stamp(event.end_at)] : []),
     "SUMMARY:" + escape(event.title),

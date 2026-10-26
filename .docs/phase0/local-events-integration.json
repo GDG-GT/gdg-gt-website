@@ -30,7 +30,27 @@
       "passed": true
     },
     {
+      "name": "client cannot forge schedule history",
+      "passed": true
+    },
+    {
+      "name": "rescheduling returns the trigger-derived committed previous date",
+      "passed": true
+    },
+    {
+      "name": "public projection exposes factual reschedule history",
+      "passed": true
+    },
+    {
+      "name": "raw crawler document marks the published event as rescheduled",
+      "passed": true
+    },
+    {
       "name": "calendar uses stable event metadata and UTC timestamps",
+      "passed": true
+    },
+    {
+      "name": "rescheduled calendar retains identity and its updated sequence",
       "passed": true
     },
     {
@@ -79,6 +99,22 @@
     },
     {
       "name": "one confirmation job exists after repeated registration",
+      "passed": true
+    },
+    {
+      "name": "cancellation disables the published registration lifecycle",
+      "passed": true
+    },
+    {
+      "name": "cancelled event detail remains concealed under the published-only rule",
+      "passed": true
+    },
+    {
+      "name": "cancelled raw document cannot advertise a scheduled event",
+      "passed": true
+    },
+    {
+      "name": "cancelled event rejects a fresh registration",
       "passed": true
     },
     {

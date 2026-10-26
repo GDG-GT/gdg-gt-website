@@ -28,9 +28,11 @@ email confirmation. File bytes/private links are excluded. See
 Closed locally on 2026-10-26: independent public event status/type URL filters,
 timezone/year display, derived capacity/availability order before pagination,
 registration pending/error/focus/route isolation and service-only view restore
-verification. See `PUBLIC_EVENT_INVENTORY.md`. Event cancellation/rescheduling
-metadata, remaining detail-state/visual/manual acceptance and the global 70%
-coverage gate remain open; this does not close the full event PRD.
+verification. See `PUBLIC_EVENT_INVENTORY.md`. Rescheduling history/metadata,
+calendar status, canonical sharing and dual registration routes are also closed
+locally (`EVENT_RESCHEDULING_OPERATIONS.md`); cancellation remains private under
+the PRD's published-only rule. Remaining detail-state/visual/manual acceptance
+and the global 70% coverage gate remain open; this does not close the full event PRD.
 
 Closed locally on 2026-10-24: dashboard chart panels/four-metric administrator
 composition/own unread-message overview; safe audit details/aggregate statistics/

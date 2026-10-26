@@ -852,7 +852,12 @@ export function EventDetailPage() {
       eventStatus:
         event.publication_status === "cancelled"
           ? "https://schema.org/EventCancelled"
-          : "https://schema.org/EventScheduled",
+          : event.previous_start_at
+            ? "https://schema.org/EventRescheduled"
+            : "https://schema.org/EventScheduled",
+      ...(event.previous_start_at
+        ? { previousStartDate: event.previous_start_at }
+        : {}),
       location: { "@type": "Place", name: event.location },
       organizer: { "@type": "Organization", name: chapterName },
     }).replace(/</g, "\\u003c");
@@ -901,15 +906,16 @@ export function EventDetailPage() {
     event.registration_state === "full" ||
     (!!event.max_participants &&
       (event.accurate_attendee_count ?? 0) >= event.max_participants);
+  const externalRegistration = safePublicUrl(
+    event.registration_url || event.google_form_url,
+  );
   const unavailable =
     full ||
     event.registration_state === "closed" ||
     event.registration_state === "ended" ||
     event.status === "cancelled" ||
-    event.registration_enabled === false;
-  const externalRegistration = safePublicUrl(
-    event.registration_url || event.google_form_url,
-  );
+    event.registration_enabled === false ||
+    (event.registration_type === "external" && !externalRegistration);
   const calendar = () => {
     window.location.assign(
       "/api/v1/events/" +
@@ -1054,6 +1060,13 @@ export function EventDetailPage() {
                 {past ? "Past event" : "Coming up"}
               </Badge>
               <h1>{event.title}</h1>
+              {event.previous_start_at && (
+                <p className="gt-event-rescheduled">
+                  Rescheduled from{" "}
+                  {dateLabel(event.previous_start_at, event.timezone)} ·{" "}
+                  {eventTimeLabel(event.previous_start_at, event.timezone)}.
+                </p>
+              )}
               <p>{levelLabel(event.level)}</p>
               <div className="gt-detail-facts">
                 <p>
@@ -1069,8 +1082,25 @@ export function EventDetailPage() {
                   <MapPin size={19} />
                   {event.location || "Venue to be announced"}
                 </p>
+                {event.end_at && (
+                  <p>
+                    <Clock3 size={19} />
+                    <span>
+                      Ends{" "}
+                      <time dateTime={event.end_at}>
+                        {dateLabel(event.end_at, event.timezone)} ·{" "}
+                        {eventTimeLabel(event.end_at, event.timezone)}
+                      </time>
+                    </span>
+                  </p>
+                )}
               </div>
               <div className="gt-inline-actions">
+                {safePublicUrl(event.event_link) && (
+                  <ActionLink to={event.event_link!} variant="secondary">
+                    Event website
+                  </ActionLink>
+                )}
                 <Button variant="secondary" onClick={calendar}>
                   <CalendarDays size={16} />
                   Add to calendar
@@ -1079,10 +1109,14 @@ export function EventDetailPage() {
                   variant="ghost"
                   onClick={async () => {
                     try {
-                      await navigator.clipboard.writeText(window.location.href);
+                      await navigator.clipboard.writeText(
+                        window.location.origin + "/events/" + slugFor(event),
+                      );
                       setFeedback("Event link copied.");
                     } catch {
-                      setFeedback(`Share this page: ${window.location.href}`);
+                      setFeedback(
+                        `Share this page: ${window.location.origin}/events/${slugFor(event)}`,
+                      );
                     }
                   }}
                 >
@@ -1203,7 +1237,9 @@ export function EventDetailPage() {
               <p>
                 {past
                   ? "This event has ended. Explore the next opportunity to build with us."
-                  : "A few details, and you’re ready to go."}
+                  : unavailable
+                    ? "Explore upcoming events for another opportunity to join us."
+                    : "A few details, and you’re ready to go."}
               </p>
               {past || unavailable ? (
                 <ActionLink to="/events" arrow>
@@ -1221,181 +1257,211 @@ export function EventDetailPage() {
                   <span className="sr-only">(opens a new tab)</span>
                 </a>
               ) : (
-                <form
-                  key={event.id}
-                  ref={registrationForm}
-                  onSubmit={register}
-                  className="gt-form"
-                  onChange={(event) => {
-                    setRegistrationDirty(true);
-                    setQueueCandidate(undefined);
-                    const control = event.target;
-                    if (
-                      control instanceof HTMLInputElement ||
-                      control instanceof HTMLTextAreaElement
-                    )
-                      setRegistrationErrors((previous) => {
-                        if (!previous[control.name]) return previous;
-                        const next = { ...previous };
-                        delete next[control.name];
-                        return next;
-                      });
-                  }}
-                >
-                  <label className="gt-honeypot" aria-hidden="true">
-                    Leave this empty
-                    <input
-                      name="website"
-                      tabIndex={-1}
-                      autoComplete="off"
-                      disabled={busy}
-                    />
-                  </label>
-                  <Field label="Full name" required>
-                    <input
-                      name="name"
-                      disabled={busy}
-                      aria-invalid={!!registrationErrors.name || undefined}
-                      aria-describedby={
-                        registrationErrors.name ? "event-name-error" : undefined
-                      }
-                      autoComplete="name"
-                      required
-                      minLength={2}
-                      maxLength={100}
-                    />
-                  </Field>
-                  {registrationErrors.name && (
-                    <p id="event-name-error" className="gt-registration-error">
-                      {registrationErrors.name}
-                    </p>
-                  )}
-                  <Field label="Email address" required>
-                    <input
-                      name="email"
-                      disabled={busy}
-                      aria-invalid={!!registrationErrors.email || undefined}
-                      aria-describedby={
-                        registrationErrors.email
-                          ? "event-email-error"
-                          : undefined
-                      }
-                      type="email"
-                      autoComplete="email"
-                      required
-                    />
-                  </Field>
-                  {registrationErrors.email && (
-                    <p id="event-email-error" className="gt-registration-error">
-                      {registrationErrors.email}
-                    </p>
-                  )}
-                  <Field label="Anything we should know?">
-                    <textarea
-                      name="notes"
-                      rows={3}
-                      maxLength={2000}
-                      disabled={busy}
-                      aria-invalid={!!registrationErrors.notes || undefined}
-                      aria-describedby={
-                        registrationErrors.notes
-                          ? "event-notes-error"
-                          : undefined
-                      }
-                    />
-                  </Field>
-                  {registrationErrors.notes && (
-                    <p id="event-notes-error" className="gt-registration-error">
-                      {registrationErrors.notes}
-                    </p>
-                  )}
-                  <label className="gt-check">
-                    <input
-                      type="checkbox"
-                      name="consent"
-                      required
-                      disabled={busy}
-                      aria-invalid={!!registrationErrors.consent || undefined}
-                      aria-describedby={
-                        registrationErrors.consent
-                          ? "event-consent-error"
-                          : undefined
-                      }
-                    />
-                    <span>
-                      I agree to be contacted about this event.{" "}
-                      <Link to="/privacy">Privacy notice</Link>
-                    </span>
-                  </label>
-                  {registrationErrors.consent && (
-                    <p
-                      id="event-consent-error"
-                      className="gt-registration-error"
-                    >
-                      {registrationErrors.consent}
-                    </p>
-                  )}
-                  <Button type="submit" disabled={busy}>
-                    {busy
-                      ? "Saving…"
-                      : localPreviewEnabled
-                        ? "Try local registration"
-                        : "Complete registration"}
-                    <ArrowRight size={17} />
-                  </Button>
-                  {localPreviewEnabled && (
-                    <small>UI demo only. No real registration or email.</small>
-                  )}
-                  {feedback && (
-                    <p
-                      role="alert"
-                      className="gt-helper"
-                      ref={registrationFeedback}
-                      tabIndex={-1}
-                    >
-                      {feedback}
-                    </p>
-                  )}
-                  {queueCandidate && !pendingReference && (
-                    <div className="gt-form">
-                      <p className="gt-helper">
-                        You can save these details on this device for up to 48
-                        hours and retry automatically when online. This does not
-                        reserve a place. Do not use this on a shared device.
-                      </p>
-                      <Button
-                        type="button"
-                        variant="secondary"
+                <>
+                  {event.registration_type === "both" &&
+                    externalRegistration && (
+                      <div className="gt-event-registration-choice">
+                        <ActionLink
+                          to={externalRegistration}
+                          variant="secondary"
+                        >
+                          Register with the event organizer
+                        </ActionLink>
+                        <p className="gt-helper">
+                          Or register directly with the chapter below.
+                        </p>
+                      </div>
+                    )}
+                  <form
+                    key={event.id}
+                    ref={registrationForm}
+                    onSubmit={register}
+                    className="gt-form"
+                    onChange={(event) => {
+                      setRegistrationDirty(true);
+                      setQueueCandidate(undefined);
+                      const control = event.target;
+                      if (
+                        control instanceof HTMLInputElement ||
+                        control instanceof HTMLTextAreaElement
+                      )
+                        setRegistrationErrors((previous) => {
+                          if (!previous[control.name]) return previous;
+                          const next = { ...previous };
+                          delete next[control.name];
+                          return next;
+                        });
+                    }}
+                  >
+                    <label className="gt-honeypot" aria-hidden="true">
+                      Leave this empty
+                      <input
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
                         disabled={busy}
-                        onClick={async () => {
-                          setBusy(true);
-                          try {
-                            const reference = await savePendingSubmission(
-                              "event",
-                              queueCandidate.body,
-                              queueCandidate.key,
-                            );
-                            setPendingReference(reference);
-                            setRegistrationDirty(false);
-                            setQueueCandidate(undefined);
-                          } catch (e) {
-                            setFeedback((e as Error).message);
-                          } finally {
-                            setBusy(false);
-                          }
-                        }}
+                      />
+                    </label>
+                    <Field label="Full name" required>
+                      <input
+                        name="name"
+                        disabled={busy}
+                        aria-invalid={!!registrationErrors.name || undefined}
+                        aria-describedby={
+                          registrationErrors.name
+                            ? "event-name-error"
+                            : undefined
+                        }
+                        autoComplete="name"
+                        required
+                        minLength={2}
+                        maxLength={100}
+                      />
+                    </Field>
+                    {registrationErrors.name && (
+                      <p
+                        id="event-name-error"
+                        className="gt-registration-error"
                       >
-                        Save pending registration on this device
-                      </Button>
-                    </div>
-                  )}
-                  {pendingReference && (
-                    <p role="status">
-                      Pending submission saved—not registered yet.{" "}
-                      <Link to="/offline">Review, retry or discard it</Link>.
-                    </p>
-                  )}
-                </form>
+                        {registrationErrors.name}
+                      </p>
+                    )}
+                    <Field label="Email address" required>
+                      <input
+                        name="email"
+                        disabled={busy}
+                        aria-invalid={!!registrationErrors.email || undefined}
+                        aria-describedby={
+                          registrationErrors.email
+                            ? "event-email-error"
+                            : undefined
+                        }
+                        type="email"
+                        autoComplete="email"
+                        required
+                      />
+                    </Field>
+                    {registrationErrors.email && (
+                      <p
+                        id="event-email-error"
+                        className="gt-registration-error"
+                      >
+                        {registrationErrors.email}
+                      </p>
+                    )}
+                    <Field label="Anything we should know?">
+                      <textarea
+                        name="notes"
+                        rows={3}
+                        maxLength={2000}
+                        disabled={busy}
+                        aria-invalid={!!registrationErrors.notes || undefined}
+                        aria-describedby={
+                          registrationErrors.notes
+                            ? "event-notes-error"
+                            : undefined
+                        }
+                      />
+                    </Field>
+                    {registrationErrors.notes && (
+                      <p
+                        id="event-notes-error"
+                        className="gt-registration-error"
+                      >
+                        {registrationErrors.notes}
+                      </p>
+                    )}
+                    <label className="gt-check">
+                      <input
+                        type="checkbox"
+                        name="consent"
+                        required
+                        disabled={busy}
+                        aria-invalid={!!registrationErrors.consent || undefined}
+                        aria-describedby={
+                          registrationErrors.consent
+                            ? "event-consent-error"
+                            : undefined
+                        }
+                      />
+                      <span>
+                        I agree to be contacted about this event.{" "}
+                        <Link to="/privacy">Privacy notice</Link>
+                      </span>
+                    </label>
+                    {registrationErrors.consent && (
+                      <p
+                        id="event-consent-error"
+                        className="gt-registration-error"
+                      >
+                        {registrationErrors.consent}
+                      </p>
+                    )}
+                    <Button type="submit" disabled={busy}>
+                      {busy
+                        ? "Saving…"
+                        : localPreviewEnabled
+                          ? "Try local registration"
+                          : "Complete registration"}
+                      <ArrowRight size={17} />
+                    </Button>
+                    {localPreviewEnabled && (
+                      <small>
+                        UI demo only. No real registration or email.
+                      </small>
+                    )}
+                    {feedback && (
+                      <p
+                        role="alert"
+                        className="gt-helper"
+                        ref={registrationFeedback}
+                        tabIndex={-1}
+                      >
+                        {feedback}
+                      </p>
+                    )}
+                    {queueCandidate && !pendingReference && (
+                      <div className="gt-form">
+                        <p className="gt-helper">
+                          You can save these details on this device for up to 48
+                          hours and retry automatically when online. This does
+                          not reserve a place. Do not use this on a shared
+                          device.
+                        </p>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          disabled={busy}
+                          onClick={async () => {
+                            setBusy(true);
+                            try {
+                              const reference = await savePendingSubmission(
+                                "event",
+                                queueCandidate.body,
+                                queueCandidate.key,
+                              );
+                              setPendingReference(reference);
+                              setRegistrationDirty(false);
+                              setQueueCandidate(undefined);
+                            } catch (e) {
+                              setFeedback((e as Error).message);
+                            } finally {
+                              setBusy(false);
+                            }
+                          }}
+                        >
+                          Save pending registration on this device
+                        </Button>
+                      </div>
+                    )}
+                    {pendingReference && (
+                      <p role="status">
+                        Pending submission saved—not registered yet.{" "}
+                        <Link to="/offline">Review, retry or discard it</Link>.
+                      </p>
+                    )}
+                  </form>
+                </>
               )}
             </>
           )}

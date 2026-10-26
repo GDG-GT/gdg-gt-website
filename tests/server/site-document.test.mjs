@@ -129,6 +129,27 @@ describe("SEO-TEST public document projections", () => {
       await siteDocument({ ...f, pathname: "/events/old-event" }),
     ).toMatchObject({ status: 308, redirect: "/events/new-event" });
   });
+  it("emits the stored previous start date and rescheduled state in raw published metadata", async () => {
+    const f = fixture({
+      events: {
+        id: "fictional",
+        slug: "rescheduled",
+        title: "Fictional rescheduled",
+        description: "Local fixture",
+        start_at: "2030-02-02T18:00:00Z",
+        previous_start_at: "2030-02-01T18:00:00Z",
+        location: "Fictional venue",
+        timezone: "America/New_York",
+      },
+    });
+    const doc = await siteDocument({ ...f, pathname: "/events/rescheduled" });
+    expect(doc.structuredData).toMatchObject({
+      eventStatus: "https://schema.org/EventRescheduled",
+      previousStartDate: "2030-02-01T18:00:00Z",
+      startDate: "2030-02-02T18:00:00Z",
+    });
+    expect(doc.canonical).toBe(origin + "/events/rescheduled");
+  });
   it("rejects traversal/control-bearing metadata requests before reads and fails closed on database errors", async () => {
     const f = fixture();
     for (const pathname of [

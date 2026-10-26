@@ -83,7 +83,7 @@ try {
       await readFile(new URL("database/migrations/" + file, root), "utf8"),
     );
   check(
-    migrations.length >= 106,
+    migrations.length >= 107,
     "source restore fixture rebuilds the complete canonical migration chain",
   );
   await sql(

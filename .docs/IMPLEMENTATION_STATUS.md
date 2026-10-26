@@ -5,6 +5,23 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Rescheduled event history and complete registration routes — 2026-10-26
+
+- Migration 107 records a previous start date only after publication, preserves
+  history through unrelated edits and clears copied history on duplication.
+  Mutations return the committed post-trigger row. Client and raw HTML metadata
+  expose factual rescheduled state; calendar output includes confirmation or
+  cancellation status with stable identity and updated sequence.
+- Detail pages show the former date and end time, safe event website and both
+  configured registration routes. Missing/unsafe external-only destinations stay
+  closed. Share copies the event's canonical address without visitor parameters.
+- 695 tests/113 files pass; strict types pass; lint is 0 errors/25 warnings.
+  Global coverage is 30.56% lines/29.20% branches, below 70%; all 17 critical
+  branch gates pass. Thirty actual local event HTTP checks, clean/legacy SQL
+  suites through 107, both capacity races and six backup/restore checks pass.
+  The catalog has 109 cases, with full acceptance unverified. See
+  `EVENT_RESCHEDULING_OPERATIONS.md`.
+
 ### Event inventory and registration interaction safeguards — 2026-10-26
 
 - Public inventory now derives capacity state in one service-only database view,

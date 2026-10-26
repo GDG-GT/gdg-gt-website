@@ -266,6 +266,104 @@ describe("EVT independent listing controls", () => {
 });
 
 describe("EVT display contract", () => {
+  it("shows stored schedule history, the explicit end time and accurate client metadata", async () => {
+    apiMock.mockImplementation((path: string) =>
+      Promise.resolve(
+        path === "/public/home"
+          ? home
+          : {
+              event: fixture("fictional", {
+                previous_start_at: "2098-12-30T01:30:00Z",
+              }),
+              related: [],
+            },
+      ),
+    );
+    mount();
+    await screen.findByText(/Rescheduled from/);
+    expect(screen.getByText(/Rescheduled from/).textContent).toMatch(
+      /Dec 29, 2098/,
+    );
+    expect(
+      screen.getByText(/Ends/).querySelector("time")?.getAttribute("datetime"),
+    ).toBe("2099-01-01T03:30:00Z");
+    const schemas = [
+      ...document.querySelectorAll('script[type="application/ld+json"]'),
+    ].map((node) => JSON.parse(node.textContent!));
+    expect(schemas.find((row) => row["@type"] === "Event")).toMatchObject({
+      eventStatus: "https://schema.org/EventRescheduled",
+      previousStartDate: "2098-12-30T01:30:00Z",
+    });
+  });
+  it("offers both configured registration routes and a safe event website", async () => {
+    apiMock.mockImplementation((path: string) =>
+      Promise.resolve(
+        path === "/public/home"
+          ? home
+          : {
+              event: fixture("fictional", {
+                registration_type: "both",
+                registration_url: "https://events.example.org/register",
+                event_link: "https://events.example.org/about",
+              }),
+              related: [],
+            },
+      ),
+    );
+    mount();
+    const organizer = await screen.findByRole("link", {
+      name: /Register with the event organizer/,
+    });
+    expect(organizer.getAttribute("href")).toBe(
+      "https://events.example.org/register",
+    );
+    expect(organizer.getAttribute("rel")).toBe("noopener noreferrer");
+    expect(screen.getByLabelText(/Full name/)).toBeTruthy();
+    expect(
+      screen
+        .getByRole("link", { name: /Event website/ })
+        .getAttribute("target"),
+    ).toBe("_blank");
+  });
+  it("keeps an external-only event without a safe registration link closed", async () => {
+    apiMock.mockImplementation((path: string) =>
+      Promise.resolve(
+        path === "/public/home"
+          ? home
+          : {
+              event: fixture("fictional", {
+                registration_type: "external",
+                registration_url: "javascript:alert(1)",
+              }),
+              related: [],
+            },
+      ),
+    );
+    mount();
+    await screen.findByRole("heading", { name: "Registration is closed." });
+    expect(screen.queryByLabelText(/Full name/)).toBeNull();
+    expect(
+      screen.queryByRole("link", { name: /Register with the event organizer/ }),
+    ).toBeNull();
+  });
+  it("shares the canonical event address without visitor query or fragment data", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+    const { router } = mount();
+    await act(async () => {
+      await router.navigate("/events/fictional?ref=visitor#registration");
+    });
+    await screen.findByRole("heading", { name: /Fictional event/, level: 1 });
+    fireEvent.click(screen.getByRole("button", { name: "Share", exact: true }));
+    await waitFor(() =>
+      expect(writeText).toHaveBeenCalledWith(
+        window.location.origin + "/events/fictional",
+      ),
+    );
+  });
   it("uses the event timezone for its date badge, calendar date and explicit timezone", () => {
     const event = fixture("fictional", {
       start_at: "2030-01-01T01:30:00Z",

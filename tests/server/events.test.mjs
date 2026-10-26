@@ -19,6 +19,7 @@ describe("event and delivery safety", () => {
       { created_by: "forged" },
       { publication_status: "published" },
       { revision: 99 },
+      { previous_start_at: "2000-01-01T00:00:00Z" },
       { timezone: "Not/AZone" },
     ])
       expect(eventInput.safeParse(row).success).toBe(false);
@@ -70,6 +71,24 @@ describe("event and delivery safety", () => {
     for (const line of content.split("\r\n"))
       expect(Buffer.byteLength(line)).toBeLessThanOrEqual(75);
     expect(content).toContain("SUMMARY:A\\, title\\;\\nInjected:");
+    expect(content).toContain("STATUS:CONFIRMED");
+  });
+  it("exports a cancellation status without changing stable calendar identity", () => {
+    const event = {
+      id: "fixture",
+      slug: "fixture",
+      title: "Fictional cancelled",
+      description: "Cancelled fixture",
+      start_at: "2030-01-01T18:00:00Z",
+      updated_at: "2026-10-26T00:00:00Z",
+      timezone: "America/New_York",
+      revision: 9,
+      publication_status: "cancelled",
+    };
+    const content = calendarFile(event, "https://chapter.example.test");
+    expect(content).toContain("STATUS:CANCELLED");
+    expect(content).toContain("UID:fixture@chapter.example.test");
+    expect(content).toContain("SEQUENCE:9");
   });
   it("neutralizes spreadsheet formula prefixes in every exported string", () => {
     for (const value of [

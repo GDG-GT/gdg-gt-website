@@ -71,6 +71,7 @@ export interface EventRecord {
   description: string;
   short_description?: string;
   date: string;
+  previous_start_at?: string | null;
   location: string;
   image_url?: string;
   registration_url?: string;

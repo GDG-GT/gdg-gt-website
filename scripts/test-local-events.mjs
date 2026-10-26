@@ -1,8 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { writeFile } from "node:fs/promises";
+import { createInterface } from "node:readline";
 import { localHttp } from "./lib/local-http.mjs";
-const { call, login, db } = await localHttp();
+const { call, login, db, env } = await localHttp();
 const evidence = [];
+if (process.argv.includes("--hold-for-browser") && !process.stdin.isTTY)
+  throw Error("Browser review requires an interactive terminal.");
 const check = (value, name) => {
   if (!value) throw new Error("FAIL " + name);
   evidence.push({ name, passed: true });
@@ -26,6 +29,9 @@ try {
         start_at: new Date(Date.now() + 86400000 * 4).toISOString(),
         location: "Development fixture",
         max_participants: 1,
+        registration_type: "both",
+        registration_url: "https://example.org/registration",
+        event_link: "https://example.org/event",
       },
     },
   });
@@ -59,6 +65,50 @@ try {
     !!etag && r.headers.get("cache-control").includes("s-maxage"),
     "public detail supplies ETag and short edge caching",
   );
+  const initialStart = event.start_at;
+  r = await call("/admin/events/" + event.id, {
+    method: "PATCH",
+    body: {
+      revision: event.revision,
+      event: { previous_start_at: "2000-01-01T00:00:00Z" },
+    },
+  });
+  check(r.status === 400, "client cannot forge schedule history");
+  r = await call("/admin/events/" + event.id, {
+    method: "PATCH",
+    body: {
+      revision: event.revision,
+      event: {
+        start_at: new Date(Date.parse(initialStart) + 86400000).toISOString(),
+        end_at: new Date(Date.parse(initialStart) + 93600000).toISOString(),
+      },
+    },
+  });
+  check(
+    r.status === 200 &&
+      Date.parse(r.json.data.event.previous_start_at) ===
+        Date.parse(initialStart),
+    "rescheduling returns the trigger-derived committed previous date",
+  );
+  event = r.json.data.event;
+  r = await call("/events/" + slug, { anonymous: true });
+  check(
+    r.status === 200 &&
+      Date.parse(r.json.data.event.previous_start_at) ===
+        Date.parse(initialStart),
+    "public projection exposes factual reschedule history",
+  );
+  const document = await fetch(env.APP_ORIGIN + "/events/" + slug, {
+    headers: { Accept: "text/html" },
+    signal: AbortSignal.timeout(15000),
+  });
+  const html = await document.text();
+  check(
+    document.status === 200 &&
+      html.includes('"eventStatus":"https://schema.org/EventRescheduled"') &&
+      html.includes('"previousStartDate":'),
+    "raw crawler document marks the published event as rescheduled",
+  );
   r = await call("/events/" + slug + "/calendar.ics", { anonymous: true });
   check(
     r.status === 200 &&
@@ -67,6 +117,27 @@ try {
       r.text.includes("DTSTART:"),
     "calendar uses stable event metadata and UTC timestamps",
   );
+  check(
+    r.text.includes("STATUS:CONFIRMED") &&
+      r.text.includes("SEQUENCE:" + event.revision),
+    "rescheduled calendar retains identity and its updated sequence",
+  );
+  if (process.argv.includes("--hold-for-browser")) {
+    console.info("Browser fixture: " + env.APP_ORIGIN + "/events/" + slug);
+    console.info(
+      "Type done to continue registration/cancellation checks and archive this exact fixture.",
+    );
+    const terminal = createInterface({ input: process.stdin });
+    await new Promise((resolve) => {
+      terminal.on("line", (line) => {
+        if (line.trim() === "done") {
+          terminal.close();
+          resolve();
+        }
+      });
+      terminal.on("close", resolve);
+    });
+  }
   const body = {
       name: "Fictional Test Person",
       email: "integration-" + unique + "@example.test",
@@ -170,6 +241,36 @@ try {
     !jobs.error && jobs.data.length === 1,
     "one confirmation job exists after repeated registration",
   );
+  r = await call("/admin/events/" + event.id + "/cancel", {
+    method: "POST",
+    body: { revision: event.revision, event: {} },
+  });
+  check(
+    r.status === 200 && r.json.data.event.publication_status === "cancelled",
+    "cancellation disables the published registration lifecycle",
+  );
+  event = r.json.data.event;
+  r = await call("/events/" + event.slug, { anonymous: true });
+  check(
+    r.status === 404,
+    "cancelled event detail remains concealed under the published-only rule",
+  );
+  const cancelledDocument = await fetch(
+    env.APP_ORIGIN + "/events/" + event.slug,
+    { headers: { Accept: "text/html" }, signal: AbortSignal.timeout(15000) },
+  );
+  check(
+    cancelledDocument.status === 404 &&
+      !(await cancelledDocument.text()).includes('"@type":"Event"'),
+    "cancelled raw document cannot advertise a scheduled event",
+  );
+  r = await call("/events/" + event.slug + "/registrations", {
+    anonymous: true,
+    method: "POST",
+    body: { ...body, email: "cancelled-" + unique + "@example.test" },
+    key: randomUUID(),
+  });
+  check(r.status === 404, "cancelled event rejects a fresh registration");
 } finally {
   if (event) {
     const r = await call("/admin/events/" + event.id, {

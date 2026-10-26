@@ -5,6 +5,7 @@ export type ChapterEvent = {
   description: string;
   short_description: string;
   start_at: string;
+  previous_start_at?: string | null;
   end_at: string | null;
   timezone: string;
   location: string;

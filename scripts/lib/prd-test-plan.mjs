@@ -248,6 +248,14 @@ add(
   ],
 );
 prdTestCases.at(-1).normative = ["22.3", "22.4", "28.3", "31.2"];
+add(
+  "EVT-TEST-025",
+  "EVT-002 EVT-004 EVT-011",
+  "Derived reschedule history, accurate raw/client metadata, calendar status, canonical sharing and dual registration routes",
+  ["tests/client/event-ui.test.tsx", unit("events"), unit("site-document"), sql("107_event_rescheduling"), local("events")],
+  ["Hosted crawlers/calendar clients and supported-device accessibility review; cancelled events remain private under the published-only contract"],
+);
+prdTestCases.at(-1).normative = ["22.4", "26.2", "31.2"];
 const teams = [
   [
     "TEAM-001",
