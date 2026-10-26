@@ -5,6 +5,22 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Resource filters and archived sponsor aliases — 2026-10-26
+
+- Shared resource filters normalize supported casing and bounds, preserve each
+  other, retain reset during populated/failed reads and distinguish out-of-range
+  pagination from an empty library. Desktop alignment and mobile stacking fixed;
+  actual 375 px checks confirm separate rows and 44 px or taller controls.
+- Sponsor packages omit empty legacy tiers. Older public tier/impact aliases
+  now conceal soft-deleted rows and have deterministic ID tie-breaking.
+- Eleven new DOM and two server cases; all 785 tests/120 files pass. Strict types
+  pass; lint is 0 errors/25 warnings. Coverage is 33.52% lines/32.04% branches,
+  below 70%; all 17 critical branch gates pass. Expanded actual HTTP/database
+  suite passes 17 checks. Browser verifies combined filtering/paging/reset and
+  empty-package omission; exact invocation-owned fixtures are archived.
+- The catalog has 117 unverified logical cases. Complete PRD acceptance remains
+  open. See `PUBLIC_DISCOVERY_RECOVERY.md`.
+
 ### Public queue interruption and storage recovery — 2026-10-26
 
 - Interrupted final attempts become a truthful terminal failure after their

@@ -3118,6 +3118,28 @@ img {
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
+.gt-resource-filters {
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.gt-resource-filters > .gt-search {
+  flex: 1 1 260px;
+}
+.gt-resource-filters > .gt-field {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+@media (max-width: 700px) {
+  .gt-resource-filters > .gt-search,
+  .gt-resource-filters > .gt-field,
+  .gt-resource-filters > .gt-button {
+    flex: none;
+    width: 100%;
+  }
+  .gt-resource-filters .gt-search input {
+    min-height: 44px;
+  }
+}
 .gt-resource {
   display: flex;
   flex-direction: column;

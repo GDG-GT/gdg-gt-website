@@ -471,6 +471,20 @@ add(
   ],
 );
 add(
+  "CONTENT-TEST-011",
+  "CONTENT-002",
+  "Resource filter normalization/reset/pagination recovery, public profile presentation, meaningful sponsor packages and archived alias concealment",
+  [
+    "tests/client/public-discovery-ui.test.tsx",
+    unit("public-collections"),
+    local("public-collections"),
+  ],
+  [
+    "Supported-device keyboard/screen-reader and approved chapter content/visual review",
+  ],
+);
+prdTestCases.at(-1).normative = ["22.5", "22.6", "22.7", "28.3", "31.2"];
+add(
   "CONTENT-TEST-003",
   "CONTENT-003 CONTENT-004",
   "Private storage separated from explicit public media publication",

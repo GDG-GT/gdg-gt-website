@@ -1648,11 +1648,20 @@ export function TeamPage() {
 export function ResourcesPage() {
   usePageTitle("Resources for builders");
   const [params, setParams] = useSearchParams(),
-    query = params.get("q") || "",
-    type = params.get("type") || "all",
-    level = params.get("level") || "all",
-    status = params.get("status") || "",
-    tag = params.get("tag") || "",
+    query = (params.get("q") || "").slice(0, 100),
+    type =
+      ["study_jam", "cloud_credit", "documentation", "recording"].find(
+        (value) => value === params.get("type")?.toLowerCase(),
+      ) || "all",
+    level =
+      ["beginner", "intermediate", "advanced"].find(
+        (value) => value === params.get("level")?.toLowerCase(),
+      ) || "all",
+    status =
+      ["Available", "Coming Soon", "Archived"].find(
+        (value) => value.toLowerCase() === params.get("status")?.toLowerCase(),
+      ) || "",
+    tag = (params.get("tag") || "").slice(0, 100),
     page = publicPageNumber(params.get("page"));
   const search = new URLSearchParams({ page: String(page), pageSize: "12" });
   for (const [key, value] of [
@@ -1668,7 +1677,9 @@ export function ResourcesPage() {
         key === "level" ? value[0].toUpperCase() + value.slice(1) : value,
       );
   const listing = usePublicCollection<PublicResource>("/resources?" + search),
-    filtered = listing.data?.items || [];
+    filtered = listing.data?.items || [],
+    hasFilters =
+      !!query || type !== "all" || level !== "all" || !!status || !!tag;
   const change = (key: string, value: string) =>
     setParams(
       (previous) => {
@@ -1706,15 +1717,15 @@ export function ResourcesPage() {
             </button>
           ))}
         </div>
-        <div className="gt-toolbar">
+        <div className="gt-toolbar gt-resource-filters">
           <SearchBox
             value={query}
             onChange={(value) => change("q", value)}
             label="Search resources"
+            maxLength={100}
             placeholder="What do you want to learn?"
           />
-          <label className="gt-sort">
-            Level
+          <Field label="Level">
             <select
               value={level}
               onChange={(event) => change("level", event.target.value)}
@@ -1724,7 +1735,7 @@ export function ResourcesPage() {
               <option value="intermediate">Intermediate</option>
               <option value="advanced">Advanced</option>
             </select>
-          </label>
+          </Field>
           <Field label="Availability">
             <select
               value={status}
@@ -1745,6 +1756,18 @@ export function ResourcesPage() {
               onChange={(event) => change("tag", event.target.value)}
             />
           </Field>
+          {(hasFilters || !!listing.error) && (
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setParams({});
+                listing.retry();
+                document.getElementById("main-content")?.focus();
+              }}
+            >
+              Reset filters
+            </Button>
+          )}
         </div>
         <PublicCollectionNotice {...listing} />
         {filtered.length ? (
@@ -1792,20 +1815,8 @@ export function ResourcesPage() {
               </article>
             ))}
           </div>
-        ) : !listing.loading && !listing.error ? (
-          <EmptyState
-            title="No resources match just yet"
-            action={
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  setParams({});
-                }}
-              >
-                Reset filters
-              </Button>
-            }
-          >
+        ) : !listing.loading && !listing.error && listing.data?.total === 0 ? (
+          <EmptyState title="No resources match just yet">
             Try a broader search or another resource type.
           </EmptyState>
         ) : null}
@@ -1841,6 +1852,10 @@ export function SponsorsPage() {
     ),
     sponsors = listing.data?.items || [],
     sponsorshipTiers = tiers.data?.items || [],
+    packages = sponsorshipTiers.filter(
+      (tier) =>
+        tier.amount?.trim() || tier.benefits?.some((benefit) => benefit.trim()),
+    ),
     chapterMetrics = metrics.data?.items || [];
   const tierOrder = [
     ...new Set([
@@ -1945,14 +1960,14 @@ export function SponsorsPage() {
           />
         )}
         <PublicCollectionNotice {...tiers} />
-        {sponsorshipTiers.length > 0 && (
+        {packages.length > 0 && (
           <section
             className="gt-section"
             aria-label="Approved sponsorship packages"
           >
             <h2>Ways to support the chapter</h2>
             <div className="gt-content-columns">
-              {sponsorshipTiers.map((tier) => (
+              {packages.map((tier) => (
                 <article key={tier.id}>
                   <Badge tone="coral">{tier.tier_level}</Badge>
                   <h3>{tier.tier_name}</h3>

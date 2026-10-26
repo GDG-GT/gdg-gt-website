@@ -278,7 +278,9 @@ export async function publicContentRoutes(
             : "id,stat_label,stat_value,stat_description,icon_name,order_index",
         )
         .eq("is_active", true)
-        .order("order_index"),
+        .is("deleted_at", null)
+        .order("order_index")
+        .order("id"),
     );
     publicJson(request, response, { items }, requestId);
     return true;

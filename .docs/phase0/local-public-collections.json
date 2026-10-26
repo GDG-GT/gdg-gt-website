@@ -42,6 +42,22 @@
       "passed": true
     },
     {
+      "name": "legacy sponsorship_tiers alias conceals a soft-deleted row even when is_active remains true",
+      "passed": true
+    },
+    {
+      "name": "canonical sponsorship_tiers inventory preserves active content while concealing archived content",
+      "passed": true
+    },
+    {
+      "name": "legacy sponsor_impact_stats alias conceals a soft-deleted row even when is_active remains true",
+      "passed": true
+    },
+    {
+      "name": "canonical sponsor_impact_stats inventory preserves active content while concealing archived content",
+      "passed": true
+    },
+    {
       "name": "homepage acknowledges a bounded selection of active approved partners",
       "passed": true
     },

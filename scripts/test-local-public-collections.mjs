@@ -75,6 +75,28 @@ try {
       order_index: index,
     })),
   );
+  await seed("sponsorship_tiers", [
+    {
+      id: randomUUID(),
+      tier_name: prefix + " archived package",
+      tier_level: "fictional-" + suffix + "-archived",
+      amount: "Fictional in-kind support",
+      color_gradient: "coral",
+      benefits: [],
+      is_active: true,
+      order_index: 900000,
+    },
+    {
+      id: randomUUID(),
+      tier_name: prefix + " empty package",
+      tier_level: "fictional-" + suffix + "-empty",
+      amount: "",
+      color_gradient: "coral",
+      benefits: [],
+      is_active: true,
+      order_index: 900001,
+    },
+  ]);
   const q = encodeURIComponent(prefix),
     first = await read(`/resources?q=${q}&pageSize=12`),
     last = await read(`/resources?q=${q}&pageSize=12&page=9`);
@@ -147,13 +169,41 @@ try {
     "rapid repeated view actions cannot mutate an arbitrary counter",
   );
   const archived = {};
-  for (const table of ["team_members", "sponsors"]) {
+  for (const table of [
+    "team_members",
+    "sponsors",
+    "sponsorship_tiers",
+    "sponsor_impact_stats",
+  ]) {
     archived[table] = owned.find((entry) => entry.table === table).ids[0];
     checked(
       await db
         .from(table)
         .update({ deleted_at: new Date().toISOString() })
         .eq("id", archived[table]),
+    );
+  }
+  for (const [table, alias, canonical] of [
+    ["sponsorship_tiers", "/sponsors/tiers", "/sponsor-tiers"],
+    ["sponsor_impact_stats", "/sponsors/impact-stats", "/sponsor-stats"],
+  ]) {
+    const old = await read(alias),
+      current = await read(canonical + "?q=" + q);
+    check(
+      !old.items.some((item) => item.id === archived[table]),
+      "legacy " +
+        table +
+        " alias conceals a soft-deleted row even when is_active remains true",
+    );
+    check(
+      !current.items.some((item) => item.id === archived[table]) &&
+        current.items.some(
+          (item) =>
+            item.id === owned.find((entry) => entry.table === table).ids[1],
+        ),
+      "canonical " +
+        table +
+        " inventory preserves active content while concealing archived content",
     );
   }
   const home = await read("/public/home");

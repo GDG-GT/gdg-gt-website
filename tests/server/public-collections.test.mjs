@@ -174,6 +174,25 @@ describe("CONTENT-TEST public collection filtering and pagination", () => {
       p_query: null,
     });
   });
+  it.each(["/sponsors/tiers", "/sponsors/impact-stats"])(
+    "keeps archived content out of the legacy public alias %s",
+    async (path) => {
+      const f = fixture(),
+        response = await f.call(path);
+      expect(response.statusCode).toBe(200);
+      expect(f.queries).toHaveLength(1);
+      expect(f.queries[0].steps).toContainEqual(["eq", "is_active", true]);
+      expect(f.queries[0].steps).toContainEqual(["is", "deleted_at", null]);
+      expect(f.queries[0].steps.filter(([step]) => step === "order")).toEqual([
+        ["order", "order_index"],
+        ["order", "id"],
+      ]);
+      expect(f.queries[0].steps[0][1]).not.toContain("deleted_at");
+      expect(response.headers.get("cache-control")).toBe(
+        "public, max-age=0, s-maxage=0, must-revalidate",
+      );
+    },
+  );
   it("pages team profiles and the complete approved impact inventory independently", async () => {
     const f = fixture();
     expect((await f.call("/team?page=5&pageSize=24")).statusCode).toBe(200);

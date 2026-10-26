@@ -57,9 +57,12 @@ export function ActionLink({
   arrow?: boolean;
 }) {
   const className = `gt-button gt-button-${variant}`;
-  const hasUnsafeCharacters = to.includes("\\") || Array.from(to).some((character) =>
-    character.charCodeAt(0) <= 32 || character.charCodeAt(0) === 127,
-  );
+  const hasUnsafeCharacters =
+    to.includes("\\") ||
+    Array.from(to).some(
+      (character) =>
+        character.charCodeAt(0) <= 32 || character.charCodeAt(0) === 127,
+    );
   let external: string | undefined;
   let destination = to;
   if (!hasUnsafeCharacters && !to.startsWith("/") && !to.startsWith("#")) {
@@ -134,11 +137,13 @@ export function SearchBox({
   onChange,
   placeholder = "Search",
   label = "Search",
+  maxLength,
 }: {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   label?: string;
+  maxLength?: number;
 }) {
   return (
     <label className="gt-search">
@@ -146,6 +151,7 @@ export function SearchBox({
       <span className="sr-only">{label}</span>
       <input
         type="search"
+        maxLength={maxLength}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}

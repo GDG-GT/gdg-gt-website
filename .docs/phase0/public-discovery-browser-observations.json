@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-26",
+  "kind": "manual CUA browser observations",
+  "origin": "http://127.0.0.1:8080",
+  "fixturePrefix": "Fictional public 44020541",
+  "observations": [
+    { "name": "Resource type, level, availability, tag and search combine to 17 real matching records", "observed": true },
+    { "name": "Keyboard Next page preserves all filters and focuses main-content; completed read shows page two of two", "observed": true },
+    { "name": "Keyboard Reset filters returns to /resources and focuses main-content", "observed": true },
+    { "name": "375 px filters occupy separate full-width rows; all controls are at least 44 px high; document width is 375 px", "observed": true },
+    { "name": "Empty fictional sponsor package is absent while actual fictional Gold/Bronze partner groups remain", "observed": true }
+  ],
+  "cleanup": "All invocation-owned fixtures recoverably archived; temporary viewport reset.",
+  "acceptance": "unverified"
+}
