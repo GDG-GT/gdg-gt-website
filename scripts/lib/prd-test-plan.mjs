@@ -233,6 +233,21 @@ const events = [
 events.forEach(([r, s, a], i) =>
   add(`EVT-TEST-${String(i + 3).padStart(3, "0")}`, r, s, a),
 );
+add(
+  "EVT-TEST-024",
+  "EVT-003 EVT-004 EVT-005 EVT-007 EVT-008 EVT-012",
+  "Independent URL filters, local timezone, derived availability before pagination and scoped pending registration interactions",
+  [
+    "tests/client/event-ui.test.tsx",
+    unit("public-collections"),
+    sql("106_public_event_inventory"),
+    local("event-inventory"),
+  ],
+  [
+    "Real supported-device, screen-reader and published lifecycle acceptance; injected DOM transport is separate from actual local SQL/HTTP proof",
+  ],
+);
+prdTestCases.at(-1).normative = ["22.3", "22.4", "28.3", "31.2"];
 const teams = [
   [
     "TEAM-001",
@@ -431,7 +446,9 @@ add(
   "",
   "External link cues and Linktree consent, frame reset, focus return and guarded discard",
   ["tests/client/public-links.test.tsx", "tests/client/linktree-ui.test.tsx"],
-  ["Real provider availability and complete browser/screen-reader/device review"],
+  [
+    "Real provider availability and complete browser/screen-reader/device review",
+  ],
 );
 prdTestCases.at(-1).normative = ["22.10", "28.2", "28.3"];
 add(
@@ -446,7 +463,11 @@ add(
   "A11Y-TEST-001",
   "CONTENT-007",
   "Responsive image dimensions, formats, lazy loading and alt text",
-  ["tests/form-images.test.ts", "tests/client/public-image.test.tsx", unit("media-content")],
+  [
+    "tests/form-images.test.ts",
+    "tests/client/public-image.test.tsx",
+    unit("media-content"),
+  ],
   [
     "Every public image/breakpoint/assistive-text review; no full browser pass yet",
   ],

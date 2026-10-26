@@ -69,6 +69,7 @@ export interface EventRecord {
   id: string;
   title: string;
   description: string;
+  short_description?: string;
   date: string;
   location: string;
   image_url?: string;
@@ -78,6 +79,7 @@ export interface EventRecord {
   registration_type?: "external" | "internal" | "both";
   max_participants?: number | null;
   registration_enabled?: boolean;
+  registration_state?: "open" | "closed" | "ended" | "full";
   is_featured: boolean;
   level?: "beginner" | "intermediate" | "advanced" | "open_for_all";
   external_attendees?: number;

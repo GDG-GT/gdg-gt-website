@@ -554,6 +554,35 @@
       "acceptance": "unverified"
     },
     {
+      "id": "EVT-TEST-024",
+      "requirements": [
+        "EVT-003",
+        "EVT-004",
+        "EVT-005",
+        "EVT-007",
+        "EVT-008",
+        "EVT-012"
+      ],
+      "scope": "Independent URL filters, local timezone, derived availability before pagination and scoped pending registration interactions",
+      "automated": [
+        "tests/client/event-ui.test.tsx",
+        "tests/server/public-collections.test.mjs",
+        "database/tests/106_public_event_inventory.sql",
+        "scripts/test-local-event-inventory.mjs"
+      ],
+      "remaining": [
+        "Real supported-device, screen-reader and published lifecycle acceptance; injected DOM transport is separate from actual local SQL/HTTP proof",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.3",
+        "22.4",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
       "id": "TEAM-TEST-001",
       "requirements": [
         "TEAM-001"

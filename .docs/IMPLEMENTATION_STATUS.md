@@ -5,6 +5,21 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Event inventory and registration interaction safeguards — 2026-10-26
+
+- Public inventory now derives capacity state in one service-only database view,
+  sorts availability before pagination and never exposes attendee identities.
+  Migration 106 passes clean and legacy-grant suites and both capacity races.
+- Independent status/type URL filters, legacy shared-link compatibility,
+  timezone/year-aware cards, summaries and registration states are implemented.
+  Pending registration freezes inputs, scopes late responses to the current
+  event, associates server errors and focuses recovery/success feedback.
+- 689 tests/113 files pass; strict types pass; lint is 0 errors/25 warnings.
+  Global coverage is 30.54% lines/29.04% branches, still below 70%; all 17
+  critical branch gates pass. Ten actual inventory HTTP checks, 21 existing
+  event checks and six backup/restore checks pass. The catalog has 108 logical
+  cases; acceptance remains unverified. See `PUBLIC_EVENT_INVENTORY.md`.
+
 ### External action and Linktree focus safeguards — 2026-10-26
 
 - Managed external actions now signal new tabs and use safe context isolation;

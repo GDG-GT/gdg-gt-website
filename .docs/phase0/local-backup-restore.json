@@ -1,11 +1,67 @@
 {
-  "generatedAt": "2026-10-24T09:39:25.842Z",
+  "generatedAt": "2026-10-26T07:04:35.196Z",
   "note": "Two invocation-owned network-isolated disposable PostgreSQL databases. No project/production data, file storage, provider backup or hosted recovery was accessed. Fictional dump remained in memory and is not persisted.",
-  "migrationCount": 105,
-  "dumpSha256": "b6a96ca769a58e719804dedba948c428b362aad8432c22da1e357d4234563690",
+  "migrationCount": 106,
+  "dumpSha256": "b76d8dbbd719bac9b6b00d80e067283a3c1ab19ec2e83a1660f91b0ed269d47d",
   "tableCount": 130,
   "catalog": {
     "rls": 129,
+    "views": {
+      "public.public_event_inventory": {
+        "grants": [
+          [
+            "postgres",
+            "DELETE",
+            false
+          ],
+          [
+            "postgres",
+            "INSERT",
+            false
+          ],
+          [
+            "postgres",
+            "MAINTAIN",
+            false
+          ],
+          [
+            "postgres",
+            "REFERENCES",
+            false
+          ],
+          [
+            "postgres",
+            "SELECT",
+            false
+          ],
+          [
+            "postgres",
+            "TRIGGER",
+            false
+          ],
+          [
+            "postgres",
+            "TRUNCATE",
+            false
+          ],
+          [
+            "postgres",
+            "UPDATE",
+            false
+          ],
+          [
+            "service_role",
+            "SELECT",
+            false
+          ]
+        ],
+        "options": [
+          "security_barrier=true",
+          "security_invoker=true"
+        ],
+        "definition": " SELECT id,\n    title,\n    slug,\n    short_description,\n    description,\n    start_at,\n    end_at,\n    timezone,\n    location,\n    room,\n    type,\n    level,\n    image_url,\n    image_media_id,\n    event_link,\n    registration_url,\n    google_form_url,\n    google_event_url,\n    registration_type,\n    registration_enabled,\n    max_participants,\n    is_featured,\n    prerequisites,\n    what_youll_learn,\n    what_to_bring,\n    schedule,\n    additional_info,\n    contact_info,\n    publication_status,\n    published_at,\n    updated_at,\n    created_at,\n    revision,\n    registration_state,\n        CASE registration_state\n            WHEN 'open'::text THEN 0\n            WHEN 'full'::text THEN 1\n            WHEN 'closed'::text THEN 2\n            ELSE 3\n        END AS registration_priority\n   FROM ( SELECT e.id,\n            e.title,\n            e.slug,\n            e.short_description,\n            e.description,\n            e.start_at,\n            e.end_at,\n            e.timezone,\n            e.location,\n            e.room,\n            e.type,\n            e.level,\n            e.image_url,\n            e.image_media_id,\n            e.event_link,\n            e.registration_url,\n            e.google_form_url,\n            e.google_event_url,\n            e.registration_type,\n            e.registration_enabled,\n            e.max_participants,\n            e.is_featured,\n            e.prerequisites,\n            e.what_youll_learn,\n            e.what_to_bring,\n            e.schedule,\n            e.additional_info,\n            e.contact_info,\n            e.publication_status,\n            e.published_at,\n            e.updated_at,\n            e.created_at,\n            e.revision,\n                CASE\n                    WHEN NOT e.registration_enabled THEN 'closed'::text\n                    WHEN COALESCE(e.end_at, e.start_at) <= now() THEN 'ended'::text\n                    WHEN e.max_participants IS NOT NULL AND (a.internal_count + e.external_attendees) >= e.max_participants THEN 'full'::text\n                    ELSE 'open'::text\n                END AS registration_state\n           FROM events e\n             LEFT JOIN LATERAL ( SELECT count(*) AS internal_count\n                   FROM event_attendance r\n                  WHERE r.event_id = e.id AND r.deleted_at IS NULL AND e.max_participants IS NOT NULL AND e.registration_enabled AND COALESCE(e.end_at, e.start_at) > now()) a ON true\n          WHERE e.publication_status = 'published'::text) inventory;"
+      }
+    },
     "tables": 130,
     "indexes": 458,
     "policies": 0,
@@ -27,7 +83,7 @@
       "passed": true
     },
     {
-      "name": "restored table/function/constraint/index/RLS/policy/trigger inventory matches the source",
+      "name": "restored table/view/function/constraint/index/RLS/policy/trigger inventory matches the source, including view definitions/options/grants",
       "passed": true
     },
     {

@@ -29,6 +29,7 @@
     "setup:local-auth": "node scripts/setup-local-auth.mjs",
     "test:local-auth": "node scripts/test-local-auth.mjs",
     "test:local-events": "node scripts/test-local-events.mjs",
+    "test:local-event-inventory": "node scripts/test-local-event-inventory.mjs",
     "test:local-workspace": "node scripts/test-local-workspace.mjs",
     "test:local-forms": "node scripts/test-local-forms.mjs",
     "test:local-form-images": "node scripts/test-local-form-images.mjs",

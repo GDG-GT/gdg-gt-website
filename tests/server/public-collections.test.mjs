@@ -64,6 +64,27 @@ function fixture() {
   return { call, queries, db, store };
 }
 describe("CONTENT-TEST public collection filtering and pagination", () => {
+  it("sorts actual event availability and start time before pagination in one bounded projection read", async () => {
+    const f = fixture();
+    const response = await f.call(
+      "/events?sort=availability&page=2&pageSize=12",
+    );
+    expect(response.statusCode).toBe(200);
+    expect(f.queries).toHaveLength(1);
+    const query = f.queries[0];
+    expect(query.table).toBe("public_event_inventory");
+    const selection = query.steps.find(([name]) => name === "select");
+    expect(selection[1]).toContain("registration_state");
+    expect(selection[1]).not.toContain("registration_priority");
+    expect(selection[1]).not.toContain("attendee_email");
+    expect(query.steps.filter(([name]) => name === "order")).toEqual([
+      ["order", "registration_priority", { ascending: true }],
+      ["order", "start_at"],
+      ["order", "id"],
+    ]);
+    expect(query.steps).toContainEqual(["range", 12, 23]);
+    expect(f.db.rpc).not.toHaveBeenCalled();
+  });
   it("bounds homepage partner selections and excludes archived team and sponsor records", async () => {
     const f = fixture();
     const response = await f.call("/public/home");

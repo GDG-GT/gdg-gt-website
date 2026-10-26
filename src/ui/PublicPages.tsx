@@ -44,8 +44,13 @@ import {
   abandonContactAttachment,
   type ContactUpload,
 } from "@/lib/contact-upload";
-import { api } from "@/lib/api";
-import { eventForPage, type ChapterEvent } from "./events";
+import { api, ApiFailure } from "@/lib/api";
+import {
+  eventForPage,
+  eventDateLabel as dateLabel,
+  eventTimeLabel,
+  type ChapterEvent,
+} from "./events";
 import SubmissionQueue from "@/pwa/SubmissionQueue";
 import { savePendingSubmission } from "@/pwa/queue-actions";
 import type { EventRecord } from "@/lib/chapter-types";
@@ -87,13 +92,6 @@ const slugFor = (event: SiteEvent) =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
-const dateLabel = (date: string) =>
-  new Intl.DateTimeFormat("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    timeZone: "America/New_York",
-  }).format(new Date(date));
 const isPast = (event: SiteEvent) =>
   new Date(event.end_at || event.date).getTime() < Date.now();
 const safePublicUrl = (value?: string) => {
@@ -132,7 +130,23 @@ function usePageTitle(title: string, description?: string, image?: string) {
 }
 
 export function EventTile({ event }: { event: SiteEvent }) {
-  const date = new Date(event.date);
+  const date = new Date(event.date),
+    timeZone = event.timezone || "America/New_York",
+    state =
+      event.registration_state ||
+      (isPast(event)
+        ? "ended"
+        : event.registration_enabled === false
+          ? "closed"
+          : undefined),
+    availability = state
+      ? {
+          open: "Registration open",
+          full: "Event full",
+          closed: "Registration closed",
+          ended: "Event ended",
+        }[state]
+      : undefined;
   return (
     <article className="gt-event-card">
       <Link
@@ -153,13 +167,13 @@ export function EventTile({ event }: { event: SiteEvent }) {
           <span>
             {date.toLocaleDateString("en-US", {
               month: "short",
-              timeZone: "America/New_York",
+              timeZone,
             })}
           </span>
           <strong>
             {date.toLocaleDateString("en-US", {
               day: "numeric",
-              timeZone: "America/New_York",
+              timeZone,
             })}
           </strong>
         </span>
@@ -173,11 +187,30 @@ export function EventTile({ event }: { event: SiteEvent }) {
         <h3>
           <Link to={`/events/${slugFor(event)}`}>{event.title}</Link>
         </h3>
+        {event.short_description && (
+          <p className="gt-event-summary">{event.short_description}</p>
+        )}
+        {availability && (
+          <p className="gt-event-availability">
+            <Badge
+              tone={
+                state === "open"
+                  ? "success"
+                  : state === "full"
+                    ? "warning"
+                    : "neutral"
+              }
+            >
+              {availability}
+            </Badge>
+          </p>
+        )}
         <p className="gt-event-meta">
           <Clock3 size={16} />
-          <span>
-            {dateLabel(event.date)} · {event.time || "Time to be announced"}
-          </span>
+          <time dateTime={event.date} title={timeZone}>
+            {dateLabel(event.date, timeZone)} ·{" "}
+            {eventTimeLabel(event.date, timeZone)}
+          </time>
         </p>
         <p className="gt-event-meta">
           <MapPin size={16} />
@@ -490,10 +523,25 @@ export function EventsPage() {
     [total, setTotal] = useState(0),
     [refresh, setRefresh] = useState(0);
   const [params, setParams] = useSearchParams();
+  const legacyFilter = params.get("filter") || "";
+  const rawStatus = params.get("status") || legacyFilter;
   const query = params.get("q") || "",
-    filter = params.get("filter") || "upcoming",
-    sort = params.get("sort") || "soonest";
-  const page = Math.max(1, Number(params.get("page")) || 1),
+    status = ["all", "past", "upcoming"].includes(rawStatus)
+      ? rawStatus
+      : "upcoming",
+    type =
+      params.get("type") ||
+      (legacyFilter && !["all", "past", "upcoming"].includes(legacyFilter)
+        ? legacyFilter === "demo day"
+          ? "Demo Day"
+          : legacyFilter[0].toUpperCase() + legacyFilter.slice(1)
+        : ""),
+    sort = ["soonest", "newest", "title", "availability"].includes(
+      params.get("sort") || "",
+    )
+      ? params.get("sort")!
+      : "soonest";
+  const page = publicPageNumber(params.get("page")),
     level = params.get("level") || "";
   useEffect(() => {
     const controller = new AbortController();
@@ -501,25 +549,18 @@ export function EventsPage() {
     setLoadError("");
     const search = new URLSearchParams({
       q: query,
-      status: ["all", "past", "upcoming"].includes(filter)
-        ? filter
-        : "upcoming",
+      status,
       sort,
       page: String(page),
       pageSize: "12",
     });
-    if (!["all", "past", "upcoming"].includes(filter))
-      search.set(
-        "type",
-        filter === "demo day"
-          ? "Demo Day"
-          : filter[0].toUpperCase() + filter.slice(1),
-      );
+    if (type) search.set("type", type);
     if (level) search.set("level", level);
     api<{ items: ChapterEvent[]; total: number }>("/events?" + search, {
       signal: controller.signal,
     })
       .then((r) => {
+        if (controller.signal.aborted) return;
         setEvents(r.items.map(eventForPage));
         setTotal(r.total);
       })
@@ -530,10 +571,13 @@ export function EventsPage() {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [query, filter, sort, page, level, refresh]);
+  }, [query, status, type, sort, page, level, refresh]);
   const change = (key: string, value: string) =>
     setParams((previous) => {
       const next = new URLSearchParams(previous);
+      next.delete("filter");
+      next.set("status", status);
+      if (type) next.set("type", type);
       if (value) next.set(key, value);
       else next.delete(key);
       if (key !== "page") next.delete("page");
@@ -548,32 +592,56 @@ export function EventsPage() {
         description="Workshops, hackathons, and conversations worth showing up for."
       />
       <section className="gt-container gt-section gt-listing-section">
-        <div className="gt-filter-row" aria-label="Event filters">
+        <div
+          className="gt-filter-row"
+          role="group"
+          aria-label="Event date status"
+        >
           {[
             ["upcoming", "Upcoming"],
             ["all", "All events"],
             ["past", "Past"],
-            ["workshop", "Workshops"],
-            ["hackathon", "Hackathons"],
-            ["demo day", "Demo days"],
           ].map(([value, label]) => (
             <button
               key={value}
-              className={`gt-filter-pill ${filter === value ? "is-active" : ""}`}
-              onClick={() => change("filter", value)}
-              aria-pressed={filter === value}
+              className={`gt-filter-pill ${status === value ? "is-active" : ""}`}
+              onClick={() => change("status", value)}
+              aria-pressed={status === value}
             >
               {label}
             </button>
           ))}
         </div>
-        <div className="gt-toolbar">
+        <div className="gt-toolbar gt-events-toolbar">
           <SearchBox
             value={query}
             onChange={(value) => change("q", value)}
             label="Search events"
             placeholder="Find your next event…"
           />
+          <label className="gt-sort">
+            <span>Event type</span>
+            <select
+              value={type}
+              onChange={(event) => change("type", event.target.value)}
+            >
+              <option value="">All types</option>
+              {[
+                ...new Set([
+                  "Workshop",
+                  "Hackathon",
+                  "Demo Day",
+                  "Tech Talk",
+                  "Social",
+                  ...(type ? [type] : []),
+                ]),
+              ].map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </label>
           <label className="gt-sort">
             <span>Sort by</span>
             <select
@@ -639,7 +707,7 @@ export function EventsPage() {
             action={
               <Button
                 variant="secondary"
-                onClick={() => setParams({ filter: "all" })}
+                onClick={() => setParams({ status: "all" })}
               >
                 Show all events
               </Button>
@@ -681,12 +749,45 @@ export function EventDetailPage() {
   const [event, setEvent] = useState<SiteEvent | null>(null),
     [events, setRelated] = useState<SiteEvent[]>([]),
     [loading, setLoading] = useState(true),
-    [loadError, setLoadError] = useState("");
+    [loadError, setLoadError] = useState(""),
+    [loadedFor, setLoadedFor] = useState<string>(),
+    [reload, setReload] = useState(0);
+  const [submitted, setSubmitted] = useState(false),
+    [busy, setBusy] = useState(false),
+    [feedback, setFeedback] = useState(""),
+    [registrationErrors, setRegistrationErrors] = useState<
+      Record<string, string>
+    >({});
+  const [registrationDirty, setRegistrationDirty] = useState(false);
+  const [queueCandidate, setQueueCandidate] = useState<{
+      body: Record<string, unknown>;
+      key: string;
+    }>(),
+    [pendingReference, setPendingReference] = useState("");
   const registrationRequest = useRef<{ body: string; key: string } | null>(
-    null,
-  );
+      null,
+    ),
+    registrationPending = useRef(false),
+    registrationEpoch = useRef(0),
+    registrationForm = useRef<HTMLFormElement>(null),
+    registrationHeading = useRef<HTMLHeadingElement>(null),
+    registrationFeedback = useRef<HTMLParagraphElement>(null),
+    registrationFocus = useRef<"fields" | "state" | "feedback" | null>(null);
   useEffect(() => {
     const controller = new AbortController();
+    const epoch = ++registrationEpoch.current;
+    registrationRequest.current = null;
+    registrationPending.current = false;
+    registrationFocus.current = null;
+    setEvent(null);
+    setRelated([]);
+    setSubmitted(false);
+    setBusy(false);
+    setFeedback("");
+    setRegistrationErrors({});
+    setRegistrationDirty(false);
+    setQueueCandidate(undefined);
+    setPendingReference("");
     setLoading(true);
     setLoadError("");
     api<{ event: ChapterEvent; related: ChapterEvent[] }>(
@@ -694,11 +795,14 @@ export function EventDetailPage() {
       { signal: controller.signal },
     )
       .then((r) => {
+        if (controller.signal.aborted) return;
+        setLoadedFor(slug);
         setEvent(eventForPage(r.event));
         setRelated(r.related.map(eventForPage));
       })
       .catch((error) => {
         if (!controller.signal.aborted) {
+          setLoadedFor(slug);
           setEvent(null);
           if (error.status !== 404) setLoadError(error.message);
         }
@@ -706,22 +810,31 @@ export function EventDetailPage() {
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
       });
-    return () => controller.abort();
-  }, [slug]);
-  const [submitted, setSubmitted] = useState(false),
-    [busy, setBusy] = useState(false),
-    [feedback, setFeedback] = useState("");
-  const [registrationDirty, setRegistrationDirty] = useState(false);
-  const [queueCandidate, setQueueCandidate] = useState<{
-      body: Record<string, unknown>;
-      key: string;
-    }>(),
-    [pendingReference, setPendingReference] = useState("");
+    return () => {
+      controller.abort();
+      registrationEpoch.current = epoch + 1;
+    };
+  }, [slug, reload]);
   useDraftGuard(registrationDirty && !submitted, {
     busy,
     label: "Event registration details",
     privateDraft: false,
   });
+  useEffect(() => {
+    if (busy || !registrationFocus.current) return;
+    const target = registrationFocus.current;
+    registrationFocus.current = null;
+    if (target === "state") registrationHeading.current?.focus();
+    else if (target === "feedback") registrationFeedback.current?.focus();
+    else {
+      const name = ["name", "email", "notes", "consent"].find(
+        (key) => registrationErrors[key],
+      );
+      const control =
+        name && registrationForm.current?.elements.namedItem(name);
+      if (control instanceof HTMLElement) control.focus();
+    }
+  }, [busy, registrationErrors, submitted, event?.registration_state]);
   usePageTitle(event?.title || "Event", event?.description, event?.image_url);
   useEffect(() => {
     if (!event) return;
@@ -748,30 +861,50 @@ export function EventDetailPage() {
       metadata.remove();
     };
   }, [event]);
-  if (loading)
+  if (loading || loadedFor !== slug)
     return (
-      <div className="gt-container gt-section">
+      <div
+        className="gt-container gt-section"
+        role="status"
+        aria-label="Loading event"
+      >
         <div className="gt-skeleton gt-detail-skeleton" />
       </div>
     );
   if (loadError)
     return (
       <div className="gt-container gt-section">
-        <EmptyState title="This event could not load">
+        <EmptyState
+          title="This event could not load"
+          action={
+            <div className="gt-actions">
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setReload((value) => value + 1);
+                  document.getElementById("main-content")?.focus();
+                }}
+              >
+                Retry event
+              </Button>
+              <ActionLink to="/events">Return to events</ActionLink>
+            </div>
+          }
+        >
           {loadError}
-          <ActionLink to="/events">Return to events</ActionLink>
         </EmptyState>
       </div>
     );
   if (!event) return <NotFoundPage />;
-  const past = isPast(event);
+  const past = event.registration_state === "ended" || isPast(event);
   const full =
-    !!event.max_participants &&
-    ((event as SiteEvent & { registration_state?: string })
-      .registration_state === "full" ||
+    event.registration_state === "full" ||
+    (!!event.max_participants &&
       (event.accurate_attendee_count ?? 0) >= event.max_participants);
   const unavailable =
     full ||
+    event.registration_state === "closed" ||
+    event.registration_state === "ended" ||
     event.status === "cancelled" ||
     event.registration_enabled === false;
   const externalRegistration = safePublicUrl(
@@ -786,10 +919,16 @@ export function EventDetailPage() {
   };
   const register = async (submit: FormEvent<HTMLFormElement>) => {
     submit.preventDefault();
+    if (busy || registrationPending.current) return;
+    const epoch = registrationEpoch.current;
+    const form = new FormData(submit.currentTarget);
+    registrationPending.current = true;
+    registrationFocus.current = null;
+    setRegistrationErrors({});
+    setFeedback("");
     setBusy(true);
     try {
       if (localPreviewEnabled) {
-        const form = new FormData(submit.currentTarget);
         if (form.get("website")) return;
         const records = JSON.parse(
           localStorage.getItem("gdg-preview-registrations") || "[]",
@@ -812,16 +951,16 @@ export function EventDetailPage() {
           "gdg-preview-registrations",
           JSON.stringify(records),
         );
+        registrationFocus.current = "state";
         setSubmitted(true);
       } else {
-        const form = new FormData(submit.currentTarget),
-          body = {
-            name: String(form.get("name") || ""),
-            email: String(form.get("email") || ""),
-            notes: String(form.get("notes") || ""),
-            consent: form.get("consent") === "on",
-            website: String(form.get("website") || ""),
-          };
+        const body = {
+          name: String(form.get("name") || ""),
+          email: String(form.get("email") || ""),
+          notes: String(form.get("notes") || ""),
+          consent: form.get("consent") === "on",
+          website: String(form.get("website") || ""),
+        };
         const serialized = JSON.stringify(body);
         setQueueCandidate(undefined);
         setPendingReference("");
@@ -842,6 +981,7 @@ export function EventDetailPage() {
             },
           );
         } catch (e) {
+          if (epoch !== registrationEpoch.current) return;
           const status = (e as { status?: number }).status;
           if (status === undefined || status >= 500)
             setQueueCandidate({
@@ -850,17 +990,43 @@ export function EventDetailPage() {
             });
           throw e;
         }
+        if (epoch !== registrationEpoch.current) return;
+        registrationFocus.current = "state";
         setSubmitted(true);
         setFeedback("");
       }
     } catch (error) {
+      if (epoch !== registrationEpoch.current) return;
+      if (error instanceof ApiFailure && error.code === "EVENT_FULL") {
+        registrationFocus.current = "state";
+        setRegistrationDirty(false);
+        setEvent((previous) =>
+          previous ? { ...previous, registration_state: "full" } : previous,
+        );
+      } else {
+        const fields =
+          error instanceof ApiFailure
+            ? Object.fromEntries(
+                Object.entries(error.fields || {}).filter(([key]) =>
+                  ["name", "email", "notes", "consent"].includes(key),
+                ),
+              )
+            : {};
+        setRegistrationErrors(fields);
+        registrationFocus.current = Object.keys(fields).length
+          ? "fields"
+          : "feedback";
+      }
       setFeedback(
         error instanceof Error
           ? error.message
           : "Your registration could not be saved. Please try again.",
       );
     } finally {
-      setBusy(false);
+      if (epoch === registrationEpoch.current) {
+        registrationPending.current = false;
+        setBusy(false);
+      }
     }
   };
   return (
@@ -872,8 +1038,9 @@ export function EventDetailPage() {
           </Link>
           <div className="gt-event-detail-hero">
             <div className="gt-detail-photo">
-              <img
+              <PublicImage
                 src={event.image_url || "/assets/event-community.jpg"}
+                fallbackSrc="/assets/event-community.jpg"
                 alt={
                   localPreviewEnabled ? "Illustrative event image" : event.title
                 }
@@ -891,7 +1058,7 @@ export function EventDetailPage() {
               <div className="gt-detail-facts">
                 <p>
                   <CalendarDays size={19} />
-                  {dateLabel(event.date)}
+                  {dateLabel(event.date, event.timezone)}
                 </p>
                 <p>
                   <Clock3 size={19} />
@@ -1006,7 +1173,7 @@ export function EventDetailPage() {
           {submitted ? (
             <div className="gt-success">
               <CheckCircle2 size={38} />
-              <h2>
+              <h2 ref={registrationHeading} tabIndex={-1}>
                 {localPreviewEnabled
                   ? "Saved in your local preview"
                   : "Your place is confirmed."}
@@ -1022,7 +1189,7 @@ export function EventDetailPage() {
             </div>
           ) : (
             <>
-              <h2>
+              <h2 ref={registrationHeading} tabIndex={-1}>
                 {past
                   ? "Thanks for being part of it."
                   : event.status === "cancelled"
@@ -1055,44 +1222,119 @@ export function EventDetailPage() {
                 </a>
               ) : (
                 <form
+                  key={event.id}
+                  ref={registrationForm}
                   onSubmit={register}
                   className="gt-form"
-                  onChange={() => {
+                  onChange={(event) => {
                     setRegistrationDirty(true);
                     setQueueCandidate(undefined);
+                    const control = event.target;
+                    if (
+                      control instanceof HTMLInputElement ||
+                      control instanceof HTMLTextAreaElement
+                    )
+                      setRegistrationErrors((previous) => {
+                        if (!previous[control.name]) return previous;
+                        const next = { ...previous };
+                        delete next[control.name];
+                        return next;
+                      });
                   }}
                 >
                   <label className="gt-honeypot" aria-hidden="true">
                     Leave this empty
-                    <input name="website" tabIndex={-1} autoComplete="off" />
+                    <input
+                      name="website"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      disabled={busy}
+                    />
                   </label>
                   <Field label="Full name" required>
                     <input
                       name="name"
+                      disabled={busy}
+                      aria-invalid={!!registrationErrors.name || undefined}
+                      aria-describedby={
+                        registrationErrors.name ? "event-name-error" : undefined
+                      }
                       autoComplete="name"
                       required
                       minLength={2}
                       maxLength={100}
                     />
                   </Field>
+                  {registrationErrors.name && (
+                    <p id="event-name-error" className="gt-registration-error">
+                      {registrationErrors.name}
+                    </p>
+                  )}
                   <Field label="Email address" required>
                     <input
                       name="email"
+                      disabled={busy}
+                      aria-invalid={!!registrationErrors.email || undefined}
+                      aria-describedby={
+                        registrationErrors.email
+                          ? "event-email-error"
+                          : undefined
+                      }
                       type="email"
                       autoComplete="email"
                       required
                     />
                   </Field>
+                  {registrationErrors.email && (
+                    <p id="event-email-error" className="gt-registration-error">
+                      {registrationErrors.email}
+                    </p>
+                  )}
                   <Field label="Anything we should know?">
-                    <textarea name="notes" rows={3} maxLength={2000} />
+                    <textarea
+                      name="notes"
+                      rows={3}
+                      maxLength={2000}
+                      disabled={busy}
+                      aria-invalid={!!registrationErrors.notes || undefined}
+                      aria-describedby={
+                        registrationErrors.notes
+                          ? "event-notes-error"
+                          : undefined
+                      }
+                    />
                   </Field>
+                  {registrationErrors.notes && (
+                    <p id="event-notes-error" className="gt-registration-error">
+                      {registrationErrors.notes}
+                    </p>
+                  )}
                   <label className="gt-check">
-                    <input type="checkbox" name="consent" required />
+                    <input
+                      type="checkbox"
+                      name="consent"
+                      required
+                      disabled={busy}
+                      aria-invalid={!!registrationErrors.consent || undefined}
+                      aria-describedby={
+                        registrationErrors.consent
+                          ? "event-consent-error"
+                          : undefined
+                      }
+                    />
                     <span>
                       I agree to be contacted about this event.{" "}
                       <Link to="/privacy">Privacy notice</Link>
                     </span>
                   </label>
+                  {registrationErrors.consent && (
+                    <p
+                      id="event-consent-error"
+                      className="gt-registration-error"
+                    >
+                      {registrationErrors.consent}
+                    </p>
+                  )}
                   <Button type="submit" disabled={busy}>
                     {busy
                       ? "Saving…"
@@ -1105,7 +1347,12 @@ export function EventDetailPage() {
                     <small>UI demo only. No real registration or email.</small>
                   )}
                   {feedback && (
-                    <p role="status" className="gt-helper">
+                    <p
+                      role="alert"
+                      className="gt-helper"
+                      ref={registrationFeedback}
+                      tabIndex={-1}
+                    >
                       {feedback}
                     </p>
                   )}

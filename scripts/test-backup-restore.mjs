@@ -36,12 +36,22 @@ const catalog = `SELECT jsonb_build_object(
  'indexes',(SELECT count(*) FROM pg_indexes WHERE schemaname IN('public','gdg_security')),
  'rls',(SELECT count(*) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname IN('public','gdg_security') AND c.relrowsecurity),
  'policies',(SELECT count(*) FROM pg_policies WHERE schemaname IN('public','gdg_security')),
+ 'views',(SELECT coalesce(jsonb_object_agg(n.nspname||'.'||c.relname,jsonb_build_object(
+  'definition',pg_get_viewdef(c.oid,true),
+  'options',(SELECT jsonb_agg(value ORDER BY value) FROM unnest(coalesce(c.reloptions,'{}'::text[])) options(value)),
+  'grants',(SELECT jsonb_agg(jsonb_build_array(CASE WHEN grantee=0 THEN 'PUBLIC' ELSE pg_get_userbyid(grantee)::text END,privilege_type,is_grantable)
+    ORDER BY CASE WHEN grantee=0 THEN 'PUBLIC' ELSE pg_get_userbyid(grantee)::text END,privilege_type,is_grantable)
+    FROM aclexplode(coalesce(c.relacl,acldefault('r',c.relowner)))))),'{}'::jsonb)
+    FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE c.relkind='v' AND n.nspname IN('public','gdg_security')),
  'triggers',(SELECT count(*) FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname IN('public','gdg_security') AND NOT t.tgisinternal));`;
 const protections = `DO $$ DECLARE t record;BEGIN
- FOR t IN SELECT schemaname,tablename FROM pg_tables WHERE schemaname IN('public','gdg_security') LOOP
+ FOR t IN SELECT schemaname,tablename FROM pg_tables WHERE schemaname IN('public','gdg_security')
+  UNION ALL SELECT schemaname,viewname FROM pg_views WHERE schemaname IN('public','gdg_security') LOOP
   IF has_table_privilege('anon',format('%I.%I',t.schemaname,t.tablename),'SELECT,INSERT,UPDATE,DELETE')
    OR has_table_privilege('authenticated',format('%I.%I',t.schemaname,t.tablename),'SELECT,INSERT,UPDATE,DELETE') THEN RAISE EXCEPTION 'Browser grant restored incorrectly';END IF;
  END LOOP;
+ IF NOT has_table_privilege('service_role','public.public_event_inventory','SELECT')
+  OR has_table_privilege('service_role','public.public_event_inventory','INSERT,UPDATE,DELETE') THEN RAISE EXCEPTION 'View ACL restore failed';END IF;
  IF has_function_privilege('anon','public.read_workspace_widget(uuid,uuid,text)','EXECUTE')
   OR has_function_privilege('authenticated','public.read_audit_statistics(uuid,jsonb)','EXECUTE')
   OR NOT has_function_privilege('service_role','public.read_workspace_widget(uuid,uuid,text)','EXECUTE') THEN RAISE EXCEPTION 'Function ACL restore failed';END IF;
@@ -73,7 +83,7 @@ try {
       await readFile(new URL("database/migrations/" + file, root), "utf8"),
     );
   check(
-    migrations.length >= 105,
+    migrations.length >= 106,
     "source restore fixture rebuilds the complete canonical migration chain",
   );
   await sql(
@@ -121,7 +131,7 @@ try {
   );
   check(
     JSON.stringify(beforeCatalog) === JSON.stringify(afterCatalog),
-    "restored table/function/constraint/index/RLS/policy/trigger inventory matches the source",
+    "restored table/view/function/constraint/index/RLS/policy/trigger inventory matches the source, including view definitions/options/grants",
   );
   await sql(target, protections);
   check(

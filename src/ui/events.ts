@@ -36,13 +36,24 @@ export type ChapterEvent = {
   additional_info?: string;
   contact_info?: string;
 };
+export const eventDateLabel = (value: string, timezone = "America/New_York") =>
+  new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: timezone,
+  }).format(new Date(value));
+export const eventTimeLabel = (value: string, timezone = "America/New_York") =>
+  new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: timezone,
+    timeZoneName: "short",
+  }).format(new Date(value));
 export const eventForPage = (event: ChapterEvent) => ({
   ...event,
   date: event.start_at,
   status: event.publication_status,
-  time: new Intl.DateTimeFormat("en-US", {
-    timeZone: event.timezone,
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(new Date(event.start_at)),
+  time: eventTimeLabel(event.start_at, event.timezone),
 });

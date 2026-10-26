@@ -1,0 +1,46 @@
+{
+  "generatedAt": "2026-10-26T07:37:30.329Z",
+  "note": "Actual dedicated loopback read-path fixtures. Does not certify admin publication, hosted cache, device or visual acceptance. Only invocation-owned events/attendance were changed and recoverably archived; no registration email or third-party content was created.",
+  "tests": [
+    {
+      "name": "published event filters and exact totals apply before availability pagination",
+      "passed": true
+    },
+    {
+      "name": "open events sort before earlier full or closed events on the first page",
+      "passed": true
+    },
+    {
+      "name": "derived capacity sorting is stable across subsequent pages",
+      "passed": true
+    },
+    {
+      "name": "private lifecycle records remain absent without duplicate or missing public results",
+      "passed": true
+    },
+    {
+      "name": "both external totals and committed internal attendance determine full status",
+      "passed": true
+    },
+    {
+      "name": "removed attendance, disabled registration and ended events retain distinct correct states",
+      "passed": true
+    },
+    {
+      "name": "public inventory omits ordering internals, participant identity and private ownership fields",
+      "passed": true
+    },
+    {
+      "name": "event detail shares the same authoritative availability projection",
+      "passed": true
+    },
+    {
+      "name": "capacity changes produce fresh detail data instead of an obsolete conditional 304",
+      "passed": true
+    },
+    {
+      "name": "public event data retains the chosen timezone and original UTC instant",
+      "passed": true
+    }
+  ]
+}

@@ -379,7 +379,8 @@
       "line": 371,
       "status": "unverified",
       "testIds": [
-        "EVT-TEST-005"
+        "EVT-TEST-005",
+        "EVT-TEST-024"
       ],
       "evidence": []
     },
@@ -389,7 +390,8 @@
       "line": 373,
       "status": "unverified",
       "testIds": [
-        "EVT-TEST-006"
+        "EVT-TEST-006",
+        "EVT-TEST-024"
       ],
       "evidence": []
     },
@@ -399,7 +401,8 @@
       "line": 375,
       "status": "unverified",
       "testIds": [
-        "EVT-TEST-007"
+        "EVT-TEST-007",
+        "EVT-TEST-024"
       ],
       "evidence": []
     },
@@ -419,7 +422,8 @@
       "line": 379,
       "status": "unverified",
       "testIds": [
-        "EVT-TEST-008"
+        "EVT-TEST-008",
+        "EVT-TEST-024"
       ],
       "evidence": []
     },
@@ -429,7 +433,8 @@
       "line": 381,
       "status": "unverified",
       "testIds": [
-        "EVT-TEST-007"
+        "EVT-TEST-007",
+        "EVT-TEST-024"
       ],
       "evidence": []
     },
@@ -469,7 +474,8 @@
       "line": 389,
       "status": "unverified",
       "testIds": [
-        "EVT-TEST-012"
+        "EVT-TEST-012",
+        "EVT-TEST-024"
       ],
       "evidence": []
     },

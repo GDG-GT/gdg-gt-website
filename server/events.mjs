@@ -253,8 +253,8 @@ export async function eventRoutes(
     if (!eventSlug) {
       const params = queryValues(url.searchParams, listSchema);
       let query = db
-        .from("events")
-        .select(publicColumns, { count: "exact" })
+        .from("public_event_inventory")
+        .select(publicColumns + ",registration_state", { count: "exact" })
         .eq("publication_status", "published");
       if (params.q)
         query = query.ilike(
@@ -267,34 +267,28 @@ export async function eventRoutes(
         query = query.gte("start_at", new Date().toISOString());
       if (params.status === "past")
         query = query.lt("start_at", new Date().toISOString());
-      query = query
-        .order(
-          params.sort === "title"
-            ? "title"
-            : params.sort === "newest"
-              ? "created_at"
-              : params.sort === "availability"
-                ? "registration_enabled"
-                : "start_at",
-          { ascending: !["newest", "availability"].includes(params.sort) },
-        )
-        .order("id");
+      query = query.order(
+        params.sort === "title"
+          ? "title"
+          : params.sort === "newest"
+            ? "created_at"
+            : params.sort === "availability"
+              ? "registration_priority"
+              : "start_at",
+        { ascending: params.sort !== "newest" },
+      );
+      if (params.sort === "availability") query = query.order("start_at");
+      query = query.order("id");
       const result = await query.range(
         (params.page - 1) * params.pageSize,
         params.page * params.pageSize - 1,
       );
       checked(result);
-      const items = await Promise.all(
-        result.data.map(async (event) => ({
-          ...event,
-          registration_state: await registrationState(db, event),
-        })),
-      );
       publicJson(
         request,
         response,
         {
-          items,
+          items: result.data,
           page: params.page,
           pageSize: params.pageSize,
           total: result.count,
@@ -305,8 +299,8 @@ export async function eventRoutes(
     }
     let event = checked(
       await db
-        .from("events")
-        .select(publicColumns)
+        .from("public_event_inventory")
+        .select(publicColumns + ",registration_state")
         .eq("slug", eventSlug)
         .eq("publication_status", "published")
         .maybeSingle(),
@@ -352,15 +346,14 @@ export async function eventRoutes(
     }
     event = {
       ...event,
-      registration_state: await registrationState(db, event),
       linked_forms: checked(
         await db.rpc("public_event_form_integrations", { p_event: event.id }),
       ),
     };
     const related = checked(
       await db
-        .from("events")
-        .select(publicColumns)
+        .from("public_event_inventory")
+        .select(publicColumns + ",registration_state")
         .eq("publication_status", "published")
         .neq("id", event.id)
         .gte("start_at", new Date().toISOString())
@@ -740,22 +733,4 @@ export async function eventRoutes(
   );
   sendJson(response, 200, { event: result }, requestId);
   return true;
-}
-async function registrationState(db, event) {
-  if (!event.registration_enabled) return "closed";
-  if (new Date(event.end_at || event.start_at) <= new Date()) return "ended";
-  if (event.max_participants) {
-    const count = checked(
-      await db.rpc("event_registration_count", { p_event_id: event.id }),
-    );
-    const row = checked(
-      await db
-        .from("events")
-        .select("external_attendees")
-        .eq("id", event.id)
-        .single(),
-    );
-    if (count + row.external_attendees >= event.max_participants) return "full";
-  }
-  return "open";
 }

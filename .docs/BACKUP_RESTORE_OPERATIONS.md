@@ -11,15 +11,17 @@ records is written under the workspace or served by Vite.
 
 The restored database must have identical row counts and SHA-256 row-content
 fingerprints for every public/security table, plus matching table/function/
-constraint/index/RLS/policy/trigger inventories. Tests then verify revoked browser
+constraint/index/RLS/policy/trigger inventories, plus view definitions, security
+options and effective role grants. Tests then verify revoked browser
 table/function grants, intended service-role function grants, foreign-key failure
 and append-only audit protection. Negative tests must leave all fingerprints
 unchanged. Only invocation-owned purpose-verified containers are removed on
 success; failures are stopped and left recoverable for investigation.
 
-Current local proof: 105 migrations, 130 application/security tables, 350
+Current local proof: 106 migrations, 130 application/security tables, 350
 functions, 656 constraints, 458 indexes and 70 noninternal triggers. All six
-checks pass. See `phase0/local-backup-restore.json`. This proves the logical
+checks pass, including the service-only public event inventory view. See
+`phase0/local-backup-restore.json`. This proves the logical
 application-schema restore path on the tested PostgreSQL version; it is not
 evidence of hosted backups, point-in-time recovery, private object restoration,
 encryption-key escrow or an institutional disaster-recovery exercise.

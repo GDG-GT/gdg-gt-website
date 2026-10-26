@@ -106,7 +106,8 @@
     "202610240102_team_invitation_decline.sql",
     "202610240103_unregistered_invitation_decline.sql",
     "202610240104_editorial_overview.sql",
-    "202610240105_audit_statistics.sql"
+    "202610240105_audit_statistics.sql",
+    "202610260106_public_event_inventory.sql"
   ],
   "tests": [
     {
@@ -534,6 +535,10 @@
       "passed": true
     },
     {
+      "name": "202610260106_public_event_inventory.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -839,6 +844,10 @@
     },
     {
       "name": "105_audit_statistics.sql",
+      "passed": true
+    },
+    {
+      "name": "106_public_event_inventory.sql",
       "passed": true
     },
     {
