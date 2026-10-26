@@ -58,7 +58,6 @@ import {
   SearchBox,
 } from "./primitives";
 import { chapterName, localPreviewEnabled } from "./preview-data";
-import { useInitialLoad } from "./useInitialLoad";
 import PublicGallery from "./media/PublicGallery";
 import { PublicCollectionNotice, PublicPagination } from "./PublicCollection";
 import {
@@ -114,14 +113,15 @@ const levelLabel = (level?: string) =>
     open_for_all: "Everyone welcome",
   })[level || ""] || "Everyone welcome";
 function useEvents() {
-  const { events, loadEvents, isLoadingEvents } = useContent();
-  useInitialLoad(loadEvents);
+  const listing = usePublicCollection<ChapterEvent>(
+    `/events?status=${localPreviewEnabled ? "all" : "upcoming"}&sort=soonest&pageSize=3`,
+  );
   return {
-    events: events.filter(
-      (event) =>
-        !event.publication_status || event.publication_status === "published",
-    ) as SiteEvent[],
-    loading: isLoadingEvents,
+    events: (listing.data?.items || []).map(eventForPage),
+    loading: listing.loading,
+    error: listing.error,
+    at: listing.at,
+    retry: listing.retry,
   };
 }
 function usePageTitle(title: string, description?: string, image?: string) {
@@ -200,7 +200,7 @@ export function HomePage() {
     community = (getPageSection("home", "community") || {}) as PageCopy,
     eventCopy = (getPageSection("home", "events") || {}) as PageCopy,
     mission = (getPageSection("home", "mission") || {}) as PageCopy;
-  const { events, loading } = useEvents();
+  const { events, loading, error, at, retry } = useEvents();
   const upcoming = [...events]
     .filter((event) => !isPast(event))
     .sort((a, b) => a.date.localeCompare(b.date))
@@ -348,8 +348,20 @@ export function HomePage() {
             {eventCopy.cta_text || "View all events"}
           </ActionLink>
         </div>
-        {loading ? (
-          <div className="gt-event-grid">
+        {error && (
+          <PublicCollectionNotice
+            error={error}
+            loading={loading}
+            at={at}
+            retry={retry}
+          />
+        )}
+        {loading && !at ? (
+          <div
+            className="gt-event-grid"
+            role="status"
+            aria-label="Loading upcoming events"
+          >
             {[1, 2, 3].map((id) => (
               <div className="gt-skeleton gt-event-skeleton" key={id} />
             ))}
@@ -360,12 +372,12 @@ export function HomePage() {
               <EventTile key={event.id} event={event} />
             ))}
           </div>
-        ) : (
+        ) : !error && !loading ? (
           <EmptyState title="The next chapter is taking shape">
             {eventCopy.no_events_message ||
               "New workshops and gatherings will appear here. Join the newsletter to hear first."}
           </EmptyState>
-        )}
+        ) : null}
         {localPreviewEnabled && (
           <p className="gt-data-note">
             PRD reference events · Illustrative photography · Dates and venues
@@ -1514,7 +1526,7 @@ export function SponsorsPage() {
                             decoding="async"
                             style={{ objectFit: "contain" }}
                           />
-                        <h3>{sponsor.name}</h3>
+                          <h3>{sponsor.name}</h3>
                           {safePublicUrl(sponsor.website_url) && (
                             <a
                               href={safePublicUrl(sponsor.website_url)}

@@ -250,7 +250,12 @@ function ContentEditor() {
             ? "Restored as a private draft."
             : "Public visibility updated.",
       );
-      await refreshContent();
+      if (!(await refreshContent()))
+        setNotice(
+          (previous) =>
+            previous +
+            " Public page content could not refresh; retry from the public page.",
+        );
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -391,7 +396,12 @@ function ContentEditor() {
                 setDraft(undefined);
                 setRefresh((v) => v + 1);
                 setNotice("Saved privately. Review and publish separately.");
-                await refreshContent();
+                if (!(await refreshContent()))
+                  setNotice(
+                    (previous) =>
+                      previous +
+                      " Public page content could not refresh; retry from the public page.",
+                  );
               } catch (e) {
                 setError((e as Error).message);
                 if (e instanceof ApiFailure) setErrors(e.fields || {});

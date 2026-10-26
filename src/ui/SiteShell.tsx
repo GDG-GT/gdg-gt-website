@@ -39,7 +39,15 @@ export default function SiteShell({ children }: { children: ReactNode }) {
   const { login, isLoading, error, isAuthenticated } = useAdmin();
   const navigate = useNavigate();
   const location = useLocation();
-  const { navigationItems, socialLinks, footerContent } = useContent();
+  const {
+    navigationItems,
+    socialLinks,
+    footerContent,
+    contentError,
+    isLoading: contentLoading,
+    lastUpdated,
+    refreshPageContent,
+  } = useContent();
   const navigation: readonly (readonly [string, string])[] =
     navigationItems.length
       ? navigationItems.map(
@@ -61,7 +69,11 @@ export default function SiteShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!menuOpen) return;
     const closeOutside = (event: PointerEvent) => {
-      if (event.target instanceof Node && !navigationRef.current?.contains(event.target)) setMenuOpen(false);
+      if (
+        event.target instanceof Node &&
+        !navigationRef.current?.contains(event.target)
+      )
+        setMenuOpen(false);
     };
     const escape = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
@@ -70,7 +82,9 @@ export default function SiteShell({ children }: { children: ReactNode }) {
       menuButtonRef.current?.focus();
     };
     const desktop = window.matchMedia("(min-width: 1024px)");
-    const closeDesktop = () => { if (desktop.matches) setMenuOpen(false); };
+    const closeDesktop = () => {
+      if (desktop.matches) setMenuOpen(false);
+    };
     document.addEventListener("pointerdown", closeOutside);
     document.addEventListener("keydown", escape);
     desktop.addEventListener("change", closeDesktop);
@@ -164,9 +178,18 @@ export default function SiteShell({ children }: { children: ReactNode }) {
       <a href="#main-content" className="gt-skip">
         Skip to content
       </a>
-      <div className="gt-nav-wrap" ref={navigationRef} onBlur={(event) => {
-        if (menuOpen && event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) setMenuOpen(false);
-      }}>
+      <div
+        className="gt-nav-wrap"
+        ref={navigationRef}
+        onBlur={(event) => {
+          if (
+            menuOpen &&
+            event.relatedTarget instanceof Node &&
+            !event.currentTarget.contains(event.relatedTarget)
+          )
+            setMenuOpen(false);
+        }}
+      >
         <nav className="gt-nav" aria-label="Main navigation">
           <Brand compact />
           <div className="gt-nav-links">
@@ -197,13 +220,18 @@ export default function SiteShell({ children }: { children: ReactNode }) {
               if (event.key !== "ArrowDown") return;
               event.preventDefault();
               setMenuOpen(true);
-              requestAnimationFrame(() => mobileMenuRef.current?.querySelector<HTMLAnchorElement>("a")?.focus());
+              requestAnimationFrame(() =>
+                mobileMenuRef.current
+                  ?.querySelector<HTMLAnchorElement>("a")
+                  ?.focus(),
+              );
             }}
           >
             {menuOpen ? <X /> : <Menu />}
           </button>
         </nav>
-        {menuOpen && <nav
+        {menuOpen && (
+          <nav
             id="mobile-navigation"
             className="gt-mobile-nav"
             aria-label="Mobile navigation"
@@ -229,13 +257,38 @@ export default function SiteShell({ children }: { children: ReactNode }) {
                 Open workspace
               </Button>
             )}
-          </nav>}
+          </nav>
+        )}
       </div>
       <main id="main-content" tabIndex={-1}>
+        {contentError && (
+          <div className="gt-container gt-content-notice" role="alert">
+            <p>
+              {lastUpdated
+                ? `Chapter updates could not refresh. Showing content last loaded ${new Date(lastUpdated).toLocaleString()}.`
+                : "Chapter updates could not load. The page is using its built-in copy."}
+            </p>
+            <Button
+              variant="secondary"
+              disabled={contentLoading}
+              onClick={() => {
+                void refreshPageContent();
+                document.getElementById("main-content")?.focus();
+              }}
+            >
+              {contentLoading
+                ? "Loading chapter updates…"
+                : "Retry chapter updates"}
+            </Button>
+          </div>
+        )}
         {children}
       </main>
       <footer className="gt-footer">
-        <div className="gt-container"><InstallApp /><Link to="/offline">Offline help &amp; pending submissions</Link></div>
+        <div className="gt-container">
+          <InstallApp />
+          <Link to="/offline">Offline help &amp; pending submissions</Link>
+        </div>
         <div className="gt-container gt-footer-grid">
           <div>
             <Brand inverse compact />

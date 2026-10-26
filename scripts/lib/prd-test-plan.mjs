@@ -376,6 +376,17 @@ add(
   ],
 );
 add(
+  "CONTENT-TEST-019",
+  "CONTENT-001 CONTENT-002",
+  "Independent homepage/CMS recovery, stale snapshots, request races and keyboard retry focus",
+  [
+    "tests/client/public-content-recovery.test.tsx",
+    "tests/client/content-snapshot.test.ts",
+  ],
+  ["Hosted outage/reconnect and assistive-technology review"],
+);
+prdTestCases.at(-1).normative = ["22.2", "28.3"];
+add(
   "CONTENT-TEST-001",
   "CONTENT-001",
   "Managed CMS, libraries and private media operations",

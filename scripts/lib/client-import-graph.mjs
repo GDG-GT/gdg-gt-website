@@ -30,6 +30,12 @@ export async function clientImportGraph(root) {
       ts.sys.readFile,
     ).config,
     options = ts.parseJsonConfigFileContent(config, ts.sys, root).options,
+    resolutionCache = ts.createModuleResolutionCache(
+      root,
+      (file) => file,
+      options,
+    ),
+    imports = new Map(),
     app = new Set(),
     all = new Set(),
     unresolved = [];
@@ -42,8 +48,9 @@ export async function clientImportGraph(root) {
     )
       return;
     seen.add(file);
-    const source = await readFile(file, "utf8"),
-      ast = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true);
+    let source;
+    if (seen === app || !imports.has(file))
+      source = await readFile(file, "utf8");
     function inspect(node) {
       if (
         ts.isCallExpression(node) &&
@@ -65,13 +72,17 @@ export async function clientImportGraph(root) {
         });
       ts.forEachChild(node, inspect);
     }
-    if (seen === app) inspect(ast);
-    for (const item of ts.preProcessFile(source, true, true).importedFiles) {
+    if (seen === app)
+      inspect(ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true));
+    if (!imports.has(file))
+      imports.set(file, ts.preProcessFile(source, true, true).importedFiles);
+    for (const item of imports.get(file)) {
       const resolved = ts.resolveModuleName(
         item.fileName,
         file,
         options,
         ts.sys,
+        resolutionCache,
       ).resolvedModule?.resolvedFileName;
       if (resolved) await visit(resolved, seen);
       else if (

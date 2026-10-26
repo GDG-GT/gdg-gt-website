@@ -5,6 +5,22 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Public homepage and CMS recovery — 2026-10-26
+
+- Homepage event requests now ask directly for the next three upcoming events.
+  Failed reads show retry instead of an empty-calendar claim. Shared chapter
+  content preserves its last successful snapshot/timestamp, rejects malformed
+  payloads, ignores superseded requests and keeps static identity/navigation/CTAs
+  usable. Retry controls retain focus on the main landmark. CMS saves are not
+  misreported as failed when their later public refresh fails.
+- 22 new DOM/payload cases; 633 tests/109 files pass. Strict types pass; lint is
+  0 errors/25 warnings and CI enforces 25. Coverage is 28.13% lines/26.71%
+  branches: the global 70% gate still fails and all 17 critical-file gates pass.
+  The catalog now has 105 logical cases; acceptance remains unverified. See
+  `PUBLIC_CONTENT_RECOVERY.md` for behavior and evidence limits.
+- Restored 465 iCloud-offloaded files through macOS and restarted the existing
+  isolated local database, API and UI; no database volumes or credentials reset.
+
 ### Superseded browser source retirement — 2026-10-24
 
 - Removed 130 unreferenced legacy screens/services after checking both HTML

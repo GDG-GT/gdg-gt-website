@@ -1,6 +1,10 @@
 import { randomUUID } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { localHttp } from "./lib/local-http.mjs";
+import {
+  managedPublicPages,
+  publicPageSections,
+} from "../shared/site-content.ts";
 const { call, login, logout, db } = await localHttp(),
   evidence = [],
   records = [];
@@ -11,7 +15,8 @@ function check(value, name) {
 }
 const user = (await login()).user,
   prefix = "/admin/site-content/",
-  name = "Fictional CMS " + randomUUID();
+  name = "Fictional CMS " + randomUUID(),
+  ledgerFile = new URL("../.docs/local-cms-fixture.local", import.meta.url);
 try {
   let r = await call(prefix + "pages", { anonymous: true });
   check(r.status === 401, "anonymous callers cannot list CMS drafts");
@@ -42,14 +47,46 @@ try {
     },
   });
   check(r.status === 400, "CMS cannot reactivate public blog or project pages");
-  const candidates = [
-    ["resources", "header"],
-    ["events", "header"],
-    ["gallery", "header"],
-    ["team", "header"],
-  ];
-  let slot;
-  for (const [page, section] of candidates) {
+  const candidates = managedPublicPages.flatMap((page) =>
+    publicPageSections(page).map((section) => [page, section]),
+  );
+  let slot, reusable;
+  let ledger;
+  try {
+    ledger = JSON.parse(await readFile(ledgerFile, "utf8"));
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+  if (ledger) {
+    const existing = await db
+      .from("page_content")
+      .select("id,revision,page_slug,section_key,content,is_active,deleted_at")
+      .eq("id", ledger.id)
+      .maybeSingle();
+    const row = existing.data;
+    if (
+      existing.error ||
+      ledger.version !== 1 ||
+      ledger.owner !== user.id ||
+      !row ||
+      !row.deleted_at ||
+      row.is_active ||
+      row.revision !== ledger.revision ||
+      row.content?.title !== ledger.title ||
+      row.content?.description !== "Local verification only" ||
+      !/^Fictional CMS [0-9a-f-]{36}$/.test(ledger.title || "") ||
+      !candidates.some(
+        ([page, section]) =>
+          row.page_slug === page && row.section_key === section,
+      )
+    )
+      throw new Error(
+        "CMS fixture ledger does not match an untouched archived fixture; refusing to modify copy.",
+      );
+    reusable = row;
+    slot = [row.page_slug, row.section_key];
+  }
+  for (const [page, section] of slot ? [] : candidates) {
     const existing = await db
       .from("page_content")
       .select("id")
@@ -62,9 +99,20 @@ try {
   }
   if (!slot)
     throw new Error("No unused test slot; refusing to overwrite managed copy.");
-  r = await call(prefix + "pages", {
-    method: "POST",
+  if (reusable) {
+    r = await call(prefix + "pages/" + reusable.id, {
+      method: "POST",
+      body: { revision: reusable.revision, action: "restore" },
+    });
+    if (r.status !== 200)
+      throw new Error("Could not restore the ledger-owned CMS fixture.");
+    reusable = r.json.data.record;
+    records.push(["pages", reusable.id]);
+  }
+  r = await call(prefix + "pages" + (reusable ? "/" + reusable.id : ""), {
+    method: reusable ? "PATCH" : "POST",
     body: {
+      ...(reusable ? { revision: reusable.revision } : {}),
       record: {
         page_slug: slot[0],
         section_key: slot[1],
@@ -78,7 +126,7 @@ try {
     "page copy saves as a real private draft",
   );
   let row = r.json.data.record;
-  records.push(["pages", row.id]);
+  if (!reusable) records.push(["pages", row.id]);
   r = await call(prefix + "preview?page=" + slot[0], { anonymous: true });
   check(r.status === 401, "private page composition requires a real session");
   r = await call(prefix + "preview?page=" + slot[0]);
@@ -219,6 +267,36 @@ try {
         body: { revision: row.revision },
       });
   }
+  const ownPage = records.find(([kind]) => kind === "pages");
+  if (ownPage) {
+    const verified = await db
+      .from("page_content")
+      .select("id,revision,content,is_active,deleted_at")
+      .eq("id", ownPage[1])
+      .single();
+    const row = verified.data;
+    if (
+      verified.error ||
+      !row?.deleted_at ||
+      row.is_active ||
+      row.content?.title !== name ||
+      row.content?.description !== "Local verification only"
+    )
+      throw new Error(
+        "CMS fixture cleanup was not confirmed; no reusable ledger was written.",
+      );
+    await writeFile(
+      ledgerFile,
+      JSON.stringify({
+        version: 1,
+        owner: user.id,
+        id: row.id,
+        title: name,
+        revision: row.revision,
+      }) + "\n",
+      { mode: 0o600 },
+    );
+  }
   await logout();
 }
 await writeFile(
@@ -228,7 +306,7 @@ await writeFile(
   ),
   JSON.stringify(
     {
-      note: "Real local CMS API/public serialization; only new fictional records used and archived. Existing copy was never overwritten.",
+      note: "Real local CMS API/public serialization. Uses an unused slot or an untouched archived fictional fixture with matching private ledger, owner and revision; archives it again. Existing managed copy is never overwritten.",
       tests: evidence,
     },
     null,

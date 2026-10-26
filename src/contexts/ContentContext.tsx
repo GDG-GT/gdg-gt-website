@@ -4,59 +4,48 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useRef,
 } from "react";
 import { api } from "@/lib/api";
+import {
+  managedLink,
+  managedLinks,
+  projectContent,
+  readHomeContent,
+  type ContentSnapshot,
+  type FooterCopy,
+  type HomeContent,
+} from "@/lib/content-snapshot";
+import type { ManagedLink, PageCopy } from "../../shared/site-content";
+import type { PublicMetric } from "@/ui/public-collections";
+export type { ContentSnapshot } from "@/lib/content-snapshot";
 interface ContentContextType {
-  siteSettings: Record<string, any>;
-  pageContent: Record<string, Record<string, any>>;
-  navigationItems: any[];
-  socialLinks: any[];
-  footerContent: Record<string, any>;
-  events: any[];
-  teamMembers: any[];
-  projects: any[];
-  sponsors: any[];
-  chapterMetrics: Row[];
-  sponsorshipTiers: Row[];
-  resources: any[];
+  siteSettings: Record<string, unknown>;
+  pageContent: Record<string, Record<string, PageCopy>>;
+  navigationItems: ContentSnapshot["navigation"];
+  socialLinks: ContentSnapshot["social"];
+  footerContent: Record<string, FooterCopy>;
+  chapterMetrics: PublicMetric[];
   isLoading: boolean;
-  isLoadingEvents: boolean;
-  isLoadingTeam: boolean;
-  isLoadingProjects: boolean;
-  isLoadingSponsors: boolean;
-  isLoadingResources: boolean;
-  lastUpdated: number;
-  refreshContent: () => Promise<void>;
-  refreshPageContent: (pageSlug?: string) => Promise<void>;
-  forceRefreshPageContent: (pageSlug?: string) => Promise<void>;
-  loadEvents: (forceReload?: boolean) => Promise<void>;
-  loadTeamMembers: () => Promise<void>;
-  loadProjects: () => Promise<void>;
-  loadSponsors: () => Promise<void>;
-  loadResources: () => Promise<void>;
-  getSiteSetting: (key: string) => any;
-  getPageSection: (pageSlug: string, sectionKey: string) => any;
-  getFooterSection: (sectionKey: string) => any;
+  contentError: string;
+  lastUpdated?: number;
+  refreshContent: () => Promise<boolean>;
+  refreshPageContent: (pageSlug?: string) => Promise<boolean>;
+  forceRefreshPageContent: (pageSlug?: string) => Promise<boolean>;
+  getSiteSetting: (key: string) => unknown;
+  getPageSection: (pageSlug: string, sectionKey: string) => PageCopy | null;
+  getFooterSection: (sectionKey: string) => FooterCopy | null;
   getLink: (linkType: string) => string;
-  getAllLinks: (category?: string) => any[];
+  getAllLinks: (category?: string) => ManagedLink[];
 }
-
-type Row = Record<string, any>;
 const ContentContext = createContext<ContentContextType | undefined>(undefined);
 export const useContent = () => {
   const value = useContext(ContentContext);
   if (!value) throw new Error("ContentProvider is required.");
   return value;
 };
-export type ContentSnapshot = {
-  settings: Row[];
-  pages: Row[];
-  navigation: Row[];
-  social: Row[];
-  footer: Row[];
-};
-// Private composition previews override only curated CMS content. Real public
-// collections retain their ordinary read paths; no private records are published.
+// Private composition overrides only curated CMS fields. Public inventories
+// still use their independently authorized public read APIs.
 export function ContentSnapshotProvider({
   snapshot,
   children,
@@ -65,23 +54,7 @@ export function ContentSnapshotProvider({
   children: React.ReactNode;
 }) {
   const base = useContent(),
-    settings = Object.fromEntries(
-      snapshot.settings.map((row) => [row.key, row.value]),
-    ),
-    footer = Object.fromEntries(
-      snapshot.footer.map((row) => [row.section_key, row.content]),
-    ),
-    pages: Record<string, Record<string, Row>> = {};
-  for (const row of snapshot.pages) {
-    pages[row.page_slug] ||= {};
-    pages[row.page_slug][row.section_key] = row.content;
-  }
-  const allLinks = (category?: string) => {
-    const links: Row[] = Array.isArray(settings.all_links)
-      ? settings.all_links
-      : [];
-    return category ? links.filter((row) => row.category === category) : links;
-  };
+    { settings, pages, footer } = projectContent(snapshot);
   return (
     <ContentContext.Provider
       value={{
@@ -91,18 +64,13 @@ export function ContentSnapshotProvider({
         navigationItems: snapshot.navigation,
         socialLinks: snapshot.social,
         footerContent: footer,
+        contentError: "",
+        isLoading: false,
         getSiteSetting: (key) => settings[key] ?? null,
         getPageSection: (page, section) => pages[page]?.[section] ?? null,
         getFooterSection: (section) => footer[section] ?? null,
-        getAllLinks: allLinks,
-        getLink: (key) =>
-          allLinks().find(
-            (item) =>
-              item.id === key ||
-              String(item.name).toLowerCase().replace(/\s+/g, "_") === key,
-          )?.url ||
-          settings[key + "_url"] ||
-          "#",
+        getAllLinks: (category) => managedLinks(settings, category),
+        getLink: (key) => managedLink(settings, key),
       }}
     >
       {children}
@@ -114,166 +82,67 @@ export const ContentProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [siteSettings, setSiteSettings] = useState<Record<string, any>>({}),
-    [pageContent, setPageContent] = useState<
-      Record<string, Record<string, any>>
-    >({});
-  const [navigationItems, setNavigationItems] = useState<Row[]>([]),
-    [socialLinks, setSocialLinks] = useState<Row[]>([]),
-    [footerContent, setFooterContent] = useState<Record<string, any>>({});
-  const [events, setEvents] = useState<Row[]>([]),
-    [teamMembers, setTeamMembers] = useState<Row[]>([]),
-    [sponsors, setSponsors] = useState<Row[]>([]),
-    [chapterMetrics, setChapterMetrics] = useState<Row[]>([]),
-    [sponsorshipTiers, setSponsorshipTiers] = useState<Row[]>([]),
-    [resources, setResources] = useState<Row[]>([]);
-  const [isLoading, setLoading] = useState(true),
-    [isLoadingEvents, setEventsLoading] = useState(false),
-    [isLoadingTeam, setTeamLoading] = useState(false),
-    [isLoadingSponsors, setSponsorsLoading] = useState(false),
-    [isLoadingResources, setResourcesLoading] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState(Date.now());
-  const loadEssential = useCallback(async () => {
+  const [snapshot, setSnapshot] = useState<HomeContent>(),
+    [isLoading, setLoading] = useState(true),
+    [contentError, setError] = useState(""),
+    [lastUpdated, setLastUpdated] = useState<number>();
+  const request = useRef(0);
+  const loadEssential = useCallback(async (signal?: AbortSignal) => {
+    const sequence = ++request.current;
     setLoading(true);
+    setError("");
     try {
-      const data = await api<{
-        settings: Row[];
-        navigation: Row[];
-        footer: Row[];
-        pages: Row[];
-        social: Row[];
-        metrics: Row[];
-      }>("/public/home");
-      setSiteSettings(
-        Object.fromEntries(data.settings.map((r) => [r.key, r.value])),
-      );
-      setNavigationItems(data.navigation);
-      setSocialLinks(data.social);
-      setChapterMetrics(data.metrics || []);
-      setFooterContent(
-        Object.fromEntries(data.footer.map((r) => [r.section_key, r.content])),
-      );
-      const pages: Record<string, Record<string, any>> = {};
-      for (const row of data.pages) {
-        pages[row.page_slug] ||= {};
-        pages[row.page_slug][row.section_key] = row.content;
-      }
-      setPageContent(pages);
-    } finally {
-      setLoading(false);
+      const data = readHomeContent(await api<unknown>("/public/home", { signal }));
+      if (signal?.aborted || sequence !== request.current) return false;
+      setSnapshot(data);
       setLastUpdated(Date.now());
-    }
-  }, []);
-  const loadEvents = useCallback(async () => {
-    setEventsLoading(true);
-    try {
-      const result = await api<{ items: Row[] }>(
-        "/events?status=all&pageSize=100",
-      );
-      setEvents(
-        result.items.map((e) => ({
-          ...e,
-          date: e.start_at,
-          time: new Intl.DateTimeFormat("en-US", {
-            timeZone: e.timezone,
-            hour: "numeric",
-            minute: "2-digit",
-          }).format(new Date(e.start_at)),
-        })),
-      );
+      return true;
+    } catch (error) {
+      if (!signal?.aborted && sequence === request.current)
+        setError(error instanceof Error ? error.message : "Please try again.");
+      return false;
     } finally {
-      setEventsLoading(false);
-    }
-  }, []);
-  const loadTeamMembers = useCallback(async () => {
-    setTeamLoading(true);
-    try {
-      setTeamMembers((await api<{ items: Row[] }>("/team?pageSize=100")).items);
-    } finally {
-      setTeamLoading(false);
-    }
-  }, []);
-  const loadSponsors = useCallback(async () => {
-    setSponsorsLoading(true);
-    try {
-      const [partners, tiers] = await Promise.all([
-        api<{ items: Row[] }>("/sponsors?pageSize=100"),
-        api<{ items: Row[] }>("/sponsor-tiers?pageSize=100"),
-      ]);
-      setSponsors(partners.items);
-      setSponsorshipTiers(tiers.items);
-    } finally {
-      setSponsorsLoading(false);
-    }
-  }, []);
-  const loadResources = useCallback(async () => {
-    setResourcesLoading(true);
-    try {
-      setResources(
-        (await api<{ items: Row[] }>("/resources?pageSize=100")).items,
-      );
-    } finally {
-      setResourcesLoading(false);
+      if (!signal?.aborted && sequence === request.current) setLoading(false);
     }
   }, []);
   useEffect(() => {
-    loadEssential().catch(() => {});
+    const controller = new AbortController();
+    void loadEssential(controller.signal);
+    return () => {
+      controller.abort();
+      request.current++;
+    };
   }, [loadEssential]);
-  const refreshContent = async () => {
-    await Promise.all([loadEssential(), loadEvents()]);
-    setLastUpdated(Date.now());
-  };
-  const refreshPageContent = async () => {
-    await loadEssential();
-  };
-  const getAllLinks = (category?: string) => {
-    const items = Array.isArray(siteSettings.all_links)
-      ? siteSettings.all_links
-      : [];
-    return category ? items.filter((r) => r.category === category) : items;
-  };
+  const { settings, pages, footer } = projectContent(
+    snapshot || {
+      settings: [],
+      pages: [],
+      navigation: [],
+      social: [],
+      footer: [],
+    },
+  );
+  const refreshContent = useCallback(() => loadEssential(), [loadEssential]);
   return (
     <ContentContext.Provider
       value={{
-        siteSettings,
-        pageContent,
-        navigationItems,
-        socialLinks,
-        footerContent,
-        events,
-        teamMembers,
-        projects: [],
-        sponsors,
-        chapterMetrics,
-        sponsorshipTiers,
-        resources,
+        siteSettings: settings,
+        pageContent: pages,
+        navigationItems: snapshot?.navigation || [],
+        socialLinks: snapshot?.social || [],
+        footerContent: footer,
+        chapterMetrics: snapshot?.metrics || [],
         isLoading,
-        isLoadingEvents,
-        isLoadingTeam,
-        isLoadingProjects: false,
-        isLoadingSponsors,
-        isLoadingResources,
+        contentError,
         lastUpdated,
         refreshContent,
-        refreshPageContent,
-        forceRefreshPageContent: refreshPageContent,
-        loadEvents,
-        loadTeamMembers,
-        loadProjects: async () => {},
-        loadSponsors,
-        loadResources,
-        getSiteSetting: (key) => siteSettings[key] ?? null,
-        getPageSection: (page, section) => pageContent[page]?.[section] ?? null,
-        getFooterSection: (section) => footerContent[section] ?? null,
-        getAllLinks,
-        getLink: (key) =>
-          getAllLinks().find(
-            (item) =>
-              item.id === key ||
-              String(item.name).toLowerCase().replace(/\s+/g, "_") === key,
-          )?.url ||
-          siteSettings[key + "_url"] ||
-          "#",
+        refreshPageContent: refreshContent,
+        forceRefreshPageContent: refreshContent,
+        getSiteSetting: (key) => settings[key] ?? null,
+        getPageSection: (page, section) => pages[page]?.[section] ?? null,
+        getFooterSection: (section) => footer[section] ?? null,
+        getAllLinks: (category) => managedLinks(settings, category),
+        getLink: (key) => managedLink(settings, key),
       }}
     >
       {children}

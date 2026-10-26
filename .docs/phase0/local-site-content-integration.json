@@ -1,5 +1,5 @@
 {
-  "note": "Real local CMS API/public serialization; only new fictional records used and archived. Existing copy was never overwritten.",
+  "note": "Real local CMS API/public serialization. Uses an unused slot or an untouched archived fictional fixture with matching private ledger, owner and revision; archives it again. Existing managed copy is never overwritten.",
   "tests": [
     {
       "name": "anonymous callers cannot list CMS drafts",

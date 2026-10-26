@@ -116,14 +116,14 @@ Their manual/hosted/visual acceptance remains open.
   four low remain. See `ZOD_VALIDATION_UPGRADE.md`. The earlier full development
   audit had five high Tailwind/braces-chain findings; recheck before launch.
 - Strict application/build TypeScript now passes. Lint remediation remains:
-  zero errors/36 warnings after reviewed unused-client retirement;
+  zero errors/25 warnings after reviewed unused-client retirement and typed CMS recovery;
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is still 26.73% lines/25.45% branches, below the global
-  70% gate; 611 tests pass, not a percentage of completed PRD features.
+  coverage is still 28.13% lines/26.71% branches, below the global
+  70% gate; 633 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 104 reviewed logical test cases with
+  All 146 numbered requirements now map into 105 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.

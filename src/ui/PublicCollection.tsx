@@ -21,7 +21,14 @@ export function PublicCollectionNotice({
               : "This list could not load."}{" "}
             {error}
           </p>
-          <Button variant="secondary" onClick={retry} disabled={loading}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              retry();
+              document.getElementById("main-content")?.focus();
+            }}
+            disabled={loading}
+          >
             Try again
           </Button>
         </div>
