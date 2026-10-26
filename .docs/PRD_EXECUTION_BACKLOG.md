@@ -103,7 +103,8 @@ Their manual/hosted/visual acceptance remains open.
    acceptance. Production worker/manifest/icons, public-only cache rules,
    draft-guarded updates, install guidance and IndexedDB event/newsletter queue
    (pending/failure/retry/discard, 48-hour expiry and logout epoch clearing) are
-   implemented locally. Actual browser verifies public offline fallback, private
+   implemented locally. Interrupted-final-attempt and storage-read/focus recovery
+   are implemented (`QUEUE_RECOVERY_OPERATIONS.md`). Actual browser verifies public offline fallback, private
    route refusal and a real fictional queued signup; see `PWA_OPERATIONS.md`.
 6. Push actual supported-device enrollment/permission/delivery/click/expiry,
    hosted VAPID/provider/scheduler/load/privacy/accessibility acceptance. Verified
@@ -130,10 +131,10 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is still 32.37% lines/31.09% branches, below the global
-  70% gate; 754 tests pass, not a percentage of completed PRD features.
+  coverage is still 33.08% lines/31.49% branches, below the global
+  70% gate; 772 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 114 reviewed logical test cases with
+  All 146 numbered requirements now map into 116 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.

@@ -2625,9 +2625,9 @@ export function InfoPage({
       "If you encounter a barrier or need an accommodation, please use the accessibility inquiry option on our contact page.",
     ],
     offline: [
-      "You’re offline. We’re still here.",
-      "Offline",
-      "You can explore pages already open in this browser. New data, registrations, and final form submissions need an internet connection.",
+      "Connection and pending submissions.",
+      "Offline help",
+      "Once offline assets are ready, the public app assets and this help page are available without a connection. Current event information, private workspace data and native forms are not cached.",
       "Event registrations and newsletter signups saved to the device queue remain pending until the server accepts them. Final native Forms responses are never background queued.",
     ],
     maintenance: [

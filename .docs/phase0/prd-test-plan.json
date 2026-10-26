@@ -1783,6 +1783,44 @@
       "acceptance": "unverified"
     },
     {
+      "id": "PWA-TEST-005",
+      "requirements": [],
+      "scope": "Minimal public queue, retry classification, leases, interrupted-final-attempt recovery, expiry and logout fences",
+      "automated": [
+        "tests/server/public-queue.test.mjs",
+        "tests/client/submission-queue-ui.test.tsx"
+      ],
+      "remaining": [
+        "Real multi-tab/worker interruption, lost-response, 48-hour expiry and logout storage-failure acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "11.3",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
+      "id": "PWA-TEST-006",
+      "requirements": [],
+      "scope": "Device storage loading/error/stale recovery, offline retry, consent and semantic focus",
+      "automated": [
+        "tests/client/submission-queue-ui.test.tsx"
+      ],
+      "remaining": [
+        "Supported-device storage/private-mode/keyboard/screen-reader review",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "11.3",
+        "22.13",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
       "id": "PWA-TEST-007",
       "requirements": [
         "PUSH-001",

@@ -871,6 +871,24 @@ add(
   ["Real supported-device installation/uninstall/reinstall acceptance"],
 );
 add(
+  "PWA-TEST-005",
+  "",
+  "Minimal public queue, retry classification, leases, interrupted-final-attempt recovery, expiry and logout fences",
+  [unit("public-queue"), "tests/client/submission-queue-ui.test.tsx"],
+  [
+    "Real multi-tab/worker interruption, lost-response, 48-hour expiry and logout storage-failure acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["11.3", "28.3", "31.2"];
+add(
+  "PWA-TEST-006",
+  "",
+  "Device storage loading/error/stale recovery, offline retry, consent and semantic focus",
+  ["tests/client/submission-queue-ui.test.tsx"],
+  ["Supported-device storage/private-mode/keyboard/screen-reader review"],
+);
+prdTestCases.at(-1).normative = ["11.3", "22.13", "28.3", "31.2"];
+add(
   "PWA-TEST-007",
   "PUSH-001 PUSH-009",
   "User-gesture-only permission and iOS installed-context guidance",

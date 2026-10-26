@@ -2934,6 +2934,14 @@ img {
 .gt-form h2 {
   margin-bottom: -8px;
 }
+.gt-queue-signup-fields {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
 .gt-form > p {
   color: #716157;
   font-size: 0.8rem;

@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-26",
+  "kind": "manual CUA browser observations with a read-only local database verification",
+  "origin": "http://127.0.0.1:8080",
+  "route": "/offline",
+  "fixture": "fictional-queue-recovery-20261026@example.test",
+  "observations": [
+    { "name": "Consent and fictional email enable Save pending signup", "observed": true },
+    { "name": "Successful device save clears email and focuses the truthful save feedback", "observed": true },
+    { "name": "Actual API replay shows accepted signup with email-confirmation guidance", "observed": true },
+    { "name": "Reload restores the accepted record from real IndexedDB", "observed": true },
+    { "name": "Read-only database check finds exactly one pending, inactive, unconfirmed fictional subscriber", "observed": true },
+    { "name": "Offline help uses neutral connection copy when online", "observed": true },
+    { "name": "375 px viewport has 375 px document width and a 44 px high Dismiss action; viewport reset afterward", "observed": true }
+  ],
+  "retention": "Synthetic pending subscriber and identifier-only accepted device record retained. No existing user queue records cleared.",
+  "externalDelivery": false,
+  "acceptance": "unverified"
+}

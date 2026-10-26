@@ -5,6 +5,25 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Public queue interruption and storage recovery — 2026-10-26
+
+- Interrupted final attempts become a truthful terminal failure after their
+  lease ends; active requests are preserved, earlier attempts retain their key,
+  and obsolete results cannot overwrite a newer lease. Expiry asks the user to
+  check the original server result before submitting again.
+- Device storage now has loading/error/read-retry/stale states, ordered reads,
+  consent/write freezing, duplicate prevention, connection-aware retry and
+  semantic feedback focus. Offline help no longer claims an online user is offline.
+- Four added engine cases and fourteen DOM/lifecycle cases; all 772 tests across
+  119 files pass. Strict types pass and lint remains 0 errors/25 warnings. Global
+  coverage remains below 70% at 33.08% lines/31.49% branches; all 17 critical-file
+  branch gates pass. A competing build caused one import-graph timeout; the
+  subsequent complete coverage run passed every test without that competing build.
+- Real Chrome/IndexedDB/API replay and reload plus a read-only database check
+  confirm one fictional pending/unconfirmed subscriber. Mobile DOM fits at 375 px.
+  No provider send or production change. There are now 116 unverified logical
+  acceptance cases. See `QUEUE_RECOVERY_OPERATIONS.md`; full PRD acceptance is open.
+
 ### Forms recovery, review and section focus — 2026-10-26
 
 - Validation and section focus no longer depend on animation frames. Back to
