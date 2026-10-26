@@ -1,0 +1,34 @@
+{
+  "generatedAt": "2026-10-26T18:30:07.751Z",
+  "kind": "manual-local-browser-observations",
+  "note": "Native Chrome segmented date/time entry, review/back and committed fictional response. Direct database read verified complete status and the string zero answer. No real respondent or external provider used. The separate unfinished automation draft was discarded.",
+  "observations": [
+    {
+      "name": "Native segmented date and time input accepted the allowed local value",
+      "passed": true
+    },
+    {
+      "name": "Review preserved the zero estimate",
+      "passed": true
+    },
+    {
+      "name": "Review heading received keyboard focus",
+      "passed": true
+    },
+    {
+      "name": "Back to section one focused Your questions",
+      "passed": true
+    },
+    {
+      "name": "Committed success focused its heading",
+      "passed": true
+    },
+    {
+      "name": "Database confirms complete status and the zero answer",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "ui-review/form-first-section-focus.png"
+  ]
+}

@@ -12,6 +12,7 @@ export function usePublicMetadata(
     image?: string;
     event?: boolean;
     noindex?: boolean;
+    noarchive?: boolean;
   } = {},
 ) {
   const { pathname } = useLocation(),
@@ -23,7 +24,8 @@ export function usePublicMetadata(
     noindex =
       options.noindex ??
       !(publicIndexPaths.includes(path) || /^\/events\/[a-z0-9-]+$/.test(path)),
-    kind = options.event ? "article" : "website";
+    kind = options.event ? "article" : "website",
+    noarchive = options.noarchive === true;
   useEffect(() => {
     const origin = window.location.origin,
       canonicalUrl = new URL(path, origin).href,
@@ -70,7 +72,11 @@ export function usePublicMetadata(
     }
     meta("og:image", imageUrl);
     meta("twitter:image", imageUrl);
-    meta("robots", noindex ? "noindex, nofollow" : "index, follow");
+    meta(
+      "robots",
+      (noindex ? "noindex, nofollow" : "index, follow") +
+        (noarchive ? ", noarchive" : ""),
+    );
     const links = Array.from(
         document.head.querySelectorAll<HTMLLinkElement>(
           'link[rel="canonical"]',
@@ -105,5 +111,5 @@ export function usePublicMetadata(
       organization?.remove();
       if (document.title === title) document.title = previousTitle;
     };
-  }, [title, path, description, image, noindex, kind]);
+  }, [title, path, description, image, noindex, kind, noarchive]);
 }

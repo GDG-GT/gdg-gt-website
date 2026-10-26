@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import React from "react";
 import {
+  act,
   cleanup,
   fireEvent,
   render,
@@ -12,6 +13,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import PublicForm from "../../src/ui/forms/PublicForm";
 import { createTemplate, newField } from "../../shared/forms";
 import { ApiFailure } from "../../src/lib/api";
+import { reviewAnswer } from "../../src/ui/forms/review-answer";
 const { apiMock } = vi.hoisted(() => ({ apiMock: vi.fn() }));
 vi.mock("@/lib/api", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../../src/lib/api")>()),
@@ -48,7 +50,14 @@ function mount(query = "") {
       future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <Routes>
-        <Route path="/forms/:slug" element={<PublicForm />} />
+        <Route
+          path="/forms/:slug"
+          element={
+            <main id="main-content" tabIndex={-1}>
+              <PublicForm />
+            </main>
+          }
+        />
       </Routes>
     </MemoryRouter>,
   );
@@ -462,9 +471,290 @@ describe("FORM-TEST-031: respondent identity, submission, privacy and recovery U
     await screen.findByText(
       "If eligible, a private access link is on its way.",
     );
-    expect(apiMock).toHaveBeenCalledWith("/forms/fictional/verify", {
-      method: "POST",
-      body: { email: "fictional-invite@example.test", website: "" },
+    expect(apiMock).toHaveBeenCalledWith(
+      "/forms/fictional/verify",
+      expect.objectContaining({
+        method: "POST",
+        body: { email: "fictional-invite@example.test", website: "" },
+        signal: expect.any(AbortSignal),
+      }),
+    );
+  });
+});
+
+describe("Form recovery and semantic focus", () => {
+  it("keeps an offline draft only in the open tab and never auto-submits on reconnect", async () => {
+    apiMock.mockImplementation((path: string) =>
+      Promise.resolve(
+        path.endsWith("/submissions")
+          ? { responseId: "fictional-online-response" }
+          : { form: fixture() },
+      ),
+    );
+    mount();
+    await fill();
+    vi.stubGlobal("navigator", { ...navigator, onLine: false });
+    fireEvent(window, new Event("offline"));
+    expect(
+      screen.getByText(
+        /You’re offline. Your current answers remain in this open tab/,
+      ),
+    ).toBeTruthy();
+    expect(
+      (
+        screen.getByRole("button", {
+          name: "Submit response",
+        }) as HTMLButtonElement
+      ).disabled,
+    ).toBe(true);
+    expect(
+      (
+        screen.getByRole("button", {
+          name: "Save and resume later",
+        }) as HTMLButtonElement
+      ).disabled,
+    ).toBe(true);
+    submit();
+    const alert = await screen.findByRole("alert");
+    expect(alert.textContent).toContain("Reconnect to submit");
+    expect(
+      apiMock.mock.calls.filter(([path]) => path.endsWith("/submissions")),
+    ).toHaveLength(0);
+    vi.stubGlobal("navigator", { ...navigator, onLine: true });
+    fireEvent(window, new Event("online"));
+    expect(
+      screen.queryByText(
+        /You’re offline. Your current answers remain in this open tab/,
+      ),
+    ).toBeNull();
+    expect(
+      (screen.getByLabelText(/Fictional answer/) as HTMLInputElement).value,
+    ).toBe("A fictional answer");
+    expect(
+      apiMock.mock.calls.filter(([path]) => path.endsWith("/submissions")),
+    ).toHaveLength(0);
+    submit();
+    await screen.findByRole("heading", { name: "Response submitted." });
+  });
+  it("reviews private files by known filename or generic label, never their capability or object identity", () => {
+    const privateId = "f1330000-0000-4000-8000-000000000001";
+    expect(
+      reviewAnswer([privateId], "file", { [privateId]: "fictional.pdf" }),
+    ).toBe("fictional.pdf");
+    expect(reviewAnswer([privateId], "file", {})).toBe("Private attachment");
+  });
+  it("focuses identity and required answers while animation frames are paused", async () => {
+    vi.stubGlobal(
+      "requestAnimationFrame",
+      vi.fn(() => 0),
+    );
+    apiMock.mockResolvedValue({ form: fixture() });
+    mount();
+    await screen.findByRole("heading", { name: "Fictional respondent form" });
+    submit();
+    await waitFor(() =>
+      expect(document.activeElement).toBe(screen.getByLabelText("Your name *")),
+    );
+    await fill();
+    fireEvent.change(screen.getByLabelText(/Fictional answer/), {
+      target: { value: "" },
     });
+    submit();
+    await waitFor(() =>
+      expect(document.activeElement).toBe(
+        screen.getByLabelText(/Fictional answer/),
+      ),
+    );
+  });
+  it("focuses every section transition, including Back to section one", async () => {
+    const form = fixture();
+    form.sections[0].title = "First fictional section";
+    form.sections.push({
+      id: "second-fictional-section",
+      title: "Second fictional section",
+      description: "",
+    });
+    apiMock.mockResolvedValue({ form });
+    mount();
+    await fill();
+    fireEvent.click(screen.getByRole("button", { name: "Next" }));
+    const second = await screen.findByRole("heading", {
+      name: "Second fictional section",
+    });
+    expect(document.activeElement).toBe(second);
+    fireEvent.click(screen.getByRole("button", { name: "Back" }));
+    expect(document.activeElement).toBe(
+      screen.getByRole("heading", { name: "First fictional section" }),
+    );
+  });
+  it("returns server-rejected answers to their earlier section and focuses the enabled invalid control", async () => {
+    const form = fixture();
+    form.sections.push({
+      id: "second-fictional-section",
+      title: "Second fictional section",
+      description: "",
+    });
+    apiMock.mockImplementation((path: string) =>
+      path.endsWith("/submissions")
+        ? Promise.reject(
+            new ApiFailure(
+              400,
+              "VALIDATION_ERROR",
+              "Check the supplied answer.",
+              { [form.fields[0].id]: "Correct this answer." },
+            ),
+          )
+        : Promise.resolve({ form }),
+    );
+    mount();
+    await fill();
+    fireEvent.click(screen.getByRole("button", { name: "Next" }));
+    submit();
+    await screen.findByRole("alert");
+    const input = screen.getByLabelText(/Fictional answer/) as HTMLInputElement;
+    await waitFor(() => expect(document.activeElement).toBe(input));
+    expect(input.disabled).toBe(false);
+    expect(input.getAttribute("aria-invalid")).toBe("true");
+  });
+  it("focuses generic submission errors instead of leaving focus on an unavailable control", async () => {
+    apiMock.mockImplementation((path: string) =>
+      path.endsWith("/submissions")
+        ? Promise.reject(Error("Fictional server outage"))
+        : Promise.resolve({ form: fixture() }),
+    );
+    mount();
+    await fill();
+    submit();
+    const alert = await screen.findByRole("alert");
+    await waitFor(() => expect(document.activeElement).toBe(alert));
+    expect(
+      (
+        screen.getByRole("button", {
+          name: "Submit response",
+        }) as HTMLButtonElement
+      ).disabled,
+    ).toBe(false);
+  });
+  it("shows a real loading status and recovers a read failure with retained landmark focus", async () => {
+    let calls = 0;
+    apiMock.mockImplementation(() =>
+      ++calls === 1
+        ? Promise.reject(Error("Fictional read failure"))
+        : Promise.resolve({ form: fixture() }),
+    );
+    mount();
+    expect(screen.getByRole("status", { name: "Loading form" })).toBeTruthy();
+    await screen.findByRole("heading", { name: "This form isn’t available" });
+    fireEvent.click(screen.getByRole("button", { name: "Retry form" }));
+    await screen.findByRole("heading", { name: "Fictional respondent form" });
+    expect(document.activeElement?.id).toBe("main-content");
+    expect(calls).toBe(2);
+  });
+  it("uses the branded 404 for a concealed draft and keeps its metadata private", async () => {
+    apiMock.mockRejectedValue(new ApiFailure(404, "NOT_FOUND", "Not found"));
+    mount();
+    await screen.findByRole("heading", {
+      name: "A little off the beaten path.",
+    });
+    expect(screen.getByText("404")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Retry form" })).toBeNull();
+    expect(document.title).toMatch(/^Page not found/);
+    expect(
+      document.querySelector('meta[name="robots"]')?.getAttribute("content"),
+    ).toBe("noindex, nofollow, noarchive");
+  });
+  it("keeps zero answers, labels cleared choices and formats grid review as readable text", async () => {
+    const form = fixture({ review: true }),
+      section = form.sections[0].id;
+    const zero = { ...newField("number", section), label: "Fictional zero" },
+      choices = {
+        ...newField("checkbox", section),
+        label: "Fictional choices",
+      },
+      matrix = { ...newField("likert", section), label: "Fictional matrix" };
+    form.fields.push(zero, choices, matrix);
+    apiMock.mockResolvedValue({ form });
+    mount();
+    await fill();
+    fireEvent.change(screen.getByLabelText(/Fictional zero/), {
+      target: { value: "0" },
+    });
+    const option = screen
+      .getByRole("group", { name: /Fictional choices/ })
+      .querySelector("input")!;
+    fireEvent.click(option);
+    fireEvent.click(option);
+    const row = matrix.options[0],
+      column = (matrix.columns || ["Disagree", "Neutral", "Agree"])[0];
+    fireEvent.click(screen.getByLabelText(row + ": " + column));
+    fireEvent.click(screen.getByRole("button", { name: "Next" }));
+    await screen.findByRole("heading", { name: "One last look." });
+    const answer = (label: string) =>
+      screen
+        .getByText(label, { exact: true })
+        .closest("div")
+        ?.querySelector("p")?.textContent;
+    expect(answer("Fictional zero")).toBe("0");
+    expect(answer("Fictional choices")).toBe("Not answered");
+    expect(answer("Fictional matrix")).toBe(row + ": " + column);
+  });
+  it("makes private-link copy failure visible after a committed submission", async () => {
+    vi.stubGlobal("navigator", {
+      ...navigator,
+      onLine: true,
+      clipboard: {
+        writeText: vi
+          .fn()
+          .mockRejectedValue(Error("Fictional clipboard denial")),
+      },
+    });
+    apiMock.mockImplementation((path: string) =>
+      Promise.resolve(
+        path.endsWith("/submissions")
+          ? {
+              responseId: "fictional-response",
+              editToken: "e".repeat(43),
+              revision: 1,
+            }
+          : { form: fixture() },
+      ),
+    );
+    mount();
+    await fill();
+    submit();
+    await screen.findByRole("heading", { name: "Response submitted." });
+    fireEvent.click(screen.getByRole("button", { name: "Copy private link" }));
+    const status = await screen.findByText(
+      "The private link could not be copied. Try again.",
+    );
+    await waitFor(() => expect(document.activeElement).toBe(status));
+    expect(status.getAttribute("role")).toBe("status");
+  });
+  it("aborts an unfinished submission when the form unmounts and ignores its late result", async () => {
+    let resolve!: (value: { responseId: string }) => void;
+    apiMock.mockImplementation((path: string) =>
+      path.endsWith("/submissions")
+        ? new Promise((yes) => {
+            resolve = yes;
+          })
+        : Promise.resolve({ form: fixture() }),
+    );
+    const view = mount();
+    await fill();
+    submit();
+    const call = apiMock.mock.calls.find(([path]) =>
+      path.endsWith("/submissions"),
+    )!;
+    view.unmount();
+    expect(call[1].signal.aborted).toBe(true);
+    mount();
+    await screen.findByRole("heading", { name: "Fictional respondent form" });
+    await act(async () => resolve({ responseId: "fictional-late" }));
+    expect(
+      screen.queryByRole("heading", { name: "Response submitted." }),
+    ).toBeNull();
+    expect(
+      (screen.getByLabelText("Your name *") as HTMLInputElement).value,
+    ).toBe("");
   });
 });

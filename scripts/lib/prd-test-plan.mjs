@@ -947,6 +947,17 @@ add(
   ["Real keyboard/screen-reader and published file-policy acceptance"],
 );
 
+add(
+  "FORM-TEST-033",
+  "FORM-011 FORM-014 FORM-026",
+  "Frame-independent validation/section focus, read retry, branded concealment, readable review, private-link feedback and mutation cancellation",
+  ["tests/client/public-form-ui.test.tsx", local("form-runtime")],
+  [
+    "Full supported-device/screen-reader accessibility and hosted error/response acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["22.11", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

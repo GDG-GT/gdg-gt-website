@@ -1952,6 +1952,29 @@
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified"
+    },
+    {
+      "id": "FORM-TEST-033",
+      "requirements": [
+        "FORM-011",
+        "FORM-014",
+        "FORM-026"
+      ],
+      "scope": "Frame-independent validation/section focus, read retry, branded concealment, readable review, private-link feedback and mutation cancellation",
+      "automated": [
+        "tests/client/public-form-ui.test.tsx",
+        "scripts/test-local-form-runtime.mjs"
+      ],
+      "remaining": [
+        "Full supported-device/screen-reader accessibility and hosted error/response acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.11",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

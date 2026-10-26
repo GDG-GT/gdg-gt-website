@@ -25,6 +25,9 @@ import {
   formCapabilityNames,
 } from "../../../shared/capability-navigation";
 import RespondentFileField from "./RespondentFileField";
+import NotFoundContent from "../NotFoundContent";
+import { usePublicMetadata } from "../usePublicMetadata";
+import { reviewAnswer } from "./review-answer";
 import { api, ApiFailure } from "@/lib/api";
 import GeorgiaTechSsoOption from "../auth/GeorgiaTechSsoOption";
 import {
@@ -60,6 +63,9 @@ function RespondentFormRuntime() {
   const [form, setForm] = useState<RespondentForm>(),
     [loading, setLoading] = useState(true),
     [loadError, setLoadError] = useState(""),
+    [loadStatus, setLoadStatus] = useState<number>(),
+    [loadAttempt, setLoadAttempt] = useState(0),
+    [online, setOnline] = useState(navigator.onLine),
     [pending, setPending] = useState(false),
     [savedLink, setSavedLink] = useState(""),
     [accessRequired, setAccessRequired] = useState(false);
@@ -91,7 +97,25 @@ function RespondentFormRuntime() {
     [copyRequested, setCopyRequested] = useState(false),
     [copyQueued, setCopyQueued] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null),
-    formRef = useRef<HTMLFormElement>(null);
+    formRef = useRef<HTMLFormElement>(null),
+    errorFeedback = useRef<HTMLElement | null>(null),
+    statusFeedback = useRef<HTMLParagraphElement>(null),
+    focusTarget = useRef<{
+      kind: "identity" | "field" | "heading" | "error" | "status";
+      id?: string;
+    }>(),
+    mutation = useRef<AbortController>();
+  useEffect(() => () => mutation.current?.abort(), []);
+  useEffect(() => {
+    const connected = () => setOnline(true),
+      disconnected = () => setOnline(false);
+    window.addEventListener("online", connected);
+    window.addEventListener("offline", disconnected);
+    return () => {
+      window.removeEventListener("online", connected);
+      window.removeEventListener("offline", disconnected);
+    };
+  }, []);
   const responseId = useRef<string | null>(null);
   const savedAnswers = useRef(
     JSON.stringify({
@@ -110,7 +134,9 @@ function RespondentFormRuntime() {
   );
   const [uploading, setUploading] = useState<string[]>([]),
     [fileNames, setFileNames] = useState<Record<string, string>>({});
-  const rejectIdentity = (issues: readonly { path: readonly PropertyKey[] }[]) => {
+  const rejectIdentity = (
+    issues: readonly { path: readonly PropertyKey[] }[],
+  ) => {
     const messages = {
       name: "Enter your name (2–100 characters).",
       email: "Enter a valid email address.",
@@ -124,9 +150,7 @@ function RespondentFormRuntime() {
     setIdentityErrors(errors);
     setError(Object.values(errors)[0]);
     setStep(0);
-    requestAnimationFrame(() =>
-      document.getElementById(`respondent-${Object.keys(errors)[0]}`)?.focus(),
-    );
+    focusTarget.current = { kind: "identity", id: Object.keys(errors)[0] };
   };
   useDraftGuard(
     !submitted &&
@@ -147,30 +171,16 @@ function RespondentFormRuntime() {
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [uploading.length]);
-  const formId = form?.id,
-    formTitle = form?.title;
-  useEffect(() => {
-    if (formId) document.title = `${formTitle} · GDG at Georgia Tech`;
-  }, [formId, formTitle]);
-  useEffect(() => {
-    let meta = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
-    const previous = meta?.content;
-    if (!meta) {
-      meta = document.createElement("meta");
-      meta.name = "robots";
-      document.head.appendChild(meta);
-    }
-    meta.content = "noindex, nofollow, noarchive";
-    return () => {
-      if (previous !== undefined) meta!.content = previous;
-      else meta?.remove();
-    };
-  }, []);
+  usePublicMetadata(
+    `${loadStatus === 404 ? "Page not found" : form?.title || "Chapter form"} · GDG at Georgia Tech`,
+    { noindex: true, noarchive: true },
+  );
   useEffect(() => {
     stripUrlCapabilities(window.history, window.location, formCapabilityNames);
     const controller = new AbortController();
     setLoading(true);
     setLoadError("");
+    setLoadStatus(undefined);
     setAccessRequired(false);
     const load = async () => {
       if (tokens.edit && !preview) {
@@ -188,6 +198,7 @@ function RespondentFormRuntime() {
           },
           signal: controller.signal,
         });
+        if (controller.signal.aborted) return;
         setForm(data.form);
         savedAnswers.current = JSON.stringify({
           answers: data.answers,
@@ -206,6 +217,7 @@ function RespondentFormRuntime() {
           `/forms/${slug}${preview ? "/preview" : ""}`,
           { formAccessToken: tokens.access, signal: controller.signal },
         );
+        if (controller.signal.aborted) return;
         setForm(data.form);
         const initial = {
           name: data.form.respondentContext?.name || "",
@@ -230,6 +242,7 @@ function RespondentFormRuntime() {
             },
             signal: controller.signal,
           });
+          if (controller.signal.aborted) return;
           savedAnswers.current = JSON.stringify({
             answers: draft.answers,
             respondent: draft.respondent,
@@ -246,6 +259,7 @@ function RespondentFormRuntime() {
       .catch((e) => {
         if (!controller.signal.aborted) {
           setLoadError(e.message);
+          setLoadStatus(e instanceof ApiFailure ? e.status : undefined);
           if (e instanceof ApiFailure && e.code === "ACCESS_REQUIRED")
             setAccessRequired(true);
         }
@@ -254,10 +268,28 @@ function RespondentFormRuntime() {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [slug, preview, tokens]);
+  }, [slug, preview, tokens, loadAttempt]);
   useEffect(() => {
-    if (step || submitted) heading.current?.focus();
-  }, [step, submitted]);
+    if (loading || pending || !focusTarget.current) return;
+    const target = focusTarget.current;
+    focusTarget.current = undefined;
+    if (target.kind === "identity")
+      document.getElementById("respondent-" + target.id)?.focus();
+    else if (target.kind === "field")
+      document.getElementById("field-" + target.id)?.focus();
+    else if (target.kind === "error") errorFeedback.current?.focus();
+    else if (target.kind === "status") statusFeedback.current?.focus();
+    else heading.current?.focus();
+  }, [
+    step,
+    submitted,
+    pending,
+    loading,
+    fieldErrors,
+    identityErrors,
+    error,
+    feedback,
+  ]);
   if (!loading && accessRequired)
     return (
       <div className="gt-public-form-page">
@@ -277,6 +309,8 @@ function RespondentFormRuntime() {
               setPending(true);
               operation.current = true;
               setError("");
+              const controller = new AbortController();
+              mutation.current = controller;
               try {
                 const result = await api<{ message: string }>(
                   `/forms/${slug}/verify`,
@@ -286,14 +320,19 @@ function RespondentFormRuntime() {
                       email: String(values.get("email") || ""),
                       website: String(values.get("website") || ""),
                     },
+                    signal: controller.signal,
                   },
                 );
+                if (controller.signal.aborted) return;
+                focusTarget.current = { kind: "status" };
                 setFeedback(result.message);
               } catch (e) {
+                if (controller.signal.aborted) return;
+                focusTarget.current = { kind: "error" };
                 setError((e as Error).message);
               } finally {
                 operation.current = false;
-                setPending(false);
+                if (!controller.signal.aborted) setPending(false);
               }
             }}
           >
@@ -310,28 +349,72 @@ function RespondentFormRuntime() {
             <div className="gt-honeypot" aria-hidden="true">
               <label>
                 Website
-                <input name="website" tabIndex={-1} autoComplete="off" />
+                <input
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  disabled={pending}
+                />
               </label>
             </div>
             <Button disabled={pending}>Request verification link</Button>
           </form>
           {error && (
-            <p className="gt-form-error" role="alert">
+            <p
+              className="gt-form-error"
+              role="alert"
+              tabIndex={-1}
+              ref={(node) => {
+                errorFeedback.current = node;
+              }}
+            >
               {error}
             </p>
           )}
-          {feedback && <p role="status">{feedback}</p>}
+          {feedback && (
+            <p role="status" tabIndex={-1} ref={statusFeedback}>
+              {feedback}
+            </p>
+          )}
           <GeorgiaTechSsoOption purpose="form" />
           <Link to="/contact">Contact the chapter</Link>
         </section>
       </div>
     );
-  if (loading || loadError || !form || !definition)
+  if (loading)
+    return (
+      <div className="gt-public-form-page">
+        <div
+          className="gt-public-form-sheet"
+          role="status"
+          aria-label="Loading form"
+        >
+          <div className="gt-skeleton gt-detail-skeleton" />
+          <span className="sr-only">Loading your form…</span>
+        </div>
+      </div>
+    );
+  if (loadStatus === 404) return <NotFoundContent />;
+  if (loadError || !form || !definition)
     return (
       <div className="gt-public-form-page">
         <EmptyState
-          title={loading ? "Loading your form…" : "This form isn’t available"}
-          action={<Link to="/">Return home</Link>}
+          title="This form isn’t available"
+          action={
+            <div className="gt-inline-actions">
+              {(!loadStatus || loadStatus >= 500 || loadStatus === 429) && (
+                <Button
+                  onClick={() => {
+                    setLoadAttempt((value) => value + 1);
+                    document.getElementById("main-content")?.focus();
+                  }}
+                >
+                  Retry form
+                </Button>
+              )}
+              <Link to="/">Return home</Link>
+            </div>
+          }
         >
           {loadError ||
             "It may be a draft, archived, or require a valid access link."}
@@ -380,6 +463,7 @@ function RespondentFormRuntime() {
     event.preventDefault();
     if (operation.current) return;
     if (uploading.length) {
+      focusTarget.current = { kind: "error" };
       setError("Wait for file uploads and security checks to finish.");
       return;
     }
@@ -406,12 +490,11 @@ function RespondentFormRuntime() {
         setStep(
           sections.findIndex((section) => section.id === missing.sectionId),
         );
-      requestAnimationFrame(() =>
-        document.getElementById(`field-${missing.id}`)?.focus(),
-      );
+      focusTarget.current = { kind: "field", id: missing.id };
       return;
     }
     if (!finalStep) {
+      focusTarget.current = { kind: "heading" };
       setStep(step + 1);
       return;
     }
@@ -422,6 +505,7 @@ function RespondentFormRuntime() {
       return;
     }
     if (!navigator.onLine) {
+      focusTarget.current = { kind: "error" };
       setError(
         "Reconnect to submit. Keep this page open; final responses are never queued offline.",
       );
@@ -462,6 +546,8 @@ function RespondentFormRuntime() {
       submission.current = { payload, key: crypto.randomUUID() };
     setPending(true);
     operation.current = true;
+    const controller = new AbortController();
+    mutation.current = controller;
     try {
       const result = await api<{
         responseId: string;
@@ -472,7 +558,9 @@ function RespondentFormRuntime() {
         method: "POST",
         body,
         idempotencyKey: submission.current.key,
+        signal: controller.signal,
       });
+      if (controller.signal.aborted) return;
       responseId.current = result.responseId;
       setCopyQueued(!!result.copyQueued);
       setRespondent(identity.data);
@@ -497,8 +585,11 @@ function RespondentFormRuntime() {
             "#edit=" +
             editToken.current,
         );
+      focusTarget.current = { kind: "heading" };
       setSubmitted(true);
     } catch (e) {
+      if (controller.signal.aborted) return;
+      focusTarget.current = { kind: "error" };
       setError((e as Error).message);
       if (e instanceof ApiFailure && e.fields) {
         setFieldErrors(e.fields);
@@ -510,14 +601,12 @@ function RespondentFormRuntime() {
               sections.findIndex((section) => section.id === invalid.sectionId),
             ),
           );
-          requestAnimationFrame(() =>
-            document.getElementById(`field-${invalid.id}`)?.focus(),
-          );
+          focusTarget.current = { kind: "field", id: invalid.id };
         }
       }
     } finally {
       operation.current = false;
-      setPending(false);
+      if (!controller.signal.aborted) setPending(false);
     }
   };
   const save = async () => {
@@ -531,6 +620,8 @@ function RespondentFormRuntime() {
     operation.current = true;
     setIdentityErrors({});
     setError("");
+    const controller = new AbortController();
+    mutation.current = controller;
     try {
       const visible = visibleFields(
           definition.fields,
@@ -557,7 +648,9 @@ function RespondentFormRuntime() {
           uploadToken,
           ...(tokens.access ? { accessToken: tokens.access } : {}),
         },
+        signal: controller.signal,
       });
+      if (controller.signal.aborted) return;
       resumeToken.current = result.resumeToken;
       setRespondent(identity.data);
       savedAnswers.current = JSON.stringify({
@@ -573,14 +666,17 @@ function RespondentFormRuntime() {
       setSavedLink(
         window.location.origin + window.location.pathname + "#" + fragment,
       );
+      focusTarget.current = { kind: "status" };
       setFeedback(
         `Draft saved securely until ${new Date(result.expiresAt).toLocaleString()}. Keep your private resume link.`,
       );
     } catch (e) {
+      if (controller.signal.aborted) return;
+      focusTarget.current = { kind: "error" };
       setError((e as Error).message);
     } finally {
       operation.current = false;
-      setPending(false);
+      if (!controller.signal.aborted) setPending(false);
     }
   };
   return (
@@ -593,6 +689,15 @@ function RespondentFormRuntime() {
           <Badge tone="coral">Preview</Badge> You’re viewing the current draft.
           Submissions are disabled.
           <Link to={`/admin/forms/${form.id}/edit`}>Back to builder</Link>
+        </div>
+      )}
+      {!online && !submitted && (
+        <div className="gt-public-form-sheet" role="status">
+          <p>
+            You’re offline. Your current answers remain in this open tab.
+            Reconnect to submit or save a private resume link. Reloading or
+            closing this tab can lose unsaved answers.
+          </p>
         </div>
       )}
       <div className="gt-public-form-sheet">
@@ -618,6 +723,7 @@ function RespondentFormRuntime() {
               <Button
                 variant="secondary"
                 onClick={() => {
+                  focusTarget.current = { kind: "heading" };
                   setSubmitted(false);
                   setStep(0);
                 }}
@@ -690,7 +796,14 @@ function RespondentFormRuntime() {
                   : "Fields marked * are required."}
               </p>
               {error && (
-                <div className="gt-form-error" role="alert">
+                <div
+                  className="gt-form-error"
+                  role="alert"
+                  tabIndex={-1}
+                  ref={(node) => {
+                    errorFeedback.current = node;
+                  }}
+                >
                   {error}
                 </div>
               )}
@@ -785,18 +898,12 @@ function RespondentFormRuntime() {
                     .map((field) => (
                       <div key={field.id}>
                         <strong>{field.label}</strong>
-                        <p>
-                          {Array.isArray(answers[field.id])
-                            ? (answers[field.id] as string[])
-                                .map((value) =>
-                                  field.type === "file"
-                                    ? fileNames[value] || "Private attachment"
-                                    : value,
-                                )
-                                .join(", ")
-                            : typeof answers[field.id] === "object"
-                              ? JSON.stringify(answers[field.id])
-                              : String(answers[field.id] || "Not answered")}
+                        <p style={{ whiteSpace: "pre-wrap" }}>
+                          {reviewAnswer(
+                            answers[field.id],
+                            field.type,
+                            fileNames,
+                          )}
                         </p>
                       </div>
                     ))}
@@ -893,6 +1000,7 @@ function RespondentFormRuntime() {
                     variant="secondary"
                     disabled={pending || uploading.length > 0}
                     onClick={() => {
+                      focusTarget.current = { kind: "heading" };
                       setStep(step - 1);
                       setError("");
                     }}
@@ -905,7 +1013,10 @@ function RespondentFormRuntime() {
                 <Button
                   type="submit"
                   disabled={
-                    pending || uploading.length > 0 || (preview && finalStep)
+                    pending ||
+                    uploading.length > 0 ||
+                    (preview && finalStep) ||
+                    (!online && finalStep)
                   }
                 >
                   {pending ? "Saving…" : finalStep ? "Submit response" : "Next"}
@@ -914,7 +1025,7 @@ function RespondentFormRuntime() {
               </div>
               {settings.resume && !preview && !editToken.current && (
                 <button
-                  disabled={pending || uploading.length > 0}
+                  disabled={pending || uploading.length > 0 || !online}
                   type="button"
                   className="gt-save-resume"
                   onClick={save}
@@ -952,13 +1063,16 @@ function RespondentFormRuntime() {
                 await navigator.clipboard.writeText(savedLink);
                 setFeedback("Private link copied.");
               } catch {
-                setError("The link could not be copied.");
+                focusTarget.current = { kind: "status" };
+                setFeedback("The private link could not be copied. Try again.");
               }
             }}
           >
             Copy private link
           </Button>
-          <p role="status">{feedback}</p>
+          <p role="status" tabIndex={-1} ref={statusFeedback}>
+            {feedback}
+          </p>
         </div>
       )}
       {!submitted && (

@@ -5,6 +5,26 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Forms recovery, review and section focus — 2026-10-26
+
+- Validation and section focus no longer depend on animation frames. Back to
+  section one, earlier-section server errors, generic failures, draft feedback
+  and submitted private-link copy errors now retain useful focus. Leaving the
+  runtime aborts pending mutations and ignores their late results.
+- Form loading has a real skeleton/status, recoverable read retry and the shared
+  branded 404 for concealed records. Metadata remains noindex/noarchive with a
+  generic unavailable title. Review labels empty choices, preserves typed zero
+  and formats grids as readable text while masking private file IDs. Offline
+  state explicitly preserves only the current open-tab draft, disables network
+  writes and never auto-submits on reconnect.
+- Eleven new DOM/privacy cases; 754 tests/118 files pass; strict types, lint
+  0 errors/25 warnings, build and byte budgets pass. Coverage is 32.37% lines/
+  31.09% branches, below 70%; all 17 critical branch gates pass. Nine real runtime
+  HTTP checks pass; native keyboard date entry, review/Back and one committed
+  fictional zero-valued response are verified. Exact form/account archived;
+  its synthetic responses retained. The catalog has 114 unverified logical
+  cases. See `FORM_INTERFACE_RECOVERY.md`.
+
 ### Newsletter review before preference changes — 2026-10-26
 
 - Opening confirmation/unsubscribe pages now performs only a private, read-only
