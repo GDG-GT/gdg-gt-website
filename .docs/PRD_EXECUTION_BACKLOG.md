@@ -130,10 +130,10 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is still 31.66% lines/30.21% branches, below the global
-  70% gate; 716 tests pass, not a percentage of completed PRD features.
+  coverage is still 31.73% lines/30.27% branches, below the global
+  70% gate; 726 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 111 reviewed logical test cases with
+  All 146 numbered requirements now map into 112 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.

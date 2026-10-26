@@ -60,6 +60,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const navigationRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLElement>(null);
+  const focusMenuOnOpen = useRef(false);
   const subscriptionRequest = useRef({ email: "", key: crypto.randomUUID() });
 
   useEffect(() => {
@@ -68,6 +69,10 @@ export default function SiteShell({ children }: { children: ReactNode }) {
   }, [location.pathname]);
   useEffect(() => {
     if (!menuOpen) return;
+    if (focusMenuOnOpen.current) {
+      focusMenuOnOpen.current = false;
+      mobileMenuRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
+    }
     const closeOutside = (event: PointerEvent) => {
       if (
         event.target instanceof Node &&
@@ -234,12 +239,14 @@ export default function SiteShell({ children }: { children: ReactNode }) {
             onKeyDown={(event) => {
               if (event.key !== "ArrowDown") return;
               event.preventDefault();
+              focusMenuOnOpen.current = true;
               setMenuOpen(true);
-              requestAnimationFrame(() =>
+              if (menuOpen) {
+                focusMenuOnOpen.current = false;
                 mobileMenuRef.current
                   ?.querySelector<HTMLAnchorElement>("a")
-                  ?.focus(),
-              );
+                  ?.focus();
+              }
             }}
           >
             {menuOpen ? <X /> : <Menu />}

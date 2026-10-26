@@ -393,6 +393,27 @@ describe("A11Y-TEST-004: top navigation keyboard containment", () => {
       screen.getByRole("button", { name: "Open navigation" }),
     );
   });
+  it("opens keyboard navigation even when animation frames are paused", async () => {
+    mount();
+    const frame = vi
+      .spyOn(window, "requestAnimationFrame")
+      .mockImplementation(() => 0);
+    try {
+      const button = screen.getByRole("button", { name: "Open navigation" });
+      fireEvent.keyDown(button, { key: "ArrowDown" });
+      const menu = screen.getByRole("navigation", {
+        name: "Mobile navigation",
+      });
+      await waitFor(() =>
+        expect(document.activeElement).toBe(menu.querySelector("a")),
+      );
+      button.focus();
+      fireEvent.keyDown(button, { key: "ArrowDown" });
+      expect(document.activeElement).toBe(menu.querySelector("a"));
+    } finally {
+      frame.mockRestore();
+    }
+  });
   it("closes after selecting a route or clicking outside the panel", async () => {
     menuFixture();
     fireEvent.click(screen.getByRole("button", { name: "Open navigation" }));

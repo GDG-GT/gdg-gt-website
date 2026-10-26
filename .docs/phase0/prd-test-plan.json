@@ -1046,6 +1046,25 @@
       ]
     },
     {
+      "id": "A11Y-TEST-006",
+      "requirements": [],
+      "scope": "Page destination focus, public/workspace boundary, inquiry context and frame-independent menu keyboard opening",
+      "automated": [
+        "tests/client/route-focus.test.tsx",
+        "tests/client/public-content-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Full screen-reader, browser/device and keyboard/zoom accessibility acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.1",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
       "id": "A11Y-TEST-004",
       "requirements": [],
       "scope": "Compact top-menu Tab containment, ArrowDown entry, Escape focus return and route/outside close",

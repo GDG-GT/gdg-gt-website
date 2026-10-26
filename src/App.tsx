@@ -20,6 +20,7 @@ import AdminShell from "@/ui/AdminShell";
 import RouteErrorBoundary from "@/ui/RouteErrorBoundary";
 import NavigationSafety from "@/ui/NavigationSafety";
 import CapabilityBoundary from "@/ui/CapabilityBoundary";
+import RouteFocus from "@/ui/RouteFocus";
 import { formCapabilityNames } from "../shared/capability-navigation";
 import { PwaUpdateNotice } from "@/pwa/PwaControls";
 import { QueueRuntime } from "@/pwa/SubmissionQueue";
@@ -146,6 +147,7 @@ function protectedPage(children: ReactNode) {
 function RoutedApplication() {
   return (
     <NavigationSafety>
+      <RouteFocus />
       <PwaUpdateNotice />
       <QueueRuntime />
       <SiteStatusRedirect>

@@ -5,6 +5,21 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Page navigation and frame-independent menu focus — 2026-10-26
+
+- Page changes focus the new public/workspace content landmark while list
+  filters, paging, editor tabs and fragments retain their active control. Contact
+  inquiry changes focus the new context. Initial mount and destination-specific
+  focus remain intact; Stay/Discard respects the accepted destination.
+- Compact-menu ArrowDown no longer relies on animation frames. Native Chrome
+  at verified 200% zoom opens/focuses the first item, navigates to Team and then
+  Tabs into its first content action. Localhost zoom/viewport were restored.
+- Ten new DOM cases; 726 tests/116 files pass; strict types, lint 0 errors/25
+  warnings, build, byte budgets and secret scan pass. Global coverage remains
+  below 70% at 31.73% lines/30.27% branches; all 17 critical branch gates pass.
+  The catalog has 112 logical cases, acceptance unverified. See
+  `PAGE_NAVIGATION_FOCUS.md`.
+
 ### Contact submission focus and inquiry isolation — 2026-10-26
 
 - Contact now blocks duplicate in-flight submits, freezes the complete form,

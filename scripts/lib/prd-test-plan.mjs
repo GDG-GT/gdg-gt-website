@@ -496,6 +496,19 @@ add(
 );
 prdTestCases.at(-1).normative = ["22.10", "28.2", "28.3"];
 add(
+  "A11Y-TEST-006",
+  "",
+  "Page destination focus, public/workspace boundary, inquiry context and frame-independent menu keyboard opening",
+  [
+    "tests/client/route-focus.test.tsx",
+    "tests/client/public-content-recovery.test.tsx",
+  ],
+  [
+    "Full screen-reader, browser/device and keyboard/zoom accessibility acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["22.1", "28.3", "31.2"];
+add(
   "A11Y-TEST-004",
   "",
   "Compact top-menu Tab containment, ArrowDown entry, Escape focus return and route/outside close",
