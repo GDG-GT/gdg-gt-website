@@ -869,6 +869,31 @@
       "acceptance": "unverified"
     },
     {
+      "id": "NEWS-TEST-004",
+      "requirements": [
+        "NEWS-002",
+        "NEWS-003"
+      ],
+      "scope": "Read-only token review before explicit confirmation/opt-out, safe retries, truthful ambiguous failures and no global capability cache",
+      "automated": [
+        "tests/client/newsletter-token-ui.test.tsx",
+        "tests/server/newsletter-token-review.test.mjs",
+        "database/tests/108_newsletter_token_review.sql",
+        "scripts/test-local-newsletter.mjs",
+        "scripts/test-local-newsletter-review.mjs"
+      ],
+      "remaining": [
+        "Full supported-device/screen-reader and hosted sender/link-scanner acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
       "id": "CONTENT-TEST-015",
       "requirements": [
         "CONTACT-001",

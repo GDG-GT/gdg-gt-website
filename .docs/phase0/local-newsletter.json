@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-22T06:12:47.170Z",
+  "generatedAt": "2026-10-26T18:07:51.572Z",
   "environment": "Fictional loopback accounts/team/recipients; local SMTP only; ephemeral signed callback fixture; one subscriber confirms through actual email, a second is explicitly synthetic preconfirmed data. All fixture records archived, no operator records erased.",
   "tests": [
     {
@@ -23,7 +23,19 @@
       "passed": true
     },
     {
+      "name": "opening a confirmation review validates without activating the subscriber",
+      "passed": true
+    },
+    {
+      "name": "token review rejects a confirmation capability used for unsubscribe",
+      "passed": true
+    },
+    {
       "name": "public POST token confirmation activates only the intended subscriber",
+      "passed": true
+    },
+    {
+      "name": "a confirmation retry returns safe success without another subscriber mutation",
       "passed": true
     },
     {
@@ -100,6 +112,10 @@
     },
     {
       "name": "delivery status never exposes stored unsubscribe capabilities",
+      "passed": true
+    },
+    {
+      "name": "read-only unsubscribe review recognizes an already committed opt-out",
       "passed": true
     },
     {

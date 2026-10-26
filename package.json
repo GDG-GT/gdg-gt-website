@@ -50,6 +50,7 @@
     "test:local-media-core": "node scripts/test-local-media-core.mjs",
     "test:local-media-files": "node scripts/test-local-media-files.mjs",
     "test:local-newsletter": "node scripts/test-local-newsletter.mjs",
+    "test:local-newsletter-review": "node scripts/test-local-newsletter-review.mjs",
     "test:local-contact-files": "node scripts/test-local-contact-files.mjs",
     "test:local-event-mail": "node scripts/test-local-event-mail.mjs",
     "setup:local-push": "node scripts/setup-local-push.mjs",

@@ -395,6 +395,22 @@ add(
   [unit("mail-transport"), "scripts/scan-secrets.mjs"],
 );
 add(
+  "NEWS-TEST-004",
+  "NEWS-002 NEWS-003",
+  "Read-only token review before explicit confirmation/opt-out, safe retries, truthful ambiguous failures and no global capability cache",
+  [
+    "tests/client/newsletter-token-ui.test.tsx",
+    unit("newsletter-token-review"),
+    sql("108_newsletter_token_review"),
+    local("newsletter"),
+    local("newsletter-review"),
+  ],
+  [
+    "Full supported-device/screen-reader and hosted sender/link-scanner acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["22.12", "28.3", "31.2"];
+add(
   "CONTENT-TEST-015",
   "CONTACT-001 CONTACT-002 CONTACT-003",
   "Bound contact inputs, fixed destination and escaped template",

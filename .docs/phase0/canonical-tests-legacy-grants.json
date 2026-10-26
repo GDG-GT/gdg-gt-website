@@ -108,7 +108,8 @@
     "202610240104_editorial_overview.sql",
     "202610240105_audit_statistics.sql",
     "202610260106_public_event_inventory.sql",
-    "202610260107_event_rescheduling.sql"
+    "202610260107_event_rescheduling.sql",
+    "202610260108_newsletter_token_review.sql"
   ],
   "tests": [
     {
@@ -548,6 +549,10 @@
       "passed": true
     },
     {
+      "name": "202610260108_newsletter_token_review.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -861,6 +866,10 @@
     },
     {
       "name": "107_event_rescheduling.sql",
+      "passed": true
+    },
+    {
+      "name": "108_newsletter_token_review.sql",
       "passed": true
     },
     {

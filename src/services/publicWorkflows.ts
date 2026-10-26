@@ -1,5 +1,4 @@
 import { api } from "@/lib/api";
-const pending = new Map<string, Promise<boolean>>();
 export class PublicNewsletterService {
   static async subscribe(
     email: string,
@@ -21,27 +20,33 @@ export class PublicNewsletterService {
       gateValid: data.gateValid === true,
     };
   }
-  static async confirmSubscription(token: string) {
-    return this.consume("confirm", token);
+  static async inspectToken(
+    kind: "confirm" | "unsubscribe",
+    token: string,
+    signal?: AbortSignal,
+  ) {
+    return api<{ valid: boolean; applied: boolean }>(
+      "/newsletter/" + kind + "/validate",
+      { method: "POST", body: { token }, signal },
+    );
   }
-  static async unsubscribe(token: string) {
-    return this.consume("unsubscribe", token);
+  static async confirmSubscription(token: string, signal?: AbortSignal) {
+    return this.consume("confirm", token, signal);
   }
-  private static consume(kind: "confirm" | "unsubscribe", token: string) {
-    const key = kind + ":" + token;
-    if (!pending.has(key))
-      pending.set(
-        key,
-        api<{ updated: boolean }>("/newsletter/" + kind, {
-          method: "POST",
-          body: { token },
-        })
-          .then((r) => r.updated)
-          .catch((error) => {
-            pending.delete(key);
-            throw error;
-          }),
-      );
-    return pending.get(key)!;
+  static async unsubscribe(token: string, signal?: AbortSignal) {
+    return this.consume("unsubscribe", token, signal);
+  }
+  private static async consume(
+    kind: "confirm" | "unsubscribe",
+    token: string,
+    signal?: AbortSignal,
+  ) {
+    return (
+      await api<{ updated: boolean }>("/newsletter/" + kind, {
+        method: "POST",
+        body: { token },
+        signal,
+      })
+    ).updated;
   }
 }

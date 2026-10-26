@@ -5,6 +5,25 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Newsletter review before preference changes — 2026-10-26
+
+- Opening confirmation/unsubscribe pages now performs only a private, read-only
+  token review. Explicit buttons commit changes. Token values are scrubbed and
+  no longer held in a module-level browser cache. Unknown/expired/wrong-purpose
+  capabilities do not reveal subscriber identities.
+- Migration 108 permits safe confirmation retry while the subscription remains
+  active, with consent/suppression/team/deletion safeguards. An old confirmation
+  never reactivates an opted-out subscriber. Ambiguous UI failures no longer
+  falsely promise that preferences are unchanged; pending operations remain guarded.
+- Seventeen DOM/API cases added; 743 tests/118 files pass; strict types, lint
+  0 errors/25 warnings, build and byte budgets pass. Coverage is 32.12% lines/
+  30.80% branches, below 70%; all 17 critical branch gates pass. Clean/legacy SQL
+  through 108, both capacity races and six restore checks pass. Thirty-five real
+  newsletter checks and nine isolated token-review API checks pass; native
+  review verifies unchanged state before either button and success focus after.
+  Exact fixtures revoked/archived. The catalog has 113 unverified logical cases.
+  See `NEWSLETTER_TOKEN_REVIEW.md`.
+
 ### Page navigation and frame-independent menu focus — 2026-10-26
 
 - Page changes focus the new public/workspace content landmark while list

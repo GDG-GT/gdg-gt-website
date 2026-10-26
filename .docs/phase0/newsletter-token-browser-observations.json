@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-10-26T18:12:56.851Z",
+  "kind": "manual-local-browser-observations",
+  "note": "Native Chrome with one invocation-owned fictional subscriber and private temporary tokens. Opening each page was separately checked against PostgreSQL by the held review suite before pressing its action. Both capabilities were revoked and the fixture archived afterward. This is not hosted or full accessibility acceptance.",
+  "observations": [
+    {
+      "name": "Opening confirmation review left subscriber pending",
+      "passed": true
+    },
+    {
+      "name": "Explicit Confirm subscription completed and focused the success heading",
+      "passed": true
+    },
+    {
+      "name": "Opening unsubscribe review left subscriber active",
+      "passed": true
+    },
+    {
+      "name": "Explicit Unsubscribe completed and focused the success heading",
+      "passed": true
+    },
+    {
+      "name": "Both visible browser addresses were scrubbed of the capability before screenshots",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "ui-review/newsletter-confirmation-review.png",
+    "ui-review/newsletter-unsubscribe-review.png"
+  ]
+}

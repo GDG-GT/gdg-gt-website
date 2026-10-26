@@ -124,6 +124,30 @@ try {
     !!confirmationToken,
     "double opt-in confirmation is delivered through real local SMTP",
   );
+  const tokenReview = data(
+    await call("/newsletter/confirm/validate", {
+      method: "POST",
+      body: { token: confirmationToken },
+      anonymous: true,
+    }),
+  );
+  check(
+    tokenReview.valid &&
+      !tokenReview.applied &&
+      data(await call(base + "/subscribers/" + subscriber.id)).record.state ===
+        "pending",
+    "opening a confirmation review validates without activating the subscriber",
+  );
+  check(
+    !data(
+      await call("/newsletter/unsubscribe/validate", {
+        method: "POST",
+        body: { token: confirmationToken },
+        anonymous: true,
+      }),
+    ).valid,
+    "token review rejects a confirmation capability used for unsubscribe",
+  );
   data(
     await call("/newsletter/confirm", {
       method: "POST",
@@ -135,6 +159,27 @@ try {
   check(
     subscriber.state === "active" && !!subscriber.confirmedAt,
     "public POST token confirmation activates only the intended subscriber",
+  );
+  data(
+    await call("/newsletter/confirm", {
+      method: "POST",
+      body: { token: confirmationToken },
+      anonymous: true,
+    }),
+  );
+  const confirmedAgain = data(
+    await call(base + "/subscribers/" + subscriber.id),
+  ).record;
+  check(
+    confirmedAgain.revision === subscriber.revision &&
+      data(
+        await call("/newsletter/confirm/validate", {
+          method: "POST",
+          body: { token: confirmationToken },
+          anonymous: true,
+        }),
+      ).applied,
+    "a confirmation retry returns safe success without another subscriber mutation",
   );
   const template = data(
     await post(base + "/templates", {
@@ -418,6 +463,16 @@ try {
     }),
   );
   check(
+    data(
+      await call("/newsletter/unsubscribe/validate", {
+        method: "POST",
+        body: { token: unsubscribeToken },
+        anonymous: true,
+      }),
+    ).applied,
+    "read-only unsubscribe review recognizes an already committed opt-out",
+  );
+  check(
     data(await call(base + "/subscribers/" + subscriber.id)).record.state ===
       "unsubscribed",
     "public unsubscribe remains safe after provider suppression",
@@ -508,17 +563,15 @@ try {
   );
   if (process.argv.includes("--hold-for-browser")) {
     sql(
-      await db
-        .from("newsletter_subscribers")
-        .insert({
-          email: `fictional-newsletter-browser-${actor}@example.test`,
-          name: "Synthetic browser fixture",
-          team_id: scope,
-          state: "active",
-          is_active: true,
-          consent_at: new Date().toISOString(),
-          confirmed_at: new Date().toISOString(),
-        }),
+      await db.from("newsletter_subscribers").insert({
+        email: `fictional-newsletter-browser-${actor}@example.test`,
+        name: "Synthetic browser fixture",
+        team_id: scope,
+        state: "active",
+        is_active: true,
+        consent_at: new Date().toISOString(),
+        confirmed_at: new Date().toISOString(),
+      }),
     );
     data(
       await post(base + "/campaigns", {

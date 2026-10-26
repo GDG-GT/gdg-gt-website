@@ -1,0 +1,42 @@
+{
+  "generatedAt": "2026-10-26T18:11:50.760Z",
+  "note": "Fictional loopback-only token review; tokens were private in-memory/ignored mode-0600 ledger and were revoked after review. No email was queued by this read-path fixture. Browser phases: false",
+  "tests": [
+    {
+      "name": "read-only confirmation validation leaves the fictional subscriber pending",
+      "passed": true
+    },
+    {
+      "name": "a confirmation token cannot review an unsubscribe action",
+      "passed": true
+    },
+    {
+      "name": "explicit confirmation commits an active subscription",
+      "passed": true
+    },
+    {
+      "name": "confirmation retry does not write the subscriber again",
+      "passed": true
+    },
+    {
+      "name": "a reloaded confirmation review reports already applied without mutation",
+      "passed": true
+    },
+    {
+      "name": "explicit unsubscribe commits the opt-out",
+      "passed": true
+    },
+    {
+      "name": "unsubscribe retry does not write the subscriber again",
+      "passed": true
+    },
+    {
+      "name": "reloaded unsubscribe review reports already applied",
+      "passed": true
+    },
+    {
+      "name": "a former confirmation cannot reactivate an opted-out subscriber",
+      "passed": true
+    }
+  ]
+}

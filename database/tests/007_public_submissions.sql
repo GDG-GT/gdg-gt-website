@@ -6,7 +6,9 @@ DO $$ DECLARE v uuid;v_repeat uuid;v_subscriber uuid;v_job public.delivery_jobs;
  IF (SELECT count(*) FROM public.newsletter_tokens WHERE subscriber_id=v_subscriber)<>1
   OR EXISTS(SELECT 1 FROM public.newsletter_subscribers WHERE id=v_subscriber AND is_active) THEN RAISE EXCEPTION 'Double-opt-in or deduplication failed';END IF;
  IF NOT public.consume_newsletter_token(repeat('c',64),'confirm') THEN RAISE EXCEPTION 'Confirmation failed';END IF;
- IF public.consume_newsletter_token(repeat('c',64),'confirm') THEN RAISE EXCEPTION 'Confirmation token was reusable';END IF;
+ -- Migration 108 allows a safe success replay while the same subscription is
+ -- still active; its token cannot reactivate an opted-out/suppressed record.
+ IF NOT public.consume_newsletter_token(repeat('c',64),'confirm') THEN RAISE EXCEPTION 'Committed confirmation retry was not idempotent';END IF;
  IF NOT EXISTS(SELECT 1 FROM public.newsletter_subscribers WHERE id=v_subscriber AND state='active' AND is_active) THEN RAISE EXCEPTION 'Confirmation did not activate subscriber';END IF;
  INSERT INTO public.newsletter_tokens(subscriber_id,purpose,token_hash,expires_at) VALUES(v_subscriber,'unsubscribe',repeat('e',64),now()+interval '1 day');
  IF NOT public.consume_newsletter_token(repeat('e',64),'unsubscribe') OR NOT public.consume_newsletter_token(repeat('e',64),'unsubscribe') THEN RAISE EXCEPTION 'Unsubscribe not idempotent';END IF;

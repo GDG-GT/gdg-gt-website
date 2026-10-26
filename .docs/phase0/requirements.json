@@ -678,7 +678,8 @@
       "line": 437,
       "status": "unverified",
       "testIds": [
-        "NEWS-TEST-001"
+        "NEWS-TEST-001",
+        "NEWS-TEST-004"
       ],
       "evidence": []
     },
@@ -688,7 +689,8 @@
       "line": 439,
       "status": "unverified",
       "testIds": [
-        "NEWS-TEST-001"
+        "NEWS-TEST-001",
+        "NEWS-TEST-004"
       ],
       "evidence": []
     },

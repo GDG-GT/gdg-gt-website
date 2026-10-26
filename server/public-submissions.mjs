@@ -26,6 +26,8 @@ export async function publicSubmissionRoutes(
       "/api/v1/newsletter/subscriptions",
       "/api/v1/newsletter/confirm",
       "/api/v1/newsletter/unsubscribe",
+      "/api/v1/newsletter/confirm/validate",
+      "/api/v1/newsletter/unsubscribe/validate",
       "/api/v1/contact",
     ].includes(path)
   )
@@ -108,16 +110,37 @@ export async function publicSubmissionRoutes(
     );
     return true;
   }
-  if (path.endsWith("/confirm") || path.endsWith("/unsubscribe")) {
+  const tokenAction = path.match(
+    /^\/api\/v1\/newsletter\/(confirm|unsubscribe)(\/validate)?$/,
+  );
+  if (tokenAction) {
     const body = await jsonBody(
       request,
       z.object({ token: z.string().refine(validToken) }).strict(),
       4096,
     );
+    if (tokenAction[2]) {
+      const result = checked(
+        await db.rpc("inspect_newsletter_token", {
+          p_hash: tokenHash(body.token),
+          p_purpose: tokenAction[1],
+        }),
+      );
+      sendJson(
+        response,
+        200,
+        {
+          valid: result.valid === true,
+          applied: result.valid === true && result.applied === true,
+        },
+        requestId,
+      );
+      return true;
+    }
     const success = checked(
       await db.rpc("consume_newsletter_token", {
         p_hash: tokenHash(body.token),
-        p_purpose: path.endsWith("/confirm") ? "confirm" : "unsubscribe",
+        p_purpose: tokenAction[1],
       }),
     );
     if (!success)

@@ -18,7 +18,7 @@ and append-only audit protection. Negative tests must leave all fingerprints
 unchanged. Only invocation-owned purpose-verified containers are removed on
 success; failures are stopped and left recoverable for investigation.
 
-Current local proof: 107 migrations, 130 application/security tables, 351
+Current local proof: 108 migrations, 130 application/security tables, 352
 functions, 656 constraints, 458 indexes and 71 noninternal triggers. All six
 checks pass, including the service-only public event inventory view. See
 `phase0/local-backup-restore.json`. This proves the logical

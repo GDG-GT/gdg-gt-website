@@ -30,7 +30,7 @@
       "passed": true
     },
     {
-      "name": "consumed confirmation token cannot be replayed",
+      "name": "committed confirmation safely replays while the subscription remains active",
       "passed": true
     },
     {

@@ -81,7 +81,7 @@ r = await call("/newsletter/confirm", {
   body: { token: raw },
   anonymous: true,
 });
-check(r.status === 410, "consumed confirmation token cannot be replayed");
+check(r.status === 200, "committed confirmation safely replays while the subscription remains active");
 const activeResponse = await call("/newsletter/subscriptions", {
   method: "POST",
   body: { email },
