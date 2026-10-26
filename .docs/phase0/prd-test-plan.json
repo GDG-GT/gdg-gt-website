@@ -748,6 +748,29 @@
       "acceptance": "unverified"
     },
     {
+      "id": "COMM-TEST-004",
+      "requirements": [
+        "COMM-001"
+      ],
+      "scope": "Account-bound notification inbox loading/error/stale states, read-all to read-only dismiss-all, late-response fences, mutation freezing and semantic focus",
+      "automated": [
+        "tests/client/notification-inbox-ui.test.tsx",
+        "tests/client/accessibility-structure.test.tsx",
+        "scripts/test-local-notification-bulk.mjs"
+      ],
+      "remaining": [
+        "Full supported-browser/screen-reader/realtime outage and institutional notification acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.2",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
       "id": "OPS-TEST-009",
       "requirements": [
         "COMM-006"

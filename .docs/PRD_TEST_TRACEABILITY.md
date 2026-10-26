@@ -1,6 +1,6 @@
 # Numbered PRD test mapping
 
-All 146 explicit v1.5 requirements now map into 119 logical acceptance cases in
+All 146 explicit v1.5 requirements now map into 120 logical acceptance cases in
 `phase0/prd-test-plan.json`. Each case identifies its concrete executable source
 suites, applicable manual/hosted work and an unverified acceptance state. Cases
 may cover several related requirements; this is not a count of tests executed or

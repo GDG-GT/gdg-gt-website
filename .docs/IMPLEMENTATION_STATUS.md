@@ -5,6 +5,23 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Notification inbox read/dismiss recovery — 2026-10-26
+
+- Read-all → read-only Dismiss all retains newly arrived unread updates. Reads
+  are abortable/ordered, writes freeze synchronously, page/account context resets
+  safely, permission failure clears private rows and stale network reads carry
+  their timestamp. Pending/unmount/error/feedback focus recovery implemented;
+  update paths are restricted to safe internal links and actions are named.
+- Thirteen new DOM cases plus one notification axe case; all 839 tests/123 files
+  pass. Strict types pass; lint is 0 errors/25 warnings. Coverage remains below
+  70% at 35.86% lines/33.94% branches; all 17 critical branch gates pass.
+- Eight actual local API/database checks pass, including foreign-account/new
+  unread preservation and the real fictional browser flow. Mobile dialog fits
+  at 375 px. The browser signed out, owned test rows were cleaned and private
+  ledger removed; unrelated inboxes were untouched.
+- Catalog: 120 unverified logical cases. See `NOTIFICATION_INBOX_RECOVERY.md`;
+  full PRD acceptance is still open.
+
 ### Axe structural regression checks — 2026-10-26
 
 - Pinned axe-core 4.14.0 adds 18 representative DOM cases to normal tests/CI and

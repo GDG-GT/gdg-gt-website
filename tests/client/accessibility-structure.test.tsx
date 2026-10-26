@@ -37,6 +37,7 @@ import FormBuilder from "../../src/ui/forms/FormBuilder";
 import ResponseWorkspace from "../../src/ui/forms/ResponseWorkspace";
 import { createTemplate, newField } from "../../shared/forms";
 import { ApiFailure } from "../../src/lib/api";
+import NotificationBell from "../../src/components/admin/NotificationBell";
 const { apiMock, listQueue } = vi.hoisted(() => ({
   apiMock: vi.fn(),
   listQueue: vi.fn(),
@@ -70,6 +71,7 @@ vi.mock("@/hooks/useDraftGuard", () => ({
   useDraftGuard: () => {},
   useNavigationSafety: () => ({ allow: (run: () => void) => run() }),
 }));
+vi.mock("@/hooks/useScopedRealtime", () => ({ useScopedRealtime: () => {} }));
 vi.mock("../../shared/public-queue.mjs", () => ({
   publicQueue: { list: listQueue },
 }));
@@ -508,6 +510,40 @@ describe("A11Y structural axe checks (JSDOM; no contrast/visual certification)",
     await audit();
     fireEvent.click(screen.getByRole("tab", { name: "Summary" }));
     await screen.findByRole("heading", { name: "0 matching responses" });
+    await audit();
+  });
+  it("checks the real notification dialog, named actions and message structure", async () => {
+    const original = apiMock.getMockImplementation()!;
+    apiMock.mockImplementation((path: string) =>
+      path.startsWith("/admin/notifications")
+        ? Promise.resolve({
+            items: [
+              {
+                id: "fictional-notification",
+                title: "Fictional chapter update",
+                message: "A fictional notification.",
+                link: "/admin/profile",
+                is_read: false,
+                created_at: "2026-10-26T12:00:00Z",
+              },
+            ],
+            total: 1,
+            unreadCount: 1,
+          })
+        : original(path),
+    );
+    render(
+      <MemoryRouter
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
+        <main>
+          <h1>Fictional workspace</h1>
+          <NotificationBell />
+        </main>
+      </MemoryRouter>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Notifications/ }));
+    await screen.findByRole("heading", { name: "Fictional chapter update" });
     await audit();
   });
 });

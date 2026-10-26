@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-26",
+  "kind": "manual CUA browser observations with a direct local HTTP verification",
+  "origin": "http://127.0.0.1:8080",
+  "fixtureTitle": "Fictional browser inbox cf57249f",
+  "observations": [
+    { "name": "Isolated fictional account opens an inbox with one unread notification", "observed": true },
+    { "name": "Mark all read resolves to zero unread, Dismiss all and committed read feedback", "observed": true },
+    { "name": "Dismiss all resolves to a genuine empty inbox with success feedback focus", "observed": true },
+    { "name": "A direct server read confirms the fictional account inbox is empty", "observed": true },
+    { "name": "375 px viewport has 375 px page width and a bounded 620 px-high dialog; viewport reset", "observed": true },
+    { "name": "Fictional browser sign-out returns to the public homepage", "observed": true }
+  ],
+  "cleanup": "Invocation-owned fictional notification rows removed; fixture accounts disabled; HTTP/browser sessions signed out; private ledger removed.",
+  "acceptance": "unverified"
+}

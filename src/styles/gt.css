@@ -6462,12 +6462,22 @@ img {
   min-width: 0;
   overflow-wrap: anywhere;
 }
+.gt-notification-inbox {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.gt-notification-inbox > p,
+.gt-notification-inbox .gt-panel-heading {
+  margin: 0;
+}
 .gt-notification-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 .gt-notification-list li {
+  overflow-wrap: anywhere;
   padding: 1.1rem 0;
   border-bottom: 1px solid var(--line);
 }

@@ -332,6 +332,20 @@ add("COMM-TEST-003", "COMM-005", "Scoped internal email fan-out review", [
   local("announcements"),
 ]);
 add(
+  "COMM-TEST-004",
+  "COMM-001",
+  "Account-bound notification inbox loading/error/stale states, read-all to read-only dismiss-all, late-response fences, mutation freezing and semantic focus",
+  [
+    "tests/client/notification-inbox-ui.test.tsx",
+    "tests/client/accessibility-structure.test.tsx",
+    local("notification-bulk"),
+  ],
+  [
+    "Full supported-browser/screen-reader/realtime outage and institutional notification acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "28.2", "28.3", "31.2"];
+add(
   "OPS-TEST-009",
   "COMM-006",
   "Authenticated scheduler, leases, dedupe and bounded retries",

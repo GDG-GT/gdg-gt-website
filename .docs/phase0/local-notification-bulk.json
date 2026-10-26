@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-21T17:32:28.115Z",
+  "generatedAt": "2026-10-26T19:37:27.839Z",
   "environment": "dedicated loopback fictional inboxes",
   "tests": [
     {
@@ -28,6 +28,10 @@
     },
     {
       "name": "repeating dismissal of an empty inbox is safe",
+      "passed": true
+    },
+    {
+      "name": "fictional browser read-all then dismiss-all leaves the actual server inbox empty",
       "passed": true
     }
   ]

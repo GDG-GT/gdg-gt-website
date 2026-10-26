@@ -1,7 +1,7 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { Bell } from "lucide-react";
 import { Link } from "react-router-dom";
-import { api } from "@/lib/api";
+import { api, ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useScopedRealtime } from "@/hooks/useScopedRealtime";
 import {
@@ -28,82 +28,225 @@ export function NotificationInbox({
 }) {
   const [data, setData] = useState<Inbox>(),
     [page, setPage] = useState(1),
-    [busy, setBusy] = useState(false),
+    [reading, setReading] = useState(true),
+    [writing, setWriting] = useState(false),
     [notice, setNotice] = useState(""),
-    [error, setError] = useState("");
+    [error, setError] = useState(""),
+    [loadError, setLoadError] = useState(""),
+    [loadedPage, setLoadedPage] = useState(0),
+    [loadedAt, setLoadedAt] = useState("");
+  const mounted = useRef(false),
+    read = useRef<AbortController>(),
+    mutation = useRef<AbortController>(),
+    mutationPending = useRef(false),
+    summary = useRef<HTMLParagraphElement>(null),
+    feedback = useRef<HTMLParagraphElement>(null),
+    failure = useRef<HTMLParagraphElement>(null),
+    focusTarget = useRef<"summary" | "notice" | "error" | null>(null);
+  const busy = reading || writing,
+    current = loadedPage === page ? data : undefined;
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      read.current?.abort();
+      mutation.current?.abort();
+    };
+  }, []);
   const load = useCallback(async () => {
-    setBusy(true);
+    read.current?.abort();
+    const controller = new AbortController();
+    read.current = controller;
+    setReading(true);
+    setLoadError("");
     try {
       const result = await api<Inbox>(
         `/admin/notifications?page=${page}&pageSize=20`,
+        { signal: controller.signal },
       );
+      if (!mounted.current || controller.signal.aborted) return;
       if (page > 1 && result.total <= (page - 1) * 20) {
         setPage(Math.max(1, Math.ceil(result.total / 20)));
         return;
       }
       setData(result);
+      setLoadedPage(page);
+      setLoadedAt(new Date().toLocaleString());
       onChange?.(result.unreadCount);
-      setError("");
     } catch (e) {
-      setError((e as Error).message);
+      if (mounted.current && !controller.signal.aborted) {
+        if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
+          setData(undefined);
+          setLoadedPage(0);
+          setLoadedAt("");
+          onChange?.(0);
+        }
+        setLoadError(
+          e instanceof Error
+            ? e.message
+            : "Notifications could not load. Try again.",
+        );
+      }
     } finally {
-      setBusy(false);
+      if (mounted.current && !controller.signal.aborted) setReading(false);
     }
   }, [page, onChange]);
   useEffect(() => {
     void load();
+    return () => read.current?.abort();
   }, [load]);
   useEffect(() => {
-    const refresh = () => void load();
+    const refresh = () => {
+      if (!mutationPending.current) void load();
+    };
     window.addEventListener("gdg:notifications-updated", refresh);
     return () =>
       window.removeEventListener("gdg:notifications-updated", refresh);
   }, [load]);
+  useEffect(() => {
+    if (busy || !focusTarget.current) return;
+    const target = { summary, notice: feedback, error: failure }[
+      focusTarget.current
+    ].current;
+    if (target) {
+      focusTarget.current = null;
+      target.focus();
+    }
+  }, [busy, notice, error, loadError, current]);
   const mutate = async (path: string, method = "PATCH", dismissAll = false) => {
-    setBusy(true);
+    if (mutationPending.current) return;
+    mutationPending.current = true;
+    read.current?.abort();
+    setReading(false);
+    const controller = new AbortController();
+    mutation.current = controller;
+    setWriting(true);
+    setError("");
     setNotice("");
     try {
       await api(path, {
         method,
         protected: true,
+        signal: controller.signal,
         ...(method === "PATCH" ? { body: { is_read: true } } : {}),
         ...(dismissAll ? { body: { readOnly: true } } : {}),
       });
+      if (!mounted.current || controller.signal.aborted) return;
+      setNotice(
+        dismissAll
+          ? "Read notifications dismissed. New unread notifications are kept."
+          : method === "DELETE"
+            ? "Notification dismissed from your inbox."
+            : "Notifications marked read.",
+      );
+      focusTarget.current = "notice";
       if (dismissAll) {
-        setNotice("Read notifications dismissed. New unread notifications are kept.");
-        if (page !== 1) { setPage(1); return; }
+        if (page !== 1) {
+          setPage(1);
+          return;
+        }
       }
       await load();
     } catch (e) {
-      setError((e as Error).message);
-      setBusy(false);
+      if (mounted.current && !controller.signal.aborted) {
+        if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
+          setData(undefined);
+          setLoadedPage(0);
+          setLoadedAt("");
+          onChange?.(0);
+        }
+        setError(
+          e instanceof Error
+            ? e.message
+            : "This change could not be confirmed. Refresh your inbox before trying again.",
+        );
+        focusTarget.current = "error";
+      }
+    } finally {
+      mutationPending.current = false;
+      if (mounted.current && !controller.signal.aborted) setWriting(false);
     }
   };
   return (
     <div className="gt-notification-inbox" aria-busy={busy}>
       <div className="gt-panel-heading">
-        <p>{data ? `${data.unreadCount} unread` : "Loading notifications…"}</p>
+        <p ref={summary} tabIndex={-1}>
+          {current
+            ? `${current.unreadCount} unread`
+            : reading
+              ? "Loading notifications…"
+              : "Notifications unavailable"}
+        </p>
         <Button
           variant="secondary"
-          disabled={busy || !data?.total}
-          onClick={() => data?.unreadCount ? mutate("/admin/notifications") : mutate("/admin/notifications", "DELETE", true)}
+          disabled={busy || !!loadError || !current?.total}
+          onClick={() =>
+            current?.unreadCount
+              ? mutate("/admin/notifications")
+              : mutate("/admin/notifications", "DELETE", true)
+          }
         >
-          {data?.unreadCount ? "Mark all read" : "Dismiss all"}
+          {current?.unreadCount ? "Mark all read" : "Dismiss all"}
         </Button>
       </div>
-      {notice && <p role="status">{notice}</p>}
-      {error && (
-        <p className="gt-form-error" role="alert">
-          {error} <button onClick={() => void load()}>Try again</button>
+      <p className="gt-helper">
+        Dismiss all removes read notifications from your inbox. New unread
+        updates are kept.
+      </p>
+      {notice && (
+        <p role="status" ref={feedback} tabIndex={-1}>
+          {notice}
         </p>
       )}
-      {data?.items.length === 0 && !error && (
+      {reading && !current && (
+        <div
+          role="status"
+          aria-label="Loading notifications"
+          className="gt-skeleton gt-detail-skeleton"
+        />
+      )}
+      {loadError && (
+        <div role="alert" className="gt-form-error">
+          <p>
+            {current && loadedAt
+              ? `Could not refresh. Showing notifications last loaded ${loadedAt}. `
+              : "Notifications could not load. "}
+            {loadError}
+          </p>
+          <Button
+            variant="secondary"
+            disabled={busy}
+            onClick={() => {
+              focusTarget.current = "summary";
+              void load();
+            }}
+          >
+            Retry loading notifications
+          </Button>
+        </div>
+      )}
+      {error && (
+        <p className="gt-form-error" role="alert" ref={failure} tabIndex={-1}>
+          {error}{" "}
+          <button
+            disabled={busy}
+            onClick={() => {
+              setError("");
+              focusTarget.current = "summary";
+              void load();
+            }}
+          >
+            Refresh inbox
+          </button>
+        </p>
+      )}
+      {current?.items.length === 0 && !error && !loadError && (
         <EmptyState title="You’re all caught up">
           Team updates and account notifications will appear here.
         </EmptyState>
       )}
       <ul className="gt-notification-list">
-        {data?.items.map((item) => (
+        {current?.items.map((item) => (
           <li key={item.id} className={item.is_read ? "" : "is-unread"}>
             <div>
               <h3>{item.title}</h3>
@@ -111,11 +254,19 @@ export function NotificationInbox({
               <small>{new Date(item.created_at).toLocaleString()}</small>
             </div>
             <div className="gt-actions">
-              {item.link && <Link to={item.link}>Open update</Link>}
+              {item.link &&
+                /^\/(?!\/)/.test(item.link) &&
+                !/[\\\s]/.test(item.link) &&
+                !Array.from(item.link).some(
+                  (character) =>
+                    character.charCodeAt(0) <= 32 ||
+                    character.charCodeAt(0) === 127,
+                ) && <Link to={item.link}>Open update</Link>}
               {!item.is_read && (
                 <Button
                   variant="ghost"
-                  disabled={busy}
+                  aria-label={`Mark read: ${item.title}`}
+                  disabled={busy || !!loadError}
                   onClick={() => mutate("/admin/notifications/" + item.id)}
                 >
                   Mark read
@@ -123,7 +274,8 @@ export function NotificationInbox({
               )}
               <Button
                 variant="ghost"
-                disabled={busy}
+                aria-label={`Dismiss ${item.title}`}
+                disabled={busy || !!loadError}
                 onClick={() =>
                   mutate("/admin/notifications/" + item.id, "DELETE")
                 }
@@ -134,22 +286,28 @@ export function NotificationInbox({
           </li>
         ))}
       </ul>
-      {!!data?.total && (
+      {!!current?.total && (
         <nav aria-label="Notifications pages" className="gt-actions">
           <Button
             variant="secondary"
             disabled={busy || page === 1}
-            onClick={() => setPage(page - 1)}
+            onClick={() => {
+              setPage(page - 1);
+              focusTarget.current = "summary";
+            }}
           >
             Previous
           </Button>
           <span>
-            Page {page} of {Math.max(1, Math.ceil(data.total / 20))}
+            Page {page} of {Math.max(1, Math.ceil(current.total / 20))}
           </span>
           <Button
             variant="secondary"
-            disabled={busy || page * 20 >= data.total}
-            onClick={() => setPage(page + 1)}
+            disabled={busy || page * 20 >= current.total}
+            onClick={() => {
+              setPage(page + 1);
+              focusTarget.current = "summary";
+            }}
           >
             Next
           </Button>
@@ -160,7 +318,14 @@ export function NotificationInbox({
 }
 export default function NotificationBell() {
   const { currentAdmin } = useAdmin();
-  const accountId = currentAdmin?.id;
+  return (
+    <NotificationBellWorkspace
+      key={`${currentAdmin?.id}:${currentAdmin?.role}`}
+      accountId={currentAdmin?.id}
+    />
+  );
+}
+function NotificationBellWorkspace({ accountId }: { accountId?: string }) {
   const [open, setOpen] = useState(false),
     [count, setCount] = useState(0),
     [revision, setRevision] = useState(0);

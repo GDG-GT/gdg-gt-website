@@ -131,10 +131,10 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is still 35.28% lines/33.41% branches, below the global
-  70% gate; 825 tests pass, not a percentage of completed PRD features.
+  coverage is still 35.86% lines/33.94% branches, below the global
+  70% gate; 839 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 119 reviewed logical test cases with
+  All 146 numbered requirements now map into 120 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.
@@ -149,7 +149,7 @@ Their manual/hosted/visual acceptance remains open.
 - Every public/protected route and negative role/team/resource/storage boundary,
   remaining stale-data/navigation states, outage/reconnect recovery, supported
   browsers, keyboard/zoom and manual screen-reader paths.
-  Eighteen local axe structural cases now run in the normal unit suite
+  Nineteen local axe structural cases now run in the normal unit suite
   (`ACCESSIBILITY_STRUCTURE_CHECKS.md`); JSDOM contrast and incomplete axe checks
   are not certified by that result.
 - Public route bundles, modern images/font budgets, 3D fallbacks, Lighthouse,
