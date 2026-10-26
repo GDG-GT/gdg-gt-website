@@ -526,6 +526,16 @@ add(
 );
 prdTestCases.at(-1).normative = ["22.10", "28.2", "28.3"];
 add(
+  "A11Y-TEST-007",
+  "FORM-026",
+  "Pinned axe WCAG 2.1 A/AA and best-practice structural checks across public pages, populated cards, form validation, gallery dialog, builder and response states",
+  ["tests/client/accessibility-structure.test.tsx"],
+  [
+    "JSDOM excludes color contrast and cannot certify geometry, pixels, actual canvas, screen-reader behavior or incomplete axe rules; full browser axe/Lighthouse/device acceptance remains mandatory",
+  ],
+);
+prdTestCases.at(-1).normative = ["12.1", "13.2", "23", "31.2"];
+add(
   "A11Y-TEST-006",
   "",
   "Page destination focus, public/workspace boundary, inquiry context and frame-independent menu keyboard opening",

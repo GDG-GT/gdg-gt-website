@@ -2765,6 +2765,8 @@ img {
   background: #fff0e6;
   margin-bottom: 20px;
 }
+.gt-empty h1,
+.gt-empty h2,
 .gt-empty h3 {
   margin: 0 0 12px;
   font-size: 1.2rem;
@@ -3361,7 +3363,7 @@ img {
   background: var(--surface-raised);
   color: #ab503b;
 }
-.gt-contact-reasons h3 {
+.gt-contact-reasons h2 {
   font-size: 0.95rem;
   font-weight: 650;
 }
@@ -6020,7 +6022,7 @@ img {
     gap: 22px;
     margin-top: 28px;
   }
-  .gt-contact-reasons h3 {
+  .gt-contact-reasons h2 {
     font-size: 0.85rem;
   }
   .gt-contact-small {

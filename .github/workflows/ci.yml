@@ -27,6 +27,8 @@ jobs:
       - name: Lint without increasing the inherited warning budget
         run: npm run lint -- --max-warnings=25
       - run: npm run typecheck
+      # Includes axe structural regression checks; real-browser contrast,
+      # geometry, Lighthouse and manual assistive-technology gates stay separate.
       - run: npm test
       - run: npm run test:traceability
       - name: Rebuild the canonical schema, security policies and capacity tests

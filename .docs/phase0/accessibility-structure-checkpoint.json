@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-26",
+  "kind": "local regression checkpoint summary",
+  "testSource": "tests/client/accessibility-structure.test.tsx",
+  "command": "npm run test:a11y:structure",
+  "axeVersion": "4.14.0",
+  "structuralCasesPassed": 18,
+  "rulesets": ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"],
+  "disabledRule": { "id": "color-contrast", "reason": "JSDOM does not render pixels/layout" },
+  "incompleteRulesRequireManualReview": ["aria-hidden-focus", "label-content-name-mismatch", "landmark-one-main", "page-has-heading-one"],
+  "browserObservation": "Contact main content has an H1 and H2 reason/form headings; native rendered screenshot saved; only the temporary test tab was closed.",
+  "acceptance": "unverified"
+}

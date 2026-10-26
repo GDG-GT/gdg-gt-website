@@ -5,6 +5,22 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Axe structural regression checks — 2026-10-26
+
+- Pinned axe-core 4.14.0 adds 18 representative DOM cases to normal tests/CI and
+  `test:a11y:structure`. Public empty-state/Contact heading order and builder
+  complementary landmark names were corrected with existing visual styles.
+- All 825 tests/122 files pass; strict types pass; lint is 0 errors/25 warnings.
+  Global coverage is 35.28% lines/33.41% branches, below 70%; all 17 critical-file
+  branch gates pass. Fresh audits: production 2 moderate/4 low; full 4 moderate/
+  5 low, both zero high/critical. Only the pinned axe dev dependency was added.
+- JSDOM contrast is explicitly excluded, and four incomplete axe rules remain
+  manual follow-ups. This does not satisfy browser axe, Lighthouse, contrast,
+  layout, screen-reader or device acceptance. Native Chrome verifies Contact's
+  semantic/visual presentation; no contact submitted and the test tab was closed.
+- Catalog: 119 unverified logical cases. See `ACCESSIBILITY_STRUCTURE_CHECKS.md`;
+  the complete PRD is still open.
+
 ### Protected Forms read/filter recovery — 2026-10-26
 
 - Definition reads are scoped to form/account/role and abort superseded requests.

@@ -704,6 +704,7 @@ export function EventsPage() {
           </div>
         ) : (
           <EmptyState
+            headingLevel={2}
             title="Nothing on the calendar with those filters"
             action={
               <Button
@@ -881,6 +882,7 @@ export function EventDetailPage() {
     return (
       <div className="gt-container gt-section">
         <EmptyState
+          headingLevel={1}
           title="This event could not load"
           action={
             <div className="gt-actions">
@@ -1816,7 +1818,7 @@ export function ResourcesPage() {
             ))}
           </div>
         ) : !listing.loading && !listing.error && listing.data?.total === 0 ? (
-          <EmptyState title="No resources match just yet">
+          <EmptyState headingLevel={2} title="No resources match just yet">
             Try a broader search or another resource type.
           </EmptyState>
         ) : null}
@@ -2297,7 +2299,7 @@ function ContactPageContent({ initialType }: { initialType: string }) {
                     <ReasonIcon size={21} />
                   </span>
                   <div>
-                    <h3>{String(title)}</h3>
+                    <h2>{String(title)}</h2>
                     <p>{String(text)}</p>
                   </div>
                 </div>

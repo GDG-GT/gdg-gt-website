@@ -168,7 +168,7 @@ export default function PublicGallery() {
             )}
           </>
         ) : !collection.loading && !collection.error ? (
-          <EmptyState title="More moments are on the way">
+          <EmptyState headingLevel={2} title="More moments are on the way">
             {event
               ? "No approved photos are currently available for this event."
               : "Chapter event photography will appear here once it is approved."}

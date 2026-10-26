@@ -116,17 +116,20 @@ export function EmptyState({
   title,
   children,
   action,
+  headingLevel = 3,
 }: {
   title: string;
   children?: ReactNode;
   action?: ReactNode;
+  headingLevel?: 1 | 2 | 3;
 }) {
+  const Heading = headingLevel === 1 ? "h1" : headingLevel === 2 ? "h2" : "h3";
   return (
     <div className="gt-empty">
       <span className="gt-empty-icon">
         <Inbox size={28} />
       </span>
-      <h3>{title}</h3>
+      <Heading>{title}</Heading>
       {children && <p>{children}</p>}
       {action}
     </div>

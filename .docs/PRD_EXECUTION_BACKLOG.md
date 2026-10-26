@@ -122,7 +122,7 @@ Their manual/hosted/visual acceptance remains open.
 ## Acceptance and infrastructure still required
 
 - Fresh October 26 audits report zero high/critical findings: production has two
-  moderate/four low; the complete tree has six moderate/five low. The earlier
+  moderate/four low; the complete tree has four moderate/five low. The earlier
   five development high findings are absent from the current full audit. The
   patched Zod migration is documented in `ZOD_VALIDATION_UPGRADE.md`; keep the
   dependency gate and recheck before launch.
@@ -131,10 +131,10 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is still 34.79% lines/33.03% branches, below the global
-  70% gate; 807 tests pass, not a percentage of completed PRD features.
+  coverage is still 35.28% lines/33.41% branches, below the global
+  70% gate; 825 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 118 reviewed logical test cases with
+  All 146 numbered requirements now map into 119 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.
@@ -149,6 +149,9 @@ Their manual/hosted/visual acceptance remains open.
 - Every public/protected route and negative role/team/resource/storage boundary,
   remaining stale-data/navigation states, outage/reconnect recovery, supported
   browsers, keyboard/zoom and manual screen-reader paths.
+  Eighteen local axe structural cases now run in the normal unit suite
+  (`ACCESSIBILITY_STRUCTURE_CHECKS.md`); JSDOM contrast and incomplete axe checks
+  are not certified by that result.
 - Public route bundles, modern images/font budgets, 3D fallbacks, Lighthouse,
   LCP/INP/CLS and load tests. Public byte budgets and bounded offline install now
   pass; runtime profiles and complete lazy-route inspection remain open.

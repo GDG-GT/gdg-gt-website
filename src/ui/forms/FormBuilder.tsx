@@ -1101,7 +1101,9 @@ export default function FormBuilder() {
         </Button>
       </div>
       <div className="gt-builder-grid">
-        <aside className="gt-builder-palette">{palette}</aside>
+        <aside className="gt-builder-palette" aria-label="Field library">
+          {palette}
+        </aside>
         <div
           className={`gt-builder-canvas ${mobile ? "is-mobile-preview" : ""}`}
           data-form-theme={
@@ -1301,7 +1303,9 @@ export default function FormBuilder() {
             autosave securely; publication creates a separate immutable version.
           </p>
         </div>
-        <aside className="gt-builder-inspector">{inspector("inline")}</aside>
+        <aside className="gt-builder-inspector" aria-label="Form inspector">
+          {inspector("inline")}
+        </aside>
       </div>
       <Dialog open={paletteOpen} onOpenChange={setPaletteOpen}>
         <DialogContent className="gt-builder-tool-dialog">
