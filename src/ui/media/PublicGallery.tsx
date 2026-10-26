@@ -1,5 +1,12 @@
-import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import PublicImage from "../PublicImage";
+import { PublicCollectionNotice, PublicPagination } from "../PublicCollection";
+import {
+  publicPageNumber,
+  usePublicCollection,
+  type PublicListing,
+} from "../public-collections";
 import {
   Dialog,
   DialogContent,
@@ -19,12 +26,6 @@ type Photo = {
   event_id: string | null;
   event_title: string | null;
   downloadUrl: string | null;
-};
-type Listing = {
-  items: Photo[];
-  total: number;
-  pageSize: number;
-  events?: { id: string; title: string }[];
 };
 const previews: Photo[] = [
   {
@@ -62,35 +63,23 @@ const previews: Photo[] = [
   },
 ];
 export default function PublicGallery() {
-  const [event, setEvent] = useState(""),
-    [page, setPage] = useState(1),
-    [listing, setListing] = useState<Listing>(),
-    [error, setError] = useState(""),
-    [loading, setLoading] = useState(true),
-    [tick, setTick] = useState(0),
-    [selected, setSelected] = useState<string | null>(null);
+  const [params, setParams] = useSearchParams(),
+    event = params.get("event") || "",
+    page = publicPageNumber(params.get("page")),
+    path = `/gallery?page=${page}${event ? "&event=" + encodeURIComponent(event) : ""}`,
+    collection = usePublicCollection<Photo>(path),
+    listing = collection.data as
+      | (PublicListing<Photo> & { events?: { id: string; title: string }[] })
+      | undefined,
+    [selected, setSelected] = useState<string | null>(null),
+    opener = useRef<HTMLButtonElement | null>(null),
+    heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError("");
     setSelected(null);
-    api<Listing>(`/gallery?page=${page}${event ? "&event=" + event : ""}`, {
-      signal: controller.signal,
-    })
-      .then((r) => {
-        if (!controller.signal.aborted) setListing(r);
-      })
-      .catch((e: Error) => {
-        if (!controller.signal.aborted) {
-          setError(e.message);
-          setListing(undefined);
-        }
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
-      });
-    return () => controller.abort();
-  }, [event, page, tick]);
+  }, [path]);
+  useEffect(() => {
+    if (selected) heading.current?.focus();
+  }, [selected]);
   const illustrative =
       !!listing && listing.total === 0 && !event && localPreviewEnabled,
     photos = illustrative ? previews : listing?.items || [],
@@ -112,13 +101,15 @@ export default function PublicGallery() {
           <Field label="Filter by event">
             <select
               value={event}
-              disabled={loading}
+              disabled={collection.loading}
               onChange={(e) => {
-                setEvent(e.target.value);
-                setPage(1);
+                setParams(e.target.value ? { event: e.target.value } : {});
               }}
             >
               <option value="">All chapter moments</option>
+              {event && !listing?.events?.some((v) => v.id === event) && (
+                <option value={event}>Selected event</option>
+              )}
               {listing?.events?.map((v) => (
                 <option key={v.id} value={v.id}>
                   {v.title}
@@ -126,38 +117,31 @@ export default function PublicGallery() {
               ))}
             </select>
           </Field>
-          <p className="gt-helper">
+          <p className="gt-helper" role="status">
             {illustrative
               ? "Illustrative local preview"
-              : listing
-                ? `${listing.total} approved photo${listing.total === 1 ? "" : "s"}`
-                : "Only approved chapter images appear here."}
+              : collection.loading
+                ? "Loading approved photos…"
+                : listing
+                  ? `${listing.total} approved photo${listing.total === 1 ? "" : "s"}`
+                  : "Only approved chapter images appear here."}
           </p>
         </div>
-        {error ? (
-          <div role="alert" className="gt-inline-error">
-            <p>The gallery could not be loaded. {error}</p>
-            <Button variant="secondary" onClick={() => setTick((v) => v + 1)}>
-              Retry gallery
-            </Button>
-          </div>
-        ) : loading ? (
-          <div
-            className="gt-skeleton gt-detail-skeleton"
-            role="status"
-            aria-label="Loading approved gallery"
-          />
-        ) : photos.length ? (
+        <PublicCollectionNotice {...collection} />
+        {photos.length ? (
           <>
             <div className="gt-gallery">
               {photos.map((p) => (
                 <button
                   className="gt-gallery-photo"
                   key={p.id}
-                  onClick={() => setSelected(p.id)}
+                  onClick={(e) => {
+                    opener.current = e.currentTarget;
+                    setSelected(p.id);
+                  }}
                   aria-label={`View photo: ${p.alt_text}`}
                 >
-                  <img
+                  <PublicImage
                     src={p.url}
                     srcSet={p.srcSet}
                     sizes="(max-width: 600px) 92vw, (max-width: 1000px) 45vw, 31vw"
@@ -166,6 +150,7 @@ export default function PublicGallery() {
                     height={p.height}
                     loading="lazy"
                     decoding="async"
+                    fallback="Photo unavailable. Open its caption and event details."
                   />
                   <span>
                     <span>{p.event_title || "Chapter community"}</span>
@@ -182,36 +167,26 @@ export default function PublicGallery() {
               </p>
             )}
           </>
-        ) : (
+        ) : !collection.loading && !collection.error ? (
           <EmptyState title="More moments are on the way">
             {event
               ? "No approved photos are currently available for this event."
               : "Chapter event photography will appear here once it is approved."}
           </EmptyState>
-        )}
-        {listing && !illustrative && listing.total > listing.pageSize && (
-          <nav
-            className="gt-inline-actions gt-media-pagination"
-            aria-label="Gallery pages"
-          >
-            <Button
-              variant="secondary"
-              disabled={loading || page <= 1}
-              onClick={() => setPage((v) => v - 1)}
-            >
-              Previous page
-            </Button>
-            <span>
-              Page {page} of {Math.ceil(listing.total / listing.pageSize)}
-            </span>
-            <Button
-              variant="secondary"
-              disabled={loading || page * listing.pageSize >= listing.total}
-              onClick={() => setPage((v) => v + 1)}
-            >
-              Next page
-            </Button>
-          </nav>
+        ) : null}
+        {listing && !illustrative && (
+          <PublicPagination
+            {...listing}
+            label="Gallery pages"
+            busy={collection.loading}
+            onPage={(value) =>
+              setParams((previous) => {
+                const next = new URLSearchParams(previous);
+                next.set("page", String(value));
+                return next;
+              })
+            }
+          />
         )}
       </section>
       <Dialog
@@ -222,6 +197,17 @@ export default function PublicGallery() {
       >
         <DialogContent
           className="gt-lightbox"
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+            heading.current?.focus();
+          }}
+          onCloseAutoFocus={(e) => {
+            e.preventDefault();
+            (opener.current?.isConnected
+              ? opener.current
+              : document.getElementById("main-content")
+            )?.focus();
+          }}
           onKeyDown={(e) => {
             if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
               e.preventDefault();
@@ -231,13 +217,15 @@ export default function PublicGallery() {
         >
           {photo && (
             <>
-              <DialogTitle>{photo.description || photo.alt_text}</DialogTitle>
+              <DialogTitle ref={heading} tabIndex={-1}>
+                {photo.description || photo.alt_text}
+              </DialogTitle>
               <DialogDescription>
                 {illustrative ? "Illustrative local preview · " : ""}
                 {photo.event_title || "Chapter community"}. Use Left and Right
                 arrow keys to browse this page.
               </DialogDescription>
-              <img
+              <PublicImage
                 src={
                   photo.id.startsWith("preview-")
                     ? photo.url
@@ -247,6 +235,7 @@ export default function PublicGallery() {
                 width={photo.width}
                 height={photo.height}
                 decoding="async"
+                fallback="This photo could not load. Its caption and event details are still available."
               />
               <div className="gt-lightbox-actions">
                 <Button

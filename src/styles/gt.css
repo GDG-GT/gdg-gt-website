@@ -3266,13 +3266,18 @@ img {
 .gt-lightbox {
   max-width: 920px !important;
   padding: 30px;
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
 }
+.gt-lightbox > h2 { padding-right: 44px; overflow-wrap: anywhere; }
 .gt-lightbox > img {
   border-radius: 8px;
   width: 100%;
   max-height: 60vh;
   object-fit: contain;
 }
+.gt-lightbox > button { min-width: 44px; min-height: 44px; display: grid; place-items: center; }
+.gt-gallery-photo > .gt-image-fallback { position: relative; inset: auto; min-height: 280px; aspect-ratio: 3 / 2; padding: 24px 24px 140px; background: var(--surface-raised); color: var(--text-secondary); }
 .gt-lightbox-actions {
   display: flex;
   align-items: center;

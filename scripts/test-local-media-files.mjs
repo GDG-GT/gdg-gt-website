@@ -38,7 +38,7 @@ const check = (value, name) => {
 const post = (path, body, key = randomUUID()) =>
     call(path, { method: "POST", body, key }),
   sha = (bytes) => createHash("sha256").update(bytes).digest("hex");
-let team, foreign;
+let team, foreign, galleryEvent;
 const fixtureEmail = `fictional-media-files-${actor}@example.test`;
 async function intent(filename, mime, bytes, extra = {}, key = randomUUID()) {
   const result = data(
@@ -295,13 +295,30 @@ try {
     (await mutate(before, "star", { starred: false })).status === 409,
     "stale file revision cannot overwrite current metadata",
   );
+  galleryEvent = randomUUID();
+  sql(
+    await db
+      .from("events")
+      .insert({
+        id: galleryEvent,
+        title: "Fictional gallery event " + actor.slice(0, 8),
+        description:
+          "Generated gallery-filter fixture, not a chapter announcement.",
+        slug: "fictional-gallery-event-" + galleryEvent,
+        start_at: new Date(Date.now() + 86400000 * 7).toISOString(),
+        location: "Fictional venue",
+        publication_status: "published",
+        team_id: team.id,
+        created_by: actor,
+      }),
+  );
   data(
     await mutate(file, "metadata", {
       name: "Fictional approved caption",
       alt: "Coral rectangle used only in local testing",
       description: "Fixture only",
       tags: ["fictional", "local"],
-      eventId: null,
+      eventId: galleryEvent,
       order: 2,
       allowDownload: false,
     }),
@@ -385,6 +402,20 @@ try {
       !JSON.stringify(publicPhoto).includes("clean/") &&
       !publicPhoto.downloadUrl,
     "public gallery returns responsive approved metadata and no private object paths",
+  );
+  check(
+    publicGallery.events?.some(
+      (event) =>
+        event.id === galleryEvent &&
+        event.title.startsWith("Fictional gallery event "),
+    ),
+    "gallery API retains approved event options for the real filter control",
+  );
+  const filteredGallery = data(await call("/gallery?event=" + galleryEvent));
+  check(
+    filteredGallery.items.some((photo) => photo.id === file.id) &&
+      filteredGallery.items.every((photo) => photo.event_id === galleryEvent),
+    "gallery event filter returns only its approved associated photos",
   );
   check(
     (await call(`/media/public/${file.id}?width=960&download=true`)).status ===
@@ -769,6 +800,13 @@ try {
       .update({ is_active: false })
       .in("id", [actor, outsider]),
   );
+  if (galleryEvent)
+    sql(
+      await db
+        .from("events")
+        .update({ publication_status: "archived", registration_enabled: false })
+        .eq("id", galleryEvent),
+    );
 }
 await writeFile(
   new URL("../.docs/phase0/local-media-files.json", import.meta.url),

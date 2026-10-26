@@ -326,6 +326,7 @@ export async function publicContentRoutes(
         page: p.page,
         pageSize: 30,
         total: result.total,
+        events: (result.events || []).map(({ id, title }) => ({ id, title })),
       },
       requestId,
     );

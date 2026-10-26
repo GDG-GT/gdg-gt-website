@@ -444,6 +444,14 @@ add(
   ],
 );
 add(
+  "CONTENT-TEST-010",
+  "CONTENT-003 CONTENT-004",
+  "Approved gallery event choices, shared pagination, failure recovery, safe image fallback and lightbox keyboard focus",
+  ["tests/client/public-gallery-ui.test.tsx", unit("public-collections"), local("media-files")],
+  ["Real screen-reader and full supported-device/visual review; synthetic approved rectangles do not approve chapter photography"],
+);
+prdTestCases.at(-1).normative = ["22.8", "28.3", "31.2"];
+add(
   "CONTENT-TEST-004",
   "CONTENT-005 CONTENT-006",
   "Upload MIME/signature/size/ownership/quarantine and SVG policy",

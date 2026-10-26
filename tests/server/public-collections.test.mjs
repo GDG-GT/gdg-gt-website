@@ -64,6 +64,40 @@ function fixture() {
   return { call, queries, db, store };
 }
 describe("CONTENT-TEST public collection filtering and pagination", () => {
+  it("preserves approved gallery event choices and builds only mediated image/download URLs", async () => {
+    const f = fixture(),
+      id = "f1080000-0000-4000-8000-000000000001";
+    f.db.rpc.mockResolvedValueOnce({
+      data: {
+        items: [
+          { id, width: 960, alt_text: "Fictional image", allow_download: true },
+        ],
+        total: 1,
+        events: [
+          {
+            id: "f1080000-0000-4000-8000-000000000002",
+            title: "Fictional event",
+            discarded: "not a public field",
+          },
+        ],
+      },
+      error: null,
+    });
+    const r = await f.call("/gallery?page=2&event=" + id);
+    expect(r.statusCode).toBe(200);
+    expect(f.db.rpc).toHaveBeenCalledWith("read_public_gallery", {
+      p_event: id,
+      p_page: 2,
+    });
+    expect(r.body.data.events).toEqual([
+      { id: "f1080000-0000-4000-8000-000000000002", title: "Fictional event" },
+    ]);
+    expect(r.body.data.items[0]).toMatchObject({
+      url: "/api/v1/media/public/" + id,
+      downloadUrl: `/api/v1/media/public/${id}?width=1920&download=true`,
+    });
+    expect(r.body.data.items[0].srcSet).toContain("?width=360 360w");
+  });
   it("sorts actual event availability and start time before pagination in one bounded projection read", async () => {
     const f = fixture();
     const response = await f.call(

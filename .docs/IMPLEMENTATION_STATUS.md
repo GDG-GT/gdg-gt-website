@@ -5,6 +5,22 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Gallery event filtering and lightbox recovery — 2026-10-26
+
+- Restored approved event choices dropped by the API. Event/page filters now
+  persist in shared URLs; paging retains the current event and handles empty
+  out-of-range pages. Gallery requests use scoped stale/error recovery.
+- Lightbox captions receive focus on open/arrow browsing, and close/Escape
+  returns to the original thumbnail. Failed images retain useful captions and
+  controls. The bounded, scrollable mobile lightbox has a 44px close target.
+- 704 tests/114 files pass; strict types pass; lint is 0 errors/25 warnings.
+  Coverage is 30.90% lines/29.55% branches, below 70%; all 17 critical branch
+  gates pass. Forty-six actual media/scanner/storage/HTTP checks pass, including
+  the real event filter. Native Chrome keyboard and 375px fit checks pass.
+  All temporary publications were revoked and exact fixtures archived; no real
+  chapter asset or external provider used. The catalog has 110 logical cases,
+  with acceptance unverified. See `PUBLIC_GALLERY_INTERACTIONS.md`.
+
 ### Rescheduled event history and complete registration routes — 2026-10-26
 
 - Migration 107 records a previous start date only after publication, preserves

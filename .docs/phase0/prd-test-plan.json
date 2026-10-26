@@ -963,6 +963,29 @@
       "acceptance": "unverified"
     },
     {
+      "id": "CONTENT-TEST-010",
+      "requirements": [
+        "CONTENT-003",
+        "CONTENT-004"
+      ],
+      "scope": "Approved gallery event choices, shared pagination, failure recovery, safe image fallback and lightbox keyboard focus",
+      "automated": [
+        "tests/client/public-gallery-ui.test.tsx",
+        "tests/server/public-collections.test.mjs",
+        "scripts/test-local-media-files.mjs"
+      ],
+      "remaining": [
+        "Real screen-reader and full supported-device/visual review; synthetic approved rectangles do not approve chapter photography",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.8",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
       "id": "CONTENT-TEST-004",
       "requirements": [
         "CONTENT-005",
