@@ -124,13 +124,17 @@ export async function publicContentRoutes(
         .from("team_members")
         .select(select.team.columns)
         .eq("is_active", true)
+        .is("deleted_at", null)
         .order("order_index")
+        .order("id")
         .limit(6),
       db
         .from("sponsors")
         .select(select.sponsors.columns)
         .eq("is_active", true)
+        .is("deleted_at", null)
         .order("order_index")
+        .order("id")
         .limit(12),
       db
         .from("sponsor_impact_stats")

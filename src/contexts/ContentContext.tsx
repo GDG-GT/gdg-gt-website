@@ -17,7 +17,7 @@ import {
   type HomeContent,
 } from "@/lib/content-snapshot";
 import type { ManagedLink, PageCopy } from "../../shared/site-content";
-import type { PublicMetric } from "@/ui/public-collections";
+import type { PublicMetric, PublicSponsor } from "@/ui/public-collections";
 export type { ContentSnapshot } from "@/lib/content-snapshot";
 interface ContentContextType {
   siteSettings: Record<string, unknown>;
@@ -26,6 +26,7 @@ interface ContentContextType {
   socialLinks: ContentSnapshot["social"];
   footerContent: Record<string, FooterCopy>;
   chapterMetrics: PublicMetric[];
+  featuredSponsors: PublicSponsor[];
   isLoading: boolean;
   contentError: string;
   lastUpdated?: number;
@@ -92,7 +93,9 @@ export const ContentProvider = ({
     setLoading(true);
     setError("");
     try {
-      const data = readHomeContent(await api<unknown>("/public/home", { signal }));
+      const data = readHomeContent(
+        await api<unknown>("/public/home", { signal }),
+      );
       if (signal?.aborted || sequence !== request.current) return false;
       setSnapshot(data);
       setLastUpdated(Date.now());
@@ -132,6 +135,7 @@ export const ContentProvider = ({
         socialLinks: snapshot?.social || [],
         footerContent: footer,
         chapterMetrics: snapshot?.metrics || [],
+        featuredSponsors: snapshot?.sponsors || [],
         isLoading,
         contentError,
         lastUpdated,

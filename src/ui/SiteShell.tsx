@@ -181,6 +181,21 @@ export default function SiteShell({ children }: { children: ReactNode }) {
       <div
         className="gt-nav-wrap"
         ref={navigationRef}
+        onKeyDown={(event) => {
+          if (!menuOpen || event.key !== "Tab") return;
+          const controls = event.currentTarget.querySelectorAll<HTMLElement>(
+            ".gt-nav > .gt-brand, .gt-nav-login:not(:disabled), .gt-menu-button:not(:disabled), #mobile-navigation a[href], #mobile-navigation button:not(:disabled)",
+          );
+          const first = controls[0],
+            last = controls[controls.length - 1];
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last?.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first?.focus();
+          }
+        }}
         onBlur={(event) => {
           if (
             menuOpen &&

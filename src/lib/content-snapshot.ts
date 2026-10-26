@@ -1,5 +1,5 @@
 import type { ManagedLink, PageCopy } from "../../shared/site-content";
-import type { PublicMetric } from "@/ui/public-collections";
+import type { PublicMetric, PublicSponsor } from "@/ui/public-collections";
 
 export type FooterCopy = Partial<
   Record<
@@ -18,7 +18,10 @@ export type ContentSnapshot = {
   social: { platform: string; url: string }[];
   footer: { section_key: string; content: FooterCopy }[];
 };
-export type HomeContent = ContentSnapshot & { metrics: PublicMetric[] };
+export type HomeContent = ContentSnapshot & {
+  metrics: PublicMetric[];
+  sponsors: PublicSponsor[];
+};
 
 const record = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === "object" && !Array.isArray(value);
@@ -34,6 +37,7 @@ export function readHomeContent(value: unknown): HomeContent {
     pages: ["page_slug", "section_key"],
     navigation: ["label", "href"],
     social: ["platform", "url"],
+    sponsors: ["id", "name", "logo_url", "tier"],
     footer: ["section_key"],
     metrics: ["id", "stat_label", "stat_value", "stat_description"],
   };

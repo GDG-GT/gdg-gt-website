@@ -111,19 +111,20 @@ Their manual/hosted/visual acceptance remains open.
 
 ## Acceptance and infrastructure still required
 
-- Fresh production audit found a high Zod advisory updated 2026-10-23; migration
-  to patched 4.6.7 restores zero production high/critical findings. Two moderate/
-  four low remain. See `ZOD_VALIDATION_UPGRADE.md`. The earlier full development
-  audit had five high Tailwind/braces-chain findings; recheck before launch.
+- Fresh October 26 audits report zero high/critical findings: production has two
+  moderate/four low; the complete tree has six moderate/five low. The earlier
+  five development high findings are absent from the current full audit. The
+  patched Zod migration is documented in `ZOD_VALIDATION_UPGRADE.md`; keep the
+  dependency gate and recheck before launch.
 - Strict application/build TypeScript now passes. Lint remediation remains:
   zero errors/25 warnings after reviewed unused-client retirement and typed CMS recovery;
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is still 28.13% lines/26.71% branches, below the global
-  70% gate; 633 tests pass, not a percentage of completed PRD features.
+  coverage is still 28.41% lines/27.00% branches, below the global
+  70% gate; 644 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 105 reviewed logical test cases with
+  All 146 numbered requirements now map into 106 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.

@@ -1,5 +1,6 @@
 import PrivacyNoticeDetails from "./PrivacyNoticeDetails";
 import HeroScene from "./HeroScene";
+import PublicImage from "./PublicImage";
 import { useEffect, useMemo, useState, useRef, type FormEvent } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
@@ -140,8 +141,9 @@ export function EventTile({ event }: { event: SiteEvent }) {
         tabIndex={-1}
         aria-hidden="true"
       >
-        <img
+        <PublicImage
           src={event.image_url || "/assets/event-community.jpg"}
+          fallbackSrc="/assets/event-community.jpg"
           alt=""
           width="640"
           height="360"
@@ -195,7 +197,7 @@ export function EventTile({ event }: { event: SiteEvent }) {
 
 export function HomePage() {
   usePageTitle("A community of builders");
-  const { getPageSection, chapterMetrics } = useContent(),
+  const { getPageSection, chapterMetrics, featuredSponsors } = useContent(),
     hero = (getPageSection("home", "hero") || {}) as PageCopy,
     community = (getPageSection("home", "community") || {}) as PageCopy,
     eventCopy = (getPageSection("home", "events") || {}) as PageCopy,
@@ -443,6 +445,39 @@ export function HomePage() {
           {mission.cta_text || "Meet the team"}
         </ActionLink>
       </section>
+      {featuredSponsors.length > 0 && (
+        <section
+          className="gt-container gt-section gt-home-partners"
+          aria-label="Chapter partners"
+        >
+          <div className="gt-section-heading">
+            <div>
+              <p className="gt-section-note">With our community</p>
+              <h2>
+                Built with our <span>partners.</span>
+              </h2>
+            </div>
+            <ActionLink to="/sponsors" variant="secondary" arrow>
+              Meet our partners
+            </ActionLink>
+          </div>
+          <div className="gt-home-partner-grid">
+            {featuredSponsors.map((partner) => (
+              <div key={partner.id} className="gt-home-partner">
+                <PublicImage
+                  src={partner.logo_url}
+                  alt={partner.name}
+                  fallback={partner.name}
+                  loading="lazy"
+                  decoding="async"
+                  width={320}
+                  height={160}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </>
   );
 }
@@ -1181,9 +1216,14 @@ export function TeamPage() {
                     <article className="gt-person" key={person.id}>
                       <div className="gt-person-portrait">
                         {person.image_url ? (
-                          <img
+                          <PublicImage
                             src={person.image_url}
                             alt={person.name}
+                            fallback={person.name
+                              .split(" ")
+                              .map((part) => part[0])
+                              .slice(0, 2)
+                              .join("")}
                             loading="lazy"
                             width={480}
                             height={480}
@@ -1517,9 +1557,10 @@ export function SponsorsPage() {
                       .map((sponsor) => (
                         <article className="gt-sponsor" key={sponsor.id}>
                           <Badge tone="coral">{sponsor.tier} partner</Badge>
-                          <img
+                          <PublicImage
                             src={sponsor.logo_url}
                             alt={sponsor.name}
+                            fallback={sponsor.name}
                             loading="lazy"
                             width={320}
                             height={160}

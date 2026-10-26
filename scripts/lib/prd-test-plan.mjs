@@ -427,10 +427,18 @@ add(
   [unit("upload-content"), unit("upload-routes"), local("uploads")],
 );
 add(
+  "A11Y-TEST-004",
+  "",
+  "Compact top-menu Tab containment, ArrowDown entry, Escape focus return and route/outside close",
+  ["tests/client/public-content-recovery.test.tsx"],
+  ["Full screen-reader, device and supported-browser acceptance"],
+);
+prdTestCases.at(-1).normative = ["22.1", "28.3"];
+add(
   "A11Y-TEST-001",
   "CONTENT-007",
   "Responsive image dimensions, formats, lazy loading and alt text",
-  ["tests/form-images.test.ts", unit("media-content")],
+  ["tests/form-images.test.ts", "tests/client/public-image.test.tsx", unit("media-content")],
   [
     "Every public image/breakpoint/assistive-text review; no full browser pass yet",
   ],

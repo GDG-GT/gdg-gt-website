@@ -13,6 +13,7 @@ const empty = () => ({
   social: [],
   footer: [],
   metrics: [],
+  sponsors: [],
 });
 describe("public chapter snapshot boundary", () => {
   it.each([

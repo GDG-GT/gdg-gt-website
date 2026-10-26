@@ -21,6 +21,9 @@ function fixture() {
           "ilike",
           "contains",
           "range",
+          "in",
+          "gte",
+          "limit",
         ])
           chain[name] = (...args) => {
             query.steps.push([name, ...args]);
@@ -61,6 +64,20 @@ function fixture() {
   return { call, queries, db, store };
 }
 describe("CONTENT-TEST public collection filtering and pagination", () => {
+  it("bounds homepage partner selections and excludes archived team and sponsor records", async () => {
+    const f = fixture();
+    const response = await f.call("/public/home");
+    expect(response.statusCode).toBe(200);
+    for (const table of ["team_members", "sponsors"]) {
+      const query = f.queries.find((q) => q.table === table);
+      expect(query.steps).toContainEqual(["is", "deleted_at", null]);
+      expect(query.steps).toContainEqual(["order", "id"]);
+    }
+    expect(f.queries.find((q) => q.table === "sponsors").steps).toContainEqual([
+      "limit",
+      12,
+    ]);
+  });
   it("applies resource status/tag/type/level/search before deterministic pagination and omits archived rows", async () => {
     const f = fixture(),
       r = await f.call(

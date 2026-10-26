@@ -5,6 +5,22 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Public navigation, partners and image recovery — 2026-10-26
+
+- Added compact top-menu keyboard containment without a body scroll lock or
+  modal. Native Chrome scrolling, Tab/Shift+Tab wrapping and Escape restoration
+  pass at 200% zoom; 375px DOM measurements show no overflow or scroll lock.
+- Added the missing conditional homepage sponsor acknowledgment from the public
+  aggregate. Archived rows are excluded explicitly, selected records are stably
+  ordered, and empty optional sections disappear. Managed event images, portraits
+  and logos now have safe bounded fallbacks. Thirteen actual public HTTP/database
+  checks pass and their fictional fixtures were archived afterward.
+- 644 tests/110 files pass; strict types pass; lint remains 0 errors/25 warnings.
+  Global unit coverage is 28.41% lines/27.00% branches, still below 70%; all 17
+  critical-file branch gates pass. The catalog has 106 logical cases. Full PRD
+  and manual/device/visual/hosted acceptance remain open. See
+  `PUBLIC_NAVIGATION_PARTNERS.md`.
+
 ### Public homepage and CMS recovery — 2026-10-26
 
 - Homepage event requests now ask directly for the next three upcoming events.

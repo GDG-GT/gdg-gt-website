@@ -40,6 +40,18 @@
     {
       "name": "rapid repeated view actions cannot mutate an arbitrary counter",
       "passed": true
+    },
+    {
+      "name": "homepage acknowledges a bounded selection of active approved partners",
+      "passed": true
+    },
+    {
+      "name": "archived team and sponsor rows cannot reappear in homepage selections",
+      "passed": true
+    },
+    {
+      "name": "homepage partner and team selections omit private lifecycle metadata",
+      "passed": true
     }
   ]
 }

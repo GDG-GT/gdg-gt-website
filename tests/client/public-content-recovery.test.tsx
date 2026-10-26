@@ -10,6 +10,7 @@ import {
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
+import { publicLinks } from "../../src/ui/preview-data";
 import {
   ContentProvider,
   ContentSnapshotProvider,
@@ -59,6 +60,7 @@ function content(title = "Approved chapter copy"): HomeContent {
         stat_description: "Completed local fixtures",
       },
     ],
+    sponsors: [],
   };
 }
 const event = {
@@ -145,6 +147,44 @@ afterEach(() => {
 });
 
 describe("CONTENT-TEST-019: independent public content recovery", () => {
+  it("hides the optional partner section when no approved sponsors exist", async () => {
+    mount();
+    await screen.findByRole("heading", { name: /Approved chapter copy$/ });
+    expect(
+      screen.queryByRole("region", { name: "Chapter partners" }),
+    ).toBeNull();
+  });
+  it("acknowledges only aggregate-supplied partners and falls back safely when their logo fails", async () => {
+    const snapshot = content();
+    snapshot.sponsors = [
+      {
+        id: "fictional-partner",
+        name: "Fictional approved partner",
+        logo_url: "/fixture-missing-logo.png",
+        tier: "gold",
+      },
+    ];
+    apiMock.mockImplementation((path: string) =>
+      Promise.resolve(path === "/public/home" ? snapshot : listing()),
+    );
+    mount();
+    const section = await screen.findByRole("region", {
+      name: "Chapter partners",
+    });
+    const image = screen.getByRole("img", {
+      name: "Fictional approved partner",
+    });
+    expect(section.contains(image)).toBe(true);
+    fireEvent.error(image);
+    expect(
+      screen.getByRole("img", { name: "Fictional approved partner" }).tagName,
+    ).toBe("SPAN");
+    expect(
+      screen
+        .getByRole("link", { name: "Meet our partners" })
+        .getAttribute("href"),
+    ).toBe("/sponsors");
+  });
   it("names the initial event loading state and requests the next three upcoming events directly", async () => {
     const events = pending<ReturnType<typeof listing>>();
     apiMock.mockImplementation((path: string) =>
@@ -306,5 +346,68 @@ describe("CONTENT-TEST-019: independent public content recovery", () => {
     await waitFor(() => expect(state().loading).toBe(false));
     expect(state().error).toBe("");
     expect(state().metrics).toEqual([]);
+  });
+});
+
+describe("A11Y-TEST-004: top navigation keyboard containment", () => {
+  function menuFixture() {
+    const snapshot = content();
+    snapshot.navigation = publicLinks.map(([label, href]) => ({ label, href }));
+    apiMock.mockResolvedValue(snapshot);
+    return mount(<Probe />);
+  }
+  it("uses a top navigation panel and cycles Tab/Shift+Tab within the open navigation", async () => {
+    const page = menuFixture();
+    const button = screen.getByRole("button", { name: "Open navigation" });
+    fireEvent.click(button);
+    const menu = screen.getByRole("navigation", { name: "Mobile navigation" });
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(document.body.style.overflow).toBe("");
+    const last = menu.querySelectorAll("a")[6];
+    last.focus();
+    fireEvent.keyDown(last, { key: "Tab" });
+    const brand = page.container.querySelector<HTMLAnchorElement>(
+      ".gt-nav > .gt-brand",
+    )!;
+    expect(document.activeElement).toBe(brand);
+    fireEvent.keyDown(brand, { key: "Tab", shiftKey: true });
+    expect(document.activeElement).toBe(last);
+    expect(button.getAttribute("aria-controls")).toBe(menu.id);
+    expect(button.getAttribute("aria-expanded")).toBe("true");
+    await waitFor(() => expect(state().loading).toBe(false));
+  });
+  it("opens the first item with ArrowDown and restores the trigger on Escape", async () => {
+    menuFixture();
+    const button = screen.getByRole("button", { name: "Open navigation" });
+    button.focus();
+    fireEvent.keyDown(button, { key: "ArrowDown" });
+    const menu = screen.getByRole("navigation", { name: "Mobile navigation" });
+    await waitFor(() =>
+      expect(document.activeElement).toBe(menu.querySelector("a")),
+    );
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(
+      screen.queryByRole("navigation", { name: "Mobile navigation" }),
+    ).toBeNull();
+    expect(document.activeElement).toBe(
+      screen.getByRole("button", { name: "Open navigation" }),
+    );
+  });
+  it("closes after selecting a route or clicking outside the panel", async () => {
+    menuFixture();
+    fireEvent.click(screen.getByRole("button", { name: "Open navigation" }));
+    const menu = screen.getByRole("navigation", { name: "Mobile navigation" });
+    fireEvent.click(
+      menu.querySelector<HTMLAnchorElement>('a[href="/events"]')!,
+    );
+    expect(
+      screen.queryByRole("navigation", { name: "Mobile navigation" }),
+    ).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Open navigation" }));
+    fireEvent.pointerDown(screen.getByRole("main"));
+    expect(
+      screen.queryByRole("navigation", { name: "Mobile navigation" }),
+    ).toBeNull();
+    await waitFor(() => expect(state().loading).toBe(false));
   });
 });

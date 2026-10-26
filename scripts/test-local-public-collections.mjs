@@ -146,6 +146,40 @@ try {
     row.views === 1,
     "rapid repeated view actions cannot mutate an arbitrary counter",
   );
+  const archived = {};
+  for (const table of ["team_members", "sponsors"]) {
+    archived[table] = owned.find((entry) => entry.table === table).ids[0];
+    checked(
+      await db
+        .from(table)
+        .update({ deleted_at: new Date().toISOString() })
+        .eq("id", archived[table]),
+    );
+  }
+  const home = await read("/public/home");
+  check(
+    home.sponsors.length <= 12 &&
+      home.sponsors.some((partner) =>
+        owned
+          .find((entry) => entry.table === "sponsors")
+          .ids.includes(partner.id),
+      ),
+    "homepage acknowledges a bounded selection of active approved partners",
+  );
+  check(
+    !home.team.some((person) => person.id === archived.team_members) &&
+      !home.sponsors.some((partner) => partner.id === archived.sponsors),
+    "archived team and sponsor rows cannot reappear in homepage selections",
+  );
+  check(
+    !JSON.stringify({ team: home.team, sponsors: home.sponsors }).includes(
+      "deleted_at",
+    ) &&
+      !JSON.stringify({ team: home.team, sponsors: home.sponsors }).includes(
+        "created_by",
+      ),
+    "homepage partner and team selections omit private lifecycle metadata",
+  );
   await writeFile(
     new URL("../.docs/phase0/local-public-collections.json", import.meta.url),
     JSON.stringify(

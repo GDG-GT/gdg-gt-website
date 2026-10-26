@@ -925,6 +925,23 @@
       "acceptance": "unverified"
     },
     {
+      "id": "A11Y-TEST-004",
+      "requirements": [],
+      "scope": "Compact top-menu Tab containment, ArrowDown entry, Escape focus return and route/outside close",
+      "automated": [
+        "tests/client/public-content-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Full screen-reader, device and supported-browser acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.1",
+        "28.3"
+      ]
+    },
+    {
       "id": "A11Y-TEST-001",
       "requirements": [
         "CONTENT-007"
@@ -932,6 +949,7 @@
       "scope": "Responsive image dimensions, formats, lazy loading and alt text",
       "automated": [
         "tests/form-images.test.ts",
+        "tests/client/public-image.test.tsx",
         "tests/server/media-content.test.mjs"
       ],
       "remaining": [
