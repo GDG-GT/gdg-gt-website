@@ -5,6 +5,24 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Protected Forms read/filter recovery — 2026-10-26
+
+- Definition reads are scoped to form/account/role and abort superseded requests.
+  Library context changes hide prior rows immediately. Builder/response initial
+  failures have skeletons and focused explicit retry/return paths. Response
+  table/summary/saved-view reads ignore aborted results.
+- Applied and saved filters now appear in response controls; local dates retain
+  precision and unchanged DST instants. Reset clears unapplied edits. Reversed
+  dates fail locally with associated focus; result tabs support roving Arrow/
+  Home/End keyboard operation and an explicitly labelled panel.
+- Twenty-two added hook/DOM cases; all 807 tests/121 files pass. Strict types pass;
+  lint stays 0 errors/25 warnings. Global coverage is 34.79% lines/33.03% branches,
+  below 70%; all 17 critical branch gates pass. Nine real local runtime checks,
+  live builder/response/date/tab/reset and 375 px bounded layout verified; owned
+  fixture archived and actor disabled. Error/race injection remains DOM-only.
+- The catalog has 118 unverified logical cases. See
+  `PROTECTED_FORM_READ_RECOVERY.md`; full PRD acceptance remains open.
+
 ### Resource filters and archived sponsor aliases — 2026-10-26
 
 - Shared resource filters normalize supported casing and bounds, preserve each

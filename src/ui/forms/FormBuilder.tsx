@@ -159,15 +159,33 @@ export default function FormBuilder() {
   if (!form)
     return (
       <div className="gt-admin-page">
-        <EmptyState
-          title={
-            server.loading ? "Loading your form…" : "This form is not available"
-          }
-          action={<Link to="/admin/forms">Back to forms</Link>}
-        >
-          {server.error ||
-            "Your saved draft is loaded from the chapter server."}
-        </EmptyState>
+        {server.loading ? (
+          <div role="status" aria-label="Loading form builder">
+            <div className="gt-skeleton gt-detail-skeleton" />
+            <span className="sr-only">Loading your form…</span>
+          </div>
+        ) : (
+          <EmptyState
+            title="This form is not available"
+            action={
+              <div className="gt-inline-actions">
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    void server.reload();
+                    document.getElementById("workspace-content")?.focus();
+                  }}
+                >
+                  Try loading form again
+                </Button>
+                <Link to="/admin/forms">Back to forms</Link>
+              </div>
+            }
+          >
+            {server.error ||
+              "Your saved draft could not be loaded from the chapter server."}
+          </EmptyState>
+        )}
       </div>
     );
   const field = form.fields.find((item) => item.id === selected),

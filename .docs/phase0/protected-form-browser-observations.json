@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-26",
+  "kind": "manual CUA browser observations",
+  "origin": "http://127.0.0.1:8080",
+  "fixtureSlug": "fictional-runtime-f9196257-113745",
+  "observations": [
+    { "name": "Authorized fictional builder and response table load through the real local API", "observed": true },
+    { "name": "Applied 12:00 UTC response date filters display as 08:00 in the current local timezone", "observed": true },
+    { "name": "Arrow and End keys select/focus the labelled Summary and Responses tabs", "observed": true },
+    { "name": "Reversed date range produces inline error associated with the focused end-date input", "observed": true },
+    { "name": "Reset clears query and date controls and focuses workspace-content", "observed": true },
+    { "name": "375 px page has 375 px scroll width; filter controls stay within the viewport at heights of at least 44 px; table scroll is bounded to its wrapper", "observed": true }
+  ],
+  "limits": "Initial read failures and late-response races were exercised in controlled DOM tests, not real browser fault injection. An unknown ID is concealed by the existing page-access guard.",
+  "cleanup": "Runtime script completed; owned form archived, fixture actor disabled/sessions revoked, synthetic response retained; viewport reset.",
+  "acceptance": "unverified"
+}

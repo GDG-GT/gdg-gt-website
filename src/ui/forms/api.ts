@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
 import type { PreviewForm, FormResponse } from "./store";
@@ -52,8 +52,9 @@ export const formsApi = {
       })
     ).form;
   },
-  async load(id: string) {
-    return (await api<{ form: PreviewForm }>("/admin/forms/" + id)).form;
+  async load(id: string, signal?: AbortSignal) {
+    return (await api<{ form: PreviewForm }>("/admin/forms/" + id, { signal }))
+      .form;
   },
   async save(form: PreviewForm) {
     return (
@@ -122,56 +123,96 @@ export const formsApi = {
 };
 export function useFormLibrary(params: string, enabled = true) {
   const { currentAdmin } = useAdmin();
-  const [data, setData] = useState<Library>({
-      items: [],
-      total: 0,
-      page: 1,
-      pageSize: 30,
-    }),
-    [error, setError] = useState(""),
-    [loading, setLoading] = useState(true),
+  const scope = JSON.stringify([
+    currentAdmin?.id,
+    currentAdmin?.role,
+    params,
+    enabled,
+  ]);
+  const [snapshot, setSnapshot] = useState<{ scope: string; data: Library }>(),
+    [request, setRequest] = useState({ scope, error: "", loading: true }),
     [refresh, setRefresh] = useState(0);
   useEffect(() => {
     const controller = new AbortController();
-    setLoading(true);
-    setError("");
-    setData({ items: [], total: 0, page: 1, pageSize: 30 });
+    setRequest({ scope, loading: true, error: "" });
+    setSnapshot(undefined);
     if (!enabled) {
-      setLoading(false);
+      setRequest({ scope, loading: false, error: "" });
       return () => controller.abort();
     }
     api<Library>("/admin/forms?" + params, { signal: controller.signal })
       .then((result) => {
-        if (!controller.signal.aborted) setData(result);
+        if (!controller.signal.aborted) setSnapshot({ scope, data: result });
       })
       .catch((e) => {
-        if (!controller.signal.aborted) setError(e.message);
+        if (!controller.signal.aborted)
+          setRequest({
+            scope,
+            loading: false,
+            error:
+              e instanceof Error
+                ? e.message
+                : "The form library could not load. Try again.",
+          });
       })
       .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if (!controller.signal.aborted)
+          setRequest((previous) => ({ ...previous, loading: false }));
       });
     return () => controller.abort();
-  }, [params, enabled, refresh, currentAdmin?.id, currentAdmin?.role]);
-  return { ...data, error, loading, reload: () => setRefresh((v) => v + 1) };
+  }, [params, enabled, refresh, scope]);
+  const data =
+    snapshot?.scope === scope && enabled
+      ? snapshot.data
+      : { items: [], total: 0, page: 1, pageSize: 30 };
+  return {
+    ...data,
+    error: request.scope === scope ? request.error : "",
+    loading: enabled && (request.scope !== scope || request.loading),
+    reload: () => setRefresh((v) => v + 1),
+  };
 }
 export function useServerForm(id: string | undefined) {
-  const [form, setForm] = useState<PreviewForm>(),
-    [error, setError] = useState(""),
-    [loading, setLoading] = useState(true);
+  const { currentAdmin } = useAdmin(),
+    scope = JSON.stringify([currentAdmin?.id, currentAdmin?.role, id]);
+  const [snapshot, setSnapshot] = useState<{
+      scope: string;
+      form: PreviewForm;
+    }>(),
+    [request, setRequest] = useState({ scope, error: "", loading: !!id });
+  const activeRequest = useRef<AbortController>();
   const load = useCallback(async () => {
+    activeRequest.current?.abort();
     if (!id) return;
-    setLoading(true);
-    setError("");
+    const controller = new AbortController();
+    activeRequest.current = controller;
+    setRequest({ scope, loading: true, error: "" });
     try {
-      setForm(await formsApi.load(id));
+      const form = await formsApi.load(id, controller.signal);
+      if (!controller.signal.aborted) setSnapshot({ scope, form });
     } catch (e) {
-      setError((e as Error).message);
+      if (!controller.signal.aborted)
+        setRequest({
+          scope,
+          loading: false,
+          error:
+            e instanceof Error
+              ? e.message
+              : "This form could not load. Try again.",
+        });
     } finally {
-      setLoading(false);
+      if (!controller.signal.aborted)
+        setRequest((previous) => ({ ...previous, loading: false }));
     }
-  }, [id]);
+  }, [id, scope]);
   useEffect(() => {
     void load();
+    return () => activeRequest.current?.abort();
   }, [load]);
-  return { form, error, loading, reload: load };
+  return {
+    form: id && snapshot?.scope === scope ? snapshot.form : undefined,
+    error: request.scope === scope ? request.error : "",
+    loading: !!id && (request.scope !== scope || request.loading),
+    reload: load,
+  };
 }

@@ -14,6 +14,7 @@ import ResponseFileLinks from "./ResponseFileLinks";
 import ResponseExports from "./ResponseExports";
 import ResponseHistory from "./ResponseHistory";
 import PrivacyPanel from "./PrivacyPanel";
+import { responseFilterLocalTime } from "./response-filters";
 import { useNavigationSafety } from "@/hooks/useDraftGuard";
 type Result = {
   items: FormResponse[];
@@ -66,7 +67,13 @@ export default function ResponseWorkspace() {
     [privacyState, setPrivacyState] = useState({ dirty: false, busy: false }),
     [formHeld, setFormHeld] = useState<boolean>(),
     [holdError, setHoldError] = useState(false);
+  const [dateError, setDateError] = useState<"from" | "to" | "">(""),
+    [dateMessage, setDateMessage] = useState("");
   const query = params.toString();
+  useEffect(() => {
+    setDateError("");
+    setDateMessage("");
+  }, [query]);
   const mayReviewPrivacy = !!form?.actions?.includes("delete");
   useEffect(() => {
     if (!formId || !mayReviewPrivacy) {
@@ -100,10 +107,14 @@ export default function ResponseWorkspace() {
       tab === "Summary"
         ? api<Summary>(`/admin/forms/${formId}/analytics?${query}`, {
             signal: controller.signal,
-          }).then(setSummary)
+          }).then((value) => {
+            if (!controller.signal.aborted) setSummary(value);
+          })
         : api<Result>(`/admin/forms/${formId}/responses?${query}`, {
             signal: controller.signal,
-          }).then(setData);
+          }).then((value) => {
+            if (!controller.signal.aborted) setData(value);
+          });
     work
       .catch((e) => {
         if (!controller.signal.aborted) setError(e.message);
@@ -114,10 +125,19 @@ export default function ResponseWorkspace() {
     return () => controller.abort();
   }, [formId, query, refresh, tab]);
   useEffect(() => {
+    const controller = new AbortController();
+    setViews([]);
     if (formId)
-      api<{ items: View[] }>(`/admin/forms/${formId}/views`)
-        .then((r) => setViews(r.items))
-        .catch(() => setViews([]));
+      api<{ items: View[] }>(`/admin/forms/${formId}/views`, {
+        signal: controller.signal,
+      })
+        .then((r) => {
+          if (!controller.signal.aborted) setViews(r.items);
+        })
+        .catch(() => {
+          if (!controller.signal.aborted) setViews([]);
+        });
+    return () => controller.abort();
   }, [formId, refresh]);
   const change = (key: string, value: string) => {
     const next = new URLSearchParams(params);
@@ -125,6 +145,7 @@ export default function ResponseWorkspace() {
     else next.delete(key);
     if (key !== "page") next.delete("page");
     setParams(next);
+    if (key === "page") document.getElementById("workspace-content")?.focus();
   };
   const work = async (run: () => Promise<unknown>, message: string) => {
     setBusy(true);
@@ -144,21 +165,40 @@ export default function ResponseWorkspace() {
   if (!form)
     return (
       <div className="gt-admin-page">
-        <EmptyState
-          title={
-            server.loading
-              ? "Loading response workspace…"
-              : "This form is not available"
-          }
-        >
-          {server.error}
-        </EmptyState>
+        {server.loading ? (
+          <div role="status" aria-label="Loading form responses">
+            <div className="gt-skeleton gt-detail-skeleton" />
+            <span className="sr-only">Loading response workspace…</span>
+          </div>
+        ) : (
+          <EmptyState
+            title="This form is not available"
+            action={
+              <div className="gt-inline-actions">
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    void server.reload();
+                    document.getElementById("workspace-content")?.focus();
+                  }}
+                >
+                  Try loading form again
+                </Button>
+                <Link to="/admin/forms">Back to forms</Link>
+              </div>
+            }
+          >
+            {server.error}
+          </EmptyState>
+        )}
       </div>
     );
   const fieldMap = new Map(
       form.versions.flatMap((v) => v.fields.map((f) => [f.id, f] as const)),
     ),
-    visibleColumns = columns.map((id) => fieldMap.get(id)).filter((field): field is NonNullable<typeof field> => !!field);
+    visibleColumns = columns
+      .map((id) => fieldMap.get(id))
+      .filter((field): field is NonNullable<typeof field> => !!field);
   return (
     <div className="gt-admin-page" aria-busy={loading || busy}>
       <header className="gt-admin-page-heading">
@@ -212,34 +252,98 @@ export default function ResponseWorkspace() {
       )}
       {notice && <p role="status">{notice}</p>}
       <div className="gt-tabs" role="tablist" aria-label="Response view">
-        {["Summary", "Responses"].map((value) => (
+        {["Summary", "Responses"].map((value, index, tabs) => (
           <button
             key={value}
             role="tab"
+            id={`response-tab-${value}`}
+            aria-controls="response-results-panel"
+            tabIndex={tab === value ? 0 : -1}
             aria-selected={tab === value}
             onClick={() => setTab(value)}
+            onKeyDown={(event) => {
+              const target =
+                event.key === "ArrowRight"
+                  ? (index + 1) % tabs.length
+                  : event.key === "ArrowLeft"
+                    ? (index + tabs.length - 1) % tabs.length
+                    : event.key === "Home"
+                      ? 0
+                      : event.key === "End"
+                        ? tabs.length - 1
+                        : -1;
+              if (target < 0) return;
+              event.preventDefault();
+              setTab(tabs[target]);
+              document.getElementById(`response-tab-${tabs[target]}`)?.focus();
+            }}
           >
             {value}
           </button>
         ))}
       </div>
       <form
+        key={query}
         className="gt-panel gt-form"
         onSubmit={(e) => {
           e.preventDefault();
           const body = new FormData(e.currentTarget),
             next = new URLSearchParams();
+          setDateError("");
+          setDateMessage("");
+          setError("");
           for (const [key, value] of body)
-            if (String(value))
-              next.set(
-                key,
-                ["from", "to"].includes(key)
-                  ? new Date(String(value)).toISOString()
-                  : String(value),
-              );
+            if (String(value)) {
+              if (key === "from" || key === "to") {
+                const date = new Date(String(value));
+                if (!Number.isFinite(date.getTime())) {
+                  setDateError(key);
+                  setDateMessage("Choose a valid date and time.");
+                  e.currentTarget
+                    .querySelector<HTMLInputElement>(`[name="${key}"]`)
+                    ?.focus();
+                  return;
+                }
+                const previous = params.get(key),
+                  previousLocal = responseFilterLocalTime(previous);
+                // Keep an unchanged saved instant through a DST repeated hour,
+                // including native controls that omit zero seconds in value.
+                next.set(
+                  key,
+                  previous &&
+                    previousLocal &&
+                    new Date(previousLocal).getTime() === date.getTime()
+                    ? previous
+                    : date.toISOString(),
+                );
+              } else next.set(key, String(value));
+            }
+          if (
+            next.get("from") &&
+            next.get("to") &&
+            new Date(next.get("from")!).getTime() >
+              new Date(next.get("to")!).getTime()
+          ) {
+            setDateError("to");
+            setDateMessage("The end date must be on or after the start date.");
+            e.currentTarget
+              .querySelector<HTMLInputElement>('[name="to"]')
+              ?.focus();
+            return;
+          }
           setParams(next);
+          document.getElementById("workspace-content")?.focus();
         }}
       >
+        {dateError && dateMessage && (
+          <p
+            id="response-filter-date-error"
+            role="alert"
+            className="gt-form-error"
+          >
+            {dateMessage}
+          </p>
+        )}
         <div className="gt-form-grid">
           <Field label="Search respondents and non-sensitive answers">
             <input
@@ -268,15 +372,44 @@ export default function ResponseWorkspace() {
             </select>
           </Field>
           <Field label="From (your local time)">
-            <input name="from" type="datetime-local" />
+            <input
+              name="from"
+              type="datetime-local"
+              step="any"
+              defaultValue={responseFilterLocalTime(params.get("from"))}
+              aria-invalid={dateError === "from"}
+              aria-describedby={
+                dateError === "from" ? "response-filter-date-error" : undefined
+              }
+            />
           </Field>
           <Field label="To (your local time)">
-            <input name="to" type="datetime-local" />
+            <input
+              name="to"
+              type="datetime-local"
+              step="any"
+              defaultValue={responseFilterLocalTime(params.get("to"))}
+              aria-invalid={dateError === "to"}
+              aria-describedby={
+                dateError === "to" ? "response-filter-date-error" : undefined
+              }
+            />
           </Field>
         </div>
         <div className="gt-actions">
           <Button disabled={loading}>Apply filters</Button>
-          <Button type="button" variant="ghost" onClick={() => setParams({})}>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={(event) => {
+              event.currentTarget.form?.reset();
+              setError("");
+              setDateError("");
+              setDateMessage("");
+              setParams({});
+              document.getElementById("workspace-content")?.focus();
+            }}
+          >
             Reset
           </Button>
         </div>
@@ -341,6 +474,10 @@ export default function ResponseWorkspace() {
                       ]),
                     ),
                   );
+                  setDateError("");
+                  setDateMessage("");
+                  setError("");
+                  document.getElementById("workspace-content")?.focus();
                 }
               }}
             >
@@ -387,187 +524,193 @@ export default function ResponseWorkspace() {
           </Button>
         </div>
       </section>
-      {loading && <p role="status">Loading {tab.toLowerCase()}…</p>}
-      {summary && (
-        <section className="gt-panel gt-event-editor">
-          <h2>{summary.responseCount} matching responses</h2>
-          <p>
-            Sensitive fields and free-text values are excluded from summaries.
-          </p>
-          {summary.fields.map((field) => (
-            <article
-              className="gt-response-summary"
-              key={`${field.version}-${field.fieldId}`}
-            >
-              <h3>
-                {field.label}{" "}
-                <small>
-                  v{field.version} · {field.answered} answered
-                </small>
-              </h3>
-              {field.numeric && (
-                <p>
-                  Mean {field.numeric.mean.toFixed(2)} · Min {field.numeric.min}{" "}
-                  · Max {field.numeric.max}
-                </p>
-              )}
-              {Object.entries(field.counts).map(([label, count]) => (
-                <div className="gt-summary-bar" key={label}>
-                  <span>{label}</span>
-                  <meter
-                    min={0}
-                    max={Math.max(field.answered, 1)}
-                    value={count}
-                  />
-                  <span>{count}</span>
-                </div>
-              ))}
-              {Object.entries(field.grid).map(([row, counts]) => (
-                <div key={row}>
-                  <h4>{row}</h4>
-                  {Object.entries(counts).map(([column, count]) => (
-                    <div className="gt-summary-bar" key={column}>
-                      <span>{column}</span>
-                      <meter
-                        min={0}
-                        max={Math.max(field.answered, 1)}
-                        value={count}
-                      />
-                      <span>{count}</span>
-                    </div>
-                  ))}
-                </div>
-              ))}
-              {Object.entries(field.ranking).map(([label, position]) => (
-                <p key={label}>
-                  {label}: mean rank {position?.toFixed(2) || "No answers"}
-                </p>
-              ))}
-            </article>
-          ))}
-        </section>
-      )}
-      {data && (
-        <section className="gt-panel gt-event-editor">
-          <div className="gt-panel-heading">
-            <h2>{data.total.toLocaleString()} matching responses</h2>
-          </div>
-          <p className="gt-helper">
-            Exports include stable field IDs and version labels, and are
-            audited.{" "}
-            {checked.length
-              ? `${checked.length} selected.`
-              : "All filtered responses selected for export."}
-          </p>
-          {form.actions?.includes("export_responses") && (
-            <ResponseExports
-              key={form.id}
-              formId={form.id}
-              filters={Object.fromEntries(
-                [...params].filter(([key]) =>
-                  ["q", "version", "from", "to", "status"].includes(key),
-                ),
-              )}
-              selected={checked}
-              columns={columns}
-              canSensitive={
-                !!form.actions?.includes("view_sensitive_responses")
-              }
-            />
-          )}
-          {data.items.length ? (
-            <div className="gt-table-wrap">
-              <table className="gt-data-table">
-                <thead>
-                  <tr>
-                    <th>Select</th>
-                    <th>Submitted</th>
-                    <th>Respondent</th>
-                    <th>Version</th>
-                    <th>Status</th>
-                    {visibleColumns.map((f) => (
-                      <th key={f.id}>{f.label}</th>
-                    ))}
-                    <th>Review</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.items.map((row) => (
-                    <tr key={row.id}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          aria-label={`Select response ${row.id}`}
-                          checked={checked.includes(row.id)}
-                          onChange={(e) =>
-                            setChecked(
-                              e.target.checked
-                                ? [...checked, row.id]
-                                : checked.filter((id) => id !== row.id),
-                            )
-                          }
+      <div
+        role="tabpanel"
+        id="response-results-panel"
+        aria-labelledby={`response-tab-${tab}`}
+      >
+        {loading && <p role="status">Loading {tab.toLowerCase()}…</p>}
+        {summary && (
+          <section className="gt-panel gt-event-editor">
+            <h2>{summary.responseCount} matching responses</h2>
+            <p>
+              Sensitive fields and free-text values are excluded from summaries.
+            </p>
+            {summary.fields.map((field) => (
+              <article
+                className="gt-response-summary"
+                key={`${field.version}-${field.fieldId}`}
+              >
+                <h3>
+                  {field.label}{" "}
+                  <small>
+                    v{field.version} · {field.answered} answered
+                  </small>
+                </h3>
+                {field.numeric && (
+                  <p>
+                    Mean {field.numeric.mean.toFixed(2)} · Min{" "}
+                    {field.numeric.min} · Max {field.numeric.max}
+                  </p>
+                )}
+                {Object.entries(field.counts).map(([label, count]) => (
+                  <div className="gt-summary-bar" key={label}>
+                    <span>{label}</span>
+                    <meter
+                      min={0}
+                      max={Math.max(field.answered, 1)}
+                      value={count}
+                    />
+                    <span>{count}</span>
+                  </div>
+                ))}
+                {Object.entries(field.grid).map(([row, counts]) => (
+                  <div key={row}>
+                    <h4>{row}</h4>
+                    {Object.entries(counts).map(([column, count]) => (
+                      <div className="gt-summary-bar" key={column}>
+                        <span>{column}</span>
+                        <meter
+                          min={0}
+                          max={Math.max(field.answered, 1)}
+                          value={count}
                         />
-                      </td>
-                      <td>{new Date(row.submittedAt).toLocaleString()}</td>
-                      <td>
-                        {row.respondent?.name ||
-                          "Historical identity unavailable"}
-                        <br />
-                        {row.respondent?.email}
-                      </td>
-                      <td>v{row.version}</td>
-                      <td>{row.status}</td>
-                      {visibleColumns.map((f) => (
-                        <td key={f.id}>
-                          {f.sensitive && !row.answers[f.id]
-                            ? "Hidden"
-                            : typeof row.answers[f.id] === "object"
-                              ? JSON.stringify(row.answers[f.id])
-                              : String(row.answers[f.id] ?? "—")}
-                        </td>
-                      ))}
-                      <td>
-                        <Button
-                          variant="ghost"
-                          onClick={() => setSelected(row)}
-                        >
-                          Open
-                          <span className="sr-only"> response {row.id}</span>
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        <span>{count}</span>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+                {Object.entries(field.ranking).map(([label, position]) => (
+                  <p key={label}>
+                    {label}: mean rank {position?.toFixed(2) || "No answers"}
+                  </p>
+                ))}
+              </article>
+            ))}
+          </section>
+        )}
+        {data && (
+          <section className="gt-panel gt-event-editor">
+            <div className="gt-panel-heading">
+              <h2>{data.total.toLocaleString()} matching responses</h2>
             </div>
-          ) : (
-            <EmptyState title="No responses match">
-              Responses appear only after an online server commit. Try removing
-              a filter.
-            </EmptyState>
-          )}
-          <nav className="gt-actions" aria-label="Response pages">
-            <Button
-              variant="secondary"
-              disabled={data.page === 1 || loading}
-              onClick={() => change("page", String(data.page - 1))}
-            >
-              Previous
-            </Button>
-            <span>
-              Page {data.page} of{" "}
-              {Math.max(1, Math.ceil(data.total / data.pageSize))}
-            </span>
-            <Button
-              variant="secondary"
-              disabled={data.page * data.pageSize >= data.total || loading}
-              onClick={() => change("page", String(data.page + 1))}
-            >
-              Next
-            </Button>
-          </nav>
-        </section>
-      )}
+            <p className="gt-helper">
+              Exports include stable field IDs and version labels, and are
+              audited.{" "}
+              {checked.length
+                ? `${checked.length} selected.`
+                : "All filtered responses selected for export."}
+            </p>
+            {form.actions?.includes("export_responses") && (
+              <ResponseExports
+                key={form.id}
+                formId={form.id}
+                filters={Object.fromEntries(
+                  [...params].filter(([key]) =>
+                    ["q", "version", "from", "to", "status"].includes(key),
+                  ),
+                )}
+                selected={checked}
+                columns={columns}
+                canSensitive={
+                  !!form.actions?.includes("view_sensitive_responses")
+                }
+              />
+            )}
+            {data.items.length ? (
+              <div className="gt-table-wrap">
+                <table className="gt-data-table">
+                  <thead>
+                    <tr>
+                      <th>Select</th>
+                      <th>Submitted</th>
+                      <th>Respondent</th>
+                      <th>Version</th>
+                      <th>Status</th>
+                      {visibleColumns.map((f) => (
+                        <th key={f.id}>{f.label}</th>
+                      ))}
+                      <th>Review</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.items.map((row) => (
+                      <tr key={row.id}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            aria-label={`Select response ${row.id}`}
+                            checked={checked.includes(row.id)}
+                            onChange={(e) =>
+                              setChecked(
+                                e.target.checked
+                                  ? [...checked, row.id]
+                                  : checked.filter((id) => id !== row.id),
+                              )
+                            }
+                          />
+                        </td>
+                        <td>{new Date(row.submittedAt).toLocaleString()}</td>
+                        <td>
+                          {row.respondent?.name ||
+                            "Historical identity unavailable"}
+                          <br />
+                          {row.respondent?.email}
+                        </td>
+                        <td>v{row.version}</td>
+                        <td>{row.status}</td>
+                        {visibleColumns.map((f) => (
+                          <td key={f.id}>
+                            {f.sensitive && !row.answers[f.id]
+                              ? "Hidden"
+                              : typeof row.answers[f.id] === "object"
+                                ? JSON.stringify(row.answers[f.id])
+                                : String(row.answers[f.id] ?? "—")}
+                          </td>
+                        ))}
+                        <td>
+                          <Button
+                            variant="ghost"
+                            onClick={() => setSelected(row)}
+                          >
+                            Open
+                            <span className="sr-only"> response {row.id}</span>
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <EmptyState title="No responses match">
+                Responses appear only after an online server commit. Try
+                removing a filter.
+              </EmptyState>
+            )}
+            <nav className="gt-actions" aria-label="Response pages">
+              <Button
+                variant="secondary"
+                disabled={data.page === 1 || loading}
+                onClick={() => change("page", String(data.page - 1))}
+              >
+                Previous
+              </Button>
+              <span>
+                Page {data.page} of{" "}
+                {Math.max(1, Math.ceil(data.total / data.pageSize))}
+              </span>
+              <Button
+                variant="secondary"
+                disabled={data.page * data.pageSize >= data.total || loading}
+                onClick={() => change("page", String(data.page + 1))}
+              >
+                Next
+              </Button>
+            </nav>
+          </section>
+        )}
+      </div>
       <Dialog
         open={!!selected}
         onOpenChange={(open) => {

@@ -1807,6 +1807,29 @@
       "acceptance": "unverified"
     },
     {
+      "id": "FORM-TEST-034",
+      "requirements": [
+        "FORM-005",
+        "FORM-018",
+        "FORM-019",
+        "FORM-026"
+      ],
+      "scope": "Protected definition/library scope, aborted superseded reads, initial builder/response retry, stale-result fencing, visible saved/date filters and response-tab keyboard operation",
+      "automated": [
+        "tests/client/form-data-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Actual supported-browser outage/role-change/reconnect and manual accessibility acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
       "id": "PWA-TEST-005",
       "requirements": [],
       "scope": "Minimal public queue, retry classification, leases, interrupted-final-attempt recovery, expiry and logout fences",

@@ -885,6 +885,16 @@ add(
   ["Real supported-device installation/uninstall/reinstall acceptance"],
 );
 add(
+  "FORM-TEST-034",
+  "FORM-005 FORM-018 FORM-019 FORM-026",
+  "Protected definition/library scope, aborted superseded reads, initial builder/response retry, stale-result fencing, visible saved/date filters and response-tab keyboard operation",
+  ["tests/client/form-data-recovery.test.tsx"],
+  [
+    "Actual supported-browser outage/role-change/reconnect and manual accessibility acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+add(
   "PWA-TEST-005",
   "",
   "Minimal public queue, retry classification, leases, interrupted-final-attempt recovery, expiry and logout fences",
