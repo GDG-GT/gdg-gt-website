@@ -1248,9 +1248,15 @@ export function TeamPage() {
                             href={safePublicUrl(person.linkedin_url)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label={`${person.name} on LinkedIn`}
+                            aria-label={`${person.name} on LinkedIn (opens a new tab)`}
+                            className="gt-external-social"
                           >
                             <Linkedin size={18} />
+                            <ArrowUpRight
+                              className="gt-external-marker"
+                              size={10}
+                              aria-hidden="true"
+                            />
                           </a>
                         )}
                         {safePublicUrl(person.github_url) && (
@@ -1258,9 +1264,15 @@ export function TeamPage() {
                             href={safePublicUrl(person.github_url)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label={`${person.name} on GitHub`}
+                            aria-label={`${person.name} on GitHub (opens a new tab)`}
+                            className="gt-external-social"
                           >
                             <Github size={18} />
+                            <ArrowUpRight
+                              className="gt-external-marker"
+                              size={10}
+                              aria-hidden="true"
+                            />
                           </a>
                         )}
                       </div>

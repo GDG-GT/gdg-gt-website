@@ -321,9 +321,17 @@ export default function SiteShell({ children }: { children: ReactNode }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${item.platform} (opens a new tab)`}
+                    className="gt-external-social"
                   >
                     {item.platform === "github" ? (
-                      <Github size={19} />
+                      <>
+                        <Github size={19} />
+                        <ArrowUpRight
+                          className="gt-external-marker"
+                          size={10}
+                          aria-hidden="true"
+                        />
+                      </>
                     ) : (
                       <ExternalLink size={19} />
                     )}
@@ -336,8 +344,14 @@ export default function SiteShell({ children }: { children: ReactNode }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="GDG on Campus on GitHub (opens a new tab)"
+                    className="gt-external-social"
                   >
                     <Github size={19} />
+                    <ArrowUpRight
+                      className="gt-external-marker"
+                      size={10}
+                      aria-hidden="true"
+                    />
                   </a>
                   <Link to="/contact" aria-label="Contact the chapter">
                     <Mail size={19} />

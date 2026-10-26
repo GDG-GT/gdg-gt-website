@@ -5,6 +5,22 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### External action and Linktree focus safeguards — 2026-10-26
+
+- Managed external actions now signal new tabs and use safe context isolation;
+  absolute same-origin actions retain router navigation. Unsafe managed links
+  become inert. Public social links and private Markdown gain external cues.
+- Fixed Linktree preview/close focus, expanded-trigger toggling and old-frame/
+  consent carryover on profile changes. A shared confirmation focus fix allows
+  approved destinations to focus correctly while cancellation returns to the
+  previous control. Loaded external forms retain their discard safeguard.
+- 22 new DOM cases; 666 tests/112 files pass; strict types, zero lint errors/25
+  warnings, build and byte limits pass. Thirty-six actual local Linktree checks
+  pass and their isolated fixtures were archived. Global unit coverage is
+  29.33% lines/27.62% branches, still below 70%; all 17 critical branch gates pass.
+  The catalog has 107 logical cases and full acceptance remains unverified. See
+  `PUBLIC_LINK_FOCUS.md`.
+
 ### Public navigation, partners and image recovery — 2026-10-26
 
 - Added compact top-menu keyboard containment without a body scroll lock or

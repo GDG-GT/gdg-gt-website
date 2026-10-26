@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Search, Inbox } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Search, Inbox } from "lucide-react";
 import { chapterName } from "./preview-data";
 import { useContent } from "@/contexts/ContentContext";
 import { useLocation } from "react-router-dom";
@@ -56,10 +56,56 @@ export function ActionLink({
   variant?: "primary" | "secondary" | "ghost";
   arrow?: boolean;
 }) {
+  const className = `gt-button gt-button-${variant}`;
+  const hasUnsafeCharacters = to.includes("\\") || Array.from(to).some((character) =>
+    character.charCodeAt(0) <= 32 || character.charCodeAt(0) === 127,
+  );
+  let external: string | undefined;
+  let destination = to;
+  if (!hasUnsafeCharacters && !to.startsWith("/") && !to.startsWith("#")) {
+    try {
+      const url = new URL(to);
+      if (url.protocol === "https:" && !url.username && !url.password) {
+        if (
+          typeof window !== "undefined" &&
+          url.origin === window.location.origin
+        )
+          destination = url.pathname + url.search + url.hash;
+        else external = url.href;
+      }
+    } catch {
+      /* Relative routes are handled by the router below. */
+    }
+  }
+  if (external)
+    return (
+      <a
+        className={className}
+        href={external}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {children}
+        <ArrowUpRight size={17} aria-hidden="true" />{" "}
+        <span className="sr-only">(opens a new tab)</span>
+      </a>
+    );
+  if (
+    hasUnsafeCharacters ||
+    !(
+      (destination.startsWith("/") && !destination.startsWith("//")) ||
+      destination.startsWith("#")
+    )
+  )
+    return (
+      <span className={className} aria-disabled="true">
+        {children}
+      </span>
+    );
   return (
-    <Link className={`gt-button gt-button-${variant}`} to={to}>
+    <Link className={className} to={destination}>
       {children}
-      {arrow && <ArrowRight size={17} />}
+      {arrow && <ArrowRight size={17} aria-hidden="true" />}
     </Link>
   );
 }

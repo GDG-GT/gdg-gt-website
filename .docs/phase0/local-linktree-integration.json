@@ -1,6 +1,6 @@
 {
   "note": "Actual dedicated loopback HTTP checks with fictional isolated accounts/team/profile/links. No provider iframe, external site, email or real visitor data was loaded. Rate limits and jobs were not reset. Profile/team/accounts recoverably archived and username/history preserved.",
-  "profileId": "407e30b4-6534-4917-9084-ed1336b7e259",
+  "profileId": "e778c0cc-8e54-457b-9959-cb2b4bf0d5da",
   "tests": [
     {
       "name": "anonymous callers cannot read the Linktree manager",
@@ -108,10 +108,6 @@
     },
     {
       "name": "browser-review fixture is active and contains only explicit fictional links",
-      "passed": true
-    },
-    {
-      "name": "independent-session update delivered during browser review",
       "passed": true
     },
     {

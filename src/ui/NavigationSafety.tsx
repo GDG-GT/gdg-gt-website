@@ -15,7 +15,7 @@ import {
   type DraftState,
 } from "@/contexts/NavigationSafetyContext";
 import { Button } from "./primitives";
-import { navigationChangesContext } from '../../shared/capability-navigation';
+import { navigationChangesContext } from "../../shared/capability-navigation";
 export default function NavigationSafety({
   children,
 }: {
@@ -26,11 +26,12 @@ export default function NavigationSafety({
     [pending, setPending] = useState<(() => void) | null>(null);
   const pendingRef = useRef<(() => void) | null>(null),
     previousFocus = useRef<HTMLElement | null>(null),
+    restorePreviousFocus = useRef(true),
     stay = useRef<HTMLButtonElement>(null);
   const changed = useCallback(() => setVersion((v) => v + 1), []);
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
-      navigationChangesContext(currentLocation,nextLocation) &&
+      navigationChangesContext(currentLocation, nextLocation) &&
       registry.shouldBlock(),
   );
   const states = registry.states() as DraftState[],
@@ -104,12 +105,16 @@ export default function NavigationSafety({
             className="gt-navigation-dialog"
             onOpenAutoFocus={(event) => {
               event.preventDefault();
+              restorePreviousFocus.current = true;
               previousFocus.current = document.activeElement as HTMLElement;
               stay.current?.focus();
             }}
             onCloseAutoFocus={(event) => {
               event.preventDefault();
-              if (previousFocus.current?.isConnected)
+              if (
+                restorePreviousFocus.current &&
+                previousFocus.current?.isConnected
+              )
                 previousFocus.current.focus();
             }}
           >
@@ -143,6 +148,9 @@ export default function NavigationSafety({
                 <Button
                   variant="danger"
                   onClick={() => {
+                    // An approved change owns its next focus target. Only
+                    // cancellation should return to the previous control.
+                    restorePreviousFocus.current = false;
                     const action = pendingRef.current;
                     pendingRef.current = null;
                     setPending(null);

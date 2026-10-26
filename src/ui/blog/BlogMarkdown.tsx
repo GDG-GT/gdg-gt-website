@@ -2,6 +2,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { safeBlogMarkdown } from "../../../shared/blog.mjs";
 import { linktreeUrl } from "../../../shared/linktree.mjs";
+import { ArrowUpRight } from "lucide-react";
 
 export default function BlogMarkdown({ children }: { children: string }) {
   return (
@@ -25,6 +26,8 @@ export default function BlogMarkdown({ children }: { children: string }) {
                 referrerPolicy="no-referrer"
               >
                 {children}
+                <ArrowUpRight size={14} aria-hidden="true" />{" "}
+                <span className="sr-only">(opens a new tab)</span>
               </a>
             ) : (
               <span>{children}</span>

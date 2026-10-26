@@ -427,6 +427,14 @@ add(
   [unit("upload-content"), unit("upload-routes"), local("uploads")],
 );
 add(
+  "A11Y-TEST-005",
+  "",
+  "External link cues and Linktree consent, frame reset, focus return and guarded discard",
+  ["tests/client/public-links.test.tsx", "tests/client/linktree-ui.test.tsx"],
+  ["Real provider availability and complete browser/screen-reader/device review"],
+);
+prdTestCases.at(-1).normative = ["22.10", "28.2", "28.3"];
+add(
   "A11Y-TEST-004",
   "",
   "Compact top-menu Tab containment, ArrowDown entry, Escape focus return and route/outside close",

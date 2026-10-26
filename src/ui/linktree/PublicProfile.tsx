@@ -19,6 +19,7 @@ import {
 } from "../../../shared/linktree.mjs";
 import { NotFoundPage } from "../PublicPages";
 import { Button } from "../primitives";
+import PublicImage from "../PublicImage";
 import { type ProfileFields, type LinkFields, countLabel } from "./types";
 type PublicLink = LinkFields & { id: string; clickCount: string | null };
 type PublicProfileRecord = ProfileFields & { id: string; links: PublicLink[] };
@@ -41,7 +42,9 @@ export default function PublicProfile() {
     [embed, setEmbed] = useState<PublicLink>(),
     [embedLoaded, setEmbedLoaded] = useState(false);
   const navigation = useNavigationSafety(),
-    embedHeading = useRef<HTMLHeadingElement>(null);
+    embedHeading = useRef<HTMLHeadingElement>(null),
+    embedOpener = useRef<HTMLButtonElement | null>(null),
+    hadEmbed = useRef(false);
   useDraftGuard(embedLoaded && embed?.embedType === "google_form", {
     label: "Open third-party embedded content",
     privateDraft: false,
@@ -52,6 +55,9 @@ export default function PublicProfile() {
     setProfile(undefined);
     setMissing(false);
     setError("");
+    setEmbed(undefined);
+    setEmbedLoaded(false);
+    embedOpener.current = null;
     api<{ profile: PublicProfileRecord }>(
       `/linktree/${encodeURIComponent(username || "")}`,
       { signal: c.signal },
@@ -107,7 +113,11 @@ export default function PublicProfile() {
     if (profile) document.title = `${profile.displayName} · GDG links`;
   }, [profile]);
   useEffect(() => {
+    if (!embed && !hadEmbed.current) return;
+    hadEmbed.current = !!embed;
     if (embed) embedHeading.current?.focus();
+    else if (embedOpener.current?.isConnected) embedOpener.current.focus();
+    else document.getElementById("main-content")?.focus();
   }, [embed]);
   const track = (link: PublicLink) => {
     if (profile)
@@ -116,8 +126,9 @@ export default function PublicProfile() {
         { method: "POST", body: {} },
       ).catch(() => {});
   };
-  const changeEmbed = (link?: PublicLink) => {
+  const changeEmbed = (link?: PublicLink, opener?: HTMLButtonElement) => {
     const change = () => {
+      if (link) embedOpener.current = opener || null;
       setEmbedLoaded(false);
       setEmbed(link);
     };
@@ -171,9 +182,10 @@ export default function PublicProfile() {
       <div className="gt-linktree-page" data-theme={profile.theme}>
         <header className="gt-linktree-identity">
           {profile.avatarUrl ? (
-            <img
+            <PublicImage
               className="gt-linktree-avatar"
               src={profile.avatarUrl}
+              fallbackSrc="/logo.png"
               width={96}
               height={96}
               alt=""
@@ -222,10 +234,15 @@ export default function PublicProfile() {
                 key={link.id}
                 className={className}
                 style={color}
-                onClick={() => changeEmbed(link)}
+                onClick={(event) =>
+                  changeEmbed(
+                    embed?.id === link.id ? undefined : link,
+                    event.currentTarget,
+                  )
+                }
                 aria-expanded={embed?.id === link.id}
               >
-                {child}
+                {child} <span className="sr-only">(opens a preview)</span>
               </button>
             ) : (
               <a
@@ -237,7 +254,7 @@ export default function PublicProfile() {
                 rel="noopener noreferrer"
                 onClick={() => track(link)}
               >
-                {child}
+                {child} <span className="sr-only">(opens a new tab)</span>
               </a>
             );
           })}
@@ -284,6 +301,8 @@ export default function PublicProfile() {
                     onClick={() => track(embed)}
                   >
                     Open externally
+                    <ExternalLink aria-hidden="true" size={17} />
+                    <span className="sr-only"> (opens a new tab)</span>
                   </a>
                 </div>
               </>
@@ -315,6 +334,8 @@ export default function PublicProfile() {
                   onClick={() => track(embed)}
                 >
                   Having trouble? Open the original page
+                  <ExternalLink aria-hidden="true" size={17} />
+                  <span className="sr-only"> (opens a new tab)</span>
                 </a>
               </>
             )}
