@@ -6710,6 +6710,7 @@ img {
 .gt-event-summary { margin: 0 0 12px; color: var(--text-secondary); font-size: .82rem; line-height: 1.6; overflow-wrap: anywhere; }
 .gt-event-availability { margin: 0 0 12px; }
 .gt-registration-error { margin: -8px 0 0; color: var(--coral); font-size: .8rem; }
+.gt-contact-form .gt-contact-field-error { color: #9c3028; font-size: .75rem; line-height: 1.5; }
 .gt-button[aria-disabled="true"] { opacity: .6; cursor: not-allowed; }
 .gt-events-toolbar { display: grid; grid-template-columns: minmax(180px, 1fr) minmax(130px, .6fr) minmax(190px, .8fr) minmax(150px, .6fr) auto; align-items: end; }
 .gt-events-toolbar .gt-search { width: 100%; }

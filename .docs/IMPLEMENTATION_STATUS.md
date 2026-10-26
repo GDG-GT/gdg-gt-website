@@ -5,6 +5,23 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Contact submission focus and inquiry isolation — 2026-10-26
+
+- Contact now blocks duplicate in-flight submits, freezes the complete form,
+  retains idempotency/attachment proof on retries and associates safe server
+  validation errors with controls. Local file/interest validation focuses its
+  input; generic failure and committed success receive appropriate focus.
+- Supported inquiry URLs preselect correctly. An approved inquiry-context change
+  starts a fresh form, aborts old work and cannot inherit its confirmation.
+  Attachment removal and Write another message retain useful keyboard focus.
+- Twelve DOM cases added; 716 tests/115 files pass; strict types pass; lint is
+  0 errors/25 warnings. Coverage is 31.66% lines/30.21% branches, below 70%; all
+  17 critical branch gates pass. Thirty real contact-file/scanner/local-SMTP/
+  retention checks pass. Native Chrome verified validation, a single committed
+  fictional inquiry and next-message focus; its exact record was resolved via
+  the audited API. The catalog has 111 logical cases, acceptance unverified.
+  See `CONTACT_INTERFACE_RECOVERY.md`.
+
 ### Gallery event filtering and lightbox recovery — 2026-10-26
 
 - Restored approved event choices dropped by the API. Event/page filters now

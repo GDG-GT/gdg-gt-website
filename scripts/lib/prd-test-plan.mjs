@@ -252,8 +252,16 @@ add(
   "EVT-TEST-025",
   "EVT-002 EVT-004 EVT-011",
   "Derived reschedule history, accurate raw/client metadata, calendar status, canonical sharing and dual registration routes",
-  ["tests/client/event-ui.test.tsx", unit("events"), unit("site-document"), sql("107_event_rescheduling"), local("events")],
-  ["Hosted crawlers/calendar clients and supported-device accessibility review; cancelled events remain private under the published-only contract"],
+  [
+    "tests/client/event-ui.test.tsx",
+    unit("events"),
+    unit("site-document"),
+    sql("107_event_rescheduling"),
+    local("events"),
+  ],
+  [
+    "Hosted crawlers/calendar clients and supported-device accessibility review; cancelled events remain private under the published-only contract",
+  ],
 );
 prdTestCases.at(-1).normative = ["22.4", "26.2", "31.2"];
 const teams = [
@@ -399,6 +407,20 @@ add(
   ],
 );
 add(
+  "CONTENT-TEST-016",
+  "CONTACT-001 CONTACT-002 CONTACT-003",
+  "Contact duplicate-submit protection, safe field errors/focus, attachment retry and inquiry-route isolation",
+  [
+    "tests/client/contact-ui.test.tsx",
+    "tests/server/contact-upload.test.ts",
+    local("contact-files"),
+  ],
+  [
+    "Native fictional browser submission and local mail capture do not approve hosted delivery, real chapter copy or full accessibility/device acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["22.9", "28.3", "31.2"];
+add(
   "CONTENT-TEST-019",
   "CONTENT-001 CONTENT-002",
   "Independent homepage/CMS recovery, stale snapshots, request races and keyboard retry focus",
@@ -447,8 +469,14 @@ add(
   "CONTENT-TEST-010",
   "CONTENT-003 CONTENT-004",
   "Approved gallery event choices, shared pagination, failure recovery, safe image fallback and lightbox keyboard focus",
-  ["tests/client/public-gallery-ui.test.tsx", unit("public-collections"), local("media-files")],
-  ["Real screen-reader and full supported-device/visual review; synthetic approved rectangles do not approve chapter photography"],
+  [
+    "tests/client/public-gallery-ui.test.tsx",
+    unit("public-collections"),
+    local("media-files"),
+  ],
+  [
+    "Real screen-reader and full supported-device/visual review; synthetic approved rectangles do not approve chapter photography",
+  ],
 );
 prdTestCases.at(-1).normative = ["22.8", "28.3", "31.2"];
 add(

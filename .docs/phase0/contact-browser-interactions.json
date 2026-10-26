@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-10-26T17:50:17.469Z",
+  "note": "Native Chrome fictional loopback submission with mail capture only. Exact fixture resolved through the audited protected API; no unrelated contact modified.",
+  "tests": [
+    {
+      "name": "Native validation focuses the associated interests input before POST",
+      "passed": true
+    },
+    {
+      "name": "Committed success focuses its heading",
+      "passed": true
+    },
+    {
+      "name": "Write another message focuses a fresh empty form",
+      "passed": true
+    },
+    {
+      "name": "Exactly one fictional browser inquiry committed",
+      "passed": true
+    },
+    {
+      "name": "Only the exact browser fixture was resolved through the protected API",
+      "passed": true
+    }
+  ]
+}

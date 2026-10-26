@@ -889,6 +889,30 @@
       "acceptance": "unverified"
     },
     {
+      "id": "CONTENT-TEST-016",
+      "requirements": [
+        "CONTACT-001",
+        "CONTACT-002",
+        "CONTACT-003"
+      ],
+      "scope": "Contact duplicate-submit protection, safe field errors/focus, attachment retry and inquiry-route isolation",
+      "automated": [
+        "tests/client/contact-ui.test.tsx",
+        "tests/server/contact-upload.test.ts",
+        "scripts/test-local-contact-files.mjs"
+      ],
+      "remaining": [
+        "Native fictional browser submission and local mail capture do not approve hosted delivery, real chapter copy or full accessibility/device acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.9",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
       "id": "CONTENT-TEST-019",
       "requirements": [
         "CONTENT-001",

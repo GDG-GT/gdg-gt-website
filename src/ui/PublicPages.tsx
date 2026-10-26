@@ -2035,25 +2035,48 @@ export function GalleryPage() {
 }
 
 export function ContactPage() {
+  const [params] = useSearchParams(),
+    requestedType = params.get("type") || "general",
+    initialType = [
+      "general",
+      "membership",
+      "event",
+      "sponsorship",
+      "speaker",
+      "accessibility",
+    ].includes(requestedType)
+      ? requestedType
+      : "general";
+  return <ContactPageContent key={initialType} initialType={initialType} />;
+}
+
+function ContactPageContent({ initialType }: { initialType: string }) {
   usePageTitle("Let’s build something together");
   const { getPageSection, getSiteSetting } = useContent(),
     copy = (getPageSection("contact", "main") ||
       getPageSection("contact", "header") ||
       {}) as PageCopy,
     contactEmail = getSiteSetting("contact_email");
-  const [params] = useSearchParams(),
-    [type, setType] = useState(params.get("type") || "general");
+  const [type, setType] = useState(initialType);
   const [message, setMessage] = useState(""),
     [file, setFile] = useState<File | null>(null),
     [error, setError] = useState(""),
     [success, setSuccess] = useState(false),
     [busy, setBusy] = useState(false);
+  const [contactErrors, setContactErrors] = useState<Record<string, string>>(
+    {},
+  );
   const [interests, setInterests] = useState(""),
     [uploadProgress, setUploadProgress] = useState("");
   const attachment = useRef<ContactUpload>(),
     contactPending = useRef<AbortController>(),
     contactActive = useRef(true),
-    contactFileInput = useRef<HTMLInputElement>(null);
+    contactFileInput = useRef<HTMLInputElement>(null),
+    contactSubmitting = useRef(false),
+    contactForm = useRef<HTMLFormElement>(null),
+    contactHeading = useRef<HTMLHeadingElement>(null),
+    contactFeedback = useRef<HTMLParagraphElement>(null),
+    contactFocus = useRef<"fields" | "feedback" | "heading" | null>(null);
   useEffect(() => {
     contactActive.current = true;
     return () => {
@@ -2061,6 +2084,25 @@ export function ContactPage() {
       contactPending.current?.abort();
     };
   }, []);
+  useEffect(() => {
+    if (busy || !contactFocus.current) return;
+    const target = contactFocus.current;
+    contactFocus.current = null;
+    if (target === "heading") contactHeading.current?.focus();
+    else if (target === "feedback") contactFeedback.current?.focus();
+    else {
+      const name = [
+        "name",
+        "email",
+        "type",
+        "message",
+        "interests",
+        "attachment",
+      ].find((key) => contactErrors[key]);
+      const control = name && contactForm.current?.elements.namedItem(name);
+      if (control instanceof HTMLElement) control.focus();
+    }
+  }, [busy, error, success, contactErrors]);
   const contactRequest = useRef<{ body: string; key: string } | null>(null);
   const [contactDirty, setContactDirty] = useState(false);
   useDraftGuard(!success && (contactDirty || !!message || !!file), {
@@ -2070,24 +2112,35 @@ export function ContactPage() {
   });
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (busy || contactSubmitting.current) return;
+    const data = new FormData(event.currentTarget);
+    contactSubmitting.current = true;
+    contactFocus.current = null;
+    setContactErrors({});
     setError("");
     setBusy(true);
     setUploadProgress("");
     const controller = new AbortController();
     contactPending.current = controller;
-    const data = new FormData(event.currentTarget);
-    if (
-      file &&
-      (file.size > 10 * 1024 * 1024 ||
-        !["application/pdf", "image/png", "image/jpeg", "image/webp"].includes(
-          file.type,
-        ))
-    ) {
-      setError("Choose a PDF, PNG, JPEG, or WebP smaller than 10 MB.");
-      setBusy(false);
-      return;
-    }
     try {
+      if (
+        file &&
+        (file.size < 1 ||
+          file.size > 10 * 1024 * 1024 ||
+          ![
+            "application/pdf",
+            "image/png",
+            "image/jpeg",
+            "image/webp",
+          ].includes(file.type))
+      ) {
+        setError("Check the selected attachment before sending.");
+        setContactErrors({
+          attachment: "Choose a nonempty PDF, PNG, JPEG, or WebP up to 10 MB.",
+        });
+        contactFocus.current = "fields";
+        return;
+      }
       if (localPreviewEnabled) {
         localStorage.setItem(
           "gdg-preview-contact",
@@ -2099,10 +2152,12 @@ export function ContactPage() {
             attachment: file?.name,
           }),
         );
+        contactFocus.current = "heading";
         setSuccess(true);
       } else {
         if (data.get("website")) {
           setError("This message could not be accepted.");
+          contactFocus.current = "feedback";
           return;
         }
         const parsedInterests = interests
@@ -2113,7 +2168,11 @@ export function ContactPage() {
           parsedInterests.length > 20 ||
           parsedInterests.some((v) => v.length > 100)
         ) {
-          setError("Use up to 20 interests, each at most 100 characters.");
+          setError("Check the highlighted fields, then send again.");
+          setContactErrors({
+            interests: "Use up to 20 interests, each at most 100 characters.",
+          });
+          contactFocus.current = "fields";
           return;
         }
         let approvedAttachment:
@@ -2149,25 +2208,37 @@ export function ContactPage() {
           contactRequest.current.key,
           controller.signal,
         );
-        if (!contactActive.current) return;
+        if (!contactActive.current || controller.signal.aborted) return;
         if (result.success) {
+          contactFocus.current = "heading";
           setSuccess(true);
           setContactDirty(false);
           attachment.current = undefined;
           setUploadProgress("");
-        } else
+        } else {
+          setContactErrors(result.fields || {});
+          contactFocus.current = Object.keys(result.fields || {}).length
+            ? "fields"
+            : "feedback";
           setError(
-            result.error || "We could not send your message. Please try again.",
+            Object.keys(result.fields || {}).length
+              ? "Check the highlighted fields, then send again."
+              : result.error ||
+                  "We could not send your message. Please try again.",
           );
+        }
       }
     } catch (failure) {
-      if (contactActive.current && !controller.signal.aborted)
+      if (contactActive.current && !controller.signal.aborted) {
+        contactFocus.current = "feedback";
         setError(
           failure instanceof Error
             ? failure.message
             : "We could not send your message. Please try again.",
         );
+      }
     } finally {
+      contactSubmitting.current = false;
       if (contactActive.current) setBusy(false);
     }
   };
@@ -2232,7 +2303,7 @@ export function ContactPage() {
           {success ? (
             <div className="gt-success">
               <CheckCircle2 size={44} />
-              <h2>
+              <h2 ref={contactHeading} tabIndex={-1}>
                 {localPreviewEnabled
                   ? "Your preview message is saved."
                   : "Message received."}
@@ -2252,6 +2323,9 @@ export function ContactPage() {
                   setInterests("");
                   setUploadProgress("");
                   contactRequest.current = null;
+                  setContactErrors({});
+                  setError("");
+                  contactFocus.current = "heading";
                 }}
                 variant="secondary"
               >
@@ -2260,15 +2334,37 @@ export function ContactPage() {
             </div>
           ) : (
             <form
+              ref={contactForm}
               className="gt-form"
               onSubmit={submit}
-              onChange={() => setContactDirty(true)}
+              onChange={(event) => {
+                setContactDirty(true);
+                const control = event.target;
+                if (
+                  control instanceof HTMLInputElement ||
+                  control instanceof HTMLTextAreaElement ||
+                  control instanceof HTMLSelectElement
+                )
+                  setContactErrors((previous) => {
+                    if (!previous[control.name]) return previous;
+                    const next = { ...previous };
+                    delete next[control.name];
+                    return next;
+                  });
+              }}
             >
               <label className="gt-honeypot" aria-hidden="true">
                 Leave this empty
-                <input name="website" tabIndex={-1} autoComplete="off" />
+                <input
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  disabled={busy}
+                />
               </label>
-              <h2>{copy.form_title || "Say hello."}</h2>
+              <h2 ref={contactHeading} tabIndex={-1}>
+                {copy.form_title || "Say hello."}
+              </h2>
               <p>
                 Fields marked <span className="gt-required">*</span> are
                 required.
@@ -2282,7 +2378,19 @@ export function ContactPage() {
                     minLength={2}
                     maxLength={100}
                     disabled={busy}
+                    aria-invalid={!!contactErrors.name}
+                    aria-describedby={
+                      contactErrors.name ? "contact-name-error" : undefined
+                    }
                   />
+                  {contactErrors.name && (
+                    <small
+                      id="contact-name-error"
+                      className="gt-contact-field-error"
+                    >
+                      {contactErrors.name}
+                    </small>
+                  )}
                 </Field>
                 <Field label="Email address" required>
                   <input
@@ -2292,14 +2400,31 @@ export function ContactPage() {
                     required
                     maxLength={254}
                     disabled={busy}
+                    aria-invalid={!!contactErrors.email}
+                    aria-describedby={
+                      contactErrors.email ? "contact-email-error" : undefined
+                    }
                   />
+                  {contactErrors.email && (
+                    <small
+                      id="contact-email-error"
+                      className="gt-contact-field-error"
+                    >
+                      {contactErrors.email}
+                    </small>
+                  )}
                 </Field>
               </div>
               <Field label="What brings you here?" required>
                 <select
+                  name="type"
                   value={type}
                   disabled={busy}
                   onChange={(event) => setType(event.target.value)}
+                  aria-invalid={!!contactErrors.type}
+                  aria-describedby={
+                    contactErrors.type ? "contact-type-error" : undefined
+                  }
                 >
                   {[
                     ["general", "General question"],
@@ -2314,6 +2439,14 @@ export function ContactPage() {
                     </option>
                   ))}
                 </select>
+                {contactErrors.type && (
+                  <small
+                    id="contact-type-error"
+                    className="gt-contact-field-error"
+                  >
+                    {contactErrors.type}
+                  </small>
+                )}
               </Field>
               <Field
                 label="Your message"
@@ -2330,28 +2463,62 @@ export function ContactPage() {
                   value={message}
                   onChange={(event) => setMessage(event.target.value)}
                   placeholder="Tell us what’s on your mind…"
+                  aria-invalid={!!contactErrors.message}
+                  aria-describedby={
+                    contactErrors.message ? "contact-message-error" : undefined
+                  }
                 />
+                {contactErrors.message && (
+                  <small
+                    id="contact-message-error"
+                    className="gt-contact-field-error"
+                  >
+                    {contactErrors.message}
+                  </small>
+                )}
               </Field>
               <Field
                 label="Interests (optional)"
                 hint="Separate interests with commas. Up to 20; avoid private or sensitive details."
               >
                 <input
+                  name="interests"
                   maxLength={2000}
                   value={interests}
                   disabled={busy}
                   onChange={(event) => setInterests(event.target.value)}
+                  aria-invalid={!!contactErrors.interests}
+                  aria-describedby={
+                    contactErrors.interests
+                      ? "contact-interests-error"
+                      : undefined
+                  }
                 />
+                {contactErrors.interests && (
+                  <small
+                    id="contact-interests-error"
+                    className="gt-contact-field-error"
+                  >
+                    {contactErrors.interests}
+                  </small>
+                )}
               </Field>
               <Field
                 label="Attachment (optional)"
                 hint="PDF, PNG, JPEG, or WebP · Up to 10 MB. Uploaded privately and checked before the message is accepted."
               >
                 <input
+                  name="attachment"
                   type="file"
                   accept=".pdf,.png,.jpg,.jpeg,.webp"
                   ref={contactFileInput}
                   disabled={busy}
+                  aria-invalid={!!contactErrors.attachment}
+                  aria-describedby={
+                    contactErrors.attachment
+                      ? "contact-attachment-error"
+                      : undefined
+                  }
                   onChange={(event) => {
                     void abandonContactAttachment(attachment.current);
                     attachment.current = undefined;
@@ -2360,6 +2527,14 @@ export function ContactPage() {
                     setError("");
                   }}
                 />
+                {contactErrors.attachment && (
+                  <small
+                    id="contact-attachment-error"
+                    className="gt-contact-field-error"
+                  >
+                    {contactErrors.attachment}
+                  </small>
+                )}
               </Field>
               {file && (
                 <small>
@@ -2380,6 +2555,12 @@ export function ContactPage() {
                       contactFileInput.current.value = "";
                     setUploadProgress("");
                     setError("");
+                    setContactErrors((previous) => {
+                      const next = { ...previous };
+                      delete next.attachment;
+                      return next;
+                    });
+                    contactFileInput.current?.focus();
                   }}
                 >
                   Remove attachment
@@ -2391,7 +2572,12 @@ export function ContactPage() {
                 </p>
               )}
               {error && (
-                <p className="gt-form-error" role="alert">
+                <p
+                  className="gt-form-error"
+                  role="alert"
+                  ref={contactFeedback}
+                  tabIndex={-1}
+                >
                   {error}
                 </p>
               )}

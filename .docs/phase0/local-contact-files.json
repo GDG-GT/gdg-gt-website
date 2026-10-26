@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-22T00:28:27.601Z",
+  "generatedAt": "2026-10-26T17:46:29.623Z",
   "environment": "Fictional loopback inquiries/accounts; actual private S3, ClamAV and SMTP. Only captured synthetic contact files are purged by the resolution-retention test; unrelated upload cleanup claims are excluded.",
   "tests": [
     {
