@@ -2104,6 +2104,31 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "FORM-TEST-035",
+      "requirements": [
+        "FORM-004",
+        "FORM-026"
+      ],
+      "scope": "View-only definition routing, independent response/access actions, scoped create/copy grants, section reorder and undo",
+      "automated": [
+        "tests/client/form-editor-permissions.test.tsx",
+        "tests/server/access.test.mjs",
+        "tests/server/form-admin-routes.test.mjs",
+        "database/tests/109_form_library_creation_capabilities.sql",
+        "scripts/test-local-form-viewing.mjs"
+      ],
+      "remaining": [
+        "Browser keyboard/assistive-technology review across all builder tabs, permission changes and responsive inspector layouts",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.11",
+        "26.1",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

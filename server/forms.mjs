@@ -117,10 +117,11 @@ export async function formRoutes(
     ownerId: row.owner_id,
     ownerLabel: row.owner_label || undefined,
     templateKey: row.template_key ?? null,
+    canDuplicate: row.can_duplicate === true,
     revision: row.draft_revision,
-    responseCount:
-      row.response_count ??
-      ((await can(actor, row.id, "view_responses"))
+    responseCount: Object.hasOwn(row, "response_count")
+      ? row.response_count
+      : (await can(actor, row.id, "view_responses"))
         ? (
             await db
               .from("form_responses")
@@ -128,7 +129,7 @@ export async function formRoutes(
               .eq("form_id", row.id)
               .is("deleted_at", null)
           ).count
-        : null),
+        : null,
     versions: (await versions(row.id)).map((v) => ({
       ...v.definition,
       version: v.version,

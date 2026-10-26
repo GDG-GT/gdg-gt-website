@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-26",
+  "note": "Live local Chrome DOM and keyboard observations on a fictional view-only collaborator. Screenshot raster was inconsistent with viewport; no screenshot accepted as visual proof.",
+  "library": {
+    "createDisabled": true,
+    "templatesHidden": true,
+    "responseCount": "Restricted",
+    "definitionLinkVisible": true
+  },
+  "builder": {
+    "definitionRouteLoaded": true,
+    "titleDisabled": true,
+    "publishDisabled": true,
+    "fieldControlsDisabled": true,
+    "settingsSelectable": true,
+    "settingsControlsDisabled": true,
+    "viewOnlyNoticeVisible": true
+  },
+  "mobile": {
+    "dialog": {
+      "bottom": 751.09765625,
+      "left": 0,
+      "right": 375,
+      "top": 60.90234375
+    },
+    "dialogScrollable": true,
+    "documentWidth": 375,
+    "panelDisabledInputs": true,
+    "selectedTab": "Settings",
+    "width": 375
+  },
+  "acceptance": "unverified"
+}

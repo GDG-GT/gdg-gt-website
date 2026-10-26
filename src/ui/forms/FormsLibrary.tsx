@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Archive,
@@ -45,6 +45,14 @@ export default function FormsLibrary() {
   );
 }
 function FormsLibraryWorkspace() {
+  const mounted = useRef(false),
+    operationPending = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const navigate = useNavigate();
   const { isSuperAdmin } = useAdmin();
   const [deletion, setDeletion] = useState<PreviewForm | null>(null);
@@ -100,15 +108,18 @@ function FormsLibraryWorkspace() {
     ),
     forms = library.items;
   const work = async (action: () => Promise<unknown>) => {
+    if (operationPending.current) return;
+    operationPending.current = true;
     setBusy(true);
     setError("");
     try {
       await action();
-      library.reload();
+      if (mounted.current) library.reload();
     } catch (e) {
-      setError((e as Error).message);
+      if (mounted.current) setError((e as Error).message);
     } finally {
-      setBusy(false);
+      operationPending.current = false;
+      if (mounted.current) setBusy(false);
     }
   };
   const templates = [
@@ -130,11 +141,13 @@ function FormsLibraryWorkspace() {
     ],
     ["General Survey", "Start a conversation with your community.", "survey"],
   ] as const;
-  const create = (name: string, kind: FormTemplate = "blank") =>
-    work(async () => {
+  const create = (name: string, kind: FormTemplate = "blank") => {
+    if (!library.canCreate) return;
+    return work(async () => {
       const form = await formsApi.create(createTemplate(name, kind));
-      navigate(`/admin/forms/${form.id}/edit`);
+      if (mounted.current) navigate(`/admin/forms/${form.id}/edit`);
     });
+  };
   const filtered = forms;
   return (
     <div className="gt-admin-page">
@@ -146,7 +159,10 @@ function FormsLibraryWorkspace() {
           <h1>Forms</h1>
           <p>Build, publish, and make sense of what comes back.</p>
         </div>
-        <Button disabled={busy} onClick={() => setCreateOpen(true)}>
+        <Button
+          disabled={busy || library.loading || !library.canCreate}
+          onClick={() => setCreateOpen(true)}
+        >
           <Plus size={17} /> Create form
         </Button>
       </div>
@@ -169,8 +185,18 @@ function FormsLibraryWorkspace() {
             forms.filter((form) => form.status === "Draft").length,
           ],
           [
-            "Responses on this page",
-            forms.reduce((sum, form) => sum + (form.responseCount || 0), 0),
+            "Visible responses on this page",
+            forms.length &&
+            !forms.some((form) => form.actions?.includes("view_responses"))
+              ? "Restricted"
+              : forms.reduce(
+                  (sum, form) =>
+                    sum +
+                    (form.actions?.includes("view_responses")
+                      ? form.responseCount || 0
+                      : 0),
+                  0,
+                ),
           ],
         ].map(([label, value]) => (
           <div key={label}>
@@ -179,7 +205,9 @@ function FormsLibraryWorkspace() {
           </div>
         ))}
       </div>
-      <div className="gt-forms-library-layout">
+      <div
+        className={`gt-forms-library-layout ${library.canCreate ? "" : "is-view-only"}`}
+      >
         <section className="gt-panel gt-forms-inventory">
           <div className="gt-panel-heading">
             <h2>Your forms</h2>
@@ -378,9 +406,13 @@ function FormsLibraryWorkspace() {
                         </Badge>
                       </td>
                       <td>
-                        <Link to={`/admin/forms/${form.id}/responses`}>
-                          {form.responseCount ?? "Restricted"}
-                        </Link>
+                        {form.actions?.includes("view_responses") ? (
+                          <Link to={`/admin/forms/${form.id}/responses`}>
+                            {form.responseCount ?? 0}
+                          </Link>
+                        ) : (
+                          <span>Restricted</span>
+                        )}
                       </td>
                       <td>
                         {form.versions.length
@@ -398,6 +430,7 @@ function FormsLibraryWorkspace() {
                           <DropdownMenuTrigger asChild>
                             <button
                               className="gt-icon-button"
+                              disabled={busy}
                               aria-label={`Actions for ${form.title}`}
                             >
                               <MoreHorizontal size={19} />
@@ -409,7 +442,9 @@ function FormsLibraryWorkspace() {
                                 navigate(`/admin/forms/${form.id}/edit`)
                               }
                             >
-                              Edit form
+                              {form.actions?.includes("edit")
+                                ? "Edit form"
+                                : "View form"}
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() =>
@@ -419,6 +454,9 @@ function FormsLibraryWorkspace() {
                               Preview
                             </DropdownMenuItem>
                             <DropdownMenuItem
+                              disabled={
+                                !form.actions?.includes("view_responses")
+                              }
                               onClick={() =>
                                 navigate(`/admin/forms/${form.id}/responses`)
                               }
@@ -434,6 +472,7 @@ function FormsLibraryWorkspace() {
                               Share
                             </DropdownMenuItem>
                             <DropdownMenuItem
+                              disabled={busy || !form.canDuplicate}
                               onClick={() =>
                                 work(() => formsApi.duplicate(form))
                               }
@@ -494,22 +533,30 @@ function FormsLibraryWorkspace() {
               title={
                 hasFilters
                   ? "No forms match your filters"
-                  : "Create your first form"
+                  : library.canCreate
+                    ? "Create your first form"
+                    : "No forms are available"
               }
               action={
-                <Button
-                  variant="secondary"
-                  onClick={() =>
-                    hasFilters ? resetFilters() : setCreateOpen(true)
-                  }
-                >
-                  {hasFilters ? "Reset filters" : "Create a form"}
-                </Button>
+                hasFilters || library.canCreate ? (
+                  <Button
+                    variant="secondary"
+                    onClick={() =>
+                      hasFilters ? resetFilters() : setCreateOpen(true)
+                    }
+                  >
+                    {hasFilters ? "Reset filters" : "Create a form"}
+                  </Button>
+                ) : (
+                  <Link to="/admin">Back to dashboard</Link>
+                )
               }
             >
               {hasFilters
                 ? "Try widening the date, owner, team or template filters."
-                : "Start with a blank page or a helpful template."}
+                : library.canCreate
+                  ? "Start with a blank page or a helpful template."
+                  : "Forms shared with your account will appear here. Ask a form owner if you need access."}
             </EmptyState>
           ) : null}
           <div className="gt-table-footer">
@@ -533,34 +580,36 @@ function FormsLibraryWorkspace() {
             </div>
           </div>
         </section>
-        <aside className="gt-forms-template-panel">
-          <h2>A head start.</h2>
-          <p>Good questions start here.</p>
-          {templates.map(([name, description, kind]) => (
-            <button
-              key={name}
-              disabled={busy}
-              onClick={() => create(`${name} Form`, kind)}
-            >
-              <span className="gt-template-icon">
-                <FilePlus2 size={19} />
-              </span>
-              <span>
-                <strong>{name}</strong>
-                <small>{description}</small>
-              </span>
-              <Plus size={16} />
-            </button>
-          ))}
-          <div className="gt-template-tip">
-            <Sparkles size={22} />
-            <h3>Made for your chapter.</h3>
-            <p>
-              Build on the website, collect responses in one place, and keep
-              your community in the loop.
-            </p>
-          </div>
-        </aside>
+        {library.canCreate && (
+          <aside className="gt-forms-template-panel">
+            <h2>A head start.</h2>
+            <p>Good questions start here.</p>
+            {templates.map(([name, description, kind]) => (
+              <button
+                key={name}
+                disabled={busy}
+                onClick={() => create(`${name} Form`, kind)}
+              >
+                <span className="gt-template-icon">
+                  <FilePlus2 size={19} />
+                </span>
+                <span>
+                  <strong>{name}</strong>
+                  <small>{description}</small>
+                </span>
+                <Plus size={16} />
+              </button>
+            ))}
+            <div className="gt-template-tip">
+              <Sparkles size={22} />
+              <h3>Made for your chapter.</h3>
+              <p>
+                Build on the website, collect responses in one place, and keep
+                your community in the loop.
+              </p>
+            </div>
+          </aside>
+        )}
       </div>
       {deletion && (
         <FormDeletionReview
@@ -589,6 +638,7 @@ function FormsLibraryWorkspace() {
             <Field label="Form title" required>
               <input
                 autoFocus
+                disabled={busy}
                 required
                 maxLength={120}
                 value={title}
@@ -596,7 +646,7 @@ function FormsLibraryWorkspace() {
                 placeholder="For example, Workshop feedback"
               />
             </Field>
-            <Button type="submit" disabled={busy}>
+            <Button type="submit" disabled={busy || !library.canCreate}>
               <Plus size={17} /> Create form
             </Button>
           </form>

@@ -1024,6 +1024,23 @@ add(
 );
 prdTestCases.at(-1).normative = ["22.11", "28.3", "31.2"];
 
+add(
+  "FORM-TEST-035",
+  "FORM-004 FORM-026",
+  "View-only definition routing, independent response/access actions, scoped create/copy grants, section reorder and undo",
+  [
+    "tests/client/form-editor-permissions.test.tsx",
+    unit("access"),
+    unit("form-admin-routes"),
+    sql("109_form_library_creation_capabilities"),
+    local("form-viewing"),
+  ],
+  [
+    "Browser keyboard/assistive-technology review across all builder tabs, permission changes and responsive inspector layouts",
+  ],
+);
+prdTestCases.at(-1).normative = ["22.11", "26.1", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

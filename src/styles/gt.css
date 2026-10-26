@@ -4236,6 +4236,9 @@ img {
   gap: 25px;
   align-items: start;
 }
+.gt-forms-library-layout.is-view-only {
+  grid-template-columns: minmax(0, 1fr);
+}
 .gt-forms-inventory {
   padding: 22px 0 0;
   overflow: hidden;
@@ -4747,6 +4750,12 @@ img {
 .gt-builder-inspector .gt-form {
   margin-top: 22px;
   gap: 18px;
+}
+.gt-builder-definition-panel {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 .gt-builder-inspector .gt-field {
   font-size: 0.65rem;

@@ -219,7 +219,9 @@ export async function accessRoutes(
         await db.rpc("can_operate_form", {
           p_actor: session.user.id,
           p_form: formRoute[1],
-          p_action: formRoute[2] === "edit" ? "edit" : "view_responses",
+          // The definition workspace supports inspection. Its mutation APIs
+          // independently require edit/publish/manage_access grants.
+          p_action: formRoute[2] === "edit" ? "view" : "view_responses",
           p_team: null,
         }),
       );

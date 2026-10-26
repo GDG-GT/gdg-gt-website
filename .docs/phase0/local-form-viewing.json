@@ -1,0 +1,49 @@
+{
+  "note": "Actual loopback HTTP/database checks with isolated fictional accounts; no provider sends or deployment. Browser observations recorded separately.",
+  "tests": [
+    {
+      "name": "view collaborator reads definition without response capability/count",
+      "passed": true
+    },
+    {
+      "name": "inventory disables creation/copy and preserves restricted response count",
+      "passed": true
+    },
+    {
+      "name": "definition route permits inspection while response route remains denied",
+      "passed": true
+    },
+    {
+      "name": "view collaborator can discover Forms in workspace navigation",
+      "passed": true
+    },
+    {
+      "name": "view-only draft editing denied by actual server",
+      "passed": true
+    },
+    {
+      "name": "view-only publishing denied by actual server",
+      "passed": true
+    },
+    {
+      "name": "view-only response review denied by actual server",
+      "passed": true
+    },
+    {
+      "name": "view-only access management denied by actual server",
+      "passed": true
+    },
+    {
+      "name": "view-only duplication denied by actual server",
+      "passed": true
+    },
+    {
+      "name": "ungranted form remains concealed",
+      "passed": true
+    },
+    {
+      "name": "denied operations leave original definition/revision/state intact",
+      "passed": true
+    }
+  ]
+}

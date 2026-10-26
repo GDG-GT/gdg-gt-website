@@ -7,6 +7,7 @@ type Library = {
   total: number;
   page: number;
   pageSize: number;
+  canCreate?: boolean;
 };
 export function draftDefinition(form: PreviewForm) {
   return {
@@ -167,6 +168,7 @@ export function useFormLibrary(params: string, enabled = true) {
       : { items: [], total: 0, page: 1, pageSize: 30 };
   return {
     ...data,
+    canCreate: !!data.canCreate,
     error: request.scope === scope ? request.error : "",
     loading: enabled && (request.scope !== scope || request.loading),
     reload: () => setRefresh((v) => v + 1),

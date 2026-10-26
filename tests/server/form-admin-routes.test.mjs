@@ -11,6 +11,36 @@ import {
 afterEach(() => vi.unstubAllEnvs());
 const base = `/admin/forms/${ids.form}`;
 describe("Forms library, authoring and response route contracts", () => {
+  it("preserves server-derived creation and destination-specific copy capabilities", async () => {
+    const f = fixture();
+    f.results.set("list_form_library", {
+      items: [
+        {
+          ...f.row,
+          actions: ["view"],
+          response_count: null,
+          can_duplicate: true,
+        },
+      ],
+      total: 1,
+      canCreate: false,
+    });
+    const r = await f.call("/admin/forms");
+    expect(r.body.data.canCreate).toBe(false);
+    expect(r.body.data.items[0]).toMatchObject({
+      actions: ["view"],
+      responseCount: null,
+      canDuplicate: true,
+    });
+    f.results.set("list_form_library", {
+      items: [{ ...f.row, actions: ["view"], can_duplicate: false }],
+      total: 1,
+      canCreate: true,
+    });
+    const next = await f.call("/admin/forms");
+    expect(next.body.data.canCreate).toBe(true);
+    expect(next.body.data.items[0].canDuplicate).toBe(false);
+  });
   it("ignores unrelated routes and rejects invalid methods, IDs, sessions and CSRF before writes", async () => {
     const f = fixture();
     expect(

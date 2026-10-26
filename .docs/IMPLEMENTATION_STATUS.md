@@ -5,6 +5,23 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Forms view-only definition and scoped creation — 2026-10-26
+
+- View-only collaborators can open the definition route; editing/dragging remains
+  disabled and response/access actions keep independent grants. Migration 109
+  projects create and destination-specific duplicate capability. Restricted
+  response counts remain restricted, including the library statistic. Section
+  ordering/drag Undo and local write/unmount guards corrected.
+- All 852 tests/124 files pass, types pass and lint is 0 errors/25 warnings.
+  Coverage remains below 70% at 36.79% lines/34.79% branches; all 17 critical
+  branch gates pass. Fresh/legacy SQL, capacity races and six restore checks pass
+  through migration 109. Eleven actual loopback permission checks pass.
+- Browser DOM verifies library/definition/disabled settings and bounded mobile
+  inspector. Inconsistent screenshot raster is not counted as visual evidence.
+  Owned fixtures archived/accounts disabled, browser signed out and viewport
+  reset. Catalog: 121 unverified logical cases. See `FORM_VIEW_PERMISSIONS.md`;
+  full PRD acceptance is still open.
+
 ### Notification inbox read/dismiss recovery — 2026-10-26
 
 - Read-all → read-only Dismiss all retains newly arrived unread updates. Reads

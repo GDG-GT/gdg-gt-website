@@ -100,6 +100,7 @@ describe("SEC strict shared API validation and sanitized database failures", () 
       ],
       [{ code: "23505", message: "private unique detail" }, 409, "DUPLICATE"],
       [{ code: "42501", message: "private ACL detail" }, 403, "FORBIDDEN"],
+      [{ code: "P0001", message: "FORBIDDEN" }, 403, "FORBIDDEN"],
       ...["23514", "23502", "22P02", "22023"].map((code) => [
         { code, message: "private constraint detail" },
         400,

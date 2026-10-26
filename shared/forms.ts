@@ -111,6 +111,7 @@ export interface PreviewForm {
   revision?: number;
   responseCount?: number;
   actions?: string[];
+  canDuplicate?: boolean;
 }
 export interface FormResponse {
   id: string;

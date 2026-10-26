@@ -67,9 +67,11 @@ function fixture(role = "team_member") {
         ).then(resolve, reject);
       return chain;
     }),
-    rpc: vi.fn(async (name) => ({
+    rpc: vi.fn(async (name, args) => ({
       data: rpcResults.has(name)
-        ? rpcResults.get(name)
+        ? typeof rpcResults.get(name) === "function"
+          ? rpcResults.get(name)(args)
+          : rpcResults.get(name)
         : name.startsWith("can_")
           ? false
           : name === "update_own_profile"
@@ -394,7 +396,21 @@ describe("AUTH/TEAM protected access and own-profile route contract", () => {
     expect(r.body.data.accessibleRoutes).toContain("/admin/whiteboard");
     expect(r.body.data.accessibleRoutes).not.toContain("/admin/users");
   });
-  it("asks the database for exact Forms edit/response and team-route authority and rejects malformed IDs", async () => {
+  it("allows definition inspection with a view grant while withholding response review", async () => {
+    const f = fixture();
+    f.rpcResults.set(
+      "can_operate_form",
+      ({ p_form, p_action }) => p_form === form && p_action === "view",
+    );
+    const route = (suffix) =>
+      "/admin/access?route=" +
+      encodeURIComponent(`/admin/forms/${form}/${suffix}`);
+    expect((await f.call(route("edit"))).body.data.allowed).toBe(true);
+    expect((await f.call(route("responses"))).body.data.allowed).toBe(false);
+    f.rpcResults.set("can_operate_form", false);
+    expect((await f.call(route("edit"))).body.data.allowed).toBe(false);
+  });
+  it("asks the database for exact Forms definition/response and team-route authority and rejects malformed IDs", async () => {
     const f = fixture("admin");
     f.rpcResults.set("can_operate_form", true);
     f.rpcResults.set("can_operate_team", true);
@@ -411,7 +427,7 @@ describe("AUTH/TEAM protected access and own-profile route contract", () => {
       expect.objectContaining({
         p_actor: actor,
         p_form: form,
-        p_action: "edit",
+        p_action: "view",
       }),
     );
     expect(

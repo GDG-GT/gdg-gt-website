@@ -188,9 +188,11 @@ export default function FormBuilder() {
         )}
       </div>
     );
-  const field = form.fields.find((item) => item.id === selected),
+  const editable = !!form.actions?.includes("edit"),
+    field = form.fields.find((item) => item.id === selected),
     issues = validateDefinition(form);
   const update = (next: PreviewForm) => {
+    if (!editable) return;
     undo.current.push(structuredClone(form));
     redo.current = [];
     setForm(next);
@@ -231,6 +233,7 @@ export default function FormBuilder() {
     type: FieldType,
     sectionId = form.sections[form.sections.length - 1].id,
   ) => {
+    if (!editable) return;
     const item = newField(type, sectionId);
     update({ ...form, fields: [...form.fields, item] });
     setSelected(item.id);
@@ -239,15 +242,19 @@ export default function FormBuilder() {
   const move = (fieldId: string, delta: number) => {
     const fields = [...form.fields],
       index = fields.findIndex((item) => item.id === fieldId),
-      target = index + delta;
-    if (target < 0 || target >= fields.length) return;
+      section = fields[index]?.sectionId,
+      peers = fields.flatMap((item, position) =>
+        item.sectionId === section ? [position] : [],
+      ),
+      target = peers[peers.indexOf(index) + delta];
+    if (!editable || index < 0 || target === undefined) return;
     [fields[index], fields[target]] = [fields[target], fields[index]];
     update({ ...form, fields });
   };
   const palette = (
     <>
       <div className="gt-builder-panel-title">
-        <h2>Add a field</h2>
+        <h2>{editable ? "Add a field" : "Field types"}</h2>
         <Plus size={17} />
       </div>
       <SearchBox
@@ -268,7 +275,8 @@ export default function FormBuilder() {
             .map(([type, label]) => (
               <button
                 key={type}
-                draggable
+                disabled={!editable}
+                draggable={editable}
                 onDragStart={(event) =>
                   event.dataTransfer.setData("field-type", type)
                 }
@@ -330,658 +338,668 @@ export default function FormBuilder() {
         aria-labelledby={`${prefix}-builder-tab-${tab}`}
         tabIndex={0}
       >
-        {tab === "Access" ? (
-          <AccessPanel form={form} />
-        ) : tab === "Field" ? (
-          field ? (
-            <div className="gt-form">
-              <Badge tone="coral">
-                {fieldTypes.find((item) => item[0] === field.type)?.[1]}
-              </Badge>
-              <Field
-                label={
-                  field.type === "image"
-                    ? "Image description (alt text)"
-                    : "Question label"
-                }
-                required
-              >
-                <input
-                  value={field.label}
-                  onChange={(event) =>
-                    updateField({ label: event.target.value })
+        <fieldset
+          className="gt-builder-definition-panel"
+          disabled={!editable && tab !== "Access"}
+          aria-label={`Form ${tab.toLowerCase()} controls`}
+        >
+          {tab === "Access" ? (
+            <AccessPanel form={form} />
+          ) : tab === "Field" ? (
+            field ? (
+              <div className="gt-form">
+                <Badge tone="coral">
+                  {fieldTypes.find((item) => item[0] === field.type)?.[1]}
+                </Badge>
+                <Field
+                  label={
+                    field.type === "image"
+                      ? "Image description (alt text)"
+                      : "Question label"
                   }
-                />
-              </Field>
-              {field.type === "image" && (
-                <FormImagePicker
-                  label="Published image"
-                  selected={field.imageMediaId}
-                  onChange={(photo) =>
-                    updateField({
-                      imageMediaId: photo?.id,
-                      imageWidth: photo?.width,
-                      imageHeight: photo?.height,
-                      ...(photo
-                        ? {
-                            label:
-                              photo.alt_text ||
-                              photo.description ||
-                              field.label,
-                          }
-                        : {}),
-                    })
-                  }
-                />
-              )}
-              <Field label="Description">
-                <textarea
-                  rows={3}
-                  value={field.description}
-                  onChange={(event) =>
-                    updateField({ description: event.target.value })
-                  }
-                />
-              </Field>
-              {!["image", "title", "description", "divider"].includes(
-                field.type,
-              ) && (
-                <>
-                  <label className="gt-toggle-row">
-                    Required question
-                    <input
-                      type="checkbox"
-                      role="switch"
-                      checked={field.required}
-                      onChange={(event) =>
-                        updateField({ required: event.target.checked })
-                      }
-                    />
-                  </label>
-                  <label className="gt-toggle-row">
-                    Sensitive answer
-                    <input
-                      type="checkbox"
-                      role="switch"
-                      checked={field.sensitive}
-                      onChange={(event) =>
-                        updateField({ sensitive: event.target.checked })
-                      }
-                    />
-                  </label>
-                </>
-              )}
-              {[
-                "radio",
-                "checkbox",
-                "dropdown",
-                "likert",
-                "grid",
-                "ranking",
-              ].includes(field.type) && (
-                <Field label="Options" hint="One option per line">
-                  <textarea
-                    rows={5}
-                    value={field.options.join("\n")}
+                  required
+                >
+                  <input
+                    value={field.label}
                     onChange={(event) =>
-                      updateField({ options: event.target.value.split("\n") })
+                      updateField({ label: event.target.value })
                     }
                   />
                 </Field>
-              )}
-              {["scale", "rating", "number"].includes(field.type) && (
-                <div className="gt-form-two">
-                  <Field label="Minimum">
-                    <input
-                      type="number"
-                      min={field.type === "number" ? undefined : 0}
-                      max={field.type === "number" ? undefined : 9}
-                      step={field.type === "number" ? "any" : 1}
-                      value={field.min ?? (field.type === "number" ? "" : 1)}
+                {field.type === "image" && (
+                  <FormImagePicker
+                    label="Published image"
+                    selected={field.imageMediaId}
+                    onChange={(photo) =>
+                      updateField({
+                        imageMediaId: photo?.id,
+                        imageWidth: photo?.width,
+                        imageHeight: photo?.height,
+                        ...(photo
+                          ? {
+                              label:
+                                photo.alt_text ||
+                                photo.description ||
+                                field.label,
+                            }
+                          : {}),
+                      })
+                    }
+                  />
+                )}
+                <Field label="Description">
+                  <textarea
+                    rows={3}
+                    value={field.description}
+                    onChange={(event) =>
+                      updateField({ description: event.target.value })
+                    }
+                  />
+                </Field>
+                {!["image", "title", "description", "divider"].includes(
+                  field.type,
+                ) && (
+                  <>
+                    <label className="gt-toggle-row">
+                      Required question
+                      <input
+                        type="checkbox"
+                        role="switch"
+                        checked={field.required}
+                        onChange={(event) =>
+                          updateField({ required: event.target.checked })
+                        }
+                      />
+                    </label>
+                    <label className="gt-toggle-row">
+                      Sensitive answer
+                      <input
+                        type="checkbox"
+                        role="switch"
+                        checked={field.sensitive}
+                        onChange={(event) =>
+                          updateField({ sensitive: event.target.checked })
+                        }
+                      />
+                    </label>
+                  </>
+                )}
+                {[
+                  "radio",
+                  "checkbox",
+                  "dropdown",
+                  "likert",
+                  "grid",
+                  "ranking",
+                ].includes(field.type) && (
+                  <Field label="Options" hint="One option per line">
+                    <textarea
+                      rows={5}
+                      value={field.options.join("\n")}
                       onChange={(event) =>
-                        updateField({
-                          min:
-                            event.target.value === ""
-                              ? undefined
-                              : Number(event.target.value),
-                        })
+                        updateField({ options: event.target.value.split("\n") })
                       }
                     />
                   </Field>
-                  <Field label="Maximum">
+                )}
+                {["scale", "rating", "number"].includes(field.type) && (
+                  <div className="gt-form-two">
+                    <Field label="Minimum">
+                      <input
+                        type="number"
+                        min={field.type === "number" ? undefined : 0}
+                        max={field.type === "number" ? undefined : 9}
+                        step={field.type === "number" ? "any" : 1}
+                        value={field.min ?? (field.type === "number" ? "" : 1)}
+                        onChange={(event) =>
+                          updateField({
+                            min:
+                              event.target.value === ""
+                                ? undefined
+                                : Number(event.target.value),
+                          })
+                        }
+                      />
+                    </Field>
+                    <Field label="Maximum">
+                      <input
+                        type="number"
+                        step={field.type === "number" ? "any" : 1}
+                        min={field.type === "number" ? undefined : 2}
+                        max={field.type === "number" ? undefined : 10}
+                        value={field.max ?? (field.type === "number" ? "" : 5)}
+                        onChange={(event) =>
+                          updateField({
+                            max:
+                              event.target.value === ""
+                                ? undefined
+                                : field.type === "number"
+                                  ? Number(event.target.value)
+                                  : Math.min(
+                                      10,
+                                      Math.max(2, Number(event.target.value)),
+                                    ),
+                          })
+                        }
+                      />
+                    </Field>
+                  </div>
+                )}
+                {["short", "long", "phone", "url"].includes(field.type) && (
+                  <div className="gt-form-two">
+                    <Field label="Minimum length">
+                      <input
+                        type="number"
+                        min={0}
+                        value={field.minLength ?? ""}
+                        onChange={(event) =>
+                          updateField({
+                            minLength: event.target.value
+                              ? Math.max(0, Number(event.target.value))
+                              : undefined,
+                          })
+                        }
+                      />
+                    </Field>
+                    <Field label="Maximum length">
+                      <input
+                        type="number"
+                        min={1}
+                        value={field.maxLength ?? ""}
+                        onChange={(event) =>
+                          updateField({
+                            maxLength: event.target.value
+                              ? Math.max(1, Number(event.target.value))
+                              : undefined,
+                          })
+                        }
+                      />
+                    </Field>
+                  </div>
+                )}
+                {field.type === "email" && (
+                  <Field
+                    label="Allowed email domain"
+                    hint="Optional, for example gatech.edu. This is a format rule, not identity verification."
+                  >
                     <input
-                      type="number"
-                      step={field.type === "number" ? "any" : 1}
-                      min={field.type === "number" ? undefined : 2}
-                      max={field.type === "number" ? undefined : 10}
-                      value={field.max ?? (field.type === "number" ? "" : 5)}
+                      value={field.allowedDomain || ""}
                       onChange={(event) =>
                         updateField({
-                          max:
-                            event.target.value === ""
-                              ? undefined
-                              : field.type === "number"
-                                ? Number(event.target.value)
-                                : Math.min(
-                                    10,
-                                    Math.max(2, Number(event.target.value)),
-                                  ),
+                          allowedDomain: event.target.value
+                            .trim()
+                            .replace(/^@/, ""),
                         })
                       }
+                      placeholder="Any email domain"
                     />
                   </Field>
-                </div>
-              )}
-              {["short", "long", "phone", "url"].includes(field.type) && (
-                <div className="gt-form-two">
-                  <Field label="Minimum length">
-                    <input
-                      type="number"
-                      min={0}
-                      value={field.minLength ?? ""}
-                      onChange={(event) =>
-                        updateField({
-                          minLength: event.target.value
-                            ? Math.max(0, Number(event.target.value))
-                            : undefined,
-                        })
-                      }
-                    />
-                  </Field>
-                  <Field label="Maximum length">
+                )}
+                {field.type === "checkbox" && (
+                  <Field
+                    label="Maximum choices"
+                    hint="Leave empty for no maximum"
+                  >
                     <input
                       type="number"
                       min={1}
-                      value={field.maxLength ?? ""}
+                      value={field.maxChoices ?? ""}
                       onChange={(event) =>
                         updateField({
-                          maxLength: event.target.value
+                          maxChoices: event.target.value
                             ? Math.max(1, Number(event.target.value))
                             : undefined,
                         })
                       }
                     />
                   </Field>
-                </div>
-              )}
-              {field.type === "email" && (
-                <Field
-                  label="Allowed email domain"
-                  hint="Optional, for example gatech.edu. This is a format rule, not identity verification."
-                >
-                  <input
-                    value={field.allowedDomain || ""}
-                    onChange={(event) =>
-                      updateField({
-                        allowedDomain: event.target.value
-                          .trim()
-                          .replace(/^@/, ""),
-                      })
-                    }
-                    placeholder="Any email domain"
-                  />
-                </Field>
-              )}
-              {field.type === "checkbox" && (
-                <Field
-                  label="Maximum choices"
-                  hint="Leave empty for no maximum"
-                >
-                  <input
-                    type="number"
-                    min={1}
-                    value={field.maxChoices ?? ""}
-                    onChange={(event) =>
-                      updateField({
-                        maxChoices: event.target.value
-                          ? Math.max(1, Number(event.target.value))
-                          : undefined,
-                      })
-                    }
-                  />
-                </Field>
-              )}
-              {["date", "datetime"].includes(field.type) && (
-                <>
-                  <Field label="Earliest date">
-                    <input
-                      type={field.type === "date" ? "date" : "datetime-local"}
-                      value={field.dateFrom || ""}
-                      onChange={(event) =>
-                        updateField({ dateFrom: event.target.value })
-                      }
-                    />
-                  </Field>
-                  <Field label="Latest date">
-                    <input
-                      type={field.type === "date" ? "date" : "datetime-local"}
-                      value={field.dateTo || ""}
-                      onChange={(event) =>
-                        updateField({ dateTo: event.target.value })
-                      }
-                    />
-                  </Field>
-                </>
-              )}
-              {["likert", "grid"].includes(field.type) && (
-                <Field
-                  label="Grid columns"
-                  hint="One column per line. The options above define your rows."
-                >
-                  <textarea
-                    rows={4}
-                    value={(
-                      field.columns || ["Disagree", "Neutral", "Agree"]
-                    ).join("\n")}
-                    onChange={(event) =>
-                      updateField({ columns: event.target.value.split("\n") })
-                    }
-                  />
-                </Field>
-              )}
-              <FieldValidationSettings field={field} onChange={updateField} />
-              <Field label="Section">
-                <select
-                  value={field.sectionId}
-                  onChange={(event) =>
-                    updateField({ sectionId: event.target.value })
-                  }
-                >
-                  {form.sections.map((section) => (
-                    <option key={section.id} value={section.id}>
-                      {section.title}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <div className="gt-inspector-actions">
-                <Button
-                  variant="secondary"
-                  onClick={() => {
-                    const item = {
-                      ...structuredClone(field),
-                      id: crypto.randomUUID(),
-                    };
-                    update({ ...form, fields: [...form.fields, item] });
-                    setSelected(item.id);
-                  }}
-                >
-                  <Copy size={15} />
-                  Duplicate
-                </Button>
-                <Button
-                  variant="danger"
-                  onClick={() => {
-                    update({
-                      ...form,
-                      fields: form.fields.filter(
-                        (item) => item.id !== field.id,
-                      ),
-                    });
-                    setSelected("");
-                  }}
-                >
-                  <Trash2 size={15} />
-                  Remove
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <EmptyState title="Select a question">
-              Choose a field on the canvas to edit its settings.
-            </EmptyState>
-          )
-        ) : tab === "Logic" ? (
-          <div className="gt-form">
-            <h3>Keep the conversation relevant.</h3>
-            <p className="gt-helper">
-              Show a question only when an earlier answer matches your rule.
-            </p>
-            {field ? (
-              <>
-                <Field label="Show this field when">
-                  <select
-                    value={field.condition?.fieldId || ""}
-                    onChange={(event) =>
-                      updateField({
-                        condition: event.target.value
-                          ? { fieldId: event.target.value, value: "" }
-                          : undefined,
-                      })
-                    }
+                )}
+                {["date", "datetime"].includes(field.type) && (
+                  <>
+                    <Field label="Earliest date">
+                      <input
+                        type={field.type === "date" ? "date" : "datetime-local"}
+                        value={field.dateFrom || ""}
+                        onChange={(event) =>
+                          updateField({ dateFrom: event.target.value })
+                        }
+                      />
+                    </Field>
+                    <Field label="Latest date">
+                      <input
+                        type={field.type === "date" ? "date" : "datetime-local"}
+                        value={field.dateTo || ""}
+                        onChange={(event) =>
+                          updateField({ dateTo: event.target.value })
+                        }
+                      />
+                    </Field>
+                  </>
+                )}
+                {["likert", "grid"].includes(field.type) && (
+                  <Field
+                    label="Grid columns"
+                    hint="One column per line. The options above define your rows."
                   >
-                    <option value="">Always visible</option>
-                    {form.fields
-                      .slice(0, form.fields.indexOf(field))
-                      .filter((item) =>
-                        [
-                          "radio",
-                          "checkbox",
-                          "dropdown",
-                          "scale",
-                          "rating",
-                        ].includes(item.type),
-                      )
-                      .map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {item.label}
-                        </option>
-                      ))}
-                  </select>
-                </Field>
-                {field.condition && (
-                  <Field label="Answer equals">
-                    <input
-                      value={field.condition.value}
+                    <textarea
+                      rows={4}
+                      value={(
+                        field.columns || ["Disagree", "Neutral", "Agree"]
+                      ).join("\n")}
                       onChange={(event) =>
-                        updateField({
-                          condition: {
-                            ...field.condition!,
-                            value: event.target.value,
-                          },
-                        })
+                        updateField({ columns: event.target.value.split("\n") })
                       }
-                      list="condition-options"
                     />
-                    <datalist id="condition-options">
-                      {form.fields
-                        .find((item) => item.id === field.condition?.fieldId)
-                        ?.options.map((option) => (
-                          <option key={option}>{option}</option>
-                        ))}
-                    </datalist>
                   </Field>
                 )}
-                <div className="gt-logic-valid">
-                  <ShieldCheck size={18} />
-                  {issues.length
-                    ? `${issues.length} items to review`
-                    : "No circular dependencies"}
+                <FieldValidationSettings field={field} onChange={updateField} />
+                <Field label="Section">
+                  <select
+                    value={field.sectionId}
+                    onChange={(event) =>
+                      updateField({ sectionId: event.target.value })
+                    }
+                  >
+                    {form.sections.map((section) => (
+                      <option key={section.id} value={section.id}>
+                        {section.title}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+                <div className="gt-inspector-actions">
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      const item = {
+                        ...structuredClone(field),
+                        id: crypto.randomUUID(),
+                      };
+                      update({ ...form, fields: [...form.fields, item] });
+                      setSelected(item.id);
+                    }}
+                  >
+                    <Copy size={15} />
+                    Duplicate
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => {
+                      update({
+                        ...form,
+                        fields: form.fields.filter(
+                          (item) => item.id !== field.id,
+                        ),
+                      });
+                      setSelected("");
+                    }}
+                  >
+                    <Trash2 size={15} />
+                    Remove
+                  </Button>
                 </div>
-              </>
+              </div>
             ) : (
-              <p>Select a question to add a rule.</p>
-            )}
-            <SectionLogic
-              form={form}
-              sectionId={field?.sectionId || form.sections[0].id}
-              onChange={(section) =>
-                update({
-                  ...form,
-                  sections: form.sections.map((value) =>
-                    value.id === section.id ? section : value,
-                  ),
-                })
-              }
-            />
-          </div>
-        ) : (
-          <div className="gt-form">
-            <Field label="Access mode">
-              <select
-                value={form.settings.access}
-                onChange={(event) =>
-                  update({
-                    ...form,
-                    settings: {
-                      ...form.settings,
-                      access: event.target
-                        .value as PreviewForm["settings"]["access"],
-                    },
-                  })
-                }
-              >
-                {[
-                  ["public", "Public · name and email required"],
-                  ["verified", "Verified email"],
-                  ["unlisted", "Unlisted link"],
-                  ["invited", "Invitation only"],
-                  ["internal", "Chapter members"],
-                ].map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-                <option value="georgia-tech-sso-planned" disabled>
-                  Georgia Tech SSO · Coming soon
-                </option>
-              </select>
-            </Field>
-            {form.settings.access !== "public" && (
+              <EmptyState title="Select a question">
+                Choose a field on the canvas to edit its settings.
+              </EmptyState>
+            )
+          ) : tab === "Logic" ? (
+            <div className="gt-form">
+              <h3>Keep the conversation relevant.</h3>
               <p className="gt-helper">
-                Access is checked by the server. Token-restricted forms require
-                a valid invitation or access link; chapter forms require an
-                active account.
+                Show a question only when an earlier answer matches your rule.
               </p>
-            )}
-            <p className="gt-helper">
-              Every respondent must enter a name and email. Entered details are
-              unverified unless an existing access method verifies them. Georgia
-              Tech SSO (preferred) and Google sign-in are planned, not
-              connected.
-            </p>
-            <Field
-              label="Form theme"
-              hint="Approved chapter accents only. Content surfaces stay neutral and readable."
-            >
-              <select
-                value={form.settings.theme || "coral"}
-                onChange={(event) =>
+              {field ? (
+                <>
+                  <Field label="Show this field when">
+                    <select
+                      value={field.condition?.fieldId || ""}
+                      onChange={(event) =>
+                        updateField({
+                          condition: event.target.value
+                            ? { fieldId: event.target.value, value: "" }
+                            : undefined,
+                        })
+                      }
+                    >
+                      <option value="">Always visible</option>
+                      {form.fields
+                        .slice(0, form.fields.indexOf(field))
+                        .filter((item) =>
+                          [
+                            "radio",
+                            "checkbox",
+                            "dropdown",
+                            "scale",
+                            "rating",
+                          ].includes(item.type),
+                        )
+                        .map((item) => (
+                          <option key={item.id} value={item.id}>
+                            {item.label}
+                          </option>
+                        ))}
+                    </select>
+                  </Field>
+                  {field.condition && (
+                    <Field label="Answer equals">
+                      <input
+                        value={field.condition.value}
+                        onChange={(event) =>
+                          updateField({
+                            condition: {
+                              ...field.condition!,
+                              value: event.target.value,
+                            },
+                          })
+                        }
+                        list="condition-options"
+                      />
+                      <datalist id="condition-options">
+                        {form.fields
+                          .find((item) => item.id === field.condition?.fieldId)
+                          ?.options.map((option) => (
+                            <option key={option}>{option}</option>
+                          ))}
+                      </datalist>
+                    </Field>
+                  )}
+                  <div className="gt-logic-valid">
+                    <ShieldCheck size={18} />
+                    {issues.length
+                      ? `${issues.length} items to review`
+                      : "No circular dependencies"}
+                  </div>
+                </>
+              ) : (
+                <p>Select a question to add a rule.</p>
+              )}
+              <SectionLogic
+                form={form}
+                sectionId={field?.sectionId || form.sections[0].id}
+                onChange={(section) =>
                   update({
                     ...form,
-                    settings: {
-                      ...form.settings,
-                      theme: event.target.value as "coral" | "charcoal",
-                    },
+                    sections: form.sections.map((value) =>
+                      value.id === section.id ? section : value,
+                    ),
                   })
                 }
-              >
-                <option value="coral">Coral · chapter default</option>
-                <option value="charcoal">Charcoal · quiet accent</option>
-              </select>
-            </Field>
-            <FormImagePicker
-              label="Header image"
-              selected={formImageId(form.settings.headerMedia)}
-              onChange={(photo) =>
-                update({
-                  ...form,
-                  settings: {
-                    ...form.settings,
-                    headerMedia: photo
-                      ? `/api/v1/media/public/${photo.id}`
-                      : "",
-                    headerAlt: photo?.alt_text || photo?.description || "",
-                  },
-                })
-              }
-            />
-            {form.settings.headerMedia && (
-              <Field label="Header image description (alt text)" required>
-                <input
-                  value={form.settings.headerAlt || ""}
+              />
+            </div>
+          ) : (
+            <div className="gt-form">
+              <Field label="Access mode">
+                <select
+                  value={form.settings.access}
                   onChange={(event) =>
                     update({
                       ...form,
                       settings: {
                         ...form.settings,
-                        headerAlt: event.target.value,
+                        access: event.target
+                          .value as PreviewForm["settings"]["access"],
                       },
                     })
                   }
-                />
+                >
+                  {[
+                    ["public", "Public · name and email required"],
+                    ["verified", "Verified email"],
+                    ["unlisted", "Unlisted link"],
+                    ["invited", "Invitation only"],
+                    ["internal", "Chapter members"],
+                  ].map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                  <option value="georgia-tech-sso-planned" disabled>
+                    Georgia Tech SSO · Coming soon
+                  </option>
+                </select>
               </Field>
-            )}
-            <Field label="Response limit" hint="0 means no configured limit">
-              <input
-                type="number"
-                min={0}
-                value={form.settings.limit}
-                onChange={(event) =>
+              {form.settings.access !== "public" && (
+                <p className="gt-helper">
+                  Access is checked by the server. Token-restricted forms
+                  require a valid invitation or access link; chapter forms
+                  require an active account.
+                </p>
+              )}
+              <p className="gt-helper">
+                Every respondent must enter a name and email. Entered details
+                are unverified unless an existing access method verifies them.
+                Georgia Tech SSO (preferred) and Google sign-in are planned, not
+                connected.
+              </p>
+              <Field
+                label="Form theme"
+                hint="Approved chapter accents only. Content surfaces stay neutral and readable."
+              >
+                <select
+                  value={form.settings.theme || "coral"}
+                  onChange={(event) =>
+                    update({
+                      ...form,
+                      settings: {
+                        ...form.settings,
+                        theme: event.target.value as "coral" | "charcoal",
+                      },
+                    })
+                  }
+                >
+                  <option value="coral">Coral · chapter default</option>
+                  <option value="charcoal">Charcoal · quiet accent</option>
+                </select>
+              </Field>
+              <FormImagePicker
+                label="Header image"
+                selected={formImageId(form.settings.headerMedia)}
+                onChange={(photo) =>
                   update({
                     ...form,
                     settings: {
                       ...form.settings,
-                      limit: Math.max(0, Number(event.target.value)),
+                      headerMedia: photo
+                        ? `/api/v1/media/public/${photo.id}`
+                        : "",
+                      headerAlt: photo?.alt_text || photo?.description || "",
                     },
                   })
                 }
               />
-            </Field>
-            <Field label="Opens at">
-              <input
-                type="datetime-local"
-                value={form.settings.opensAt}
-                onChange={(event) =>
-                  update({
-                    ...form,
-                    settings: { ...form.settings, opensAt: event.target.value },
-                  })
-                }
-              />
-            </Field>
-            <Field label="Closes at">
-              <input
-                type="datetime-local"
-                value={form.settings.closesAt}
-                onChange={(event) =>
-                  update({
-                    ...form,
-                    settings: {
-                      ...form.settings,
-                      closesAt: event.target.value,
-                    },
-                  })
-                }
-              />
-            </Field>
-            {(
-              [
-                ["resume", "Save & resume"],
-                ["editing", "Allow response edits"],
-                ["receipts", "Legacy receipt publication review"],
-                ["review", "Final answer review"],
-                ["oneResponse", "One response per verified identity"],
-                ["progress", "Show progress bar"],
-                ["shuffleQuestions", "Shuffle independent questions"],
-                ["shuffleOptions", "Shuffle unordered choice options"],
-              ] as const
-            )
-              .filter(([key]) => key !== "receipts" || form.settings.receipts)
-              .map(([key, label]) => (
-                <label className="gt-toggle-row" key={key}>
-                  {label}
+              {form.settings.headerMedia && (
+                <Field label="Header image description (alt text)" required>
                   <input
-                    type="checkbox"
-                    role="switch"
-                    checked={
-                      form.settings[key] ?? ["review", "progress"].includes(key)
-                    }
-                    disabled={
-                      (key === "oneResponse" &&
-                        form.settings.access === "public") ||
-                      (key === "shuffleQuestions" &&
-                        !form.settings.shuffleQuestions &&
-                        !canShuffleQuestions(form.fields, form.sections))
-                    }
+                    value={form.settings.headerAlt || ""}
                     onChange={(event) =>
                       update({
                         ...form,
                         settings: {
                           ...form.settings,
-                          [key]: event.target.checked,
+                          headerAlt: event.target.value,
                         },
                       })
                     }
                   />
-                </label>
-              ))}
-            <p className="gt-helper">
-              One-response enforcement requires a verified identity or unique
-              private invitation. A public form with entered details cannot
-              reliably identify respondents.
-            </p>
-            <p className="gt-helper">
-              Question shuffling stays within each section and never crosses a
-              content block; conditional/branching forms cannot enable it.
-              Choice shuffling applies only to unordered single-choice,
-              multiple-choice and dropdown questions. Scales, grids, rankings
-              and relative-position choices keep their order.
-            </p>
-            {form.actions?.includes("manage_access") &&
-              form.actions?.includes("view_responses") && (
-                <Button
-                  variant="secondary"
-                  disabled={saveStatus !== "Saved"}
-                  onClick={() => setDeliveryOpen(true)}
-                >
-                  Review chapter notifications
-                </Button>
+                </Field>
               )}
-            <p className="gt-helper">
-              Respondents can request their own complete copy at submission,
-              sent only to their entered email without confirmation. Chapter
-              notifications are separate and only go to explicitly reviewed
-              recipients. Older receipt-enabled drafts keep their existing
-              publication-review requirement until that legacy setting is turned
-              off.
-            </p>
-            <Field
-              label="Response retention (days)"
-              hint="1–365 days. Historical responses and files follow the published privacy policy."
-            >
-              <input
-                type="number"
-                min={1}
-                max={365}
-                value={form.settings.retentionDays || 365}
-                onChange={(event) =>
-                  update({
-                    ...form,
-                    settings: {
-                      ...form.settings,
-                      retentionDays: Number(event.target.value),
-                    },
-                  })
-                }
-              />
-            </Field>
-            <Field label="Closed-form message">
-              <textarea
-                maxLength={3000}
-                rows={3}
-                value={
-                  form.settings.closedMessage ||
-                  "This form is not accepting responses right now."
-                }
-                onChange={(event) =>
-                  update({
-                    ...form,
-                    settings: {
-                      ...form.settings,
-                      closedMessage: event.target.value,
-                    },
-                  })
-                }
-              />
-            </Field>
-            <Field label="Confirmation message">
-              <textarea
-                rows={3}
-                value={form.settings.confirmation}
-                onChange={(event) =>
-                  update({
-                    ...form,
-                    settings: {
-                      ...form.settings,
-                      confirmation: event.target.value,
-                    },
-                  })
-                }
-              />
-            </Field>
-          </div>
-        )}
+              <Field label="Response limit" hint="0 means no configured limit">
+                <input
+                  type="number"
+                  min={0}
+                  value={form.settings.limit}
+                  onChange={(event) =>
+                    update({
+                      ...form,
+                      settings: {
+                        ...form.settings,
+                        limit: Math.max(0, Number(event.target.value)),
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Opens at">
+                <input
+                  type="datetime-local"
+                  value={form.settings.opensAt}
+                  onChange={(event) =>
+                    update({
+                      ...form,
+                      settings: {
+                        ...form.settings,
+                        opensAt: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Closes at">
+                <input
+                  type="datetime-local"
+                  value={form.settings.closesAt}
+                  onChange={(event) =>
+                    update({
+                      ...form,
+                      settings: {
+                        ...form.settings,
+                        closesAt: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              {(
+                [
+                  ["resume", "Save & resume"],
+                  ["editing", "Allow response edits"],
+                  ["receipts", "Legacy receipt publication review"],
+                  ["review", "Final answer review"],
+                  ["oneResponse", "One response per verified identity"],
+                  ["progress", "Show progress bar"],
+                  ["shuffleQuestions", "Shuffle independent questions"],
+                  ["shuffleOptions", "Shuffle unordered choice options"],
+                ] as const
+              )
+                .filter(([key]) => key !== "receipts" || form.settings.receipts)
+                .map(([key, label]) => (
+                  <label className="gt-toggle-row" key={key}>
+                    {label}
+                    <input
+                      type="checkbox"
+                      role="switch"
+                      checked={
+                        form.settings[key] ??
+                        ["review", "progress"].includes(key)
+                      }
+                      disabled={
+                        (key === "oneResponse" &&
+                          form.settings.access === "public") ||
+                        (key === "shuffleQuestions" &&
+                          !form.settings.shuffleQuestions &&
+                          !canShuffleQuestions(form.fields, form.sections))
+                      }
+                      onChange={(event) =>
+                        update({
+                          ...form,
+                          settings: {
+                            ...form.settings,
+                            [key]: event.target.checked,
+                          },
+                        })
+                      }
+                    />
+                  </label>
+                ))}
+              <p className="gt-helper">
+                One-response enforcement requires a verified identity or unique
+                private invitation. A public form with entered details cannot
+                reliably identify respondents.
+              </p>
+              <p className="gt-helper">
+                Question shuffling stays within each section and never crosses a
+                content block; conditional/branching forms cannot enable it.
+                Choice shuffling applies only to unordered single-choice,
+                multiple-choice and dropdown questions. Scales, grids, rankings
+                and relative-position choices keep their order.
+              </p>
+              {form.actions?.includes("manage_access") &&
+                form.actions?.includes("view_responses") && (
+                  <Button
+                    variant="secondary"
+                    disabled={saveStatus !== "Saved"}
+                    onClick={() => setDeliveryOpen(true)}
+                  >
+                    Review chapter notifications
+                  </Button>
+                )}
+              <p className="gt-helper">
+                Respondents can request their own complete copy at submission,
+                sent only to their entered email without confirmation. Chapter
+                notifications are separate and only go to explicitly reviewed
+                recipients. Older receipt-enabled drafts keep their existing
+                publication-review requirement until that legacy setting is
+                turned off.
+              </p>
+              <Field
+                label="Response retention (days)"
+                hint="1–365 days. Historical responses and files follow the published privacy policy."
+              >
+                <input
+                  type="number"
+                  min={1}
+                  max={365}
+                  value={form.settings.retentionDays || 365}
+                  onChange={(event) =>
+                    update({
+                      ...form,
+                      settings: {
+                        ...form.settings,
+                        retentionDays: Number(event.target.value),
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Closed-form message">
+                <textarea
+                  maxLength={3000}
+                  rows={3}
+                  value={
+                    form.settings.closedMessage ||
+                    "This form is not accepting responses right now."
+                  }
+                  onChange={(event) =>
+                    update({
+                      ...form,
+                      settings: {
+                        ...form.settings,
+                        closedMessage: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+              <Field label="Confirmation message">
+                <textarea
+                  rows={3}
+                  value={form.settings.confirmation}
+                  onChange={(event) =>
+                    update({
+                      ...form,
+                      settings: {
+                        ...form.settings,
+                        confirmation: event.target.value,
+                      },
+                    })
+                  }
+                />
+              </Field>
+            </div>
+          )}
+        </fieldset>
       </div>
     </>
   );
@@ -994,6 +1012,7 @@ export default function FormBuilder() {
           </Link>
           <input
             className="gt-builder-title"
+            disabled={!editable}
             aria-label="Form title"
             value={form.title}
             onChange={(event) => update({ ...form, title: event.target.value })}
@@ -1006,7 +1025,7 @@ export default function FormBuilder() {
         <div className="gt-builder-header-actions">
           <button
             className="gt-icon-button"
-            disabled={!undo.current.length}
+            disabled={!editable || !undo.current.length}
             aria-label="Undo change"
             onClick={() => {
               const previous = undo.current.pop();
@@ -1020,7 +1039,7 @@ export default function FormBuilder() {
           </button>
           <button
             className="gt-icon-button"
-            disabled={!redo.current.length}
+            disabled={!editable || !redo.current.length}
             aria-label="Redo change"
             onClick={() => {
               const next = redo.current.pop();
@@ -1074,6 +1093,12 @@ export default function FormBuilder() {
           </Button>
         </div>
       </div>
+      {!editable && (
+        <p className="gt-data-note" role="status">
+          View only. Draft editing requires additional permission. You can
+          inspect fields, settings and published versions.
+        </p>
+      )}
       {saveError && (
         <p role="alert" className="gt-form-error">
           {saveError} Your changes remain on this page.{" "}
@@ -1087,7 +1112,7 @@ export default function FormBuilder() {
       <div className="gt-builder-mobile-tools">
         <Button variant="secondary" onClick={() => setPaletteOpen(true)}>
           <Plus size={16} />
-          Add field
+          {editable ? "Add field" : "Field types"}
         </Button>
         <Button
           variant="secondary"
@@ -1131,6 +1156,7 @@ export default function FormBuilder() {
               <h1>{form.title || "Untitled form"}</h1>
               <textarea
                 aria-label="Form description"
+                disabled={!editable}
                 value={form.description}
                 onChange={(event) =>
                   update({ ...form, description: event.target.value })
@@ -1145,6 +1171,7 @@ export default function FormBuilder() {
                   <Badge tone="coral">Section {sectionIndex + 1}</Badge>
                   <input
                     aria-label={`Section ${sectionIndex + 1} title`}
+                    disabled={!editable}
                     value={section.title}
                     onChange={(event) =>
                       update({
@@ -1161,6 +1188,7 @@ export default function FormBuilder() {
                     type="button"
                     className="gt-icon-button"
                     aria-label={`Duplicate section ${sectionIndex + 1}`}
+                    disabled={!editable}
                     title="Duplicate section"
                     onClick={() => update(duplicateSection(form, section.id))}
                   >
@@ -1169,17 +1197,18 @@ export default function FormBuilder() {
                 </div>
                 {form.fields
                   .filter((item) => item.sectionId === section.id)
-                  .map((item) => (
+                  .map((item, sectionIndex, sectionFields) => (
                     <article
                       className={`gt-builder-field ${selected === item.id ? "is-selected" : ""}`}
                       key={item.id}
-                      draggable
+                      draggable={editable}
                       onDragStart={() => {
                         dragged.current = item.id;
                       }}
                       onDragOver={(event) => event.preventDefault()}
                       onDrop={(event) => {
                         event.stopPropagation();
+                        if (!editable) return;
                         const sourceIndex = form.fields.findIndex(
                             (value) => value.id === dragged.current,
                           ),
@@ -1188,8 +1217,8 @@ export default function FormBuilder() {
                           );
                         if (sourceIndex >= 0 && sourceIndex !== targetIndex) {
                           const fields = [...form.fields];
-                          const [moved] = fields.splice(sourceIndex, 1);
-                          moved.sectionId = item.sectionId;
+                          const [source] = fields.splice(sourceIndex, 1),
+                            moved = { ...source, sectionId: item.sectionId };
                           fields.splice(targetIndex, 0, moved);
                           update({ ...form, fields });
                         }
@@ -1203,7 +1232,7 @@ export default function FormBuilder() {
                             setInspectorOpen(true);
                             setTab("Field");
                           }}
-                          aria-label={`Edit ${item.label}`}
+                          aria-label={`${editable ? "Edit" : "Inspect"} ${item.label}`}
                         >
                           <GripVertical size={15} />
                           {
@@ -1216,7 +1245,7 @@ export default function FormBuilder() {
                           <button
                             className="gt-icon-button"
                             aria-label={`Move ${item.label} up`}
-                            disabled={form.fields.indexOf(item) === 0}
+                            disabled={!editable || sectionIndex === 0}
                             onClick={(event) => {
                               event.stopPropagation();
                               move(item.id, -1);
@@ -1228,8 +1257,8 @@ export default function FormBuilder() {
                             className="gt-icon-button"
                             aria-label={`Move ${item.label} down`}
                             disabled={
-                              form.fields.indexOf(item) ===
-                              form.fields.length - 1
+                              !editable ||
+                              sectionIndex === sectionFields.length - 1
                             }
                             onClick={(event) => {
                               event.stopPropagation();
@@ -1254,6 +1283,7 @@ export default function FormBuilder() {
                   ))}
                 <button
                   className="gt-add-question"
+                  disabled={!editable}
                   onClick={() => add("short", section.id)}
                 >
                   <Plus size={17} /> Add question
@@ -1262,6 +1292,7 @@ export default function FormBuilder() {
             ))}
             <Button
               variant="ghost"
+              disabled={!editable}
               onClick={() =>
                 update({
                   ...form,
@@ -1299,8 +1330,9 @@ export default function FormBuilder() {
             </div>
           </div>
           <p className="gt-builder-hint">
-            Drag to reorder, or use the move up and down buttons. Draft changes
-            autosave securely; publication creates a separate immutable version.
+            {editable
+              ? "Drag to reorder, or use the move up and down buttons. Draft changes autosave securely; publication creates a separate immutable version."
+              : "Select a question to inspect its settings. Draft changes require edit permission."}
           </p>
         </div>
         <aside className="gt-builder-inspector" aria-label="Form inspector">
@@ -1309,7 +1341,7 @@ export default function FormBuilder() {
       </div>
       <Dialog open={paletteOpen} onOpenChange={setPaletteOpen}>
         <DialogContent className="gt-builder-tool-dialog">
-          <DialogTitle>Add a field</DialogTitle>
+          <DialogTitle>{editable ? "Add a field" : "Field types"}</DialogTitle>
           <DialogDescription>
             Choose a question or content block.
           </DialogDescription>
@@ -1326,7 +1358,9 @@ export default function FormBuilder() {
                 : "Question settings"}
           </DialogTitle>
           <DialogDescription>
-            Edit the selected field or form settings.
+            {editable
+              ? "Edit the selected field or form settings."
+              : "Inspect the selected field or form settings. Changes require edit permission."}
           </DialogDescription>
           {inspector("dialog")}
         </DialogContent>
