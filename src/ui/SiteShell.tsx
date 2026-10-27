@@ -110,9 +110,6 @@ export default function SiteShell({ children }: { children: ReactNode }) {
         password: "local-preview",
       });
       if (ok) navigate("/admin");
-    } else {
-      document.getElementById("newsletter-email")?.focus();
-      setNotice("Chapter officers can enter their access code here.");
     }
   };
   const subscribe = async (event: FormEvent, officerAccess = false) => {

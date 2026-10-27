@@ -12,6 +12,10 @@ The authenticated admin application serves chapter officers, team leads, team me
 
 Public form respondents need to complete accessible chapter forms, upload permitted files, save and resume when enabled, and receive a trustworthy completion state without leaving the website.
 
+Public copy must not reveal the hidden officer entrance, its footer location or
+access-code instructions. This includes maintenance messages, fallback pages,
+newsletter feedback and offline help (Tejas, 2026-10-27).
+
 Public pages use the brand register. Authenticated admin pages use the product register even though the project default is brand.
 
 ## Product Purpose

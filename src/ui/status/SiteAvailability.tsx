@@ -143,10 +143,6 @@ export function MaintenanceContent({
         {status?.message ||
           "The chapter website is taking a short break while we make improvements."}
       </p>
-      <p>
-        Chapter officers can use their normal access code in the footer. The
-        workspace, sign-in and account recovery remain available.
-      </p>
       {status?.redirect_url &&
         (preview ? (
           <span className="gt-button gt-button-secondary" aria-disabled="true">

@@ -331,7 +331,7 @@ export default function SubmissionQueue() {
           >
             <Field
               label="Newsletter email address"
-              hint="Use your subscription email, never an officer access code or password."
+              hint="Enter the email address you want to subscribe."
             >
               <input
                 type="email"

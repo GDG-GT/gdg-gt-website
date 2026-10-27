@@ -2651,7 +2651,7 @@ export function InfoPage({
       "A little work behind the scenes.",
       "We’ll be back soon",
       "The chapter website is taking a short break while we make improvements.",
-      "Please check back later. Chapter officers can continue through their normal access flow.",
+      "Please check back later for chapter updates.",
     ],
   }[kind];
   usePageTitle(copy[1]);
