@@ -1,6 +1,9 @@
 {
-  "note": "Actual loopback HTTP checks with fictional scoped accounts, team, project and participant. No external links, invitations, mail or providers used. Project/member/star history retained; exact fixture accounts/team archived and community participant deactivated. Rate limits and jobs were not reset.",
-  "projectId": "e8a2f677-0b1a-41f4-b35d-6f1463425a4d",
+  "note": "Actual loopback HTTP checks with fictional scoped accounts, team, project and participant. No external links, invitations, mail or providers. Project/member/star history retained; exact fixture accounts/team archived and community participant deactivated. Quotas/jobs never reset.",
+  "projectId": "d1535818-baeb-4a30-8255-ae0cb005c46f",
+  "cleanup": {
+    "completed": true
+  },
   "tests": [
     {
       "name": "anonymous private project listing denied",

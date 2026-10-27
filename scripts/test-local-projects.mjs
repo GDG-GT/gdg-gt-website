@@ -1,14 +1,33 @@
 import { randomUUID } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { writeFile, unlink } from "node:fs/promises";
 import { createInterface } from "node:readline";
 import { localHttp } from "./lib/local-http.mjs";
 import { hashSecret } from "../server/lib/security.mjs";
 import { projectRecord } from "../shared/projects.mjs";
+if (process.env.GDG_LOCAL_TEST_SHARED_SESSION === "true")
+  throw Error("Requires isolated fictional sessions.");
 const root = await localHttp(),
   db = root.db,
   accounts = [],
   evidence = [];
 let admin, member, outsider, editor, teamId, projectId, communityId;
+let ledgerOwned = false;
+const ledger = new URL("../.docs/local-project-review.local", import.meta.url);
+async function writeEvidence(cleanedUp) {
+  await writeFile(
+    new URL("../.docs/phase0/local-projects-integration.json", import.meta.url),
+    JSON.stringify(
+      {
+        note: "Actual loopback HTTP checks with fictional scoped accounts, team, project and participant. No external links, invitations, mail or providers. Project/member/star history retained; exact fixture accounts/team archived and community participant deactivated. Quotas/jobs never reset.",
+        projectId,
+        cleanup: { completed: cleanedUp },
+        tests: evidence,
+      },
+      null,
+      2,
+    ) + "\n",
+  );
+}
 const base = "/admin/projects",
   record = projectRecord.parse({
     title: "Fictional chapter project",
@@ -43,16 +62,14 @@ async function actor(role) {
     id = randomUUID(),
     email = `fictional-project-${id}@example.test`,
     password = "Fictional-project-" + randomUUID();
-  const r = await db
-    .from("admin_users")
-    .insert({
-      id,
-      email,
-      password_hash: await hashSecret(password),
-      role,
-      is_active: true,
-      display_name: "Fictional project " + role,
-    });
+  const r = await db.from("admin_users").insert({
+    id,
+    email,
+    password_hash: await hashSecret(password),
+    role,
+    is_active: true,
+    display_name: "Fictional project " + role,
+  });
   if (r.error) throw Error("Account fixture failed");
   accounts.push(id);
   data(
@@ -64,7 +81,7 @@ async function actor(role) {
   data(
     await h.call("/auth/login", { method: "POST", body: { email, password } }),
   );
-  return { ...h, id, password };
+  return { ...h, id, email, password };
 }
 const detail = async (h = member) => data(await h.call(base + "/" + projectId));
 async function action(name, changes = {}, h = member) {
@@ -99,43 +116,35 @@ try {
   teamId = randomUUID();
   communityId = randomUUID();
   for (const r of [
-    await db
-      .from("admin_teams")
-      .insert({
-        id: teamId,
-        name: "Fictional project team",
-        slug: "fictional-project-" + teamId,
-        created_by: admin.id,
-      }),
+    await db.from("admin_teams").insert({
+      id: teamId,
+      name: "Fictional project team",
+      slug: "fictional-project-" + teamId,
+      created_by: admin.id,
+    }),
     await db
       .from("team_memberships")
       .insert({ team_id: teamId, admin_user_id: member.id, role: "member" }),
-    await db
-      .from("team_page_access")
-      .insert({
-        team_id: teamId,
-        page_path: "/admin/projects",
-        can_access: true,
-      }),
-    await db
-      .from("team_permissions")
-      .insert({
-        team_id: teamId,
-        resource_type: "projects",
-        permission: "crud",
-        can_read: true,
-        can_create: true,
-        can_update: true,
-        can_delete: true,
-      }),
-    await db
-      .from("members")
-      .insert({
-        id: communityId,
-        name: "Fictional project participant",
-        email: "fictional-project-" + communityId + "@example.test",
-        is_active: true,
-      }),
+    await db.from("team_page_access").insert({
+      team_id: teamId,
+      page_path: "/admin/projects",
+      can_access: true,
+    }),
+    await db.from("team_permissions").insert({
+      team_id: teamId,
+      resource_type: "projects",
+      permission: "crud",
+      can_read: true,
+      can_create: true,
+      can_update: true,
+      can_delete: true,
+    }),
+    await db.from("members").insert({
+      id: communityId,
+      name: "Fictional project participant",
+      email: "fictional-project-" + communityId + "@example.test",
+      is_active: true,
+    }),
   ])
     if (r.error) throw Error("Scoped project fixtures unavailable");
   check(
@@ -284,12 +293,10 @@ try {
     (await detail()).members[0].active,
     "restoring keeps participants and does not publish",
   );
-  const star = await db
-    .from("project_stars")
-    .insert({
-      project_id: projectId,
-      user_identifier: "fictional-" + randomUUID(),
-    });
+  const star = await db.from("project_stars").insert({
+    project_id: projectId,
+    user_identifier: "fictional-" + randomUUID(),
+  });
   if (star.error) throw Error("Star fixture failed");
   check(
     (await db.from("project_stars").select("id").eq("project_id", projectId))
@@ -297,6 +304,18 @@ try {
     "private star records remain retained",
   );
   if (process.argv.includes("--hold-for-browser")) {
+    await writeFile(
+      ledger,
+      JSON.stringify({
+        email: admin.email,
+        password: admin.password,
+        projectId,
+        title: record.title,
+      }),
+      { mode: 0o600, flag: "wx" },
+    );
+    ledgerOwned = true;
+    await writeEvidence(false);
     console.info(
       "BROWSER_ADMIN http://127.0.0.1:8080/admin/projects?project=" + projectId,
     );
@@ -414,16 +433,7 @@ try {
         .is("revoked_at", null);
     if (a.error || s.error) throw Error("Account archive failed");
   }
+  if (ledgerOwned) await unlink(ledger);
+  if (process.stdin.isTTY) process.stdin.pause();
 }
-await writeFile(
-  new URL("../.docs/phase0/local-projects-integration.json", import.meta.url),
-  JSON.stringify(
-    {
-      note: "Actual loopback HTTP checks with fictional scoped accounts, team, project and participant. No external links, invitations, mail or providers used. Project/member/star history retained; exact fixture accounts/team archived and community participant deactivated. Rate limits and jobs were not reset.",
-      projectId,
-      tests: evidence,
-    },
-    null,
-    2,
-  ) + "\n",
-);
+await writeEvidence(true);

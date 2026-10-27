@@ -2339,6 +2339,29 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "CONTENT-TEST-017",
+      "requirements": [
+        "PROJ-001",
+        "PROJ-002",
+        "PROJ-003"
+      ],
+      "scope": "Private project independent read recovery, navigation/account/session isolation, scoped creation, stale permissions/revisions, stable retries and retained participant operations",
+      "automated": [
+        "tests/client/project-recovery.test.tsx",
+        "scripts/test-local-projects.mjs"
+      ],
+      "remaining": [
+        "Browser interruption, supported-device/screen-reader and hosted project acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

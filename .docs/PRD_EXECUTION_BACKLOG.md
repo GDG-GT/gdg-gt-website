@@ -5,6 +5,13 @@ Reviewed against the complete v1.5 PRD on 2026-10-21, including normative sectio
 documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
+Current local verification update (2026-10-27): the latest module checkpoint is
+`PROJECT_RECOVERY.md`; completed recovery checkpoints include tasks,
+announcements, whiteboards, finance and media. Their dedicated recovery documents
+and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
+below. All numbered requirements remain unverified against complete acceptance;
+passing local interactions is not a PRD-completion percentage.
+
 ## Deferred by Tejas
 
 Georgia Tech SSO and Bevy/Engage integration are deferred, not implementation
@@ -131,10 +138,10 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is still 35.86% lines/33.94% branches, below the global
-  70% gate; 839 tests pass, not a percentage of completed PRD features.
+  coverage is 52.72% lines/50.72% branches at the project checkpoint, below the global
+  70% gate; 1,045 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 120 reviewed logical test cases with
+  All 146 numbered requirements now map into 131 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.
@@ -149,7 +156,7 @@ Their manual/hosted/visual acceptance remains open.
 - Every public/protected route and negative role/team/resource/storage boundary,
   remaining stale-data/navigation states, outage/reconnect recovery, supported
   browsers, keyboard/zoom and manual screen-reader paths.
-  Nineteen local axe structural cases now run in the normal unit suite
+  Local axe structural cases and module-specific interaction audits run in the normal unit suite
   (`ACCESSIBILITY_STRUCTURE_CHECKS.md`); JSDOM contrast and incomplete axe checks
   are not certified by that result.
 - Public route bundles, modern images/font budgets, 3D fallbacks, Lighthouse,

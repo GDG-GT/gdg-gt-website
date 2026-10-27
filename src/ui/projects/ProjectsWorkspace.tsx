@@ -1,5 +1,15 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
 import { api, ApiFailure } from "@/lib/api";
+import { useAdmin } from "@/contexts/AdminContext";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import {
   useApprovedSearchParams,
   useDraftGuard,
@@ -92,12 +102,24 @@ const fields = (p?: Project): Fields => ({
   is_open_source: p?.is_open_source ?? true,
 });
 export default function ProjectsWorkspace() {
+  const { currentAdmin } = useAdmin();
+  const [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((v) => v + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  return (
+    <ProjectsWorkspaceContent
+      key={`${currentAdmin?.id}:${currentAdmin?.role}:${epoch}`}
+    />
+  );
+}
+function ProjectsWorkspaceContent() {
+  const { isOnline } = useOnlineStatus();
   const [params, setParams] = useApprovedSearchParams(),
     selected = params.get("project") || "",
     navigation = useNavigationSafety();
-  const [listing, setListing] = useState<Listing>(),
-    [detail, setDetail] = useState<Detail>(),
-    [cap, setCap] = useState<Cap>();
   const [q, setQ] = useState(""),
     [state, setState] = useState("current"),
     [status, setStatus] = useState(""),
@@ -115,131 +137,127 @@ export default function ProjectsWorkspace() {
     [role, setRole] = useState("contributor"),
     [password, setPassword] = useState(""),
     [confirmation, setConfirmation] = useState("");
-  const [busy, setBusy] = useState(false),
-    [error, setError] = useState(""),
-    [loadError, setLoadError] = useState(""),
+  const [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [conflict, setConflict] = useState(false);
   const snapshot = useRef<{ revision: number; title: string }>(),
     key = useRef<string>(),
     keyDocument = useRef<string>(),
-    epoch = useRef(0),
     workspaceHeading = useRef<HTMLHeadingElement>(null),
     heading = useRef<HTMLHeadingElement>(null);
+  const {
+    busy,
+    begin: beginOperation,
+    current,
+    finish,
+    cancel,
+    pending,
+  } = usePrivateMutation(selected);
+  const noticeFocus = useRef<HTMLParagraphElement>(null),
+    errorFocus = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    if (notice) noticeFocus.current?.focus();
+  }, [notice]);
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
+  const query = new URLSearchParams({
+    q,
+    state,
+    page: String(page),
+    ...(status ? { status } : {}),
+    ...(category ? { category } : {}),
+    ...(featured ? { featured: "true" } : {}),
+  });
+  const capRead = usePrivateRead<Cap>(base + "/capabilities", tick),
+    listRead = usePrivateRead<Listing>(base + "?" + query, tick),
+    detailRead = usePrivateRead<Detail>(
+      selected ? base + "/" + selected + "?page=" + memberPage : undefined,
+      tick,
+    );
+  const cap = capRead.data,
+    listing = listRead.data,
+    detail = detailRead.data;
+  const { clear: clearCap } = capRead,
+    { clear: clearList } = listRead,
+    { clear: clearDetail } = detailRead;
+  const reads = [
+    { name: "Project permissions", ...capRead },
+    { name: "Project inventory", ...listRead },
+    { name: "Project details", ...detailRead },
+  ];
   const p = detail?.project,
     stale =
-      !!mode &&
-      mode !== "create" &&
-      !!p &&
-      p.revision !== snapshot.current?.revision;
+      !!mode && mode !== "create" && p?.revision !== snapshot.current?.revision;
   const required =
       mode === "archive" || mode === "restore" ? "delete" : "update",
     denied =
       !!mode && mode !== "create" && (!p || !p.actions.includes(required));
   useDraftGuard(!!mode, { busy, label: "Private project changes" });
   useEffect(() => {
-    const timer = window.setInterval(() => setTick((v) => v + 1), 30000);
-    const invalidate = () => {
-      epoch.current++;
+    const refresh = () => {
+      if (!pending.current) setTick((v) => v + 1);
     };
-    const clear = () => {
-      invalidate();
-      setListing(undefined);
-      setDetail(undefined);
-      setCap(undefined);
+    const timer = setInterval(() => {
+      if (!document.hidden && navigator.onLine) refresh();
+    }, 30000);
+    window.addEventListener("gdg:access-changed", refresh);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("gdg:access-changed", refresh);
+    };
+  }, [pending]);
+  useEffect(() => {
+    if (capRead.denied) {
+      cancel();
+      clearCap();
+      clearList();
+      clearDetail();
       setMode(null);
       setPassword("");
-      setEmail("");
       setValues(fields());
+      setEmail("");
       setTechnology("");
       setTags("");
       setConfirmation("");
-      setNotice("");
-      setError("");
-      setBusy(false);
-    };
-    window.addEventListener("gdg:session-cleared", clear);
-    return () => {
-      invalidate();
-      window.clearInterval(timer);
-      window.removeEventListener("gdg:session-cleared", clear);
-    };
-  }, []);
-  useEffect(() => {
-    const c = new AbortController(),
-      readEpoch = epoch.current;
-    api<Cap>(base + "/capabilities", { signal: c.signal })
-      .then((v) => {
-        if (!c.signal.aborted && readEpoch === epoch.current) setCap(v);
-      })
-      .catch((e) => {
-        if (!c.signal.aborted && readEpoch === epoch.current) {
-          setCap(undefined);
-          setLoadError(e.message);
-        }
-      });
-    return () => c.abort();
-  }, [tick]);
-  useEffect(() => {
-    const c = new AbortController(),
-      readEpoch = epoch.current,
-      query = new URLSearchParams({
-        q,
-        state,
-        page: String(page),
-        ...(status ? { status } : {}),
-        ...(category ? { category } : {}),
-        ...(featured ? { featured: "true" } : {}),
-      });
-    api<Listing>(base + "?" + query, { signal: c.signal })
-      .then((v) => {
-        if (!c.signal.aborted && readEpoch === epoch.current) {
-          setListing(v);
-          setLoadError("");
-        }
-      })
-      .catch((e) => {
-        if (!c.signal.aborted && readEpoch === epoch.current) {
-          setListing(undefined);
-          setLoadError(e.message);
-        }
-      });
-    return () => c.abort();
-  }, [q, state, page, status, category, featured, tick]);
-  useEffect(() => {
-    if (!selected) {
-      setDetail(undefined);
-      return;
     }
-    const c = new AbortController(),
-      readEpoch = epoch.current;
-    api<Detail>(base + "/" + selected + "?page=" + memberPage, {
-      signal: c.signal,
-    })
-      .then((v) => {
-        if (!c.signal.aborted && readEpoch === epoch.current) setDetail(v);
-      })
-      .catch((e) => {
-        if (!c.signal.aborted && readEpoch === epoch.current) {
-          setDetail(undefined);
-          setLoadError(e.message);
-        }
-      });
-    return () => c.abort();
-  }, [selected, memberPage, tick]);
+  }, [capRead.denied, cancel, clearCap, clearList, clearDetail]);
+  useEffect(() => {
+    if (detailRead.denied) {
+      cancel();
+      setMode(null);
+      setPassword("");
+      setValues(fields());
+      setEmail("");
+      setConfirmation("");
+    }
+  }, [detailRead.denied, cancel]);
   useEffect(() => {
     if (mode) heading.current?.focus();
-    else workspaceHeading.current?.focus();
-  }, [mode]);
-  const reset = () => {
+    else if (!notice) workspaceHeading.current?.focus();
+  }, [mode, notice]);
+  const reset = useCallback(() => {
     setMode(null);
     setPassword("");
     setConfirmation("");
     setEmail("");
     setConflict(false);
     key.current = undefined;
-  };
+    keyDocument.current = undefined;
+    snapshot.current = undefined;
+    setValues(fields());
+    setTechnology("");
+    setTags("");
+    setTeam("");
+  }, []);
+  useEffect(() => {
+    cancel();
+    reset();
+    setError("");
+    setMemberPage(1);
+  }, [selected, cancel, reset]);
   const leave = (run: () => void) => {
+    if (pending.current) return;
     const next = () => {
       reset();
       setError("");
@@ -250,12 +268,23 @@ export default function ProjectsWorkspace() {
   };
   const choose = (id: string) =>
     leave(() => {
-      setDetail(undefined);
+      clearDetail();
       setMemberPage(1);
       setParams(id ? { project: id } : {});
     });
   const edit = (next: Mode) =>
     leave(() => {
+      if (
+        next === "create"
+          ? !canCreate
+          : !p ||
+            detailRead.loading ||
+            !!detailRead.error ||
+            !p.actions.includes(
+              next === "archive" || next === "restore" ? "delete" : "update",
+            )
+      )
+        return;
       snapshot.current = { revision: p?.revision || 0, title: p?.title || "" };
       setValues(fields(next === "update" ? p : undefined));
       setTechnology(next === "update" ? p?.tech_stack.join(", ") || "" : "");
@@ -264,11 +293,16 @@ export default function ProjectsWorkspace() {
       setRole("contributor");
       setMode(next);
     });
-  const changed = () => {
-    key.current = undefined;
-  };
-  async function mutate(document: unknown, id = selected) {
-    const identity = id + JSON.stringify(document);
+  async function mutate(
+    document: unknown,
+    controller: AbortController,
+    id = selected,
+  ) {
+    const identity =
+      id +
+      JSON.stringify(document, (key, value) =>
+        key === "currentPassword" ? undefined : value,
+      );
     if (keyDocument.current !== identity) {
       key.current = undefined;
       keyDocument.current = identity;
@@ -279,16 +313,30 @@ export default function ProjectsWorkspace() {
       body: document,
       protected: true,
       idempotencyKey: key.current,
+      signal: controller.signal,
     });
   }
   async function save(e: FormEvent) {
     e.preventDefault();
-    if (busy || stale || conflict || denied || !mode) return;
-    const runEpoch = epoch.current,
-      secret = password;
+    if (
+      stale ||
+      conflict ||
+      denied ||
+      !mode ||
+      readUnavailable ||
+      (mode === "create" && !scopeAllowed)
+    )
+      return;
+    if (
+      ["archive", "restore"].includes(mode) &&
+      (!password || confirmation !== snapshot.current?.title)
+    )
+      return;
+    const controller = beginOperation();
+    if (!controller) return;
+    const secret = password;
     setPassword("");
     setError("");
-    setBusy(true);
     try {
       const revision = snapshot.current!.revision;
       const record =
@@ -317,29 +365,42 @@ export default function ProjectsWorkspace() {
                 ? { currentPassword: secret, confirmation }
                 : {}),
             });
-      const r = await mutate(body, mode === "create" ? "" : selected);
-      if (runEpoch !== epoch.current) return;
-      reset();
-      setDetail(undefined);
-      setParams({ project: r.id });
+      const r = await mutate(
+        body,
+        controller,
+        mode === "create" ? "" : selected,
+      );
+      if (!current(controller)) return;
+      navigation.allow(() => {
+        reset();
+        clearDetail();
+        setParams({ project: r.id });
+      });
       setTick((v) => v + 1);
       setNotice("Private project changes saved. Nothing was published.");
     } catch (e) {
-      if (runEpoch === epoch.current) {
+      if (current(controller)) {
         if (e instanceof ApiFailure && e.status === 409) setConflict(true);
         setError(
           validationMessage(e, "Check the project fields and try again."),
         );
       }
     } finally {
-      if (runEpoch === epoch.current) setBusy(false);
+      finish(controller);
     }
   }
   async function remove(m: Member) {
-    if (!p || busy) return;
-    const runEpoch = epoch.current;
+    if (
+      !p ||
+      mode ||
+      !p.actions.includes("update") ||
+      readUnavailable ||
+      p.deleted_at
+    )
+      return;
+    const controller = beginOperation();
+    if (!controller) return;
     setError("");
-    setBusy(true);
     try {
       await mutate(
         projectMutation.parse({
@@ -347,21 +408,29 @@ export default function ProjectsWorkspace() {
           revision: p.revision,
           memberId: m.memberId,
         }),
+        controller,
       );
-      if (runEpoch !== epoch.current) return;
+      if (!current(controller)) return;
       key.current = undefined;
       setTick((v) => v + 1);
       setNotice("Participant removed; membership history is retained.");
     } catch (e) {
-      if (runEpoch === epoch.current)
+      if (current(controller))
         setError(
           validationMessage(e, "The participant change could not be saved."),
         );
     } finally {
-      if (runEpoch === epoch.current) setBusy(false);
+      finish(controller);
     }
   }
   const canCreate = !!cap && (cap.globalCreate || cap.teams.length > 0);
+  const scopeAllowed =
+    !!cap && (team ? cap.teams.some((t) => t.id === team) : cap.globalCreate);
+  const readUnavailable =
+    !isOnline ||
+    !!capRead.error ||
+    capRead.loading ||
+    (mode !== "create" && (detailRead.loading || !!detailRead.error));
   const input = (
     label: string,
     name: keyof Fields,
@@ -391,33 +460,74 @@ export default function ProjectsWorkspace() {
         </div>
         <div className="gt-actions">
           <Button
-            disabled={!canCreate || busy || !!mode}
+            disabled={
+              !canCreate ||
+              !isOnline ||
+              !!capRead.error ||
+              capRead.loading ||
+              busy ||
+              !!mode
+            }
             onClick={() => edit("create")}
           >
             New project
           </Button>
-          <Button variant="secondary" onClick={() => setTick((v) => v + 1)}>
+          <Button
+            variant="secondary"
+            disabled={busy || !isOnline}
+            onClick={() => setTick((v) => v + 1)}
+          >
             Refresh
           </Button>
         </div>
       </header>
-      {notice && <p role="status">{notice}</p>}
+      {notice && (
+        <p ref={noticeFocus} tabIndex={-1} role="status">
+          {notice}
+        </p>
+      )}
       {error && (
-        <p className="gt-inline-error" role="alert">
+        <p
+          ref={errorFocus}
+          tabIndex={-1}
+          className="gt-inline-error"
+          role="alert"
+        >
           {error}
         </p>
       )}
-      {loadError && (
-        <p className="gt-inline-error" role="alert">
-          {loadError}
+      {!isOnline && (
+        <p role="status" className="gt-data-note">
+          You are offline. Unsaved project fields stay only in this open tab;
+          nothing submits automatically on reconnect.
         </p>
       )}
+      {reads
+        .filter((read) => read.error)
+        .map((read) => (
+          <p key={read.name} role="alert" className="gt-inline-error">
+            {read.name}: {read.error}{" "}
+            <button
+              disabled={busy || !isOnline}
+              onClick={() => {
+                setTick((v) => v + 1);
+                document.getElementById("workspace-content")?.focus();
+              }}
+            >
+              Retry {read.name.toLowerCase()}
+            </button>
+          </p>
+        ))}
+      {reads
+        .filter((read) => read.data && (read.error || !isOnline))
+        .map((read) => (
+          <p key={read.name} role="status" className="gt-data-note">
+            {read.name} may be out of date. Last loaded{" "}
+            {read.at ? new Date(read.at).toLocaleString() : "earlier"}.
+          </p>
+        ))}
       {mode && (
-        <form
-          className="gt-panel gt-event-editor"
-          onSubmit={save}
-          onChange={changed}
-        >
+        <form className="gt-panel gt-event-editor" onSubmit={save}>
           <h2 ref={heading} tabIndex={-1}>
             {mode === "create"
               ? "New private project"
@@ -432,6 +542,12 @@ export default function ProjectsWorkspace() {
               {denied
                 ? "Your current access no longer permits this action."
                 : "This project changed. Your input is preserved. Close the editor and reload before saving."}
+            </p>
+          )}
+          {mode === "create" && !scopeAllowed && (
+            <p role="alert">
+              Project creation is unavailable in the selected scope. Your fields
+              are preserved.
             </p>
           )}
           <fieldset disabled={busy} className="gt-plain-fieldset">
@@ -664,7 +780,16 @@ export default function ProjectsWorkspace() {
           <div className="gt-actions">
             <Button
               type="submit"
-              disabled={busy || stale || conflict || denied}
+              disabled={
+                busy ||
+                stale ||
+                conflict ||
+                denied ||
+                readUnavailable ||
+                (mode === "create" && !scopeAllowed) ||
+                (["archive", "restore"].includes(mode) &&
+                  (!password || confirmation !== snapshot.current?.title))
+              }
             >
               Save changes
             </Button>
@@ -741,6 +866,39 @@ export default function ProjectsWorkspace() {
           Featured only
         </label>
       </section>
+      {(q ||
+        state !== "current" ||
+        status ||
+        category ||
+        featured ||
+        page > 1) && (
+        <Button
+          variant="ghost"
+          disabled={busy}
+          onClick={() => {
+            setQ("");
+            setState("current");
+            setStatus("");
+            setCategory("");
+            setFeatured(false);
+            setPage(1);
+            document.getElementById("workspace-content")?.focus();
+          }}
+        >
+          Reset project filters
+        </Button>
+      )}
+      {listRead.loading && !listing && (
+        <div role="status" aria-label="Loading private projects">
+          <div className="gt-skeleton gt-detail-skeleton" />
+          <span className="sr-only">Loading private projects…</span>
+        </div>
+      )}
+      {!listRead.loading && !listing && listRead.error && (
+        <p>
+          Project inventory is unavailable. Retry to check your current scope.
+        </p>
+      )}
       {listing && (
         <>
           <p role="status">
@@ -787,6 +945,7 @@ export default function ProjectsWorkspace() {
                     <td>
                       <Button
                         variant="secondary"
+                        aria-label={`Manage project ${x.title}`}
                         disabled={busy || selected === x.id}
                         onClick={() => choose(x.id)}
                       >
@@ -799,7 +958,7 @@ export default function ProjectsWorkspace() {
             </table>
           </div>
           {!listing.items.length && (
-            <EmptyState title="No matching projects">
+            <EmptyState headingLevel={2} title="No matching projects">
               Try another filter or create a private project.
             </EmptyState>
           )}
@@ -853,7 +1012,7 @@ export default function ProjectsWorkspace() {
                 {p.teamName || "Chapter"} · revision {p.revision} · private
               </p>
             </div>
-            <Button variant="ghost" onClick={() => choose("")}>
+            <Button variant="ghost" disabled={busy} onClick={() => choose("")}>
               Close project
             </Button>
           </div>
@@ -891,8 +1050,17 @@ export default function ProjectsWorkspace() {
             )}
             {!p.deleted_at && p.actions.includes("update") && (
               <>
-                <Button onClick={() => edit("update")}>Edit project</Button>
-                <Button variant="secondary" onClick={() => edit("member_save")}>
+                <Button
+                  disabled={busy || readUnavailable}
+                  onClick={() => edit("update")}
+                >
+                  Edit project
+                </Button>
+                <Button
+                  variant="secondary"
+                  disabled={busy || readUnavailable}
+                  onClick={() => edit("member_save")}
+                >
                   Add or update participant
                 </Button>
               </>
@@ -900,6 +1068,7 @@ export default function ProjectsWorkspace() {
             {p.actions.includes("delete") && (
               <Button
                 variant="secondary"
+                disabled={busy || readUnavailable}
                 onClick={() => edit(p.deleted_at ? "restore" : "archive")}
               >
                 {p.deleted_at ? "Restore project" : "Archive project"}
@@ -937,7 +1106,8 @@ export default function ProjectsWorkspace() {
                         p.actions.includes("update") && (
                           <Button
                             variant="secondary"
-                            disabled={busy}
+                            disabled={busy || readUnavailable}
+                            aria-label={`Remove ${m.name} from project`}
                             onClick={() => remove(m)}
                           >
                             Remove
@@ -957,7 +1127,7 @@ export default function ProjectsWorkspace() {
           <nav aria-label="Participant pages" className="gt-actions">
             <Button
               variant="secondary"
-              disabled={memberPage <= 1}
+              disabled={busy || detailRead.loading || memberPage <= 1}
               onClick={() => setMemberPage((v) => v - 1)}
             >
               Previous participants
@@ -967,7 +1137,11 @@ export default function ProjectsWorkspace() {
             </span>
             <Button
               variant="secondary"
-              disabled={memberPage * detail.pageSize >= detail.memberTotal}
+              disabled={
+                busy ||
+                detailRead.loading ||
+                memberPage * detail.pageSize >= detail.memberTotal
+              }
               onClick={() => setMemberPage((v) => v + 1)}
             >
               Next participants
@@ -975,6 +1149,20 @@ export default function ProjectsWorkspace() {
           </nav>
         </section>
       )}
+      {!mode &&
+        selected &&
+        !p &&
+        (detailRead.loading ? (
+          <div role="status" aria-label="Loading selected project">
+            <div className="gt-skeleton gt-detail-skeleton" />
+            <span className="sr-only">Loading selected project…</span>
+          </div>
+        ) : (
+          <p>
+            Selected project is unavailable. Retry its details or choose another
+            project.
+          </p>
+        ))}
     </section>
   );
 }

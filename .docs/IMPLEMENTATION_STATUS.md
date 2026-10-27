@@ -8,6 +8,21 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Private project reads, editor and participant recovery — 2026-10-27
+
+- Independent permissions/inventory/detail recovery, session isolation, scoped
+  cancellation and synchronous write guards now protect project operations.
+  Same-revision project navigation clears the former editor; remote updates keep
+  input and block stale saves. Retry identity, password handling, current grants,
+  confirmation, offline recovery and semantic feedback are covered.
+- Eighteen DOM cases include three axe audits. All 1,045 tests/134 files pass;
+  global coverage remains below 70% at 52.72% lines/50.72% branches. All 17 critical
+  branch gates pass; types/lint (0 errors/25 warnings), build/budgets/secrets pass.
+- Twenty-eight actual API checks pass with fixture cleanup completed. Browser
+  confirms conflict preservation, bounded 375 px layout, deliberate draft discard
+  and sign-out; screenshot retained. Tab closed, viewport reset, ledger removed.
+  Catalog: 131 unverified cases. See `PROJECT_RECOVERY.md`; full PRD remains open.
+
 ### Media inventory, private operations and publication recovery — 2026-10-27
 
 - Media/gallery account/session state remounts; folder/bulk/metadata/publication/

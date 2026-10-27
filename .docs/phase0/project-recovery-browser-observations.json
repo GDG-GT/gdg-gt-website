@@ -1,0 +1,17 @@
+{
+  "note": "Partial loopback browser check using fictional accounts/team/project. No browser project save/archive/participant mutation or external link opened. Full device/screen-reader/visual acceptance remains open.",
+  "cleanup": { "draftDiscarded": true, "signedOut": true, "tabClosed": true, "viewportReset": true },
+  "screenshot": "ui-review/project-conflict-recovery.png",
+  "conflict": {
+    "draft": "Fictional unsaved project title",
+    "saveDisabled": true
+  },
+  "mobile": {
+    "width": 375,
+    "documentWidth": 375,
+    "titleLeft": 37,
+    "titleRight": 338,
+    "titleHeight": 46.796875,
+    "tableWidth": 339
+  }
+}

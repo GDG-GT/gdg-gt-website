@@ -1162,6 +1162,17 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 
+add(
+  "CONTENT-TEST-017",
+  "PROJ-001 PROJ-002 PROJ-003",
+  "Private project independent read recovery, navigation/account/session isolation, scoped creation, stale permissions/revisions, stable retries and retained participant operations",
+  ["tests/client/project-recovery.test.tsx", local("projects")],
+  [
+    "Browser interruption, supported-device/screen-reader and hosted project acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",
