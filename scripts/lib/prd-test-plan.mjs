@@ -1108,6 +1108,17 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 
+add(
+  "COMM-TEST-017",
+  "COMM-001 COMM-005",
+  "Announcement independent read recovery, private context fences, draft conflicts, stable retries and exact audience preview expiry/confirmation lifecycle",
+  ["tests/client/announcement-recovery.test.tsx", local("announcements")],
+  [
+    "Supported-browser outage/reconnect, assistive-technology and hosted publication acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "27.1", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

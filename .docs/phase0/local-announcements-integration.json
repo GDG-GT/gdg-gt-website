@@ -1,5 +1,8 @@
 {
-  "note": "Actual local protected API, audience, state, secret-authenticated job, worker and Mailpit checks with fictional accounts. No external email, quota/scheduler resets, or permanent deletion. Browser fixture identity only is printed. Fixtures recoverably archived and notices marked read.",
+  "note": "Actual loopback protected API, audience, state, authenticated job, worker, realtime and Mailpit checks with isolated fictional accounts. No external email, quota/scheduler reset or permanent deletion.",
+  "cleanup": {
+    "completed": true
+  },
   "tests": [
     {
       "name": "anonymous chapter announcement reads are denied",
@@ -115,6 +118,10 @@
     },
     {
       "name": "in-app-only announcements finish without contacting an email provider",
+      "passed": true
+    },
+    {
+      "name": "independent-session browser-review draft update committed",
       "passed": true
     }
   ]

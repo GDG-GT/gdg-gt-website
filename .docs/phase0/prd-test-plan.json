@@ -2242,6 +2242,29 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "COMM-TEST-017",
+      "requirements": [
+        "COMM-001",
+        "COMM-005"
+      ],
+      "scope": "Announcement independent read recovery, private context fences, draft conflicts, stable retries and exact audience preview expiry/confirmation lifecycle",
+      "automated": [
+        "tests/client/announcement-recovery.test.tsx",
+        "scripts/test-local-announcements.mjs"
+      ],
+      "remaining": [
+        "Supported-browser outage/reconnect, assistive-technology and hosted publication acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "27.1",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

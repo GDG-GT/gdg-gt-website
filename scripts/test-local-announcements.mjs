@@ -1,17 +1,41 @@
 import { randomUUID } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { writeFile, unlink } from "node:fs/promises";
 import { createInterface } from "node:readline";
 import { localHttp } from "./lib/local-http.mjs";
 import { hashSecret } from "../server/lib/security.mjs";
 import { runDelivery } from "../server/delivery.mjs";
 import { createClient } from "@supabase/supabase-js";
-const root = await localHttp(),
-  { db, env, credentials } = root,
+if (process.env.GDG_LOCAL_TEST_SHARED_SESSION === "true")
+  throw Error("Requires isolated fictional sessions.");
+let root = await localHttp();
+const { db, env, credentials } = root,
   evidence = [],
   fixtures = [],
   records = [],
   sockets = [],
   base = "/admin/communications/announcements";
+const ledger = new URL(
+  "../.docs/local-announcement-review.local",
+  import.meta.url,
+);
+let ledgerOwned = false;
+async function recordEvidence(cleanedUp) {
+  await writeFile(
+    new URL(
+      "../.docs/phase0/local-announcements-integration.json",
+      import.meta.url,
+    ),
+    JSON.stringify(
+      {
+        note: "Actual loopback protected API, audience, state, authenticated job, worker, realtime and Mailpit checks with isolated fictional accounts. No external email, quota/scheduler reset or permanent deletion.",
+        cleanup: { completed: cleanedUp },
+        tests: evidence,
+      },
+      null,
+      2,
+    ) + "\n",
+  );
+}
 if (process.argv.includes("--hold-for-browser") && !process.stdin.isTTY)
   throw new Error("Browser review requires an interactive terminal.");
 const occurrence = Math.floor(Date.now() / 300000),
@@ -166,7 +190,7 @@ async function notificationSocket(client) {
   };
 }
 try {
-  await root.login();
+  root = await account("super_admin", "Fictional announcement review officer");
   const a = await account("admin", "Fictional announcement publisher"),
     b = await account("blog_editor", "Fictional announcement reader"),
     c = await account("team_member", "Fictional unrelated announcement reader");
@@ -177,7 +201,7 @@ try {
   );
   const draft = await create(
       a,
-      record([b.email, credentials.email], { emailEnabled: true }),
+      record([b.email, root.email], { emailEnabled: true }),
     ),
     id = draft.id;
   check(
@@ -223,7 +247,7 @@ try {
     revision: draft.revision,
     previewId: p.id,
     confirmation: draft.title,
-    currentPassword: credentials.password,
+    currentPassword: root.password,
   });
   check(
     borrowed.status === 409 && borrowed.json.error.code === "PREVIEW_REQUIRED",
@@ -447,7 +471,7 @@ try {
   );
   const browser = await create(
       a,
-      record([credentials.email], {
+      record([root.email], {
         title: "Fictional chapter announcement workflow",
         message:
           "This fictional announcement verifies local reading, draft editing, audience preview, and responsive layout. No real chapter correspondence is involved.",
@@ -456,9 +480,25 @@ try {
     bp = await preview(a, browser);
   data(await confirm(a, browser, bp));
   if (process.argv.includes("--hold-for-browser")) {
-    console.info("BROWSER_ANNOUNCEMENT " + browser.id);
+    const draftReview = await create(
+      a,
+      record([b.email], { title: "Fictional announcement draft review" }),
+    );
+    await writeFile(
+      ledger,
+      JSON.stringify({
+        email: a.email,
+        password: a.password,
+        announcementId: draftReview.id,
+        title: draftReview.title,
+      }),
+      { mode: 0o600, flag: "wx" },
+    );
+    ledgerOwned = true;
+    await recordEvidence(false);
+    console.info("Fictional draft ready for browser review.");
     console.info(
-      "Type change to pin remotely, or done to recoverably archive fictional records.",
+      "Type change to edit the fictional draft remotely, or done to recoverably archive fictional records.",
     );
     const rl = createInterface({
       input: process.stdin,
@@ -470,15 +510,27 @@ try {
         break;
       }
       if (line.trim() === "change") {
-        const n = data(await a.call(base + "/" + browser.id)).record;
+        const n = data(await a.call(base + "/" + draftReview.id)).record;
         data(
           await post(a, base + "/" + n.id, {
-            action: "pin",
+            action: "update",
             revision: n.revision,
-            pinned: !n.pinned,
+            record: {
+              title: n.title,
+              message: n.message + "\nFictional remote announcement update.",
+              audience: n.audience,
+              priority: n.priority,
+              pinned: n.pinned,
+              scheduledFor: n.scheduledFor,
+              expiresAt: n.expiresAt,
+              emailEnabled: n.emailEnabled,
+            },
           }),
         );
-        check(true, "independent-session browser-review pin change delivered");
+        check(
+          true,
+          "independent-session browser-review draft update committed",
+        );
       }
     }
   }
@@ -529,18 +581,7 @@ try {
       .is("revoked_at", null);
   }
   await root.logout();
+  if (ledgerOwned) await unlink(ledger);
+  if (process.stdin.isTTY) process.stdin.pause();
 }
-await writeFile(
-  new URL(
-    "../.docs/phase0/local-announcements-integration.json",
-    import.meta.url,
-  ),
-  JSON.stringify(
-    {
-      note: "Actual local protected API, audience, state, secret-authenticated job, worker and Mailpit checks with fictional accounts. No external email, quota/scheduler resets, or permanent deletion. Browser fixture identity only is printed. Fixtures recoverably archived and notices marked read.",
-      tests: evidence,
-    },
-    null,
-    2,
-  ) + "\n",
-);
+await recordEvidence(true);

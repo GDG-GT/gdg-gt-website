@@ -562,7 +562,8 @@
         "COMM-TEST-004",
         "COMM-TEST-020",
         "COMM-TEST-019",
-        "COMM-TEST-018"
+        "COMM-TEST-018",
+        "COMM-TEST-017"
       ],
       "evidence": []
     },
@@ -604,7 +605,8 @@
       "line": 417,
       "status": "unverified",
       "testIds": [
-        "COMM-TEST-003"
+        "COMM-TEST-003",
+        "COMM-TEST-017"
       ],
       "evidence": []
     },

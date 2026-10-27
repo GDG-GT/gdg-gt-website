@@ -1,0 +1,104 @@
+{
+  "note": "Partial local browser verification with isolated fictional fixtures; no browser publish, schedule or draft save. Not a visual/device/screen-reader acceptance.",
+  "conflict": {
+    "conflict": true,
+    "draft": "Fictional unsaved announcement draft",
+    "saveDisabled": true
+  },
+  "mobile": {
+    "conflict": true,
+    "controls": [
+      {
+        "height": 44,
+        "left": 18,
+        "right": 196.3984375,
+        "type": "submit"
+      },
+      {
+        "height": 46.796875,
+        "labelHeight": 74.875,
+        "left": 36,
+        "right": 339,
+        "type": "text"
+      },
+      {
+        "height": 195.578125,
+        "labelHeight": 264.953125,
+        "left": 36,
+        "right": 339,
+        "type": "textarea"
+      },
+      {
+        "height": 44,
+        "labelHeight": 72.078125,
+        "left": 36,
+        "right": 339,
+        "type": "select-one"
+      },
+      {
+        "height": 44,
+        "labelHeight": 72.078125,
+        "left": 36,
+        "right": 339,
+        "type": "select-one"
+      },
+      {
+        "height": 121.1875,
+        "labelHeight": 207.7109375,
+        "left": 36,
+        "right": 339,
+        "type": "textarea"
+      },
+      {
+        "height": 48.796875,
+        "labelHeight": 118.171875,
+        "left": 36,
+        "right": 339,
+        "type": "datetime-local"
+      },
+      {
+        "height": 48.796875,
+        "labelHeight": 101.0234375,
+        "left": 36,
+        "right": 339,
+        "type": "datetime-local"
+      },
+      {
+        "height": 18,
+        "labelHeight": 44,
+        "left": 36,
+        "right": 54,
+        "type": "checkbox"
+      },
+      {
+        "height": 18,
+        "labelHeight": 44,
+        "left": 36,
+        "right": 54,
+        "type": "checkbox"
+      },
+      {
+        "height": 44,
+        "left": 36,
+        "right": 147.109375,
+        "type": "submit"
+      },
+      {
+        "height": 44,
+        "left": 157.109375,
+        "right": 246.40625,
+        "type": "button"
+      }
+    ],
+    "documentWidth": 375,
+    "width": 375
+  },
+  "cleanup": {
+    "draftDiscarded": true,
+    "signedOut": true,
+    "reviewTabClosed": true,
+    "viewportReset": true
+  },
+  "previewLimitation": "Audience-preview activation timed out in browser controls; not counted as browser preview acceptance. DOM interaction suite separately covers confirmation behavior.",
+  "screenshot": ".docs/ui-review/announcement-conflict-recovery.png"
+}

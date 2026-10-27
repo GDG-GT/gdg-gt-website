@@ -8,6 +8,23 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Announcement draft/publication recovery — 2026-10-27
+
+- Officer/session/selection-bound request guards cancel private work and suppress
+  duplicate writes. Preview expiry/exact-title checks run at submit time, passwords
+  clear at request start, unchanged retries keep their key and fresh grants/revisions
+  block stale edits. Independent read errors, skeletons, retained timestamps,
+  filter reset, semantic focus and offline draft behavior improved.
+- Twenty new DOM cases include three axe audits. All 958 tests/130 files pass;
+  types pass, lint is 0 errors/25 warnings. Coverage remains below 70% at 45.62%
+  lines/43.39% branches; all 17 critical branch gates pass.
+- Thirty actual loopback HTTP/WebSocket/scheduler/worker/Mailpit checks pass with
+  cleanup completed. Browser verifies revision conflict, preserved input and bounded
+  375 px controls; screenshot retained. Browser preview activation timed out and is
+  not counted as acceptance. Owned fixture cleanup, sign-out/tab closure, viewport
+  reset and ledger removal completed. Catalog: 127 unverified cases. See
+  `ANNOUNCEMENT_RECOVERY.md`; the full PRD remains open.
+
 ### Task interaction and comment-history recovery — 2026-10-27
 
 - Account/session/task-bound pending guards abort/fence late writes, freeze fields
