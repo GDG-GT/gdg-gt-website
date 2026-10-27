@@ -8,6 +8,22 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Site availability recovery and hidden-entry disclosure removal — 2026-10-27
+
+- Keyed private reads retain timestamped snapshots and drafts on temporary failure;
+  denied access clears state. Synchronous pending guards/cancellation, exact mode,
+  current grants/revisions and stable password-free retry identity protect writes.
+  Offline drafts stay unsent; editor/error/receipt focus is covered.
+- Seventeen interaction cases include two axe audits. All 1,120 tests/138 files
+  pass; coverage remains below 70% at 56.61% lines/54.79% branches. All 17 critical
+  branch gates pass; types/lint (0 errors/25 warnings), build/budgets/secrets pass.
+- Twenty-one actual checks pass; exact original local availability restored,
+  fixtures archived/sessions revoked/ledger removed. Browser confirms no public
+  entry instructions and bounded 375 px maintenance layout. Private browser input
+  and screenshot timed out; those acceptances are not claimed. Public hints removed
+  from all four identified surfaces. Catalog: 134 unverified logical cases.
+  See `SITE_STATUS_RECOVERY.md`; full PRD remains open.
+
 ### Newsletter reads, draft conflicts and delivery-review recovery — 2026-10-27
 
 - Independent scoped reads, account/session isolation and cancelled private work

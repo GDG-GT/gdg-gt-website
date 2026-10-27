@@ -2412,6 +2412,29 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "CONTENT-TEST-005",
+      "requirements": [
+        "STATUS-001",
+        "STATUS-002",
+        "STATUS-003"
+      ],
+      "scope": "Site availability stale-snapshot/read recovery, preserved conflict drafts, exact mode validation, unchanged confirmation retry keys, account/session isolation, pending cancellation and offline safeguards",
+      "automated": [
+        "tests/client/site-status-recovery.test.tsx",
+        "scripts/test-local-site-status.mjs"
+      ],
+      "remaining": [
+        "Full supported-device/screen-reader, browser interruption and hosted availability/redirect acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

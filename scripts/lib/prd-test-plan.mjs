@@ -1191,6 +1191,15 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 
+add(
+  "CONTENT-TEST-005",
+  "STATUS-001 STATUS-002 STATUS-003",
+  "Site availability stale-snapshot/read recovery, preserved conflict drafts, exact mode validation, unchanged confirmation retry keys, account/session isolation, pending cancellation and offline safeguards",
+  ["tests/client/site-status-recovery.test.tsx", local("site-status")],
+  ["Full supported-device/screen-reader, browser interruption and hosted availability/redirect acceptance"],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

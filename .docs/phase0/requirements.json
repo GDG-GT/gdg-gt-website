@@ -1340,7 +1340,8 @@
       "line": 581,
       "status": "unverified",
       "testIds": [
-        "CONTENT-TEST-009"
+        "CONTENT-TEST-009",
+        "CONTENT-TEST-005"
       ],
       "evidence": []
     },
@@ -1350,7 +1351,8 @@
       "line": 583,
       "status": "unverified",
       "testIds": [
-        "CONTENT-TEST-009"
+        "CONTENT-TEST-009",
+        "CONTENT-TEST-005"
       ],
       "evidence": []
     },
@@ -1360,7 +1362,8 @@
       "line": 585,
       "status": "unverified",
       "testIds": [
-        "CONTENT-TEST-009"
+        "CONTENT-TEST-009",
+        "CONTENT-TEST-005"
       ],
       "evidence": []
     },

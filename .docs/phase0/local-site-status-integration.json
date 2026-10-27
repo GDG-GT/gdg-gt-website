@@ -1,5 +1,8 @@
 {
   "note": "Actual dedicated loopback HTTP checks with fictional operators/team/Linktree. Public maintenance was temporarily enabled and the exact original configuration restored with revision fencing. No external destination or provider was loaded and no email was sent. Fixture accounts/team/profile recoverably archived. Rate limits and jobs were not reset.",
+  "cleanup": {
+    "completed": true
+  },
   "tests": [
     {
       "name": "anonymous access to operator configuration denied",

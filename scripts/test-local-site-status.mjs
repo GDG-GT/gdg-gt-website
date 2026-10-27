@@ -1,8 +1,10 @@
 import { randomUUID } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { writeFile, unlink } from "node:fs/promises";
 import { createInterface } from "node:readline";
 import { localHttp } from "./lib/local-http.mjs";
 import { hashSecret } from "../server/lib/security.mjs";
+if (process.env.GDG_LOCAL_TEST_SHARED_SESSION === "true")
+  throw Error("Requires isolated fictional sessions.");
 const root = await localHttp(),
   db = root.db,
   accounts = [],
@@ -16,6 +18,28 @@ let admin,
   original,
   lastRevision,
   changed = false;
+const ledger = new URL(
+  "../.docs/local-site-status-review.local",
+  import.meta.url,
+);
+let ledgerOwned = false;
+async function writeEvidence(cleanedUp) {
+  await writeFile(
+    new URL(
+      "../.docs/phase0/local-site-status-integration.json",
+      import.meta.url,
+    ),
+    JSON.stringify(
+      {
+        note: "Actual dedicated loopback HTTP checks with fictional operators/team/Linktree. Public maintenance was temporarily enabled and the exact original configuration restored with revision fencing. No external destination or provider was loaded and no email was sent. Fixture accounts/team/profile recoverably archived. Rate limits and jobs were not reset.",
+        cleanup: { completed: cleanedUp },
+        tests: evidence,
+      },
+      null,
+      2,
+    ) + "\n",
+  );
+}
 const path = "/admin/site-status",
   username = "fictional-status-" + randomUUID().slice(0, 8),
   message =
@@ -57,16 +81,14 @@ async function actor(role) {
     id = randomUUID(),
     email = `fictional-status-${id}@example.test`,
     password = "Fictional-status-" + randomUUID();
-  const r = await db
-    .from("admin_users")
-    .insert({
-      id,
-      email,
-      password_hash: await hashSecret(password),
-      role,
-      is_active: true,
-      display_name: "Fictional status " + role,
-    });
+  const r = await db.from("admin_users").insert({
+    id,
+    email,
+    password_hash: await hashSecret(password),
+    role,
+    is_active: true,
+    display_name: "Fictional status " + role,
+  });
   if (r.error) throw Error("Status account fixture failed");
   accounts.push(id);
   data(
@@ -78,7 +100,7 @@ async function actor(role) {
   data(
     await h.call("/auth/login", { method: "POST", body: { email, password } }),
   );
-  return { ...h, id, password };
+  return { ...h, id, email, password };
 }
 const body = (r, revision = lastRevision) => ({
   revision,
@@ -110,33 +132,27 @@ try {
   );
   teamId = randomUUID();
   for (const r of [
-    await db
-      .from("admin_teams")
-      .insert({
-        id: teamId,
-        name: "Fictional availability operators",
-        slug: "fictional-status-" + teamId,
-        created_by: admin.id,
-      }),
+    await db.from("admin_teams").insert({
+      id: teamId,
+      name: "Fictional availability operators",
+      slug: "fictional-status-" + teamId,
+      created_by: admin.id,
+    }),
     await db
       .from("team_memberships")
       .insert({ team_id: teamId, admin_user_id: member.id, role: "member" }),
-    await db
-      .from("team_page_access")
-      .insert({
-        team_id: teamId,
-        page_path: "/admin/site-status",
-        can_access: true,
-      }),
-    await db
-      .from("team_permissions")
-      .insert({
-        team_id: teamId,
-        resource_type: "site_status",
-        permission: "crud",
-        can_read: true,
-        can_update: false,
-      }),
+    await db.from("team_page_access").insert({
+      team_id: teamId,
+      page_path: "/admin/site-status",
+      can_access: true,
+    }),
+    await db.from("team_permissions").insert({
+      team_id: teamId,
+      resource_type: "site_status",
+      permission: "crud",
+      can_read: true,
+      can_update: false,
+    }),
   ])
     if (r.error) throw Error("Status scope fixtures unavailable");
   check(
@@ -282,6 +298,22 @@ try {
     );
   }
   if (process.argv.includes("--hold-for-browser")) {
+    await writeFile(
+      ledger,
+      JSON.stringify({
+        email: admin.email,
+        password: admin.password,
+        accounts,
+        teamId,
+        profileId,
+        original,
+        lastRevision,
+        message,
+      }),
+      { mode: 0o600, flag: "wx" },
+    );
+    ledgerOwned = true;
+    await writeEvidence(false);
     console.info("BROWSER_ADMIN http://127.0.0.1:8080/admin/site-status");
     console.info("BROWSER_PUBLIC http://127.0.0.1:8080/events");
     console.info(
@@ -298,6 +330,30 @@ try {
       }
       if (line.trim() === "auto") await automatic();
       if (line.trim() === "hide") await hide();
+      if (line.trim() === "change") {
+        await change({
+          ...record,
+          button_text: "Fictional revised update link",
+        });
+        check(
+          true,
+          "independent availability revision delivered during browser review",
+        );
+      }
+      await writeFile(
+        ledger,
+        JSON.stringify({
+          email: admin.email,
+          password: admin.password,
+          accounts,
+          teamId,
+          profileId,
+          original,
+          lastRevision,
+          message,
+        }),
+        { mode: 0o600 },
+      );
     }
   }
   if (
@@ -383,18 +439,7 @@ try {
     if (a.error || s.error)
       throw Error("Status account fixture archive failed");
   }
+  if (ledgerOwned) await unlink(ledger);
+  if (process.stdin.isTTY) process.stdin.pause();
 }
-await writeFile(
-  new URL(
-    "../.docs/phase0/local-site-status-integration.json",
-    import.meta.url,
-  ),
-  JSON.stringify(
-    {
-      note: "Actual dedicated loopback HTTP checks with fictional operators/team/Linktree. Public maintenance was temporarily enabled and the exact original configuration restored with revision fencing. No external destination or provider was loaded and no email was sent. Fixture accounts/team/profile recoverably archived. Rate limits and jobs were not reset.",
-      tests: evidence,
-    },
-    null,
-    2,
-  ) + "\n",
-);
+await writeEvidence(true);
