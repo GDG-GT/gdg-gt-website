@@ -5,6 +5,23 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Linktree independent reads and mutation recovery — 2026-10-26
+
+- Capability/inventory/detail/analytics loading and errors are independent, with
+  skeletons, explicit retry, matching timestamped stale snapshots and immediate
+  filter/profile/period isolation. Denials erase/abort private snapshots across
+  views; account/session changes clear drafts and fence late results.
+- Writes freeze synchronously, abort/fence on unmount, focus committed feedback
+  and check create scope/live confirmation. Offline drafts require explicit
+  refresh after reconnect; no autosubmit. Filtered empty/reset behavior fixed.
+- Seventeen added DOM cases include three axe structural audits. All 869 tests/
+  125 files pass; types pass; lint 0 errors/25 warnings. Coverage remains below
+  70% at 38.18% lines/36.65% branches; all 17 critical branch gates pass.
+- Thirty-seven actual local HTTP checks, live revision-conflict/input preservation
+  and bounded 375 px editor verified. Owned fixtures archived; private ledger
+  removed, browser signed out/tab closed and viewport reset. Catalog: 122
+  unverified logical cases. See `LINKTREE_READ_RECOVERY.md`; full PRD is open.
+
 ### Forms view-only definition and scoped creation — 2026-10-26
 
 - View-only collaborators can open the definition route; editing/dragging remains

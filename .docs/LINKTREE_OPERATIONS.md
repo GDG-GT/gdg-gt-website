@@ -59,6 +59,10 @@ There is no Linktree Realtime table publication or browser database grant.
 
 ## Verification
 
+The later read/mutation recovery pass is documented in `LINKTREE_READ_RECOVERY.md`.
+Interactive fixtures use an ignored mode-0600 `local-linktree-review.local` ledger,
+removed on completion; credentials are never printed by the test script.
+
 `npm test`, `npm run typecheck`, `npm run lint:ui`, `npm run build`, and the full
 canonical SQL suite cover validation, authorization, transitions and regressions.
 `npm run test:local-linktree` runs actual loopback HTTP checks with fictional

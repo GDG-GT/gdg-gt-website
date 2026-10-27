@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-26",
+  "note": "Actual local Chrome fictional scoped fixture. Filter/reset, editor heading focus, independent HTTP-session revision update and explicit refresh observed; no browser save/publication or external iframe loaded.",
+  "filterResetWorked": true,
+  "editorHeadingFocused": true,
+  "revisionChangePreservedDraft": true,
+  "saveDisabledAfterRevisionChange": true,
+  "mobile": {
+    "allEditorControlsBounded": true,
+    "documentWidth": 375,
+    "draftPreserved": true,
+    "iframeCount": 0,
+    "staleSaveDisabled": true,
+    "width": 375
+  },
+  "screenshot": "ui-review/linktree-conflict-recovery.png",
+  "acceptance": "unverified"
+}

@@ -1041,6 +1041,17 @@ add(
 );
 prdTestCases.at(-1).normative = ["22.11", "26.1", "31.2"];
 
+add(
+  "CONTENT-TEST-020",
+  "LINK-001 LINK-002 LINK-003 LINK-004",
+  "Independent Linktree permission/inventory/detail/analytics read recovery, stale snapshots, private context isolation, offline drafts and confirmed mutation lifecycle",
+  ["tests/client/linktree-workspace-recovery.test.tsx", local("linktree")],
+  [
+    "Real browser outage/role-change/assistive-technology acceptance, visual baselines and approved external-provider checks",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

@@ -6,6 +6,9 @@ import {
 } from "@/hooks/useDraftGuard";
 import { api, ApiFailure } from "@/lib/api";
 import { validationMessage } from "@/lib/validationMessage";
+import { useAdmin } from "@/contexts/AdminContext";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { useLinktreeRead } from "./useLinktreeRead";
 import {
   linktreeCreate,
   linktreeMutation,
@@ -34,13 +37,73 @@ type Pending = {
 };
 const base = "/admin/linktree/profiles";
 export default function LinktreeWorkspace() {
+  const { currentAdmin } = useAdmin();
+  const [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((value) => value + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  return (
+    <LinktreeWorkspaceContent
+      key={`${currentAdmin?.id}:${currentAdmin?.role}:${epoch}`}
+    />
+  );
+}
+function ReadState({
+  name,
+  read,
+  retry,
+  online,
+}: {
+  name: string;
+  read: { loading: boolean; error: string; at?: string; data?: unknown };
+  retry: () => void;
+  online: boolean;
+}) {
+  return (
+    <>
+      {read.loading && (
+        <div
+          role="status"
+          aria-label={`Loading ${name}`}
+          className="gt-read-state"
+        >
+          <span>{read.data ? `Refreshing ${name}…` : `Loading ${name}…`}</span>
+          {!read.data && <div className="gt-skeleton gt-loading-heading" />}
+        </div>
+      )}
+      {read.error && (
+        <p className="gt-form-error" role="alert">
+          {name}: {read.error}{" "}
+          <Button
+            variant="ghost"
+            disabled={read.loading || !online}
+            onClick={retry}
+          >
+            Retry {name}
+          </Button>
+        </p>
+      )}
+      {read.data && (read.error || !online) && (
+        <p role="status" className="gt-data-note">
+          {name} may be out of date. Last loaded{" "}
+          {read.at ? new Date(read.at).toLocaleString() : "earlier"}. Refresh
+          after reconnecting before making changes.
+        </p>
+      )}
+    </>
+  );
+}
+function LinktreeWorkspaceContent() {
+  const { isOnline } = useOnlineStatus();
+  const [needsRefresh, setNeedsRefresh] = useState(!isOnline);
+  useEffect(() => {
+    if (!isOnline) setNeedsRefresh(true);
+  }, [isOnline]);
   const [params, setParams] = useApprovedSearchParams(),
     selected = params.get("profile") || "";
   const navigation = useNavigationSafety();
-  const [list, setList] = useState<Listing>(),
-    [detail, setDetail] = useState<Detail>(),
-    [cap, setCap] = useState<Capabilities>(),
-    [analytics, setAnalytics] = useState<Analytics>();
   const [q, setQ] = useState(""),
     [state, setState] = useState("current"),
     [page, setPage] = useState(1),
@@ -58,9 +121,7 @@ export default function LinktreeWorkspace() {
     [confirmation, setConfirmation] = useState(""),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
-    [loadError, setLoadError] = useState(""),
     [notice, setNotice] = useState(""),
-    [loading, setLoading] = useState(true),
     [conflict, setConflict] = useState(false);
   const snapshot = useRef<{
       revision: number;
@@ -69,9 +130,10 @@ export default function LinktreeWorkspace() {
     }>(),
     mutationKey = useRef<string>(),
     heading = useRef<HTMLHeadingElement>(null),
-    selectedRef = useRef(selected),
-    mounted = useRef(true);
-  selectedRef.current = selected;
+    mounted = useRef(true),
+    operation = useRef<AbortController>(),
+    busyRef = useRef(false),
+    feedback = useRef<HTMLParagraphElement>(null);
   useDraftGuard(!!mode || !!pending || !!password, {
     busy,
     label: "Linktree profile, link or publication changes",
@@ -80,113 +142,95 @@ export default function LinktreeWorkspace() {
     mounted.current = true;
     return () => {
       mounted.current = false;
+      operation.current?.abort();
     };
   }, []);
-  useEffect(() => {
-    const c = new AbortController();
-    api<Capabilities>("/admin/linktree/capabilities", { signal: c.signal })
-      .then((r) => {
-        if (!c.signal.aborted) setCap(r);
-      })
-      .catch((e) => {
-        if (!c.signal.aborted) {
-          setLoadError(e.message);
-          setCap(undefined);
-        }
-      });
-    return () => c.abort();
-  }, [tick]);
-  useEffect(() => {
-    const c = new AbortController();
-    setLoading(true);
-    api<Listing>(
+  const capabilities = useLinktreeRead<Capabilities>(
+      "/admin/linktree/capabilities",
+      tick,
+    ),
+    inventory = useLinktreeRead<Listing>(
       `${base}?${new URLSearchParams({ q, state, page: String(page) })}`,
-      { signal: c.signal },
-    )
-      .then((r) => {
-        if (!c.signal.aborted) {
-          setList(r);
-          setLoadError("");
-        }
-      })
-      .catch((e) => {
-        if (!c.signal.aborted) {
-          setLoadError(e.message);
-          if (e instanceof ApiFailure && [401, 403].includes(e.status)) {
-            setList(undefined);
-            setDetail(undefined);
-            setAnalytics(undefined);
-            setCap(undefined);
-            setMode(null);
-            setPending(undefined);
-          }
-        }
-      })
-      .finally(() => {
-        if (!c.signal.aborted) setLoading(false);
-      });
-    return () => c.abort();
-  }, [q, state, page, tick]);
-  useEffect(() => {
-    if (!selected) {
-      setDetail(undefined);
-      setAnalytics(undefined);
-      return;
-    }
-    const c = new AbortController();
-    api<Detail>(
-      `${base}/${selected}?page=${linkPage}&state=${trash ? "trash" : "current"}`,
-      { signal: c.signal },
-    )
-      .then((r) => {
-        if (!c.signal.aborted && selectedRef.current === selected) setDetail(r);
-      })
-      .catch((e) => {
-        if (!c.signal.aborted && selectedRef.current === selected) {
-          setLoadError(e.message);
-          if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
-            setDetail(undefined);
-            setAnalytics(undefined);
-            setMode(null);
-            setPending(undefined);
-          }
-        }
-      });
-    api<Analytics>(
-      `/admin/linktree/analytics?profileId=${selected}&days=${days}`,
-      { signal: c.signal },
-    )
-      .then((r) => {
-        if (!c.signal.aborted && selectedRef.current === selected)
-          setAnalytics(r);
-      })
-      .catch(() => {
-        if (!c.signal.aborted) setAnalytics(undefined);
-      });
-    return () => c.abort();
-  }, [selected, linkPage, trash, days, tick]);
+      tick,
+    ),
+    definition = useLinktreeRead<Detail>(
+      selected
+        ? `${base}/${selected}?page=${linkPage}&state=${trash ? "trash" : "current"}`
+        : undefined,
+      tick,
+    ),
+    report = useLinktreeRead<Analytics>(
+      selected
+        ? `/admin/linktree/analytics?profileId=${selected}&days=${days}`
+        : undefined,
+      tick,
+    ),
+    blocked = capabilities.denied || inventory.denied,
+    cap = blocked ? undefined : capabilities.data,
+    list = blocked ? undefined : inventory.data,
+    detail = blocked ? undefined : definition.data,
+    analytics = blocked ? undefined : report.data,
+    canCreateInScope =
+      !!cap &&
+      !capabilities.loading &&
+      !capabilities.error &&
+      (team ? cap.teams.some((value) => value.id === team) : cap.globalCreate),
+    canChange =
+      isOnline &&
+      !needsRefresh &&
+      !!detail &&
+      !definition.error &&
+      !definition.loading;
+  const retry = () => {
+    if (!isOnline || busyRef.current) return;
+    setNeedsRefresh(false);
+    setTick((value) => value + 1);
+    document.getElementById("workspace-content")?.focus();
+  };
   useEffect(() => {
     const id = setInterval(() => {
-      if (!document.hidden) setTick((v) => v + 1);
+      if (!document.hidden && !busyRef.current && navigator.onLine)
+        setTick((v) => v + 1);
     }, 30000);
-    const clear = () => {
-      setList(undefined);
-      setDetail(undefined);
-      setAnalytics(undefined);
-      setCap(undefined);
-      setMode(null);
-      setPending(undefined);
-      setPassword("");
-    };
-    window.addEventListener("gdg:session-cleared", clear);
     return () => {
       clearInterval(id);
-      window.removeEventListener("gdg:session-cleared", clear);
     };
   }, []);
   useEffect(() => {
     if (mode || pending) heading.current?.focus();
   }, [mode, pending]);
+  useEffect(() => {
+    if (error || notice) feedback.current?.focus();
+  }, [error, notice]);
+  const clearCapabilities = capabilities.clear, clearInventory = inventory.clear,
+    clearDefinition = definition.clear, clearReport = report.clear,
+    definitionDenied = definition.denied;
+  useEffect(() => {
+    if (blocked || definitionDenied) {
+      operation.current?.abort();
+      if (blocked) {
+        clearCapabilities();
+        clearInventory();
+      }
+      clearDefinition();
+      clearReport();
+      setMode(null);
+      setPending(undefined);
+      setPassword("");
+      setConfirmation("");
+      setNotice("");
+      setProfileValues(profileFields());
+      setLinkValues(linkFields());
+      setEditingLink(undefined);
+    }
+  }, [
+    blocked,
+    definitionDenied,
+    clearCapabilities,
+    clearInventory,
+    clearDefinition,
+    clearReport,
+  ]);
   const p = detail?.profile.id === selected ? detail.profile : undefined;
   const requiredAction =
     mode === "link_create"
@@ -215,6 +259,7 @@ export default function LinktreeWorkspace() {
           : false));
   const reset = () => {
     setError("");
+    setNotice("");
     setMode(null);
     setPending(undefined);
     setPassword("");
@@ -226,19 +271,29 @@ export default function LinktreeWorkspace() {
     const next = () => {
       reset();
       run();
+      document.getElementById("workspace-content")?.focus();
     };
     if (navigation) navigation.request(next);
     else next();
   };
   const choose = (id: string) =>
     leave(() => {
-      setDetail(undefined);
-      setAnalytics(undefined);
       setLinkPage(1);
       setTrash(false);
       setParams(id ? { profile: id } : {});
     });
   function edit(next: Mode, link?: ProfileLink) {
+    if (
+      busyRef.current ||
+      !isOnline ||
+      needsRefresh ||
+      (next === "profile_create"
+        ? capabilities.loading ||
+          !!capabilities.error ||
+          !(cap?.globalCreate || cap?.teams.length)
+        : !canChange)
+    )
+      return;
     leave(() => {
       snapshot.current = {
         revision: p?.revision || 0,
@@ -264,10 +319,11 @@ export default function LinktreeWorkspace() {
       protected: true,
       body: document,
       idempotencyKey: mutationKey.current,
+      signal: operation.current?.signal,
     });
   }
   function finished(id: string, message: string) {
-    if (!mounted.current) return;
+    if (!mounted.current || operation.current?.signal.aborted) return;
     reset();
     setNotice(message);
     setParams({ profile: id });
@@ -275,7 +331,20 @@ export default function LinktreeWorkspace() {
   }
   async function save(event: FormEvent) {
     event.preventDefault();
-    if (busy || stale || conflict || !mode) return;
+    if (
+      busyRef.current ||
+      !isOnline ||
+      needsRefresh ||
+      stale ||
+      conflict ||
+      !mode ||
+      (snapshot.current?.live &&
+        (confirmation !== snapshot.current.expected || !password)) ||
+      (mode === "profile_create" ? !canCreateInScope : !canChange)
+    )
+      return;
+    busyRef.current = true;
+    operation.current = new AbortController();
     const secret = password;
     setPassword("");
     setBusy(true);
@@ -310,16 +379,17 @@ export default function LinktreeWorkspace() {
           : "Linktree changes saved.",
       );
     } catch (e) {
-      if (mounted.current) {
+      if (mounted.current && !operation.current?.signal.aborted) {
         setError(
           validationMessage(
             e,
-            "The change did not save. Your input is preserved.",
+            "This save could not be confirmed. Your input is preserved. Refresh to check the current revision before retrying.",
           ),
         );
         if (e instanceof ApiFailure && e.status === 409) setConflict(true);
       }
     } finally {
+      busyRef.current = false;
       if (mounted.current) setBusy(false);
     }
   }
@@ -328,7 +398,7 @@ export default function LinktreeWorkspace() {
     link?: ProfileLink,
     direction?: "up" | "down",
   ) {
-    if (!p) return;
+    if (!p || !canChange || busyRef.current) return;
     leave(() => {
       setPending({
         action,
@@ -384,6 +454,10 @@ export default function LinktreeWorkspace() {
           <Button
             disabled={
               busy ||
+              !isOnline ||
+              needsRefresh ||
+              capabilities.loading ||
+              !!capabilities.error ||
               !!mode ||
               !!pending ||
               !(cap?.globalCreate || cap?.teams.length)
@@ -392,32 +466,48 @@ export default function LinktreeWorkspace() {
           >
             New profile
           </Button>
-          <Button variant="ghost" onClick={() => setTick((v) => v + 1)}>
+          <Button variant="ghost" disabled={busy || !isOnline} onClick={retry}>
             Refresh
           </Button>
         </div>
       </header>
       {error && (
-        <p className="gt-form-error" role="alert">
+        <p ref={feedback} tabIndex={-1} className="gt-form-error" role="alert">
           {error}
         </p>
       )}
-      {loadError && (
-        <p className="gt-form-error" role="alert">
-          {loadError}{" "}
-          <Button variant="ghost" onClick={() => setTick((v) => v + 1)}>
-            Retry loading
-          </Button>
+      {!isOnline && (
+        <p role="status" className="gt-data-note">
+          You are offline. This open tab retains your input; changes cannot be
+          saved until you reconnect and refresh. No changes will be sent
+          automatically.
         </p>
       )}
-      {notice && <p role="status">{notice}</p>}
+      {isOnline && needsRefresh && (
+        <p role="status" className="gt-data-note">
+          Connection restored. Refresh the workspace to check current
+          permissions and revisions before saving. Your input remains in this
+          tab.
+        </p>
+      )}
+      <ReadState
+        name="creation permissions"
+        read={capabilities}
+        retry={retry}
+        online={isOnline}
+      />
+      {notice && (
+        <p ref={feedback} tabIndex={-1} role="status">
+          {notice}
+        </p>
+      )}
       {(stale || conflict) && (
         <p role="alert" className="gt-form-error">
           This profile or its links changed. Your input is preserved, but this
           version cannot save. Close the editor and review the current record.
         </p>
       )}
-      {mode && (
+      {mode && !blocked && !definition.denied && (
         <section className="gt-panel gt-event-editor">
           <h2 ref={heading} tabIndex={-1}>
             {mode.startsWith("profile") ? "Profile details" : "Link details"}
@@ -823,8 +913,16 @@ export default function LinktreeWorkspace() {
               <Button
                 disabled={
                   busy ||
+                  !isOnline ||
+                  needsRefresh ||
+                  (mode === "profile_create"
+                    ? !canCreateInScope
+                    : !canChange) ||
                   stale ||
                   conflict ||
+                  (snapshot.current?.live &&
+                    (confirmation !== snapshot.current.expected ||
+                      !password)) ||
                   (mode === "profile_create" && !cap?.globalCreate && !team)
                 }
               >
@@ -842,7 +940,7 @@ export default function LinktreeWorkspace() {
           </form>
         </section>
       )}
-      {pending && (
+      {pending && !blocked && !definition.denied && (
         <section className="gt-panel gt-event-editor">
           <h2 ref={heading} tabIndex={-1}>
             Confirm {pending.action.replace(/_/g, " ")}
@@ -855,7 +953,9 @@ export default function LinktreeWorkspace() {
             className="gt-form"
             onSubmit={async (e) => {
               e.preventDefault();
-              if (busy || stale || conflict) return;
+              if (busyRef.current || !canChange || stale || conflict) return;
+              busyRef.current = true;
+              operation.current = new AbortController();
               const secret = password;
               setPassword("");
               setBusy(true);
@@ -874,17 +974,18 @@ export default function LinktreeWorkspace() {
                 const r = await mutate(body);
                 finished(r.id, "Confirmed Linktree change recorded.");
               } catch (e) {
-                if (mounted.current) {
+                if (mounted.current && !operation.current?.signal.aborted) {
                   setError(
                     validationMessage(
                       e,
-                      "The confirmed change did not complete.",
+                      "This change could not be confirmed. Refresh to check the current revision before retrying.",
                     ),
                   );
                   if (e instanceof ApiFailure && e.status === 409)
                     setConflict(true);
                 }
               } finally {
+                busyRef.current = false;
                 if (mounted.current) setBusy(false);
               }
             }}
@@ -894,6 +995,7 @@ export default function LinktreeWorkspace() {
               <Button
                 disabled={
                   busy ||
+                  !canChange ||
                   stale ||
                   conflict ||
                   confirmation !== pending.expected ||
@@ -940,7 +1042,25 @@ export default function LinktreeWorkspace() {
           </select>
         </Field>
       </section>
-      {loading && !list && <p role="status">Loading authorized profiles…</p>}
+      {(q || state !== "current" || page !== 1) && (
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setQ("");
+            setState("current");
+            setPage(1);
+            document.getElementById("workspace-content")?.focus();
+          }}
+        >
+          Reset profile filters
+        </Button>
+      )}
+      <ReadState
+        name="profiles"
+        read={inventory}
+        retry={retry}
+        online={isOnline}
+      />
       {list && (
         <>
           <div className="gt-table-wrap">
@@ -976,7 +1096,12 @@ export default function LinktreeWorkspace() {
                     <td>
                       <Button
                         variant="ghost"
-                        disabled={busy}
+                        disabled={
+                          busy ||
+                          inventory.loading ||
+                          !!inventory.error ||
+                          !isOnline
+                        }
                         onClick={() => choose(row.id)}
                       >
                         <span aria-hidden="true">Manage</span>
@@ -991,15 +1116,27 @@ export default function LinktreeWorkspace() {
             </table>
           </div>
           {list.items.length === 0 && (
-            <EmptyState title="No permitted profiles in this view">
-              Create a private profile, or ask a chapter administrator for the
-              appropriate team grants.
+            <EmptyState
+              headingLevel={2}
+              title={
+                page > 1 && list.total > 0
+                  ? "No profiles on this page"
+                  : q || state !== "current"
+                    ? "No profiles match these filters"
+                    : "No permitted profiles yet"
+              }
+            >
+              {q || state !== "current" || page > 1
+                ? "Reset the filters or return to the first page to see your permitted profiles."
+                : cap?.globalCreate || cap?.teams.length
+                  ? "Create a private profile to start collecting chapter links."
+                  : "Ask a chapter administrator for the appropriate team grants."}
             </EmptyState>
           )}
           <nav className="gt-button-row" aria-label="Linktree profile pages">
             <Button
               variant="ghost"
-              disabled={page <= 1}
+              disabled={page <= 1 || inventory.loading}
               onClick={() => setPage(page - 1)}
             >
               Previous profiles
@@ -1009,13 +1146,21 @@ export default function LinktreeWorkspace() {
             </span>
             <Button
               variant="ghost"
-              disabled={page * list.pageSize >= list.total}
+              disabled={page * list.pageSize >= list.total || inventory.loading}
               onClick={() => setPage(page + 1)}
             >
               Next profiles
             </Button>
           </nav>
         </>
+      )}
+      {selected && (
+        <ReadState
+          name="profile details"
+          read={definition}
+          retry={retry}
+          online={isOnline}
+        />
       )}
       {p && detail && !mode && !pending && (
         <section className="gt-linktree-management">
@@ -1050,6 +1195,7 @@ export default function LinktreeWorkspace() {
                   (!p.active || p.actions.includes("publish")) && (
                     <Button
                       variant="secondary"
+                      disabled={!canChange || busy}
                       onClick={() => edit("profile_edit")}
                     >
                       Edit profile
@@ -1058,13 +1204,17 @@ export default function LinktreeWorkspace() {
                 {p.actions.includes("publish") && (
                   <Button
                     variant="secondary"
+                    disabled={!canChange || busy}
                     onClick={() => decision(p.active ? "unpublish" : "publish")}
                   >
                     {p.active ? "Deactivate profile" : "Activate profile"}
                   </Button>
                 )}
                 {p.actions.includes("create") && (
-                  <Button onClick={() => edit("link_create")}>
+                  <Button
+                    disabled={!canChange || busy}
+                    onClick={() => edit("link_create")}
+                  >
                     Add draft link
                   </Button>
                 )}
@@ -1072,6 +1222,7 @@ export default function LinktreeWorkspace() {
                   (!p.active || p.actions.includes("publish")) && (
                     <Button
                       variant="danger"
+                      disabled={!canChange || busy}
                       onClick={() => decision("archive")}
                     >
                       Archive profile
@@ -1080,7 +1231,11 @@ export default function LinktreeWorkspace() {
               </>
             )}
             {p.deletedAt && p.actions.includes("delete") && (
-              <Button variant="secondary" onClick={() => decision("restore")}>
+              <Button
+                variant="secondary"
+                disabled={!canChange || busy}
+                onClick={() => decision("restore")}
+              >
                 Restore as inactive
               </Button>
             )}
@@ -1137,6 +1292,7 @@ export default function LinktreeWorkspace() {
                             p.actions.includes("delete") && (
                               <Button
                                 variant="ghost"
+                                disabled={!canChange || busy}
                                 onClick={() => decision("link_restore", link)}
                               >
                                 <span aria-hidden="true">Restore</span>
@@ -1152,6 +1308,7 @@ export default function LinktreeWorkspace() {
                                   p.actions.includes("publish")) && (
                                   <Button
                                     variant="ghost"
+                                    disabled={!canChange || busy}
                                     onClick={() => edit("link_edit", link)}
                                   >
                                     <span aria-hidden="true">Edit</span>
@@ -1163,6 +1320,7 @@ export default function LinktreeWorkspace() {
                               {p.actions.includes("publish") && (
                                 <Button
                                   variant="ghost"
+                                  disabled={!canChange || busy}
                                   onClick={() =>
                                     decision(
                                       link.active
@@ -1187,7 +1345,11 @@ export default function LinktreeWorkspace() {
                                   <>
                                     <Button
                                       variant="ghost"
-                                      disabled={index === 0 && linkPage === 1}
+                                      disabled={
+                                        !canChange ||
+                                        busy ||
+                                        (index === 0 && linkPage === 1)
+                                      }
                                       onClick={() =>
                                         decision("move", link, "up")
                                       }
@@ -1200,9 +1362,11 @@ export default function LinktreeWorkspace() {
                                     <Button
                                       variant="ghost"
                                       disabled={
-                                        index === detail.links.length - 1 &&
-                                        linkPage * detail.linkPageSize >=
-                                          detail.linkTotal
+                                        !canChange ||
+                                        busy ||
+                                        (index === detail.links.length - 1 &&
+                                          linkPage * detail.linkPageSize >=
+                                            detail.linkTotal)
                                       }
                                       onClick={() =>
                                         decision("move", link, "down")
@@ -1220,6 +1384,7 @@ export default function LinktreeWorkspace() {
                                   p.actions.includes("publish")) && (
                                   <Button
                                     variant="ghost"
+                                    disabled={!canChange || busy}
                                     onClick={() =>
                                       decision("link_archive", link)
                                     }
@@ -1248,7 +1413,7 @@ export default function LinktreeWorkspace() {
           <nav className="gt-button-row" aria-label="Profile link pages">
             <Button
               variant="ghost"
-              disabled={linkPage <= 1}
+              disabled={linkPage <= 1 || definition.loading}
               onClick={() => setLinkPage(linkPage - 1)}
             >
               Previous links
@@ -1258,7 +1423,10 @@ export default function LinktreeWorkspace() {
             </span>
             <Button
               variant="ghost"
-              disabled={linkPage * detail.linkPageSize >= detail.linkTotal}
+              disabled={
+                linkPage * detail.linkPageSize >= detail.linkTotal ||
+                definition.loading
+              }
               onClick={() => setLinkPage(linkPage + 1)}
             >
               Next links
@@ -1280,6 +1448,12 @@ export default function LinktreeWorkspace() {
                 </select>
               </Field>
             </div>
+            <ReadState
+              name="analytics"
+              read={report}
+              retry={retry}
+              online={isOnline}
+            />
             {analytics ? (
               <>
                 <p>{analytics.note}</p>
@@ -1341,9 +1515,7 @@ export default function LinktreeWorkspace() {
                   </p>
                 )}
               </>
-            ) : (
-              <p>Analytics are unavailable. Refresh to retry.</p>
-            )}
+            ) : null}
           </section>
         </section>
       )}

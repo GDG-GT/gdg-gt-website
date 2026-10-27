@@ -2129,6 +2129,30 @@
         "26.1",
         "31.2"
       ]
+    },
+    {
+      "id": "CONTENT-TEST-020",
+      "requirements": [
+        "LINK-001",
+        "LINK-002",
+        "LINK-003",
+        "LINK-004"
+      ],
+      "scope": "Independent Linktree permission/inventory/detail/analytics read recovery, stale snapshots, private context isolation, offline drafts and confirmed mutation lifecycle",
+      "automated": [
+        "tests/client/linktree-workspace-recovery.test.tsx",
+        "scripts/test-local-linktree.mjs"
+      ],
+      "remaining": [
+        "Real browser outage/role-change/assistive-technology acceptance, visual baselines and approved external-provider checks",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

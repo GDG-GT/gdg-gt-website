@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { writeFile, unlink } from "node:fs/promises";
 import { createInterface } from "node:readline";
 import { localHttp } from "./lib/local-http.mjs";
 import { hashSecret } from "../server/lib/security.mjs";
@@ -8,7 +8,14 @@ const { db, credentials } = await localHttp(),
   accounts = [];
 const base = "/admin/linktree/profiles",
   username = "fictional-links-" + randomUUID().slice(0, 8);
-let teamId, profileId, member, admin, outsider, editor;
+let teamId,
+  profileId,
+  member,
+  admin,
+  outsider,
+  editor,
+  ledgerOwned = false;
+const ledger = new URL("../.docs/local-linktree-review.local", import.meta.url);
 if (process.argv.includes("--hold-for-browser") && !process.stdin.isTTY)
   throw new Error("Browser review requires an interactive terminal.");
 function check(value, name) {
@@ -30,16 +37,14 @@ async function actor(role, name) {
     id = randomUUID(),
     email = `fictional-links-${id}@example.test`,
     password = "Fictional-links-" + randomUUID();
-  const created = await db
-    .from("admin_users")
-    .insert({
-      id,
-      email,
-      password_hash: await hashSecret(password),
-      role,
-      display_name: name,
-      is_active: true,
-    });
+  const created = await db.from("admin_users").insert({
+    id,
+    email,
+    password_hash: await hashSecret(password),
+    role,
+    display_name: name,
+    is_active: true,
+  });
   if (created.error) throw new Error("Linktree fixture account unavailable");
   accounts.push(id);
   data(
@@ -54,7 +59,7 @@ async function actor(role, name) {
       body: { email, password },
     }),
   );
-  return { ...http, id, password };
+  return { ...http, id, email, password };
 }
 const profileRecord = (changes = {}) => ({
   username,
@@ -132,35 +137,29 @@ try {
   editor = await actor("blog_editor", "Fictional link editor");
   teamId = randomUUID();
   for (const r of [
-    await db
-      .from("admin_teams")
-      .insert({
-        id: teamId,
-        name: "Fictional link curation team",
-        slug: "fictional-links-" + teamId,
-        created_by: admin.id,
-      }),
+    await db.from("admin_teams").insert({
+      id: teamId,
+      name: "Fictional link curation team",
+      slug: "fictional-links-" + teamId,
+      created_by: admin.id,
+    }),
     await db
       .from("team_memberships")
       .insert({ team_id: teamId, admin_user_id: member.id, role: "member" }),
-    await db
-      .from("team_page_access")
-      .insert({
-        team_id: teamId,
-        page_path: "/admin/linktree",
-        can_access: true,
-      }),
-    await db
-      .from("team_permissions")
-      .insert({
-        team_id: teamId,
-        resource_type: "linktree",
-        permission: "crud",
-        can_read: true,
-        can_create: true,
-        can_update: true,
-        can_delete: true,
-      }),
+    await db.from("team_page_access").insert({
+      team_id: teamId,
+      page_path: "/admin/linktree",
+      can_access: true,
+    }),
+    await db.from("team_permissions").insert({
+      team_id: teamId,
+      resource_type: "linktree",
+      permission: "crud",
+      can_read: true,
+      can_create: true,
+      can_update: true,
+      can_delete: true,
+    }),
   ])
     if (r.error) throw new Error("Linktree team fixture unavailable");
   check(
@@ -225,14 +224,12 @@ try {
     (await action(member, "publish")).status === 403,
     "page and CRUD grants do not imply publication authority",
   );
-  const grant = await db
-    .from("team_permissions")
-    .insert({
-      team_id: teamId,
-      resource_type: "linktree",
-      permission: "publish",
-      can_update: true,
-    });
+  const grant = await db.from("team_permissions").insert({
+    team_id: teamId,
+    resource_type: "linktree",
+    permission: "publish",
+    can_update: true,
+  });
   if (grant.error) throw new Error("Fictional publish grant unavailable");
   check(
     (
@@ -443,6 +440,17 @@ try {
     "browser-review fixture is active and contains only explicit fictional links",
   );
   if (process.argv.includes("--hold-for-browser")) {
+    await writeFile(
+      ledger,
+      JSON.stringify({
+        email: member.email,
+        password: member.password,
+        profileId,
+        username,
+      }) + "\n",
+      { mode: 0o600, flag: "wx" },
+    );
+    ledgerOwned = true;
     console.info(
       "BROWSER_ADMIN http://127.0.0.1:8080/admin/linktree?profile=" + profileId,
     );
@@ -541,6 +549,7 @@ try {
     "unsupported permanent deletion is not available through the API",
   );
 } finally {
+  if (ledgerOwned) await unlink(ledger);
   if (profileId && admin) {
     const r = await admin.call(base + "/" + profileId);
     if (r.status === 200 && !r.json.data.profile.deletedAt) {
