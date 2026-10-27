@@ -8,6 +8,23 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Task interaction and comment-history recovery — 2026-10-27
+
+- Account/session/task-bound pending guards abort/fence late writes, freeze fields
+  and retain unchanged retry keys without retaining password signatures. Independent
+  read errors, skeletons, stale timestamps, permission refresh and filter reset fixed.
+  New revisions preserve input and block stale saves; displayed older comment pages
+  refresh authoritative edits/removals. Offline input never auto-submits.
+- Nineteen new DOM cases include two structural axe audits. The task checkpoint
+  passes 938 tests/129 files, types, lint (0 errors/25 warnings), build, byte budgets
+  and secrets. Coverage remains below 70% at 44.06% lines/41.88% branches; all 17
+  critical branch gates pass. No thresholds or inclusions were relaxed.
+- Fresh loopback task suite: 40 checks and cleanup completed; task privacy: 7 checks.
+  Browser confirms live conflict/input preservation and bounded 375 px controls.
+  Screenshot capture unavailable; no visual acceptance claimed. Interrupted fixture
+  recovery verified separately. Catalog: 126 unverified logical cases. See
+  `TASK_RECOVERY.md`; complete PRD acceptance remains open.
+
 ### Channel and team-chat interaction recovery — 2026-10-26
 
 - Private context/pending/controller guards fence channel writes and ordered member

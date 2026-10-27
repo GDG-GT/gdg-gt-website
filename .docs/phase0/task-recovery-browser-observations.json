@@ -1,0 +1,100 @@
+{
+  "note": "Partial local browser verification with fictional fixtures; not device, screen-reader or visual acceptance. No task/comment was saved in the browser.",
+  "mobile": {
+    "conflict": true,
+    "controls": [
+      {
+        "height": 44,
+        "left": 18,
+        "right": 123.0078125
+      },
+      {
+        "height": 46.796875,
+        "left": 36,
+        "right": 339
+      },
+      {
+        "height": 145.984375,
+        "left": 36,
+        "right": 339
+      },
+      {
+        "height": 48.796875,
+        "left": 36,
+        "right": 339
+      },
+      {
+        "height": 44,
+        "left": 36,
+        "right": 339
+      },
+      {
+        "height": 46.796875,
+        "left": 36,
+        "right": 339
+      },
+      {
+        "height": 44,
+        "left": 36,
+        "right": 205.640625
+      },
+      {
+        "height": 44,
+        "left": 215.640625,
+        "right": 304.9375
+      },
+      {
+        "height": 44,
+        "left": 18,
+        "right": 150.640625
+      },
+      {
+        "height": 44,
+        "left": 18,
+        "right": 185.0234375
+      },
+      {
+        "height": 44,
+        "left": 195.0234375,
+        "right": 295.484375
+      },
+      {
+        "height": 44,
+        "left": 18,
+        "right": 122.2265625
+      },
+      {
+        "height": 44,
+        "left": 132.2265625,
+        "right": 226.7890625
+      },
+      {
+        "height": 44,
+        "left": 18,
+        "right": 357
+      },
+      {
+        "height": 121.1875,
+        "left": 18,
+        "right": 357
+      },
+      {
+        "height": 44,
+        "left": 18,
+        "right": 157.8359375
+      }
+    ],
+    "documentWidth": 375,
+    "draft": "Fictional unsaved task draft",
+    "saveDisabled": true,
+    "width": 375
+  },
+  "cleanup": {
+    "draftDiscarded": true,
+    "signedOut": true,
+    "freshReviewTabClosed": true,
+    "interruptedOriginalTab": "Signed out; debugger unavailable for explicit tab closure.",
+    "viewportReset": true
+  },
+  "screenshot": "Capture timed out twice; no screenshot accepted or claimed."
+}

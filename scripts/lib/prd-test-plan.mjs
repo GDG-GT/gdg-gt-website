@@ -1093,6 +1093,21 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "27.1", "28.3", "31.2"];
 
+add(
+  "COMM-TEST-018",
+  "COMM-001",
+  "Task inventory/detail/permission read recovery, optimistic task/comment conflicts, displayed history refresh, stable retries and private-context cancellation",
+  [
+    "tests/client/task-recovery.test.tsx",
+    local("tasks"),
+    local("task-privacy"),
+  ],
+  [
+    "Real-browser interruption, permission changes, screen-reader and supported-device acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

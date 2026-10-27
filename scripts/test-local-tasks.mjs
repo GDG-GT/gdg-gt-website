@@ -1,12 +1,14 @@
 import { randomUUID } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { writeFile, unlink } from "node:fs/promises";
 import { createInterface } from "node:readline";
 import { localHttp } from "./lib/local-http.mjs";
-import { hashSecret, riskHash } from "../server/lib/security.mjs";
+import { hashSecret } from "../server/lib/security.mjs";
 import { runDelivery } from "../server/delivery.mjs";
 if (process.argv.includes("--hold-for-browser") && !process.stdin.isTTY)
   throw new Error("Browser review requires an interactive terminal.");
-const { call, login, logout, db, env, credentials } = await localHttp(),
+if (process.env.GDG_LOCAL_TEST_SHARED_SESSION === "true")
+  throw Error("Requires isolated fictional sessions.");
+const { db, env, credentials } = await localHttp(),
   evidence = [],
   tasks = [],
   accounts = [];
@@ -14,6 +16,24 @@ const suffix = randomUUID(),
   password = "Fictional-task-only-" + suffix,
   hash = await hashSecret(password),
   path = "/admin/communications/tasks";
+let call,
+  owner,
+  ledgerOwned = false;
+const ledger = new URL("../.docs/local-task-review.local", import.meta.url);
+async function recordEvidence(cleanedUp) {
+  await writeFile(
+    new URL("../.docs/phase0/local-tasks-integration.json", import.meta.url),
+    JSON.stringify(
+      {
+        note: "Actual local independent-session HTTP and fenced scheduler/delivery verification. Only new fictional tasks/accounts were used. Notifications contain generic metadata; no external email or credential disclosure.",
+        cleanup: { completed: cleanedUp },
+        tests: evidence,
+      },
+      null,
+      2,
+    ) + "\n",
+  );
+}
 function check(value, name) {
   if (!value) throw new Error("FAIL " + name);
   evidence.push({ name, passed: true });
@@ -71,12 +91,6 @@ async function cron(name, headers = {}) {
   });
   return { status: r.status, json: await r.json() };
 }
-const actor = await db
-  .from("admin_users")
-  .select("id")
-  .eq("email", credentials.email)
-  .single();
-if (actor.error) throw new Error("Local task review account unavailable");
 const occurrence = Math.floor(Date.now() / 900000);
 const scheduled = await db
   .from("scheduled_job_runs")
@@ -94,17 +108,9 @@ if (
   throw new Error(
     "This overdue-job occurrence is already claimed or complete. Pause local job polling and wait for the next natural 15-minute slot before this suite; no scheduler or rate-limit state was reset.",
   );
-const headroom = await db.rpc("check_rate_limit", {
-  p_scope: "tasks.confirm",
-  p_risk_hash: riskHash(actor.data.id, env.RISK_HASH_SECRET),
-  p_limit: 4,
-});
-if (headroom.error || !headroom.data.allowed)
-  throw new Error(
-    "Wait for the current task-confirmation cooldown. No quota or records were changed.",
-  );
-await login();
 try {
+  owner = await fixture("review-officer", "super_admin");
+  call = owner.call;
   const editor = await fixture("editor", "blog_editor"),
     outsider = await fixture("outsider");
   let r = await call(path, { anonymous: true });
@@ -132,7 +138,7 @@ try {
   check(
     task.status === "pending" &&
       task.assigned_to_id === editor.id &&
-      task.assigned_by_id === actor.data.id &&
+      task.assigned_by_id === owner.id &&
       task.team_id === null,
     "task defaults preserve server ownership and private scope",
   );
@@ -263,7 +269,7 @@ try {
   );
   r = await mutate(task, "assign", {
     assigneeEmail: outsider.email,
-    currentPassword: credentials.password,
+    currentPassword: password,
     confirmation: task.title,
   });
   check(
@@ -382,6 +388,18 @@ try {
     "authorized manager restores the original task scope",
   );
   if (process.argv.includes("--hold-for-browser")) {
+    await recordEvidence(false);
+    await writeFile(
+      ledger,
+      JSON.stringify({
+        email: owner.email,
+        password,
+        taskId: id,
+        title: task.title,
+      }),
+      { mode: 0o600, flag: "wx" },
+    );
+    ledgerOwned = true;
     console.info("Browser review task: " + task.title);
     console.info(
       "Commands: change, done. Only this fictional task is affected.",
@@ -420,33 +438,27 @@ try {
       if (archived.status !== 200)
         throw new Error("Task fixture cleanup failed " + archived.status);
     }
-    await db
+    const notices = await db
       .from("notifications")
       .update({ is_read: true })
       .eq("link", "/admin/communications?tab=tasks&task=" + id);
+    if (notices.error) throw Error("Task fixture notice cleanup failed");
   }
   for (const id of accounts) {
-    await db
+    const account = await db
       .from("admin_users")
       .update({ is_active: false, deleted_at: new Date().toISOString() })
       .eq("id", id);
-    await db
+    if (account.error) throw Error("Task fixture account cleanup failed");
+    const sessions = await db
       .from("admin_sessions")
       .update({ revoked_at: new Date().toISOString() })
       .eq("admin_user_id", id)
       .is("revoked_at", null);
+    if (sessions.error) throw Error("Task fixture session cleanup failed");
   }
-  await logout();
+  if (call) await call("/auth/session", { method: "DELETE" });
+  if (ledgerOwned) await unlink(ledger);
   if (process.stdin.isTTY) process.stdin.pause();
 }
-await writeFile(
-  new URL("../.docs/phase0/local-tasks-integration.json", import.meta.url),
-  JSON.stringify(
-    {
-      note: "Actual local independent-session HTTP and fenced scheduler/delivery verification. Only new fictional tasks/accounts were used and recoverably archived. Notifications contain generic metadata; no external email or credential disclosure.",
-      tests: evidence,
-    },
-    null,
-    2,
-  ) + "\n",
-);
+await recordEvidence(true);

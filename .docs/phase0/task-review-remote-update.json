@@ -1,0 +1,9 @@
+{
+  "note": "Loopback-only update to the owned fictional task after an interrupted review. No browser save or external send.",
+  "checks": [
+    {
+      "name": "remote task detail update accepted with the current optimistic revision",
+      "passed": true
+    }
+  ]
+}

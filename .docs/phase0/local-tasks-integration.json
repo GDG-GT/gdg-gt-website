@@ -1,5 +1,8 @@
 {
-  "note": "Actual local independent-session HTTP and fenced scheduler/delivery verification. Only new fictional tasks/accounts were used and recoverably archived. Notifications contain generic metadata; no external email or credential disclosure.",
+  "note": "Actual local independent-session HTTP and fenced scheduler/delivery verification. Only new fictional tasks/accounts were used. Notifications contain generic metadata; no external email or credential disclosure.",
+  "cleanup": {
+    "completed": true
+  },
   "tests": [
     {
       "name": "task inventory rejects anonymous callers",
@@ -159,10 +162,6 @@
     },
     {
       "name": "authorized manager restores the original task scope",
-      "passed": true
-    },
-    {
-      "name": "browser review remote task update committed",
       "passed": true
     }
   ]

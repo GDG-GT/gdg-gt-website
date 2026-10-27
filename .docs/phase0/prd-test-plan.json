@@ -2220,6 +2220,28 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "COMM-TEST-018",
+      "requirements": [
+        "COMM-001"
+      ],
+      "scope": "Task inventory/detail/permission read recovery, optimistic task/comment conflicts, displayed history refresh, stable retries and private-context cancellation",
+      "automated": [
+        "tests/client/task-recovery.test.tsx",
+        "scripts/test-local-tasks.mjs",
+        "scripts/test-local-task-privacy.mjs"
+      ],
+      "remaining": [
+        "Real-browser interruption, permission changes, screen-reader and supported-device acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {
