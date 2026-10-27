@@ -1,0 +1,63 @@
+{
+  "note": "Generated private rectangle only; no browser upload, publication, download or metadata save. Partial local review, not full supported-device/screen-reader/visual acceptance.",
+  "unsavedStayPreserved": true,
+  "review": {
+    "confirmationDisabled": true,
+    "focus": "Approve this image for the public gallery",
+    "review": [
+      "Coral rectangle for local recovery testing",
+      "Generated fixture only",
+      "Not allowed"
+    ]
+  },
+  "mobile": {
+    "controls": [
+      {
+        "height": 44,
+        "left": 37,
+        "right": 142.4921875
+      },
+      {
+        "height": 44,
+        "left": 37,
+        "right": 215.984375
+      },
+      {
+        "height": 44,
+        "left": 37,
+        "right": 248.25
+      },
+      {
+        "height": 46.796875,
+        "left": 37,
+        "right": 338
+      },
+      {
+        "height": 46.796875,
+        "left": 37,
+        "right": 338
+      },
+      {
+        "height": 44,
+        "left": 37,
+        "right": 270.4375
+      },
+      {
+        "height": 44,
+        "left": 37,
+        "right": 175.0546875
+      }
+    ],
+    "documentWidth": 375,
+    "tableWidth": 339,
+    "width": 375
+  },
+  "cleanup": {
+    "draftDiscarded": true,
+    "reviewCancelled": true,
+    "signedOut": true,
+    "reviewTabClosed": true,
+    "viewportReset": true
+  },
+  "screenshot": ".docs/ui-review/media-publication-review.png"
+}

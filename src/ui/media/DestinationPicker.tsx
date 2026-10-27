@@ -25,7 +25,8 @@ export default function DestinationPicker({
   const [team, setTeam] = useState(initialTeam || "chapter"),
     [folder, setFolder] = useState<string | null>(null),
     [list, setList] = useState<MediaListing>(),
-    [error, setError] = useState("");
+    [error, setError] = useState(""),
+    [retry, setRetry] = useState(0);
   useEffect(() => {
     const controller = new AbortController();
     setList(undefined);
@@ -43,7 +44,7 @@ export default function DestinationPicker({
         if (!controller.signal.aborted) setError(e.message);
       });
     return () => controller.abort();
-  }, [team, folder, gallery]);
+  }, [team, folder, gallery, retry]);
   return (
     <div className="gt-media-destination">
       <Field label="Destination scope">
@@ -69,7 +70,14 @@ export default function DestinationPicker({
       </Field>
       {error && (
         <p role="alert" className="gt-form-error">
-          {error}
+          {error}{" "}
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => setRetry((v) => v + 1)}
+          >
+            Retry destination folders
+          </button>
         </p>
       )}
       {!list && !error && <p role="status">Loading authorized folders…</p>}

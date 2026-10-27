@@ -1,0 +1,32 @@
+{
+  "note": "Actual loopback upload/scan/metadata recovery with one generated rectangle and an isolated fictional officer. No publication, external send, imported personal file or permanent deletion.",
+  "cleanup": {
+    "completed": true
+  },
+  "tests": [
+    {
+      "name": "unchanged upload intent retry retains the original private file",
+      "passed": true
+    },
+    {
+      "name": "generated rectangle uploads only to signed private quarantine",
+      "passed": true
+    },
+    {
+      "name": "real background scanner promotes the generated rectangle before private editing",
+      "passed": true
+    },
+    {
+      "name": "uncertain metadata retry is idempotent and preserves exactly one revision advance",
+      "passed": true
+    },
+    {
+      "name": "private metadata save does not approve public delivery",
+      "passed": true
+    },
+    {
+      "name": "stale media revisions cannot overwrite the accepted metadata",
+      "passed": true
+    }
+  ]
+}

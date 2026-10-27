@@ -2316,6 +2316,29 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "CONTENT-TEST-018",
+      "requirements": [
+        "CONTENT-004"
+      ],
+      "scope": "Media inventory/folder/error recovery, metadata/publication confirmation retries, scoped private-context cancellation and quarantined upload/download lifecycle",
+      "automated": [
+        "tests/client/media-recovery.test.tsx",
+        "scripts/test-local-media-core.mjs",
+        "scripts/test-local-media-files.mjs",
+        "scripts/test-local-media-recovery.mjs"
+      ],
+      "remaining": [
+        "Real-browser interruption/download/publication, assistive-technology, supported-device and hosted storage/worker acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

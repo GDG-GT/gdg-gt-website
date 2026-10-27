@@ -8,6 +8,23 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Media inventory, private operations and publication recovery — 2026-10-27
+
+- Media/gallery account/session state remounts; folder/bulk/metadata/publication/
+  capability/upload work uses synchronous pending guards and abortable ownership.
+  Unchanged retries remain stable; publication passwords clear immediately and
+  exact confirmation/current grants/revisions recheck. Inventory failures, stale
+  snapshots, scope reset, event/destination retry and semantic focus improved.
+- Twenty-three new DOM cases include three axe audits. All 1,027 tests/133 files
+  pass; coverage remains below 70% at 51.69% lines/49.50% branches; all 17 critical
+  branch gates pass. Types/lint (0 errors/25 warnings), build/budgets/secrets pass.
+- Twelve real folder, 45 real media/scanner/publication and 6 recovery checks pass.
+  Browser verifies preserved Stay input, saved-value review, locked approval and
+  bounded 375 px layout. No browser publication/upload/download/save occurred.
+  Fixture recoverably archived, account disabled/sessions revoked, ledger removed,
+  browser signed out/tab closed and viewport reset. Catalog: 130 unverified cases.
+  See `MEDIA_RECOVERY.md`; full PRD remains open.
+
 ### Finance independent reads and private operation recovery — 2026-10-27
 
 - Permissions, inventory, budgets, reports and detail reads recover independently;

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
 import { mediaTypes } from "../../../shared/media.mjs";
 import { Button, Field } from "../primitives";
@@ -24,41 +26,44 @@ export default function MediaUpload({
   imagesOnly?: boolean;
 }) {
   const [file, setFile] = useState<File>(),
-    [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [progress, setProgress] = useState("");
   const safety = useNavigationSafety(),
     input = useRef<HTMLInputElement>(null),
-    epoch = useRef(0),
-    abort = useRef<AbortController>(),
     attempt = useRef<{
       createKey: string;
       completeKey: string;
       intent?: Intent;
       putDone?: boolean;
     }>();
+  const { busy, begin, current, finish, cancel, pending } = usePrivateMutation(
+    `${teamId}:${folderId}:${imagesOnly}`,
+  );
+  const { isOnline } = useOnlineStatus();
+  const heading = useRef<HTMLHeadingElement>(null),
+    errorFocus = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    heading.current?.focus();
+  }, []);
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
   useDraftGuard(!!file, { busy, label: "Private media upload" });
   useEffect(() => {
-    const invalidate = () => {
-      epoch.current++;
-      abort.current?.abort();
-    };
     const clear = () => {
-      invalidate();
+      cancel();
       setFile(undefined);
-      setBusy(false);
       setError("");
       attempt.current = undefined;
       if (input.current) input.current.value = "";
     };
     window.addEventListener("gdg:session-cleared", clear);
     return () => {
-      invalidate();
       window.removeEventListener("gdg:session-cleared", clear);
     };
-  }, []);
+  }, [cancel]);
   const upload = async () => {
-    if (!file || busy) return;
+    if (!file || pending.current) return;
     const rule = Object.values(
         mediaTypes as Record<string, { extensions: string[]; limit: number }>,
       ).find((v) =>
@@ -77,12 +82,10 @@ export default function MediaUpload({
       );
       return;
     }
-    const controller = new AbortController(),
-      current = epoch.current;
-    abort.current = controller;
-    setBusy(true);
+    const controller = begin();
+    if (!controller) return;
     setError("");
-    const valid = () => current === epoch.current && !controller.signal.aborted;
+    const valid = () => current(controller);
     try {
       setProgress("Checking file and reserving private quarantine…");
       const digest = await crypto.subtle.digest(
@@ -130,7 +133,7 @@ export default function MediaUpload({
         a.putDone = true;
       }
       if (!valid()) return;
-      setProgress("Queueing isolated malware and content checks…");
+      setProgress("Queueing file safety checks…");
       await api(`/admin/media/uploads/${a.intent.uploadId}/complete`, {
         method: "POST",
         body: {},
@@ -154,12 +157,14 @@ export default function MediaUpload({
         setProgress("");
       }
     } finally {
-      if (valid()) setBusy(false);
+      finish(controller);
     }
   };
   return (
     <section className="gt-panel gt-form" aria-label="Upload private media">
-      <h2>Upload to this folder</h2>
+      <h2 ref={heading} tabIndex={-1}>
+        Upload to this folder
+      </h2>
       <p className="gt-helper">
         Images 20 MiB · video 250 MiB · audio 50 MiB · documents/ZIP 25 MiB.
         Files stay private until scanning passes. Publishing is a separate
@@ -194,13 +199,21 @@ export default function MediaUpload({
         </p>
       )}
       {error && (
-        <p role="alert" className="gt-form-error">
+        <p
+          ref={errorFocus}
+          tabIndex={-1}
+          role="alert"
+          className="gt-form-error"
+        >
           {error}
         </p>
       )}
       {progress && <p role="status">{progress}</p>}
       <div className="gt-inline-actions">
-        <Button disabled={busy || !file} onClick={() => void upload()}>
+        <Button
+          disabled={busy || !isOnline || !file}
+          onClick={() => void upload()}
+        >
           {busy
             ? "Working…"
             : error
@@ -211,6 +224,7 @@ export default function MediaUpload({
           variant="secondary"
           disabled={busy}
           onClick={() => {
+            if (pending.current) return;
             if (file && safety) safety.request(onClose);
             else onClose();
           }}

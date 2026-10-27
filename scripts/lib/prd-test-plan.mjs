@@ -1146,6 +1146,22 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 
+add(
+  "CONTENT-TEST-018",
+  "CONTENT-004",
+  "Media inventory/folder/error recovery, metadata/publication confirmation retries, scoped private-context cancellation and quarantined upload/download lifecycle",
+  [
+    "tests/client/media-recovery.test.tsx",
+    local("media-core"),
+    local("media-files"),
+    local("media-recovery"),
+  ],
+  [
+    "Real-browser interruption/download/publication, assistive-technology, supported-device and hosted storage/worker acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

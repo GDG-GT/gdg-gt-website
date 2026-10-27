@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Folder, FileImage, Star, Upload } from "lucide-react";
 import { api, ApiFailure } from "@/lib/api";
+import { useAdmin } from "@/contexts/AdminContext";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import {
@@ -12,7 +15,9 @@ import {
 import MediaUpload from "./MediaUpload";
 import MediaFileEditor from "./MediaFileEditor";
 import DestinationPicker from "./DestinationPicker";
-type FolderMode = {action:"create";folder?:never} | {action:"update"|"move"|"delete";folder:MediaFolder};
+type FolderMode =
+  | { action: "create"; folder?: never }
+  | { action: "update" | "move" | "delete"; folder: MediaFolder };
 function FolderEditor({
   mode,
   listing,
@@ -20,6 +25,7 @@ function FolderEditor({
   parentId,
   onSaved,
   onClose,
+  readUnavailable = false,
 }: {
   mode: FolderMode;
   listing: MediaListing;
@@ -27,6 +33,7 @@ function FolderEditor({
   parentId: string | null;
   onSaved: () => void;
   onClose: () => void;
+  readUnavailable?: boolean;
 }) {
   const [name, setName] = useState(mode.folder?.name || ""),
     [description, setDescription] = useState(mode.folder?.description || ""),
@@ -34,43 +41,54 @@ function FolderEditor({
       teamId: string | null;
       folderId: string | null;
     }>(),
-    [busy, setBusy] = useState(false),
     [error, setError] = useState("");
   const safety = useNavigationSafety(),
-    active = useRef(true),
-    pending = useRef<AbortController>();
+    heading = useRef<HTMLHeadingElement>(null),
+    errorFocus = useRef<HTMLParagraphElement>(null);
+  const { busy, begin, current, finish, pending } = usePrivateMutation(
+    `${mode.action}:${mode.folder?.id || "new"}:${teamId}:${parentId}`,
+  );
+  const { isOnline } = useOnlineStatus();
+  const canChange =
+    !readUnavailable &&
+    (teamId
+      ? !!listing.teams.find((team) => team.id === teamId)?.canManageFolders
+      : !!listing.chapterFolders);
   const dirty =
     name !== (mode.folder?.name || "") ||
     description !== (mode.folder?.description || "") ||
     !!destination;
   useDraftGuard(dirty, { busy, label: "Media folder changes" });
   useEffect(() => {
-    active.current = true;
-    return () => {
-      active.current = false;
-      pending.current?.abort();
-    };
+    heading.current?.focus();
   }, []);
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (busy) return;
-    setBusy(true);
+    if (!canChange || (mode.action === "move" && !destination)) return;
+    const controller = begin();
+    if (!controller) return;
     setError("");
-    const controller = new AbortController();
-    pending.current = controller;
     const f = mode.folder;
     const body =
-        mode.action === "create"
-          ? { name, description, teamId, parentId }
-          : mode.action === "update"
-            ? { action: "update", name, description, revision: mode.folder.revision }
-            : mode.action === "move"
-              ? {
-                  action: "move",
-                  parentId: destination?.folderId ?? null,
-                  revision: mode.folder.revision,
-                }
-              : { revision: mode.folder.revision };
+      mode.action === "create"
+        ? { name, description, teamId, parentId }
+        : mode.action === "update"
+          ? {
+              action: "update",
+              name,
+              description,
+              revision: mode.folder.revision,
+            }
+          : mode.action === "move"
+            ? {
+                action: "move",
+                parentId: destination?.folderId ?? null,
+                revision: mode.folder.revision,
+              }
+            : { revision: mode.folder.revision };
     try {
       await api("/admin/media/folders" + (f ? "/" + f.id : ""), {
         method:
@@ -82,12 +100,11 @@ function FolderEditor({
         body,
         signal: controller.signal,
       });
-      if (active.current) onSaved();
+      if (current(controller)) onSaved();
     } catch (e) {
-      if (active.current && !controller.signal.aborted)
-        setError((e as Error).message);
+      if (current(controller)) setError((e as Error).message);
     } finally {
-      if (active.current) setBusy(false);
+      finish(controller);
     }
   };
   return (
@@ -96,7 +113,7 @@ function FolderEditor({
       onSubmit={submit}
       aria-label="Media folder changes"
     >
-      <h2>
+      <h2 ref={heading} tabIndex={-1}>
         {
           {
             create: "Create a folder",
@@ -112,7 +129,12 @@ function FolderEditor({
         </p>
       )}
       {error && (
-        <p role="alert" className="gt-form-error">
+        <p
+          ref={errorFocus}
+          tabIndex={-1}
+          role="alert"
+          className="gt-form-error"
+        >
           {error}
         </p>
       )}
@@ -161,7 +183,14 @@ function FolderEditor({
         </p>
       )}
       <div className="gt-inline-actions">
-        <Button disabled={busy || (mode.action === "move" && !destination)}>
+        <Button
+          disabled={
+            busy ||
+            !isOnline ||
+            !canChange ||
+            (mode.action === "move" && !destination)
+          }
+        >
           {busy
             ? "Saving…"
             : mode.action === "delete"
@@ -173,7 +202,8 @@ function FolderEditor({
           variant="secondary"
           disabled={busy}
           onClick={() =>
-            dirty && safety ? safety.request(onClose) : onClose()
+            !pending.current &&
+            (dirty && safety ? safety.request(onClose) : onClose())
           }
         >
           Cancel folder changes
@@ -187,8 +217,26 @@ export default function MediaWorkspace({
 }: {
   gallery?: boolean;
 }) {
+  const { currentAdmin } = useAdmin();
+  const [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((v) => v + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  return (
+    <MediaWorkspaceContent
+      key={`${currentAdmin?.id}:${currentAdmin?.role}:${epoch}:${gallery}`}
+      gallery={gallery}
+    />
+  );
+}
+function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
+  const { isOnline } = useOnlineStatus();
   const [list, setList] = useState<MediaListing>(),
     [loading, setLoading] = useState(true),
+    [listError, setListError] = useState(""),
+    [loadedAt, setLoadedAt] = useState<string>(),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [team, setTeam] = useState(""),
@@ -212,12 +260,30 @@ export default function MediaWorkspace({
     [destination, setDestination] = useState<{
       teamId: string | null;
       folderId: string | null;
-    }>(),
-    [busy, setBusy] = useState(false);
+    }>();
   const safety = useNavigationSafety(),
+    readKey = useRef(""),
     epoch = useRef(0),
-    mutation = useRef<AbortController>(),
     attempt = useRef<{ signature: string; key: string }>();
+  const {
+    busy,
+    begin,
+    current,
+    finish,
+    pending: mutationPending,
+  } = usePrivateMutation(`${gallery}:${team}:${folder}:${state}:${page}`);
+  const noticeFocus = useRef<HTMLParagraphElement>(null),
+    errorFocus = useRef<HTMLParagraphElement>(null),
+    bulkHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (notice) noticeFocus.current?.focus();
+  }, [notice]);
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
+  useEffect(() => {
+    if (bulk) bulkHeading.current?.focus();
+  }, [bulk]);
   useDraftGuard(!!bulk, { busy, label: "Selected media operation" });
   const reset = () => {
     setEditor(undefined);
@@ -230,7 +296,7 @@ export default function MediaWorkspace({
     attempt.current = undefined;
   };
   const leave = (action: () => void) => {
-    if (busy) return;
+    if (mutationPending.current) return;
     const next = () => {
       reset();
       action();
@@ -248,14 +314,12 @@ export default function MediaWorkspace({
   useEffect(() => {
     const invalidate = () => {
       epoch.current++;
-      mutation.current?.abort();
     };
     const clear = () => {
       invalidate();
       setList(undefined);
       setSelected([]);
       reset();
-      setBusy(false);
       setNotice("");
     };
     window.addEventListener("gdg:session-cleared", clear);
@@ -268,7 +332,7 @@ export default function MediaWorkspace({
     const controller = new AbortController(),
       current = ++epoch.current;
     setLoading(true);
-    setError("");
+    setListError("");
     const params = new URLSearchParams({
       view: gallery ? "gallery" : "library",
       page: String(page),
@@ -280,13 +344,22 @@ export default function MediaWorkspace({
       ...(tag ? { tag } : {}),
       ...(starred ? { starred: "true" } : {}),
     });
+    const key = params.toString();
+    if (readKey.current !== key) {
+      setList(undefined);
+      setLoadedAt(undefined);
+      readKey.current = key;
+    }
     api<MediaListing>("/admin/media?" + params, { signal: controller.signal })
       .then((v) => {
-        if (current === epoch.current) setList(v);
+        if (current === epoch.current && !controller.signal.aborted) {
+          setList(v);
+          setLoadedAt(new Date().toISOString());
+        }
       })
       .catch((e: Error) => {
         if (current === epoch.current && !controller.signal.aborted) {
-          setError(e.message);
+          setListError(e.message);
           if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
             setList(undefined);
             reset();
@@ -295,7 +368,8 @@ export default function MediaWorkspace({
         }
       })
       .finally(() => {
-        if (current === epoch.current) setLoading(false);
+        if (current === epoch.current && !controller.signal.aborted)
+          setLoading(false);
       });
     return () => controller.abort();
   }, [team, folder, page, state, q, tag, type, starred, tick, gallery]);
@@ -307,7 +381,7 @@ export default function MediaWorkspace({
   useEffect(() => {
     if (!pending || editor || upload || folderMode || bulk) return;
     const id = setInterval(() => {
-      if (!document.hidden) refresh();
+      if (!document.hidden && navigator.onLine) refresh();
     }, 5000);
     return () => clearInterval(id);
   }, [pending, editor, upload, folderMode, bulk]);
@@ -328,10 +402,24 @@ export default function MediaWorkspace({
         : list.chapterFolders),
     allUpdate =
       selected.length > 0 &&
-      selected.every((f) => f.actions.includes("update") && !f.purgedAt),
+      selected.every((f) => {
+        const current = list?.items.find((item) => item.id === f.id);
+        return (
+          current?.revision === f.revision &&
+          current.actions.includes("update") &&
+          !current.purgedAt
+        );
+      }),
     allDelete =
       selected.length > 0 &&
-      selected.every((f) => f.actions.includes("delete") && !f.purgedAt),
+      selected.every((f) => {
+        const current = list?.items.find((item) => item.id === f.id);
+        return (
+          current?.revision === f.revision &&
+          current.actions.includes("delete") &&
+          !current.purgedAt
+        );
+      }),
     movable = selected.every(
       (f) =>
         !f.public && !f.inUse && !["pending", "queued"].includes(f.scanState),
@@ -344,8 +432,21 @@ export default function MediaWorkspace({
   };
   const applyBulk = async (e: FormEvent) => {
     e.preventDefault();
-    if (busy || !selected.length || !bulk || (bulk === "move" && !destination))
+    if (
+      !selected.length ||
+      !bulk ||
+      loading ||
+      listError ||
+      (bulk === "move" && !destination)
+    )
       return;
+    if (
+      (bulk === "archive" ? !allDelete || !movable : !allUpdate) ||
+      (bulk === "move" && !movable)
+    )
+      return;
+    const controller = begin();
+    if (!controller) return;
     const body = {
         action: bulk === "unstar" ? "star" : bulk,
         files: selected.map((f) => ({ id: f.id, revision: f.revision })),
@@ -367,10 +468,6 @@ export default function MediaWorkspace({
       signature = JSON.stringify(body);
     if (attempt.current?.signature !== signature)
       attempt.current = { signature, key: crypto.randomUUID() };
-    const controller = new AbortController(),
-      current = epoch.current;
-    mutation.current = controller;
-    setBusy(true);
     setError("");
     try {
       await api("/admin/media/files", {
@@ -379,15 +476,14 @@ export default function MediaWorkspace({
         idempotencyKey: attempt.current.key,
         signal: controller.signal,
       });
-      if (current === epoch.current)
+      if (current(controller))
         saved(
           "Media change recorded. No original file bytes were permanently deleted.",
         );
     } catch (e) {
-      if (current === epoch.current && !controller.signal.aborted)
-        setError((e as Error).message);
+      if (current(controller)) setError((e as Error).message);
     } finally {
-      if (!controller.signal.aborted) setBusy(false);
+      finish(controller);
     }
   };
   return (
@@ -418,16 +514,43 @@ export default function MediaWorkspace({
         </div>
       </header>
       {notice && (
-        <p role="status" className="gt-notice">
+        <p ref={noticeFocus} tabIndex={-1} role="status" className="gt-notice">
           {notice}
         </p>
       )}
       {error && (
+        <p
+          ref={errorFocus}
+          tabIndex={-1}
+          role="alert"
+          className="gt-form-error"
+        >
+          {error}
+        </p>
+      )}
+      {listError && (
         <p role="alert" className="gt-form-error">
-          {error}{" "}
-          <Button variant="ghost" disabled={busy} onClick={refresh}>
+          Media inventory: {listError}{" "}
+          <Button
+            variant="ghost"
+            disabled={busy || !isOnline}
+            onClick={() => {
+              refresh();
+              document.getElementById("workspace-content")?.focus();
+            }}
+          >
             Retry list
           </Button>
+        </p>
+      )}
+      {(!isOnline || (list && listError)) && (
+        <p role="status" className="gt-data-note">
+          {!isOnline
+            ? "You are offline. Nothing submits automatically on reconnect."
+            : "The inventory may be out of date."}{" "}
+          {loadedAt
+            ? `Last loaded ${new Date(loadedAt).toLocaleString()}.`
+            : "Refresh before continuing."}
         </p>
       )}
       <section className="gt-media-filters" aria-label="Media filters">
@@ -518,6 +641,45 @@ export default function MediaWorkspace({
           </Button>
         </form>
       </section>
+      {(team ||
+        folder ||
+        q ||
+        tag ||
+        starred ||
+        type !== (gallery ? "image" : "") ||
+        state !== "current" ||
+        page > 1) && (
+        <Button
+          variant="ghost"
+          disabled={busy}
+          onClick={() =>
+            change(() => {
+              setTeam("");
+              setFolder(null);
+              setQ("");
+              setQueryDraft("");
+              setTag("");
+              setTagDraft("");
+              setStarred(false);
+              setType(gallery ? "image" : "");
+              setState("current");
+            })
+          }
+        >
+          Reset media filters
+        </Button>
+      )}
+      {loading && !list && (
+        <div role="status" aria-label="Loading authorized media">
+          <div className="gt-skeleton gt-detail-skeleton" />
+          <span className="sr-only">Loading authorized media…</span>
+        </div>
+      )}
+      {!loading && !list && listError && (
+        <p>
+          Media inventory is unavailable. Retry to check your permitted scopes.
+        </p>
+      )}
       {!explicitScope && (
         <p className="gt-helper">
           Choose a library scope to upload files or manage folders. This view
@@ -546,14 +708,26 @@ export default function MediaWorkspace({
           listing={list}
           teamId={folderMode.folder?.teamId ?? scope}
           parentId={folder}
+          readUnavailable={loading || !!listError}
           onSaved={() => saved("Folder change recorded.")}
           onClose={() => setFolderMode(undefined)}
         />
       )}
       {editor && (
         <MediaFileEditor
-          key={`${editor.id}/${editor.revision}`}
-          file={editor}
+          key={editor.id}
+          file={
+            list?.items.find((file) => file.id === editor.id) || {
+              ...editor,
+              actions: [],
+              canPublish: false,
+            }
+          }
+          readUnavailable={
+            loading ||
+            !!listError ||
+            !list?.items.some((file) => file.id === editor.id)
+          }
           onSaved={() =>
             saved(
               "Media metadata or publication change recorded. Refresh the list to review worker status.",
@@ -685,7 +859,7 @@ export default function MediaWorkspace({
               </div>
               {bulk && (
                 <form className="gt-form" onSubmit={applyBulk}>
-                  <h2>
+                  <h2 ref={bulkHeading} tabIndex={-1}>
                     Confirm {bulk} · {selected.length} file
                     {selected.length === 1 ? "" : "s"}
                   </h2>
@@ -736,7 +910,13 @@ export default function MediaWorkspace({
                   </p>
                   <div className="gt-inline-actions">
                     <Button
-                      disabled={busy || (bulk === "move" && !destination)}
+                      disabled={
+                        busy ||
+                        !isOnline ||
+                        loading ||
+                        !!listError ||
+                        (bulk === "move" && !destination)
+                      }
                     >
                       {busy ? "Applying…" : "Confirm media change"}
                     </Button>
@@ -867,6 +1047,7 @@ export default function MediaWorkspace({
           ) : (
             !loading && (
               <EmptyState
+                headingLevel={2}
                 title={
                   state === "trash"
                     ? "No archived files here"
@@ -913,10 +1094,10 @@ export default function MediaWorkspace({
         </>
       )}
       <p className="gt-helper">
-        Local upload policy: five active uploads, 25 files / 500 MiB per account
-        per day, 1 GiB / 1,000 retained files per scope. Scanning and
-        publication require the isolated media worker. Legacy unverified files
-        are never served as clean files.
+        Upload limits: five active uploads, 25 files / 500 MiB per account per
+        day, 1 GiB / 1,000 retained files per scope. Scanning and publication
+        continue in the background. Original uploads are never published
+        automatically; only files that pass scanning can be downloaded.
       </p>
     </div>
   );

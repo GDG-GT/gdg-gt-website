@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { api, ApiFailure } from "@/lib/api";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
 import { mediaFileMutation } from "../../../shared/media.mjs";
 import { Button, Field, Badge } from "../primitives";
@@ -8,10 +10,12 @@ export default function MediaFileEditor({
   file,
   onSaved,
   onClose,
+  readUnavailable = false,
 }: {
   file: MediaFile;
   onSaved: () => void;
   onClose: () => void;
+  readUnavailable?: boolean;
 }) {
   const initial = {
     name: file.name,
@@ -28,7 +32,6 @@ export default function MediaFileEditor({
     [review, setReview] = useState<"publish" | "revoke">(),
     [password, setPassword] = useState(""),
     [confirmation, setConfirmation] = useState(""),
-    [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [conflict, setConflict] = useState(false),
@@ -37,7 +40,19 @@ export default function MediaFileEditor({
       { id: string; title: string; publication_status: string }[]
     >([]),
     [eventQuery, setEventQuery] = useState(""),
-    [eventSearch, setEventSearch] = useState("");
+    [eventSearch, setEventSearch] = useState(""),
+    [eventError, setEventError] = useState(""),
+    [eventRetry, setEventRetry] = useState(0);
+  const { busy, begin, current, finish, cancel, pending } = usePrivateMutation(
+    file.id,
+  );
+  const { isOnline } = useOnlineStatus();
+  const originalRevision = useRef(file.revision),
+    heading = useRef<HTMLHeadingElement>(null),
+    reviewHeading = useRef<HTMLHeadingElement>(null),
+    errorFocus = useRef<HTMLParagraphElement>(null),
+    noticeFocus = useRef<HTMLParagraphElement>(null);
+  const stale = originalRevision.current !== file.revision;
   const editable =
       file.actions.includes("update") &&
       !file.public &&
@@ -48,20 +63,14 @@ export default function MediaFileEditor({
       !!password ||
       !!confirmation,
     safety = useNavigationSafety(),
-    epoch = useRef(0),
-    pending = useRef<AbortController>(),
     attempt = useRef<{ signature: string; key: string }>();
   useDraftGuard(dirty, {
     busy,
     label: "Media metadata and publication review",
   });
   useEffect(() => {
-    const invalidate = () => {
-      epoch.current++;
-      pending.current?.abort();
-    };
     const clear = () => {
-      invalidate();
+      cancel();
       setCapability(undefined);
       setPassword("");
       setConfirmation("");
@@ -78,14 +87,24 @@ export default function MediaFileEditor({
       });
       setEvents([]);
       setReview(undefined);
-      setBusy(false);
     };
     window.addEventListener("gdg:session-cleared", clear);
     return () => {
-      invalidate();
       window.removeEventListener("gdg:session-cleared", clear);
     };
+  }, [cancel]);
+  useEffect(() => {
+    heading.current?.focus();
   }, []);
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
+  useEffect(() => {
+    if (notice) noticeFocus.current?.focus();
+  }, [notice]);
+  useEffect(() => {
+    if (review) reviewHeading.current?.focus();
+  }, [review]);
   useEffect(() => {
     const controller = new AbortController();
     api<{ items: typeof events }>(
@@ -93,29 +112,52 @@ export default function MediaFileEditor({
       { signal: controller.signal },
     )
       .then((r) => {
-        if (!controller.signal.aborted) setEvents(r.items);
+        if (!controller.signal.aborted) {
+          setEvents(r.items);
+          setEventError("");
+        }
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setEvents([]);
+      .catch((e) => {
+        if (!controller.signal.aborted) {
+          setEvents([]);
+          setEventError(
+            e instanceof Error ? e.message : "Event choices could not load.",
+          );
+        }
       });
     return () => controller.abort();
-  }, [file.teamId, eventSearch]);
+  }, [file.teamId, eventSearch, eventRetry]);
   useEffect(() => {
     if (!capability) return;
     const timer = setTimeout(() => setCapability(undefined), 55000);
     return () => clearTimeout(timer);
   }, [capability]);
   const leave = (next: () => void) => {
-    if (busy) return;
+    if (pending.current) return;
     if (dirty && safety) safety.request(next);
     else next();
   };
   const run = async (publication = false) => {
-    if (busy || conflict) return;
-    const controller = new AbortController(),
-      current = epoch.current;
-    pending.current = controller;
-    setBusy(true);
+    if (readUnavailable || conflict || stale || (!publication && !editable))
+      return;
+    if (
+      publication &&
+      (!file.canPublish ||
+        file.deletedAt ||
+        file.purgedAt ||
+        file.fileType !== "image" ||
+        file.scanState !== "clean" ||
+        !review ||
+        !password ||
+        confirmation !==
+          (review === "publish" ? "PUBLISH IMAGE" : "REVOKE IMAGE") ||
+        (review === "publish" && !file.alt.trim()))
+    )
+      return;
+    const controller = begin();
+    if (!controller) return;
+    const secret = password;
+    setPassword("");
     setError("");
     try {
       let body: unknown;
@@ -123,7 +165,7 @@ export default function MediaFileEditor({
         body = {
           action: review,
           revision: file.revision,
-          currentPassword: password,
+          currentPassword: secret,
           confirmation,
         };
       else {
@@ -162,14 +204,15 @@ export default function MediaFileEditor({
           signal: controller.signal,
         },
       );
-      if (current === epoch.current) {
+      if (current(controller)) {
+        attempt.current = undefined;
         setPassword("");
         setConfirmation("");
         setCapability(undefined);
         onSaved();
       }
     } catch (e) {
-      if (current === epoch.current && !controller.signal.aborted) {
+      if (current(controller)) {
         setError((e as Error).message);
         if (
           e instanceof ApiFailure &&
@@ -179,7 +222,7 @@ export default function MediaFileEditor({
           setConflict(true);
       }
     } finally {
-      if (current === epoch.current) setBusy(false);
+      finish(controller);
     }
   };
   return (
@@ -189,7 +232,9 @@ export default function MediaFileEditor({
     >
       <div className="gt-panel-heading">
         <div>
-          <h2>{file.name}</h2>
+          <h2 ref={heading} tabIndex={-1}>
+            {file.name}
+          </h2>
           <p className="gt-helper">
             {file.originalName} · {humanBytes(file.bytes)} · revision{" "}
             {file.revision}
@@ -218,13 +263,34 @@ export default function MediaFileEditor({
           : "No retained usage reference found."}
       </p>
       {error && (
-        <p role="alert" className="gt-form-error">
+        <p
+          ref={errorFocus}
+          tabIndex={-1}
+          role="alert"
+          className="gt-form-error"
+        >
           {error}
         </p>
       )}
-      {notice && <p role="status">{notice}</p>}
-      {conflict && (
-        <p className="gt-helper">
+      {notice && (
+        <p ref={noticeFocus} tabIndex={-1} role="status">
+          {notice}
+        </p>
+      )}
+      {!isOnline && (
+        <p role="status" className="gt-data-note">
+          You are offline. Unsaved metadata stays in this open tab; nothing
+          submits automatically on reconnect.
+        </p>
+      )}
+      {readUnavailable && (
+        <p role="status" className="gt-data-note">
+          File actions are unavailable until the current protected inventory
+          loads. Your fields are preserved.
+        </p>
+      )}
+      {(conflict || stale) && (
+        <p role="alert" className="gt-form-error">
           This file changed. Close this draft and reopen the current record;
           unsaved changes will be reviewed before leaving.
         </p>
@@ -236,12 +302,11 @@ export default function MediaFileEditor({
               <Button
                 key={String(preview)}
                 variant="secondary"
-                disabled={busy}
+                disabled={busy || !isOnline || readUnavailable}
                 onClick={async () => {
-                  const controller = new AbortController(),
-                    current = epoch.current;
-                  pending.current = controller;
-                  setBusy(true);
+                  if (readUnavailable) return;
+                  const controller = begin();
+                  if (!controller) return;
                   setError("");
                   setCapability(undefined);
                   try {
@@ -249,17 +314,16 @@ export default function MediaFileEditor({
                       `/admin/media/files/${file.id}/${preview ? "preview" : "download"}`,
                       { signal: controller.signal },
                     );
-                    if (current === epoch.current) {
+                    if (current(controller)) {
                       setCapability({ url: r.url, preview });
                       setNotice(
                         "Private link expires in 60 seconds. Previously downloaded copies cannot be recalled.",
                       );
                     }
                   } catch (e) {
-                    if (current === epoch.current && !controller.signal.aborted)
-                      setError((e as Error).message);
+                    if (current(controller)) setError((e as Error).message);
                   } finally {
-                    if (current === epoch.current) setBusy(false);
+                    finish(controller);
                   }
                 }}
               >
@@ -303,7 +367,7 @@ export default function MediaFileEditor({
             </p>
           )}
           <fieldset
-            disabled={busy || !editable || conflict}
+            disabled={busy || !editable || conflict || stale}
             className="gt-media-fields"
           >
             <Field label="Display name" required>
@@ -381,6 +445,18 @@ export default function MediaFileEditor({
                 Find events
               </Button>
             </div>
+            {eventError && (
+              <p role="alert" className="gt-form-error">
+                Event choices: {eventError}{" "}
+                <button
+                  type="button"
+                  disabled={busy || !isOnline}
+                  onClick={() => setEventRetry((v) => v + 1)}
+                >
+                  Retry event choices
+                </button>
+              </p>
+            )}
             <Field
               label="Event association"
               hint="Up to 50 matching events in this scope. The event must be published before its image can be published."
@@ -431,7 +507,17 @@ export default function MediaFileEditor({
           </fieldset>
           <div className="gt-inline-actions">
             {editable && (
-              <Button type="submit" disabled={busy || !dirty || conflict}>
+              <Button
+                type="submit"
+                disabled={
+                  busy ||
+                  !isOnline ||
+                  readUnavailable ||
+                  !dirty ||
+                  conflict ||
+                  stale
+                }
+              >
                 {busy ? "Saving…" : "Save private metadata"}
               </Button>
             )}
@@ -441,7 +527,14 @@ export default function MediaFileEditor({
                 <Button
                   type="button"
                   variant="secondary"
-                  disabled={busy || conflict || file.scanState !== "clean"}
+                  disabled={
+                    busy ||
+                    !isOnline ||
+                    readUnavailable ||
+                    conflict ||
+                    stale ||
+                    file.scanState !== "clean"
+                  }
                   onClick={() =>
                     leave(() => {
                       setDraft(initial);
@@ -470,14 +563,14 @@ export default function MediaFileEditor({
             void run(true);
           }}
         >
-          <h3>
+          <h3 ref={reviewHeading} tabIndex={-1}>
             {review === "publish"
               ? "Approve this image for the public gallery"
               : "Revoke public image delivery"}
           </h3>
           <p>
             {review === "publish"
-              ? "The image, alt text, caption, associated event and download permission will become public after an isolated worker creates approved responsive WebP versions. Original files and other media stay private."
+              ? "The image, alt text, caption, associated event and download permission will become public after responsive WebP versions are prepared. Original files and other media stay private."
               : "New public requests will stop. Copies already downloaded or visible in an open page cannot be recalled. Active publication work is cancelled."}
           </p>
           <dl>
@@ -516,6 +609,10 @@ export default function MediaFileEditor({
             <Button
               disabled={
                 busy ||
+                !isOnline ||
+                readUnavailable ||
+                stale ||
+                !file.canPublish ||
                 conflict ||
                 !password ||
                 confirmation !==
