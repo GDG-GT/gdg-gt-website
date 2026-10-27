@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { Button, Field } from "../primitives";
 import { date, useNewsletterWork, type NewsletterRecord } from "./types";
 type Review = {
@@ -16,9 +17,13 @@ type Review = {
 export default function NewsletterSend({
   record,
   onSaved,
+  unavailable = false,
+  onLockChange,
 }: {
   record: NewsletterRecord;
   onSaved: (message: string) => void;
+  unavailable?: boolean;
+  onLockChange?: (locked: boolean, pending: boolean) => void;
 }) {
   const [mode, setMode] = useState<"send" | "test" | "cancel">(),
     [review, setReview] = useState<Review>(),
@@ -27,9 +32,16 @@ export default function NewsletterSend({
     [schedule, setSchedule] = useState(""),
     [expired, setExpired] = useState(false),
     [notice, setNotice] = useState("");
-  const { busy, error, setError, work } = useNewsletterWork(),
+  const { busy, error, setError, work, pending, cancel } = useNewsletterWork(
+      record.id + ":" + record.revision,
+    ),
     safety = useNavigationSafety(),
-    retry = useRef<{ signature: string; key: string }>();
+    retry = useRef<{ signature: string; key: string }>(),
+    heading = useRef<HTMLHeadingElement>(null),
+    errorFocus = useRef<HTMLParagraphElement>(null),
+    noticeFocus = useRef<HTMLParagraphElement>(null);
+  const { isOnline } = useOnlineStatus();
+  const allowed = record.actions.includes("send_email") && !record.deletedAt;
   const path = `/admin/newsletter/campaigns/${record.id}`;
   useDraftGuard(!!mode, { busy, label: "Campaign send review" });
   const clear = useCallback(() => {
@@ -46,19 +58,50 @@ export default function NewsletterSend({
     return () => window.removeEventListener("gdg:session-cleared", clear);
   }, [clear]);
   useEffect(() => {
+    cancel();
+    clear();
+    setNotice("");
+  }, [record.id, record.revision, allowed, cancel, clear]);
+  useEffect(() => {
+    onLockChange?.(busy || !!mode, busy);
+    return () => onLockChange?.(false, false);
+  }, [busy, mode, onLockChange]);
+  useEffect(() => {
+    if (mode) heading.current?.focus();
+  }, [mode]);
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
+  useEffect(() => {
+    if (notice) noticeFocus.current?.focus();
+  }, [notice]);
+  useEffect(() => {
     setExpired(false);
     if (!review) return;
+    const expires = Date.parse(review.expiresAt);
+    if (!Number.isFinite(expires) || expires <= Date.now()) {
+      setExpired(true);
+      return;
+    }
     const timer = setTimeout(
       () => setExpired(true),
-      Math.max(0, new Date(review.expiresAt).getTime() - Date.now()),
+      Math.max(0, expires - Date.now()),
     );
     return () => clearTimeout(timer);
   }, [review]);
-  if (!record.actions.includes("send_email") || record.deletedAt) return null;
-  const request = async () => {
-    if (!mode || busy) return;
+  if (!allowed) return null;
+  const request = async (reviewOnly = false) => {
+    if (!mode || pending.current || !isOnline || unavailable || !allowed)
+      return;
+    if ((mode === "send" || mode === "test") && record.status !== "draft")
+      return;
+    if (
+      mode === "cancel" &&
+      !["scheduled", "sending"].includes(record.status || "")
+    )
+      return;
     setNotice("");
-    if (mode === "send" && (!review || expired)) {
+    if (mode === "send" && reviewOnly) {
       await work(
         (signal) =>
           api<Review>(path + "/send-review", {
@@ -70,7 +113,30 @@ export default function NewsletterSend({
           setReview(r);
           setPassword("");
           setConfirmation("");
+          setExpired(
+            !Number.isFinite(Date.parse(r.expiresAt)) ||
+              Date.parse(r.expiresAt) <= Date.now(),
+          );
+          heading.current?.focus();
         },
+      );
+      return;
+    }
+    if (!password || confirmation !== expected) {
+      setError("Enter the exact confirmation and your current password.");
+      return;
+    }
+    if (
+      mode === "send" &&
+      (!review ||
+        !Number.isFinite(Date.parse(review.expiresAt)) ||
+        Date.parse(review.expiresAt) <= Date.now())
+    ) {
+      setExpired(true);
+      setPassword("");
+      setConfirmation("");
+      setError(
+        "This send review expired. Generate a fresh review before approval.",
       );
       return;
     }
@@ -138,13 +204,24 @@ export default function NewsletterSend({
   return (
     <section className="gt-newsletter-send" aria-label="Campaign sending">
       <h3>Delivery controls</h3>
-      {notice && <p role="status">{notice}</p>}
+      {notice && (
+        <p role="status" tabIndex={-1} ref={noticeFocus}>
+          {notice}
+        </p>
+      )}
+      {!isOnline && (
+        <p role="status">
+          You’re offline. Delivery actions stay unsent until you reconnect and
+          confirm.
+        </p>
+      )}
       {!mode ? (
         <div className="gt-inline-actions">
           {record.status === "draft" && (
             <>
               <Button
                 type="button"
+                disabled={unavailable || !isOnline}
                 onClick={() => {
                   setMode("send");
                   setNotice("");
@@ -155,6 +232,7 @@ export default function NewsletterSend({
               <Button
                 type="button"
                 variant="secondary"
+                disabled={unavailable || !isOnline}
                 onClick={() => setMode("test")}
               >
                 Send test to me
@@ -165,6 +243,7 @@ export default function NewsletterSend({
             <Button
               type="button"
               variant="danger"
+              disabled={unavailable || !isOnline}
               onClick={() => setMode("cancel")}
             >
               Cancel remaining sends
@@ -178,7 +257,7 @@ export default function NewsletterSend({
         </div>
       ) : (
         <div className="gt-form">
-          <h4>
+          <h4 tabIndex={-1} ref={heading}>
             {mode === "send"
               ? "Review the exact audience"
               : mode === "test"
@@ -193,7 +272,12 @@ export default function NewsletterSend({
                 : "Stops queued work. An email already accepted by the provider cannot be recalled."}
           </p>
           {error && (
-            <p role="alert" className="gt-form-error">
+            <p
+              role="alert"
+              tabIndex={-1}
+              ref={errorFocus}
+              className="gt-form-error"
+            >
               {error}
             </p>
           )}
@@ -226,8 +310,8 @@ export default function NewsletterSend({
           {mode === "send" && (!review || expired) ? (
             <Button
               type="button"
-              disabled={busy}
-              onClick={() => void request()}
+              disabled={busy || unavailable || !isOnline}
+              onClick={() => void request(true)}
             >
               {busy
                 ? "Reviewing…"
@@ -272,7 +356,12 @@ export default function NewsletterSend({
               <Button
                 type="button"
                 disabled={
-                  busy || !password || confirmation !== expected || expired
+                  busy ||
+                  unavailable ||
+                  !isOnline ||
+                  !password ||
+                  confirmation !== expected ||
+                  expired
                 }
                 variant={mode === "cancel" ? "danger" : "primary"}
                 onClick={() => void request()}

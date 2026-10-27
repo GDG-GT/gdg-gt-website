@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 export type Kind = "subscribers" | "templates" | "campaigns";
 export type NewsletterRecord = {
   id: string;
@@ -53,52 +54,31 @@ export type Delivery = {
 };
 export const date = (value?: string) =>
   value ? new Date(value).toLocaleString() : "—";
-export function useNewsletterWork() {
-  const [busy, setBusy] = useState(false),
-    [error, setError] = useState("");
-  const generation = useRef(0),
-    pending = useRef<AbortController>(),
-    running = useRef(false);
+export function useNewsletterWork(scope = "newsletter") {
+  const [error, setError] = useState("");
+  const { busy, begin, current, finish, cancel, pending } =
+    usePrivateMutation(scope);
   useEffect(() => {
-    const invalidate = () => {
-      generation.current++;
-      pending.current?.abort();
-    };
-    const clear = () => {
-      invalidate();
-      running.current = false;
-      setBusy(false);
-      setError("");
-    };
+    setError("");
+    const clear = () => setError("");
     window.addEventListener("gdg:session-cleared", clear);
-    return () => {
-      invalidate();
-      window.removeEventListener("gdg:session-cleared", clear);
-    };
-  }, []);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, [scope]);
   async function work<T>(
     task: (signal: AbortSignal) => Promise<T>,
     done: (result: T) => void,
   ) {
-    if (running.current) return;
-    running.current = true;
-    const current = generation.current,
-      controller = new AbortController();
-    pending.current = controller;
-    setBusy(true);
+    const controller = begin();
+    if (!controller) return;
     setError("");
     try {
       const result = await task(controller.signal);
-      if (current === generation.current) done(result);
+      if (current(controller)) done(result);
     } catch (e) {
-      if (current === generation.current && !controller.signal.aborted)
-        setError((e as Error).message);
+      if (current(controller)) setError((e as Error).message);
     } finally {
-      if (current === generation.current) {
-        running.current = false;
-        setBusy(false);
-      }
+      finish(controller);
     }
   }
-  return { busy, error, setError, work };
+  return { busy, error, setError, work, cancel, pending };
 }

@@ -684,7 +684,8 @@
       "line": 435,
       "status": "unverified",
       "testIds": [
-        "NEWS-TEST-001"
+        "NEWS-TEST-001",
+        "NEWS-TEST-005"
       ],
       "evidence": []
     },
@@ -695,7 +696,8 @@
       "status": "unverified",
       "testIds": [
         "NEWS-TEST-001",
-        "NEWS-TEST-004"
+        "NEWS-TEST-004",
+        "NEWS-TEST-005"
       ],
       "evidence": []
     },
@@ -706,7 +708,8 @@
       "status": "unverified",
       "testIds": [
         "NEWS-TEST-001",
-        "NEWS-TEST-004"
+        "NEWS-TEST-004",
+        "NEWS-TEST-005"
       ],
       "evidence": []
     },
@@ -716,7 +719,8 @@
       "line": 441,
       "status": "unverified",
       "testIds": [
-        "NEWS-TEST-002"
+        "NEWS-TEST-002",
+        "NEWS-TEST-005"
       ],
       "evidence": []
     },
@@ -726,7 +730,8 @@
       "line": 443,
       "status": "unverified",
       "testIds": [
-        "NEWS-TEST-002"
+        "NEWS-TEST-002",
+        "NEWS-TEST-005"
       ],
       "evidence": []
     },

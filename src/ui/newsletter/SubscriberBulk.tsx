@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { Button, Field } from "../primitives";
 import { useNewsletterWork, type NewsletterRecord } from "./types";
 export default function SubscriberBulk({
@@ -19,9 +20,22 @@ export default function SubscriberBulk({
   const [action, setAction] = useState<"archive" | "restore" | "deactivate">(),
     [password, setPassword] = useState(""),
     [confirmation, setConfirmation] = useState("");
-  const { busy, error, work } = useNewsletterWork(),
+  const identity = JSON.stringify(records.map((r) => [r.id, r.revision]));
+  const { busy, error, work, pending } = useNewsletterWork(identity),
     safety = useNavigationSafety(),
-    retry = useRef<{ signature: string; key: string }>();
+    retry = useRef<{ signature: string; key: string }>(),
+    snapshot = useRef(identity),
+    heading = useRef<HTMLHeadingElement>(null),
+    errorFocus = useRef<HTMLParagraphElement>(null);
+  const { isOnline } = useOnlineStatus();
+  const stale = !!action && snapshot.current !== identity,
+    denied = records.some((r) => !r.actions.includes("delete"));
+  useEffect(() => {
+    if (action) heading.current?.focus();
+  }, [action]);
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
   useDraftGuard(!!action, {
     busy,
     label: "Selected newsletter subscriber review",
@@ -37,6 +51,16 @@ export default function SubscriberBulk({
     retry.current = undefined;
   };
   const submit = async () => {
+    if (
+      !action ||
+      pending.current ||
+      stale ||
+      denied ||
+      !isOnline ||
+      !password ||
+      confirmation !== expected
+    )
+      return;
     const document = {
         action,
         records: records.map((r) => ({ id: r.id, revision: r.revision })),
@@ -77,18 +101,36 @@ export default function SubscriberBulk({
       {!action ? (
         <div className="gt-inline-actions">
           {archived ? (
-            <Button variant="secondary" onClick={() => setAction("restore")}>
+            <Button
+              variant="secondary"
+              disabled={denied || !isOnline}
+              onClick={() => {
+                snapshot.current = identity;
+                setAction("restore");
+              }}
+            >
               Review selected restore
             </Button>
           ) : (
             <>
               <Button
                 variant="secondary"
-                onClick={() => setAction("deactivate")}
+                disabled={denied || !isOnline}
+                onClick={() => {
+                  snapshot.current = identity;
+                  setAction("deactivate");
+                }}
               >
                 Review selected deactivation
               </Button>
-              <Button variant="secondary" onClick={() => setAction("archive")}>
+              <Button
+                variant="secondary"
+                disabled={denied || !isOnline}
+                onClick={() => {
+                  snapshot.current = identity;
+                  setAction("archive");
+                }}
+              >
                 Review selected archive
               </Button>
             </>
@@ -99,7 +141,15 @@ export default function SubscriberBulk({
         </div>
       ) : (
         <>
-          <h3>Review {action}</h3>
+          <h3 tabIndex={-1} ref={heading}>
+            Review {action}
+          </h3>
+          {(stale || denied) && (
+            <p role="alert">
+              The selected records or permissions changed. Close this review and
+              select current records before confirming.
+            </p>
+          )}
           <p>
             Only these selected records will change. Deactivation or archive
             stops future sends and revokes tokens. Restore keeps addresses
@@ -114,7 +164,12 @@ export default function SubscriberBulk({
             ))}
           </ul>
           {error && (
-            <p role="alert" className="gt-form-error">
+            <p
+              role="alert"
+              tabIndex={-1}
+              ref={errorFocus}
+              className="gt-form-error"
+            >
               {error}
             </p>
           )}
@@ -139,7 +194,14 @@ export default function SubscriberBulk({
           </Field>
           <div className="gt-inline-actions">
             <Button
-              disabled={busy || !password || confirmation !== expected}
+              disabled={
+                busy ||
+                stale ||
+                denied ||
+                !isOnline ||
+                !password ||
+                confirmation !== expected
+              }
               onClick={() => void submit()}
             >
               {busy ? "Applying…" : "Confirm selected changes"}

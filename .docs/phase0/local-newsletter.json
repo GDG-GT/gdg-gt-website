@@ -1,6 +1,9 @@
 {
-  "generatedAt": "2026-10-26T18:07:51.572Z",
+  "generatedAt": "2026-10-27T22:09:37.431Z",
   "environment": "Fictional loopback accounts/team/recipients; local SMTP only; ephemeral signed callback fixture; one subscriber confirms through actual email, a second is explicitly synthetic preconfirmed data. All fixture records archived, no operator records erased.",
+  "cleanup": {
+    "completed": true
+  },
   "tests": [
     {
       "name": "all email tests are restricted to loopback SMTP capture",
@@ -140,6 +143,10 @@
     },
     {
       "name": "public signup returns a generic response without re-queuing mail for a suppressed address",
+      "passed": true
+    },
+    {
+      "name": "independent campaign change delivered during browser review",
       "passed": true
     }
   ]

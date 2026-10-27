@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { api, ApiFailure } from "@/lib/api";
+import { api } from "@/lib/api";
+import { useAdmin } from "@/contexts/AdminContext";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { useNavigationSafety } from "@/hooks/useDraftGuard";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import NewsletterEditor from "./NewsletterEditor";
@@ -13,8 +15,21 @@ import {
   type NewsletterRecord,
 } from "./types";
 export default function NewsletterWorkspace() {
-  const [cap, setCap] = useState<Capabilities>(),
-    [kind, setKind] = useState<Kind>("campaigns"),
+  const { currentAdmin } = useAdmin();
+  const [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((v) => v + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  return (
+    <NewsletterWorkspaceContent
+      key={`${currentAdmin?.id}:${currentAdmin?.role}:${epoch}`}
+    />
+  );
+}
+function NewsletterWorkspaceContent() {
+  const [kind, setKind] = useState<Kind>("campaigns"),
     [team, setTeam] = useState(""),
     [state, setState] = useState("current"),
     [status, setStatus] = useState(""),
@@ -22,12 +37,6 @@ export default function NewsletterWorkspace() {
     [q, setQ] = useState(""),
     [page, setPage] = useState(1),
     [tick, setTick] = useState(0),
-    [listingResponse, setListingResponse] = useState<{
-      key: string;
-      value: Listing;
-    }>(),
-    [loading, setLoading] = useState(true),
-    [loadError, setLoadError] = useState(""),
     [notice, setNotice] = useState(""),
     [editor, setEditor] = useState<{
       record?: NewsletterRecord;
@@ -36,103 +45,107 @@ export default function NewsletterWorkspace() {
     [exporting, setExporting] = useState(false);
   const [selected, setSelected] = useState<NewsletterRecord[]>([]),
     [bulkLocked, setBulkLocked] = useState(false);
-  const { busy: working, error, work } = useNewsletterWork(),
+  const {
+      busy: working,
+      error,
+      setError,
+      work,
+      cancel,
+      pending,
+    } = useNewsletterWork(JSON.stringify([kind, team, state, status, q, page])),
     busy = working || bulkLocked,
     safety = useNavigationSafety(),
-    epoch = useRef(0);
+    noticeFocus = useRef<HTMLParagraphElement>(null),
+    errorFocus = useRef<HTMLParagraphElement>(null);
   const filters = {
     ...(team ? { team } : {}),
     state,
     ...(status ? { status } : {}),
     q,
   };
-  const listingKey = JSON.stringify([kind, team, state, status, q, page]),
-    list =
-      listingResponse?.key === listingKey ? listingResponse.value : undefined;
+  const capRead = usePrivateRead<Capabilities>(
+      "/admin/newsletter/capabilities",
+      tick,
+    ),
+    listRead = usePrivateRead<Listing>(
+      "/admin/newsletter/" +
+        kind +
+        "?" +
+        new URLSearchParams({ ...filters, page: String(page) }),
+      tick,
+    ),
+    detailRead = usePrivateRead<{ record: NewsletterRecord }>(
+      editor?.record
+        ? `/admin/newsletter/${kind}/${editor.record.id}`
+        : undefined,
+      tick,
+    );
+  const cap = capRead.data,
+    list = listRead.data,
+    loading = listRead.loading,
+    loadError = listRead.error;
+  const { clear: clearCap } = capRead,
+    { clear: clearList } = listRead,
+    { clear: clearDetail } = detailRead;
   useEffect(() => {
-    const invalidate = () => {
-      epoch.current++;
+    const refresh = () => {
+      if (!pending.current) setTick((v) => v + 1);
     };
-    const clear = () => {
-      invalidate();
-      setCap(undefined);
-      setListingResponse(undefined);
+    const timer = setInterval(() => {
+      if (!document.hidden && navigator.onLine) refresh();
+    }, 30000);
+    window.addEventListener("gdg:access-changed", refresh);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("gdg:access-changed", refresh);
+    };
+  }, [pending]);
+  useEffect(() => {
+    if (capRead.denied || listRead.denied) {
+      cancel();
+      clearCap();
+      clearList();
+      clearDetail();
       setEditor(undefined);
       setNotice("");
       setExporting(false);
       setSelected([]);
-    };
-    window.addEventListener("gdg:session-cleared", clear);
-    return () => {
-      invalidate();
-      window.removeEventListener("gdg:session-cleared", clear);
-    };
-  }, []);
+    }
+  }, [
+    capRead.denied,
+    listRead.denied,
+    cancel,
+    clearCap,
+    clearList,
+    clearDetail,
+  ]);
   useEffect(() => {
-    const controller = new AbortController(),
-      current = epoch.current;
-    api<Capabilities>("/admin/newsletter/capabilities", {
-      signal: controller.signal,
-    })
-      .then((c) => {
-        if (!controller.signal.aborted && current === epoch.current) setCap(c);
-      })
-      .catch((e: Error) => {
-        if (!controller.signal.aborted && current === epoch.current)
-          setLoadError(e.message);
-      });
-    return () => controller.abort();
-  }, [tick]);
+    if (detailRead.denied) {
+      setEditor(undefined);
+      clearDetail();
+      setError("Newsletter record access changed. Private editor cleared.");
+    }
+  }, [detailRead.denied, clearDetail, setError]);
   useEffect(() => {
-    const controller = new AbortController(),
-      current = epoch.current;
-    setLoading(true);
-    setLoadError("");
-    setListingResponse(undefined);
-    api<Listing>(
-      "/admin/newsletter/" +
-        kind +
-        "?" +
-        new URLSearchParams({
-          ...(team ? { team } : {}),
-          state,
-          ...(status ? { status } : {}),
-          q,
-          page: String(page),
-        }),
-      { signal: controller.signal },
-    )
-      .then((v) => {
-        if (!controller.signal.aborted && current === epoch.current)
-          setListingResponse({ key: listingKey, value: v });
-      })
-      .catch((e: Error) => {
-        if (!controller.signal.aborted && current === epoch.current) {
-          setLoadError(e.message);
-          if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
-            setCap(undefined);
-            setEditor(undefined);
-          }
-        }
-      })
-      .finally(() => {
-        if (!controller.signal.aborted && current === epoch.current)
-          setLoading(false);
-      });
-    return () => controller.abort();
-  }, [kind, team, state, status, q, page, tick, listingKey]);
+    if (notice) noticeFocus.current?.focus();
+  }, [notice]);
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
   useEffect(() => {
     setSelected([]);
-  }, [kind, team, state, status, q, page, tick]);
+  }, [kind, team, state, status, q, page]);
   const refresh = () => setTick((n) => n + 1),
     canCreate =
       state === "current" &&
+      !capRead.loading &&
+      !capRead.error &&
       !!team &&
       (team === "chapter"
         ? cap?.chapterCreate
         : cap?.teams.find((t) => t.id === team)?.canCreate);
   const navigate = (run: () => void) => {
-    if (!busy) {
+    if (!busy && !pending.current) {
       if (safety) safety.request(run);
       else run();
     }
@@ -176,21 +189,62 @@ export default function NewsletterWorkspace() {
         </Button>
       </header>
       {notice && (
-        <p role="status" className="gt-notice">
+        <p role="status" tabIndex={-1} ref={noticeFocus} className="gt-notice">
           {notice}
         </p>
       )}
-      {(loadError || error) && (
-        <p role="alert" className="gt-form-error">
-          {loadError || error}
+      {error && (
+        <p
+          role="alert"
+          tabIndex={-1}
+          ref={errorFocus}
+          className="gt-form-error"
+        >
+          {error}
         </p>
       )}
+      {[
+        { name: "Newsletter permissions", ...capRead },
+        { name: "Newsletter inventory", ...listRead },
+        { name: "Newsletter details", ...detailRead },
+      ].map((read) => (
+        <div key={read.name}>
+          {read.error && (
+            <p role="alert" className="gt-form-error">
+              {read.name}: {read.error}{" "}
+              <Button
+                variant="ghost"
+                disabled={busy}
+                onClick={() => {
+                  document.getElementById("workspace-content")?.focus();
+                  refresh();
+                }}
+              >
+                Retry {read.name.toLowerCase()}
+              </Button>
+            </p>
+          )}
+          {read.data && (read.error || read.loading) && (
+            <p role="status">
+              {read.name} may be out of date. Last loaded{" "}
+              {new Date(read.at!).toLocaleString()}.
+            </p>
+          )}
+        </div>
+      ))}
       {editor ? (
         <NewsletterEditor
           key={editor.key}
           kind={kind}
-          record={editor.record}
+          record={detailRead.data?.record || editor.record}
           scope={team}
+          unavailable={
+            capRead.loading ||
+            !!capRead.error ||
+            (!!editor.record && (detailRead.loading || !!detailRead.error)) ||
+            (!editor.record && !canCreate)
+          }
+          onRefresh={refresh}
           onSaved={saved}
           onClose={() => {
             setEditor(undefined);
@@ -296,6 +350,7 @@ export default function NewsletterWorkspace() {
             <Button
               disabled={busy || !canCreate}
               onClick={() => {
+                if (!canCreate || pending.current) return;
                 setEditor({ key: crypto.randomUUID() });
                 setNotice("");
               }}
@@ -415,7 +470,9 @@ export default function NewsletterWorkspace() {
             selected.length > 0 &&
             selected.every((r) => list.items.some((s) => s.id === r.id)) && (
               <SubscriberBulk
-                records={selected}
+                records={selected.map((r) =>
+                  list.items.find((s) => s.id === r.id)!,
+                )}
                 archived={state === "trash"}
                 onLockChange={setBulkLocked}
                 onClear={() => setSelected([])}
@@ -426,7 +483,7 @@ export default function NewsletterWorkspace() {
                 }}
               />
             )}
-          {loading || (!list && !loadError) ? (
+          {(!list && loading) || (!list && !loadError) ? (
             <div
               className="gt-newsletter-loading"
               role="status"

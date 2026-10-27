@@ -1,0 +1,28 @@
+{
+  "note": "Partial loopback campaign review using fictional team/account. No browser send, self-test, cancellation, download, save or external link.",
+  "conflict": {
+    "draft": "Fictional unsaved newsletter title",
+    "saveDisabled": true
+  },
+  "mobile": {
+    "width": 375,
+    "documentWidth": 375,
+    "subjectLeft": 37,
+    "subjectRight": 338,
+    "subjectHeight": 46.796875
+  },
+  "deliveryReview": {
+    "generatedWithoutSend": true,
+    "subjectFrozen": true,
+    "approvalDisabled": true,
+    "headingFocused": true,
+    "discardAfterLockFix": true
+  },
+  "cleanup": {
+    "draftDiscarded": true,
+    "reviewDiscarded": true,
+    "signOutAndCloseVerified": false,
+    "limitation": "Final tab attachment unavailable; independent API fixture cleanup revokes sessions. Viewport reset issued."
+  },
+  "screenshot": "ui-review/newsletter-conflict-recovery.png"
+}

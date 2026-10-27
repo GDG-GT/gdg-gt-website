@@ -1182,6 +1182,15 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 
+add(
+  "NEWS-TEST-005",
+  "NEWS-001 NEWS-002 NEWS-003 NEWS-004 NEWS-005",
+  "Newsletter independent read recovery, stale draft and selected-subscriber fencing, account/session cancellation, unchanged retry keys, review-time expiry/exact confirmation, offline safeguards and delivery review editor locking",
+  ["tests/client/newsletter-recovery.test.tsx", "tests/client/newsletter-navigation.test.tsx", local("newsletter")],
+  ["Real supported-device/send/download interruption, screen-reader and hosted provider/worker acceptance"],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

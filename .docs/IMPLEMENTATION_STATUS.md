@@ -8,6 +8,22 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Newsletter reads, draft conflicts and delivery-review recovery — 2026-10-27
+
+- Independent scoped reads, account/session isolation and cancelled private work
+  protect newsletter state. Current record refresh preserves draft input and
+  blocks stale saves. Exact confirmation/expiry/current grants recheck; selected
+  subscriber review detects changed revisions. Delivery review locks the editor
+  while preserving a working discard flow; real navigation regressions cover it.
+- Thirty-two interaction cases include two axe audits. All 1,103 tests/137 files
+  pass; coverage remains below 70% at 56.04% lines/54.39% branches. All 17 critical
+  branch gates pass. Types/lint (0 errors/25 warnings), build/budgets/secrets pass.
+- Thirty-six actual local SMTP/API/callback checks pass with fixture cleanup and
+  session revocation completed. Browser confirms conflict preservation, bounded
+  375 px layout, disabled unconfirmed approval and fixed review discard. Final UI
+  sign-out/close attachment unavailable, not claimed. Catalog: 133 unverified
+  cases. See `NEWSLETTER_RECOVERY.md`; full PRD remains open.
+
 ### Private editorial reads, confirmation and file recovery — 2026-10-27
 
 - Independent read recovery, account/session isolation, category choice paging,

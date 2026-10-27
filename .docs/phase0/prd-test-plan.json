@@ -2386,6 +2386,32 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "NEWS-TEST-005",
+      "requirements": [
+        "NEWS-001",
+        "NEWS-002",
+        "NEWS-003",
+        "NEWS-004",
+        "NEWS-005"
+      ],
+      "scope": "Newsletter independent read recovery, stale draft and selected-subscriber fencing, account/session cancellation, unchanged retry keys, review-time expiry/exact confirmation, offline safeguards and delivery review editor locking",
+      "automated": [
+        "tests/client/newsletter-recovery.test.tsx",
+        "tests/client/newsletter-navigation.test.tsx",
+        "scripts/test-local-newsletter.mjs"
+      ],
+      "remaining": [
+        "Real supported-device/send/download interruption, screen-reader and hosted provider/worker acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

@@ -2,7 +2,7 @@ import { randomUUID, randomBytes, createHmac } from "node:crypto";
 import { createServer } from "node:http";
 import { once } from "node:events";
 import { createInterface } from "node:readline";
-import { writeFile } from "node:fs/promises";
+import { writeFile, unlink } from "node:fs/promises";
 import { localHttp } from "./lib/local-http.mjs";
 import { hashSecret } from "../server/lib/security.mjs";
 import { runDelivery } from "../server/delivery.mjs";
@@ -10,12 +10,37 @@ import { runNewsletterWorker } from "../server/newsletter-worker.mjs";
 import { applicationHandler } from "../server/handler.mjs";
 import { SecurityStore } from "../server/db/security-store.mjs";
 import { serverConfig } from "../server/config.mjs";
+if (process.env.GDG_LOCAL_TEST_SHARED_SESSION === "true")
+  throw Error("Requires isolated fictional sessions.");
+if (process.argv.includes("--hold-for-browser") && !process.stdin.isTTY)
+  throw Error("Browser review requires an interactive terminal.");
 const h = await localHttp(),
   { db, env, call } = h,
   actor = randomUUID(),
   email = `fictional-newsletter-${actor}@example.test`,
   password = "Newsletter-fixture-" + randomUUID(),
   evidence = [];
+const ledger = new URL(
+  "../.docs/local-newsletter-campaign-review.local",
+  import.meta.url,
+);
+let ledgerOwned = false;
+async function writeEvidence(cleanedUp) {
+  await writeFile(
+    new URL("../.docs/phase0/local-newsletter.json", import.meta.url),
+    JSON.stringify(
+      {
+        generatedAt: new Date().toISOString(),
+        environment:
+          "Fictional loopback accounts/team/recipients; local SMTP only; ephemeral signed callback fixture; one subscriber confirms through actual email, a second is explicitly synthetic preconfirmed data. All fixture records archived, no operator records erased.",
+        cleanup: { completed: cleanedUp },
+        tests: evidence,
+      },
+      null,
+      2,
+    ) + "\n",
+  );
+}
 const sql = (r) => {
   if (r.error)
     throw Error("Newsletter fixture database error: " + r.error.code);
@@ -573,7 +598,7 @@ try {
         confirmed_at: new Date().toISOString(),
       }),
     );
-    data(
+    const browserCampaign = data(
       await post(base + "/campaigns", {
         teamId: scope,
         record: {
@@ -585,6 +610,19 @@ try {
         },
       }),
     );
+    await writeFile(
+      ledger,
+      JSON.stringify({
+        email,
+        password,
+        actor,
+        teamId: scope,
+        campaignId: browserCampaign.id,
+      }),
+      { mode: 0o600, flag: "wx" },
+    );
+    ledgerOwned = true;
+    await writeEvidence(false);
     console.info(
       "Fictional newsletter browser fixtures ready. Enter done to archive them.",
     );
@@ -592,8 +630,34 @@ try {
       input: process.stdin,
       output: process.stdout,
     });
-    await new Promise((resolve) => reader.once("line", resolve));
-    reader.close();
+    for await (const line of reader) {
+      if (line.trim() === "done") {
+        reader.close();
+        break;
+      }
+      if (line.trim() === "change") {
+        const current = data(
+          await call(`${base}/campaigns/${browserCampaign.id}`),
+        ).record;
+        data(
+          await post(`${base}/campaigns/${browserCampaign.id}`, {
+            action: "update",
+            revision: current.revision,
+            record: {
+              subject: current.subject,
+              content:
+                "Independent fictional newsletter revision. No delivery requested.",
+              audience: "all",
+              recipientIds: [],
+            },
+          }),
+        );
+        check(
+          true,
+          "independent campaign change delivered during browser review",
+        );
+      }
+    }
   }
 } finally {
   if (callbackServer) {
@@ -644,18 +708,15 @@ try {
   sql(
     await db.from("admin_users").update({ is_active: false }).eq("id", actor),
   );
+  sql(
+    await db
+      .from("admin_sessions")
+      .update({ revoked_at: new Date().toISOString() })
+      .eq("admin_user_id", actor)
+      .is("revoked_at", null),
+  );
+  if (ledgerOwned) await unlink(ledger);
+  if (process.stdin.isTTY) process.stdin.pause();
 }
-await writeFile(
-  new URL("../.docs/phase0/local-newsletter.json", import.meta.url),
-  JSON.stringify(
-    {
-      generatedAt: new Date().toISOString(),
-      environment:
-        "Fictional loopback accounts/team/recipients; local SMTP only; ephemeral signed callback fixture; one subscriber confirms through actual email, a second is explicitly synthetic preconfirmed data. All fixture records archived, no operator records erased.",
-      tests: evidence,
-    },
-    null,
-    2,
-  ) + "\n",
-);
+await writeEvidence(true);
 console.info(`${evidence.length} actual local newsletter checks passed.`);

@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { api } from "@/lib/api";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { api, ApiFailure } from "@/lib/api";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
 import {
   newsletterCampaign,
   newsletterTemplate,
@@ -31,30 +33,19 @@ function RecipientPicker({
   const [q, setQ] = useState(""),
     [search, setSearch] = useState(""),
     [page, setPage] = useState(1),
-    [list, setList] = useState<Listing>(),
-    [error, setError] = useState("");
-  useEffect(() => {
-    const c = new AbortController();
-    setList(undefined);
-    setError("");
-    api<Listing>(
-      "/admin/newsletter/subscribers?" +
-        new URLSearchParams({
-          team,
-          q: search,
-          status: "active",
-          page: String(page),
-        }),
-      { signal: c.signal },
-    )
-      .then((v) => {
-        if (!c.signal.aborted) setList(v);
-      })
-      .catch((e: Error) => {
-        if (!c.signal.aborted) setError(e.message);
-      });
-    return () => c.abort();
-  }, [team, search, page]);
+    [tick, setTick] = useState(0);
+  const read = usePrivateRead<Listing>(
+    "/admin/newsletter/subscribers?" +
+      new URLSearchParams({
+        team,
+        q: search,
+        status: "active",
+        page: String(page),
+      }),
+    tick,
+  );
+  const list = read.data,
+    error = read.error;
   return (
     <fieldset className="gt-newsletter-audience" disabled={disabled}>
       <legend>Custom confirmed audience · {selected.length} selected</legend>
@@ -80,9 +71,24 @@ function RecipientPicker({
           Clear selected
         </Button>
       </div>
-      {error && <p role="alert">{error}</p>}
+      {error && (
+        <p role="alert">
+          {error}{" "}
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => setTick((v) => v + 1)}
+          >
+            Retry confirmed subscribers
+          </Button>
+        </p>
+      )}
       {!list ? (
-        <p role="status">Loading confirmed subscribers…</p>
+        <p role="status">
+          {error
+            ? "Confirmed subscribers are unavailable. Retry to select recipients."
+            : "Loading confirmed subscribers…"}
+        </p>
       ) : (
         <>
           <ul className="gt-newsletter-recipient-list">
@@ -133,7 +139,7 @@ function RecipientPicker({
             <Button
               type="button"
               variant="secondary"
-              disabled={page * 50 >= list.total}
+              disabled={page * list.pageSize >= list.total}
               onClick={() => setPage((n) => n + 1)}
             >
               Next recipients
@@ -149,26 +155,14 @@ function RecipientPicker({
   );
 }
 function DeliveryStatus({ record }: { record: NewsletterRecord }) {
-  const [result, setResult] = useState<Delivery>(),
-    [page, setPage] = useState(1),
-    [tick, setTick] = useState(0),
-    [error, setError] = useState("");
-  useEffect(() => {
-    const controller = new AbortController();
-    setError("");
-    setResult(undefined);
-    api<Delivery>(
-      `/admin/newsletter/campaigns/${record.id}/delivery?page=${page}`,
-      { signal: controller.signal },
-    )
-      .then((r) => {
-        if (!controller.signal.aborted) setResult(r);
-      })
-      .catch((e: Error) => {
-        if (!controller.signal.aborted) setError(e.message);
-      });
-    return () => controller.abort();
-  }, [record.id, page, tick]);
+  const [page, setPage] = useState(1),
+    [tick, setTick] = useState(0);
+  const read = usePrivateRead<Delivery>(
+    `/admin/newsletter/campaigns/${record.id}/delivery?page=${page}`,
+    tick,
+  );
+  const result = read.data,
+    error = read.error;
   return (
     <section
       className="gt-newsletter-delivery"
@@ -190,8 +184,18 @@ function DeliveryStatus({ record }: { record: NewsletterRecord }) {
         callbacks; email clients can block or prefetch tracking.
       </p>
       {error && <p role="alert">{error}</p>}
+      {result && (error || read.loading) && (
+        <p role="status">
+          Delivery results may be out of date. Last loaded{" "}
+          {new Date(read.at!).toLocaleString()}.
+        </p>
+      )}
       {!result ? (
-        <p role="status">Loading results…</p>
+        <p role="status">
+          {error
+            ? "Delivery results are unavailable. Use Refresh results to retry."
+            : "Loading results…"}
+        </p>
       ) : (
         <>
           <dl className="gt-newsletter-counts">
@@ -263,14 +267,18 @@ export default function NewsletterEditor({
   scope,
   onSaved,
   onClose,
+  unavailable = false,
+  onRefresh,
 }: {
   kind: Kind;
   record?: NewsletterRecord;
   scope: string;
   onSaved: (message: string, id?: string) => void;
   onClose: () => void;
+  unavailable?: boolean;
+  onRefresh?: () => void;
 }) {
-  const initial = {
+  const initial = useRef({
     name: record?.name || "",
     email: record?.email || "",
     description: record?.description || "",
@@ -279,15 +287,41 @@ export default function NewsletterEditor({
     audience: record?.audience || "all",
     recipientIds: record?.recipientIds || [],
     consent: false,
-  };
+  }).current;
+  const originalRevision = useRef(record?.revision).current;
   const [draft, setDraft] = useState(initial),
     [action, setAction] = useState<string>(),
     [preview, setPreview] = useState<{ html: string }>(),
     [templates, setTemplates] = useState<Listing>(),
-    [templateQuery, setTemplateQuery] = useState("");
-  const { busy, error, setError, work } = useNewsletterWork(),
+    [templateQuery, setTemplateQuery] = useState(""),
+    [conflict, setConflict] = useState(false),
+    [deliveryLocked, setDeliveryLocked] = useState(false),
+    [deliveryPending, setDeliveryPending] = useState(false);
+  const lockDelivery = useCallback((locked: boolean, pending: boolean) => {
+    setDeliveryLocked(locked);
+    setDeliveryPending(pending);
+  }, []);
+  const {
+      busy: working,
+      error,
+      setError,
+      work,
+      pending,
+    } = useNewsletterWork(kind + ":" + (record?.id || scope)),
     safety = useNavigationSafety(),
-    attempt = useRef<{ signature: string; key: string }>();
+    attempt = useRef<{ signature: string; key: string }>(),
+    errorFocus = useRef<HTMLParagraphElement>(null),
+    heading = useRef<HTMLHeadingElement>(null);
+  const busy = working || deliveryLocked,
+    { isOnline } = useOnlineStatus(),
+    stale = record?.revision !== originalRevision,
+    blocked = unavailable || stale || conflict || !isOnline;
+  useEffect(() => {
+    heading.current?.focus();
+  }, []);
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
   const dirty = JSON.stringify(draft) !== JSON.stringify(initial),
     editable =
       !record ||
@@ -296,8 +330,30 @@ export default function NewsletterEditor({
         (kind !== "campaigns" || record.status === "draft"));
   const path = "/admin/newsletter/" + kind + (record ? "/" + record.id : ""),
     team = record ? record.teamId || "chapter" : scope;
+  async function request<T>(
+    signal: AbortSignal,
+    body: unknown,
+    idempotencyKey: string,
+  ) {
+    try {
+      return await api<T>(path, {
+        method: "POST",
+        body,
+        signal,
+        idempotencyKey,
+      });
+    } catch (error) {
+      if (
+        !signal.aborted &&
+        error instanceof ApiFailure &&
+        error.status === 409
+      )
+        setConflict(true);
+      throw error;
+    }
+  }
   useDraftGuard(dirty || !!action, {
-    busy,
+    busy: working || deliveryPending,
     label: `Newsletter ${kind} changes`,
   });
   const discard = (run: () => void) => {
@@ -326,6 +382,7 @@ export default function NewsletterEditor({
     return () => window.removeEventListener("gdg:session-cleared", clear);
   }, []);
   const save = async () => {
+    if (pending.current || busy || blocked || !editable) return;
     let body: unknown;
     if (kind === "subscribers") {
       body = record
@@ -374,13 +431,7 @@ export default function NewsletterEditor({
       attempt.current = { signature, key: crypto.randomUUID() };
     const idempotencyKey = attempt.current.key;
     await work(
-      (signal) =>
-        api<{ id?: string }>(path, {
-          method: "POST",
-          body,
-          signal,
-          idempotencyKey,
-        }),
+      (signal) => request<{ id?: string }>(signal, body, idempotencyKey),
       (r) =>
         onSaved(
           kind === "subscribers" && !record
@@ -391,19 +442,35 @@ export default function NewsletterEditor({
     );
   };
   const mutate = async (name: string) => {
-    if (!record || busy) return;
+    if (
+      !record ||
+      busy ||
+      pending.current ||
+      blocked ||
+      !record.actions.includes(name === "duplicate" ? "create" : "delete")
+    )
+      return;
+    if (
+      name === "duplicate"
+        ? kind !== "campaigns" || !!record.deletedAt
+        : name === "restore"
+          ? !record.deletedAt
+          : !!record.deletedAt ||
+            (kind === "campaigns" &&
+              ["scheduled", "sending"].includes(record.status || ""))
+    )
+      return;
     const signature = name + record.id + record.revision;
     if (attempt.current?.signature !== signature)
       attempt.current = { signature, key: crypto.randomUUID() };
     const idempotencyKey = attempt.current.key;
     await work(
       (signal) =>
-        api<{ id: string }>(path, {
-          method: "POST",
-          body: { action: name, revision: record.revision },
+        request<{ id: string }>(
           signal,
+          { action: name, revision: record.revision },
           idempotencyKey,
-        }),
+        ),
       (r) =>
         onSaved(
           name === "restore" && kind === "subscribers"
@@ -422,7 +489,7 @@ export default function NewsletterEditor({
     >
       <header className="gt-panel-heading">
         <div>
-          <h2>
+          <h2 tabIndex={-1} ref={heading}>
             {record
               ? kind === "subscribers"
                 ? record.email
@@ -447,6 +514,16 @@ export default function NewsletterEditor({
         >
           Back to list
         </Button>
+        {onRefresh && (
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={busy}
+            onClick={onRefresh}
+          >
+            Refresh record access
+          </Button>
+        )}
       </header>
       {record && (
         <div className="gt-inline-actions">
@@ -465,8 +542,25 @@ export default function NewsletterEditor({
         </div>
       )}
       {error && (
-        <p role="alert" className="gt-form-error">
+        <p
+          role="alert"
+          tabIndex={-1}
+          ref={errorFocus}
+          className="gt-form-error"
+        >
           {error}
+        </p>
+      )}
+      {(stale || conflict) && (
+        <p role="alert">
+          This newsletter record changed. Your input is preserved. Return to the
+          list and reopen before saving or sending.
+        </p>
+      )}
+      {!isOnline && (
+        <p role="status">
+          You’re offline. Input stays in this tab; reconnect and save when
+          ready.
         </p>
       )}
       <form
@@ -591,7 +685,7 @@ export default function NewsletterEditor({
         )}
         {editable && (
           <div className="gt-inline-actions">
-            <Button disabled={busy || (!!record && !dirty)}>
+            <Button disabled={busy || blocked || (!!record && !dirty)}>
               {busy
                 ? "Working…"
                 : !record && kind === "subscribers"
@@ -683,7 +777,7 @@ export default function NewsletterEditor({
           <Button
             type="button"
             variant="secondary"
-            disabled={busy || dirty}
+            disabled={busy || blocked || dirty}
             onClick={() =>
               void work(
                 (signal) =>
@@ -699,7 +793,7 @@ export default function NewsletterEditor({
               Save changes before previewing or sending.
             </p>
           )}
-          {preview && (
+          {preview && !blocked && (
             <iframe
               className="gt-newsletter-email-preview"
               title="Saved email preview"
@@ -712,7 +806,12 @@ export default function NewsletterEditor({
       )}
       {record && !dirty && kind === "campaigns" && (
         <>
-          <NewsletterSend record={record} onSaved={onSaved} />
+          <NewsletterSend
+            record={record}
+            onSaved={onSaved}
+            unavailable={blocked || working}
+            onLockChange={lockDelivery}
+          />
           {record.status !== "draft" && <DeliveryStatus record={record} />}
         </>
       )}
@@ -780,7 +879,7 @@ export default function NewsletterEditor({
               <div className="gt-inline-actions">
                 <Button
                   type="button"
-                  disabled={busy}
+                  disabled={busy || blocked}
                   onClick={() => void mutate(action)}
                 >
                   Confirm {action}
