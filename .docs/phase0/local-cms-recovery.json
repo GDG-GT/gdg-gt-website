@@ -1,0 +1,52 @@
+{
+  "note": "Actual loopback CMS checks with one fresh fictional officer and a new private navigation draft. Existing managed copy/roles were untouched; no public publication, external provider, mail or user files. Synthetic record recoverably archived; account disabled/sessions revoked. Quotas/jobs never reset. Server mutation replay deduplication is not implemented or claimed.",
+  "cleanup": {
+    "completed": true
+  },
+  "tests": [
+    {
+      "name": "anonymous CMS inventory denied",
+      "passed": true
+    },
+    {
+      "name": "fresh officer receives current CMS action grants",
+      "passed": true
+    },
+    {
+      "name": "new synthetic navigation is a private draft",
+      "passed": true
+    },
+    {
+      "name": "selected CMS detail resolves the current saved record",
+      "passed": true
+    },
+    {
+      "name": "private navigation is absent from public projection",
+      "passed": true
+    },
+    {
+      "name": "private composition includes only the saved synthetic draft",
+      "passed": true
+    },
+    {
+      "name": "CMS update increments revision while remaining private",
+      "passed": true
+    },
+    {
+      "name": "obsolete CMS update cannot overwrite current copy",
+      "passed": true
+    },
+    {
+      "name": "synthetic navigation archival is recoverable",
+      "passed": true
+    },
+    {
+      "name": "archived selected detail remains in its authorized inventory",
+      "passed": true
+    },
+    {
+      "name": "deactivation revokes the next private CMS read",
+      "passed": true
+    }
+  ]
+}

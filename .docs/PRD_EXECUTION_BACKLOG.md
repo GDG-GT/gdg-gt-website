@@ -6,8 +6,8 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-10-27): the latest module checkpoint is
-`SITE_STATUS_RECOVERY.md`; completed recovery checkpoints include tasks,
-announcements, whiteboards, finance, media, projects, editorial and newsletter. Their dedicated recovery documents
+`CMS_RECOVERY.md`; completed recovery checkpoints include tasks,
+announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
 passing local interactions is not a PRD-completion percentage.
@@ -19,6 +19,10 @@ blockers for the remaining original v1.5 work. Existing disabled SSO placeholder
 do not perform authentication or verification. No external integration is enabled.
 
 ## Feature implementation still required
+
+CMS and public-content collection mutations still need server replay
+deduplication. CMS UI now blocks blind retry after an uncertain result and retains
+input (`CMS_RECOVERY.md`); that mitigation does not close server idempotency.
 
 Additional requests on 2026-10-21 are implemented locally: community directory
 (`/admin/members`) CSV import/export and notification Mark all read → Dismiss all.
@@ -138,10 +142,10 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is 56.61% lines/54.79% branches at the availability checkpoint, below the global
-  70% gate; 1,120 tests pass, not a percentage of completed PRD features.
+  coverage is 57.46% lines/55.85% branches at the CMS checkpoint, below the global
+  70% gate; 1,142 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 134 reviewed logical test cases with
+  All 146 numbered requirements now map into 135 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.

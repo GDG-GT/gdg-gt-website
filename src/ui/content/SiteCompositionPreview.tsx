@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { api } from "@/lib/api";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
 import {
   ContentSnapshotProvider,
   type ContentSnapshot,
@@ -36,27 +36,14 @@ export default function SiteCompositionPreview() {
     requested = params.get("page") || "home",
     page = managedPublicPages.find((p) => p === requested) || "home",
     Page = components[page];
-  const [data, setData] = useState<Preview>(),
-    [error, setError] = useState(""),
-    [busy, setBusy] = useState(true),
-    [tick, setTick] = useState(0);
-  useEffect(() => {
-    const controller = new AbortController();
-    setBusy(true);
-    setData(undefined);
-    setError("");
-    api<Preview>("/admin/site-content/preview?page=" + page, {
-      signal: controller.signal,
-    })
-      .then(setData)
-      .catch((e) => {
-        if (!controller.signal.aborted) setError(e.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setBusy(false);
-      });
-    return () => controller.abort();
-  }, [page, tick]);
+  const [tick, setTick] = useState(0);
+  const read = usePrivateRead<Preview>(
+      "/admin/site-content/preview?page=" + page,
+      tick,
+    ),
+    data = read.data,
+    error = read.error,
+    busy = read.loading;
   return (
     <>
       <header className="gt-composition-toolbar">
@@ -104,6 +91,12 @@ export default function SiteCompositionPreview() {
       )}
       {data && (
         <>
+          {(busy || error) && (
+            <p role="status" className="gt-container">
+              Showing the private snapshot last loaded{" "}
+              {new Date(read.at!).toLocaleString()} until reload succeeds.
+            </p>
+          )}
           <p className="gt-composition-note">
             Includes {data.draftCount} saved drafts. Snapshot{" "}
             {new Date(data.generatedAt).toLocaleString()}.

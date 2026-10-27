@@ -785,7 +785,8 @@
       "status": "unverified",
       "testIds": [
         "CONTENT-TEST-019",
-        "CONTENT-TEST-001"
+        "CONTENT-TEST-001",
+        "CONTENT-TEST-006"
       ],
       "evidence": []
     },
@@ -797,7 +798,8 @@
       "testIds": [
         "CONTENT-TEST-019",
         "CONTENT-TEST-002",
-        "CONTENT-TEST-011"
+        "CONTENT-TEST-011",
+        "CONTENT-TEST-006"
       ],
       "evidence": []
     },

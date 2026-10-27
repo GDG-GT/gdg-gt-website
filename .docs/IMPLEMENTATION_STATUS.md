@@ -8,6 +8,21 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### CMS independent reads, review and composition recovery — 2026-10-27
+
+- Account/session remounts and keyed reads protect CMS inventory, permissions,
+  selected content and private previews. Current grants/revisions block stale
+  saves; private writes cancel/fence and freeze synchronously. Every visibility
+  transition has review. Uncertain saves preserve input and block blind retry;
+  server mutation replay deduplication remains an explicit implementation gap.
+- Twenty-two DOM cases include two axe audits. All 1,142 tests/139 files pass;
+  coverage remains below 70% at 57.46% lines/55.85% branches. All 17 critical branch
+  gates pass; types/lint (0 errors/25 warnings), build/budgets/secrets pass.
+- Eleven real loopback checks pass with a fresh private navigation draft/officer.
+  Existing managed copy/roles untouched; draft archived/account disabled/sessions
+  revoked. Composition tests use controlled adapters, not full visual acceptance.
+  Catalog: 135 unverified cases. See `CMS_RECOVERY.md`; full PRD remains open.
+
 ### Site availability recovery and hidden-entry disclosure removal — 2026-10-27
 
 - Keyed private reads retain timestamped snapshots and drafts on temporary failure;

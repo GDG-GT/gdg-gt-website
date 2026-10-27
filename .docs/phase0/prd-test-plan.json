@@ -2435,6 +2435,28 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "CONTENT-TEST-006",
+      "requirements": [
+        "CONTENT-001",
+        "CONTENT-002"
+      ],
+      "scope": "Independent CMS permission/inventory/selected-record recovery, stale grant/revision fences, guarded publication/archive/restore reviews, uncertain-save preservation, account/session cancellation and keyed private composition snapshots",
+      "automated": [
+        "tests/client/cms-recovery.test.tsx",
+        "scripts/test-local-cms-recovery.mjs"
+      ],
+      "remaining": [
+        "Server mutation replay deduplication, real composition/device/screen-reader/browser interruption and hosted CMS/cache acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

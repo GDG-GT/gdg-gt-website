@@ -1200,6 +1200,15 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 
+add(
+  "CONTENT-TEST-006",
+  "CONTENT-001 CONTENT-002",
+  "Independent CMS permission/inventory/selected-record recovery, stale grant/revision fences, guarded publication/archive/restore reviews, uncertain-save preservation, account/session cancellation and keyed private composition snapshots",
+  ["tests/client/cms-recovery.test.tsx", local("cms-recovery")],
+  ["Server mutation replay deduplication, real composition/device/screen-reader/browser interruption and hosted CMS/cache acceptance"],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

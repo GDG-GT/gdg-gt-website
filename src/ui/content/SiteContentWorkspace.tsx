@@ -3,6 +3,10 @@ import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { useSearchParams } from "react-router-dom";
 import SiteCompositionPreview from "./SiteCompositionPreview";
 import { api, ApiFailure } from "@/lib/api";
+import { useAdmin } from "@/contexts/AdminContext";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import { useContent } from "@/contexts/ContentContext";
 import { Badge, Button, EmptyState, Field } from "../primitives";
 import {
@@ -55,6 +59,20 @@ type Draft = {
   links: { id: string; name: string; url: string; category: string }[];
 };
 export default function SiteContentWorkspace() {
+  const { currentAdmin } = useAdmin();
+  const [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((v) => v + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  return (
+    <SiteContentView
+      key={`${currentAdmin?.id}:${currentAdmin?.role}:${epoch}`}
+    />
+  );
+}
+function SiteContentView() {
   const [params] = useSearchParams();
   return params.get("mode") === "preview" ? (
     <SiteCompositionPreview />
@@ -66,54 +84,122 @@ function ContentEditor() {
   const [kind, setKind] = useState<Kind>("pages"),
     [state, setState] = useState("current"),
     [page, setPage] = useState(1),
-    [data, setData] = useState<Listing>(),
-    [actions, setActions] = useState<string[]>([]),
-    [loading, setLoading] = useState(true),
     [refresh, setRefresh] = useState(0),
     [draft, setDraft] = useState<Draft>(),
-    [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [errors, setErrors] = useState<Record<string, string>>({}),
     [confirm, setConfirm] = useState<{
       row: Row;
-      action: "publish" | "archive";
+      action: "publish" | "archive" | "unpublish" | "restore";
     }>(),
-    [discard, setDiscard] = useState(false);
+    [discard, setDiscard] = useState(false),
+    [conflict, setConflict] = useState(false),
+    [uncertain, setUncertain] = useState(false);
   const original = useRef(""),
     heading = useRef<HTMLHeadingElement>(null),
+    reviewHeading = useRef<HTMLHeadingElement>(null),
+    errorFocus = useRef<HTMLParagraphElement>(null),
+    noticeFocus = useRef<HTMLParagraphElement>(null),
     { refreshContent } = useContent(),
     prefix = "/admin/site-content/" + kind,
     key = draft ? draft.row?.id || "new" : undefined,
     dirty = !!draft && JSON.stringify(draft) !== original.current;
+  const selected = draft?.row || confirm?.row,
+    { isOnline } = useOnlineStatus(),
+    { busy, begin, current, finish, cancel, pending } =
+      usePrivateMutation(prefix);
+  const listRead = usePrivateRead<Listing>(
+      prefix + "?" + new URLSearchParams({ state, page: String(page) }),
+      refresh,
+    ),
+    capRead = usePrivateRead<{ actions: string[] }>(
+      prefix + "/capabilities",
+      refresh,
+    ),
+    detailRead = usePrivateRead<Listing>(
+      selected
+        ? prefix +
+            "/" +
+            selected.id +
+            "?state=" +
+            (selected.deleted_at ? "trash" : "current")
+        : undefined,
+      refresh,
+    );
+  const data = listRead.data,
+    actions = capRead.data?.actions || [],
+    loading = listRead.loading,
+    freshRow = detailRead.data?.items[0],
+    stale = !!selected && !!freshRow && selected.revision !== freshRow.revision,
+    unavailable =
+      capRead.loading ||
+      !!capRead.error ||
+      listRead.loading ||
+      !!listRead.error ||
+      (!!selected && (detailRead.loading || !!detailRead.error || !freshRow)),
+    denied = !!draft && !actions.includes(draft.row ? "update" : "create");
+  const { clear: clearList } = listRead,
+    { clear: clearCap } = capRead,
+    { clear: clearDetail } = detailRead;
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
+  useEffect(() => {
+    if (notice) noticeFocus.current?.focus();
+  }, [notice]);
+  useEffect(() => {
+    if (confirm) reviewHeading.current?.focus();
+  }, [confirm]);
+  useDraftGuard(!!confirm, { busy, label: "Site content publication review" });
   useEffect(() => {
     document.title = "Site content · GDG workspace";
   }, []);
   useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError("");
-    Promise.all([
-      api<Listing>(
-        prefix + "?" + new URLSearchParams({ state, page: String(page) }),
-        { signal: controller.signal },
-      ),
-      api<{ actions: string[] }>(prefix + "/capabilities", {
-        signal: controller.signal,
-      }),
-    ])
-      .then(([rows, allowed]) => {
-        setData(rows);
-        setActions(allowed.actions);
-      })
-      .catch((e) => {
-        if (!controller.signal.aborted) setError(e.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
-      });
-    return () => controller.abort();
-  }, [prefix, state, page, refresh]);
+    const update = () => {
+      if (!pending.current) setRefresh((v) => v + 1);
+    };
+    const timer = setInterval(() => {
+      if (!document.hidden && navigator.onLine) update();
+    }, 30000);
+    window.addEventListener("gdg:access-changed", update);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("gdg:access-changed", update);
+    };
+  }, [pending]);
+  useEffect(() => {
+    if (capRead.denied || listRead.denied) {
+      cancel();
+      clearList();
+      clearCap();
+      clearDetail();
+      setDraft(undefined);
+      setConfirm(undefined);
+      setNotice("");
+      setErrors({});
+      setDiscard(false);
+    }
+  }, [
+    capRead.denied,
+    listRead.denied,
+    cancel,
+    clearList,
+    clearCap,
+    clearDetail,
+  ]);
+  useEffect(() => {
+    if (detailRead.denied || (detailRead.data && !freshRow)) {
+      cancel();
+      clearDetail();
+      setDraft(undefined);
+      setConfirm(undefined);
+      setNotice("");
+      setErrors({});
+      setDiscard(false);
+      setError("This content is no longer available in your current access.");
+    }
+  }, [detailRead.denied, detailRead.data, freshRow, cancel, clearDetail]);
   useEffect(() => {
     if (key) heading.current?.focus();
   }, [key]);
@@ -138,6 +224,12 @@ function ContentEditor() {
         "Content",
     );
   const open = (row?: Row) => {
+    if (
+      pending.current ||
+      unavailable ||
+      !actions.includes(row ? "update" : "create")
+    )
+      return;
     const values: Record<string, string> = {
       page_slug: "home",
       section_key: kind === "footer" ? "about" : "hero",
@@ -166,6 +258,9 @@ function ContentEditor() {
     setError("");
     setErrors({});
     setDiscard(false);
+    setConflict(false);
+    setUncertain(false);
+    setNotice("");
   };
   const field = (
     name: string,
@@ -233,14 +328,33 @@ function ContentEditor() {
       </Field>
     );
   const mutate = async (row: Row, action: string) => {
-    setBusy(true);
+    const authoritative =
+      selected?.id === row.id
+        ? freshRow
+        : data?.items.find((item) => item.id === row.id);
+    if (
+      pending.current ||
+      !isOnline ||
+      unavailable ||
+      uncertain ||
+      !authoritative ||
+      authoritative.revision !== row.revision ||
+      !actions.includes(
+        ["archive", "restore"].includes(action) ? "delete" : "publish",
+      )
+    )
+      return;
+    const controller = begin();
+    if (!controller) return;
     setError("");
     try {
       await api(prefix + "/" + row.id, {
         method: action === "archive" ? "DELETE" : "POST",
         protected: true,
         body: { revision: row.revision, action },
+        signal: controller.signal,
       });
+      if (!current(controller)) return;
       setConfirm(undefined);
       setRefresh((v) => v + 1);
       setNotice(
@@ -250,16 +364,21 @@ function ContentEditor() {
             ? "Restored as a private draft."
             : "Public visibility updated.",
       );
-      if (!(await refreshContent()))
+      const refreshed = await refreshContent();
+      if (!current(controller)) return;
+      if (!refreshed)
         setNotice(
           (previous) =>
             previous +
             " Public page content could not refresh; retry from the public page.",
         );
     } catch (e) {
+      if (!current(controller)) return;
       setError((e as Error).message);
+      if (e instanceof ApiFailure && e.status === 409) setConflict(true);
+      if (!(e instanceof ApiFailure) || e.status >= 500) setUncertain(true);
     } finally {
-      setBusy(false);
+      finish(controller);
     }
   };
   return (
@@ -273,10 +392,23 @@ function ContentEditor() {
           </p>
         </div>
         <Button
-          disabled={!!draft || busy || !actions.includes("create")}
+          disabled={
+            !!draft ||
+            !!confirm ||
+            busy ||
+            unavailable ||
+            !actions.includes("create")
+          }
           onClick={() => open()}
         >
           Create draft
+        </Button>
+        <Button
+          variant="secondary"
+          disabled={busy}
+          onClick={() => setRefresh((v) => v + 1)}
+        >
+          Refresh site content
         </Button>
       </div>
       <div className="gt-actions" aria-label="Private page previews">
@@ -309,13 +441,15 @@ function ContentEditor() {
             key={value}
             variant={kind === value ? "primary" : "secondary"}
             aria-pressed={kind === value}
-            disabled={!!draft || busy}
+            disabled={!!draft || !!confirm || busy}
             onClick={() => {
               setKind(value);
-              setData(undefined);
               setPage(1);
               setNotice("");
               setConfirm(undefined);
+              setError("");
+              setConflict(false);
+              setUncertain(false);
             }}
           >
             {kinds[value]}
@@ -323,14 +457,68 @@ function ContentEditor() {
         ))}
       </div>
       {error && (
-        <p className="gt-form-error" role="alert">
+        <p
+          className="gt-form-error"
+          role="alert"
+          tabIndex={-1}
+          ref={errorFocus}
+        >
           {error}{" "}
-          <button onClick={() => setRefresh((v) => v + 1)}>
-            Retry loading
-          </button>
         </p>
       )}
-      {notice && <p role="status">{notice}</p>}
+      {notice && (
+        <p role="status" tabIndex={-1} ref={noticeFocus}>
+          {notice}
+        </p>
+      )}
+      {[
+        { name: "Content permissions", ...capRead },
+        { name: "Content inventory", ...listRead },
+        { name: "Selected content", ...detailRead },
+      ].map((read) => (
+        <div key={read.name}>
+          {read.error && (
+            <p role="alert">
+              {read.name}: {read.error}{" "}
+              <Button
+                variant="ghost"
+                disabled={busy}
+                onClick={() => {
+                  document.getElementById("workspace-content")?.focus();
+                  setRefresh((v) => v + 1);
+                }}
+              >
+                Retry {read.name.toLowerCase()}
+              </Button>
+            </p>
+          )}
+          {read.data && (read.loading || read.error) && (
+            <p role="status">
+              {read.name} may be out of date. Last loaded{" "}
+              {new Date(read.at!).toLocaleString()}.
+            </p>
+          )}
+        </div>
+      ))}
+      {!isOnline && (
+        <p role="status">
+          You’re offline. Your input stays in this tab. Reconnect and save when
+          ready; nothing sends automatically.
+        </p>
+      )}
+      {(stale || conflict) && (
+        <p role="alert">
+          This content changed. Input is preserved; close and reopen the editor
+          or review before saving.
+        </p>
+      )}
+      {uncertain && (
+        <p role="alert">
+          The previous change could not be confirmed. Refresh and inspect the
+          inventory before closing and reopening this editor or review.
+          Automatic retry is disabled to prevent duplicate records.
+        </p>
+      )}
       {draft && (
         <section className="gt-panel gt-event-editor">
           <h2 ref={heading} tabIndex={-1}>
@@ -342,7 +530,18 @@ function ContentEditor() {
             className="gt-form"
             onSubmit={async (event) => {
               event.preventDefault();
-              setBusy(true);
+              if (
+                pending.current ||
+                !isOnline ||
+                unavailable ||
+                denied ||
+                stale ||
+                conflict ||
+                uncertain
+              )
+                return;
+              const controller = begin();
+              if (!controller) return;
               setError("");
               setErrors({});
               try {
@@ -392,21 +591,30 @@ function ContentEditor() {
                     ...(draft.row ? { revision: draft.row.revision } : {}),
                     record,
                   },
+                  signal: controller.signal,
                 });
+                if (!current(controller)) return;
                 setDraft(undefined);
                 setRefresh((v) => v + 1);
                 setNotice("Saved privately. Review and publish separately.");
-                if (!(await refreshContent()))
+                const refreshed = await refreshContent();
+                if (!current(controller)) return;
+                if (!refreshed)
                   setNotice(
                     (previous) =>
                       previous +
                       " Public page content could not refresh; retry from the public page.",
                   );
               } catch (e) {
+                if (!current(controller)) return;
                 setError((e as Error).message);
                 if (e instanceof ApiFailure) setErrors(e.fields || {});
+                if (e instanceof ApiFailure && e.status === 409)
+                  setConflict(true);
+                if (!(e instanceof ApiFailure) || e.status >= 500)
+                  setUncertain(true);
               } finally {
-                setBusy(false);
+                finish(controller);
               }
             }}
           >
@@ -597,7 +805,18 @@ function ContentEditor() {
             )}
             {kind !== "settings" && field("order_index", "Display order")}
             <div className="gt-actions">
-              <Button disabled={busy} type="submit">
+              <Button
+                disabled={
+                  busy ||
+                  !isOnline ||
+                  unavailable ||
+                  denied ||
+                  stale ||
+                  conflict ||
+                  uncertain
+                }
+                type="submit"
+              >
                 {busy ? "Saving…" : "Save private draft"}
               </Button>
               <Button
@@ -638,29 +857,53 @@ function ContentEditor() {
       )}
       {confirm && (
         <section className="gt-panel gt-operational-confirm">
-          <h2>
+          <h2 tabIndex={-1} ref={reviewHeading}>
             {confirm.action === "publish"
               ? "Publish approved content?"
-              : "Archive this content?"}
+              : confirm.action === "archive"
+                ? "Archive this content?"
+                : confirm.action === "restore"
+                  ? "Restore this private draft?"
+                  : "Unpublish this content?"}
           </h2>
           <p>
             {label(confirm.row)}.{" "}
             {confirm.action === "publish"
               ? "This changes the public website."
-              : "This hides the record and preserves it for recovery."}
+              : confirm.action === "restore"
+                ? "This restores a private draft without publishing it."
+                : "This hides the record and preserves it for recovery."}
           </p>
           <div className="gt-actions">
             <Button
-              disabled={busy}
+              disabled={
+                busy ||
+                !isOnline ||
+                unavailable ||
+                stale ||
+                conflict ||
+                uncertain ||
+                !actions.includes(
+                  ["archive", "restore"].includes(confirm.action)
+                    ? "delete"
+                    : "publish",
+                )
+              }
               variant={confirm.action === "archive" ? "danger" : "primary"}
               onClick={() => mutate(confirm.row, confirm.action)}
             >
-              Confirm {confirm.action === "publish" ? "publication" : "archive"}
+              Confirm{" "}
+              {confirm.action === "publish" ? "publication" : confirm.action}
             </Button>
             <Button
               disabled={busy}
               variant="secondary"
-              onClick={() => setConfirm(undefined)}
+              onClick={() => {
+                setConfirm(undefined);
+                setConflict(false);
+                setUncertain(false);
+                setError("");
+              }}
             >
               Cancel
             </Button>
@@ -670,6 +913,7 @@ function ContentEditor() {
       <Field label="Visibility">
         <select
           value={state}
+          disabled={busy || !!draft || !!confirm}
           onChange={(event) => {
             setState(event.target.value);
             setPage(1);
@@ -681,8 +925,11 @@ function ContentEditor() {
           <option value="trash">Archived records</option>
         </select>
       </Field>
-      {loading ? (
-        <p role="status">Loading site content…</p>
+      {loading && !data ? (
+        <div role="status" aria-label="Loading site content">
+          <div className="gt-skeleton gt-overview-placeholder" />
+          <span className="sr-only">Loading site content…</span>
+        </div>
       ) : data?.items.length ? (
         <div className="gt-table-wrap">
           <table className="gt-data-table">
@@ -716,7 +963,8 @@ function ContentEditor() {
                     <div className="gt-actions">
                       {!row.deleted_at && actions.includes("update") && (
                         <Button
-                          disabled={busy || !!draft}
+                          disabled={busy || !!draft || !!confirm || unavailable}
+                          aria-label={"Edit " + label(row)}
                           variant="secondary"
                           onClick={() => open(row)}
                         >
@@ -725,26 +973,40 @@ function ContentEditor() {
                       )}
                       {!row.deleted_at && actions.includes("publish") && (
                         <Button
-                          disabled={busy || !!draft}
-                          variant="secondary"
-                          onClick={() =>
-                            row.is_active
-                              ? mutate(row, "unpublish")
-                              : setConfirm({ row, action: "publish" })
+                          disabled={busy || !!draft || !!confirm || unavailable}
+                          aria-label={
+                            (row.is_active ? "Unpublish " : "Publish ") +
+                            label(row)
                           }
+                          variant="secondary"
+                          onClick={() => (
+                            setConflict(false),
+                            setUncertain(false),
+                            setConfirm({
+                              row,
+                              action: row.is_active ? "unpublish" : "publish",
+                            })
+                          )}
                         >
                           {row.is_active ? "Unpublish" : "Publish"}
                         </Button>
                       )}
                       {actions.includes("delete") && (
                         <Button
-                          disabled={busy || !!draft}
-                          variant="secondary"
-                          onClick={() =>
-                            row.deleted_at
-                              ? mutate(row, "restore")
-                              : setConfirm({ row, action: "archive" })
+                          disabled={busy || !!draft || !!confirm || unavailable}
+                          aria-label={
+                            (row.deleted_at ? "Restore draft " : "Archive ") +
+                            label(row)
                           }
+                          variant="secondary"
+                          onClick={() => (
+                            setConflict(false),
+                            setUncertain(false),
+                            setConfirm({
+                              row,
+                              action: row.deleted_at ? "restore" : "archive",
+                            })
+                          )}
                         >
                           {row.deleted_at ? "Restore draft" : "Archive"}
                         </Button>
@@ -757,7 +1019,7 @@ function ContentEditor() {
           </table>
         </div>
       ) : (
-        !error && (
+        !listRead.error && (
           <EmptyState title="No content in this view">
             Create a private draft or choose a different visibility filter.
             Public pages retain their approved defaults until managed copy is
@@ -771,14 +1033,20 @@ function ContentEditor() {
             {data.total} records · Page {page}
           </span>
           <Button
-            disabled={loading || page <= 1}
+            disabled={busy || !!draft || !!confirm || loading || page <= 1}
             variant="secondary"
             onClick={() => setPage((value) => value - 1)}
           >
             Previous
           </Button>
           <Button
-            disabled={loading || page * data.pageSize >= data.total}
+            disabled={
+              busy ||
+              !!draft ||
+              !!confirm ||
+              loading ||
+              page * data.pageSize >= data.total
+            }
             variant="secondary"
             onClick={() => setPage((value) => value + 1)}
           >
