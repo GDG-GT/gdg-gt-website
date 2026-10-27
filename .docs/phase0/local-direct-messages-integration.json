@@ -156,6 +156,10 @@
     {
       "name": "captured email contains the protected deep link without private subject or message text",
       "passed": true
+    },
+    {
+      "name": "independent-session browser-review follow-up delivered",
+      "passed": true
     }
   ]
 }

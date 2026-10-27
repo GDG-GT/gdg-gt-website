@@ -559,7 +559,8 @@
       "status": "unverified",
       "testIds": [
         "COMM-TEST-001",
-        "COMM-TEST-004"
+        "COMM-TEST-004",
+        "COMM-TEST-020"
       ],
       "evidence": []
     },

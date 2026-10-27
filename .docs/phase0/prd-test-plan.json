@@ -2173,6 +2173,28 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "COMM-TEST-020",
+      "requirements": [
+        "COMM-001"
+      ],
+      "scope": "Private-message read cancellation, error/empty recovery, mutation duplicate/context fencing, audit-review lifecycle and semantic feedback",
+      "automated": [
+        "tests/client/direct-message-lifecycle.test.tsx",
+        "scripts/test-local-direct-messages.mjs"
+      ],
+      "remaining": [
+        "Full browser network-fault, review-expiry, assistive-technology and supported-device acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "27.1",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

@@ -14,6 +14,7 @@ import ContactInboxLink from "./ContactInboxLink";
 import { validationMessage } from "@/lib/validationMessage";
 import { useScopedRealtime } from "@/hooks/useScopedRealtime";
 import { useAdmin } from "@/contexts/AdminContext";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import {
   directCreate,
   directReply,
@@ -70,6 +71,7 @@ type Listing = {
 type History = { items: Message[]; nextCursor: Cursor | null };
 type Review = { active: boolean; expiresAt: string | null };
 const base = "/admin/communications/messages";
+type Operation = { epoch: number; thread: string; controller: AbortController };
 const stamp = (v: string) =>
   new Intl.DateTimeFormat(undefined, {
     dateStyle: "medium",
@@ -81,6 +83,16 @@ export default function DirectMessageWorkspace({
   personal?: boolean;
 }) {
   const { currentAdmin } = useAdmin();
+  return (
+    <DirectMessageContent
+      key={`${currentAdmin?.id}:${currentAdmin?.role}`}
+      personal={personal}
+    />
+  );
+}
+function DirectMessageContent({ personal }: { personal: boolean }) {
+  const { currentAdmin } = useAdmin();
+  const { isOnline } = useOnlineStatus();
   const [params, setParams] = useSearchParams(),
     selected = params.get("thread") || "";
   const [listing, setListing] = useState<Listing>(),
@@ -95,7 +107,8 @@ export default function DirectMessageWorkspace({
     [error, setError] = useState(""),
     [listError, setListError] = useState(""),
     [threadError, setThreadError] = useState(""),
-    [notice, setNotice] = useState("");
+    [notice, setNotice] = useState(""),
+    [threadReadAt, setThreadReadAt] = useState<string>();
   const [compose, setCompose] = useState(false),
     [recipient, setRecipient] = useState(""),
     [subject, setSubject] = useState(""),
@@ -115,7 +128,17 @@ export default function DirectMessageWorkspace({
     seq = useRef(0),
     listSeq = useRef(0),
     mounted = useRef(true),
-    mutationKey = useRef<{ signature: string; key: string }>();
+    mutationKey = useRef<{ signature: string; key: string }>(),
+    privateEpoch = useRef(0),
+    operation = useRef<Operation>(),
+    busyRef = useRef(false),
+    listRequest = useRef<AbortController>(),
+    threadRequest = useRef<AbortController>(),
+    reviewRequest = useRef<AbortController>(),
+    errorFocus = useRef<HTMLParagraphElement>(null),
+    noticeFocus = useRef<HTMLParagraphElement>(null),
+    editorHeading = useRef<HTMLHeadingElement>(null),
+    editingInput = useRef<HTMLTextAreaElement>(null);
   const reviewDeadline = useRef(0),
     refreshTimer = useRef<ReturnType<typeof setTimeout>>(),
     historyBefore = useRef<Cursor>();
@@ -142,6 +165,16 @@ export default function DirectMessageWorkspace({
     [],
   );
   const clearPrivate = useCallback(() => {
+    privateEpoch.current++;
+    clearTimeout(refreshTimer.current);
+    reviewDeadline.current = 0;
+    operation.current?.controller.abort();
+    operation.current = undefined;
+    busyRef.current = false;
+    listRequest.current?.abort();
+    threadRequest.current?.abort();
+    reviewRequest.current?.abort();
+    mutationKey.current = undefined;
     seq.current++;
     listSeq.current++;
     setListing(undefined);
@@ -158,15 +191,72 @@ export default function DirectMessageWorkspace({
     setReason("");
     setPassword("");
     setReview({ active: false, expiresAt: null });
+    setReviewForm(false);
+    setBusy(false);
+    setNotice("");
+    setError("");
+    setLoading(false);
+    setListError("");
+    setThreadError("");
+    setThreadReadAt(undefined);
   }, []);
   useEffect(() => {
     mounted.current = true;
+    const epochRef = privateEpoch;
     window.addEventListener("gdg:session-cleared", clearPrivate);
     return () => {
       mounted.current = false;
+      epochRef.current++;
+      operation.current?.controller.abort();
+      listRequest.current?.abort();
+      threadRequest.current?.abort();
+      reviewRequest.current?.abort();
       window.removeEventListener("gdg:session-cleared", clearPrivate);
     };
   }, [clearPrivate]);
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
+  useEffect(() => {
+    if (notice) noticeFocus.current?.focus();
+  }, [notice]);
+  useEffect(() => {
+    if (compose || reviewForm) editorHeading.current?.focus();
+  }, [compose, reviewForm]);
+  useEffect(() => {
+    if (editing) editingInput.current?.focus();
+  }, [editing]);
+  function begin(): Operation | undefined {
+    if (busyRef.current || !isOnline) return;
+    const next = {
+      epoch: privateEpoch.current,
+      thread: selected,
+      controller: new AbortController(),
+    };
+    operation.current = next;
+    busyRef.current = true;
+    setBusy(true);
+    setError("");
+    setNotice("");
+    return next;
+  }
+  const current = (op: Operation) =>
+    mounted.current &&
+    privateEpoch.current === op.epoch &&
+    operation.current === op &&
+    !op.controller.signal.aborted &&
+    selectedRef.current === op.thread;
+  function finish(op: Operation) {
+    if (
+      mounted.current &&
+      privateEpoch.current === op.epoch &&
+      operation.current === op
+    ) {
+      busyRef.current = false;
+      setBusy(false);
+      operation.current = undefined;
+    }
+  }
   useEffect(() => {
     const leave = (e: BeforeUnloadEvent) => {
       if (dirty) e.preventDefault();
@@ -175,6 +265,9 @@ export default function DirectMessageWorkspace({
     return () => window.removeEventListener("beforeunload", leave);
   }, [dirty]);
   const readList = useCallback(async () => {
+    listRequest.current?.abort();
+    const controller = new AbortController();
+    listRequest.current = controller;
     const request = ++listSeq.current;
     try {
       const q = new URLSearchParams({
@@ -183,9 +276,12 @@ export default function DirectMessageWorkspace({
         scope,
         ...listCursor,
       });
-      const result = await api<Listing>(base + "?" + q);
+      const result = await api<Listing>(base + "?" + q, {
+        signal: controller.signal,
+      });
       if (
         request === listSeq.current &&
+        !controller.signal.aborted &&
         mounted.current &&
         (scope !== "review" || reviewDeadline.current > Date.now())
       ) {
@@ -193,7 +289,11 @@ export default function DirectMessageWorkspace({
         setListError("");
       }
     } catch (e) {
-      if (request === listSeq.current && mounted.current) {
+      if (
+        request === listSeq.current &&
+        mounted.current &&
+        !controller.signal.aborted
+      ) {
         setListing(undefined);
         if (
           scope === "review" &&
@@ -213,23 +313,34 @@ export default function DirectMessageWorkspace({
         );
       }
     } finally {
-      if (request === listSeq.current && mounted.current) setLoading(false);
+      if (
+        request === listSeq.current &&
+        mounted.current &&
+        !controller.signal.aborted
+      )
+        setLoading(false);
     }
   }, [query, archived, scope, listCursor]);
   const readThread = useCallback(async () => {
     const id = selectedRef.current;
     if (!id) return;
+    threadRequest.current?.abort();
+    const controller = new AbortController();
+    threadRequest.current = controller;
     const request = ++seq.current;
     try {
       const windowQuery = historyBefore.current
         ? "?" + new URLSearchParams(historyBefore.current)
         : "";
       const [detail, messages] = await Promise.all([
-        api<{ record: Thread }>(base + "/" + id),
-        api<History>(base + "/" + id + "/history" + windowQuery),
+        api<{ record: Thread }>(base + "/" + id, { signal: controller.signal }),
+        api<History>(base + "/" + id + "/history" + windowQuery, {
+          signal: controller.signal,
+        }),
       ]);
       if (
         request === seq.current &&
+        !controller.signal.aborted &&
         selectedRef.current === id &&
         mounted.current
       ) {
@@ -237,15 +348,21 @@ export default function DirectMessageWorkspace({
           return;
         setRecord(detail.record);
         setHistory(messages);
+        setThreadReadAt(new Date().toISOString());
         setThreadError("");
       }
     } catch (e) {
       if (
         request === seq.current &&
+        !controller.signal.aborted &&
         selectedRef.current === id &&
         mounted.current
       ) {
         if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
+          operation.current?.controller.abort();
+          operation.current = undefined;
+          busyRef.current = false;
+          setBusy(false);
           setRecord(undefined);
           setHistory(undefined);
           setEditing(undefined);
@@ -264,7 +381,12 @@ export default function DirectMessageWorkspace({
   }, []);
   const refresh = useCallback(() => {
     if (refreshTimer.current) clearTimeout(refreshTimer.current);
-    refreshTimer.current = setTimeout(() => {
+    refreshTimer.current = setTimeout(function flush() {
+      if (!mounted.current) return;
+      if (busyRef.current) {
+        refreshTimer.current = setTimeout(flush, 200);
+        return;
+      }
       void readList();
       void readThread();
     }, 200);
@@ -274,21 +396,32 @@ export default function DirectMessageWorkspace({
     selected ? { kind: "direct-thread", id: selected } : null,
     refresh,
     () => {
+      operation.current?.controller.abort();
+      operation.current = undefined;
+      busyRef.current = false;
+      setBusy(false);
       setRecord(undefined);
       setHistory(undefined);
       void readThread();
     },
   );
   useEffect(() => {
+    listSeq.current++;
+    listRequest.current?.abort();
+    setListing(undefined);
+    setListError("");
     setLoading(true);
     const t = setTimeout(() => void readList(), 200);
     return () => clearTimeout(t);
   }, [readList]);
   useEffect(() => {
     seq.current++;
+    threadRequest.current?.abort();
     historyBefore.current = undefined;
     setRecord(undefined);
     setHistory(undefined);
+    setThreadError("");
+    setThreadReadAt(undefined);
     void readThread();
   }, [selected, readThread]);
   useEffect(() => {
@@ -305,7 +438,7 @@ export default function DirectMessageWorkspace({
   useEffect(() => {
     const t = setInterval(
       () => {
-        if (!document.hidden) refresh();
+        if (!document.hidden && !busyRef.current && navigator.onLine) refresh();
       },
       live === "live" ? 30000 : 5000,
     );
@@ -313,14 +446,17 @@ export default function DirectMessageWorkspace({
   }, [refresh, live]);
   useEffect(() => {
     if (!listing?.canReview) return;
-    let stopped = false;
-    api<Review>(base + "/review")
+    const controller = new AbortController();
+    reviewRequest.current = controller;
+    api<Review>(base + "/review", { signal: controller.signal })
       .then((r) => {
-        if (!stopped) setReview(r);
+        if (!controller.signal.aborted) setReview(r);
       })
-      .catch(fail);
+      .catch((error) => {
+        if (!controller.signal.aborted) fail(error);
+      });
     return () => {
-      stopped = true;
+      controller.abort();
     };
   }, [listing?.canReview, fail]);
   useEffect(() => {
@@ -354,7 +490,7 @@ export default function DirectMessageWorkspace({
     return !dirty || confirm("Discard the unsaved message changes?");
   }
   function choose(id = "", newMessage = false) {
-    if (busy || !canLeave()) return;
+    if (busyRef.current || !canLeave()) return;
     setBody("");
     setRecipient("");
     setSubject("");
@@ -371,7 +507,7 @@ export default function DirectMessageWorkspace({
     else next.delete("thread");
     setParams(next);
   }
-  async function mutate(path: string, document: unknown) {
+  async function mutate(path: string, document: unknown, op: Operation) {
     const signature = path + JSON.stringify(document);
     if (mutationKey.current?.signature !== signature)
       mutationKey.current = { signature, key: crypto.randomUUID() };
@@ -380,15 +516,16 @@ export default function DirectMessageWorkspace({
       protected: true,
       body: document,
       idempotencyKey: mutationKey.current.key,
+      signal: op.controller.signal,
     });
-    mutationKey.current = undefined;
+    if (current(op)) mutationKey.current = undefined;
     return result;
   }
   async function send(e: FormEvent) {
     e.preventDefault();
-    if (busy) return;
-    setBusy(true);
-    setError("");
+    if (!compose && (!record?.participant || !record.canReply)) return;
+    const op = begin();
+    if (!op) return;
     const id = selected;
     try {
       const document = compose
@@ -401,8 +538,9 @@ export default function DirectMessageWorkspace({
       const result = await mutate(
         compose ? base : base + "/" + id + "/items",
         document,
+        op,
       );
-      if (!mounted.current || id !== selectedRef.current) return;
+      if (!current(op)) return;
       historyBefore.current = undefined;
       setBody("");
       setRecipient("");
@@ -418,6 +556,7 @@ export default function DirectMessageWorkspace({
       }
       refresh();
     } catch (e) {
+      if (!current(op)) return;
       setError(
         validationMessage(e, "Check the message fields.", {
           recipientEmail: "Recipient email",
@@ -426,14 +565,14 @@ export default function DirectMessageWorkspace({
         }),
       );
     } finally {
-      if (mounted.current) setBusy(false);
+      finish(op);
     }
   }
   async function editMessage(e: FormEvent) {
     e.preventDefault();
-    if (!editing || busy) return;
-    setBusy(true);
-    setError("");
+    if (!editing) return;
+    const op = begin();
+    if (!op) return;
     try {
       await mutate(
         base + "/" + selected + "/items/" + editing.id,
@@ -442,30 +581,37 @@ export default function DirectMessageWorkspace({
           revision: editing.revision,
           message: editBody,
         }),
+        op,
       );
+      if (!current(op)) return;
       setEditing(undefined);
       setEditBody("");
       setNotice("Message updated.");
       refresh();
     } catch (e) {
+      if (!current(op)) return;
       setError(
         e instanceof ApiFailure && e.code === "CONFLICT"
           ? "This message changed. Your draft is preserved below. Cancel the edit to load its current version."
           : validationMessage(e, "Check the message.", { message: "Message" }),
       );
     } finally {
-      setBusy(false);
+      finish(op);
     }
   }
   async function messageState(item: Message, action: "delete" | "restore") {
-    if (busy) return;
-    setBusy(true);
-    setError("");
+    const op = begin();
+    if (!op) return;
     try {
-      await mutate(base + "/" + selected + "/items/" + item.id, {
-        action,
-        revision: item.revision,
-      });
+      await mutate(
+        base + "/" + selected + "/items/" + item.id,
+        {
+          action,
+          revision: item.revision,
+        },
+        op,
+      );
+      if (!current(op)) return;
       setRemoving(undefined);
       setNotice(
         action === "delete"
@@ -474,22 +620,24 @@ export default function DirectMessageWorkspace({
       );
       refresh();
     } catch (e) {
-      fail(e);
+      if (current(op)) fail(e);
     } finally {
-      setBusy(false);
+      finish(op);
     }
   }
   async function threadState(action: "archive" | "restore" | "read") {
-    if (!record || !history || busy) return;
-    setBusy(true);
-    setError("");
+    if (!record || !history) return;
+    const op = begin();
+    if (!op) return;
     try {
       await mutate(
         base + "/" + selected,
         action === "read"
           ? { action, throughId: history.items.at(-1)?.id }
           : { action, revision: record.stateRevision },
+        op,
       );
+      if (!current(op)) return;
       setNotice(
         action === "read"
           ? "Loaded messages marked as read."
@@ -499,47 +647,52 @@ export default function DirectMessageWorkspace({
       );
       refresh();
     } catch (e) {
-      fail(e);
+      if (current(op)) fail(e);
     } finally {
-      setBusy(false);
+      finish(op);
     }
   }
   async function older() {
-    if (!history?.nextCursor || busy) return;
-    setBusy(true);
+    if (!history?.nextCursor) return;
+    const op = begin();
+    if (!op) return;
     const id = selected;
     const cursor = history.nextCursor;
     seq.current++;
     try {
       const r = await api<History>(
         base + "/" + id + "/history?" + new URLSearchParams(cursor),
+        { signal: op.controller.signal },
       );
-      if (id === selectedRef.current) {
+      if (current(op)) {
         historyBefore.current = cursor;
         setHistory(r);
       }
     } catch (e) {
-      fail(e);
+      if (current(op)) fail(e);
     } finally {
-      setBusy(false);
+      finish(op);
     }
   }
   async function reviewAction(e?: FormEvent) {
     e?.preventDefault();
-    if (busy) return;
-    setBusy(true);
-    setError("");
+    const op = begin();
+    if (!op) return;
+    const secret = password;
+    setPassword("");
     try {
       const document = directReview.parse(
         review.active
           ? { action: "stop" }
-          : { action: "start", reason, currentPassword: password },
+          : { action: "start", reason, currentPassword: secret },
       );
       const result = await api<Review>(base + "/review", {
         method: "POST",
         protected: true,
         body: document,
+        signal: op.controller.signal,
       });
+      if (!current(op)) return;
       reviewDeadline.current = result.active
         ? Date.parse(result.expiresAt!)
         : 0;
@@ -567,6 +720,7 @@ export default function DirectMessageWorkspace({
           : "Message review ended.",
       );
     } catch (e) {
+      if (!current(op)) return;
       setError(
         validationMessage(e, "Check the review request.", {
           reason: "Review reason",
@@ -574,8 +728,7 @@ export default function DirectMessageWorkspace({
         }),
       );
     } finally {
-      setPassword("");
-      setBusy(false);
+      finish(op);
     }
   }
   const peerName = (t: Thread) =>
@@ -618,8 +771,20 @@ export default function DirectMessageWorkspace({
           <ContactInboxLink />
         </nav>
       )}
+      {!isOnline && (
+        <p role="status" className="gt-data-note">
+          You are offline. Unsent text stays only in this open tab. Reconnect
+          and check the conversation before sending; nothing is sent
+          automatically.
+        </p>
+      )}
       {error && (
-        <p className="gt-form-error" role="alert">
+        <p
+          ref={errorFocus}
+          tabIndex={-1}
+          className="gt-form-error"
+          role="alert"
+        >
           {error}{" "}
           <button
             onClick={() => {
@@ -631,13 +796,31 @@ export default function DirectMessageWorkspace({
           </button>
         </p>
       )}
-      {(listError || threadError) && (
-        <p className="gt-form-error" role="alert">
-          {threadError || listError}{" "}
-          <button onClick={refresh}>Retry loading</button>
+      {[
+        { label: "Inbox", error: listError },
+        { label: "Conversation", error: threadError },
+      ]
+        .filter((read) => read.error)
+        .map((read) => (
+          <p key={read.label} className="gt-form-error" role="alert">
+            {read.label}: {read.error}{" "}
+            <button disabled={busy || !isOnline} onClick={refresh}>
+              Retry {read.label.toLowerCase()}
+            </button>
+          </p>
+        ))}
+      {history && (threadError || !isOnline) && (
+        <p role="status" className="gt-data-note">
+          Conversation may be out of date. Last loaded{" "}
+          {threadReadAt ? stamp(threadReadAt) : "earlier"}. Refresh before
+          acting on these messages.
         </p>
       )}
-      {notice && <p role="status">{notice}</p>}
+      {notice && (
+        <p ref={noticeFocus} tabIndex={-1} role="status">
+          {notice}
+        </p>
+      )}
       {listing?.canReview && (
         <details
           className="gt-direct-review"
@@ -668,7 +851,9 @@ export default function DirectMessageWorkspace({
       )}
       {reviewForm && !review.active && (
         <form className="gt-event-editor" onSubmit={reviewAction}>
-          <h2>Request five-minute review</h2>
+          <h2 ref={editorHeading} tabIndex={-1}>
+            Request five-minute review
+          </h2>
           <p>
             Read-only access to chapter conversations. You cannot send as
             another person, change their messages, or mark their inbox read.
@@ -695,14 +880,16 @@ export default function DirectMessageWorkspace({
               onChange={(e) => setPassword(e.target.value)}
             />
           </Field>
-          <Button disabled={busy}>
+          <Button disabled={busy || !isOnline}>
             {busy ? "Confirming…" : "Start audited review"}
           </Button>
         </form>
       )}
       {compose && (
         <form className="gt-event-editor" onSubmit={send}>
-          <h2>New private conversation</h2>
+          <h2 ref={editorHeading} tabIndex={-1}>
+            New private conversation
+          </h2>
           <p>
             Only you and the recipient receive this conversation. Authorized
             Super Admins may read it through audited review. Email notices
@@ -747,7 +934,7 @@ export default function DirectMessageWorkspace({
             in this workflow yet.
           </p>
           <div className="gt-button-row">
-            <Button disabled={busy}>
+            <Button disabled={busy || !isOnline}>
               {busy ? "Sending…" : "Send message"}
             </Button>
             <Button
@@ -815,7 +1002,16 @@ export default function DirectMessageWorkspace({
               )}
             </div>
             {loading && !listing ? (
-              <p role="status">Loading conversations…</p>
+              <div role="status" aria-label="Loading conversations">
+                <div className="gt-skeleton gt-loading-heading" />
+                <div className="gt-skeleton gt-detail-skeleton" />
+                <span className="sr-only">Loading conversations…</span>
+              </div>
+            ) : listError && !listing ? (
+              <p>
+                The inbox is unavailable. Use Retry inbox to load your
+                conversations.
+              </p>
             ) : listing?.items.length ? (
               <ul className="gt-direct-list">
                 {listing.items.map((t) => (
@@ -884,11 +1080,17 @@ export default function DirectMessageWorkspace({
                 Choose a conversation to read its history or send a follow-up.
               </EmptyState>
             ) : !record || !history ? (
-              <p role="status">
-                {error
+              <div
+                role={threadError ? undefined : "status"}
+                aria-label={threadError ? undefined : "Loading conversation"}
+              >
+                {!threadError && (
+                  <div className="gt-skeleton gt-detail-skeleton" />
+                )}
+                {threadError
                   ? "This conversation is currently unavailable."
                   : "Loading conversation…"}
-              </p>
+              </div>
             ) : (
               <>
                 <header className="gt-direct-heading">
@@ -910,7 +1112,7 @@ export default function DirectMessageWorkspace({
                   <div className="gt-button-row">
                     <Button
                       variant="ghost"
-                      disabled={busy || !!editing || !!body}
+                      disabled={busy || !isOnline || !!editing || !!body}
                       onClick={() =>
                         void threadState(
                           record.archived ? "restore" : "archive",
@@ -921,7 +1123,12 @@ export default function DirectMessageWorkspace({
                     </Button>
                     <Button
                       variant="ghost"
-                      disabled={busy || !record.unread || !history.items.length}
+                      disabled={
+                        busy ||
+                        !isOnline ||
+                        !record.unread ||
+                        !history.items.length
+                      }
                       onClick={() => void threadState("read")}
                     >
                       Mark loaded messages read
@@ -969,6 +1176,7 @@ export default function DirectMessageWorkspace({
                         <form onSubmit={editMessage}>
                           <Field label="Edit message" required>
                             <textarea
+                              ref={editingInput}
                               required
                               rows={5}
                               disabled={busy}
@@ -985,7 +1193,11 @@ export default function DirectMessageWorkspace({
                           )}
                           <div className="gt-button-row">
                             <Button
-                              disabled={busy || editing.revision !== m.revision}
+                              disabled={
+                                busy ||
+                                !isOnline ||
+                                editing.revision !== m.revision
+                              }
                             >
                               Save edit
                             </Button>
@@ -1034,7 +1246,7 @@ export default function DirectMessageWorkspace({
                                 {m.own && !m.deleted_at && (
                                   <Button
                                     variant="ghost"
-                                    disabled={busy || !!body}
+                                    disabled={busy || !isOnline || !!body}
                                     onClick={() => {
                                       setEditing(m);
                                       setEditBody(m.message);
@@ -1047,7 +1259,7 @@ export default function DirectMessageWorkspace({
                                 {m.own && (
                                   <Button
                                     variant="ghost"
-                                    disabled={busy || !!body}
+                                    disabled={busy || !isOnline || !!body}
                                     onClick={() =>
                                       m.deleted_at
                                         ? void messageState(m, "restore")
@@ -1072,7 +1284,7 @@ export default function DirectMessageWorkspace({
                               <div className="gt-button-row">
                                 <Button
                                   variant="danger"
-                                  disabled={busy}
+                                  disabled={busy || !isOnline}
                                   onClick={() => void messageState(m, "delete")}
                                 >
                                   Remove message
@@ -1125,7 +1337,9 @@ export default function DirectMessageWorkspace({
                         />
                       </Field>
                       <Button
-                        disabled={busy || !body.trim() || !record.canReply}
+                        disabled={
+                          busy || !isOnline || !body.trim() || !record.canReply
+                        }
                       >
                         {busy ? "Working…" : "Send reply"}
                       </Button>

@@ -3,7 +3,27 @@
 The full PRD is now in scope following Tejas's request on 2026-10-19. This is an
 incremental implementation tracker, not a completion or launch claim.
 
+Entries are newest first. Older dated checkpoints record their state at that
+time; their pending-work and audit counts do not override the latest checkpoint.
+
 ## Current checkpoint
+
+### Private conversation request lifecycle — 2026-10-26
+
+- Account/session/thread-bound mutation guards prevent duplicates and fence late
+  results; reads and mutations abort on private-context teardown. Review passwords
+  clear at request start, background refresh waits for pending operations, feedback
+  focuses semantically and offline drafts never auto-submit. Inbox/thread failures
+  have truthful independent states, skeletons and retained-history timestamps.
+- Fifteen new DOM cases include two axe audits. All 901 tests/127 files pass;
+  types pass, lint 0 errors/25 warnings, build/budgets/secrets pass. Global coverage
+  remains below 70% at 40.76% lines/38.80% branches; all 17 critical branch gates pass.
+- Forty actual local HTTP/WebSocket/database/Mailpit checks pass. Cross-clock
+  expiry assertion now checks the exact interval against its database audit;
+  isolated fictional review accounts avoid existing account quotas. Browser live
+  follow-up preserves an unsent draft and 375 px reply controls fit. Cleanup,
+  sign-out/tab closure, ledger removal and viewport reset completed. Catalog: 124
+  unverified logical cases. See `DIRECT_MESSAGE_RECOVERY.md`; full PRD remains open.
 
 ### Community directory transfer lifecycle — 2026-10-26
 
@@ -1733,7 +1753,7 @@ This section supersedes older prototype-only statements below. The full PRD is
   by actual implementation and execution. Normative non-numbered sections apply
   in addition to these numbered IDs.
 
-## Required order from here
+## Original execution plan — historical 2026-10-19
 
 1. Phase 0: execute the historical schema in an isolated disposable database,
    record failures and effective catalogs, reconstruct missing objects, derive a
@@ -1750,7 +1770,7 @@ This section supersedes older prototype-only statements below. The full PRD is
 No phase exits on the strength of mock UI behavior. No protected feature is
 production-ready while the browser still uses the legacy direct table services.
 
-## Current external inputs / gates
+## Initial external inputs / gates — historical 2026-10-19
 
 - Hosted GT-owned Supabase, Redis/rate-limit, email, scanner/queue, Realtime signing, and
   deployment credentials are not configured. Do not reuse PSU credentials.
@@ -1758,11 +1778,12 @@ production-ready while the browser still uses the legacy direct table services.
   by this local checkpoint.
 - Approved marks, final content/recipients, financial retention policy, and Tejas's
   visual sign-off remain launch inputs.
-- The latest production dependency audit reports 31 findings (16 high, 14 moderate,
+- The production dependency audit at that initial checkpoint reported 31 findings (16 high, 14 moderate,
   1 low). These remain open pending individually tested remediation; no blanket
   acceptance or `audit fix --force` has been applied.
 
-Phase 0 is in progress. All later phase exit gates remain open.
+At that initial checkpoint Phase 0 was in progress. Consult the newest checkpoint
+for current implementation and validation results; full acceptance remains open.
 
 ## Backend foundation checkpoint — 2026-10-19
 

@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-26",
+  "note": "Actual local fictional editor participant. Independent-session follow-up arrived through live updates and preserved the unsent reply. No browser message was submitted. The responsive raster was stale and not retained; desktop screenshot after reset was inspected.",
+  "liveFollowUpArrived": true,
+  "unsentDraftPreserved": true,
+  "mobile": {
+    "documentWidth": 375,
+    "draftPreserved": true,
+    "reply": {
+      "height": 145.984375,
+      "left": 18,
+      "right": 357
+    },
+    "send": {
+      "height": 44,
+      "left": 18,
+      "right": 132.8828125
+    },
+    "width": 375
+  },
+  "screenshot": "ui-review/direct-message-draft-recovery.png",
+  "acceptance": "unverified"
+}

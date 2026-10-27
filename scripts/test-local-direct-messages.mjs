@@ -1,37 +1,29 @@
 import { randomUUID } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { writeFile, unlink } from "node:fs/promises";
 import { createInterface } from "node:readline";
 import { createClient } from "@supabase/supabase-js";
 import { localHttp } from "./lib/local-http.mjs";
-import { hashSecret, riskHash } from "../server/lib/security.mjs";
+import { hashSecret } from "../server/lib/security.mjs";
 import { runDelivery } from "../server/delivery.mjs";
 import { dockerCommand } from "./lib/disposable-postgres.mjs";
 if (process.argv.includes("--hold-for-browser") && !process.stdin.isTTY)
   throw new Error("Browser review requires an interactive terminal.");
-const root = await localHttp(),
-  { db, env, credentials } = root,
+if (process.env.GDG_LOCAL_TEST_SHARED_SESSION === "true")
+  throw Error("Requires isolated fictional sessions.");
+let root = await localHttp();
+const { db, env, credentials } = root,
   evidence = [],
   fixtures = [],
   threads = [],
   clients = [],
   channels = [];
 const base = "/admin/communications/messages";
-let reviewActive = false;
-const primary = await db
-  .from("admin_users")
-  .select("id")
-  .eq("email", credentials.email)
-  .single();
-if (primary.error) throw new Error("Local message review account unavailable");
-const headroom = await db.rpc("check_rate_limit", {
-  p_scope: "messages.review",
-  p_risk_hash: riskHash(primary.data.id, env.RISK_HASH_SECRET),
-  p_limit: 4,
-});
-if (headroom.error || !headroom.data.allowed)
-  throw new Error(
-    "Wait for the natural review-confirmation cooldown; this suite needs two confirmations. No quota state was reset.",
-  );
+let reviewActive = false,
+  ledgerOwned = false;
+const ledger = new URL(
+  "../.docs/local-direct-message-review.local",
+  import.meta.url,
+);
 function check(value, name) {
   if (!value) throw new Error("FAIL " + name);
   evidence.push({ name, passed: true });
@@ -54,16 +46,14 @@ async function user(role, name) {
   const id = randomUUID(),
     email = `fictional-direct-${id}@example.test`,
     password = "Fictional-direct-" + randomUUID();
-  const r = await db
-    .from("admin_users")
-    .insert({
-      id,
-      email,
-      password_hash: await hashSecret(password),
-      role,
-      display_name: name,
-      is_active: true,
-    });
+  const r = await db.from("admin_users").insert({
+    id,
+    email,
+    password_hash: await hashSecret(password),
+    role,
+    display_name: name,
+    is_active: true,
+  });
   if (r.error) throw new Error("Direct-message fixture unavailable");
   fixtures.push(id);
   const http = await localHttp();
@@ -79,7 +69,7 @@ async function user(role, name) {
       body: { email, password },
     }),
   );
-  return { ...http, id, email };
+  return { ...http, id, email, password };
 }
 async function join(dto, topic = dto.topic, received = [], states = []) {
   const c = createClient(dto.url, dto.key, {
@@ -122,7 +112,8 @@ async function eventually(predicate) {
   return false;
 }
 try {
-  const rootActor = (await root.login()).user;
+  root = await user("super_admin", "Fictional message review officer");
+  const rootActor = { id: root.id };
   const a = await user("team_member", "Fictional message author"),
     b = await user("blog_editor", "Fictional message recipient"),
     outsider = await user("admin", "Fictional unrelated officer");
@@ -326,12 +317,23 @@ try {
     await send(root, base + "/review", {
       action: "start",
       reason: "Fictional local integration review only",
-      currentPassword: credentials.password,
+      currentPassword: root.password,
     }),
   );
   reviewActive = true;
+  const reviewAudit = await db
+    .from("admin_actions")
+    .select("created_at")
+    .eq("actor_id", rootActor.id)
+    .eq("action", "messages.review_start")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
+  if (reviewAudit.error) throw Error("Review expiry audit unavailable");
   check(
-    review.active && Date.parse(review.expiresAt) <= Date.now() + 300000,
+    review.active &&
+      Date.parse(review.expiresAt) - Date.parse(reviewAudit.data.created_at) ===
+        300000,
     "password-confirmed review receives a five-minute server expiry",
   );
   check(
@@ -378,7 +380,7 @@ try {
     await send(root, base + "/review", {
       action: "start",
       reason: "Fictional short-lived expiry boundary test",
-      currentPassword: credentials.password,
+      currentPassword: root.password,
     }),
   );
   reviewActive = true;
@@ -403,16 +405,21 @@ try {
       "ON_ERROR_STOP=1",
       "-At",
     ],
-    `UPDATE gdg_security.direct_review_sessions SET expires_at=now()+interval '4 seconds' WHERE session_id='${reviewSession}' AND actor_id='${rootActor.id}' AND revoked_at IS NULL;`,
+    `UPDATE gdg_security.direct_review_sessions SET expires_at=now()+interval '4 seconds' WHERE session_id='${reviewSession}' AND actor_id='${rootActor.id}' AND revoked_at IS NULL RETURNING extract(epoch from expires_at);`,
   );
   if (shortened.code !== 0 || !shortened.stdout.includes("UPDATE 1"))
     throw new Error("Short-lived review fixture unavailable");
+  const shortenedExpiry = Number(
+    shortened.stdout.split("\n").find((line) => /^\d+\.\d+$/.test(line)),
+  );
+  if (!Number.isFinite(shortenedExpiry))
+    throw Error("Short-lived review expiry unavailable");
   const shortGrant = data(
       await send(root, "/auth/realtime-token", { kind: "direct-thread", id }),
     ),
     expiryStates = [];
   check(
-    shortGrant.expiresAt * 1000 <= Date.now() + 4000 &&
+    shortGrant.expiresAt <= shortenedExpiry &&
       (await join(shortGrant, shortGrant.topic, [], expiryStates)) ===
         "SUBSCRIBED",
     "near-expiry review receives a capped JWT that can join before expiration",
@@ -487,7 +494,7 @@ try {
   // Create an own-thread fixture for visual review using the existing signed-in browser.
   const browserThread = data(
     await send(b, base, {
-      recipientEmail: credentials.email,
+      recipientEmail: root.email,
       subject: "Fictional message workflow review",
       message:
         "Let’s use this fictional conversation to verify replies, read receipts, and the phone layout. Nothing here is real chapter correspondence.",
@@ -495,6 +502,16 @@ try {
   );
   threads.push(browserThread.id);
   if (process.argv.includes("--hold-for-browser")) {
+    await writeFile(
+      ledger,
+      JSON.stringify({
+        email: b.email,
+        password: b.password,
+        threadId: browserThread.id,
+      }) + "\n",
+      { mode: 0o600, flag: "wx" },
+    );
+    ledgerOwned = true;
     console.info("BROWSER_THREAD " + browserThread.id);
     console.info(
       "Type change to send a remote follow-up, or done to recoverably archive fixtures.",
@@ -523,6 +540,7 @@ try {
   await b.logout();
   await outsider.logout();
 } finally {
+  if (ledgerOwned) await unlink(ledger);
   if (reviewActive) await send(root, base + "/review", { action: "stop" });
   for (const ch of channels) ch.teardown();
   for (const c of clients) {

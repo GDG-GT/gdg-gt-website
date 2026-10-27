@@ -1056,10 +1056,27 @@ add(
   "TEAM-TEST-025",
   "",
   "Community directory CSV validation/review/expiry/confirmation, duplicate prevention, filtered private export consent, offline input and session cancellation",
-  ["tests/client/member-transfer-ui.test.tsx", unit("member-transfer"), local("member-transfer")],
-  ["Supported-device/screen-reader and real-browser network interruption/download acceptance"],
+  [
+    "tests/client/member-transfer-ui.test.tsx",
+    unit("member-transfer"),
+    local("member-transfer"),
+  ],
+  [
+    "Supported-device/screen-reader and real-browser network interruption/download acceptance",
+  ],
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+
+add(
+  "COMM-TEST-020",
+  "COMM-001",
+  "Private-message read cancellation, error/empty recovery, mutation duplicate/context fencing, audit-review lifecycle and semantic feedback",
+  ["tests/client/direct-message-lifecycle.test.tsx", local("direct-messages")],
+  [
+    "Full browser network-fault, review-expiry, assistive-technology and supported-device acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "27.1", "28.3", "31.2"];
 
 export const requirementOverrides = {
   "FORM-007":
