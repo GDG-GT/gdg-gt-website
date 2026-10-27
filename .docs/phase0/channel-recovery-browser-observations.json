@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-26",
+  "note": "Actual local current-lead team-chat fixture, independent-session live follow-up, no browser message submitted.",
+  "remoteFollowUpArrived": true,
+  "unsentDraftPreserved": true,
+  "mobile": {
+    "documentWidth": 375,
+    "draftPreserved": true,
+    "logContainsNativeList": true,
+    "reply": {
+      "height": 96.390625,
+      "left": 18,
+      "right": 357
+    },
+    "send": {
+      "height": 44,
+      "left": 18,
+      "right": 357
+    },
+    "width": 375
+  },
+  "screenshot": "ui-review/channel-draft-recovery.png",
+  "acceptance": "unverified"
+}

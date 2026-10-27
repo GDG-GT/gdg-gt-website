@@ -2195,6 +2195,31 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "COMM-TEST-019",
+      "requirements": [
+        "COMM-001",
+        "COMM-002",
+        "COMM-003"
+      ],
+      "scope": "Channel permission/list/history/member read recovery, pinned isolation, ordered delta pages, mutation/context fences and native list/live-log accessibility",
+      "automated": [
+        "tests/client/channel-recovery.test.tsx",
+        "scripts/test-local-channels.mjs",
+        "scripts/test-local-team-chat.mjs"
+      ],
+      "remaining": [
+        "Full real-browser outage/role/reconnect, screen-reader and supported-device acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "27.1",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

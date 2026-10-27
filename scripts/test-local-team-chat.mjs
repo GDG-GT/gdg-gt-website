@@ -1,10 +1,14 @@
 import { randomUUID } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { writeFile, unlink } from "node:fs/promises";
 import { createInterface } from "node:readline";
 import { createClient } from "@supabase/supabase-js";
 import { localHttp } from "./lib/local-http.mjs";
 import { hashSecret } from "../server/lib/security.mjs";
 import { dockerCommand } from "./lib/disposable-postgres.mjs";
+if (process.env.GDG_LOCAL_TEST_SHARED_SESSION === "true")
+  throw Error("Requires isolated fictional sessions.");
+const ledger = new URL("../.docs/local-channel-review.local", import.meta.url);
+let ledgerOwned = false;
 const { db, credentials } = await localHttp(),
   evidence = [],
   accounts = [],
@@ -443,6 +447,17 @@ try {
     "the large Unicode fixture is soft-deleted to a body-free placeholder before browser review",
   );
   if (process.argv.includes("--hold-for-browser")) {
+    await writeFile(
+      ledger,
+      JSON.stringify({
+        email: member.email,
+        password: member.password,
+        channelId,
+        teamId,
+      }) + "\n",
+      { mode: 0o600, flag: "wx" },
+    );
+    ledgerOwned = true;
     console.info("BROWSER_TEAM " + teamId);
     console.info("BROWSER_ROOM " + channelId);
     console.info(
@@ -476,6 +491,7 @@ try {
   await member.logout();
   await outsider.logout();
 } finally {
+  if (ledgerOwned) await unlink(ledger);
   for (const { client, channel } of sockets) {
     channel.teardown();
     client.realtime.disconnect();

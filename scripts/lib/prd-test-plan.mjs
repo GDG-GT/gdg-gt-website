@@ -1078,6 +1078,21 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "27.1", "28.3", "31.2"];
 
+add(
+  "COMM-TEST-019",
+  "COMM-001 COMM-002 COMM-003",
+  "Channel permission/list/history/member read recovery, pinned isolation, ordered delta pages, mutation/context fences and native list/live-log accessibility",
+  [
+    "tests/client/channel-recovery.test.tsx",
+    local("channels"),
+    local("team-chat"),
+  ],
+  [
+    "Full real-browser outage/role/reconnect, screen-reader and supported-device acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "27.1", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

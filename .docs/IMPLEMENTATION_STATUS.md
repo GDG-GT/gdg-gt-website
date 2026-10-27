@@ -8,6 +8,21 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Channel and team-chat interaction recovery — 2026-10-26
+
+- Private context/pending/controller guards fence channel writes and ordered member
+  reads; access denial cancels work immediately. Permission/directory/history/member
+  failures have independent retry, skeleton and stale states. Pinned reads hide old
+  unpinned results; catch-up pages remain ordered. Typed room/create scope gates,
+  offline behavior and semantic feedback improved. Live log wraps a native list.
+- Eighteen new DOM cases include three axe audits. All 919 tests/128 files pass;
+  types pass, lint 0 errors/25 warnings, build/budgets/secrets pass. Coverage remains
+  below 70% at 42.54% lines/40.52% branches; all 17 critical branch gates pass.
+- Thirty-three channel plus 29 team-chat actual local HTTP/WebSocket checks pass.
+  Browser live follow-up preserves an unsent draft; mobile controls fit at 375 px.
+  Owned cleanup, sign-out/tab closure, ledger removal and viewport reset completed.
+  Catalog: 125 unverified logical cases. See `CHANNEL_RECOVERY.md`; full PRD is open.
+
 ### Private conversation request lifecycle — 2026-10-26
 
 - Account/session/thread-bound mutation guards prevent duplicates and fence late
