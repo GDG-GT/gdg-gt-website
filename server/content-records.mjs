@@ -9,7 +9,9 @@ import {
   text,
   safeUrl,
   imageUrl,
+  idempotency,
 } from "./lib/validation.mjs";
+import { tokenHash } from "./lib/security.mjs";
 const optional = (schema) => schema.nullable().optional(),
   lines = z.array(text(500, 1)).max(100),
   order = z.number().int().min(0).max(1000000).default(0),
@@ -255,8 +257,10 @@ export async function contentRecordRoutes(
       "Each sponsorship tier level is unique. Create a different level instead.",
     );
   const changed = checked(
-    await db.rpc("mutate_content_record", {
+    await db.rpc("mutate_curated_content", {
       p_actor: session.user.id,
+      p_session: session.sessionId,
+      p_namespace: "collection",
       p_kind: kind,
       p_id: id,
       p_action: !id
@@ -269,7 +273,17 @@ export async function contentRecordRoutes(
         ...(body.record || {}),
         ...(body.teamId !== undefined ? { team_id: body.teamId } : {}),
       },
-      p_request: requestId,
+      p_key_hash: tokenHash(idempotency(request)),
+      p_request_hash: tokenHash(
+        JSON.stringify({
+          namespace: "collection",
+          kind,
+          id,
+          method: request.method,
+          body,
+        }),
+      ),
+      p_request_id: requestId,
     }),
   );
   sendJson(response, 200, { record: changed }, requestId);

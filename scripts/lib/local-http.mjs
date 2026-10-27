@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
 import { parseEnv } from "node:util";
 import { serverDatabase } from "../../server/db/client.mjs";
 let shared;
@@ -36,6 +37,14 @@ export async function localHttp() {
       sessionBinding,
     } = {},
   ) {
+    // Curated-content mutations now require explicit retry intent. A null key
+    // deliberately omits the header for negative contract checks.
+    const requestKey =
+      key === undefined &&
+      method !== "GET" &&
+      /^\/admin\/(?:site-content|content-records)\//.test(path)
+        ? randomUUID()
+        : key;
     const response = await fetch(env.APP_ORIGIN + "/api/v1" + path, {
       method,
       redirect,
@@ -48,7 +57,7 @@ export async function localHttp() {
             }
           : {}),
         ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
-        ...(key ? { "Idempotency-Key": key } : {}),
+        ...(requestKey ? { "Idempotency-Key": requestKey } : {}),
         ...(accessToken ? { "X-Form-Access": accessToken } : {}),
         ...(sessionBinding ? { "X-Session-Binding": sessionBinding } : {}),
       },

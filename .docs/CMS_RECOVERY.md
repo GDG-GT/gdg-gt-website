@@ -11,12 +11,11 @@ an editor or review is open. Errors, saved receipts and review headings receive
 semantic focus. Offline drafts never auto-submit.
 
 Private writes use synchronous pending guards, abort signals and ownership checks.
-Accepted saves remain reported as saved if public content refresh fails. The CMS
-server currently lacks mutation replay deduplication; UI uncertain failures
-therefore preserve the draft and block blind retry until the operator inspects
-the inventory and closes/reopens. This guard does not claim server idempotency.
-Known validation errors remain correctable; server revision conflicts lock saves.
-Server mutation replay remains an explicit PRD implementation gap.
+Accepted saves remain reported as saved if public content refresh fails. Uncertain
+failures preserve drafts and retain their explicit retry key. Server deduplication
+is now implemented by the follow-up in `CURATED_CONTENT_RETRIES.md`, including
+current-session/action/scope checks. Known validation errors remain correctable;
+server revision conflicts lock saves.
 
 Private composition reads now use keyed snapshots, ignore aborted responses,
 retain timestamped previews on temporary failure and clear denied previews.
@@ -34,6 +33,7 @@ gates pass. Types, lint (zero errors/25 existing warnings), production build, en
 byte budgets and secret scan pass. No threshold/inclusion was relaxed. No new
 live-browser CMS or visual acceptance is claimed by this checkpoint.
 
-The catalog contains 135 unverified logical cases. Server replay, full browser
+The latest catalog/verification figures are in `CURATED_CONTENT_RETRIES.md`.
+Full browser
 interruption, device/screen-reader, real composition, visual, hosted/cache and
 global coverage acceptance remain open. This does not finish the complete PRD.

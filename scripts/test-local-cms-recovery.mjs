@@ -14,6 +14,7 @@ const base = "/admin/site-content/navigation",
   label = "Fictional private navigation " + id.slice(0, 8);
 let created = false,
   recordId,
+  resourceId,
   cleanup = false;
 const data = (r) => {
   if (r.status !== 200)
@@ -31,19 +32,17 @@ function check(ok, name) {
   tests.push({ name, passed: true });
   console.info("PASS " + name);
 }
-const write = (p, body, method = "POST") => call(p, { method, body });
+const write = (p, body, method = "POST", key) => call(p, { method, body, key });
 try {
   checked(
-    await db
-      .from("admin_users")
-      .insert({
-        id,
-        email,
-        password_hash: await hashSecret(password),
-        role: "admin",
-        is_active: true,
-        display_name: "Fictional CMS recovery officer",
-      }),
+    await db.from("admin_users").insert({
+      id,
+      email,
+      password_hash: await hashSecret(password),
+      role: "admin",
+      is_active: true,
+      display_name: "Fictional CMS recovery officer",
+    }),
   );
   created = true;
   data(await write("/auth/gate", { code: h.credentials.gateCode }));
@@ -56,10 +55,39 @@ try {
     data(await call(base + "/capabilities")).actions.includes("update"),
     "fresh officer receives current CMS action grants",
   );
-  const first = data(
-    await write(base, { record: { label, href: "/events", order_index: 0 } }),
-  ).record;
+  const creation = { record: { label, href: "/events", order_index: 0 } },
+    creationKey = randomUUID();
+  check(
+    (await write(base, creation, "POST", null)).status === 400,
+    "CMS mutation rejects a missing retry key",
+  );
+  const concurrent = await Promise.all(
+    Array.from({ length: 10 }, () =>
+      write(base, creation, "POST", creationKey),
+    ),
+  );
+  const first = data(concurrent[0]).record;
   recordId = first.id;
+  check(
+    concurrent.every(
+      (r) => r.status === 200 && r.json.data.record.id === recordId,
+    ) &&
+      checked(
+        await db.from("admin_actions").select("id").eq("target_id", recordId),
+      ).length === 1,
+    "ten simultaneous CMS retries create one record and one audit entry",
+  );
+  check(
+    (
+      await write(
+        base,
+        { record: { ...creation.record, label: label + " changed" } },
+        "POST",
+        creationKey,
+      )
+    ).status === 409,
+    "changed CMS payload conflicts with reused retry key",
+  );
   check(
     !first.is_active && first.revision === 1,
     "new synthetic navigation is a private draft",
@@ -80,6 +108,11 @@ try {
     ),
     "private composition includes only the saved synthetic draft",
   );
+  const updateKey = randomUUID(),
+    updateBody = {
+      revision: 1,
+      record: { label: label + " revised", href: "/events", order_index: 1 },
+    };
   const updated = data(
     await write(
       base + "/" + recordId,
@@ -88,8 +121,14 @@ try {
         record: { label: label + " revised", href: "/events", order_index: 1 },
       },
       "PATCH",
+      updateKey,
     ),
   ).record;
+  check(
+    data(await write(base + "/" + recordId, updateBody, "PATCH", updateKey))
+      .record.revision === 2,
+    "unchanged CMS update retry returns its original revision",
+  );
   check(
     updated.revision === 2 && !updated.is_active,
     "CMS update increments revision while remaining private",
@@ -107,13 +146,26 @@ try {
     ).status === 409,
     "obsolete CMS update cannot overwrite current copy",
   );
+  const archiveKey = randomUUID();
   const archived = data(
     await write(
       base + "/" + recordId,
       { revision: updated.revision, action: "archive" },
       "DELETE",
+      archiveKey,
     ),
   ).record;
+  check(
+    data(
+      await write(
+        base + "/" + recordId,
+        { revision: updated.revision, action: "archive" },
+        "DELETE",
+        archiveKey,
+      ),
+    ).record.revision === archived.revision,
+    "archive retry does not increment a retained record again",
+  );
   check(
     !!archived.deleted_at && !archived.is_active,
     "synthetic navigation archival is recoverable",
@@ -122,6 +174,29 @@ try {
     data(await call(base + "/" + recordId + "?state=trash")).items[0].id ===
       recordId,
     "archived selected detail remains in its authorized inventory",
+  );
+  const resourcePath = "/admin/content-records/resources",
+    resourceKey = randomUUID(),
+    resourceBody = {
+      teamId: null,
+      record: {
+        title: "Fictional retry resource " + id.slice(0, 8),
+        description: "Private loopback retry fixture",
+        type: "documentation",
+      },
+    };
+  check(
+    (await write(resourcePath, resourceBody, "POST", null)).status === 400,
+    "collection mutation rejects a missing retry key",
+  );
+  const resource = data(
+    await write(resourcePath, resourceBody, "POST", resourceKey),
+  ).record;
+  resourceId = resource.id;
+  check(
+    data(await write(resourcePath, resourceBody, "POST", resourceKey)).record
+      .id === resourceId,
+    "collection create retry reuses the exact private resource",
   );
   checked(
     await db.from("admin_users").update({ is_active: false }).eq("id", id),
@@ -154,6 +229,27 @@ try {
           .eq("revision", record.revision),
       );
   }
+  if (resourceId) {
+    const r = checked(
+      await db
+        .from("resources")
+        .select("id,created_by,revision")
+        .eq("id", resourceId)
+        .single(),
+    );
+    if (r.created_by !== id) throw Error("Resource fixture ownership changed");
+    checked(
+      await db
+        .from("resources")
+        .update({
+          deleted_at: new Date().toISOString(),
+          is_active: false,
+          revision: r.revision + 1,
+        })
+        .eq("id", resourceId)
+        .eq("revision", r.revision),
+    );
+  }
   if (created) {
     checked(
       await db
@@ -174,7 +270,7 @@ try {
     new URL("../.docs/phase0/local-cms-recovery.json", import.meta.url),
     JSON.stringify(
       {
-        note: "Actual loopback CMS checks with one fresh fictional officer and a new private navigation draft. Existing managed copy/roles were untouched; no public publication, external provider, mail or user files. Synthetic record recoverably archived; account disabled/sessions revoked. Quotas/jobs never reset. Server mutation replay deduplication is not implemented or claimed.",
+        note: "Actual loopback CMS/content collection retries with one fresh fictional officer and new private navigation/resource drafts, including ten simultaneous identical CMS creates. Existing managed copy/roles untouched; no public publication, external provider, mail or user files. Synthetic records recoverably archived; account disabled/sessions revoked. Quotas/jobs never reset.",
         cleanup: { completed: cleanup },
         tests,
       },

@@ -8,7 +8,9 @@ import {
   uuid,
   text,
   safeUrl,
+  idempotency,
 } from "./lib/validation.mjs";
+import { tokenHash } from "./lib/security.mjs";
 import {
   managedPublicPages,
   managedPageSections,
@@ -394,14 +396,26 @@ export async function siteContentRoutes(
       "This content action is not permitted.",
     );
   const row = checked(
-    await db.rpc("mutate_site_content", {
+    await db.rpc("mutate_curated_content", {
       p_actor: session.user.id,
+      p_session: session.sessionId,
+      p_namespace: "site",
       p_kind: kind,
       p_id: id,
       p_action: action,
       p_revision: body.revision || null,
       p_document: body.record || {},
-      p_request: requestId,
+      p_key_hash: tokenHash(idempotency(request)),
+      p_request_hash: tokenHash(
+        JSON.stringify({
+          namespace: "site",
+          kind,
+          id,
+          method: request.method,
+          body,
+        }),
+      ),
+      p_request_id: requestId,
     }),
   );
   sendJson(response, 200, { record: row }, requestId);

@@ -329,7 +329,7 @@ describe("CMS private mutations and recovery", () => {
       "Saved privately. Review and publish separately.",
     );
   });
-  it("preserves uncertain saves and blocks blind retry without server deduplication", async () => {
+  it("preserves uncertain saves and retains their server retry identity", async () => {
     apiMock.mockImplementation((p: string, o?: { method?: string }) =>
       o?.method
         ? Promise.reject(Error("Save not confirmed"))
@@ -340,19 +340,20 @@ describe("CMS private mutations and recovery", () => {
       form = input.closest("form")!;
     fireEvent.change(input, { target: { value: "Fictional uncertain draft" } });
     fireEvent.submit(form);
-    await screen.findByText(/The previous change could not be confirmed/);
+    await screen.findByText("Save not confirmed");
     expect((input as HTMLTextAreaElement).value).toBe(
       "Fictional uncertain draft",
     );
     fireEvent.submit(form);
-    expect(writes()).toHaveLength(1);
+    await waitFor(() => expect(writes()).toHaveLength(2));
+    expect(writes()[0][1].idempotencyKey).toBe(writes()[1][1].idempotencyKey);
     expect(
       (
         screen.getByRole("button", {
           name: "Save private draft",
         }) as HTMLButtonElement
       ).disabled,
-    ).toBe(true);
+    ).toBe(false);
   });
   it("allows correcting a known validation failure without losing draft copy", async () => {
     let failed = true;

@@ -8,6 +8,22 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Atomic CMS and public-content collection replay — 2026-10-27
+
+- Forward migration 110 adds actor-bound mutation deduplication with current
+  session/action/team revalidation and moved-result concealment. CMS/collection
+  clients retain unchanged retry keys. Missing/malformed keys and identity
+  injection reject. CMS can explicitly retry uncertain saves without duplicates.
+- Seven route/two collection cases supplement CMS checks. All 1,151 tests/141
+  files pass; coverage remains below 70% at 58.01% lines/56.40% branches. All 17
+  critical branch gates pass; types/lint (0 errors/25 warnings), build/budgets/
+  secrets pass. Complete 110-migration SQL suites pass under both grant modes;
+  all six isolated backup/restore checks pass. Migration applied only locally.
+- Eighteen real recovery checks include ten simultaneous identical CMS creates
+  yielding one record/audit; 23 broader collection checks pass. Fixtures archived,
+  fictional sessions revoked, no external send/production change. Catalog: 136
+  unverified cases. See `CURATED_CONTENT_RETRIES.md`; full PRD remains open.
+
 ### CMS independent reads, review and composition recovery — 2026-10-27
 
 - Account/session remounts and keyed reads protect CMS inventory, permissions,

@@ -216,6 +216,7 @@ export default function CollectionWorkspace({
     }>(),
     [discard, setDiscard] = useState(false);
   const original = useRef(""),
+    retry = useRef<{ signature: string; key: string }>(),
     editorHeading = useRef<HTMLHeadingElement>(null),
     spec = specifications[kind],
     prefix = "/admin/content-records/" + kind;
@@ -264,6 +265,7 @@ export default function CollectionWorkspace({
     if (editorKey) editorHeading.current?.focus();
   }, [editorKey]);
   const open = (row?: Row) => {
+    retry.current = undefined;
     const next = {
       row,
       values: Object.fromEntries(
@@ -294,12 +296,17 @@ export default function CollectionWorkspace({
     setBusy(true);
     setError("");
     setNotice("");
+    const identity = JSON.stringify([prefix, row.id, action, row.revision]);
+    if (retry.current?.signature !== identity)
+      retry.current = { signature: identity, key: crypto.randomUUID() };
     try {
       await api(prefix + "/" + row.id, {
         method: action === "archive" ? "DELETE" : "POST",
         protected: true,
         body: { revision: row.revision, action },
+        idempotencyKey: retry.current.key,
       });
+      retry.current = undefined;
       setConfirm(undefined);
       setRefresh((v) => v + 1);
       setNotice(
@@ -401,15 +408,24 @@ export default function CollectionWorkspace({
                           : editor.values[field.name],
                   ]),
                 );
+                const body = {
+                  ...(editor.row ? { revision: editor.row.revision } : {}),
+                  teamId: editor.teamId || null,
+                  record,
+                };
+                const identity = JSON.stringify([prefix, editor.row?.id, body]);
+                if (retry.current?.signature !== identity)
+                  retry.current = {
+                    signature: identity,
+                    key: crypto.randomUUID(),
+                  };
                 await api(prefix + (editor.row ? "/" + editor.row.id : ""), {
                   method: editor.row ? "PATCH" : "POST",
                   protected: true,
-                  body: {
-                    ...(editor.row ? { revision: editor.row.revision } : {}),
-                    teamId: editor.teamId || null,
-                    record,
-                  },
+                  body,
+                  idempotencyKey: retry.current.key,
                 });
+                retry.current = undefined;
                 setEditor(null);
                 setRefresh((v) => v + 1);
                 setNotice(

@@ -110,7 +110,8 @@
     "202610260106_public_event_inventory.sql",
     "202610260107_event_rescheduling.sql",
     "202610260108_newsletter_token_review.sql",
-    "202610260109_form_library_creation_capabilities.sql"
+    "202610260109_form_library_creation_capabilities.sql",
+    "202610270110_curated_content_retries.sql"
   ],
   "tests": [
     {
@@ -558,6 +559,10 @@
       "passed": true
     },
     {
+      "name": "202610270110_curated_content_retries.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -879,6 +884,10 @@
     },
     {
       "name": "109_form_library_creation_capabilities.sql",
+      "passed": true
+    },
+    {
+      "name": "110_curated_content_retries.sql",
       "passed": true
     },
     {

@@ -1,5 +1,5 @@
 {
-  "note": "Actual loopback CMS checks with one fresh fictional officer and a new private navigation draft. Existing managed copy/roles were untouched; no public publication, external provider, mail or user files. Synthetic record recoverably archived; account disabled/sessions revoked. Quotas/jobs never reset. Server mutation replay deduplication is not implemented or claimed.",
+  "note": "Actual loopback CMS/content collection retries with one fresh fictional officer and new private navigation/resource drafts, including ten simultaneous identical CMS creates. Existing managed copy/roles untouched; no public publication, external provider, mail or user files. Synthetic records recoverably archived; account disabled/sessions revoked. Quotas/jobs never reset.",
   "cleanup": {
     "completed": true
   },
@@ -10,6 +10,18 @@
     },
     {
       "name": "fresh officer receives current CMS action grants",
+      "passed": true
+    },
+    {
+      "name": "CMS mutation rejects a missing retry key",
+      "passed": true
+    },
+    {
+      "name": "ten simultaneous CMS retries create one record and one audit entry",
+      "passed": true
+    },
+    {
+      "name": "changed CMS payload conflicts with reused retry key",
       "passed": true
     },
     {
@@ -29,6 +41,10 @@
       "passed": true
     },
     {
+      "name": "unchanged CMS update retry returns its original revision",
+      "passed": true
+    },
+    {
       "name": "CMS update increments revision while remaining private",
       "passed": true
     },
@@ -37,11 +53,23 @@
       "passed": true
     },
     {
+      "name": "archive retry does not increment a retained record again",
+      "passed": true
+    },
+    {
       "name": "synthetic navigation archival is recoverable",
       "passed": true
     },
     {
       "name": "archived selected detail remains in its authorized inventory",
+      "passed": true
+    },
+    {
+      "name": "collection mutation rejects a missing retry key",
+      "passed": true
+    },
+    {
+      "name": "collection create retry reuses the exact private resource",
       "passed": true
     },
     {

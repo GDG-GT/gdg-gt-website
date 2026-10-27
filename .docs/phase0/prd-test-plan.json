@@ -2448,12 +2448,39 @@
         "scripts/test-local-cms-recovery.mjs"
       ],
       "remaining": [
-        "Server mutation replay deduplication, real composition/device/screen-reader/browser interruption and hosted CMS/cache acceptance",
+        "Real composition/device/screen-reader/browser interruption and hosted CMS/cache acceptance",
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified",
       "normative": [
         "23",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
+      "id": "CONTENT-TEST-007",
+      "requirements": [
+        "CONTENT-001",
+        "CONTENT-002"
+      ],
+      "scope": "Atomic actor-bound CMS/collection mutation replay with current-session/action/team revalidation, changed-intent conflicts, stable client keys and concurrent create/audit deduplication",
+      "automated": [
+        "tests/server/curated-content-retries.test.mjs",
+        "tests/client/cms-recovery.test.tsx",
+        "tests/client/collection-retries.test.tsx",
+        "database/tests/110_curated_content_retries.sql",
+        "scripts/test-local-cms-recovery.mjs",
+        "scripts/test-local-content.mjs"
+      ],
+      "remaining": [
+        "Full supported-device/browser interruption, hosted concurrency/retention and operational acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "25.1",
+        "26.1",
         "28.3",
         "31.2"
       ]

@@ -94,9 +94,9 @@ function ContentEditor() {
       action: "publish" | "archive" | "unpublish" | "restore";
     }>(),
     [discard, setDiscard] = useState(false),
-    [conflict, setConflict] = useState(false),
-    [uncertain, setUncertain] = useState(false);
+    [conflict, setConflict] = useState(false);
   const original = useRef(""),
+    retry = useRef<{ signature: string; key: string }>(),
     heading = useRef<HTMLHeadingElement>(null),
     reviewHeading = useRef<HTMLHeadingElement>(null),
     errorFocus = useRef<HTMLParagraphElement>(null),
@@ -259,7 +259,7 @@ function ContentEditor() {
     setErrors({});
     setDiscard(false);
     setConflict(false);
-    setUncertain(false);
+    retry.current = undefined;
     setNotice("");
   };
   const field = (
@@ -336,7 +336,6 @@ function ContentEditor() {
       pending.current ||
       !isOnline ||
       unavailable ||
-      uncertain ||
       !authoritative ||
       authoritative.revision !== row.revision ||
       !actions.includes(
@@ -347,14 +346,19 @@ function ContentEditor() {
     const controller = begin();
     if (!controller) return;
     setError("");
+    const identity = JSON.stringify([prefix, row.id, action, row.revision]);
+    if (retry.current?.signature !== identity)
+      retry.current = { signature: identity, key: crypto.randomUUID() };
     try {
       await api(prefix + "/" + row.id, {
         method: action === "archive" ? "DELETE" : "POST",
         protected: true,
         body: { revision: row.revision, action },
         signal: controller.signal,
+        idempotencyKey: retry.current.key,
       });
       if (!current(controller)) return;
+      retry.current = undefined;
       setConfirm(undefined);
       setRefresh((v) => v + 1);
       setNotice(
@@ -376,7 +380,6 @@ function ContentEditor() {
       if (!current(controller)) return;
       setError((e as Error).message);
       if (e instanceof ApiFailure && e.status === 409) setConflict(true);
-      if (!(e instanceof ApiFailure) || e.status >= 500) setUncertain(true);
     } finally {
       finish(controller);
     }
@@ -449,7 +452,7 @@ function ContentEditor() {
               setConfirm(undefined);
               setError("");
               setConflict(false);
-              setUncertain(false);
+              retry.current = undefined;
             }}
           >
             {kinds[value]}
@@ -512,13 +515,6 @@ function ContentEditor() {
           or review before saving.
         </p>
       )}
-      {uncertain && (
-        <p role="alert">
-          The previous change could not be confirmed. Refresh and inspect the
-          inventory before closing and reopening this editor or review.
-          Automatic retry is disabled to prevent duplicate records.
-        </p>
-      )}
       {draft && (
         <section className="gt-panel gt-event-editor">
           <h2 ref={heading} tabIndex={-1}>
@@ -536,8 +532,7 @@ function ContentEditor() {
                 unavailable ||
                 denied ||
                 stale ||
-                conflict ||
-                uncertain
+                conflict
               )
                 return;
               const controller = begin();
@@ -584,16 +579,25 @@ function ContentEditor() {
                                 icon: values.platform,
                                 order_index,
                               };
+                const body = {
+                  ...(draft.row ? { revision: draft.row.revision } : {}),
+                  record,
+                };
+                const identity = JSON.stringify([prefix, draft.row?.id, body]);
+                if (retry.current?.signature !== identity)
+                  retry.current = {
+                    signature: identity,
+                    key: crypto.randomUUID(),
+                  };
                 await api(prefix + (draft.row ? "/" + draft.row.id : ""), {
                   method: draft.row ? "PATCH" : "POST",
                   protected: true,
-                  body: {
-                    ...(draft.row ? { revision: draft.row.revision } : {}),
-                    record,
-                  },
+                  body,
                   signal: controller.signal,
+                  idempotencyKey: retry.current.key,
                 });
                 if (!current(controller)) return;
+                retry.current = undefined;
                 setDraft(undefined);
                 setRefresh((v) => v + 1);
                 setNotice("Saved privately. Review and publish separately.");
@@ -611,8 +615,6 @@ function ContentEditor() {
                 if (e instanceof ApiFailure) setErrors(e.fields || {});
                 if (e instanceof ApiFailure && e.status === 409)
                   setConflict(true);
-                if (!(e instanceof ApiFailure) || e.status >= 500)
-                  setUncertain(true);
               } finally {
                 finish(controller);
               }
@@ -812,8 +814,7 @@ function ContentEditor() {
                   unavailable ||
                   denied ||
                   stale ||
-                  conflict ||
-                  uncertain
+                  conflict
                 }
                 type="submit"
               >
@@ -882,7 +883,6 @@ function ContentEditor() {
                 unavailable ||
                 stale ||
                 conflict ||
-                uncertain ||
                 !actions.includes(
                   ["archive", "restore"].includes(confirm.action)
                     ? "delete"
@@ -901,7 +901,7 @@ function ContentEditor() {
               onClick={() => {
                 setConfirm(undefined);
                 setConflict(false);
-                setUncertain(false);
+                retry.current = undefined;
                 setError("");
               }}
             >
@@ -981,7 +981,7 @@ function ContentEditor() {
                           variant="secondary"
                           onClick={() => (
                             setConflict(false),
-                            setUncertain(false),
+                            (retry.current = undefined),
                             setConfirm({
                               row,
                               action: row.is_active ? "unpublish" : "publish",
@@ -1001,7 +1001,7 @@ function ContentEditor() {
                           variant="secondary"
                           onClick={() => (
                             setConflict(false),
-                            setUncertain(false),
+                            (retry.current = undefined),
                             setConfirm({
                               row,
                               action: row.deleted_at ? "restore" : "archive",

@@ -1178,7 +1178,9 @@ add(
   "BLOG-001 BLOG-005 BLOG-006",
   "Private editorial independent reads, draft/confirmation retry identity, stale revisions and grants, account/session/navigation cancellation, category choice pagination and guarded quarantine/download authorization",
   ["tests/client/blog-recovery.test.tsx", local("blog"), local("blog-uploads")],
-  ["Supported-device/screen-reader, browser interruption/download and hosted editorial/storage acceptance"],
+  [
+    "Supported-device/screen-reader, browser interruption/download and hosted editorial/storage acceptance",
+  ],
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 
@@ -1186,8 +1188,14 @@ add(
   "NEWS-TEST-005",
   "NEWS-001 NEWS-002 NEWS-003 NEWS-004 NEWS-005",
   "Newsletter independent read recovery, stale draft and selected-subscriber fencing, account/session cancellation, unchanged retry keys, review-time expiry/exact confirmation, offline safeguards and delivery review editor locking",
-  ["tests/client/newsletter-recovery.test.tsx", "tests/client/newsletter-navigation.test.tsx", local("newsletter")],
-  ["Real supported-device/send/download interruption, screen-reader and hosted provider/worker acceptance"],
+  [
+    "tests/client/newsletter-recovery.test.tsx",
+    "tests/client/newsletter-navigation.test.tsx",
+    local("newsletter"),
+  ],
+  [
+    "Real supported-device/send/download interruption, screen-reader and hosted provider/worker acceptance",
+  ],
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 
@@ -1196,7 +1204,9 @@ add(
   "STATUS-001 STATUS-002 STATUS-003",
   "Site availability stale-snapshot/read recovery, preserved conflict drafts, exact mode validation, unchanged confirmation retry keys, account/session isolation, pending cancellation and offline safeguards",
   ["tests/client/site-status-recovery.test.tsx", local("site-status")],
-  ["Full supported-device/screen-reader, browser interruption and hosted availability/redirect acceptance"],
+  [
+    "Full supported-device/screen-reader, browser interruption and hosted availability/redirect acceptance",
+  ],
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 
@@ -1205,9 +1215,29 @@ add(
   "CONTENT-001 CONTENT-002",
   "Independent CMS permission/inventory/selected-record recovery, stale grant/revision fences, guarded publication/archive/restore reviews, uncertain-save preservation, account/session cancellation and keyed private composition snapshots",
   ["tests/client/cms-recovery.test.tsx", local("cms-recovery")],
-  ["Server mutation replay deduplication, real composition/device/screen-reader/browser interruption and hosted CMS/cache acceptance"],
+  [
+    "Real composition/device/screen-reader/browser interruption and hosted CMS/cache acceptance",
+  ],
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+
+add(
+  "CONTENT-TEST-007",
+  "CONTENT-001 CONTENT-002",
+  "Atomic actor-bound CMS/collection mutation replay with current-session/action/team revalidation, changed-intent conflicts, stable client keys and concurrent create/audit deduplication",
+  [
+    "tests/server/curated-content-retries.test.mjs",
+    "tests/client/cms-recovery.test.tsx",
+    "tests/client/collection-retries.test.tsx",
+    sql("110_curated_content_retries"),
+    local("cms-recovery"),
+    local("content"),
+  ],
+  [
+    "Full supported-device/browser interruption, hosted concurrency/retention and operational acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["25.1", "26.1", "28.3", "31.2"];
 
 export const requirementOverrides = {
   "FORM-007":
