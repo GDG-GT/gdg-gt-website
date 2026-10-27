@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { blogFileTypes } from "../../../shared/blog-uploads.mjs";
 import { Button, Field } from "../primitives";
 type Intent = {
@@ -24,19 +26,20 @@ export function BlogFileUpload({
   globalCreate,
   teams,
   onCreated,
+  unavailable = false,
 }: {
   globalCreate: boolean;
   teams: { id: string; name: string }[];
   onCreated: (id: string) => void;
+  unavailable?: boolean;
 }) {
   const [file, setFile] = useState<File>(),
     [team, setTeam] = useState(globalCreate ? "" : teams[0]?.id || ""),
-    [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
   const input = useRef<HTMLInputElement>(null),
-    epoch = useRef(0),
-    controller = useRef<AbortController>(),
+    errorFocus = useRef<HTMLParagraphElement>(null),
+    noticeFocus = useRef<HTMLParagraphElement>(null),
     attempt = useRef<{
       createKey: string;
       completeKey: string;
@@ -44,13 +47,20 @@ export function BlogFileUpload({
       putDone?: boolean;
     }>();
   const navigation = useNavigationSafety();
+  const { isOnline } = useOnlineStatus();
+  const {
+    busy,
+    begin,
+    current: owns,
+    finish,
+    cancel,
+  } = usePrivateMutation(team);
+  const allowed = team ? teams.some((t) => t.id === team) : globalCreate;
   useDraftGuard(!!file, { busy, label: "Private editorial file upload" });
   useEffect(() => {
     const clear = () => {
-      epoch.current++;
-      controller.current?.abort();
+      cancel();
       setFile(undefined);
-      setBusy(false);
       setError("");
       setNotice("");
       attempt.current = undefined;
@@ -58,10 +68,24 @@ export function BlogFileUpload({
     };
     window.addEventListener("gdg:session-cleared", clear);
     return () => {
-      clear();
+      cancel();
       window.removeEventListener("gdg:session-cleared", clear);
     };
-  }, []);
+  }, [cancel]);
+  useEffect(() => {
+    if (!allowed) {
+      cancel();
+      setFile(undefined);
+      attempt.current = undefined;
+      if (input.current) input.current.value = "";
+    }
+  }, [allowed, cancel]);
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
+  useEffect(() => {
+    if (notice) noticeFocus.current?.focus();
+  }, [notice]);
   return (
     <section
       className="gt-blog-detail"
@@ -77,13 +101,13 @@ export function BlogFileUpload({
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          if (!file || busy) return;
-          const n = epoch.current,
-            current = attempt.current!;
-          setBusy(true);
+          if (!file || unavailable || !allowed || !isOnline || !attempt.current)
+            return;
+          const controller = begin();
+          if (!controller) return;
+          const current = attempt.current;
           setError("");
           setNotice("Preparing private quarantine upload…");
-          controller.current = new AbortController();
           try {
             const mime =
               file.type ||
@@ -95,18 +119,19 @@ export function BlogFileUpload({
             )
               throw Error("Choose an allowed file up to 20 MB.");
             const bytes = await file.arrayBuffer();
-            if (n !== epoch.current) return;
+            if (!owns(controller)) return;
             if (!current.putDone) {
               if (!current.intent) {
                 const digest = await crypto.subtle.digest("SHA-256", bytes),
                   sha256 = Array.from(new Uint8Array(digest), (v) =>
                     v.toString(16).padStart(2, "0"),
                   ).join("");
-                if (n !== epoch.current) return;
+                if (!owns(controller)) return;
                 current.intent = await api<Intent>(base, {
                   method: "POST",
                   protected: true,
                   idempotencyKey: current.createKey,
+                  signal: controller.signal,
                   body: {
                     teamId: team || null,
                     filename: file.name,
@@ -116,31 +141,36 @@ export function BlogFileUpload({
                   },
                 });
               }
-              if (n !== epoch.current) return;
+              if (!owns(controller)) return;
               const result = await fetch(current.intent.url, {
                 method: "PUT",
                 credentials: "omit",
                 headers: current.intent.headers,
                 body: bytes,
-                signal: controller.current.signal,
+                signal: AbortSignal.any([
+                  controller.signal,
+                  AbortSignal.timeout(120000),
+                ]),
               });
               if (!result.ok)
                 throw Error(
                   "The private upload did not finish. Retry before its two-minute link expires.",
                 );
+              if (!owns(controller)) return;
               current.putDone = true;
             }
-            if (n !== epoch.current) return;
+            if (!owns(controller)) return;
             const result = await api<{ submissionId: string }>(
               base + "/" + current.intent!.uploadId + "/complete",
               {
                 method: "POST",
                 protected: true,
                 idempotencyKey: current.completeKey,
+                signal: controller.signal,
                 body: {},
               },
             );
-            if (n !== epoch.current) return;
+            if (!owns(controller)) return;
             setFile(undefined);
             attempt.current = undefined;
             if (input.current) input.current.value = "";
@@ -149,7 +179,7 @@ export function BlogFileUpload({
             );
             navigation.allow(() => onCreated(result.submissionId));
           } catch (x) {
-            if (n === epoch.current) {
+            if (owns(controller)) {
               setError(
                 x instanceof Error
                   ? x.message
@@ -158,11 +188,11 @@ export function BlogFileUpload({
               setNotice("");
             }
           } finally {
-            if (n === epoch.current) setBusy(false);
+            finish(controller);
           }
         }}
       >
-        <fieldset disabled={busy}>
+        <fieldset disabled={busy || unavailable}>
           <Field label="File owning scope">
             <select
               value={team}
@@ -195,13 +225,30 @@ export function BlogFileUpload({
           </Field>
         </fieldset>
         {error && (
-          <p role="alert" className="gt-inline-error">
+          <p
+            role="alert"
+            tabIndex={-1}
+            ref={errorFocus}
+            className="gt-inline-error"
+          >
             {error}
           </p>
         )}
-        {notice && <p role="status">{notice}</p>}
+        {notice && (
+          <p role="status" tabIndex={-1} ref={noticeFocus}>
+            {notice}
+          </p>
+        )}
+        {!isOnline && (
+          <p role="status">
+            You’re offline. Reconnect and choose Upload when ready; nothing
+            sends automatically.
+          </p>
+        )}
         <div className="gt-toolbar">
-          <Button disabled={busy || !file}>
+          <Button
+            disabled={busy || !file || unavailable || !allowed || !isOnline}
+          >
             {busy ? "Uploading privately…" : "Upload and scan privately"}
           </Button>
           {file && (
@@ -227,28 +274,38 @@ export function BlogFileUpload({
 export function BlogFileDownload({
   uploadId,
   filename,
+  unavailable = false,
 }: {
   uploadId: string;
   filename: string;
+  unavailable?: boolean;
 }) {
   const [link, setLink] = useState<{ url: string; expires: number }>(),
-    [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
-    epoch = useRef(0);
+    errorFocus = useRef<HTMLParagraphElement>(null);
+  const { busy, begin, current, finish, cancel } = usePrivateMutation(uploadId);
+  const { isOnline } = useOnlineStatus();
   useDraftGuard(false, { busy, label: "Private file download authorization" });
   useEffect(() => {
     const clear = () => {
-      epoch.current++;
+      cancel();
       setLink(undefined);
-      setBusy(false);
       setError("");
     };
     window.addEventListener("gdg:session-cleared", clear);
     return () => {
-      clear();
+      cancel();
       window.removeEventListener("gdg:session-cleared", clear);
     };
-  }, []);
+  }, [cancel]);
+  useEffect(() => {
+    cancel();
+    setLink(undefined);
+    setError("");
+  }, [uploadId, unavailable, cancel]);
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
   useEffect(() => {
     if (!link) return;
     const timer = setTimeout(
@@ -261,28 +318,35 @@ export function BlogFileDownload({
     <div>
       <Button
         variant="secondary"
-        disabled={busy}
+        disabled={busy || unavailable || !isOnline}
         onClick={async () => {
-          const n = epoch.current;
-          setBusy(true);
+          if (unavailable || !isOnline) return;
+          const controller = begin();
+          if (!controller) return;
           setError("");
           setLink(undefined);
           try {
             const result = await api<{ url: string }>(
               base + "/" + uploadId + "/download",
+              { signal: controller.signal },
             );
-            if (n === epoch.current)
+            if (current(controller))
               setLink({ url: result.url, expires: Date.now() + 55000 });
           } catch (x) {
-            if (n === epoch.current) setError((x instanceof Error ? x.message : "This action could not be completed."));
+            if (current(controller))
+              setError(
+                x instanceof Error
+                  ? x.message
+                  : "This action could not be completed.",
+              );
           } finally {
-            if (n === epoch.current) setBusy(false);
+            finish(controller);
           }
         }}
       >
         {busy ? "Checking file access…" : "Authorize private download"}
       </Button>
-      {link && (
+      {link && !unavailable && (
         <p>
           <a
             className="gt-button gt-button-secondary"
@@ -296,7 +360,12 @@ export function BlogFileDownload({
         </p>
       )}
       {error && (
-        <p role="alert" className="gt-inline-error">
+        <p
+          role="alert"
+          tabIndex={-1}
+          ref={errorFocus}
+          className="gt-inline-error"
+        >
           {error}
         </p>
       )}

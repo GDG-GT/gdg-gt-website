@@ -1219,7 +1219,8 @@
       "line": 555,
       "status": "unverified",
       "testIds": [
-        "PRIVATE-TEST-001"
+        "PRIVATE-TEST-001",
+        "PRIVATE-TEST-004"
       ],
       "evidence": []
     },
@@ -1259,7 +1260,8 @@
       "line": 563,
       "status": "unverified",
       "testIds": [
-        "PRIVATE-TEST-003"
+        "PRIVATE-TEST-003",
+        "PRIVATE-TEST-004"
       ],
       "evidence": []
     },
@@ -1269,7 +1271,8 @@
       "line": 565,
       "status": "unverified",
       "testIds": [
-        "PRIVATE-TEST-001"
+        "PRIVATE-TEST-001",
+        "PRIVATE-TEST-004"
       ],
       "evidence": []
     },

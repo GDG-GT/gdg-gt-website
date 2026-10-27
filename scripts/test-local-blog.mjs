@@ -1,9 +1,13 @@
 import { randomUUID } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { writeFile, unlink } from "node:fs/promises";
 import { createInterface } from "node:readline";
 import { localHttp } from "./lib/local-http.mjs";
 import { hashSecret } from "../server/lib/security.mjs";
 import { blogReference } from "../shared/blog.mjs";
+if (process.env.GDG_LOCAL_TEST_SHARED_SESSION === "true")
+  throw Error("Requires isolated fictional sessions.");
+if (process.argv.includes("--hold-for-browser") && !process.stdin.isTTY)
+  throw Error("Browser review needs a terminal");
 const root = await localHttp(),
   db = root.db,
   accounts = [],
@@ -11,6 +15,22 @@ const root = await localHttp(),
   tests = [],
   suffix = randomUUID().slice(0, 8);
 let admin, editor, other, member, teamId, postId, submissionId;
+let ledgerOwned = false;
+const ledger = new URL("../.docs/local-blog-review.local", import.meta.url);
+async function writeEvidence(cleanedUp) {
+  await writeFile(
+    new URL("../.docs/phase0/local-blog-integration.json", import.meta.url),
+    JSON.stringify(
+      {
+        note: "Actual loopback private-editorial workflows with fictional isolated accounts, team, writing, unverified submission metadata, comments and likes. Exact fixtures recoverably archived. No real file uploaded, public Blog, external provider or email.",
+        cleanup: { completed: cleanedUp },
+        tests,
+      },
+      null,
+      2,
+    ) + "\n",
+  );
+}
 const base = "/admin/blog",
   record = {
     title: "Fictional editorial article " + suffix,
@@ -38,16 +58,14 @@ async function actor(role) {
     id = randomUUID(),
     email = "fictional-blog-" + id + "@example.test",
     password = "Fictional-editorial-" + randomUUID();
-  const r = await db
-    .from("admin_users")
-    .insert({
-      id,
-      email,
-      password_hash: await hashSecret(password),
-      role,
-      is_active: true,
-      display_name: "Fictional editorial " + role,
-    });
+  const r = await db.from("admin_users").insert({
+    id,
+    email,
+    password_hash: await hashSecret(password),
+    role,
+    is_active: true,
+    display_name: "Fictional editorial " + role,
+  });
   if (r.error) throw Error("Editorial account fixture failed");
   accounts.push(id);
   data(
@@ -59,7 +77,7 @@ async function actor(role) {
   data(
     await h.call("/auth/login", { method: "POST", body: { email, password } }),
   );
-  return { ...h, id, password };
+  return { ...h, id, email, password };
 }
 const post = (h, path, body, key = randomUUID(), method = "POST") =>
   h.call(path, { method, body, key });
@@ -108,31 +126,27 @@ try {
   member = await actor("team_member");
   teamId = randomUUID();
   for (const r of [
-    await db
-      .from("admin_teams")
-      .insert({
-        id: teamId,
-        name: "Fictional editorial team " + suffix,
-        slug: "fictional-editorial-" + teamId,
-        created_by: admin.id,
-      }),
+    await db.from("admin_teams").insert({
+      id: teamId,
+      name: "Fictional editorial team " + suffix,
+      slug: "fictional-editorial-" + teamId,
+      created_by: admin.id,
+    }),
     await db
       .from("team_memberships")
       .insert({ team_id: teamId, admin_user_id: member.id, role: "member" }),
     await db
       .from("team_page_access")
       .insert({ team_id: teamId, page_path: "/admin/blog", can_access: true }),
-    await db
-      .from("team_permissions")
-      .insert({
-        team_id: teamId,
-        resource_type: "blog",
-        permission: "crud",
-        can_read: true,
-        can_create: true,
-        can_update: true,
-        can_delete: true,
-      }),
+    await db.from("team_permissions").insert({
+      team_id: teamId,
+      resource_type: "blog",
+      permission: "crud",
+      can_read: true,
+      can_create: true,
+      can_update: true,
+      can_delete: true,
+    }),
   ])
     if (r.error) throw Error("Editorial team fixture failed");
   check(
@@ -424,12 +438,10 @@ try {
       (await detail("comments", comment.data.id)).is_flagged,
     "administrator comment moderation preserves separate approval and flag states",
   );
-  const like = await db
-    .from("blog_likes")
-    .insert({
-      post_id: postId,
-      user_identifier: "fictional-private-voter-" + suffix,
-    });
+  const like = await db.from("blog_likes").insert({
+    post_id: postId,
+    user_identifier: "fictional-private-voter-" + suffix,
+  });
   if (like.error) throw Error("Like fixture failed");
   p = await detail("posts", postId, editor);
   check(
@@ -442,7 +454,21 @@ try {
     "editorial revisions are retained separately from audit metadata",
   );
   if (process.argv.includes("--hold-for-browser")) {
-    if (!process.stdin.isTTY) throw Error("Browser review needs a terminal");
+    await writeFile(
+      ledger,
+      JSON.stringify({
+        email: admin.email,
+        password: admin.password,
+        postId,
+        submissionId,
+        accounts,
+        owned,
+        teamId,
+      }),
+      { mode: 0o600, flag: "wx" },
+    );
+    ledgerOwned = true;
+    await writeEvidence(false);
     console.info(
       "BROWSER_ARTICLE http://127.0.0.1:8080/admin/blog?record=" + postId,
     );
@@ -569,15 +595,7 @@ try {
     ])
       if (r.error) throw Error("Fictional editorial account retention failed");
   }
+  if (ledgerOwned) await unlink(ledger);
+  if (process.stdin.isTTY) process.stdin.pause();
 }
-await writeFile(
-  new URL("../.docs/phase0/local-blog-integration.json", import.meta.url),
-  JSON.stringify(
-    {
-      note: "Actual loopback private-editorial workflows with fictional isolated accounts, team, writing, unverified submission metadata, comments and likes. Exact fixtures recoverably archived. No real file uploaded, public Blog, external provider or email.",
-      tests,
-    },
-    null,
-    2,
-  ) + "\n",
-);
+await writeEvidence(true);

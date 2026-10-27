@@ -2362,6 +2362,30 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "PRIVATE-TEST-004",
+      "requirements": [
+        "BLOG-001",
+        "BLOG-005",
+        "BLOG-006"
+      ],
+      "scope": "Private editorial independent reads, draft/confirmation retry identity, stale revisions and grants, account/session/navigation cancellation, category choice pagination and guarded quarantine/download authorization",
+      "automated": [
+        "tests/client/blog-recovery.test.tsx",
+        "scripts/test-local-blog.mjs",
+        "scripts/test-local-blog-uploads.mjs"
+      ],
+      "remaining": [
+        "Supported-device/screen-reader, browser interruption/download and hosted editorial/storage acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

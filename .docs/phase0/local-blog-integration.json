@@ -1,5 +1,8 @@
 {
   "note": "Actual loopback private-editorial workflows with fictional isolated accounts, team, writing, unverified submission metadata, comments and likes. Exact fixtures recoverably archived. No real file uploaded, public Blog, external provider or email.",
+  "cleanup": {
+    "completed": true
+  },
   "tests": [
     {
       "name": "anonymous Blog inventory denied",

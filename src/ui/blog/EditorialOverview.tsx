@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { api } from "@/lib/api";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { Button } from "../primitives";
 type Summary = {
   articles: number;
@@ -15,33 +15,14 @@ type Personal = {
   };
 };
 export default function EditorialOverview() {
-  const [data, setData] = useState<Summary>(),
-    [personal, setPersonal] = useState<Personal>(),
-    [error, setError] = useState(""),
-    [personalError, setPersonalError] = useState(""),
-    [tick, setTick] = useState(0),
-    [busy, setBusy] = useState(true);
-  useEffect(() => {
-    const controller = new AbortController();
-    setBusy(true);
-    setError("");
-    setPersonalError("");
-    Promise.allSettled([
-      api<Summary>("/admin/blog/overview", { signal: controller.signal })
-        .then(setData)
-        .catch((e) => {
-          if (!controller.signal.aborted) setError(e.message);
-        }),
-      api<Personal>("/admin/dashboard", { signal: controller.signal })
-        .then(setPersonal)
-        .catch((e) => {
-          if (!controller.signal.aborted) setPersonalError(e.message);
-        }),
-    ]).finally(() => {
-      if (!controller.signal.aborted) setBusy(false);
-    });
-    return () => controller.abort();
-  }, [tick]);
+  const [tick, setTick] = useState(0);
+  const summary = usePrivateRead<Summary>("/admin/blog/overview", tick),
+    work = usePrivateRead<Personal>("/admin/dashboard", tick),
+    data = summary.data,
+    personal = work.data,
+    error = summary.error,
+    personalError = work.error,
+    busy = summary.loading || work.loading;
   const max = Math.max(1, ...(data?.revisionMonths.map((m) => m.count) || []));
   return (
     <section
@@ -67,7 +48,8 @@ export default function EditorialOverview() {
       )}
       {data && (busy || error) && (
         <p role="status">
-          Showing the last loaded editorial snapshot until refresh succeeds.
+          Showing the editorial snapshot last loaded{" "}
+          {new Date(summary.at!).toLocaleString()} until refresh succeeds.
         </p>
       )}
       {error && <p role="alert">{error}</p>}

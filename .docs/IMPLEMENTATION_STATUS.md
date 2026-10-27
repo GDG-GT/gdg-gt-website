@@ -8,6 +8,22 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Private editorial reads, confirmation and file recovery — 2026-10-27
+
+- Independent read recovery, account/session isolation, category choice paging,
+  scoped cancellation, synchronous pending guards and unchanged retry keys protect
+  Blog workflows. Passwords clear at request start; exact references/current
+  grants/revisions recheck. Quarantine/download authorization and overview reads
+  suppress late results. Offline drafts stay unsent; feedback receives focus.
+- Twenty-six DOM cases include three axe audits. All 1,071 tests/135 files pass;
+  coverage remains below 70% at 54.48% lines/52.55% branches. All 17 critical branch
+  gates pass; types/lint (0 errors/25 warnings), build/budgets/secrets pass.
+- Thirty-five real editorial and 23 real private-file checks pass; fixture
+  cleanup/session revocation/ledger removal completed. Browser confirms live
+  conflict preservation, bounded 375 px controls and deliberate draft discard.
+  Final browser sign-out/close verification lost attachment and is not claimed.
+  Screenshot retained; catalog: 132 unverified cases. See `BLOG_RECOVERY.md`.
+
 ### Private project reads, editor and participant recovery — 2026-10-27
 
 - Independent permissions/inventory/detail recovery, session isolation, scoped

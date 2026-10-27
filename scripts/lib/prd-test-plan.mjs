@@ -1173,6 +1173,15 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 
+add(
+  "PRIVATE-TEST-004",
+  "BLOG-001 BLOG-005 BLOG-006",
+  "Private editorial independent reads, draft/confirmation retry identity, stale revisions and grants, account/session/navigation cancellation, category choice pagination and guarded quarantine/download authorization",
+  ["tests/client/blog-recovery.test.tsx", local("blog"), local("blog-uploads")],
+  ["Supported-device/screen-reader, browser interruption/download and hosted editorial/storage acceptance"],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

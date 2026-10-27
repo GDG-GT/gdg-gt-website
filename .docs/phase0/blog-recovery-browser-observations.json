@@ -1,0 +1,17 @@
+{
+  "note": "Partial loopback browser review with a fictional article. No browser save, publication, upload, download or external link. Complete device/screen-reader/visual acceptance remains open.",
+  "cleanup": {"draftDiscarded":true,"signOutAndCloseVerified":false,"limitation":"Final tab attachment unavailable; API fixture cleanup revoked sessions independently. Viewport reset issued."},
+  "screenshot": "ui-review/blog-conflict-recovery.png",
+  "conflict": {
+    "draft": "Fictional unsaved editorial title",
+    "saveDisabled": true
+  },
+  "mobile": {
+    "width": 375,
+    "documentWidth": 375,
+    "titleLeft": 35,
+    "titleRight": 340,
+    "titleHeight": 46.796875,
+    "tableWidth": 339
+  }
+}
