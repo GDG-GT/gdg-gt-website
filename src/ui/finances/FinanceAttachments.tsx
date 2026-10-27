@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { api, ApiFailure } from "@/lib/api";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import { Button, Field } from "../primitives";
 import { human } from "./types";
 type Files = {
@@ -22,22 +23,27 @@ type Intent = {
   url: string;
   headers: Record<string, string>;
 };
-export default function FinanceAttachments({
-  financeId,
-  revision,
-  disabled,
-  onEditState,
-}: {
+type AttachmentProps = {
   financeId: string;
   revision: number;
   disabled: boolean;
   onEditState: (state: { dirty: boolean; busy: boolean }) => void;
-}) {
+  operationPending?: () => boolean;
+};
+export default function FinanceAttachments(props: AttachmentProps) {
+  return <FinanceAttachmentContent key={props.financeId} {...props} />;
+}
+function FinanceAttachmentContent({
+  financeId,
+  revision,
+  disabled,
+  onEditState,
+  operationPending,
+}: AttachmentProps) {
   const [files, setFiles] = useState<Files>(),
     [page, setPage] = useState(1),
     [tick, setTick] = useState(0),
     [file, setFile] = useState<File>(),
-    [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [listError, setListError] = useState(""),
     [notice, setNotice] = useState(""),
@@ -55,13 +61,26 @@ export default function FinanceAttachments({
   }>();
   const input = useRef<HTMLInputElement>(null);
   const base = `/admin/finances/${financeId}/attachments`;
-  const active = useRef(true);
+  const {
+    busy,
+    begin,
+    current: owns,
+    finish,
+    cancel,
+  } = usePrivateMutation(financeId);
+  const errorFocus = useRef<HTMLParagraphElement>(null),
+    noticeFocus = useRef<HTMLParagraphElement>(null);
   useEffect(() => {
-    active.current = true;
-    return () => {
-      active.current = false;
-    };
-  }, []);
+    if (error) errorFocus.current?.focus();
+  }, [error]);
+  useEffect(() => {
+    if (
+      notice &&
+      notice != "Preparing private upload…" &&
+      notice !== "Uploading to private quarantine…"
+    )
+      noticeFocus.current?.focus();
+  }, [notice]);
   useEffect(() => {
     onEditState({ dirty: !!file || busy, busy });
     return () => onEditState({ dirty: false, busy: false });
@@ -79,13 +98,16 @@ export default function FinanceAttachments({
         if (!c.signal.aborted) {
           setListError(e.message);
           if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
+            cancel();
+            setFile(undefined);
+            attempt.current = undefined;
             setFiles(undefined);
             setDownload(undefined);
           }
         }
       });
     return () => c.abort();
-  }, [base, page, tick, revision]);
+  }, [base, page, tick, revision, cancel]);
   const pending = files?.items.some((f) =>
     ["pending", "queued"].includes(f.state),
   );
@@ -114,7 +136,12 @@ export default function FinanceAttachments({
         retained; deletion and replacement of clean files are disabled.
       </p>
       {error && (
-        <p className="gt-form-error" role="alert">
+        <p
+          ref={errorFocus}
+          tabIndex={-1}
+          className="gt-form-error"
+          role="alert"
+        >
           {error}
         </p>
       )}
@@ -123,7 +150,11 @@ export default function FinanceAttachments({
           {listError}
         </p>
       )}
-      {notice && <p role="status">{notice}</p>}
+      {notice && (
+        <p ref={noticeFocus} tabIndex={-1} role="status">
+          {notice}
+        </p>
+      )}
       {!files ? (
         listError ? (
           <Button
@@ -156,28 +187,32 @@ export default function FinanceAttachments({
                       variant="ghost"
                       disabled={disabled || busy}
                       onClick={async () => {
-                        setBusy(true);
+                        if (disabled || operationPending?.()) return;
+                        const controller = begin();
+                        if (!controller) return;
+                        onEditState({ dirty: !!file, busy: true });
                         setError("");
                         setDownload(undefined);
                         try {
                           const r = await api<{ url: string }>(
                             `${base}/${f.id}/download`,
+                            { signal: controller.signal },
                           );
-                          if (active.current)
+                          if (owns(controller))
                             setDownload({
                               id: f.id,
                               url: r.url,
                               expiresAt: Date.now() + 55000,
                             });
                         } catch (e) {
-                          if (active.current)
+                          if (owns(controller))
                             setError(
                               e instanceof Error
                                 ? e.message
                                 : "The download could not be authorized.",
                             );
                         } finally {
-                          if (active.current) setBusy(false);
+                          finish(controller);
                         }
                       }}
                     >
@@ -237,8 +272,17 @@ export default function FinanceAttachments({
               className="gt-form"
               onSubmit={async (e) => {
                 e.preventDefault();
-                if (!file || busy || disabled || stale) return;
-                setBusy(true);
+                if (
+                  !file ||
+                  disabled ||
+                  operationPending?.() ||
+                  stale ||
+                  !files.canUpload
+                )
+                  return;
+                const controller = begin();
+                if (!controller) return;
+                onEditState({ dirty: true, busy: true });
                 setError("");
                 setNotice("Preparing private upload…");
                 const current = attempt.current!;
@@ -262,7 +306,7 @@ export default function FinanceAttachments({
                       sha256 = Array.from(new Uint8Array(digest), (v) =>
                         v.toString(16).padStart(2, "0"),
                       ).join("");
-                    if (!active.current) return;
+                    if (!owns(controller)) return;
                     current.intent = await api<Intent>(base, {
                       method: "POST",
                       protected: true,
@@ -274,15 +318,19 @@ export default function FinanceAttachments({
                         bytes: file.size,
                         sha256,
                       },
+                      signal: controller.signal,
                     });
-                    if (!active.current) return;
+                    if (!owns(controller)) return;
                     setNotice("Uploading to private quarantine…");
                     const uploaded = await fetch(current.intent.url, {
                       method: "PUT",
                       credentials: "omit",
                       headers: current.intent.headers,
                       body: file,
-                      signal: AbortSignal.timeout(120000),
+                      signal: AbortSignal.any([
+                        controller.signal,
+                        AbortSignal.timeout(120000),
+                      ]),
                     });
                     if (!uploaded.ok)
                       throw new Error(
@@ -290,14 +338,15 @@ export default function FinanceAttachments({
                       );
                     current.putDone = true;
                   }
-                  if (!active.current) return;
+                  if (!owns(controller)) return;
                   await api(`${base}/${current.intent!.uploadId}/complete`, {
                     method: "POST",
                     protected: true,
                     idempotencyKey: current.completeKey,
                     body: {},
+                    signal: controller.signal,
                   });
-                  if (!active.current) return;
+                  if (!owns(controller)) return;
                   setFile(undefined);
                   attempt.current = undefined;
                   if (input.current) input.current.value = "";
@@ -307,7 +356,7 @@ export default function FinanceAttachments({
                     "Upload received. Download becomes available only after the security scan passes.",
                   );
                 } catch (e) {
-                  if (active.current) {
+                  if (owns(controller)) {
                     setError(
                       e instanceof Error
                         ? e.message
@@ -316,7 +365,7 @@ export default function FinanceAttachments({
                     setNotice("");
                   }
                 } finally {
-                  if (active.current) setBusy(false);
+                  finish(controller);
                 }
               }}
             >

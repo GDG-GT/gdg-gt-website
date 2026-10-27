@@ -4,7 +4,9 @@ import {
   useDraftGuard,
   useNavigationSafety,
 } from "@/hooks/useDraftGuard";
-import { api, ApiFailure } from "@/lib/api";
+import { useAdmin } from "@/contexts/AdminContext";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import { financeStates } from "../../../shared/finances.mjs";
 import {
@@ -24,19 +26,27 @@ import FinanceDetail from "./FinanceDetail";
 import FinanceCharts from "./FinanceCharts";
 type Mode = "create" | "edit" | "budget_create" | "budget_edit" | null;
 export default function FinanceWorkspace() {
+  const { currentAdmin } = useAdmin();
+  const [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((v) => v + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  return (
+    <FinanceWorkspaceContent
+      key={`${currentAdmin?.id}:${currentAdmin?.role}:${epoch}`}
+    />
+  );
+}
+function FinanceWorkspaceContent() {
+  const { isOnline } = useOnlineStatus();
   const [params, setParams] = useSearchParams(),
     selected = params.get("request") || "",
     tab = params.get("tab") || "requests";
-  const [cap, setCap] = useState<Capabilities>(),
-    [list, setList] = useState<Listing>(),
-    [budgets, setBudgets] = useState<BudgetListing>(),
-    [report, setReport] = useState<Report>(),
-    [detail, setDetail] = useState<Detail>(),
-    [budgetRecord, setBudgetRecord] = useState<Budget>(),
+  const [budgetSnapshot, setBudgetRecord] = useState<Budget>(),
     [mode, setMode] = useState<Mode>(null),
-    [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
-    [loading, setLoading] = useState(true),
     [tick, setTick] = useState(0),
     [page, setPage] = useState(1),
     [budgetPage, setBudgetPage] = useState(1),
@@ -48,6 +58,10 @@ export default function FinanceWorkspace() {
     [from, setFrom] = useState(""),
     [to, setTo] = useState("");
   const selectedRef = useRef(selected);
+  const noticeFocus = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    if (notice) noticeFocus.current?.focus();
+  }, [notice]);
   const navigationSafety = useNavigationSafety();
   const [guardState, setGuardState] = useState({ dirty: false, busy: false });
   const editState = useRef({ dirty: false, busy: false });
@@ -72,99 +86,85 @@ export default function FinanceWorkspace() {
     ...(to ? { to } : {}),
   }).toString();
   const refresh = () => setTick((n) => n + 1);
+  const invalidDates = !!from && !!to && from > to;
+  const capabilityRead = usePrivateRead<Capabilities>(
+      "/admin/finances/capabilities",
+      tick,
+    ),
+    listRead = usePrivateRead<Listing>(
+      invalidDates ? undefined : `/admin/finances?${filter}&page=${page}`,
+      tick,
+    ),
+    budgetRead = usePrivateRead<BudgetListing>(
+      `/admin/budgets?page=${budgetPage}`,
+      tick,
+    ),
+    reportRead = usePrivateRead<Report>(
+      invalidDates ? undefined : `/admin/finances/report?${filter}`,
+      tick,
+    ),
+    detailRead = usePrivateRead<Detail>(
+      selected
+        ? `/admin/finances/${selected}?notesPage=${notePage}`
+        : undefined,
+      tick,
+    );
+  const cap = capabilityRead.data,
+    list = listRead.data,
+    budgets = budgetRead.data,
+    report = reportRead.data,
+    detail = detailRead.data;
+  const budgetRecord = budgetSnapshot
+    ? budgets?.items.find((b) => b.id === budgetSnapshot.id) || {
+        ...budgetSnapshot,
+        canManage: false,
+      }
+    : undefined;
+  const { clear: clearCapabilities } = capabilityRead,
+    { clear: clearList } = listRead,
+    { clear: clearBudgets } = budgetRead,
+    { clear: clearReport } = reportRead,
+    { clear: clearDetail } = detailRead;
+  const reads = [
+    { name: "Finance permissions", ...capabilityRead },
+    { name: "Request inventory", ...listRead },
+    { name: "Budget allocations", ...budgetRead },
+    { name: "Finance reports", ...reportRead },
+    { name: "Request details", ...detailRead },
+  ];
+  const loading = listRead.loading;
   useEffect(() => {
-    const c = new AbortController();
-    api<Capabilities>("/admin/finances/capabilities", { signal: c.signal })
-      .then((r) => {
-        if (!c.signal.aborted) setCap(r);
-      })
-      .catch((e) => {
-        if (!c.signal.aborted) setError(e.message);
-      });
-    return () => c.abort();
-  }, [tick]);
+    if (detailRead.denied)
+      setMode((previous) => (previous === "edit" ? null : previous));
+  }, [detailRead.denied]);
   useEffect(() => {
-    const c = new AbortController();
-    setLoading(true);
-    setError("");
-    Promise.all([
-      api<Listing>(`/admin/finances?${filter}&page=${page}`, {
-        signal: c.signal,
-      }),
-      api<BudgetListing>(`/admin/budgets?page=${budgetPage}`, {
-        signal: c.signal,
-      }),
-      api<Report>(`/admin/finances/report?${filter}`, { signal: c.signal }),
-    ])
-      .then(([l, b, r]) => {
-        if (!c.signal.aborted) {
-          setList(l);
-          setBudgets(b);
-          setReport(r);
-          setBudgetRecord((previous) =>
-            previous
-              ? b.items.find((v) => v.id === previous.id) || previous
-              : previous,
-          );
-        }
-      })
-      .catch((e) => {
-        if (!c.signal.aborted) {
-          setError(e.message);
-          if (e instanceof ApiFailure && [401, 403].includes(e.status)) {
-            setCap(undefined);
-            setList(undefined);
-            setBudgets(undefined);
-            setReport(undefined);
-            setDetail(undefined);
-            setMode(null);
-          }
-        }
-      })
-      .finally(() => {
-        if (!c.signal.aborted) setLoading(false);
-      });
-    return () => c.abort();
-  }, [filter, page, budgetPage, tick]);
-  useEffect(() => {
-    if (!selected) {
-      setDetail(undefined);
-      return;
+    if (capabilityRead.denied) {
+      clearCapabilities();
+      clearList();
+      clearBudgets();
+      clearReport();
+      clearDetail();
+      setMode(null);
+      setBudgetRecord(undefined);
     }
-    const c = new AbortController();
-    api<Detail>(`/admin/finances/${selected}?notesPage=${notePage}`, {
-      signal: c.signal,
-    })
-      .then((r) => {
-        if (!c.signal.aborted && selectedRef.current === selected) setDetail(r);
-      })
-      .catch((e) => {
-        if (!c.signal.aborted && selectedRef.current === selected) {
-          setError(e.message);
-          if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
-            setDetail(undefined);
-            setMode(null);
-          }
-        }
-      });
-    return () => c.abort();
-  }, [selected, notePage, tick]);
+  }, [
+    capabilityRead.denied,
+    clearCapabilities,
+    clearList,
+    clearBudgets,
+    clearReport,
+    clearDetail,
+  ]);
   useEffect(() => {
     const interval = window.setInterval(() => {
-      if (!document.hidden) setTick((n) => n + 1);
+      if (!document.hidden && navigator.onLine && !editState.current.busy)
+        setTick((n) => n + 1);
     }, 30000);
-    const revoke = () => {
-      setCap(undefined);
-      setDetail(undefined);
-      setList(undefined);
-      setBudgets(undefined);
-      setReport(undefined);
-      setMode(null);
-    };
-    window.addEventListener("gdg:session-cleared", revoke);
+    const access = () => setTick((n) => n + 1);
+    window.addEventListener("gdg:access-changed", access);
     return () => {
       clearInterval(interval);
-      window.removeEventListener("gdg:session-cleared", revoke);
+      window.removeEventListener("gdg:access-changed", access);
     };
   }, []);
   useEffect(() => {
@@ -193,7 +193,6 @@ export default function FinanceWorkspace() {
   };
   const select = (id: string) =>
     leave(() => {
-      setDetail(undefined);
       setNotePage(1);
       const p = new URLSearchParams(params);
       if (id) p.set("request", id);
@@ -206,7 +205,6 @@ export default function FinanceWorkspace() {
       const p = new URLSearchParams();
       p.set("tab", value);
       setParams(p);
-      setDetail(undefined);
     });
   const saved = (id: string) => {
     setMode(null);
@@ -228,7 +226,12 @@ export default function FinanceWorkspace() {
         <div className="gt-button-row">
           {cap?.canCreate && (
             <Button
-              disabled={!!mode}
+              disabled={
+                !!mode ||
+                !!capabilityRead.error ||
+                capabilityRead.loading ||
+                !isOnline
+              }
               onClick={() =>
                 leave(() => {
                   setMode("create");
@@ -239,13 +242,22 @@ export default function FinanceWorkspace() {
               New request
             </Button>
           )}
-          <a
-            className="gt-button gt-button-secondary"
-            href={`/api/v1/admin/finances/export?${filter}`}
+          {isOnline && !capabilityRead.error && cap && (
+            <a
+              className="gt-button gt-button-secondary"
+              href={`/api/v1/admin/finances/export?${filter}`}
+            >
+              Export filtered CSV
+            </a>
+          )}
+          <Button
+            variant="ghost"
+            disabled={!isOnline || guardState.busy}
+            onClick={() => {
+              refresh();
+              document.getElementById("workspace-content")?.focus();
+            }}
           >
-            Export filtered CSV
-          </a>
-          <Button variant="ghost" onClick={refresh}>
             Refresh
           </Button>
         </div>
@@ -283,15 +295,53 @@ export default function FinanceWorkspace() {
       {tab === "requests" && !selected && !mode && (
         <FinanceCharts capabilities={cap} listing={list} />
       )}
-      {error && (
-        <p role="alert" className="gt-form-error">
-          {error} <button onClick={refresh}>Retry loading</button>
+      {!isOnline && (
+        <p role="status" className="gt-data-note">
+          You are offline. Unsaved finance fields stay only in this open tab.
+          Reconnect and refresh before continuing; nothing submits
+          automatically.
         </p>
       )}
-      {notice && <p role="status">{notice}</p>}
+      {invalidDates && (
+        <p role="alert" className="gt-form-error">
+          Choose a from date on or before the to date.
+        </p>
+      )}
+      {reads
+        .filter((read) => read.error)
+        .map((read) => (
+          <p key={read.name} role="alert" className="gt-form-error">
+            {read.name}: {read.error}{" "}
+            <button
+              disabled={!isOnline || guardState.busy}
+              onClick={() => {
+                refresh();
+                document.getElementById("workspace-content")?.focus();
+              }}
+            >
+              Retry {read.name.toLowerCase()}
+            </button>
+          </p>
+        ))}
+      {reads
+        .filter((read) => read.data && (read.error || !isOnline))
+        .map((read) => (
+          <p key={read.name} role="status" className="gt-data-note">
+            {read.name} may be out of date. Last loaded{" "}
+            {read.at ? new Date(read.at).toLocaleString() : "earlier"}.
+          </p>
+        ))}
+      {notice && (
+        <p ref={noticeFocus} tabIndex={-1} role="status">
+          {notice}
+        </p>
+      )}
       {mode === "create" && cap && (
         <FinanceEditor
           onEditState={onEditState}
+          readUnavailable={
+            !isOnline || capabilityRead.loading || !!capabilityRead.error
+          }
           capabilities={cap}
           onSaved={saved}
           onCancel={() => leave(() => {})}
@@ -302,6 +352,12 @@ export default function FinanceWorkspace() {
           onEditState={onEditState}
           key={detail.record.id}
           record={detail.record}
+          readUnavailable={
+            !isOnline ||
+            detailRead.loading ||
+            !!detailRead.error ||
+            !!capabilityRead.error
+          }
           capabilities={cap}
           onSaved={saved}
           onCancel={() => leave(() => {})}
@@ -312,6 +368,12 @@ export default function FinanceWorkspace() {
           onEditState={onEditState}
           key={budgetRecord?.id || "new"}
           record={mode === "budget_edit" ? budgetRecord : undefined}
+          readUnavailable={
+            !isOnline ||
+            budgetRead.loading ||
+            !!budgetRead.error ||
+            !!capabilityRead.error
+          }
           capabilities={cap}
           onSaved={() => {
             setMode(null);
@@ -402,9 +464,40 @@ export default function FinanceWorkspace() {
         </section>
       )}
       {loading && !list && (
-        <div className="gt-panel" role="status" aria-busy="true">
-          Loading authorized finance records…
+        <div
+          className="gt-panel"
+          role="status"
+          aria-label="Loading finance requests"
+          aria-busy="true"
+        >
+          <div className="gt-skeleton gt-detail-skeleton" />
+          <span className="sr-only">Loading authorized finance records…</span>
         </div>
+      )}
+      {(q || state || type || team || from || to || page > 1) &&
+        tab !== "budgets" && (
+          <Button
+            variant="ghost"
+            disabled={guardState.busy}
+            onClick={() => {
+              setQ("");
+              setState("");
+              setType("");
+              setTeam("");
+              setFrom("");
+              setTo("");
+              setPage(1);
+              document.getElementById("workspace-content")?.focus();
+            }}
+          >
+            Reset finance filters
+          </Button>
+        )}
+      {tab === "requests" && !list && !listRead.loading && listRead.error && (
+        <p>
+          Request inventory is unavailable. Retry to check your authorized
+          records.
+        </p>
       )}
       {tab === "requests" && (
         <div
@@ -479,7 +572,10 @@ export default function FinanceWorkspace() {
                     </table>
                   </div>
                 ) : (
-                  <EmptyState title="No finance requests in this view">
+                  <EmptyState
+                    headingLevel={2}
+                    title="No finance requests in this view"
+                  >
                     Create a draft or adjust the filters. Other teams' records
                     are not shown.
                   </EmptyState>
@@ -512,17 +608,29 @@ export default function FinanceWorkspace() {
                   key={selected}
                   detail={detail}
                   actorId={cap.actorId}
+                  readUnavailable={
+                    !isOnline ||
+                    detailRead.loading ||
+                    !!detailRead.error ||
+                    !!capabilityRead.error
+                  }
                   notePage={notePage}
                   onNotePage={setNotePage}
                   onRefresh={refresh}
                   onEdit={() => leave(() => setMode("edit"))}
                   onClose={() => select("")}
                 />
+              ) : detailRead.loading || capabilityRead.loading ? (
+                <div role="status" aria-label="Loading private finance details">
+                  <div className="gt-skeleton gt-detail-skeleton" />
+                  <span className="sr-only">
+                    Loading private request details…
+                  </span>
+                </div>
               ) : (
-                <p role="status">
-                  {error
-                    ? "Request details could not load."
-                    : "Loading private request details…"}
+                <p>
+                  Request details are unavailable. Use Retry request details or
+                  choose another request.
                 </p>
               )}
             </div>
@@ -549,7 +657,16 @@ export default function FinanceWorkspace() {
             No personal spending. Sources and team allocations are separate;
             there is no transfer between allocations here.
           </p>
-          {budgets?.items.length ? (
+          {budgetRead.loading && !budgets ? (
+            <div role="status" aria-label="Loading budget allocations">
+              <div className="gt-skeleton gt-detail-skeleton" />
+              <span className="sr-only">Loading budget allocations…</span>
+            </div>
+          ) : budgetRead.error && !budgets ? (
+            <p>
+              Budget allocations are unavailable. Retry to check your scope.
+            </p>
+          ) : budgets?.items.length ? (
             <div className="gt-table-wrap">
               <table className="gt-data-table">
                 <caption className="sr-only">
@@ -601,7 +718,10 @@ export default function FinanceWorkspace() {
               </table>
             </div>
           ) : (
-            <EmptyState title="No permitted budget allocations">
+            <EmptyState
+              headingLevel={3}
+              title="No permitted budget allocations"
+            >
               Authorized administrators can create an allocation, then activate
               it before requests reference it.
             </EmptyState>
@@ -625,6 +745,22 @@ export default function FinanceWorkspace() {
               Next allocations
             </Button>
           </nav>
+        </section>
+      )}
+      {tab === "reports" && (!list || !report) && (
+        <section>
+          <h2>Authorized ledger report</h2>
+          {listRead.loading || reportRead.loading ? (
+            <div role="status" aria-label="Loading finance report">
+              <div className="gt-skeleton gt-detail-skeleton" />
+              <span className="sr-only">Loading authorized report data…</span>
+            </div>
+          ) : (
+            <p>
+              Report data is unavailable with the current read state. Retry the
+              failed source above.
+            </p>
+          )}
         </section>
       )}
       {tab === "reports" && list && report && (

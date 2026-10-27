@@ -2289,6 +2289,33 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "FIN-TEST-020",
+      "requirements": [
+        "FIN-001",
+        "FIN-002",
+        "FIN-003",
+        "FIN-004",
+        "FIN-005"
+      ],
+      "scope": "Independent finance permissions/inventory/budgets/reports/detail recovery, exact-decimal draft conflicts, guarded retained decisions/notes, stable retries and aborted private download/quarantine operations",
+      "automated": [
+        "tests/client/finance-recovery.test.tsx",
+        "scripts/test-local-finances.mjs",
+        "scripts/test-local-finance-uploads.mjs",
+        "scripts/test-local-finance-recovery.mjs"
+      ],
+      "remaining": [
+        "Supported-device/screen-reader, browser interruption/download and hosted finance acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

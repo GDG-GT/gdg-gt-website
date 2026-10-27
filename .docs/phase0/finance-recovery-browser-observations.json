@@ -1,0 +1,29 @@
+{
+  "note": "Partial loopback browser check with a fictional member and own private draft. No draft save, approval, upload or payment committed in browser. Full device/screen-reader/visual acceptance remains open.",
+  "mobile": {
+    "amount": "25.01",
+    "amountBounds": {
+      "bottom": 971.6640625,
+      "height": 46.796875,
+      "left": 41,
+      "right": 334,
+      "top": 924.8671875,
+      "width": 293,
+      "x": 41,
+      "y": 924.8671875
+    },
+    "conflict": true,
+    "documentWidth": 375,
+    "saveDisabled": true,
+    "tableScroller": 339,
+    "width": 375
+  },
+  "cleanup": {
+    "draftDiscarded": true,
+    "navigationConfirmationVerified": true,
+    "signedOut": true,
+    "reviewTabClosed": true,
+    "viewportReset": true
+  },
+  "screenshot": ".docs/ui-review/finance-conflict-recovery.png"
+}

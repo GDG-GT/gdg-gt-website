@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { api, ApiFailure } from "@/lib/api";
 import { financeMutation, financeNote } from "../../../shared/finances.mjs";
 import { validationMessage } from "@/lib/validationMessage";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import { Badge, Button, Field } from "../primitives";
 import { type Detail, dollars, human } from "./types";
 import FinanceAttachments from "./FinanceAttachments";
@@ -22,6 +23,7 @@ export default function FinanceDetail({
   onClose,
   actorId,
   onEditState,
+  readUnavailable = false,
 }: {
   detail: Detail;
   notePage: number;
@@ -31,6 +33,7 @@ export default function FinanceDetail({
   onClose: () => void;
   actorId: string;
   onEditState: (state: { dirty: boolean; busy: boolean }) => void;
+  readUnavailable?: boolean;
 }) {
   const f = detail.record,
     [action, setAction] = useState(""),
@@ -38,7 +41,6 @@ export default function FinanceDetail({
     [confirmation, setConfirmation] = useState(""),
     [reason, setReason] = useState(""),
     [note, setNote] = useState(""),
-    [operationBusy, setBusy] = useState(false),
     [attachmentState, setAttachmentState] = useState({
       dirty: false,
       busy: false,
@@ -49,12 +51,39 @@ export default function FinanceDetail({
   const revision = useRef(f.revision),
     decisionKey = useRef<string>(),
     noteKey = useRef<string>(),
-    heading = useRef<HTMLHeadingElement>(null);
+    heading = useRef<HTMLHeadingElement>(null),
+    errorFocus = useRef<HTMLParagraphElement>(null),
+    noticeFocus = useRef<HTMLParagraphElement>(null),
+    actionHeading = useRef<HTMLHeadingElement>(null);
+  const {
+    busy: operationBusy,
+    begin,
+    current,
+    finish,
+    pending,
+  } = usePrivateMutation(f.id);
+  const attachmentStateRef = useRef(attachmentState);
+  const onAttachmentState = useCallback(
+    (value: { dirty: boolean; busy: boolean }) => {
+      attachmentStateRef.current = value;
+      setAttachmentState(value);
+    },
+    [],
+  );
   const stale =
     !!action &&
     (f.revision !== revision.current || !f.actions.includes(action));
   const busy = operationBusy || attachmentState.busy;
   const dirty = !!action || !!note || attachmentState.dirty;
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
+  useEffect(() => {
+    if (notice) noticeFocus.current?.focus();
+  }, [notice]);
+  useEffect(() => {
+    if (action) actionHeading.current?.focus();
+  }, [action]);
   useEffect(() => {
     onEditState({ dirty, busy });
     return () => onEditState({ dirty: false, busy: false });
@@ -142,11 +171,26 @@ export default function FinanceDetail({
         Completion is a ledger acknowledgment, not a bank transfer or payment.
       </p>
       {error && (
-        <p role="alert" className="gt-form-error">
+        <p
+          ref={errorFocus}
+          tabIndex={-1}
+          role="alert"
+          className="gt-form-error"
+        >
           {error}
         </p>
       )}
-      {notice && <p role="status">{notice}</p>}
+      {notice && (
+        <p ref={noticeFocus} tabIndex={-1} role="status">
+          {notice}
+        </p>
+      )}
+      {readUnavailable && (
+        <p role="status" className="gt-data-note">
+          Request actions are unavailable until the current protected details
+          load successfully. Your input is preserved.
+        </p>
+      )}
       {f.rejectionReason && (
         <p>
           <strong>Rejection reason:</strong> {f.rejectionReason}
@@ -157,7 +201,7 @@ export default function FinanceDetail({
           {f.actions.includes("update") && (
             <Button
               variant="secondary"
-              disabled={busy}
+              disabled={busy || readUnavailable}
               onClick={() => leave(onEdit)}
             >
               Edit draft
@@ -168,7 +212,9 @@ export default function FinanceDetail({
             .map(([a, label]) => (
               <Button
                 key={a}
-                disabled={busy || !!note || attachmentState.dirty}
+                disabled={
+                  busy || readUnavailable || !!note || attachmentState.dirty
+                }
                 variant={
                   a === "reject" || a === "cancel" ? "danger" : "secondary"
                 }
@@ -193,10 +239,21 @@ export default function FinanceDetail({
           className="gt-form gt-finance-decision"
           onSubmit={async (e) => {
             e.preventDefault();
-            if (busy || stale || conflict) return;
+            if (
+              attachmentStateRef.current.busy ||
+              readUnavailable ||
+              stale ||
+              conflict ||
+              !f.actions.includes(action) ||
+              !password ||
+              confirmation !== f.reference
+            )
+              return;
+            const controller = begin();
+            if (!controller) return;
+            onEditState({ dirty: true, busy: true });
             const secret = password;
             setPassword("");
-            setBusy(true);
             setError("");
             try {
               const body = financeMutation.parse({
@@ -212,13 +269,16 @@ export default function FinanceDetail({
                 protected: true,
                 idempotencyKey: decisionKey.current,
                 body,
+                signal: controller.signal,
               });
+              if (!current(controller)) return;
               setAction("");
               setConfirmation("");
               setReason("");
               setNotice("Decision saved with its immutable history entry.");
               onRefresh();
             } catch (e) {
+              if (!current(controller)) return;
               if (e instanceof ApiFailure && e.status === 409)
                 setConflict(true);
               setError(
@@ -228,11 +288,13 @@ export default function FinanceDetail({
                 ),
               );
             } finally {
-              setBusy(false);
+              finish(controller);
             }
           }}
         >
-          <h3>{actionNames[action]}</h3>
+          <h3 ref={actionHeading} tabIndex={-1}>
+            {actionNames[action]}
+          </h3>
           {(stale || conflict) && (
             <p role="alert" className="gt-form-error">
               This request changed or the action is no longer available. Your
@@ -291,6 +353,7 @@ export default function FinanceDetail({
               }
               disabled={
                 busy ||
+                readUnavailable ||
                 stale ||
                 conflict ||
                 !password ||
@@ -373,13 +436,21 @@ export default function FinanceDetail({
             Older notes
           </Button>
         </nav>
-        {f.actions.includes("note") && (
+        {(f.actions.includes("note") || note.trim()) && (
           <form
             className="gt-form"
             onSubmit={async (e) => {
               e.preventDefault();
-              if (busy || action) return;
-              setBusy(true);
+              if (
+                attachmentStateRef.current.busy ||
+                action ||
+                readUnavailable ||
+                !f.actions.includes("note")
+              )
+                return;
+              const controller = begin();
+              if (!controller) return;
+              onEditState({ dirty: true, busy: true });
               setError("");
               try {
                 noteKey.current ??= crypto.randomUUID();
@@ -388,12 +459,15 @@ export default function FinanceDetail({
                   protected: true,
                   idempotencyKey: noteKey.current,
                   body: financeNote.parse({ note }),
+                  signal: controller.signal,
                 });
+                if (!current(controller)) return;
                 setNote("");
                 noteKey.current = undefined;
                 setNotice("Note appended.");
                 onRefresh();
               } catch (e) {
+                if (!current(controller)) return;
                 setError(
                   validationMessage(
                     e,
@@ -401,24 +475,39 @@ export default function FinanceDetail({
                   ),
                 );
               } finally {
-                setBusy(false);
+                finish(controller);
               }
             }}
           >
             <Field label="Add a note" required>
+              {!f.actions.includes("note") && (
+                <span role="status">
+                  Adding notes is no longer permitted. Your unsaved text remains
+                  here for you to copy.
+                </span>
+              )}
               <textarea
                 required
                 rows={3}
                 maxLength={5000}
                 value={note}
                 disabled={busy || !!action}
+                readOnly={!f.actions.includes("note")}
                 onChange={(e) => {
                   setNote(e.target.value);
                   noteKey.current = undefined;
                 }}
               />
             </Field>
-            <Button disabled={busy || !!action || !note.trim()}>
+            <Button
+              disabled={
+                busy ||
+                readUnavailable ||
+                !f.actions.includes("note") ||
+                !!action ||
+                !note.trim()
+              }
+            >
               Append note
             </Button>
           </form>
@@ -427,8 +516,9 @@ export default function FinanceDetail({
       <FinanceAttachments
         financeId={f.id}
         revision={f.revision}
-        disabled={operationBusy || !!action || !!note}
-        onEditState={setAttachmentState}
+        disabled={operationBusy || readUnavailable || !!action || !!note}
+        onEditState={onAttachmentState}
+        operationPending={() => pending.current}
       />
       <p className="gt-helper">{detail.retention}</p>
     </aside>

@@ -8,6 +8,23 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Finance independent reads and private operation recovery — 2026-10-27
+
+- Permissions, inventory, budgets, reports and detail reads recover independently;
+  keyed snapshots hide old scopes and carry stale timestamps. Shared abortable read
+  code preserves Linktree behavior. Finance/private attachment writes freeze
+  synchronously, abort/fence on context loss and keep unchanged retry keys. Exact
+  confirmations, refreshed grants/revisions, note preservation and focus improved.
+- Twenty-four new DOM cases include three axe audits; Linktree regressions pass.
+  Full suite: 1,004 tests/132 files; types and lint (0 errors/25 warnings) pass.
+  Coverage remains below 70% at 49.60% lines/47.22% branches, with all 17 critical
+  branch gates passing. Build, byte budgets and secret scan pass.
+- Thirty-seven real ledger, 22 real scanner/receipt and 7 draft/revision checks
+  pass. Browser confirms exact-amount preservation/stale lock, bounded 375 px
+  controls, discard confirmation and sign-out. Owned fixture cancelled/retained,
+  account disabled/sessions revoked, ledger removed and viewport reset. Catalog:
+  129 unverified cases. See `FINANCE_RECOVERY.md`; full PRD remains open.
+
 ### Whiteboard autosave and private-context recovery — 2026-10-27
 
 - Canvas callbacks are bound to board/editor generation; autosave and metadata

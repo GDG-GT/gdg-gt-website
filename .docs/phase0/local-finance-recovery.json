@@ -1,0 +1,36 @@
+{
+  "note": "Dedicated loopback-only private draft/retry/revision checks. No payment, provider send, quota reset or permanent deletion. Fictional financial records and audit entries remain retained.",
+  "cleanup": {
+    "completed": true
+  },
+  "tests": [
+    {
+      "name": "private draft create retry returns the original record",
+      "passed": true
+    },
+    {
+      "name": "protected draft projection preserves exact cents, state and ownership",
+      "passed": true
+    },
+    {
+      "name": "uncertain draft update retry remains idempotent after revision advance",
+      "passed": true
+    },
+    {
+      "name": "a fresh intent with an obsolete revision cannot overwrite the accepted draft",
+      "passed": true
+    },
+    {
+      "name": "accepted draft survives the rejected stale update unchanged",
+      "passed": true
+    },
+    {
+      "name": "isolated ordinary member inventory contains only its own private draft",
+      "passed": true
+    },
+    {
+      "name": "independent-session remote draft revision committed for browser conflict review",
+      "passed": true
+    }
+  ]
+}

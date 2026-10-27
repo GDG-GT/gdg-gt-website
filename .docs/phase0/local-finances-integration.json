@@ -1,10 +1,10 @@
 {
   "note": "Dedicated loopback HTTP checks with fictional isolated accounts/team/allocations. No payment, external email, imported data, quota reset or permanent deletion. Financial records and append-only decisions remain retained; fixture accounts and team recoverably archived.",
   "retainedFixtureRequestIds": [
-    "88f7231c-a510-4030-bf66-a6751edfe060",
-    "ad3b4744-9c09-439b-9342-186883451eb2",
-    "d9aba6f5-91a4-43ac-9c58-2420529ddb20",
-    "583bc355-9a2c-4542-8bb9-ee19f10c5ba1"
+    "0e9872b6-1445-469f-9531-642b0a32fc36",
+    "ff8e1488-02fd-4903-b86d-34834077515b",
+    "bad640d5-6f41-4db4-a8e9-b55678685be1",
+    "a9090450-9c9a-4425-b007-98f93474754c"
   ],
   "tests": [
     {

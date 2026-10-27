@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { validationMessage } from "@/lib/validationMessage";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import { budgetCreate, budgetMutation } from "../../../shared/finances.mjs";
 import { Button, Field } from "../primitives";
 import { type Budget, type Capabilities, dollars, remaining } from "./types";
@@ -10,12 +11,14 @@ export default function BudgetEditor({
   onSaved,
   onCancel,
   onEditState,
+  readUnavailable = false,
 }: {
   record?: Budget;
   capabilities: Capabilities;
   onSaved: () => void;
   onCancel: () => void;
   onEditState: (state: { dirty: boolean; busy: boolean }) => void;
+  readUnavailable?: boolean;
 }) {
   const snapshot = useRef(record);
   const [values, setValues] = useState({
@@ -30,11 +33,21 @@ export default function BudgetEditor({
     [password, setPassword] = useState(""),
     [confirmation, setConfirmation] = useState(""),
     [action, setAction] = useState("update"),
-    [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [conflict, setConflict] = useState(false);
   const key = useRef<string>(),
-    heading = useRef<HTMLHeadingElement>(null);
+    heading = useRef<HTMLHeadingElement>(null),
+    errorFocus = useRef<HTMLParagraphElement>(null);
+  const { busy, begin, current, finish } = usePrivateMutation(
+    record?.id || "new-budget",
+  );
+  const canSave =
+    !readUnavailable &&
+    capabilities.globalAdmin &&
+    (!team || capabilities.teams.some((t) => t.id === team));
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
   const stale =
     !!record &&
     (record.revision !== snapshot.current?.revision ||
@@ -80,8 +93,19 @@ export default function BudgetEditor({
           is preserved. Cancel to review the latest version.
         </p>
       )}
+      {!canSave && (
+        <p role="status" className="gt-data-note">
+          Budget changes are unavailable with the current permissions or read
+          state. Your fields are preserved.
+        </p>
+      )}
       {error && (
-        <p role="alert" className="gt-form-error">
+        <p
+          ref={errorFocus}
+          tabIndex={-1}
+          role="alert"
+          className="gt-form-error"
+        >
           {error}
         </p>
       )}
@@ -89,8 +113,17 @@ export default function BudgetEditor({
         className="gt-form"
         onSubmit={async (e) => {
           e.preventDefault();
-          if (busy || stale || conflict) return;
-          setBusy(true);
+          if (
+            stale ||
+            conflict ||
+            !canSave ||
+            !password ||
+            (record && confirmation !== record.name)
+          )
+            return;
+          const controller = begin();
+          if (!controller) return;
+          onEditState({ dirty: true, busy: true });
           setError("");
           const secret = password;
           setPassword("");
@@ -114,14 +147,18 @@ export default function BudgetEditor({
               protected: true,
               idempotencyKey: key.current,
               body,
+              signal: controller.signal,
             });
+            if (!current(controller)) return;
+            key.current = undefined;
             onSaved();
           } catch (e) {
+            if (!current(controller)) return;
             if (e instanceof Error && "status" in e && e.status === 409)
               setConflict(true);
             setError(validationMessage(e, "Budget change could not be saved."));
           } finally {
-            setBusy(false);
+            finish(controller);
           }
         }}
       >
@@ -233,6 +270,7 @@ export default function BudgetEditor({
           <Button
             disabled={
               busy ||
+              !canSave ||
               stale ||
               conflict ||
               !password ||

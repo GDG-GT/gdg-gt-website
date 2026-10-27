@@ -1130,6 +1130,22 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "27.1", "28.3", "31.2"];
 
+add(
+  "FIN-TEST-020",
+  "FIN-001 FIN-002 FIN-003 FIN-004 FIN-005",
+  "Independent finance permissions/inventory/budgets/reports/detail recovery, exact-decimal draft conflicts, guarded retained decisions/notes, stable retries and aborted private download/quarantine operations",
+  [
+    "tests/client/finance-recovery.test.tsx",
+    local("finances"),
+    local("finance-uploads"),
+    local("finance-recovery"),
+  ],
+  [
+    "Supported-device/screen-reader, browser interruption/download and hosted finance acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

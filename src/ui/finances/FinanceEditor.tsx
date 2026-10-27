@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { api, ApiFailure } from "@/lib/api";
 import { validationMessage } from "@/lib/validationMessage";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import {
   financeCategories,
   financeCreate,
@@ -15,12 +16,14 @@ export default function FinanceEditor({
   onSaved,
   onCancel,
   onEditState,
+  readUnavailable = false,
 }: {
   record?: Finance;
   capabilities: Capabilities;
   onSaved: (id: string) => void;
   onCancel: () => void;
   onEditState: (state: { dirty: boolean; busy: boolean }) => void;
+  readUnavailable?: boolean;
 }) {
   const initial = useRef(record);
   const [values, setValues] = useState({
@@ -41,19 +44,32 @@ export default function FinanceEditor({
     [requireTeamApproval, setRequire] = useState(
       record?.requiresTeamApproval ?? true,
     ),
-    [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [conflict, setConflict] = useState(false),
     [budgetQuery, setBudgetQuery] = useState(""),
     [budgetPage, setBudgetPage] = useState(1),
+    [budgetRetry, setBudgetRetry] = useState(0),
     [budgetListing, setBudgetListing] = useState<BudgetListing>(),
     [budgetError, setBudgetError] = useState("");
   const key = useRef<string>(),
-    heading = useRef<HTMLHeadingElement>(null);
+    heading = useRef<HTMLHeadingElement>(null),
+    errorFocus = useRef<HTMLParagraphElement>(null);
+  const { busy, begin, current, finish } = usePrivateMutation(
+    record?.id || "new-finance",
+  );
   const stale =
     !!record &&
     (initial.current?.revision !== record.revision ||
       !record.actions.includes("update"));
+  const canSave =
+    !readUnavailable &&
+    (record
+      ? record.actions.includes("update")
+      : capabilities.canCreate &&
+        (!team || capabilities.teams.some((t) => t.id === team)));
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
   useEffect(() => {
     heading.current?.focus();
   }, []);
@@ -78,7 +94,7 @@ export default function FinanceEditor({
         }
       });
     return () => controller.abort();
-  }, [budgetQuery, budgetPage]);
+  }, [budgetQuery, budgetPage, budgetRetry]);
   const field = (name: keyof typeof values) => ({
     disabled: busy,
     value: values[name],
@@ -106,8 +122,19 @@ export default function FinanceEditor({
           cancel to review the current record.
         </p>
       )}
+      {!canSave && (
+        <p role="status" className="gt-data-note">
+          Saving is unavailable with the current scope, permissions or read
+          state. Your fields are preserved.
+        </p>
+      )}
       {error && (
-        <p className="gt-form-error" role="alert">
+        <p
+          ref={errorFocus}
+          tabIndex={-1}
+          className="gt-form-error"
+          role="alert"
+        >
           {error}
         </p>
       )}
@@ -115,8 +142,10 @@ export default function FinanceEditor({
         className="gt-form"
         onSubmit={async (e) => {
           e.preventDefault();
-          if (busy || stale || conflict) return;
-          setBusy(true);
+          if (stale || conflict || !canSave) return;
+          const controller = begin();
+          if (!controller) return;
+          onEditState({ dirty: true, busy: true });
           setError("");
           try {
             const details = {
@@ -147,10 +176,14 @@ export default function FinanceEditor({
                 protected: true,
                 idempotencyKey: key.current,
                 body,
+                signal: controller.signal,
               },
             );
+            if (!current(controller)) return;
+            key.current = undefined;
             onSaved(r.id);
           } catch (e) {
+            if (!current(controller)) return;
             if (e instanceof ApiFailure && e.status === 409) setConflict(true);
             setError(
               validationMessage(
@@ -159,7 +192,7 @@ export default function FinanceEditor({
               ),
             );
           } finally {
-            setBusy(false);
+            finish(controller);
           }
         }}
       >
@@ -268,7 +301,18 @@ export default function FinanceEditor({
             <input {...field("referenceNumber")} maxLength={150} />
           </Field>
         </div>
-        {budgetError && <p role="alert">Budget search: {budgetError}</p>}
+        {budgetError && (
+          <p role="alert">
+            Budget search: {budgetError}{" "}
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => setBudgetRetry((v) => v + 1)}
+            >
+              Retry budget choices
+            </button>
+          </p>
+        )}
         <nav className="gt-button-row" aria-label="Budget selection pages">
           <Button
             type="button"
@@ -344,7 +388,7 @@ export default function FinanceEditor({
           Nobody may approve a request they submitted.
         </p>
         <div className="gt-button-row">
-          <Button disabled={busy || stale || conflict}>
+          <Button disabled={busy || stale || conflict || !canSave}>
             {busy ? "Saving…" : "Save draft"}
           </Button>
           <Button

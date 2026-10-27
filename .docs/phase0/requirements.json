@@ -629,7 +629,8 @@
       "line": 423,
       "status": "unverified",
       "testIds": [
-        "FIN-TEST-001"
+        "FIN-TEST-001",
+        "FIN-TEST-020"
       ],
       "evidence": []
     },
@@ -639,7 +640,8 @@
       "line": 425,
       "status": "unverified",
       "testIds": [
-        "FIN-TEST-002"
+        "FIN-TEST-002",
+        "FIN-TEST-020"
       ],
       "evidence": []
     },
@@ -649,7 +651,8 @@
       "line": 427,
       "status": "unverified",
       "testIds": [
-        "FIN-TEST-003"
+        "FIN-TEST-003",
+        "FIN-TEST-020"
       ],
       "evidence": []
     },
@@ -659,7 +662,8 @@
       "line": 429,
       "status": "unverified",
       "testIds": [
-        "FIN-TEST-003"
+        "FIN-TEST-003",
+        "FIN-TEST-020"
       ],
       "evidence": []
     },
@@ -669,7 +673,8 @@
       "line": 431,
       "status": "unverified",
       "testIds": [
-        "FIN-TEST-002"
+        "FIN-TEST-002",
+        "FIN-TEST-020"
       ],
       "evidence": []
     },
