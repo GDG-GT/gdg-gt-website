@@ -1,15 +1,41 @@
 import { randomUUID } from "node:crypto";
-import { writeFile } from "node:fs/promises";
+import { writeFile, unlink } from "node:fs/promises";
 import { createInterface } from "node:readline";
 import { createClient } from "@supabase/supabase-js";
 import { localHttp } from "./lib/local-http.mjs";
-import { hashSecret, riskHash } from "../server/lib/security.mjs";
+import { hashSecret } from "../server/lib/security.mjs";
 if (process.argv.includes("--hold-for-browser") && !process.stdin.isTTY)
   throw new Error("Browser review requires an interactive terminal.");
-const { call, login, logout, db, credentials, env } = await localHttp(),
+if (process.env.GDG_LOCAL_TEST_SHARED_SESSION === "true")
+  throw Error("Requires isolated fictional sessions.");
+const { db, credentials } = await localHttp(),
   evidence = [],
   boards = [],
   accounts = [];
+let call,
+  owner,
+  ledgerOwned = false;
+const ledger = new URL(
+  "../.docs/local-whiteboard-review.local",
+  import.meta.url,
+);
+async function recordEvidence(cleanedUp) {
+  await writeFile(
+    new URL(
+      "../.docs/phase0/local-whiteboards-integration.json",
+      import.meta.url,
+    ),
+    JSON.stringify(
+      {
+        note: "Actual loopback independent-session HTTP and private WebSocket checks with isolated fictional accounts and recoverably archived boards. No external assets, messages or credentials recorded.",
+        cleanup: { completed: cleanedUp },
+        tests: evidence,
+      },
+      null,
+      2,
+    ) + "\n",
+  );
+}
 const socketClients = [],
   socketChannels = [];
 async function join(dto, topic, received = []) {
@@ -171,28 +197,9 @@ async function change(
     body: { action, ...base(record), ...extra },
   });
 }
-// This suite needs four confirmations. Check available headroom without taking
-// a login, resetting a limit, changing policy, or creating disposable records.
-const actor = await db
-  .from("admin_users")
-  .select("id")
-  .eq("email", credentials.email)
-  .single();
-if (actor.error) throw new Error("Local review account unavailable");
-const headroom = await db.rpc("check_rate_limit", {
-  p_scope: "whiteboards.confirm",
-  p_risk_hash: riskHash(actor.data.id, env.RISK_HASH_SECRET),
-  p_limit: 2,
-});
-if (headroom.error) throw new Error("Confirmation quota preflight unavailable");
-if (!headroom.data.allowed)
-  throw new Error(
-    "Wait for the existing confirmation cooldown before rerunning this suite (approximately " +
-      headroom.data.retryAfter +
-      " seconds). No limit was reset and no records were created.",
-  );
-await login();
 try {
+  owner = await fixture("review-officer", "super_admin");
+  call = owner.call;
   const viewer = await fixture("viewer"),
     editor = await fixture("editor", "blog_editor"),
     outsider = await fixture("outsider");
@@ -252,7 +259,7 @@ try {
   r = await change(record, "share", {
     email: viewer.email,
     role: "viewer",
-    currentPassword: credentials.password,
+    currentPassword: password,
   });
   check(
     r.status === 200,
@@ -273,7 +280,7 @@ try {
   r = await change(record, "share", {
     email: editor.email,
     role: "editor",
-    currentPassword: credentials.password,
+    currentPassword: password,
   });
   check(
     r.status === 200,
@@ -353,7 +360,7 @@ try {
   );
   r = await change(record, "unshare", {
     email: viewer.email,
-    currentPassword: credentials.password,
+    currentPassword: password,
   });
   check(
     r.status === 200,
@@ -407,6 +414,18 @@ try {
   );
   await verifySocket(record.id, viewer.call);
   if (process.argv.includes("--hold-for-browser")) {
+    await writeFile(
+      ledger,
+      JSON.stringify({
+        email: owner.email,
+        password,
+        boardId: record.id,
+        name: record.name,
+      }),
+      { mode: 0o600, flag: "wx" },
+    );
+    ledgerOwned = true;
+    await recordEvidence(false);
     console.info("Browser review board: " + record.name);
     const input = createInterface({ input: process.stdin });
     console.info(
@@ -449,30 +468,21 @@ try {
     }
   }
   for (const id of accounts) {
-    await db
+    const account = await db
       .from("admin_users")
       .update({ is_active: false, deleted_at: new Date().toISOString() })
       .eq("id", id);
-    await db
+    if (account.error) throw Error("Whiteboard fixture account cleanup failed");
+    const sessions = await db
       .from("admin_sessions")
       .update({ revoked_at: new Date().toISOString() })
       .eq("admin_user_id", id)
       .is("revoked_at", null);
+    if (sessions.error)
+      throw Error("Whiteboard fixture session cleanup failed");
   }
-  await logout();
+  if (call) await call("/auth/session", { method: "DELETE" });
+  if (ledgerOwned) await unlink(ledger);
   if (process.stdin.isTTY) process.stdin.pause();
 }
-await writeFile(
-  new URL(
-    "../.docs/phase0/local-whiteboards-integration.json",
-    import.meta.url,
-  ),
-  JSON.stringify(
-    {
-      note: "Actual local independent-session HTTP checks. Only new fictional accounts and boards used; boards/accounts recoverably archived. No external assets, messages or credentials recorded.",
-      tests: evidence,
-    },
-    null,
-    2,
-  ) + "\n",
-);
+await recordEvidence(true);

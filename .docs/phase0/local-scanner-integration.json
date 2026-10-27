@@ -3,7 +3,7 @@
   "scanner": {
     "ready": true,
     "version": "ClamAV 1.5.4",
-    "signatureVersion": "28164"
+    "signatureVersion": "28166"
   },
   "tests": [
     {

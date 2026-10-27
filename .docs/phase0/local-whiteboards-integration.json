@@ -1,5 +1,8 @@
 {
-  "note": "Actual local independent-session HTTP checks. Only new fictional accounts and boards used; boards/accounts recoverably archived. No external assets, messages or credentials recorded.",
+  "note": "Actual loopback independent-session HTTP and private WebSocket checks with isolated fictional accounts and recoverably archived boards. No external assets, messages or credentials recorded.",
+  "cleanup": {
+    "completed": true
+  },
   "tests": [
     {
       "name": "whiteboard inventory rejects anonymous callers",
@@ -147,6 +150,10 @@
     },
     {
       "name": "removed collaborator cannot mint a replacement whiteboard socket token",
+      "passed": true
+    },
+    {
+      "name": "browser review remote version saved through protected API",
       "passed": true
     }
   ]

@@ -1,0 +1,24 @@
+{
+  "note": "Actual local drawing editor loaded. No browser drawing, rename, sharing or save committed. Partial local evidence, not full device/screen-reader/visual acceptance.",
+  "conflict": {
+    "draft": "Fictional unsaved board name",
+    "confirmationDisabled": true,
+    "canvasLoaded": true
+  },
+  "mobile": {
+    "width": 375,
+    "documentWidth": 375,
+    "canvasWidth": 339,
+    "inputLeft": 36,
+    "inputRight": 339,
+    "inputHeight": 46.796875
+  },
+  "screenshot": ".docs/ui-review/whiteboard-conflict-recovery.png",
+  "viewportReset": true,
+  "cleanup": {
+    "draftDiscarded": true,
+    "signedOut": true,
+    "reviewTabClosed": true,
+    "viewportReset": true
+  }
+}

@@ -1119,6 +1119,17 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "27.1", "28.3", "31.2"];
 
+add(
+  "COMM-TEST-016",
+  "COMM-001 COMM-003 COMM-004",
+  "Whiteboard private read recovery, unchanged-version permission refresh, canvas generation fences, stable autosave/metadata retries, pending drawing preservation, offline pause and retained conflicts",
+  ["tests/client/whiteboard-recovery.test.tsx", local("whiteboards")],
+  [
+    "Real drawing-editor keyboard/screen-reader, interruption/reconnect/concurrent-edit and supported-device acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "27.1", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

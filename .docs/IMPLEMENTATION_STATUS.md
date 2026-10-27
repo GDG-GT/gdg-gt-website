@@ -8,6 +8,23 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Whiteboard autosave and private-context recovery — 2026-10-27
+
+- Canvas callbacks are bound to board/editor generation; autosave and metadata
+  requests abort/fence on private-context loss and retain unchanged retry keys.
+  Newer drawing input remains queued behind an accepted save. Fresh action grants
+  apply even at an unchanged version; offline autosave waits for an explicit Save.
+  Independent read recovery, stale snapshots, scoped export and semantic feedback
+  corrected. Passwords clear at request start and protected confirmations recheck.
+- Twenty-two DOM cases include three shell/form axe audits using a drawing adapter.
+  All 980 tests/131 files pass; coverage remains below 70% at 47.49% lines/44.96%
+  branches, with all 17 critical branch gates passing. No thresholds were relaxed.
+- Thirty-eight real local HTTP/private-WebSocket checks pass and cleanup completed.
+  Browser loads the actual editor, preserves a staged rename on remote save, locks
+  confirmation and fits at 375 px; screenshot retained. Owned fixture cleanup,
+  sign-out/tab closure, viewport reset and ledger removal completed. Catalog: 128
+  unverified cases. See `WHITEBOARD_RECOVERY.md`; full PRD acceptance remains open.
+
 ### Announcement draft/publication recovery — 2026-10-27
 
 - Officer/session/selection-bound request guards cancel private work and suppress
