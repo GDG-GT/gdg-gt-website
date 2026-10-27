@@ -5,6 +5,23 @@ incremental implementation tracker, not a completion or launch claim.
 
 ## Current checkpoint
 
+### Community directory transfer lifecycle — 2026-10-26
+
+- CSV review/import/export/file reads freeze synchronously; passwords clear when
+  requests start and failed commits keep their idempotency key. Scope/source
+  changes invalidate review, expiry is checked at click time, and session/account
+  changes fence late private work. Offline CSVs require a new explicit review.
+- Validation/error/review/receipt and modal return focus corrected; export private
+  fields default off on every opening. Seventeen new DOM cases include two axe
+  audits; all 886 tests/126 files pass. Types pass, lint 0 errors/25 warnings,
+  build/byte budgets/secrets pass. Coverage remains below 70% at 39.03% lines/
+  37.32% branches; all 17 critical branch gates pass.
+- Twenty-two real local API checks pass. Browser verifies parse/review focus,
+  default export consent, confirmation lock and bounded scrollable 375 px dialog.
+  Owned fixture cleanup, sign-out/tab closure, ledger removal and viewport reset
+  completed. Catalog: 123 unverified logical cases. See
+  `MEMBER_TRANSFER_RECOVERY.md`; complete PRD acceptance remains open.
+
 ### Linktree independent reads and mutation recovery — 2026-10-26
 
 - Capability/inventory/detail/analytics loading and errors are independent, with

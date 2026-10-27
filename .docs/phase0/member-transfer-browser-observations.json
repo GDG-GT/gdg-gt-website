@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-26",
+  "note": "Actual local Chrome scoped fictional account. No browser import commit, file upload, CSV download, provider send or production change. Browser dispatch timed out during concurrent validation, then recovered after the build completed.",
+  "privateExportUnchecked": true,
+  "parsedSummaryFocused": true,
+  "serverReviewHeadingFocused": true,
+  "eligible": 1,
+  "confirmDisabledWithoutConfirmation": true,
+  "mobile": {
+    "allControlsBoundedAnd44px": true,
+    "confirmDisabled": true,
+    "dialog": {
+      "bottom": 771.3984375,
+      "left": 0,
+      "right": 375,
+      "top": 40.6015625
+    },
+    "documentWidth": 375,
+    "scrollable": true,
+    "width": 375
+  },
+  "screenshot": "ui-review/member-import-review-recovery.png",
+  "acceptance": "unverified"
+}

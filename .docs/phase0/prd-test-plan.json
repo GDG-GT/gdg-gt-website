@@ -2153,6 +2153,26 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "TEAM-TEST-025",
+      "requirements": [],
+      "scope": "Community directory CSV validation/review/expiry/confirmation, duplicate prevention, filtered private export consent, offline input and session cancellation",
+      "automated": [
+        "tests/client/member-transfer-ui.test.tsx",
+        "tests/server/member-transfer.test.mjs",
+        "scripts/test-local-member-transfer.mjs"
+      ],
+      "remaining": [
+        "Supported-device/screen-reader and real-browser network interruption/download acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {
