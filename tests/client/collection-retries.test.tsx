@@ -16,6 +16,12 @@ vi.mock("@/lib/api", async (original) => ({
   api: apiMock,
 }));
 vi.mock("@/hooks/useDraftGuard", () => ({ useDraftGuard: vi.fn() }));
+vi.mock("@/contexts/ContentContext", () => ({ useContent: () => ({}) }));
+vi.mock("@/contexts/AdminContext", () => ({
+  useAdmin: () => ({
+    currentAdmin: { id: "fictional-collection-admin", role: "admin" },
+  }),
+}));
 const writes = () => apiMock.mock.calls.filter(([, o]) => o?.method);
 beforeEach(() => {
   apiMock.mockReset();

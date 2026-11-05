@@ -2484,6 +2484,29 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "CONTENT-TEST-012",
+      "requirements": [
+        "CONTENT-001",
+        "CONTENT-002"
+      ],
+      "scope": "Resource/sponsor/public-team independent permission/inventory/detail recovery, account/session cancellation, preserved stale drafts, current grant checks, scoped creation, stable retries and separate visibility reviews",
+      "automated": [
+        "tests/client/collection-recovery.test.tsx",
+        "tests/client/collection-retries.test.tsx",
+        "scripts/test-local-collection-recovery.mjs"
+      ],
+      "remaining": [
+        "Full supported-device/screen-reader, live-browser interruption/visual and hosted collection acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { api, ApiFailure } from "@/lib/api";
+import { useAdmin } from "@/contexts/AdminContext";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 type Kind =
   | "resources"
@@ -193,14 +197,26 @@ export default function CollectionWorkspace({
 }: {
   initialKind: Kind;
 }) {
+  const { currentAdmin } = useAdmin();
+  const [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((v) => v + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  return (
+    <CollectionEditor
+      key={`${initialKind}:${currentAdmin?.id}:${currentAdmin?.role}:${epoch}`}
+      initialKind={initialKind}
+    />
+  );
+}
+function CollectionEditor({ initialKind }: { initialKind: Kind }) {
   const [kind, setKind] = useState<Kind>(initialKind),
-    [data, setData] = useState<Listing>(),
-    [capabilities, setCapabilities] = useState<Capabilities>(),
     [q, setQ] = useState(""),
     [state, setState] = useState("current"),
     [page, setPage] = useState(1),
     [refresh, setRefresh] = useState(0),
-    [loading, setLoading] = useState(true),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
   const [editor, setEditor] = useState<{
@@ -208,50 +224,121 @@ export default function CollectionWorkspace({
       values: Record<string, string>;
       teamId: string;
     } | null>(null),
-    [busy, setBusy] = useState(false),
     [errors, setErrors] = useState<Record<string, string>>({}),
     [confirm, setConfirm] = useState<{
       row: Row;
-      action: "archive" | "publish";
+      action: "archive" | "publish" | "unpublish" | "restore";
     }>(),
-    [discard, setDiscard] = useState(false);
+    [discard, setDiscard] = useState(false),
+    [conflict, setConflict] = useState(false);
   const original = useRef(""),
     retry = useRef<{ signature: string; key: string }>(),
     editorHeading = useRef<HTMLHeadingElement>(null),
+    reviewHeading = useRef<HTMLHeadingElement>(null),
+    errorFocus = useRef<HTMLParagraphElement>(null),
+    noticeFocus = useRef<HTMLParagraphElement>(null),
     spec = specifications[kind],
     prefix = "/admin/content-records/" + kind;
   const dirty = !!editor && JSON.stringify(editor) !== original.current,
     editorKey = editor ? editor.row?.id || "new" : null;
+  const selected = editor?.row || confirm?.row,
+    { isOnline } = useOnlineStatus(),
+    { busy, begin, current, finish, cancel, pending } =
+      usePrivateMutation(prefix);
+  const capRead = usePrivateRead<Capabilities>(
+      prefix + "/capabilities",
+      refresh,
+    ),
+    listRead = usePrivateRead<Listing>(
+      prefix + "?" + new URLSearchParams({ q, state, page: String(page) }),
+      refresh,
+    ),
+    detailRead = usePrivateRead<{ record: Row }>(
+      selected ? prefix + "/" + selected.id : undefined,
+      refresh,
+    );
+  const capabilities = capRead.data,
+    data = listRead.data,
+    loading = listRead.loading,
+    freshRow = detailRead.data?.record,
+    unavailable =
+      capRead.loading ||
+      !!capRead.error ||
+      listRead.loading ||
+      !!listRead.error ||
+      (!!selected && (detailRead.loading || !!detailRead.error || !freshRow)),
+    stale = !!selected && !!freshRow && selected.revision !== freshRow.revision,
+    canCreate = !!(capabilities?.globalCreate || capabilities?.teams.length),
+    denied =
+      !!editor &&
+      (editor.row ? !freshRow?.actions.includes("update") : !canCreate);
+  const { clear: clearCap } = capRead,
+    { clear: clearList } = listRead,
+    { clear: clearDetail } = detailRead;
+  useEffect(() => {
+    if (error) errorFocus.current?.focus();
+  }, [error]);
+  useEffect(() => {
+    if (notice) noticeFocus.current?.focus();
+  }, [notice]);
+  useEffect(() => {
+    if (confirm) reviewHeading.current?.focus();
+  }, [confirm]);
   useDraftGuard(dirty, { busy, label: "Content collection changes" });
+  useDraftGuard(!!confirm, {
+    busy,
+    label: "Content collection visibility review",
+  });
   useEffect(() => {
     document.title = spec.title + " · GDG workspace";
   }, [spec.title]);
   useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setData(undefined);
-    setError("");
-    Promise.all([
-      api<Listing>(
-        prefix + "?" + new URLSearchParams({ q, state, page: String(page) }),
-        { signal: controller.signal },
-      ),
-      api<Capabilities>(prefix + "/capabilities", {
-        signal: controller.signal,
-      }),
-    ])
-      .then(([rows, allowed]) => {
-        setData(rows);
-        setCapabilities(allowed);
-      })
-      .catch((e) => {
-        if (!controller.signal.aborted) setError(e.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
-      });
-    return () => controller.abort();
-  }, [prefix, q, state, page, refresh]);
+    const update = () => {
+      if (!pending.current) setRefresh((v) => v + 1);
+    };
+    const timer = setInterval(() => {
+      if (!document.hidden && navigator.onLine) update();
+    }, 30000);
+    window.addEventListener("gdg:access-changed", update);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("gdg:access-changed", update);
+    };
+  }, [pending]);
+  useEffect(() => {
+    if (capRead.denied || listRead.denied) {
+      cancel();
+      clearCap();
+      clearList();
+      clearDetail();
+      setEditor(null);
+      setConfirm(undefined);
+      setErrors({});
+      setDiscard(false);
+      setNotice("");
+      retry.current = undefined;
+    }
+  }, [
+    capRead.denied,
+    listRead.denied,
+    cancel,
+    clearCap,
+    clearList,
+    clearDetail,
+  ]);
+  useEffect(() => {
+    if (detailRead.denied) {
+      cancel();
+      clearDetail();
+      setEditor(null);
+      setConfirm(undefined);
+      setErrors({});
+      setDiscard(false);
+      setNotice("");
+      setError("This record is no longer available in your current access.");
+      retry.current = undefined;
+    }
+  }, [detailRead.denied, cancel, clearDetail]);
   useEffect(() => {
     if (!dirty) return;
     const warn = (event: BeforeUnloadEvent) => {
@@ -265,6 +352,12 @@ export default function CollectionWorkspace({
     if (editorKey) editorHeading.current?.focus();
   }, [editorKey]);
   const open = (row?: Row) => {
+    if (
+      pending.current ||
+      unavailable ||
+      (row ? !row.actions.includes("update") : !canCreate)
+    )
+      return;
     retry.current = undefined;
     const next = {
       row,
@@ -291,9 +384,49 @@ export default function CollectionWorkspace({
     setErrors({});
     setError("");
     setConfirm(undefined);
+    setConflict(false);
+    setNotice("");
+  };
+  const mutationDenied = (error: unknown) => {
+    if (
+      !(error instanceof ApiFailure) ||
+      ![401, 403, 404].includes(error.status)
+    )
+      return;
+    clearCap();
+    clearList();
+    clearDetail();
+    setEditor(null);
+    setConfirm(undefined);
+    setErrors({});
+    setDiscard(false);
+    retry.current = undefined;
+    setRefresh((v) => v + 1);
   };
   const mutate = async (row: Row, action: string) => {
-    setBusy(true);
+    const authoritative =
+      selected?.id === row.id
+        ? freshRow
+        : data?.items.find((r) => r.id === row.id);
+    if (
+      pending.current ||
+      !isOnline ||
+      unavailable ||
+      stale ||
+      conflict ||
+      !authoritative ||
+      authoritative.revision !== row.revision ||
+      !authoritative.actions.includes(
+        ["archive", "restore"].includes(action)
+          ? "delete"
+          : action === "duplicate"
+            ? "create"
+            : "publish",
+      )
+    )
+      return;
+    const controller = begin();
+    if (!controller) return;
     setError("");
     setNotice("");
     const identity = JSON.stringify([prefix, row.id, action, row.revision]);
@@ -305,7 +438,9 @@ export default function CollectionWorkspace({
         protected: true,
         body: { revision: row.revision, action },
         idempotencyKey: retry.current.key,
+        signal: controller.signal,
       });
+      if (!current(controller)) return;
       retry.current = undefined;
       setConfirm(undefined);
       setRefresh((v) => v + 1);
@@ -319,9 +454,12 @@ export default function CollectionWorkspace({
               : "Publication state updated.",
       );
     } catch (e) {
+      if (!current(controller)) return;
       setError((e as Error).message);
+      if (e instanceof ApiFailure && e.status === 409) setConflict(true);
+      mutationDenied(e);
     } finally {
-      setBusy(false);
+      finish(controller);
     }
   };
   const tabs: Kind[] =
@@ -340,11 +478,20 @@ export default function CollectionWorkspace({
           disabled={
             busy ||
             !!editor ||
+            !!confirm ||
+            unavailable ||
             !(capabilities?.globalCreate || capabilities?.teams.length)
           }
           onClick={() => open()}
         >
           Create draft
+        </Button>
+        <Button
+          variant="secondary"
+          disabled={busy}
+          onClick={() => setRefresh((v) => v + 1)}
+        >
+          Refresh content records
         </Button>
       </div>
       {tabs.length > 1 && (
@@ -353,12 +500,15 @@ export default function CollectionWorkspace({
             <Button
               key={value}
               variant={kind === value ? "primary" : "secondary"}
-              disabled={!!editor || busy}
+              disabled={!!editor || !!confirm || busy}
               aria-pressed={kind === value}
               onClick={() => {
                 setKind(value);
                 setPage(1);
                 setNotice("");
+                setError("");
+                setConflict(false);
+                retry.current = undefined;
               }}
             >
               {specifications[value].title}
@@ -367,14 +517,66 @@ export default function CollectionWorkspace({
         </div>
       )}
       {error && (
-        <p className="gt-form-error" role="alert">
+        <p
+          className="gt-form-error"
+          role="alert"
+          tabIndex={-1}
+          ref={errorFocus}
+        >
           {error}{" "}
-          <button type="button" onClick={() => setRefresh((v) => v + 1)}>
-            Retry loading
-          </button>
         </p>
       )}
-      {notice && <p role="status">{notice}</p>}
+      {notice && (
+        <p role="status" tabIndex={-1} ref={noticeFocus}>
+          {notice}
+        </p>
+      )}
+      {[
+        { name: "Collection permissions", ...capRead },
+        { name: "Content inventory", ...listRead },
+        { name: "Selected record", ...detailRead },
+      ].map((read) => (
+        <div key={read.name}>
+          {read.error && (
+            <p role="alert">
+              {read.name}: {read.error}{" "}
+              <Button
+                variant="ghost"
+                disabled={busy}
+                onClick={() => {
+                  document.getElementById("workspace-content")?.focus();
+                  setRefresh((v) => v + 1);
+                }}
+              >
+                Retry {read.name.toLowerCase()}
+              </Button>
+            </p>
+          )}
+          {read.data && (read.loading || read.error) && (
+            <p role="status">
+              {read.name} may be out of date. Last loaded{" "}
+              {new Date(read.at!).toLocaleString()}.
+            </p>
+          )}
+        </div>
+      ))}
+      {!isOnline && (
+        <p role="status">
+          You’re offline. Your input stays in this tab. Reconnect and save when
+          ready; nothing sends automatically.
+        </p>
+      )}
+      {(stale || conflict) && (
+        <p role="alert">
+          This record changed. Your input is preserved. Close and reopen the
+          editor or review before saving.
+        </p>
+      )}
+      {editor && denied && !unavailable && (
+        <p role="alert">
+          Your current access no longer permits saving this draft.
+        </p>
+      )}
       {editor && (
         <section className="gt-panel gt-event-editor">
           <h2 tabIndex={-1} ref={editorHeading}>
@@ -388,7 +590,26 @@ export default function CollectionWorkspace({
             className="gt-form"
             onSubmit={async (event) => {
               event.preventDefault();
-              setBusy(true);
+              if (
+                pending.current ||
+                !isOnline ||
+                unavailable ||
+                denied ||
+                stale ||
+                conflict
+              )
+                return;
+              if (
+                !(editor.teamId
+                  ? capabilities?.teams.some((t) => t.id === editor.teamId) ||
+                    editor.teamId === editor.row?.team_id
+                  : capabilities?.globalCreate)
+              ) {
+                setError("Choose a currently permitted owning scope.");
+                return;
+              }
+              const controller = begin();
+              if (!controller) return;
               setError("");
               setErrors({});
               try {
@@ -424,7 +645,9 @@ export default function CollectionWorkspace({
                   protected: true,
                   body,
                   idempotencyKey: retry.current.key,
+                  signal: controller.signal,
                 });
+                if (!current(controller)) return;
                 retry.current = undefined;
                 setEditor(null);
                 setRefresh((v) => v + 1);
@@ -432,10 +655,14 @@ export default function CollectionWorkspace({
                   "Saved as a private draft. Publish separately after review.",
                 );
               } catch (e) {
+                if (!current(controller)) return;
                 setError((e as Error).message);
                 if (e instanceof ApiFailure) setErrors(e.fields || {});
+                if (e instanceof ApiFailure && e.status === 409)
+                  setConflict(true);
+                mutationDenied(e);
               } finally {
-                setBusy(false);
+                finish(controller);
               }
             }}
           >
@@ -531,14 +758,28 @@ export default function CollectionWorkspace({
               })}
             </div>
             <div className="gt-actions">
-              <Button disabled={busy} type="submit">
+              <Button
+                disabled={
+                  busy ||
+                  !isOnline ||
+                  unavailable ||
+                  denied ||
+                  stale ||
+                  conflict
+                }
+                type="submit"
+              >
                 {busy ? "Saving…" : "Save changes"}
               </Button>
               <Button
                 disabled={busy}
                 type="button"
                 variant="secondary"
-                onClick={() => (dirty ? setDiscard(true) : setEditor(null))}
+                onClick={() =>
+                  dirty
+                    ? setDiscard(true)
+                    : (setEditor(null), setConflict(false), setError(""))
+                }
               >
                 Cancel editing
               </Button>
@@ -556,6 +797,9 @@ export default function CollectionWorkspace({
                     onClick={() => {
                       setEditor(null);
                       setDiscard(false);
+                      setConflict(false);
+                      setError("");
+                      retry.current = undefined;
                     }}
                   >
                     Discard changes
@@ -575,36 +819,62 @@ export default function CollectionWorkspace({
       )}
       {confirm && (
         <section className="gt-panel gt-operational-confirm">
-          <h2>
+          <h2 tabIndex={-1} ref={reviewHeading}>
             {confirm.action === "publish"
               ? "Publish this record?"
-              : "Move this record to archive?"}
+              : confirm.action === "archive"
+                ? "Move this record to archive?"
+                : confirm.action === "restore"
+                  ? "Restore this private draft?"
+                  : "Unpublish this record?"}
           </h2>
           <p>
             {rowLabel(confirm.row)}.{" "}
             {confirm.action === "publish"
               ? "This makes the approved content visible publicly."
-              : "This removes it from public pages. It remains recoverable from Archived records."}
+              : confirm.action === "restore"
+                ? "This restores a private draft without publishing it."
+                : "This removes it from public pages. It remains recoverable from Archived records."}
           </p>
           <div className="gt-actions">
             <Button
-              disabled={busy}
+              disabled={
+                busy ||
+                !isOnline ||
+                unavailable ||
+                stale ||
+                conflict ||
+                !freshRow?.actions.includes(
+                  ["archive", "restore"].includes(confirm.action)
+                    ? "delete"
+                    : "publish",
+                )
+              }
               variant={confirm.action === "archive" ? "danger" : "primary"}
               onClick={() => mutate(confirm.row, confirm.action)}
             >
-              Confirm {confirm.action === "publish" ? "publication" : "archive"}
+              Confirm{" "}
+              {confirm.action === "publish" ? "publication" : confirm.action}
             </Button>
             <Button
               variant="secondary"
               disabled={busy}
-              onClick={() => setConfirm(undefined)}
+              onClick={() => {
+                setConfirm(undefined);
+                setConflict(false);
+                setError("");
+                retry.current = undefined;
+              }}
             >
               Cancel
             </Button>
           </div>
         </section>
       )}
-      <div className="gt-toolbar">
+      <fieldset
+        className="gt-toolbar gt-plain-fieldset"
+        disabled={busy || !!editor || !!confirm}
+      >
         <SearchBox
           label="Search content"
           value={q}
@@ -627,9 +897,12 @@ export default function CollectionWorkspace({
             <option value="trash">Archived records</option>
           </select>
         </Field>
-      </div>
-      {loading ? (
-        <p role="status">Loading content…</p>
+      </fieldset>
+      {loading && !data ? (
+        <div role="status" aria-label="Loading content records">
+          <div className="gt-skeleton gt-overview-placeholder" />
+          <span className="sr-only">Loading content…</span>
+        </div>
       ) : data?.items.length ? (
         <div className="gt-table-wrap">
           <table className="gt-data-table">
@@ -677,7 +950,10 @@ export default function CollectionWorkspace({
                       {!row.deleted_at && row.actions.includes("update") && (
                         <Button
                           variant="secondary"
-                          disabled={busy || !!editor}
+                          disabled={
+                            busy || !!editor || !!confirm || unavailable
+                          }
+                          aria-label={"Edit " + rowLabel(row)}
                           onClick={() => open(row)}
                         >
                           Edit
@@ -688,7 +964,10 @@ export default function CollectionWorkspace({
                         row.actions.includes("create") && (
                           <Button
                             variant="secondary"
-                            disabled={busy || !!editor}
+                            disabled={
+                              busy || !!editor || !!confirm || unavailable
+                            }
+                            aria-label={"Duplicate " + rowLabel(row)}
                             onClick={() => mutate(row, "duplicate")}
                           >
                             Duplicate
@@ -697,12 +976,21 @@ export default function CollectionWorkspace({
                       {!row.deleted_at && row.actions.includes("publish") && (
                         <Button
                           variant="secondary"
-                          disabled={busy || !!editor}
-                          onClick={() =>
-                            row.is_active
-                              ? mutate(row, "unpublish")
-                              : setConfirm({ row, action: "publish" })
+                          disabled={
+                            busy || !!editor || !!confirm || unavailable
                           }
+                          aria-label={
+                            (row.is_active ? "Unpublish " : "Publish ") +
+                            rowLabel(row)
+                          }
+                          onClick={() => (
+                            setConflict(false),
+                            setConfirm({
+                              row,
+                              action: row.is_active ? "unpublish" : "publish",
+                            }),
+                            (retry.current = undefined)
+                          )}
                         >
                           {row.is_active ? "Unpublish" : "Publish"}
                         </Button>
@@ -710,12 +998,21 @@ export default function CollectionWorkspace({
                       {row.actions.includes("delete") && (
                         <Button
                           variant="secondary"
-                          disabled={busy || !!editor}
-                          onClick={() =>
-                            row.deleted_at
-                              ? mutate(row, "restore")
-                              : setConfirm({ row, action: "archive" })
+                          disabled={
+                            busy || !!editor || !!confirm || unavailable
                           }
+                          aria-label={
+                            (row.deleted_at ? "Restore draft " : "Archive ") +
+                            rowLabel(row)
+                          }
+                          onClick={() => (
+                            setConflict(false),
+                            setConfirm({
+                              row,
+                              action: row.deleted_at ? "restore" : "archive",
+                            }),
+                            (retry.current = undefined)
+                          )}
                         >
                           {row.deleted_at ? "Restore draft" : "Archive"}
                         </Button>
@@ -728,10 +1025,24 @@ export default function CollectionWorkspace({
           </table>
         </div>
       ) : (
-        !error && (
+        !listRead.error && (
           <EmptyState
             title={
               state === "trash" ? "No archived records" : "No matching content"
+            }
+            action={
+              q || state !== "current" ? (
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setQ("");
+                    setState("current");
+                    setPage(1);
+                  }}
+                >
+                  Reset content filters
+                </Button>
+              ) : undefined
             }
           >
             Create a private draft or change your search. Only permitted records
@@ -746,14 +1057,20 @@ export default function CollectionWorkspace({
           </span>
           <Button
             variant="secondary"
-            disabled={loading || page <= 1}
+            disabled={busy || !!editor || !!confirm || loading || page <= 1}
             onClick={() => setPage((value) => value - 1)}
           >
             Previous
           </Button>
           <Button
             variant="secondary"
-            disabled={loading || page * data.pageSize >= data.total}
+            disabled={
+              busy ||
+              !!editor ||
+              !!confirm ||
+              loading ||
+              page * data.pageSize >= data.total
+            }
             onClick={() => setPage((value) => value + 1)}
           >
             Next

@@ -8,6 +8,21 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Public-content collection editor recovery — 2026-11-04
+
+- Independent permission/inventory/detail reads, scoped cancellation and
+  account/role/session/collection isolation protect resources, sponsors and team
+  profiles. Current revisions/grants preserve stale drafts and block invalid
+  saves. Synchronous write guards, stable retries, explicit visibility reviews,
+  offline behavior and semantic focus are covered.
+- All 1,172 tests/142 files pass (23 focused collection cases). Global coverage
+  remains below 70%: 58.30% lines/56.97% branches; all 17 critical branch gates
+  pass. Types/lint (0 errors/25 warnings), build/budgets/secrets pass.
+- All 25 actual local API/DB checks pass and fixture cleanup is confirmed. Local
+  services restored. Browser automation unavailable; live browser interruption,
+  device/screen-reader/visual and hosted acceptance are not claimed. Catalog:
+  137 unverified cases. See `COLLECTION_RECOVERY.md`; full PRD remains open.
+
 ### Atomic CMS and public-content collection replay — 2026-10-27
 
 - Forward migration 110 adds actor-bound mutation deduplication with current

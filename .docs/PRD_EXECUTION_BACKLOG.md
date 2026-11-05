@@ -5,8 +5,8 @@ Reviewed against the complete v1.5 PRD on 2026-10-21, including normative sectio
 documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
-Current local verification update (2026-10-27): the latest module checkpoint is
-`CURATED_CONTENT_RETRIES.md`; completed recovery checkpoints include tasks,
+Current local verification update (2026-11-04): the latest module checkpoint is
+`COLLECTION_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -21,8 +21,17 @@ do not perform authentication or verification. No external integration is enable
 ## Feature implementation still required
 
 CMS and public-content collection mutation replay is now implemented locally
-(`CURATED_CONTENT_RETRIES.md`). Full collection-editor independent reads,
-account/session cancellation and selected-row recovery remain to be completed.
+(`CURATED_CONTENT_RETRIES.md`). Collection-editor independent reads,
+account/session cancellation and selected-row recovery are also implemented
+locally (`COLLECTION_RECOVERY.md`); supported-device, visual and hosted acceptance
+remain open.
+
+The November 4 source audit additionally confirms: Forms archive/close and access
+revocation need consequence reviews; collaborator candidates stop at 100 without
+search/paging; Forms delivery/retention initial failures need in-place retry;
+profile session/activity reads silently swallow failures. Complete Events, Teams,
+Users, profile/dashboard/audit and Forms recovery/navigation checks remain open.
+These are implementation gaps, separate from external launch inputs.
 
 Additional requests on 2026-10-21 are implemented locally: community directory
 (`/admin/members`) CSV import/export and notification Mark all read → Dismiss all.
@@ -142,10 +151,10 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is 58.01% lines/56.40% branches at the curated-retry checkpoint, below the global
-  70% gate; 1,151 tests pass, not a percentage of completed PRD features.
+coverage is 58.30% lines/56.97% branches at the collection-recovery checkpoint, below the global
+  70% gate; 1,172 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 136 reviewed logical test cases with
+  All 146 numbered requirements now map into 137 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.

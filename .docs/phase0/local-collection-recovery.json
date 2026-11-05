@@ -1,0 +1,109 @@
+{
+  "note": "Actual loopback resource/sponsor/public-team recovery using a fresh fictional officer and three new private drafts. Existing content and roles untouched. Fixtures recoverably archived; account disabled/sessions revoked. No public publication, external provider, real file, email or quota/job reset.",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "tests": [
+    {
+      "name": "resources: anonymous inventory denied",
+      "passed": true
+    },
+    {
+      "name": "resources: creation remains a private draft",
+      "passed": true
+    },
+    {
+      "name": "resources: unchanged create retry returns the same record",
+      "passed": true
+    },
+    {
+      "name": "resources: selected detail carries current action grants",
+      "passed": true
+    },
+    {
+      "name": "resources: current edit increments revision without publication",
+      "passed": true
+    },
+    {
+      "name": "resources: stale edit cannot overwrite the newer record",
+      "passed": true
+    },
+    {
+      "name": "resources: archive preserves recoverable private history",
+      "passed": true
+    },
+    {
+      "name": "resources: restore stays private",
+      "passed": true
+    },
+    {
+      "name": "sponsors: anonymous inventory denied",
+      "passed": true
+    },
+    {
+      "name": "sponsors: creation remains a private draft",
+      "passed": true
+    },
+    {
+      "name": "sponsors: unchanged create retry returns the same record",
+      "passed": true
+    },
+    {
+      "name": "sponsors: selected detail carries current action grants",
+      "passed": true
+    },
+    {
+      "name": "sponsors: current edit increments revision without publication",
+      "passed": true
+    },
+    {
+      "name": "sponsors: stale edit cannot overwrite the newer record",
+      "passed": true
+    },
+    {
+      "name": "sponsors: archive preserves recoverable private history",
+      "passed": true
+    },
+    {
+      "name": "sponsors: restore stays private",
+      "passed": true
+    },
+    {
+      "name": "team-profiles: anonymous inventory denied",
+      "passed": true
+    },
+    {
+      "name": "team-profiles: creation remains a private draft",
+      "passed": true
+    },
+    {
+      "name": "team-profiles: unchanged create retry returns the same record",
+      "passed": true
+    },
+    {
+      "name": "team-profiles: selected detail carries current action grants",
+      "passed": true
+    },
+    {
+      "name": "team-profiles: current edit increments revision without publication",
+      "passed": true
+    },
+    {
+      "name": "team-profiles: stale edit cannot overwrite the newer record",
+      "passed": true
+    },
+    {
+      "name": "team-profiles: archive preserves recoverable private history",
+      "passed": true
+    },
+    {
+      "name": "team-profiles: restore stays private",
+      "passed": true
+    },
+    {
+      "name": "deactivation revokes collection reads immediately",
+      "passed": true
+    }
+  ]
+}
