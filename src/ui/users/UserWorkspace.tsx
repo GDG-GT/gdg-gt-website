@@ -1,4 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { useAdmin } from "@/contexts/AdminContext";
+import ScrollableTable from "../ScrollableTable";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { api } from "@/lib/api";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
@@ -44,14 +48,36 @@ const verbs: Record<Action, string> = {
   reset: "Send new setup link",
   revoke_sessions: "Sign out all sessions",
 };
+type Sessions = {
+  items: {
+    id: string;
+    created_at: string;
+    last_seen_at: string;
+    idle_expires_at: string;
+  }[];
+};
 export default function UserWorkspace() {
-  const [data, setData] = useState<Listing>(),
-    [q, setQ] = useState(""),
+  const { currentAdmin } = useAdmin();
+  const [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((value) => value + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  if (!currentAdmin) return null;
+  return (
+    <AccountDirectory
+      key={`${currentAdmin.id}:${currentAdmin.role}:${epoch}`}
+    />
+  );
+}
+function AccountDirectory() {
+  const [q, setQ] = useState(""),
     [state, setState] = useState("current"),
     [role, setRole] = useState(""),
     [page, setPage] = useState(1),
     [refresh, setRefresh] = useState(0),
-    [loading, setLoading] = useState(true),
+    [blocked, setBlocked] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
   const [editor, setEditor] = useState<{
@@ -66,47 +92,53 @@ export default function UserWorkspace() {
     [currentPassword, setCurrentPassword] = useState(""),
     [confirmation, setConfirmation] = useState(""),
     [busy, setBusy] = useState(false);
-  const [sessions, setSessions] = useState<{
-    email: string;
-    items: {
-      id: string;
-      created_at: string;
-      last_seen_at: string;
-      idle_expires_at: string;
-    }[];
-  } | null>(null);
-  const heading = useRef<HTMLHeadingElement>(null);
+  const [sessionsTarget, setSessionsTarget] = useState<User | null>(null),
+    [sessionsRefresh, setSessionsRefresh] = useState(0);
+  const heading = useRef<HTMLHeadingElement>(null),
+    sessionsHeading = useRef<HTMLHeadingElement>(null),
+    sessionsOpener = useRef<HTMLElement>();
   const editing = !!editor,
     confirming = !!pending;
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError("");
-    api<Listing>(
+  const directory = usePrivateRead<Listing>(
       `/admin/users?${new URLSearchParams({ q, state, ...(role ? { role } : {}), page: String(page) })}`,
-      { signal: controller.signal },
-    )
-      .then(setData)
-      .catch((e) => {
-        if (!controller.signal.aborted) setError(e.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
-      });
-    return () => controller.abort();
-  }, [q, state, role, page, refresh]);
+      refresh,
+    ),
+    sessionRead = usePrivateRead<Sessions>(
+      sessionsTarget ? `/admin/users/${sessionsTarget.id}/sessions` : undefined,
+      sessionsRefresh,
+    ),
+    data = directory.data,
+    loading = directory.loading,
+    { isOnline } = useOnlineStatus(),
+    ready = !!data && !loading && !directory.error && isOnline,
+    denied = directory.denied || sessionRead.denied,
+    clearDirectory = directory.clear,
+    clearSessions = sessionRead.clear;
+  useEffect(() => {
+    if (!denied) return;
+    setBlocked(true);
+    clearDirectory();
+    clearSessions();
+    setEditor(null);
+    setPending(null);
+    setSessionsTarget(null);
+    setCurrentPassword("");
+    setConfirmation("");
+    setError("");
+    setNotice("");
+    sessionsOpener.current = undefined;
+  }, [denied, clearDirectory, clearSessions]);
+  useEffect(() => {
+    if (sessionsTarget) sessionsHeading.current?.focus();
+    else if (sessionsOpener.current) {
+      if (sessionsOpener.current.isConnected) sessionsOpener.current.focus();
+      else document.getElementById("workspace-content")?.focus();
+      sessionsOpener.current = undefined;
+    }
+  }, [sessionsTarget]);
   useEffect(() => {
     if (editing || confirming) heading.current?.focus();
   }, [editing, confirming]);
-  useEffect(() => {
-    if (!editor) return;
-    const warn = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = "";
-    };
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [editor]);
   useDraftGuard(!!editor || !!pending || !!currentPassword || !!confirmation, {
     busy,
     label: "Account or security changes",
@@ -120,6 +152,7 @@ export default function UserWorkspace() {
   }
   async function save(event: React.FormEvent) {
     event.preventDefault();
+    if (busy || !ready) return;
     setBusy(true);
     setError("");
     setNotice("");
@@ -166,7 +199,7 @@ export default function UserWorkspace() {
       setEditor(null);
       setPending(null);
       setConfirmation("");
-      setSessions(null);
+      setSessionsTarget(null);
       setRefresh((v) => v + 1);
     } catch (e) {
       setError(
@@ -178,6 +211,30 @@ export default function UserWorkspace() {
       setBusy(false);
     }
   }
+  const retryDirectory = () => {
+    setRefresh((value) => value + 1);
+    document.getElementById("workspace-content")?.focus();
+  };
+  if (blocked || denied)
+    return (
+      <EmptyState
+        title="Account access needs to be rechecked"
+        action={
+          <Button
+            disabled={!isOnline}
+            onClick={() => {
+              setBlocked(false);
+              setRefresh((value) => value + 1);
+            }}
+          >
+            Recheck account access
+          </Button>
+        }
+      >
+        Previous account, session and unsaved security information has been
+        cleared. Recheck current access before continuing.
+      </EmptyState>
+    );
   return (
     <div className="gt-admin-page">
       <header className="gt-admin-page-heading">
@@ -189,16 +246,59 @@ export default function UserWorkspace() {
           </p>
         </div>
         <Button
-          disabled={busy || !!editor || !!pending}
+          disabled={!ready || busy || !!editor || !!pending}
           onClick={() => {
             setEditor({ email: "", display_name: "", role: "team_member" });
             setCurrentPassword("");
-            setSessions(null);
+            setSessionsTarget(null);
           }}
         >
           Create account
         </Button>
       </header>
+      {!isOnline && (
+        <p role="status">
+          You are offline. Account changes and refresh wait for connectivity.
+          {directory.at && (
+            <>
+              {" "}
+              Directory snapshot from{" "}
+              <time dateTime={directory.at}>
+                {new Date(directory.at).toLocaleString()}
+              </time>
+              .
+            </>
+          )}
+        </p>
+      )}
+      {directory.error && (
+        <div className="gt-form-error" role="alert">
+          <p>{directory.error}</p>
+          {directory.at && (
+            <p>
+              Last successful account read:{" "}
+              <time dateTime={directory.at}>
+                {new Date(directory.at).toLocaleString()}
+              </time>
+              .
+            </p>
+          )}
+          <Button
+            variant="secondary"
+            disabled={busy || !isOnline || loading}
+            onClick={retryDirectory}
+          >
+            Retry account directory
+          </Button>
+        </div>
+      )}
+      <Button
+        variant="ghost"
+        disabled={!isOnline || busy || loading}
+        onClick={() => setRefresh((value) => value + 1)}
+      >
+        Refresh account directory
+      </Button>
       {error && (
         <p className="gt-form-error" role="alert">
           {error}{" "}
@@ -313,7 +413,9 @@ export default function UserWorkspace() {
               <Button
                 type="submit"
                 disabled={
-                  busy || (!!pending && confirmation !== pending.user.email)
+                  !ready ||
+                  busy ||
+                  (!!pending && confirmation !== pending.user.email)
                 }
               >
                 {busy
@@ -336,33 +438,90 @@ export default function UserWorkspace() {
           </form>
         </section>
       )}
-      {sessions && (
-        <section className="gt-panel">
-          <h2>Active sessions · {sessions.email}</h2>
+      {sessionsTarget && (
+        <section className="gt-panel" aria-label="Selected account sessions">
+          <h2 ref={sessionsHeading} tabIndex={-1}>
+            Active sessions · {sessionsTarget.email}
+          </h2>
           <p className="gt-helper">
             No IP addresses, cookies, or tokens are exposed. Up to 100 current
             sessions are shown.
           </p>
-          {sessions.items.length ? (
-            <ul>
-              {sessions.items.map((s) => (
-                <li key={s.id}>
-                  Signed in {new Date(s.created_at).toLocaleString()} · last
-                  active {new Date(s.last_seen_at).toLocaleString()}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No active sessions.</p>
+          <Button
+            variant="ghost"
+            disabled={!isOnline || busy || sessionRead.loading}
+            onClick={() => setSessionsRefresh((value) => value + 1)}
+          >
+            Refresh account sessions
+          </Button>
+          {sessionRead.loading && !sessionRead.data && (
+            <div role="status" aria-label="Loading selected account sessions">
+              <div className="gt-skeleton gt-detail-skeleton" />
+              <span className="sr-only">Loading account sessions…</span>
+            </div>
           )}
-          <Button variant="secondary" onClick={() => setSessions(null)}>
+          {sessionRead.error && (
+            <div role="alert">
+              <p>{sessionRead.error}</p>
+              {sessionRead.at && (
+                <p>
+                  Last successful session read:{" "}
+                  <time dateTime={sessionRead.at}>
+                    {new Date(sessionRead.at).toLocaleString()}
+                  </time>
+                  .
+                </p>
+              )}
+              <Button
+                variant="secondary"
+                disabled={!isOnline || busy || sessionRead.loading}
+                onClick={() => setSessionsRefresh((value) => value + 1)}
+              >
+                Retry account sessions
+              </Button>
+            </div>
+          )}
+          {!isOnline && sessionRead.at && (
+            <p role="status">
+              Session snapshot from{" "}
+              <time dateTime={sessionRead.at}>
+                {new Date(sessionRead.at).toLocaleString()}
+              </time>
+              ; offline information may be out of date.
+            </p>
+          )}
+          {sessionRead.data &&
+            (sessionRead.data.items.length ? (
+              <ul>
+                {sessionRead.data.items.map((session) => (
+                  <li key={session.id}>
+                    Signed in {new Date(session.created_at).toLocaleString()} ·
+                    last active{" "}
+                    {new Date(session.last_seen_at).toLocaleString()}
+                  </li>
+                ))}
+              </ul>
+            ) : !sessionRead.loading && !sessionRead.error ? (
+              <p>No active sessions.</p>
+            ) : null)}
+          <Button
+            variant="secondary"
+            disabled={busy}
+            onClick={() => setSessionsTarget(null)}
+          >
             Close session details
           </Button>
         </section>
       )}
-      <div className="gt-toolbar">
+      {data && loading && (
+        <p role="status">
+          Refreshing accounts; the last matching snapshot remains visible.
+        </p>
+      )}
+      <fieldset disabled={busy} className="gt-toolbar gt-account-filters">
         <SearchBox
           label="Search account emails"
+          maxLength={100}
           placeholder="Search email addresses"
           value={q}
           onChange={(v) => {
@@ -401,15 +560,15 @@ export default function UserWorkspace() {
             ))}
           </select>
         </Field>
-      </div>
-      {loading ? (
+      </fieldset>
+      {loading && !data ? (
         <div
           className="gt-skeleton gt-detail-skeleton"
           role="status"
           aria-label="Loading accounts"
         />
       ) : data?.items.length ? (
-        <div className="gt-table-wrap">
+        <ScrollableTable label="Chapter accounts table">
           <table className="gt-data-table gt-account-table">
             <caption className="sr-only">
               Chapter accounts and authorized access actions
@@ -472,7 +631,7 @@ export default function UserWorkspace() {
                           <>
                             <Button
                               variant="ghost"
-                              disabled={busy || !!editor || !!pending}
+                              disabled={!ready || busy || !!editor || !!pending}
                               onClick={() => {
                                 setEditor({
                                   user,
@@ -487,24 +646,11 @@ export default function UserWorkspace() {
                             </Button>
                             <Button
                               variant="ghost"
-                              onClick={async () => {
-                                try {
-                                  const r = await api<{
-                                    items: NonNullable<
-                                      typeof sessions
-                                    >["items"];
-                                  }>(`/admin/users/${user.id}/sessions`);
-                                  setSessions({
-                                    email: user.email,
-                                    items: r.items,
-                                  });
-                                } catch (e) {
-                                  setError(
-                                    e instanceof Error
-                                      ? e.message
-                                      : "Sessions could not load.",
-                                  );
-                                }
+                              disabled={!ready || busy}
+                              onClick={(event) => {
+                                sessionsOpener.current = event.currentTarget;
+                                setSessionsTarget(user);
+                                setSessionsRefresh((value) => value + 1);
                               }}
                             >
                               Sessions
@@ -525,7 +671,7 @@ export default function UserWorkspace() {
                           <Button
                             key={value}
                             variant="ghost"
-                            disabled={busy || !!editor || !!pending}
+                            disabled={!ready || busy || !!editor || !!pending}
                             onClick={() => {
                               setPending({ user, action: value as Action });
                               setCurrentPassword("");
@@ -542,10 +688,30 @@ export default function UserWorkspace() {
               ))}
             </tbody>
           </table>
-        </div>
+        </ScrollableTable>
       ) : (
+        data &&
+        !loading &&
+        !directory.error &&
         !error && (
-          <EmptyState title="No matching accounts">
+          <EmptyState
+            title="No matching accounts"
+            action={
+              q || state !== "current" || role ? (
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setQ("");
+                    setState("current");
+                    setRole("");
+                    setPage(1);
+                  }}
+                >
+                  Reset account filters
+                </Button>
+              ) : undefined
+            }
+          >
             Try another email or status filter. New accounts receive a private
             setup link.
           </EmptyState>
@@ -558,14 +724,22 @@ export default function UserWorkspace() {
           </span>
           <Button
             variant="secondary"
-            disabled={loading || page <= 1}
+            disabled={
+              loading || busy || !isOnline || !!directory.error || page <= 1
+            }
             onClick={() => setPage((v) => v - 1)}
           >
             Previous
           </Button>
           <Button
             variant="secondary"
-            disabled={loading || page * data.pageSize >= data.total}
+            disabled={
+              loading ||
+              busy ||
+              !isOnline ||
+              !!directory.error ||
+              page * data.pageSize >= data.total
+            }
             onClick={() => setPage((v) => v + 1)}
           >
             Next

@@ -1,0 +1,94 @@
+{
+  "generatedAt": "2026-11-05T23:50:18.988Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and Chromium desktop/mobile account-directory/session reads with controlled interruptions/denial and unsaved editor input. Fresh Super Admin and member fixture accounts disabled and sessions revoked. No account mutation was submitted by the browser, no setup/reset/provider send or existing account/session change. Browser non-read API/external requests blocked; realtime paused. Captures ignored/private; no credentials or response bodies retained.",
+  "tests": [
+    {
+      "name": "anonymous account read denied for directory",
+      "passed": true
+    },
+    {
+      "name": "ordinary member account read denied for directory",
+      "passed": true
+    },
+    {
+      "name": "anonymous account read denied for sessions",
+      "passed": true
+    },
+    {
+      "name": "ordinary member account read denied for sessions",
+      "passed": true
+    },
+    {
+      "name": "authorized account directory returns the literal filtered uncached safe projection",
+      "passed": true
+    },
+    {
+      "name": "authorized selected-account sessions are uncached and omit bearer/IP data",
+      "passed": true
+    },
+    {
+      "name": "actual account directory retry restores current data and workspace focus at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "failed directory refresh retains timestamped rows/editor input while security/session actions are disabled at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "actual selected-account session retry is independent from directory reads at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "failed actual session refresh retains its own timestamped inventory at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated directory/sessions pass measured axe checks at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "denied account session read clears directory/private state before explicit access recheck at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "directory recovery preserves keyboard table access without page errors, writes, external requests or overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "actual account directory retry restores current data and workspace focus at 375×812",
+      "passed": true
+    },
+    {
+      "name": "failed directory refresh retains timestamped rows/editor input while security/session actions are disabled at 375×812",
+      "passed": true
+    },
+    {
+      "name": "actual selected-account session retry is independent from directory reads at 375×812",
+      "passed": true
+    },
+    {
+      "name": "failed actual session refresh retains its own timestamped inventory at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated directory/sessions pass measured axe checks at 375×812",
+      "passed": true
+    },
+    {
+      "name": "denied account session read clears directory/private state before explicit access recheck at 375×812",
+      "passed": true
+    },
+    {
+      "name": "directory recovery preserves keyboard table access without page errors, writes, external requests or overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read recovery leaves the owned target account revision/access unchanged",
+      "passed": true
+    }
+  ]
+}

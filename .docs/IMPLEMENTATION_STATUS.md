@@ -8,6 +8,26 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Account-directory and selected-account session reads — 2026-11-05
+
+- Keyed independent directory/session reads cancel and hide replaced queries,
+  retain timestamped matching snapshots on temporary failure and clear all
+  private rows/editor credentials on denial. Context replacement remounts state.
+  Stale/offline reads disable account changes; unsaved editor fields survive
+  transient reads. Session retry, focus return, filter reset and named keyboard
+  table access are covered. Account-write recovery remains separate work.
+- All 1,343 tests/155 files pass (16 new cases). Coverage still fails 70%:
+  61.52% lines/60.87% branches; all 17 critical-file branch gates pass. All 21
+  actual API/DB/desktop-mobile browser checks pass, including populated measured
+  axe. Fictional accounts disabled/sessions revoked; target unchanged before
+  cleanup. No setup/reset mail or existing account/session change.
+- Catalog: 149 unverified cases. Account-write/selected-record revision recovery
+  and broader browser/role/manual/device/visual/hosted acceptance remain open.
+  See `USER_READ_RECOVERY.md`; full PRD remains open.
+- Types/lint (zero errors/25 warnings), build/budgets/secrets and traceability
+  pass. The complete production-build browser matrix passes 112 applicable
+  checks with eight expected profile skips. Captures remain unapproved candidates.
+
 ### Overview private reads and widget retry — 2026-11-05
 
 - Cancellable overview reads and account/role/session remounts fence private

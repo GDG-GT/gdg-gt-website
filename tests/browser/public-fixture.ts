@@ -108,6 +108,7 @@ export const test = base.extend<{ fixture: PublicFixture }>({
                 "/admin/guide",
                 "/admin/events",
                 "/admin/audit-log",
+                "/admin/users",
               ],
             });
             return;
@@ -162,6 +163,10 @@ export const test = base.extend<{ fixture: PublicFixture }>({
                 memberships: ready({ items: [] }),
               },
             });
+            return;
+          }
+          if (path === "/admin/users") {
+            await reply(200, { ...empty, actorId: fictionalUser.id });
             return;
           }
           if (path === "/admin/audit") {

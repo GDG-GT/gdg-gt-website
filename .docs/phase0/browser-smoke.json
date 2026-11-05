@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-11-05T23:08:01.215Z",
+  "generatedAt": "2026-11-05T23:55:44.626Z",
   "completed": true,
   "playwrightVersion": "1.64.1",
   "platform": "darwin",
   "arch": "arm64",
   "stats": {
-    "startTime": "2026-11-05T23:04:20.126Z",
-    "duration": 138416.93,
-    "expected": 94,
+    "startTime": "2026-11-05T23:53:18.135Z",
+    "duration": 134505.494,
+    "expected": 112,
     "skipped": 8,
     "unexpected": 0,
     "flaky": 0
@@ -639,6 +639,14 @@
       ]
     },
     {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
       "name": "workspace /admin/profile keeps shared labels and actions readable",
       "project": "chromium-1920",
       "expected": "passed",
@@ -665,6 +673,30 @@
     {
       "name": "workspace /admin/events keeps shared labels and actions readable",
       "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "chromium-1440",
       "expected": "passed",
       "results": [
         "passed"
@@ -703,6 +735,30 @@
       ]
     },
     {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
       "name": "workspace /admin/profile keeps shared labels and actions readable",
       "project": "chromium-mobile",
       "expected": "passed",
@@ -735,6 +791,30 @@
       ]
     },
     {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
       "name": "workspace /admin/profile keeps shared labels and actions readable",
       "project": "firefox-1440",
       "expected": "passed",
@@ -767,6 +847,30 @@
       ]
     },
     {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
       "name": "workspace /admin/profile keeps shared labels and actions readable",
       "project": "webkit-1440",
       "expected": "passed",
@@ -793,6 +897,30 @@
     {
       "name": "workspace /admin/events keeps shared labels and actions readable",
       "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "webkit-mobile",
       "expected": "passed",
       "results": [
         "passed"
@@ -824,6 +952,22 @@
     },
     {
       "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
       "project": "webkit-mobile",
       "expected": "passed",
       "results": [

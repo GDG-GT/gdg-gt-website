@@ -2774,6 +2774,27 @@
         "28.4",
         "31.2"
       ]
+    },
+    {
+      "id": "AUTH-TEST-005",
+      "requirements": [],
+      "scope": "Independent account-directory and selected-account session reads, keyed cancellation, context/denial clearing, retained drafts on transient reads and stale-action safeguards",
+      "automated": [
+        "tests/client/user-directory-read-recovery.test.tsx",
+        "scripts/test-local-user-read-recovery.mjs",
+        "tests/browser/workspace-smoke.spec.ts"
+      ],
+      "remaining": [
+        "Account mutation cancellation/replay, selected-record revision reviews and remaining supported-browser/role/device/manual/visual/hosted acceptance remain separate work",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {
