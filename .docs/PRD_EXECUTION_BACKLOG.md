@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-05): the latest module checkpoint is
-`WORKSPACE_BROWSER_ACCESSIBILITY.md`; completed recovery checkpoints include tasks,
+`PROFILE_MUTATION_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -32,8 +32,11 @@ candidate/collaborator search/paging are now closed locally
 Form library availability reviews and delivery/retention initial
 read retry are also closed locally (`FORM_AVAILABILITY_RECOVERY.md`);
 profile session/activity read recovery is also closed locally
-(`PROFILE_READ_RECOVERY.md`). Complete Events, Teams,
-Users, profile/dashboard/audit and Forms recovery/navigation checks remain open.
+(`PROFILE_READ_RECOVERY.md`). Own-profile mutation and reviewed session recovery
+are now closed locally (`PROFILE_MUTATION_RECOVERY.md`), including actual
+accepted-but-dropped save reconciliation. Complete Events, Teams,
+Users, dashboard/audit and Forms recovery/navigation checks remain open, as do
+the remaining browser/device/manual acceptance matrices.
 These are implementation gaps, separate from external launch inputs.
 
 Additional requests on 2026-10-21 are implemented locally: community directory
@@ -154,10 +157,10 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is 59.31% lines/58.33% branches at the workspace-browser checkpoint, below the global
-  70% gate; 1,224 tests pass, not a percentage of completed PRD features.
+  coverage is 59.68% lines/58.60% branches at the profile-mutation checkpoint, below the global
+  70% gate; 1,242 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 143 reviewed logical test cases with
+  All 146 numbered requirements now map into 144 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.

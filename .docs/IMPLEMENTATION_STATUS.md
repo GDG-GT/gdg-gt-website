@@ -8,6 +8,25 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Own-profile saves, password validation and session consequence reviews — 2026-11-05
+
+- Scoped cancellable writes, synchronous pending/input guards and explicit
+  confirmed-versus-uncertain recovery now protect profile/security changes.
+  Current saved values can be compared with retained drafts after read-only
+  recovery. Other-session revocation names its target/consequences and rechecks
+  current inventory. Wrong current password is field validation, preserving a
+  valid session; actual expiry/revocation still rejects authentication.
+- All 1,242 tests/148 files pass (46 focused/18 new mutation cases), along with
+  15 actual API/DB and 18 actual desktop/mobile browser checks. Fixtures cleaned
+  up; no existing account, bootstrap password or unrelated session changed.
+  Coverage still fails 70%: 59.68% lines/58.60% branches; all 17 critical-file
+  branch gates pass. Types/lint pass (zero errors/25 warnings).
+- All 18 targeted shared-workspace production browser checks pass after the
+  changes; full-suite evidence remains separate. Build/budgets/secrets pass.
+- Catalog: 144 unverified cases. Full browser interruption/role matrix, manual
+  accessibility/device/zoom, visual and hosted acceptance remain open. See
+  `PROFILE_MUTATION_RECOVERY.md`; full PRD remains open.
+
 ### Workspace browser contrast and keyboard-table recovery — 2026-11-05
 
 - Corrected measured topbar/action/Forms label contrast with existing neutral

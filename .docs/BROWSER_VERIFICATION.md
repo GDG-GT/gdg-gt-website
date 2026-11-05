@@ -36,6 +36,8 @@ rejected. The API fixture remains enabled regardless of origin. Results and
 unapproved review captures are in ignored `artifacts/browser/`; the sanitized
 invocation summary is `phase0/browser-smoke.json`. Filtered invocations record
 only the tests actually selected; no report approves acceptance automatically.
+Use `npm run test:browser:report -- --file profile-workspace-browser.json` after
+a filtered run to keep its evidence separate from the last full invocation.
 
 The new PR CI job uses the matching official Playwright container pinned by
 digest, Node 24, all six projects and retained reports/review candidates. Local

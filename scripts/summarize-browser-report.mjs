@@ -11,6 +11,15 @@ const require = createRequire(import.meta.url),
     await readFile(require.resolve("@playwright/test/package.json"), "utf8"),
   ).version,
   tests = [];
+const args = process.argv.slice(2),
+  file = args.length ? args[1] : "browser-smoke.json";
+if (
+  args.length &&
+  (args.length !== 2 ||
+    args[0] !== "--file" ||
+    !/^[a-z0-9][a-z0-9-]{0,63}\.json$/.test(file))
+)
+  throw Error("Use --file with a simple evidence JSON basename.");
 function visit(suites) {
   for (const suite of suites) {
     for (const spec of suite.specs || [])
@@ -44,12 +53,12 @@ const summary =
     null,
     2,
   ) + "\n";
+await writeFile(new URL("../.docs/phase0/" + file, import.meta.url), summary);
 await writeFile(
-  new URL("../.docs/phase0/browser-smoke.json", import.meta.url),
-  summary,
-);
-await writeFile(
-  new URL("../artifacts/browser/summary.json", import.meta.url),
+  new URL(
+    "../artifacts/browser/" + (args.length ? file : "summary.json"),
+    import.meta.url,
+  ),
   summary,
 );
 console.log(

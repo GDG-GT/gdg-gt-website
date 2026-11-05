@@ -284,7 +284,12 @@ export function createAuthHandler({
           const body = await jsonBody(request, passwordSchema, 4096);
           const account = await store.accountByEmail(session.user.email);
           if (!(await verify(body.currentPassword, account?.password_hash)))
-            throw failure();
+            throw new ApiError(
+              400,
+              "VALIDATION_ERROR",
+              "Your current password could not be confirmed.",
+              { currentPassword: "Check your current password." },
+            );
           if (body.currentPassword === body.newPassword)
             throw new ApiError(
               400,

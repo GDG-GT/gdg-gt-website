@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-11-05T22:16:27.502Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback profile/password/session operations affect only one fresh fictional account, its new unpublished profile and its three owned browser sessions. Account disabled, profile archived, sessions revoked. Existing account/password/session/content and bootstrap login untouched. No mail/provider, quota reset, publication or production changes. Passwords/cookies/response bodies are not retained.",
+  "tests": [
+    {
+      "name": "incorrect current password produces field validation rather than a missing-session response",
+      "passed": true
+    },
+    {
+      "name": "incorrect current password leaves the authenticated current session valid",
+      "passed": true
+    },
+    {
+      "name": "incorrect current password does not revoke another session",
+      "passed": true
+    },
+    {
+      "name": "own display-name save is visible through the actual private account read",
+      "passed": true
+    },
+    {
+      "name": "new own team profile stays unpublished after save",
+      "passed": true
+    },
+    {
+      "name": "independent fictional sessions are represented before reviewed revocation",
+      "passed": true
+    },
+    {
+      "name": "other-session sign-out revokes the other fictional browser",
+      "passed": true
+    },
+    {
+      "name": "other-session sign-out preserves the current browser",
+      "passed": true
+    },
+    {
+      "name": "password reuse is associated with the new-password field",
+      "passed": true
+    },
+    {
+      "name": "accepted password rotation returns only private safe confirmation material",
+      "passed": true
+    },
+    {
+      "name": "accepted password rotation revokes the other newly opened session",
+      "passed": true
+    },
+    {
+      "name": "the pre-rotation current cookie cannot be replayed",
+      "passed": true
+    },
+    {
+      "name": "the rotated current browser remains signed in",
+      "passed": true
+    },
+    {
+      "name": "only the new fictional password matches the stored hash",
+      "passed": true
+    },
+    {
+      "name": "the final fictional current session is logged out",
+      "passed": true
+    }
+  ]
+}

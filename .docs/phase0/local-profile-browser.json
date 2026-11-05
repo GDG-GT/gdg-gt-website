@@ -1,0 +1,82 @@
+{
+  "generatedAt": "2026-11-05T22:21:23.486Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual local browser UI/API/DB profile/password-error/session-review operations on one fresh fictional account and its owned browser sessions at desktop/mobile. All unrelated mutation paths/external origins blocked; realtime paused. Wrong password never accepted; no existing account/password/session, provider, publication, quota reset or production change. Fixture account disabled and sessions revoked; no password/cookie/body retained.",
+  "tests": [
+    {
+      "name": "actual browser saves only its owned display name at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "an accepted but dropped save is reconciled with visible saved values without resending at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "incorrect-current-password feedback is attached to its field without losing the account view at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "wrong current password leaves the other owned browser signed in at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "session sign-out explains its exact consequence before any revocation at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "cancelling session review preserves the other owned session at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "confirmed browser session review revokes the other owned browser at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "confirmed session revocation preserves the current browser at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "browser workflow performs one reviewed revocation without page errors or unrelated requests at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "actual browser saves only its owned display name at 375×812",
+      "passed": true
+    },
+    {
+      "name": "an accepted but dropped save is reconciled with visible saved values without resending at 375×812",
+      "passed": true
+    },
+    {
+      "name": "incorrect-current-password feedback is attached to its field without losing the account view at 375×812",
+      "passed": true
+    },
+    {
+      "name": "wrong current password leaves the other owned browser signed in at 375×812",
+      "passed": true
+    },
+    {
+      "name": "session sign-out explains its exact consequence before any revocation at 375×812",
+      "passed": true
+    },
+    {
+      "name": "cancelling session review preserves the other owned session at 375×812",
+      "passed": true
+    },
+    {
+      "name": "confirmed browser session review revokes the other owned browser at 375×812",
+      "passed": true
+    },
+    {
+      "name": "confirmed session revocation preserves the current browser at 375×812",
+      "passed": true
+    },
+    {
+      "name": "browser workflow performs one reviewed revocation without page errors or unrelated requests at 375×812",
+      "passed": true
+    }
+  ]
+}

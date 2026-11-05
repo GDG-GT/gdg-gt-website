@@ -1260,7 +1260,7 @@ add(
   "Own-profile independent session/activity read errors, retries, stale snapshots, denied-state clearing and account/session isolation",
   ["tests/client/profile-read-recovery.test.tsx", local("profile-reads")],
   [
-    "Profile mutation recovery, live browser outage/role changes, full screen-reader/device and hosted acceptance",
+    "Live browser outage/role changes, full screen-reader/device and hosted acceptance; mutation recovery has its own mapped case",
   ],
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
@@ -1341,6 +1341,22 @@ add(
   ],
 );
 prdTestCases.at(-1).normative = ["10.6", "12.1", "13.3", "23", "28.3", "31.2"];
+
+add(
+  "AUTH-TEST-004",
+  "",
+  "Own-profile pending snapshot/cancellation, acknowledged versus uncertain writes, password-field validation without invalidating a valid session, consequence-reviewed other-session revocation and actual owned browser recovery",
+  [
+    "tests/client/profile-mutation-recovery.test.tsx",
+    unit("auth"),
+    local("profile-mutations"),
+    local("profile-browser"),
+  ],
+  [
+    "Complete browser offline/role/outage/uncertain-write matrix, manual assistive-technology/device/zoom, visual and hosted acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
 
 export const requirementOverrides = {
   "FORM-007":

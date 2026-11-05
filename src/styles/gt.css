@@ -2933,12 +2933,18 @@ img {
   flex-direction: column;
   gap: 20px;
 }
-fieldset.gt-access-fields {
+fieldset.gt-access-fields,
+fieldset.gt-profile-fields {
   border: 0;
   padding: 0;
   margin: 0;
   min-width: 0;
 }
+.gt-profile-readback { margin-block: 20px; }
+.gt-profile-readback summary { cursor: pointer; font-weight: 650; }
+.gt-profile-readback dl { display: grid; gap: 12px; margin-top: 16px; }
+.gt-profile-readback dt { color: var(--text-secondary); }
+.gt-profile-readback dd { margin: 0; overflow-wrap: anywhere; }
 .gt-form h2 {
   margin-bottom: -8px;
 }

@@ -2520,7 +2520,7 @@
         "scripts/test-local-profile-reads.mjs"
       ],
       "remaining": [
-        "Profile mutation recovery, live browser outage/role changes, full screen-reader/device and hosted acceptance",
+        "Live browser outage/role changes, full screen-reader/device and hosted acceptance; mutation recovery has its own mapped case",
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified",
@@ -2652,6 +2652,28 @@
         "13.3",
         "23",
         "28.3",
+        "31.2"
+      ]
+    },
+    {
+      "id": "AUTH-TEST-004",
+      "requirements": [],
+      "scope": "Own-profile pending snapshot/cancellation, acknowledged versus uncertain writes, password-field validation without invalidating a valid session, consequence-reviewed other-session revocation and actual owned browser recovery",
+      "automated": [
+        "tests/client/profile-mutation-recovery.test.tsx",
+        "tests/server/auth.test.mjs",
+        "scripts/test-local-profile-mutations.mjs",
+        "scripts/test-local-profile-browser.mjs"
+      ],
+      "remaining": [
+        "Complete browser offline/role/outage/uncertain-write matrix, manual assistive-technology/device/zoom, visual and hosted acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "28.4",
         "31.2"
       ]
     }
