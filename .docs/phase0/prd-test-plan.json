@@ -2629,6 +2629,31 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "A11Y-TEST-009",
+      "requirements": [
+        "FORM-026"
+      ],
+      "scope": "Authenticated workspace contrast, keyboard-scrollable named tables, desktop/mobile overflow and scroll, private browser read inventory and shared-shell browser regressions",
+      "automated": [
+        "tests/client/scrollable-table.test.tsx",
+        "tests/browser/workspace-smoke.spec.ts",
+        "scripts/test-local-workspace-browser.mjs"
+      ],
+      "remaining": [
+        "All populated/private roles and dialogs, complete keyboard critical paths, real device/Safari/screen-reader runs, visual approval and hosted acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.6",
+        "12.1",
+        "13.3",
+        "23",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

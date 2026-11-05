@@ -43,6 +43,19 @@ recoverably archived. `-- --hold-for-browser` accepts `change` (remote pin) and
 
 ## Start or resume
 
+The existing private development login is stored in `.docs/local-auth.local`.
+On November 5 its saved account was missing, with zero active accounts and
+unexpired sessions in the loopback database. It was recovered using the same
+saved credentials and matching gate; no existing password/account was reset.
+All 16 actual local authentication checks pass (`phase0/local-bootstrap-recovery.json`).
+
+`npm run setup:local-auth -- --recover-missing-account` handles only this narrow
+missing-account case. It requires both existing private bootstrap files, matching
+dedicated local configuration/gate, no active account and no unexpired session.
+It refuses a changed existing bootstrap account. Ordinary bootstrap behavior
+still refuses adding an account beside existing records. Do not run recovery
+while an active account/session exists; no production bootstrap is provided.
+
 Run these in separate terminals as needed. Starting an already-running listener
 can fail with an occupied-port error; inspect the existing task process first.
 

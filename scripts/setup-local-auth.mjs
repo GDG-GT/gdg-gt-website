@@ -10,6 +10,9 @@ import { serverDatabase } from "../server/db/client.mjs";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const envFile = path.join(root, ".env.server.local");
 const credentialsFile = path.join(root, ".docs/local-auth.local");
+const recoverMissing = process.argv.includes("--recover-missing-account");
+if (process.argv.slice(2).some((arg) => arg !== "--recover-missing-account"))
+  throw Error("Unknown local auth setup option.");
 const exists = async (file) => {
   try {
     await access(file, constants.F_OK);
@@ -41,6 +44,10 @@ if (!serviceKey)
   );
 const haveEnv = await exists(envFile),
   haveCredentials = await exists(credentialsFile);
+if (recoverMissing && (!haveEnv || !haveCredentials))
+  throw Error(
+    "Recovery requires the existing private loopback configuration and saved credentials.",
+  );
 if (haveEnv !== haveCredentials)
   throw new Error(
     "Partial local bootstrap files exist; refusing to overwrite credentials.",
@@ -120,19 +127,42 @@ if (existing) {
   const { count, error } = await db
     .from("admin_users")
     .select("id", { head: true, count: "exact" });
-  if (error || count !== 0)
+  if (error || (count !== 0 && !recoverMissing))
     throw new Error(
       "Refusing to add a bootstrap admin beside existing accounts.",
     );
-  const { error: insertError } = await db
-    .from("admin_users")
-    .insert({
-      email: credentials.email,
-      password_hash: await hashSecret(credentials.password),
-      role: "super_admin",
-      is_active: true,
-      display_name: "Local Development Admin",
-    });
+  if (recoverMissing && count !== 0) {
+    const accounts = await db
+        .from("admin_users")
+        .select("id", { head: true, count: "exact" })
+        .eq("is_active", true),
+      sessions = await db
+        .from("admin_sessions")
+        .select("id", { head: true, count: "exact" })
+        .is("revoked_at", null)
+        .gt("absolute_expires_at", new Date().toISOString())
+        .gt("idle_expires_at", new Date().toISOString());
+    if (
+      accounts.error ||
+      sessions.error ||
+      accounts.count !== 0 ||
+      sessions.count !== 0
+    )
+      throw Error(
+        "Missing-account recovery requires zero active local accounts and zero unexpired sessions; nothing was changed.",
+      );
+    if (!(await verifySecret(credentials.gateCode, env.ADMIN_GATE_SECRET_HASH)))
+      throw Error(
+        "Saved gate does not match the existing local configuration; nothing was changed.",
+      );
+  }
+  const { error: insertError } = await db.from("admin_users").insert({
+    email: credentials.email,
+    password_hash: await hashSecret(credentials.password),
+    role: "super_admin",
+    is_active: true,
+    display_name: "Local Development Admin",
+  });
   if (insertError)
     throw new Error(
       "Local account creation failed; private bootstrap files were preserved for retry.",

@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-11-05T04:12:18.077Z",
+  "generatedAt": "2026-11-05T22:08:07.029Z",
   "completed": true,
   "playwrightVersion": "1.64.1",
   "platform": "darwin",
   "arch": "arm64",
   "stats": {
-    "startTime": "2026-11-05T04:09:35.130Z",
-    "duration": 114270.212,
-    "expected": 70,
+    "startTime": "2026-11-05T22:05:53.330Z",
+    "duration": 113562.139,
+    "expected": 88,
     "skipped": 8,
     "unexpected": 0,
     "flaky": 0
@@ -636,6 +636,150 @@
       "expected": "skipped",
       "results": [
         "skipped"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
       ]
     }
   ]

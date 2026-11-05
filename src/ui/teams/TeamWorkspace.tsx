@@ -1,3 +1,4 @@
+import ScrollableTable from "@/ui/ScrollableTable";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
@@ -755,7 +756,11 @@ export default function TeamWorkspace() {
               </span>
             </div>
             <div className="gt-button-row">
-              <FormIntegrations kind="team" resourceId={workspace.team.id} disabled={!!mode || busy} />
+              <FormIntegrations
+                kind="team"
+                resourceId={workspace.team.id}
+                disabled={!!mode || busy}
+              />
               {workspace.actions.settings && (
                 <>
                   <Button
@@ -827,7 +832,7 @@ export default function TeamWorkspace() {
                   </Button>
                 )}
               </header>
-              <div className="gt-table-wrap">
+              <ScrollableTable label="Team memberships table">
                 <table className="gt-data-table">
                   <caption className="sr-only">
                     Team members and membership history
@@ -901,7 +906,7 @@ export default function TeamWorkspace() {
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </ScrollableTable>
             </section>
           )}
           {tab === "announcements" && (

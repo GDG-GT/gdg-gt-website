@@ -8,6 +8,26 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Workspace browser contrast and keyboard-table recovery — 2026-11-05
+
+- Corrected measured topbar/action/Forms label contrast with existing neutral
+  tokens and admin coral. Named focusable table regions now provide horizontal
+  keyboard scrolling without intercepting nested controls. Private browser
+  artifacts reject through Vite's direct and filesystem paths (HTTP 403).
+- All 93 real authenticated loopback checks pass across 31 default workspace
+  routes/states and three viewports. No page errors, failed reads, overflow,
+  scrolling or axe violations. Probe fixtures archived/account disabled/sessions
+  revoked; no existing chapter data was changed. Focused keyboard/profile/widget
+  tests pass (18 cases). All 1,224 tests/147 files and 88 applicable browser
+  checks pass (eight explicit profile skips). Coverage still fails 70%:
+  59.31% lines/58.33% branches; all 17 critical-file branch gates pass.
+- Saved loopback bootstrap account recovered only after confirming zero active
+  accounts/sessions; existing saved credentials/gate retained. All 16 actual auth
+  checks pass. No existing account/password, provider or production changes.
+- Catalog: 143 unverified cases. Initial/default views do not close populated,
+  mutation, role, dialog, device/manual, visual, performance or hosted gates.
+  See `WORKSPACE_BROWSER_ACCESSIBILITY.md`; full PRD remains open.
+
 ### Public production-build and live browser verification — 2026-11-04
 
 - Pinned Playwright 1.64.1 now covers six Chromium/Firefox/WebKit desktop/mobile

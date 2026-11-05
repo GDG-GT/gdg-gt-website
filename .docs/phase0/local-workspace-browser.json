@@ -1,0 +1,1883 @@
+{
+  "generatedAt": "2026-11-05T22:05:43.885Z",
+  "completed": true,
+  "passed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "artifactProtection": [
+    {
+      "path": "/artifacts/:private-capture",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "path": "/@fs/:workspace/artifacts/:private-capture",
+      "status": 403,
+      "passed": true
+    }
+  ],
+  "note": "Actual loopback authenticated workspace read audit, one fresh fictional Super Admin/team/private draft. Non-read APIs and external origins blocked after fixture login; realtime grant acquisition intentionally paused. No sends, publication, existing-account/content mutation or production change. Owned form/team archived; account disabled and sessions revoked. Local screenshots remain ignored/private. Findings are not visual, manual-accessibility or hosted approval.",
+  "tests": [
+    {
+      "name": "/admin at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1490,
+        "mainHeight": 1412,
+        "mainScrollHeight": 1412,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/events at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 591,
+        "mainScrollHeight": 591,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/content at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 674,
+        "mainScrollHeight": 674,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/team at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 617,
+        "mainScrollHeight": 617,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/projects at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 847,
+        "mainScrollHeight": 847,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/members at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 863,
+        "mainScrollHeight": 863,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/resources at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 617,
+        "mainScrollHeight": 617,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/newsletter at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 833,
+        "mainScrollHeight": 833,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/blog at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 755,
+        "mainScrollHeight": 755,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/users at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 734,
+        "mainScrollHeight": 734,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/profile at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1850,
+        "mainHeight": 1772,
+        "mainScrollHeight": 1772,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/sponsors at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 661,
+        "mainScrollHeight": 661,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/communications at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 689,
+        "mainScrollHeight": 689,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/media at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 845,
+        "mainScrollHeight": 845,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/guide at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 2371,
+        "mainHeight": 2293,
+        "mainScrollHeight": 2293,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/linktree at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 680,
+        "mainScrollHeight": 680,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/site-status at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 422,
+        "mainScrollHeight": 422,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/teams at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 761,
+        "mainScrollHeight": 761,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/channels at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 460,
+        "mainScrollHeight": 460,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/whiteboard at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 619,
+        "mainScrollHeight": 619,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/gallery at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 845,
+        "mainScrollHeight": 845,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/finances at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1363,
+        "mainHeight": 1285,
+        "mainScrollHeight": 1285,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/audit-log at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 5091,
+        "mainHeight": 5013,
+        "mainScrollHeight": 5013,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/privacy at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1541,
+        "mainHeight": 1463,
+        "mainScrollHeight": 1463,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/operations at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 2350,
+        "mainHeight": 2272,
+        "mainScrollHeight": 2272,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/blog-editor at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1491,
+        "mainHeight": 1413,
+        "mainScrollHeight": 1413,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/blog-media at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1215,
+        "mainHeight": 1137,
+        "mainScrollHeight": 1137,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/forms at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1591,
+        "mainHeight": 1513,
+        "mainScrollHeight": 1513,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/team/owned-team at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 498,
+        "mainScrollHeight": 498,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/forms/owned-form/edit at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1080,
+        "mainHeight": 987,
+        "mainScrollHeight": 987,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/forms/owned-form/responses at 1920×1080",
+      "passed": true,
+      "layout": {
+        "width": 1920,
+        "scrollWidth": 1920,
+        "height": 1080,
+        "scrollHeight": 1661,
+        "mainHeight": 1583,
+        "mainScrollHeight": 1583,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 1657,
+        "mainHeight": 1579,
+        "mainScrollHeight": 1579,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/events at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 900,
+        "mainHeight": 591,
+        "mainScrollHeight": 591,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/content at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 900,
+        "mainHeight": 674,
+        "mainScrollHeight": 674,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/team at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 900,
+        "mainHeight": 617,
+        "mainScrollHeight": 617,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/projects at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 925,
+        "mainHeight": 847,
+        "mainScrollHeight": 847,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/members at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 941,
+        "mainHeight": 863,
+        "mainScrollHeight": 863,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/resources at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 900,
+        "mainHeight": 617,
+        "mainScrollHeight": 617,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/newsletter at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 911,
+        "mainHeight": 833,
+        "mainScrollHeight": 833,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/blog at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 900,
+        "mainHeight": 755,
+        "mainScrollHeight": 755,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/users at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 900,
+        "mainHeight": 734,
+        "mainScrollHeight": 734,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/profile at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 2143,
+        "mainHeight": 2065,
+        "mainScrollHeight": 2065,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/sponsors at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 900,
+        "mainHeight": 661,
+        "mainScrollHeight": 661,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/communications at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 900,
+        "mainHeight": 689,
+        "mainScrollHeight": 689,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/media at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 942,
+        "mainHeight": 864,
+        "mainScrollHeight": 864,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/guide at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 2763,
+        "mainHeight": 2685,
+        "mainScrollHeight": 2685,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/linktree at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 900,
+        "mainHeight": 680,
+        "mainScrollHeight": 680,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/site-status at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 900,
+        "mainHeight": 422,
+        "mainScrollHeight": 422,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/teams at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 900,
+        "mainHeight": 761,
+        "mainScrollHeight": 761,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/channels at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 900,
+        "mainHeight": 460,
+        "mainScrollHeight": 460,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/whiteboard at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 900,
+        "mainHeight": 619,
+        "mainScrollHeight": 619,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/gallery at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 942,
+        "mainHeight": 864,
+        "mainScrollHeight": 864,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/finances at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 1363,
+        "mainHeight": 1285,
+        "mainScrollHeight": 1285,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/audit-log at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 5091,
+        "mainHeight": 5013,
+        "mainScrollHeight": 5013,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/privacy at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 1583,
+        "mainHeight": 1505,
+        "mainScrollHeight": 1505,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/operations at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 2370,
+        "mainHeight": 2292,
+        "mainScrollHeight": 2292,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/blog-editor at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 1491,
+        "mainHeight": 1413,
+        "mainScrollHeight": 1413,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/blog-media at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 1215,
+        "mainHeight": 1137,
+        "mainScrollHeight": 1137,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/forms at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 1591,
+        "mainHeight": 1513,
+        "mainScrollHeight": 1513,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/team/owned-team at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 900,
+        "mainHeight": 498,
+        "mainScrollHeight": 498,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/forms/owned-form/edit at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 955,
+        "mainHeight": 877,
+        "mainScrollHeight": 877,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/forms/owned-form/responses at 1440×900",
+      "passed": true,
+      "layout": {
+        "width": 1440,
+        "scrollWidth": 1440,
+        "height": 900,
+        "scrollHeight": 1661,
+        "mainHeight": 1583,
+        "mainScrollHeight": 1583,
+        "headings": 1,
+        "contentTop": 78
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 3158,
+        "mainHeight": 3094,
+        "mainScrollHeight": 3094,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/events at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 812,
+        "mainHeight": 707,
+        "mainScrollHeight": 707,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/content at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 1076,
+        "mainHeight": 1012,
+        "mainScrollHeight": 1012,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/team at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 921,
+        "mainHeight": 857,
+        "mainScrollHeight": 857,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/projects at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 1254,
+        "mainHeight": 1190,
+        "mainScrollHeight": 1190,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/members at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 1393,
+        "mainHeight": 1329,
+        "mainScrollHeight": 1329,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/resources at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 921,
+        "mainHeight": 857,
+        "mainScrollHeight": 857,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/newsletter at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 1380,
+        "mainHeight": 1316,
+        "mainScrollHeight": 1316,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/blog at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 1203,
+        "mainHeight": 1139,
+        "mainScrollHeight": 1139,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/users at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 1156,
+        "mainHeight": 1092,
+        "mainScrollHeight": 1092,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/profile at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 3595,
+        "mainHeight": 3531,
+        "mainScrollHeight": 3531,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/sponsors at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 1019,
+        "mainHeight": 955,
+        "mainScrollHeight": 955,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/communications at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 1254,
+        "mainHeight": 1190,
+        "mainScrollHeight": 1190,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/media at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 1378,
+        "mainHeight": 1314,
+        "mainScrollHeight": 1314,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/guide at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 6172,
+        "mainHeight": 6108,
+        "mainScrollHeight": 6108,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/linktree at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 898,
+        "mainHeight": 834,
+        "mainScrollHeight": 834,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/site-status at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 812,
+        "mainHeight": 590,
+        "mainScrollHeight": 590,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/teams at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 1156,
+        "mainHeight": 1092,
+        "mainScrollHeight": 1092,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/channels at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 881,
+        "mainHeight": 817,
+        "mainScrollHeight": 817,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/whiteboard at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 812,
+        "mainHeight": 722,
+        "mainScrollHeight": 722,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/gallery at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 1290,
+        "mainHeight": 1226,
+        "mainScrollHeight": 1226,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/finances at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 2161,
+        "mainHeight": 2097,
+        "mainScrollHeight": 2097,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/audit-log at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 5698,
+        "mainHeight": 5634,
+        "mainScrollHeight": 5634,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/privacy at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 2142,
+        "mainHeight": 2078,
+        "mainScrollHeight": 2078,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/operations at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 2878,
+        "mainHeight": 2814,
+        "mainScrollHeight": 2814,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/blog-editor at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 1990,
+        "mainHeight": 1926,
+        "mainScrollHeight": 1926,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/blog-media at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 1664,
+        "mainHeight": 1600,
+        "mainScrollHeight": 1600,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/forms at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 2910,
+        "mainHeight": 2846,
+        "mainScrollHeight": 2846,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/team/owned-team at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 948,
+        "mainHeight": 884,
+        "mainScrollHeight": 884,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/forms/owned-form/edit at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 1060,
+        "mainHeight": 996,
+        "mainScrollHeight": 996,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    },
+    {
+      "name": "/admin/forms/owned-form/responses at 375×812",
+      "passed": true,
+      "layout": {
+        "width": 375,
+        "scrollWidth": 375,
+        "height": 812,
+        "scrollHeight": 2393,
+        "mainHeight": 2329,
+        "mainScrollHeight": 2329,
+        "headings": 1,
+        "contentTop": 64
+      },
+      "scrolled": true,
+      "pageErrorNames": [],
+      "failedReads": [],
+      "violations": [],
+      "blockedWrites": [],
+      "realtimeGrantsPaused": 1
+    }
+  ]
+}

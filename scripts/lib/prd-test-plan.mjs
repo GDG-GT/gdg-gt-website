@@ -1327,6 +1327,21 @@ add(
 );
 prdTestCases.at(-1).normative = ["10.6", "10.10", "12.1", "12.4", "13.3", "28.3", "31.2"];
 
+add(
+  "A11Y-TEST-009",
+  "FORM-026",
+  "Authenticated workspace contrast, keyboard-scrollable named tables, desktop/mobile overflow and scroll, private browser read inventory and shared-shell browser regressions",
+  [
+    "tests/client/scrollable-table.test.tsx",
+    "tests/browser/workspace-smoke.spec.ts",
+    local("workspace-browser"),
+  ],
+  [
+    "All populated/private roles and dialogs, complete keyboard critical paths, real device/Safari/screen-reader runs, visual approval and hosted acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["10.6", "12.1", "13.3", "23", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

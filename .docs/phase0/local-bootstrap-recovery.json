@@ -1,0 +1,71 @@
+{
+  "generatedAt": "2026-11-05T22:09:10.523Z",
+  "completed": true,
+  "note": "Saved bootstrap account was absent; no active account or unexpired session existed before recovery. Recreated only the saved loopback bootstrap using its existing private credentials and matching gate; no password reset, existing account mutation, environment rewrite, provider or production action. Fresh actual local HTTP/auth/security checks passed; probe session logged out and replay denied.",
+  "tests": [
+    {
+      "name": "anonymous direct table access is denied: admin_users",
+      "passed": true
+    },
+    {
+      "name": "anonymous direct table access is denied: events",
+      "passed": true
+    },
+    {
+      "name": "anonymous direct security RPC access is denied",
+      "passed": true
+    },
+    {
+      "name": "live login requires a gate",
+      "passed": true
+    },
+    {
+      "name": "live origin validation rejects cross-origin mutations",
+      "passed": true
+    },
+    {
+      "name": "live gate verifies the protected hash and sets a cookie",
+      "passed": true
+    },
+    {
+      "name": "live login rejects a supplied role",
+      "passed": true
+    },
+    {
+      "name": "live password verification creates a server session",
+      "passed": true
+    },
+    {
+      "name": "live session response is private and contains no bearer token or password hash",
+      "passed": true
+    },
+    {
+      "name": "live database stores only the opaque token hash",
+      "passed": true
+    },
+    {
+      "name": "live CSRF is hashed and bound to the session",
+      "passed": true
+    },
+    {
+      "name": "live session resolves current account and memberships",
+      "passed": true
+    },
+    {
+      "name": "live unsigned identity cookies cannot authenticate",
+      "passed": true
+    },
+    {
+      "name": "live logout requires the bound CSRF token",
+      "passed": true
+    },
+    {
+      "name": "live logout revokes the session and clears both cookies",
+      "passed": true
+    },
+    {
+      "name": "a replayed logged-out cookie is rejected",
+      "passed": true
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import ScrollableTable from "@/ui/ScrollableTable";
 import { useState, useEffect, type FormEvent } from "react";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -341,7 +342,7 @@ function ProfileEditor() {
           retry={() => setSessionsRefresh((value) => value + 1)}
         />
         {sessions.length ? (
-          <div className="gt-table-wrap">
+          <ScrollableTable label="Active sessions table">
             <table className="gt-data-table">
               <thead>
                 <tr>
@@ -362,7 +363,7 @@ function ProfileEditor() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </ScrollableTable>
         ) : sessionsRead.data ? (
           <EmptyState title="No active sessions to show" />
         ) : null}

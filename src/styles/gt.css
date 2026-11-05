@@ -3419,6 +3419,7 @@ fieldset.gt-access-fields {
 
 /* Shared product register. Existing operational pages inherit these tokens. */
 .gt-admin-app {
+  --coral: #ad4033;
   background: var(--workspace);
   min-height: 100vh;
   font-size: 0.875rem;
@@ -3525,7 +3526,7 @@ fieldset.gt-access-fields {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #8b7667;
+  color: var(--text-secondary);
   font-size: 0.7rem;
   white-space: nowrap;
 }
@@ -3552,7 +3553,7 @@ fieldset.gt-access-fields {
   padding: 2px 5px;
   border-radius: 3px;
   border: 1px solid #e7dcd3;
-  color: #8c7868;
+  color: var(--text-secondary);
   font-size: 0.55rem;
 }
 .gt-workspace-account {
@@ -3573,7 +3574,7 @@ fieldset.gt-access-fields {
   display: block;
   text-transform: capitalize;
   font-size: 0.6rem;
-  color: #877264;
+  color: var(--text-secondary);
   margin-top: 2px;
 }
 .gt-avatar {
@@ -4402,7 +4403,7 @@ fieldset.gt-access-fields {
   display: flex;
   justify-content: space-between;
   font-size: 0.58rem;
-  color: #95775e;
+  color: var(--text-secondary);
 }
 .gt-form-name {
   display: flex;
@@ -4420,7 +4421,7 @@ fieldset.gt-access-fields {
 .gt-form-name small {
   display: block;
   font-size: 0.57rem;
-  color: #99795f;
+  color: var(--text-secondary);
   margin-top: 5px;
 }
 .gt-form-file-icon {
@@ -4440,7 +4441,7 @@ fieldset.gt-access-fields {
   margin-top: 4px;
 }
 .gt-forms-template-panel > p {
-  color: #997b63;
+  color: var(--text-secondary);
   font-size: 0.7rem;
   margin-top: 8px;
   margin-bottom: 25px;
@@ -4469,7 +4470,7 @@ fieldset.gt-access-fields {
   display: block;
   font-size: 0.61rem;
   line-height: 1.7;
-  color: #99785c;
+  color: var(--text-secondary);
   margin-top: 6px;
 }
 .gt-forms-template-panel button > svg {
@@ -4483,7 +4484,7 @@ fieldset.gt-access-fields {
   border-radius: 12px;
   padding: 24px;
   margin-top: 30px;
-  color: #a26f49;
+  color: var(--text-secondary);
 }
 .gt-template-tip h3 {
   font-size: 1rem;
@@ -4579,7 +4580,7 @@ fieldset.gt-access-fields {
 .gt-palette-group > h3 {
   font-size: 0.59rem;
   font-weight: 650;
-  color: #94704e;
+  color: var(--text-secondary);
   letter-spacing: 0.04em;
   margin-bottom: 9px;
 }
@@ -4682,7 +4683,7 @@ fieldset.gt-access-fields {
   background: none;
   border: 0;
   font-size: 0.56rem;
-  color: #a07d5a;
+  color: var(--text-secondary);
 }
 .gt-field-toolbar > div {
   display: flex;
@@ -4723,7 +4724,7 @@ fieldset.gt-access-fields {
   border: 1px dashed #d8bca1;
   border-radius: 8px;
   background: var(--surface-raised);
-  color: #a0714d;
+  color: var(--text-secondary);
   font-size: 0.68rem;
 }
 .gt-builder-validation {
@@ -4746,12 +4747,12 @@ fieldset.gt-access-fields {
 .gt-builder-validation li {
   font-size: 0.58rem;
   margin-top: 5px;
-  color: #987658;
+  color: var(--text-secondary);
 }
 .gt-builder-hint {
   text-align: center;
   font-size: 0.58rem;
-  color: #9f7e61;
+  color: var(--text-secondary);
 }
 .gt-builder-inspector .gt-form {
   margin-top: 22px;
@@ -4827,10 +4828,10 @@ fieldset.gt-access-fields {
   border: 0;
   border-bottom: 2px solid transparent;
   font-size: 0.69rem;
-  color: #9a7859;
+  color: var(--text-secondary);
 }
 .gt-tabs > button[aria-selected="true"] {
-  color: #a85a37;
+  color: var(--coral);
   font-weight: 650;
   border-bottom-color: #c27b53;
 }
@@ -5265,7 +5266,7 @@ fieldset.gt-access-fields {
   gap: 5px;
   background: none;
   border: 0;
-  color: #a5673e;
+  color: var(--coral);
   font-size: 0.7rem;
   padding: 6px;
 }

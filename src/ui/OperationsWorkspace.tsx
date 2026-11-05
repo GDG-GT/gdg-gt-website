@@ -1,3 +1,4 @@
+import ScrollableTable from "@/ui/ScrollableTable";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Badge, Button, EmptyState } from "./primitives";
@@ -181,7 +182,7 @@ export default function OperationsWorkspace() {
                 of an incident.
               </p>
               {active.length ? (
-                <div className="gt-table-wrap">
+                <ScrollableTable label="Operational alerts table">
                   <table className="gt-data-table">
                     <thead>
                       <tr>
@@ -202,7 +203,7 @@ export default function OperationsWorkspace() {
                       ))}
                     </tbody>
                   </table>
-                </div>
+                </ScrollableTable>
               ) : (
                 <EmptyState
                   title={
@@ -238,7 +239,7 @@ export default function OperationsWorkspace() {
             >
               <h2 id="operations-jobs-heading">Latest scheduled runs</h2>
               {status.jobs.length ? (
-                <div className="gt-table-wrap">
+                <ScrollableTable label="Scheduled job runs table">
                   <table className="gt-data-table">
                     <thead>
                       <tr>
@@ -266,7 +267,7 @@ export default function OperationsWorkspace() {
                       ))}
                     </tbody>
                   </table>
-                </div>
+                </ScrollableTable>
               ) : (
                 <EmptyState title="No runs recorded">
                   Start the separate authenticated scheduler; browser timers do
@@ -287,7 +288,7 @@ export default function OperationsWorkspace() {
           not considered removed until physical cleanup succeeds. Holds and
           financial evidence are not bypassed.
         </p>
-        <div className="gt-table-wrap">
+        <ScrollableTable label="Retention policies table">
           <table className="gt-data-table">
             <thead>
               <tr>
@@ -304,7 +305,7 @@ export default function OperationsWorkspace() {
               ))}
             </tbody>
           </table>
-        </div>
+        </ScrollableTable>
       </section>
     </div>
   );

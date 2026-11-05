@@ -1,3 +1,4 @@
+import ScrollableTable from "@/ui/ScrollableTable";
 import {
   useCallback,
   useEffect,
@@ -906,7 +907,10 @@ function ProjectsWorkspaceContent() {
             {listing.stats.completed} completed · {listing.stats.featured}{" "}
             featured. Statistics follow filters and current access.
           </p>
-          <div className="gt-table-scroll">
+          <ScrollableTable
+            label="Private projects table"
+            className="gt-table-scroll"
+          >
             <table className="gt-data-table">
               <caption className="sr-only">Authorized private projects</caption>
               <thead>
@@ -956,7 +960,7 @@ function ProjectsWorkspaceContent() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </ScrollableTable>
           {!listing.items.length && (
             <EmptyState headingLevel={2} title="No matching projects">
               Try another filter or create a private project.
@@ -1079,7 +1083,10 @@ function ProjectsWorkspaceContent() {
           <p>
             Removal does not delete a community record or change chapter access.
           </p>
-          <div className="gt-table-scroll">
+          <ScrollableTable
+            label="Project participants table"
+            className="gt-table-scroll"
+          >
             <table className="gt-data-table">
               <caption className="sr-only">Project participants</caption>
               <thead>
@@ -1122,7 +1129,7 @@ function ProjectsWorkspaceContent() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </ScrollableTable>
           {!detail.members.length && <p>No participants yet.</p>}
           <nav aria-label="Participant pages" className="gt-actions">
             <Button

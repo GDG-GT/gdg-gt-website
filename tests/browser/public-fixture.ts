@@ -2,16 +2,28 @@ import { test as base, expect, type Page } from "@playwright/test";
 import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 export type PublicFixture = {
+  authenticated: boolean;
   failEvents: boolean;
   failedHome: boolean;
   writes: string[];
   unexpected: string[];
 };
 const empty = { items: [], total: 0, page: 1, pageSize: 30 };
+const fictionalUser = {
+  id: "fbbb0000-0000-4000-8000-000000000001",
+  display_name: "Fictional browser reviewer",
+  email: "fictional-browser@example.test",
+  role: "super_admin",
+  is_active: true,
+  must_change_password: false,
+  revision: 1,
+  created_at: "2026-11-04T12:00:00Z",
+};
 export const test = base.extend<{ fixture: PublicFixture }>({
   fixture: [
     async ({ page, baseURL }, use) => {
       const state: PublicFixture = {
+        authenticated: false,
         failEvents: false,
         failedHome: false,
         writes: [],
@@ -52,14 +64,77 @@ export const test = base.extend<{ fixture: PublicFixture }>({
                   },
             ),
           });
+        if (
+          state.authenticated &&
+          ["/auth/realtime-token", "/realtime/token"].includes(path)
+        ) {
+          await reply(503, null);
+          return;
+        }
         if (request.method() !== "GET") {
           state.writes.push(request.method() + " " + path);
           await reply(403, null);
           return;
         }
         if (path === "/auth/session") {
-          await reply(401, null);
+          await reply(
+            state.authenticated ? 200 : 401,
+            state.authenticated
+              ? {
+                  user: fictionalUser,
+                  csrfToken: "fictional-browser-csrf",
+                  sessionBinding: "a".repeat(64),
+                }
+              : null,
+          );
           return;
+        }
+        if (state.authenticated && path.startsWith("/admin/")) {
+          if (path === "/admin/me") {
+            await reply(200, {
+              user: fictionalUser,
+              memberships: [],
+              profile: null,
+            });
+            return;
+          }
+          if (path === "/admin/access") {
+            await reply(200, {
+              allowed: true,
+              accessibleRoutes: [
+                "/admin/profile",
+                "/admin/forms",
+                "/admin/guide",
+              ],
+            });
+            return;
+          }
+          if (path === "/admin/me/sessions") {
+            await reply(200, {
+              items: [
+                {
+                  id: "fictional-current-session",
+                  current: true,
+                  created_at: "2026-11-04T12:00:00Z",
+                  last_seen_at: "2026-11-05T11:00:00Z",
+                  absolute_expires_at: "2026-11-12T12:00:00Z",
+                },
+              ],
+            });
+            return;
+          }
+          if (path === "/admin/me/activity") {
+            await reply(200, { items: [] });
+            return;
+          }
+          if (path === "/admin/notifications") {
+            await reply(200, { ...empty, unreadCount: 0 });
+            return;
+          }
+          if (path === "/admin/forms" || path === "/admin/forms/filters") {
+            await reply(200, { ...empty, canCreate: true });
+            return;
+          }
         }
         if (path === "/site-status") {
           await reply(200, {

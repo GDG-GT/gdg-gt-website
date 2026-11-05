@@ -1,3 +1,4 @@
+import ScrollableTable from "@/ui/ScrollableTable";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   useApprovedSearchParams,
@@ -27,7 +28,11 @@ import {
   countLabel,
 } from "./types";
 type Mode =
-  "profile_create" | "profile_edit" | "link_create" | "link_edit" | null;
+  | "profile_create"
+  | "profile_edit"
+  | "link_create"
+  | "link_edit"
+  | null;
 type Pending = {
   action: string;
   revision: number;
@@ -202,8 +207,10 @@ function LinktreeWorkspaceContent() {
   useEffect(() => {
     if (error || notice) feedback.current?.focus();
   }, [error, notice]);
-  const clearCapabilities = capabilities.clear, clearInventory = inventory.clear,
-    clearDefinition = definition.clear, clearReport = report.clear,
+  const clearCapabilities = capabilities.clear,
+    clearInventory = inventory.clear,
+    clearDefinition = definition.clear,
+    clearReport = report.clear,
     definitionDenied = definition.denied;
   useEffect(() => {
     if (blocked || definitionDenied) {
@@ -1063,7 +1070,7 @@ function LinktreeWorkspaceContent() {
       />
       {list && (
         <>
-          <div className="gt-table-wrap">
+          <ScrollableTable label="Linktree profiles table">
             <table className="gt-data-table">
               <caption className="sr-only">
                 Authorized Linktree profiles
@@ -1114,7 +1121,7 @@ function LinktreeWorkspaceContent() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </ScrollableTable>
           {list.items.length === 0 && (
             <EmptyState
               headingLevel={2}
@@ -1254,7 +1261,7 @@ function LinktreeWorkspaceContent() {
               Archived links
             </label>
           </div>
-          <div className="gt-table-wrap">
+          <ScrollableTable label="Profile links table">
             <table className="gt-data-table">
               <caption className="sr-only">
                 Profile links in display order
@@ -1403,7 +1410,7 @@ function LinktreeWorkspaceContent() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </ScrollableTable>
           {!detail.links.length && (
             <p>
               No {trash ? "archived" : "current"} links. A profile can have up
@@ -1465,7 +1472,7 @@ function LinktreeWorkspaceContent() {
                 <div className="gt-finance-report-grid">
                   <section>
                     <h4>By day (UTC)</h4>
-                    <div className="gt-table-wrap">
+                    <ScrollableTable label="Linktree daily analytics table">
                       <table className="gt-data-table">
                         <thead>
                           <tr>
@@ -1484,11 +1491,11 @@ function LinktreeWorkspaceContent() {
                           ))}
                         </tbody>
                       </table>
-                    </div>
+                    </ScrollableTable>
                   </section>
                   <section>
                     <h4>By link</h4>
-                    <div className="gt-table-wrap">
+                    <ScrollableTable label="Linktree link analytics table">
                       <table className="gt-data-table">
                         <thead>
                           <tr>
@@ -1505,7 +1512,7 @@ function LinktreeWorkspaceContent() {
                           ))}
                         </tbody>
                       </table>
-                    </div>
+                    </ScrollableTable>
                   </section>
                 </div>
                 {!analytics.days.length && (

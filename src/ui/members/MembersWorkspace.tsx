@@ -1,3 +1,4 @@
+import ScrollableTable from "@/ui/ScrollableTable";
 import {
   useCallback,
   useEffect,
@@ -387,9 +388,19 @@ export default function MembersWorkspace() {
           </Button>
         </div>
       </header>
-      <MemberTransfers cap={cap} disabled={busy || !!mode} onImported={() => setTick((v) => v + 1)}
-        filters={{ q, state, ...(category ? { category } : {}), ...(year ? { year } : {}),
-          ...(active ? { active: active === "true" } : {}), ...(core ? { core: core === "true" } : {}) }} />
+      <MemberTransfers
+        cap={cap}
+        disabled={busy || !!mode}
+        onImported={() => setTick((v) => v + 1)}
+        filters={{
+          q,
+          state,
+          ...(category ? { category } : {}),
+          ...(year ? { year } : {}),
+          ...(active ? { active: active === "true" } : {}),
+          ...(core ? { core: core === "true" } : {}),
+        }}
+      />
       {notice && <p role="status">{notice}</p>}
       {error && (
         <p className="gt-form-error" role="alert">
@@ -594,7 +605,10 @@ export default function MembersWorkspace() {
             {listing.stats.core} marked core. Counts follow these filters and
             your current access.
           </p>
-          <div className="gt-table-scroll">
+          <ScrollableTable
+            label="Community members table"
+            className="gt-table-scroll"
+          >
             <table className="gt-data-table">
               <caption className="sr-only">
                 Authorized community members
@@ -645,7 +659,7 @@ export default function MembersWorkspace() {
                 ))}
               </tbody>
             </table>
-          </div>
+          </ScrollableTable>
           {!listing.items.length && (
             <EmptyState title="No matching community members">
               Change the filters or create a private record.

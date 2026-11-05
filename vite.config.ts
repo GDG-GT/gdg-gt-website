@@ -16,6 +16,7 @@ export default defineConfig(({ mode }) => ({
     watch: {
       ignored: [
         "**/coverage/**",
+        "**/artifacts/**",
         "**/.docs/**",
         "**/.tmp/**",
         "**/dist/**",
@@ -37,6 +38,7 @@ export default defineConfig(({ mode }) => ({
         "*.{crt,pem,key,local}",
         "**/.git/**",
         "**/.docs/**",
+        "**/artifacts/**",
         "**/server/**",
         "**/database/**",
         "**/infra/**",
