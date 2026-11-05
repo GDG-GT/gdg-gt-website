@@ -106,6 +106,7 @@ export const test = base.extend<{ fixture: PublicFixture }>({
                 "/admin/forms",
                 "/admin/guide",
                 "/admin/events",
+                "/admin/audit-log",
               ],
             });
             return;
@@ -140,6 +141,28 @@ export const test = base.extend<{ fixture: PublicFixture }>({
             await reply(200, {
               ...empty,
               capabilities: { globalCreate: true, teams: [] },
+            });
+            return;
+          }
+          if (path === "/admin/audit") {
+            await reply(200, {
+              ...empty,
+              at: "2026-11-05T12:00:00Z",
+              nextCursor: null,
+              statistics: {
+                total: 0,
+                success: 0,
+                denied: 0,
+                failure: 0,
+                firstEntry: null,
+                lastEntry: null,
+                actions: [],
+                retention: {
+                  minimumYears: 2,
+                  automaticPurge: false,
+                  earliestAvailable: null,
+                },
+              },
             });
             return;
           }

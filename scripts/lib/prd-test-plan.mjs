@@ -921,6 +921,19 @@ add(
   [sql("001_security_foundation"), unit("audit-routes")],
 );
 add(
+  "SEC-TEST-022",
+  "AUDIT-001 AUDIT-002 AUDIT-003",
+  "Independent audit history/detail loading and retry, keyed private snapshots, access-denial clearing, context cancellation and keyboard-safe cursor/filter recovery",
+  [
+    "tests/client/audit-read-recovery.test.tsx",
+    "tests/client/workspace-ui.test.tsx",
+    local("audit-read-recovery"),
+    "tests/browser/workspace-smoke.spec.ts",
+  ],
+  ["Complete populated role/device/manual/visual/hosted export and operational retention acceptance remain open"],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "29.3", "31.2"];
+add(
   "PWA-TEST-001",
   "PWA-001 PWA-002 PWA-003",
   "Production worker, GT manifest and deliberate lifecycle",

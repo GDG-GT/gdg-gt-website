@@ -12,7 +12,10 @@ import React, { type ReactNode } from "react";
 import Overview from "../../src/ui/AdminOverview";
 import AuditWorkspace from "../../src/ui/AuditWorkspace";
 const { apiMock } = vi.hoisted(() => ({ apiMock: vi.fn() }));
-vi.mock("@/lib/api", () => ({ api: apiMock }));
+vi.mock("@/lib/api", async (original) => ({
+  ...(await original<typeof import("../../src/lib/api")>()),
+  api: apiMock,
+}));
 vi.mock("@/contexts/AdminContext", () => ({
   useAdmin: () => ({ currentAdmin: { display_name: "Fictional Reviewer" } }),
 }));

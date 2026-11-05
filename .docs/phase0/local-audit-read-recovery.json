@@ -1,0 +1,102 @@
+{
+  "generatedAt": "2026-11-05T23:35:57.291Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback HTTP/DB and Chromium desktop/mobile audit reads with controlled transient/denied reads. Two fresh fictional accounts disabled and sessions revoked. The owned fictional append-only audit row and normal read-audit records are retained unchanged. Browser non-read API/external origins blocked; realtime paused. No export download, provider send, existing account/record or production change. Captures ignored/private; no credentials or response bodies retained.",
+  "tests": [
+    {
+      "name": "anonymous audit read denied for history",
+      "passed": true
+    },
+    {
+      "name": "unprivileged account audit read denied for history",
+      "passed": true
+    },
+    {
+      "name": "anonymous audit read denied for detail",
+      "passed": true
+    },
+    {
+      "name": "unprivileged account audit read denied for detail",
+      "passed": true
+    },
+    {
+      "name": "authorized history returns the filtered uncached safe projection",
+      "passed": true
+    },
+    {
+      "name": "authorized detail returns approved metadata only without caching",
+      "passed": true
+    },
+    {
+      "name": "real audit history retry restores inventory and workspace focus at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "failed real history refresh retains timestamped rows and disables export/detail entry at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "entry recovery reads only the selected real detail and shows approved metadata at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "failed entry refresh retains its own timestamped real snapshot at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated audit history/detail pass measured axe checks at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "closing actual entry detail restores its invoking control at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read denial clears all displayed audit data and explicit recheck restores current access at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "audit workflow preserves keyboard table access with no page error, write, external request or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "real audit history retry restores inventory and workspace focus at 375×812",
+      "passed": true
+    },
+    {
+      "name": "failed real history refresh retains timestamped rows and disables export/detail entry at 375×812",
+      "passed": true
+    },
+    {
+      "name": "entry recovery reads only the selected real detail and shows approved metadata at 375×812",
+      "passed": true
+    },
+    {
+      "name": "failed entry refresh retains its own timestamped real snapshot at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated audit history/detail pass measured axe checks at 375×812",
+      "passed": true
+    },
+    {
+      "name": "closing actual entry detail restores its invoking control at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read denial clears all displayed audit data and explicit recheck restores current access at 375×812",
+      "passed": true
+    },
+    {
+      "name": "audit workflow preserves keyboard table access with no page error, write, external request or page overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read recovery leaves the owned append-only fixture unchanged",
+      "passed": true
+    }
+  ]
+}

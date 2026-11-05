@@ -1871,6 +1871,32 @@
       "acceptance": "unverified"
     },
     {
+      "id": "SEC-TEST-022",
+      "requirements": [
+        "AUDIT-001",
+        "AUDIT-002",
+        "AUDIT-003"
+      ],
+      "scope": "Independent audit history/detail loading and retry, keyed private snapshots, access-denial clearing, context cancellation and keyboard-safe cursor/filter recovery",
+      "automated": [
+        "tests/client/audit-read-recovery.test.tsx",
+        "tests/client/workspace-ui.test.tsx",
+        "scripts/test-local-audit-read-recovery.mjs",
+        "tests/browser/workspace-smoke.spec.ts"
+      ],
+      "remaining": [
+        "Complete populated role/device/manual/visual/hosted export and operational retention acceptance remain open",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "29.3",
+        "31.2"
+      ]
+    },
+    {
       "id": "PWA-TEST-001",
       "requirements": [
         "PWA-001",

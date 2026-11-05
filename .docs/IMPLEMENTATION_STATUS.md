@@ -8,6 +8,24 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Audit history and entry read recovery — 2026-11-05
+
+- Independent keyed history/detail reads retain timestamped matching snapshots,
+  expose explicit retry and clear both private inventories on denial. Context
+  replacement cancels old reads; filters/cursors/entries hide previous snapshots.
+  Stale/offline export and history actions disable. Named table regions,
+  independent entry retry, focus recovery and distinct empty states are covered.
+- All 1,315 tests/153 files pass (22 focused, 14 new). Coverage still fails 70%:
+  61.10% lines/60.33% branches; all 17 critical-file branch gates pass. All 23
+  actual API/DB/desktop-mobile browser checks pass, including populated measured
+  axe checks. Fictional accounts disabled/sessions revoked; append-only fixture
+  retained unchanged. No existing account/record or real provider change.
+- Catalog: 147 unverified cases. Supported-browser/role/device/manual/visual and
+  hosted acceptance remain open. See `AUDIT_READ_RECOVERY.md`; full PRD remains open.
+- Types/lint (zero errors/25 warnings), build/budgets/secrets and traceability
+  pass. All 30 targeted production-build workspace browser checks pass across six
+  pinned profiles; captures remain unapproved review candidates.
+
 ### Events writes, consequence reviews and bounded replay — 2026-11-05
 
 - Migration 112 adds current-session/grant-bound atomic event/attendee receipts,

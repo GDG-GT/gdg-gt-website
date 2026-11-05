@@ -1,5 +1,11 @@
 import { test, expect, accessibility } from "./public-fixture";
-for (const path of ["/admin/profile", "/admin/forms", "/admin/guide", "/admin/events"]) {
+for (const path of [
+  "/admin/profile",
+  "/admin/forms",
+  "/admin/guide",
+  "/admin/events",
+  "/admin/audit-log",
+]) {
   test(`workspace ${path} keeps shared labels and actions readable`, async ({
     page,
     fixture,

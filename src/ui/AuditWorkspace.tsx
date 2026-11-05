@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { api } from "@/lib/api";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { useAdmin } from "@/contexts/AdminContext";
+import ScrollableTable from "./ScrollableTable";
 import { Button, Field, EmptyState } from "./primitives";
 type Entry = {
   id: string;
@@ -50,60 +53,72 @@ function localDate(value: string | null) {
     .slice(0, 16);
 }
 export default function AuditWorkspace() {
+  const { currentAdmin } = useAdmin();
+  const [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((value) => value + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  if (!currentAdmin) return null;
+  return (
+    <AuditHistory key={`${currentAdmin.id}:${currentAdmin.role}:${epoch}`} />
+  );
+}
+function AuditHistory() {
   const [params, setParams] = useSearchParams(),
-    [data, setData] = useState<Listing>(),
-    [error, setError] = useState(""),
-    [busy, setBusy] = useState(true),
+    [validationError, setError] = useState(""),
+    [blocked, setBlocked] = useState(false),
     [refresh, setRefresh] = useState(0),
     [trail, setTrail] = useState<string[]>([]),
-    [detail, setDetail] = useState<Detail>(),
-    [detailError, setDetailError] = useState(""),
-    [detailBusy, setDetailBusy] = useState(false);
+    [detailRefresh, setDetailRefresh] = useState(0);
   const detailHeading = useRef<HTMLHeadingElement>(null),
     detailOpener = useRef<HTMLElement | null>(null),
     historyHeading = useRef<HTMLHeadingElement>(null),
     moveToHistory = useRef(false),
     selected = params.get("entry"),
     filters = new URLSearchParams(params);
+  const trailQuery = useRef<string>();
   filters.delete("entry");
   const query = filters.toString();
   useEffect(() => {
-    const controller = new AbortController();
-    setBusy(true);
-    setError("");
-    api<Listing>("/admin/audit?" + query, { signal: controller.signal })
-      .then(setData)
-      .catch((e) => {
-        if (!controller.signal.aborted) setError(e.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setBusy(false);
-      });
-    return () => controller.abort();
-  }, [query, refresh]);
+    if (trailQuery.current !== query) setTrail([]);
+    trailQuery.current = query;
+  }, [query]);
+  const history = usePrivateRead<Listing>("/admin/audit?" + query, refresh),
+    entry = usePrivateRead<Detail>(
+      selected ? "/admin/audit/" + encodeURIComponent(selected) : undefined,
+      detailRefresh,
+    ),
+    data = history.data,
+    detail = entry.data,
+    busy = history.loading,
+    detailBusy = entry.loading,
+    detailError = entry.error,
+    error = validationError || history.error,
+    { isOnline } = useOnlineStatus(),
+    ready = !!data && !busy && !history.error && !history.denied && isOnline,
+    clearHistory = history.clear,
+    clearEntry = entry.clear,
+    denied = history.denied || entry.denied;
   useEffect(() => {
-    setDetail(undefined);
-    setDetailError("");
-    if (!selected) return;
-    const controller = new AbortController();
-    setDetailBusy(true);
-    api<Detail>("/admin/audit/" + encodeURIComponent(selected), {
-      signal: controller.signal,
-    })
-      .then(setDetail)
-      .catch((e) => {
-        if (!controller.signal.aborted) setDetailError(e.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setDetailBusy(false);
-      });
-    return () => controller.abort();
-  }, [selected, refresh]);
+    if (!denied) return;
+    setBlocked(true);
+    clearHistory();
+    clearEntry();
+    setTrail([]);
+    setError("");
+    detailOpener.current = null;
+  }, [denied, clearHistory, clearEntry]);
   useEffect(() => {
     if (detail || detailError) detailHeading.current?.focus();
   }, [detail, detailError]);
   useEffect(() => {
-    if (!selected) detailOpener.current?.focus();
+    if (!selected && detailOpener.current) {
+      if (detailOpener.current.isConnected) detailOpener.current.focus();
+      else document.getElementById("workspace-content")?.focus();
+      detailOpener.current = null;
+    }
   }, [selected]);
   useEffect(() => {
     if (data && moveToHistory.current) {
@@ -126,6 +141,33 @@ export default function AuditWorkspace() {
     setTrail([]);
     setParams(next);
   };
+  const retryHistory = () => {
+    setError("");
+    setRefresh((value) => value + 1);
+    document.getElementById("workspace-content")?.focus();
+  };
+  if (blocked || denied)
+    return (
+      <EmptyState
+        title="Audit access needs to be rechecked"
+        action={
+          <Button
+            disabled={!isOnline}
+            onClick={() => {
+              setBlocked(false);
+              setParams(filters);
+              setRefresh((value) => value + 1);
+              setDetailRefresh((value) => value + 1);
+            }}
+          >
+            Recheck audit access
+          </Button>
+        }
+      >
+        Previous audit history and entry details have been cleared. Recheck
+        current access before continuing.
+      </EmptyState>
+    );
   return (
     <div className="gt-admin-page" aria-busy={busy}>
       <header className="gt-admin-page-heading">
@@ -139,19 +181,41 @@ export default function AuditWorkspace() {
         <div className="gt-actions">
           <Button
             variant="secondary"
-            disabled={busy}
-            onClick={() => setRefresh((r) => r + 1)}
+            disabled={busy || detailBusy || !isOnline}
+            onClick={() => {
+              setError("");
+              setRefresh((r) => r + 1);
+              setDetailRefresh((r) => r + 1);
+            }}
           >
             Refresh
           </Button>
-          <a
-            className="gt-button gt-button-secondary"
-            href={"/api/v1/admin/audit/export?" + query}
-          >
-            Export filtered CSV
-          </a>
+          {ready ? (
+            <a
+              className="gt-button gt-button-secondary"
+              href={"/api/v1/admin/audit/export?" + query}
+            >
+              Export filtered CSV
+            </a>
+          ) : (
+            <Button variant="secondary" disabled>
+              Export filtered CSV
+            </Button>
+          )}
         </div>
       </header>
+      {!isOnline && (
+        <p role="status">
+          You are offline. Audit reads and export wait for connectivity.
+          {history.at && (
+            <>
+              {" "}
+              History snapshot from{" "}
+              <time dateTime={history.at}>{date(history.at)}</time>.
+            </>
+          )}
+        </p>
+      )}
       <form
         className="gt-panel gt-form"
         key={query}
@@ -175,6 +239,7 @@ export default function AuditWorkspace() {
             setError("The end of the date range must follow its start.");
             return;
           }
+          setError("");
           setTrail([]);
           setParams(next);
         }}
@@ -205,6 +270,8 @@ export default function AuditWorkspace() {
               name="actor"
               defaultValue={params.get("actor") || ""}
               placeholder="UUID, or leave blank"
+              maxLength={36}
+              pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
             />
           </Field>
           <Field label="From (your local time)">
@@ -236,6 +303,7 @@ export default function AuditWorkspace() {
             type="button"
             variant="ghost"
             onClick={() => {
+              setError("");
               setTrail([]);
               setParams({});
               setRefresh((r) => r + 1);
@@ -249,6 +317,23 @@ export default function AuditWorkspace() {
         <p role="alert" className="gt-form-error">
           {error}
         </p>
+      )}
+      {history.error && (
+        <div role="status">
+          {history.at && (
+            <p>
+              Last successful history read:{" "}
+              <time dateTime={history.at}>{date(history.at)}</time>.
+            </p>
+          )}
+          <Button
+            disabled={!isOnline || busy}
+            variant="secondary"
+            onClick={retryHistory}
+          >
+            Retry audit history
+          </Button>
+        </div>
       )}
       {busy && !data && (
         <div role="status" aria-label="Loading audit history">
@@ -306,7 +391,7 @@ export default function AuditWorkspace() {
               {date(data.at)}
             </p>
             {data.items.length ? (
-              <div className="gt-table-wrap">
+              <ScrollableTable label="Audit history table">
                 <table className="gt-data-table">
                   <caption className="sr-only">
                     Protected action history
@@ -349,7 +434,7 @@ export default function AuditWorkspace() {
                         </td>
                         <td>
                           <Button
-                            disabled={busy || !!error}
+                            disabled={!ready}
                             variant="ghost"
                             onClick={() => choose(row.id)}
                             aria-label={
@@ -366,27 +451,48 @@ export default function AuditWorkspace() {
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </ScrollableTable>
             ) : (
-              <EmptyState title="No audit entries match">
-                Try a wider date range or remove a filter.
+              <EmptyState
+                title={
+                  query ? "No audit entries match" : "No audit history yet"
+                }
+                action={
+                  query ? (
+                    <Button
+                      variant="secondary"
+                      onClick={() => {
+                        setTrail([]);
+                        setError("");
+                        setParams({});
+                      }}
+                    >
+                      Reset audit filters
+                    </Button>
+                  ) : undefined
+                }
+              >
+                {query
+                  ? "Try a wider date range or remove a filter."
+                  : "Protected account and workspace actions will appear here."}
               </EmptyState>
             )}
             <nav className="gt-actions" aria-label="Audit history pages">
               <Button
                 variant="secondary"
-                disabled={busy || !params.has("before")}
+                disabled={!ready || !params.has("before")}
                 onClick={first}
               >
                 First page
               </Button>
               <Button
                 variant="secondary"
-                disabled={busy || !trail.length}
+                disabled={!ready || !trail.length}
                 onClick={() => {
                   const next = trail.at(-1);
                   if (next !== undefined) {
                     moveToHistory.current = true;
+                    trailQuery.current = next;
                     setTrail((t) => t.slice(0, -1));
                     setParams(next);
                   }
@@ -396,7 +502,7 @@ export default function AuditWorkspace() {
               </Button>
               <Button
                 variant="secondary"
-                disabled={busy || !!error || !data.nextCursor}
+                disabled={!ready || !data.nextCursor}
                 onClick={() => {
                   if (!data.nextCursor) return;
                   moveToHistory.current = true;
@@ -404,6 +510,7 @@ export default function AuditWorkspace() {
                   next.delete("page");
                   for (const [key, value] of Object.entries(data.nextCursor))
                     next.set(key, value);
+                  trailQuery.current = next.toString();
                   setTrail((t) => [...t, query]);
                   setParams(next);
                 }}
@@ -440,9 +547,50 @@ export default function AuditWorkspace() {
             <Button variant="secondary" onClick={() => choose()}>
               Close details
             </Button>
+            <Button
+              variant="ghost"
+              disabled={!isOnline || detailBusy}
+              onClick={() => setDetailRefresh((value) => value + 1)}
+            >
+              Refresh audit entry
+            </Button>
           </div>
-          {detailBusy && <p role="status">Loading entry…</p>}
-          {detailError && <p role="alert">{detailError}</p>}
+          {detailBusy && !detail && (
+            <div role="status" aria-label="Loading audit entry">
+              <div className="gt-skeleton gt-detail-skeleton" />
+              <span className="sr-only">Loading entry…</span>
+            </div>
+          )}
+          {detailBusy && detail && (
+            <p role="status">
+              Refreshing entry; the last saved snapshot remains visible.
+            </p>
+          )}
+          {detailError && (
+            <div role="alert">
+              <p>{detailError}</p>
+              {entry.at && (
+                <p>
+                  Last successful entry read:{" "}
+                  <time dateTime={entry.at}>{date(entry.at)}</time>.
+                </p>
+              )}
+              <Button
+                disabled={!isOnline || detailBusy}
+                variant="secondary"
+                onClick={() => setDetailRefresh((value) => value + 1)}
+              >
+                Retry audit entry
+              </Button>
+            </div>
+          )}
+          {!isOnline && entry.at && (
+            <p role="status">
+              Entry snapshot from{" "}
+              <time dateTime={entry.at}>{date(entry.at)}</time>; offline data
+              may be out of date.
+            </p>
+          )}
           {detail && (
             <>
               <dl>

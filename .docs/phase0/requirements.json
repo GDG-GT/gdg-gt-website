@@ -1398,7 +1398,8 @@
       "line": 589,
       "status": "unverified",
       "testIds": [
-        "SEC-TEST-021"
+        "SEC-TEST-021",
+        "SEC-TEST-022"
       ],
       "evidence": []
     },
@@ -1409,6 +1410,7 @@
       "status": "unverified",
       "testIds": [
         "SEC-TEST-021",
+        "SEC-TEST-022",
         "A11Y-TEST-003"
       ],
       "evidence": []
@@ -1419,7 +1421,8 @@
       "line": 593,
       "status": "unverified",
       "testIds": [
-        "OPS-TEST-001"
+        "OPS-TEST-001",
+        "SEC-TEST-022"
       ],
       "evidence": []
     },
