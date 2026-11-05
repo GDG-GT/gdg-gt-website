@@ -264,6 +264,20 @@ add(
   ],
 );
 prdTestCases.at(-1).normative = ["22.4", "26.2", "31.2"];
+add(
+  "EVT-TEST-013",
+  "EVT-001 EVT-002 EVT-012",
+  "Independent private event inventory/detail/attendee reads, scoped cancellation, stale draft review and denial recovery",
+  [
+    "tests/client/event-admin-read-recovery.test.tsx",
+    local("event-read-recovery"),
+    "tests/browser/workspace-smoke.spec.ts",
+  ],
+  [
+    "Event mutation replay, permission-aware actions and complete navigation recovery remain separate implementation work; populated supported-browser/manual/visual and hosted acceptance remain open",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 const teams = [
   [
     "TEAM-001",

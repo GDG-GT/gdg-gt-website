@@ -2934,7 +2934,8 @@ img {
   gap: 20px;
 }
 fieldset.gt-access-fields,
-fieldset.gt-profile-fields {
+fieldset.gt-profile-fields,
+fieldset.gt-event-fields {
   border: 0;
   padding: 0;
   margin: 0;

@@ -1,0 +1,86 @@
+{
+  "generatedAt": "2026-11-05T22:37:03.421Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback HTTP/DB and desktop/mobile browser read recovery with controlled 503 interruptions. Two fresh fictional accounts, one private draft and one private registration fixture; never published/no delivery jobs queued. Browser non-read API calls/external origins blocked and realtime paused. Owned event archived/registration soft-deleted/accounts disabled/sessions revoked. Existing account/event/registration, quota, provider and production state unchanged. Captures ignored/private; no response bodies/credentials retained.",
+  "tests": [
+    {
+      "name": "anonymous denial for event inventory",
+      "passed": true
+    },
+    {
+      "name": "anonymous denial for selected event",
+      "passed": true
+    },
+    {
+      "name": "anonymous denial for event attendees",
+      "passed": true
+    },
+    {
+      "name": "authorized uncached inventory includes the owned private draft",
+      "passed": true
+    },
+    {
+      "name": "selected event read returns the current revision privately",
+      "passed": true
+    },
+    {
+      "name": "attendee read exposes only the authorized uncached projection",
+      "passed": true
+    },
+    {
+      "name": "unrelated team member cannot discover the private event or attendee inventory",
+      "passed": true
+    },
+    {
+      "name": "the fixture remains absent from public event detail",
+      "passed": true
+    },
+    {
+      "name": "browser inventory retry recovers real private rows and restores workspace focus at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "selected-detail outage/retry retains unsaved fields without a save at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "attendee retry recovers the real owned inventory independently at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "failed attendee refresh retains its timestamped snapshot with editing/export disabled at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "event read workflow has no page errors, mutations, external requests or horizontal overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "browser inventory retry recovers real private rows and restores workspace focus at 375×812",
+      "passed": true
+    },
+    {
+      "name": "selected-detail outage/retry retains unsaved fields without a save at 375×812",
+      "passed": true
+    },
+    {
+      "name": "attendee retry recovers the real owned inventory independently at 375×812",
+      "passed": true
+    },
+    {
+      "name": "failed attendee refresh retains its timestamped snapshot with editing/export disabled at 375×812",
+      "passed": true
+    },
+    {
+      "name": "event read workflow has no page errors, mutations, external requests or horizontal overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "all read recovery leaves the owned event revision, title and private state unchanged",
+      "passed": true
+    }
+  ]
+}

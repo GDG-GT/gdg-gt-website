@@ -609,6 +609,30 @@
       ]
     },
     {
+      "id": "EVT-TEST-013",
+      "requirements": [
+        "EVT-001",
+        "EVT-002",
+        "EVT-012"
+      ],
+      "scope": "Independent private event inventory/detail/attendee reads, scoped cancellation, stale draft review and denial recovery",
+      "automated": [
+        "tests/client/event-admin-read-recovery.test.tsx",
+        "scripts/test-local-event-read-recovery.mjs",
+        "tests/browser/workspace-smoke.spec.ts"
+      ],
+      "remaining": [
+        "Event mutation replay, permission-aware actions and complete navigation recovery remain separate implementation work; populated supported-browser/manual/visual and hosted acceptance remain open",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
       "id": "TEAM-TEST-001",
       "requirements": [
         "TEAM-001"

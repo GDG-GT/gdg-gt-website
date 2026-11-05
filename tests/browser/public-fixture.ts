@@ -105,6 +105,7 @@ export const test = base.extend<{ fixture: PublicFixture }>({
                 "/admin/profile",
                 "/admin/forms",
                 "/admin/guide",
+                "/admin/events",
               ],
             });
             return;
@@ -133,6 +134,10 @@ export const test = base.extend<{ fixture: PublicFixture }>({
           }
           if (path === "/admin/forms" || path === "/admin/forms/filters") {
             await reply(200, { ...empty, canCreate: true });
+            return;
+          }
+          if (path === "/admin/events") {
+            await reply(200, empty);
             return;
           }
         }

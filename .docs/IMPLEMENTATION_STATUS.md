@@ -8,6 +8,24 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Independent private Events read recovery — 2026-11-05
+
+- Separate inventory/detail/attendee reads now expose scoped loading/retry,
+  timestamped stale snapshots, permission-denial clearing and account/session
+  cancellation. A changed event revision retains unsaved fields and requires
+  review before loading saved values. Stale attendee actions are disabled.
+- All 1,260 tests/149 files pass, including 18 new read cases (44 focused Events
+  cases). All 19 actual local API/DB and desktop/mobile browser checks pass with
+  confirmed fixture cleanup. Coverage still fails 70%: 60.22% lines/59.31%
+  branches; all 17 critical-file branch gates pass.
+- All 24 targeted production-build workspace browser checks pass across six
+  pinned profiles. Types/lint (zero errors/25 warnings), build/budgets/secrets
+  pass. Screenshots remain unapproved review candidates.
+- Catalog: 145 unverified cases. Event writes, permissions, consequence reviews
+  and attendee/navigation handling remain separate work; full browser/manual,
+  visual, performance and hosted acceptance remain open. See
+  `EVENT_READ_RECOVERY.md`; full PRD remains open.
+
 ### Own-profile saves, password validation and session consequence reviews — 2026-11-05
 
 - Scoped cancellable writes, synchronous pending/input guards and explicit
