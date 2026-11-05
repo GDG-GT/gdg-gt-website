@@ -132,48 +132,29 @@ export async function formAccessRoutes(
   )
     throw new ApiError(404, "NOT_FOUND", "This form is not available.");
   if (candidates) {
-    const form = checked(
-      await db.from("forms").select("team_id,owner_id").eq("id", id).single(),
-    );
-    let eligible;
-    if (form.team_id) {
-      const members = checked(
-        await db
-          .from("team_memberships")
-          .select("admin_user_id")
-          .eq("team_id", form.team_id)
-          .eq("is_active", true),
-      );
-      eligible = new Set(members.map((m) => m.admin_user_id));
-    }
-    let candidatesQuery = db
-      .from("admin_users")
-      .select("id,display_name,role")
-      .eq("is_active", true)
-      .neq("role", "blog_editor")
-      .neq("id", form.owner_id);
-    // Apply team scope before pagination; unrelated global accounts must not
-    // crowd eligible team members out of the first candidate page.
-    if (eligible)
-      candidatesQuery = candidatesQuery.or(
-        "role.in.(admin,super_admin)" +
-          (eligible.size ? ",id.in.(" + [...eligible].join(",") + ")" : ""),
-      );
-    const rows = checked(
-      await candidatesQuery.order("display_name").limit(100),
+    const p = queryValues(
+      url.searchParams,
+      z
+        .object({
+          page: z.coerce.number().int().min(1).max(10000).default(1),
+          pageSize: z.coerce.number().int().min(1).max(100).default(30),
+          q: z.string().trim().max(100).default(""),
+        })
+        .strict(),
     );
     sendJson(
       response,
       200,
-      {
-        items: rows.filter(
-          (row) =>
-            row.id !== form.owner_id &&
-            (!eligible ||
-              eligible.has(row.id) ||
-              ["admin", "super_admin"].includes(row.role)),
-        ),
-      },
+      checked(
+        await db.rpc("list_form_access_accounts", {
+          p_actor: session.user.id,
+          p_form: id,
+          p_kind: "candidates",
+          p_page: p.page,
+          p_size: p.pageSize,
+          p_query: p.q || null,
+        }),
+      ),
       requestId,
     );
     return true;

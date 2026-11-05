@@ -78,6 +78,22 @@ function fixture() {
     ]),
     results = new Map([
       ["can_operate_form", true],
+      [
+        "list_form_access_accounts",
+        {
+          items: [
+            {
+              id: peer,
+              display_name: "Fictional Member",
+              role: "team_member",
+              actions: [],
+            },
+          ],
+          total: 130,
+          page: 1,
+          pageSize: 30,
+        },
+      ],
       ["request_form_verification", {}],
       ["queue_form_access", { queued: 1 }],
       ["change_form_access", {}],
@@ -239,37 +255,42 @@ describe("FORM-008/030 private invitation and verification route boundary", () =
     ]);
     expect((await f.call()).body.data.items[0].responded).toBe(false);
   });
-  it("limits collaborator candidates to current team or global administrators, excludes the owner and applies scope before limit", async () => {
+  it("delegates bounded candidate search/paging to the actor-bound scoped inventory", async () => {
     const f = fixture(),
-      r = await f.call(`/admin/forms/${form}/collaborator-candidates`);
-    expect(r.body.data.items.map((row) => row.id)).toEqual([peer, invite]);
-    const query = f.queries.find((q) => q.table === "admin_users");
-    expect(query.steps).toContainEqual(["eq", "is_active", true]);
-    expect(query.steps).toContainEqual(["neq", "role", "blog_editor"]);
-    expect(query.steps).toContainEqual(["neq", "id", actor]);
-    expect(query.steps).toContainEqual([
-      "or",
-      "role.in.(admin,super_admin),id.in.(" + peer + ")",
-    ]);
-    expect(query.steps.findIndex(([m]) => m === "or")).toBeLessThan(
-      query.steps.findIndex(([m]) => m === "limit"),
-    );
-    f.lists.set("team_memberships", []);
-    expect(
-      (
-        await f.call(`/admin/forms/${form}/collaborator-candidates`)
-      ).body.data.items.map((row) => row.id),
-    ).toEqual([invite]);
-    expect(f.queries.at(-1).steps).toContainEqual([
-      "or",
-      "role.in.(admin,super_admin)",
-    ]);
-    f.single.set("forms", { id: form, team_id: null, owner_id: actor });
-    expect(
-      (
-        await f.call(`/admin/forms/${form}/collaborator-candidates`)
-      ).body.data.items.map((row) => row.id),
-    ).toEqual([peer, team, invite]);
+      path = `/admin/forms/${form}/collaborator-candidates`,
+      r = await f.call(path);
+    expect(r.body.data.total).toBe(130);
+    expect(f.db.rpc).toHaveBeenLastCalledWith("list_form_access_accounts", {
+      p_actor: actor,
+      p_form: form,
+      p_kind: "candidates",
+      p_page: 1,
+      p_size: 30,
+      p_query: null,
+    });
+    await f.call(path + "?page=4&pageSize=25&q=%20Fictional%20%25%20");
+    expect(f.db.rpc).toHaveBeenLastCalledWith("list_form_access_accounts", {
+      p_actor: actor,
+      p_form: form,
+      p_kind: "candidates",
+      p_page: 4,
+      p_size: 25,
+      p_query: "Fictional %",
+    });
+    expect(f.queries).toHaveLength(0);
+    for (const query of [
+      "page=0",
+      "page=10001",
+      "pageSize=101",
+      "q=" + "x".repeat(101),
+      "actor=" + peer,
+      "page=1&page=2",
+    ])
+      expect((await f.call(path + "?" + query)).statusCode).toBe(400);
+    f.results.set("list_form_access_accounts", {
+      error: { code: "P0001", message: "NOT_FOUND" },
+    });
+    expect((await f.call(path)).statusCode).toBe(404);
   });
   it("normalizes/deduplicates approved recipients and sends only hashed/encrypted server-generated capabilities to the atomic queue", async () => {
     const f = fixture(),

@@ -111,7 +111,8 @@
     "202610260107_event_rescheduling.sql",
     "202610260108_newsletter_token_review.sql",
     "202610260109_form_library_creation_capabilities.sql",
-    "202610270110_curated_content_retries.sql"
+    "202610270110_curated_content_retries.sql",
+    "202611040111_form_access_account_inventory.sql"
   ],
   "tests": [
     {
@@ -559,6 +560,10 @@
       "passed": true
     },
     {
+      "name": "202611040111_form_access_account_inventory.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -884,6 +889,10 @@
     },
     {
       "name": "110_curated_content_retries.sql",
+      "passed": true
+    },
+    {
+      "name": "111_form_access_account_inventory.sql",
       "passed": true
     },
     {

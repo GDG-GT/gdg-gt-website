@@ -989,7 +989,8 @@
       "line": 497,
       "status": "unverified",
       "testIds": [
-        "FORM-TEST-008"
+        "FORM-TEST-008",
+        "FORM-TEST-038"
       ],
       "evidence": [],
       "userOverride": "Tejas removed anonymous forms. Name/email are required now; entered identity is declared, not falsely verified. Georgia Tech SSO and Google login remain deferred."
@@ -1010,7 +1011,8 @@
       "line": 501,
       "status": "unverified",
       "testIds": [
-        "FORM-TEST-010"
+        "FORM-TEST-010",
+        "FORM-TEST-038"
       ],
       "evidence": []
     },
@@ -1188,7 +1190,8 @@
         "FORM-TEST-033",
         "FORM-TEST-035",
         "FORM-TEST-036",
-        "FORM-TEST-037"
+        "FORM-TEST-037",
+        "FORM-TEST-038"
       ],
       "evidence": []
     },

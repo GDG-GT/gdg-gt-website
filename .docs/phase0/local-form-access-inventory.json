@@ -1,0 +1,118 @@
+{
+  "generatedAt": "2026-11-05T03:46:46.183Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback candidate/collaborator inventory and grant checks with 109 fresh fictional accounts, one team and one private draft. Owned form/team archived; all fixture accounts disabled and sessions revoked. Existing accounts/content untouched; no publication, email/provider job, quota reset or production change.",
+  "tests": [
+    {
+      "name": "candidate directory rejects anonymous access",
+      "passed": true
+    },
+    {
+      "name": "candidate directory conceals a form from an unrelated officer",
+      "passed": true
+    },
+    {
+      "name": "eligible candidate page 1 retains the full count beyond 100",
+      "passed": true
+    },
+    {
+      "name": "candidate page 1 is uncached and contains only safe account projections",
+      "passed": true
+    },
+    {
+      "name": "eligible candidate page 2 retains the full count beyond 100",
+      "passed": true
+    },
+    {
+      "name": "candidate page 2 is uncached and contains only safe account projections",
+      "passed": true
+    },
+    {
+      "name": "eligible candidate page 3 retains the full count beyond 100",
+      "passed": true
+    },
+    {
+      "name": "candidate page 3 is uncached and contains only safe account projections",
+      "passed": true
+    },
+    {
+      "name": "eligible candidate page 4 retains the full count beyond 100",
+      "passed": true
+    },
+    {
+      "name": "candidate page 4 is uncached and contains only safe account projections",
+      "passed": true
+    },
+    {
+      "name": "all eligible candidates appear once across stable pages",
+      "passed": true
+    },
+    {
+      "name": "case-insensitive literal search reaches the account beyond the old cutoff",
+      "passed": true
+    },
+    {
+      "name": "candidate search excludes outsider",
+      "passed": true
+    },
+    {
+      "name": "candidate search excludes owner",
+      "passed": true
+    },
+    {
+      "name": "candidate search excludes inactive",
+      "passed": true
+    },
+    {
+      "name": "candidate search excludes editor",
+      "passed": true
+    },
+    {
+      "name": "candidate search excludes %",
+      "passed": true
+    },
+    {
+      "name": "candidate query rejects page misuse",
+      "passed": true
+    },
+    {
+      "name": "candidate query rejects pageSize misuse",
+      "passed": true
+    },
+    {
+      "name": "candidate query rejects q misuse",
+      "passed": true
+    },
+    {
+      "name": "candidate query rejects actor misuse",
+      "passed": true
+    },
+    {
+      "name": "collaborator inventory supplies paged labels independently of the candidate page",
+      "passed": true
+    },
+    {
+      "name": "selected late-page account carries its current explicit actions",
+      "passed": true
+    },
+    {
+      "name": "deactivated departed account disappears from candidates",
+      "passed": true
+    },
+    {
+      "name": "inactive out-of-team account cannot receive a new grant",
+      "passed": true
+    },
+    {
+      "name": "manager can remove a stored grant after its recipient leaves and becomes inactive",
+      "passed": true
+    },
+    {
+      "name": "access inventory and grant checks do not publish or revise the private draft",
+      "passed": true
+    }
+  ]
+}

@@ -8,6 +8,22 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Form access inventories and consequence reviews — 2026-11-04
+
+- Forward migration 111 adds authorized literal search/count/paging without the
+  100-account or fetched-membership cutoff. Stored grants can be removed after
+  recipient deactivation/departure, while new grants retain current eligibility.
+  Independent reads, account/form/session cancellation, explicit access reviews,
+  pending guards and read-only uncertain-result rechecks protect the workspace.
+- All 1,222 tests/146 files pass, including 25 new DOM cases. Both complete SQL
+  grant configurations pass (197/198 checks), as do six isolated restore checks
+  and 27 real local inventory/grant checks with confirmed fixture cleanup.
+  Types/lint pass (zero errors/25 warnings). Coverage still fails 70%:
+  59.29% lines/58.30% branches; all 17 critical branch gates pass.
+- Catalog: 141 unverified cases. Broader Forms mutations, browser/device/visual
+  and hosted acceptance remain open. See `FORM_ACCESS_RECOVERY.md`; full PRD
+  remains open.
+
 ### Form availability reviews and settings read retry — 2026-11-04
 
 - Archive/restore/close/reopen now use named consequence reviews and fresh

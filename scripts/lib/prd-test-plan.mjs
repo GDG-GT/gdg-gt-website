@@ -1294,6 +1294,23 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 
+add(
+  "FORM-TEST-038",
+  "FORM-008 FORM-010 FORM-026",
+  "Scoped candidate/collaborator search and pagination beyond 100 and 1000, independent private read recovery, access consequence reviews, cancellation and current authorization",
+  [
+    "tests/client/form-access-recovery.test.tsx",
+    unit("form-access-routes"),
+    unit("form-admin-routes"),
+    sql("111_form_access_account_inventory"),
+    local("form-access-inventory"),
+  ],
+  [
+    "Live browser keyboard/role/network interruption, full screen-reader/device/visual and hosted acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

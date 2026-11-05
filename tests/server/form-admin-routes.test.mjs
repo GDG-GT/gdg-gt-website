@@ -256,12 +256,32 @@ describe("Forms library, authoring and response route contracts", () => {
     );
     expect((await f.call(base + "/collaborators")).statusCode).toBe(403);
     f.results.set("can_operate_form", true);
-    f.lists.set("form_collaborators", [
-      { admin_user_id: ids.peer, actions: ["view"], created_at: "now" },
-    ]);
+    const inventory = {
+      items: [
+        {
+          admin_user_id: ids.peer,
+          display_name: "Fictional Peer",
+          actions: ["view"],
+          created_at: "now",
+        },
+      ],
+      total: 150,
+      page: 1,
+      pageSize: 30,
+    };
+    f.results.set("list_form_access_accounts", inventory);
     expect((await f.call(base + "/collaborators")).body.data.items).toEqual(
-      f.lists.get("form_collaborators"),
+      inventory.items,
     );
+    expect(f.db.rpc).toHaveBeenLastCalledWith("list_form_access_accounts", {
+      p_actor: ids.actor,
+      p_form: ids.form,
+      p_kind: "collaborators",
+      p_page: 1,
+      p_size: 30,
+      p_query: null,
+    });
+    expect((await f.call(base + "/collaborators?page=0")).statusCode).toBe(400);
     expect(
       (await f.call(base + "/collaborators", "PATCH", { userId: ids.peer }))
         .statusCode,

@@ -2933,6 +2933,12 @@ img {
   flex-direction: column;
   gap: 20px;
 }
+fieldset.gt-access-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
 .gt-form h2 {
   margin-bottom: -8px;
 }

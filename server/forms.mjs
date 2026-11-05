@@ -811,17 +811,29 @@ export async function formRoutes(
           "FORBIDDEN",
           "You do not have permission to manage access.",
         );
+      const p = queryValues(
+        url.searchParams,
+        z
+          .object({
+            page: z.coerce.number().int().min(1).max(10000).default(1),
+            pageSize: z.coerce.number().int().min(1).max(100).default(30),
+            q: z.string().trim().max(100).default(""),
+          })
+          .strict(),
+      );
       sendJson(
         response,
         200,
-        {
-          items: checked(
-            await db
-              .from("form_collaborators")
-              .select("admin_user_id,actions,created_at,updated_at")
-              .eq("form_id", id),
-          ),
-        },
+        checked(
+          await db.rpc("list_form_access_accounts", {
+            p_actor: session.user.id,
+            p_form: id,
+            p_kind: "collaborators",
+            p_page: p.page,
+            p_size: p.pageSize,
+            p_query: p.q || null,
+          }),
+        ),
         requestId,
       );
       return true;
