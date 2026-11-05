@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-05): the latest module checkpoint is
-`AUDIT_READ_RECOVERY.md`; completed recovery checkpoints include tasks,
+`OVERVIEW_READ_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -39,11 +39,13 @@ closed locally (`EVENT_READ_RECOVERY.md`), including real desktop/mobile outage
 recovery. Core Events/attendee writes, current action capabilities, consequence
 reviews and draft navigation now have local recovery (`EVENT_MUTATION_RECOVERY.md`).
 Complete event-mail denial/uncertain-review recovery, Teams,
-Users, dashboard and Forms recovery/navigation checks remain open, as do
+Users and Forms recovery/navigation checks remain open, as do
 the remaining browser/device/manual acceptance matrices.
 These are implementation gaps, separate from external launch inputs.
 Audit history/detail read recovery is now closed locally (`AUDIT_READ_RECOVERY.md`);
 complete browser/device/manual/export/hosted acceptance remains open.
+Overview read/widget recovery is also closed locally (`OVERVIEW_READ_RECOVERY.md`);
+its complete supported-browser/role/manual/performance/hosted acceptance remains open.
 
 Additional requests on 2026-10-21 are implemented locally: community directory
 (`/admin/members`) CSV import/export and notification Mark all read → Dismiss all.
@@ -163,10 +165,10 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is 61.10% lines/60.33% branches at the Audit-read checkpoint, below the global
-  70% gate; 1,315 tests pass, not a percentage of completed PRD features.
+  coverage is 61.15% lines/60.44% branches at the Overview-read checkpoint, below the global
+  70% gate; 1,327 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 147 reviewed logical test cases with
+  All 146 numbered requirements now map into 148 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.

@@ -102,6 +102,7 @@ export const test = base.extend<{ fixture: PublicFixture }>({
             await reply(200, {
               allowed: true,
               accessibleRoutes: [
+                "/admin",
                 "/admin/profile",
                 "/admin/forms",
                 "/admin/guide",
@@ -141,6 +142,25 @@ export const test = base.extend<{ fixture: PublicFixture }>({
             await reply(200, {
               ...empty,
               capabilities: { globalCreate: true, teams: [] },
+            });
+            return;
+          }
+          if (path === "/admin/dashboard") {
+            const ready = (data: unknown) => ({ state: "ready", data });
+            await reply(200, {
+              generatedAt: "2026-11-05T12:00:00Z",
+              allowedRoutes: ["/admin/events", "/admin/forms"],
+              widgets: {
+                events: ready({ count: 0, items: [] }),
+                profiles: ready({ count: 0 }),
+                finances: ready({ pending: 0 }),
+                messages: ready({ unread: 0 }),
+                registrations: ready({ totalEvents: 0, items: [] }),
+                funding: ready({ items: [] }),
+                activity: ready({ items: [] }),
+                tasks: ready({ items: [] }),
+                memberships: ready({ items: [] }),
+              },
             });
             return;
           }

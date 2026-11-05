@@ -1033,6 +1033,14 @@ add(
 );
 prdTestCases.at(-1).normative = ["28.3", "31.2"];
 add(
+  "A11Y-TEST-010",
+  "",
+  "Overview private-read cancellation, account/role/session isolation, denial clearing, named widget retry and offline/stale shortcut safeguards",
+  ["tests/client/overview-read-recovery.test.tsx", local("overview-read-recovery"), "tests/browser/workspace-smoke.spec.ts"],
+  ["Complete populated supported-browser/role/device/manual/visual/performance and hosted widget acceptance remain open"],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+add(
   "A11Y-TEST-003",
   "AUDIT-002",
   "Audit detail focus/return, cursor history and recoverable filter/detail errors",

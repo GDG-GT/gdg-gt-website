@@ -8,6 +8,23 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Overview private reads and widget retry — 2026-11-05
+
+- Cancellable overview reads and account/role/session remounts fence private
+  widgets. Denial clears the snapshot; transient/offline recovery retains its
+  date and removes stale quick actions. Failed widgets expose named retries;
+  other ready panels remain visible. Reconnect sends no automatic read/write.
+- All 1,327 tests/154 files pass (20 focused, 12 new). Coverage still fails 70%:
+  61.15% lines/60.44% branches; all 17 critical-file branch gates pass. All 18
+  actual API/DB/desktop-mobile browser checks pass, including populated measured
+  axe. Owned task archived/accounts disabled/sessions revoked; existing records
+  and providers unchanged. Catalog: 148 unverified cases.
+- Full supported-browser/role/device/manual/visual/performance/hosted acceptance
+  remains open. See `OVERVIEW_READ_RECOVERY.md`; full PRD remains open.
+- Types/lint (zero errors/25 warnings), build/budgets/secrets and traceability
+  pass. All 36 targeted production-build workspace browser checks pass across six
+  pinned profiles; captures remain unapproved review candidates.
+
 ### Audit history and entry read recovery — 2026-11-05
 
 - Independent keyed history/detail reads retain timestamped matching snapshots,

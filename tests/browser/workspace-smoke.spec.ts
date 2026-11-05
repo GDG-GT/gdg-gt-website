@@ -1,5 +1,6 @@
 import { test, expect, accessibility } from "./public-fixture";
 for (const path of [
+  "/admin",
   "/admin/profile",
   "/admin/forms",
   "/admin/guide",

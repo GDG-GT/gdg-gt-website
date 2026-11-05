@@ -2111,6 +2111,26 @@
       ]
     },
     {
+      "id": "A11Y-TEST-010",
+      "requirements": [],
+      "scope": "Overview private-read cancellation, account/role/session isolation, denial clearing, named widget retry and offline/stale shortcut safeguards",
+      "automated": [
+        "tests/client/overview-read-recovery.test.tsx",
+        "scripts/test-local-overview-read-recovery.mjs",
+        "tests/browser/workspace-smoke.spec.ts"
+      ],
+      "remaining": [
+        "Complete populated supported-browser/role/device/manual/visual/performance and hosted widget acceptance remain open",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
       "id": "A11Y-TEST-003",
       "requirements": [
         "AUDIT-002"

@@ -1,0 +1,82 @@
+{
+  "generatedAt": "2026-11-05T23:42:00.853Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and Chromium desktop/mobile overview reads with controlled aggregate/individual-widget failures and denial. Real own-task projection; all other ready widgets remain actual API results. Fresh owned task archived, fictional accounts disabled and sessions revoked. Browser non-read API/external requests blocked; realtime paused. No provider sends, existing account/record or production changes. Captures ignored/private; no credentials or response bodies retained.",
+  "tests": [
+    {
+      "name": "anonymous overview read is denied",
+      "passed": true
+    },
+    {
+      "name": "authorized uncached overview returns the own safe assigned-task projection",
+      "passed": true
+    },
+    {
+      "name": "unrelated account overview cannot include the owned private task",
+      "passed": true
+    },
+    {
+      "name": "actual overview initial retry recovers own data and workspace focus at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "actual failed refresh retains a dated overview and removes stale quick actions at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "failed widget retries through one current overview read while unrelated data remains visible at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "offline overview keeps timestamped data and reconnect does not auto-submit or refresh at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "overview denial clears private widgets before an explicit current-access recheck at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated overview passes measured axe checks at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "overview recovery has no page error, non-read API call, external request or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "actual overview initial retry recovers own data and workspace focus at 375×812",
+      "passed": true
+    },
+    {
+      "name": "actual failed refresh retains a dated overview and removes stale quick actions at 375×812",
+      "passed": true
+    },
+    {
+      "name": "failed widget retries through one current overview read while unrelated data remains visible at 375×812",
+      "passed": true
+    },
+    {
+      "name": "offline overview keeps timestamped data and reconnect does not auto-submit or refresh at 375×812",
+      "passed": true
+    },
+    {
+      "name": "overview denial clears private widgets before an explicit current-access recheck at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated overview passes measured axe checks at 375×812",
+      "passed": true
+    },
+    {
+      "name": "overview recovery has no page error, non-read API call, external request or page overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "overview recovery leaves the owned task revision and contents unchanged",
+      "passed": true
+    }
+  ]
+}
