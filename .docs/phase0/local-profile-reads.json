@@ -1,0 +1,38 @@
+{
+  "generatedAt": "2026-11-05T03:21:00.591Z",
+  "note": "Actual loopback session/activity reads using a fresh fictional account, disabled and sessions revoked after verification. Existing accounts and settings untouched. No mail, provider or other-session changes. Response bodies and identity are not retained.",
+  "completed": true,
+  "cleanup": {
+    "logoutConfirmed": true
+  },
+  "tests": [
+    {
+      "name": "/admin/me/sessions rejects anonymous reads",
+      "passed": true
+    },
+    {
+      "name": "/admin/me/activity rejects anonymous reads",
+      "passed": true
+    },
+    {
+      "name": "current local sign-in is represented in the session inventory",
+      "passed": true
+    },
+    {
+      "name": "session inventory is uncached and contains no token or risk metadata",
+      "passed": true
+    },
+    {
+      "name": "own activity loads independently through the actual local API",
+      "passed": true
+    },
+    {
+      "name": "activity projection excludes raw audit metadata, identity and payloads",
+      "passed": true
+    },
+    {
+      "name": "the probe's own session is revoked after read verification",
+      "passed": true
+    }
+  ]
+}

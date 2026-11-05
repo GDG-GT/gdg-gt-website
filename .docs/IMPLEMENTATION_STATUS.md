@@ -8,6 +8,20 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Own-profile independent session/activity reads — 2026-11-04
+
+- Replaced swallowed read failures with independent loading/error/retry/stale
+  snapshots. Denial clears private rows; stale/offline session inventory cannot
+  drive revocation. Account/role/session remounts and read cancellation prevent
+  old results/inputs carrying across context changes.
+- All 1,180 tests/143 files pass on the clean rerun; eight new DOM cases and
+  seven actual local API checks pass. Probe account disabled/sessions revoked.
+  Global coverage remains below 70%: 58.47% lines/57.21% branches; all 17 critical
+  branch gates pass. Types/lint remain passing (0 errors/25 warnings).
+- Profile mutation recovery, browser interruption/visual, device/screen-reader
+  and hosted acceptance remain open. Catalog: 138 unverified cases. See
+  `PROFILE_READ_RECOVERY.md`; full PRD remains open.
+
 ### Public-content collection editor recovery — 2026-11-04
 
 - Independent permission/inventory/detail reads, scoped cancellation and

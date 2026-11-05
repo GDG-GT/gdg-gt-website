@@ -2,6 +2,8 @@ import { useState, useEffect, type FormEvent } from "react";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { useAdmin } from "@/contexts/AdminContext";
 import { api } from "@/lib/api";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { Button, Field, Badge, EmptyState } from "./primitives";
 type Session = {
   id: string;
@@ -17,16 +19,85 @@ type Activity = {
   result: string;
 };
 export default function ProfileWorkspace() {
+  const { currentAdmin } = useAdmin();
+  const [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((value) => value + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  if (!currentAdmin) return null;
+  return (
+    <ProfileEditor key={`${currentAdmin.id}:${currentAdmin.role}:${epoch}`} />
+  );
+}
+function ReadFeedback({
+  label,
+  read,
+  retry,
+  disabled,
+}: {
+  label: string;
+  read: { data?: unknown; at?: string; loading: boolean; error: string };
+  retry: () => void;
+  disabled: boolean;
+}) {
+  return (
+    <>
+      {read.loading && !read.data && (
+        <div role="status" aria-label={`Loading ${label.toLowerCase()}`}>
+          <div className="gt-skeleton gt-detail-skeleton" />
+          <span className="sr-only">Loading {label.toLowerCase()}…</span>
+        </div>
+      )}
+      {read.error && (
+        <div role="alert" className="gt-inline-error">
+          <p>
+            {label} could not {read.at ? "refresh" : "load"}. {read.error}
+          </p>
+          {read.at && (
+            <p>
+              Showing information last loaded{" "}
+              {new Date(read.at).toLocaleString()}.
+            </p>
+          )}
+          <Button
+            variant="secondary"
+            disabled={disabled || read.loading}
+            onClick={() => {
+              retry();
+              document.getElementById("workspace-content")?.focus();
+            }}
+          >
+            Retry {label.toLowerCase()}
+          </Button>
+        </div>
+      )}
+    </>
+  );
+}
+function ProfileEditor() {
   const [accountDirty, setAccountDirty] = useState(false),
     [profileDirty, setProfileDirty] = useState(false),
     [passwordDirty, setPasswordDirty] = useState(false);
   const { currentAdmin, mergedProfile, refreshProfile, updateTeamProfile } =
     useAdmin();
-  const [sessions, setSessions] = useState<Session[]>([]),
-    [activity, setActivity] = useState<Activity[]>([]),
+  const [sessionsRefresh, setSessionsRefresh] = useState(0),
+    [activityRefresh, setActivityRefresh] = useState(0),
     [busy, setBusy] = useState(false),
     [message, setMessage] = useState(""),
     [error, setError] = useState("");
+  const sessionsRead = usePrivateRead<{ items: Session[] }>(
+      "/admin/me/sessions",
+      sessionsRefresh,
+    ),
+    activityRead = usePrivateRead<{ items: Activity[] }>(
+      "/admin/me/activity",
+      activityRefresh,
+    ),
+    sessions = sessionsRead.data?.items || [],
+    activity = activityRead.data?.items || [],
+    { isOnline } = useOnlineStatus();
   const [displayName, setDisplayName] = useState(
     currentAdmin?.display_name || "",
   );
@@ -39,24 +110,14 @@ export default function ProfileWorkspace() {
     linkedinUrl: p?.linkedinUrl || "",
     githubUrl: p?.githubUrl || "",
   });
-  const load = async () => {
-    const results = await Promise.allSettled([
-      api<{ items: Session[] }>("/admin/me/sessions"),
-      api<{ items: Activity[] }>("/admin/me/activity"),
-    ]);
-    if (results[0].status === "fulfilled") setSessions(results[0].value.items);
-    if (results[1].status === "fulfilled") setActivity(results[1].value.items);
-  };
-  useEffect(() => {
-    load().catch(() => setError("Your account activity could not load."));
-  }, []);
   const work = async (action: () => Promise<void>) => {
     setBusy(true);
     setError("");
     setMessage("");
     try {
       await action();
-      await load();
+      setSessionsRefresh((value) => value + 1);
+      setActivityRefresh((value) => value + 1);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -98,6 +159,12 @@ export default function ProfileWorkspace() {
         </div>
         <Badge>{currentAdmin?.role.replace(/_/g, " ")}</Badge>
       </header>
+      {!isOnline && (
+        <p role="status">
+          You are offline. Saved snapshots may be out of date. Reconnect, then
+          refresh to check your account activity.
+        </p>
+      )}
       {error && (
         <p className="gt-form-error" role="alert">
           {error}
@@ -240,7 +307,20 @@ export default function ProfileWorkspace() {
           <h2>Active sessions</h2>
           <Button
             variant="secondary"
-            disabled={busy || sessions.length < 2}
+            disabled={busy || !isOnline || sessionsRead.loading}
+            onClick={() => setSessionsRefresh((value) => value + 1)}
+          >
+            Refresh active sessions
+          </Button>
+          <Button
+            variant="secondary"
+            disabled={
+              busy ||
+              !isOnline ||
+              sessionsRead.loading ||
+              !!sessionsRead.error ||
+              sessions.length < 2
+            }
             onClick={() =>
               work(async () => {
                 await api("/auth/sessions", {
@@ -254,6 +334,12 @@ export default function ProfileWorkspace() {
             Sign out other sessions
           </Button>
         </div>
+        <ReadFeedback
+          label="Active sessions"
+          read={sessionsRead}
+          disabled={busy || !isOnline}
+          retry={() => setSessionsRefresh((value) => value + 1)}
+        />
         {sessions.length ? (
           <div className="gt-table-wrap">
             <table className="gt-data-table">
@@ -277,12 +363,27 @@ export default function ProfileWorkspace() {
               </tbody>
             </table>
           </div>
-        ) : (
+        ) : sessionsRead.data ? (
           <EmptyState title="No active sessions to show" />
-        )}
+        ) : null}
       </section>
       <section className="gt-panel gt-event-editor">
-        <h2>Your recent activity</h2>
+        <div className="gt-panel-heading">
+          <h2>Your recent activity</h2>
+          <Button
+            variant="secondary"
+            disabled={busy || !isOnline || activityRead.loading}
+            onClick={() => setActivityRefresh((value) => value + 1)}
+          >
+            Refresh recent activity
+          </Button>
+        </div>
+        <ReadFeedback
+          label="Recent activity"
+          read={activityRead}
+          disabled={busy || !isOnline}
+          retry={() => setActivityRefresh((value) => value + 1)}
+        />
         {activity.length ? (
           <ul>
             {activity.map((row) => (
@@ -292,9 +393,9 @@ export default function ProfileWorkspace() {
               </li>
             ))}
           </ul>
-        ) : (
+        ) : activityRead.data ? (
           <EmptyState title="No recent activity" />
-        )}
+        ) : null}
       </section>
     </div>
   );

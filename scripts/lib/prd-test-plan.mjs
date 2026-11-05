@@ -1254,6 +1254,17 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 
+add(
+  "AUTH-TEST-003",
+  "AUTH-013 AUTH-015",
+  "Own-profile independent session/activity read errors, retries, stale snapshots, denied-state clearing and account/session isolation",
+  ["tests/client/profile-read-recovery.test.tsx", local("profile-reads")],
+  [
+    "Profile mutation recovery, live browser outage/role changes, full screen-reader/device and hosted acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

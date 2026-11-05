@@ -129,7 +129,8 @@
       "line": 298,
       "status": "unverified",
       "testIds": [
-        "AUTH-TEST-019"
+        "AUTH-TEST-019",
+        "AUTH-TEST-003"
       ],
       "evidence": []
     },
@@ -149,7 +150,8 @@
       "line": 302,
       "status": "unverified",
       "testIds": [
-        "AUTH-TEST-017"
+        "AUTH-TEST-017",
+        "AUTH-TEST-003"
       ],
       "evidence": []
     },

@@ -2507,6 +2507,28 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "AUTH-TEST-003",
+      "requirements": [
+        "AUTH-013",
+        "AUTH-015"
+      ],
+      "scope": "Own-profile independent session/activity read errors, retries, stale snapshots, denied-state clearing and account/session isolation",
+      "automated": [
+        "tests/client/profile-read-recovery.test.tsx",
+        "scripts/test-local-profile-reads.mjs"
+      ],
+      "remaining": [
+        "Profile mutation recovery, live browser outage/role changes, full screen-reader/device and hosted acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {
