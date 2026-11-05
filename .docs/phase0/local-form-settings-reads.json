@@ -1,0 +1,38 @@
+{
+  "generatedAt": "2026-11-05T03:29:50.143Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback reads of delivery/retention for one fresh fictional draft/account. Existing content/accounts/settings untouched. No publication, policy approval, mail, provider, file or quota reset. Owned draft archived/account disabled/sessions revoked.",
+  "tests": [
+    {
+      "name": "delivery read rejects anonymous access",
+      "passed": true
+    },
+    {
+      "name": "delivery loads current private configuration without a mutation",
+      "passed": true
+    },
+    {
+      "name": "delivery projection omits credential and capability material",
+      "passed": true
+    },
+    {
+      "name": "privacy read rejects anonymous access",
+      "passed": true
+    },
+    {
+      "name": "privacy loads current private configuration without a mutation",
+      "passed": true
+    },
+    {
+      "name": "privacy projection omits credential and capability material",
+      "passed": true
+    },
+    {
+      "name": "configuration reads do not publish, revise or change form availability",
+      "passed": true
+    }
+  ]
+}

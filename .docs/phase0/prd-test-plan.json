@@ -2529,6 +2529,54 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "FORM-TEST-036",
+      "requirements": [
+        "FORM-002",
+        "FORM-007",
+        "FORM-026"
+      ],
+      "scope": "Form archive/restore/close/reopen consequence review, fresh state/grant checks, revision-bound confirmation, pending/offline/cancel and session replacement",
+      "automated": [
+        "tests/client/form-availability-review.test.tsx",
+        "tests/client/form-editor-permissions.test.tsx",
+        "scripts/test-local-form-library.mjs"
+      ],
+      "remaining": [
+        "Full availability/invitation/privacy mutation recovery, real-browser keyboard/screen-reader/device and hosted acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "28.4",
+        "31.2"
+      ]
+    },
+    {
+      "id": "FORM-TEST-037",
+      "requirements": [
+        "FORM-021",
+        "FORM-025",
+        "FORM-026"
+      ],
+      "scope": "Delivery/retention initial-read skeletons, in-place retry, request cancellation and non-mutating private configuration reads",
+      "automated": [
+        "tests/client/form-settings-read-retry.test.tsx",
+        "scripts/test-local-form-settings-reads.mjs"
+      ],
+      "remaining": [
+        "Full delivery/privacy mutation recovery, real-browser interruption, screen-reader/device and hosted acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-04): the latest module checkpoint is
-`PROFILE_READ_RECOVERY.md`; completed recovery checkpoints include tasks,
+`FORM_AVAILABILITY_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -26,10 +26,11 @@ account/session cancellation and selected-row recovery are also implemented
 locally (`COLLECTION_RECOVERY.md`); supported-device, visual and hosted acceptance
 remain open.
 
-The November 4 source audit additionally confirms: Forms archive/close and access
-revocation need consequence reviews; collaborator candidates stop at 100 without
-search/paging; Forms delivery/retention initial failures need in-place retry;
-profile session/activity read recovery is now closed locally
+The November 4 source audit confirms remaining gaps: Forms access revocation
+needs consequence reviews; collaborator candidates stop at 100 without
+search/paging. Form library availability reviews and delivery/retention initial
+read retry are now closed locally (`FORM_AVAILABILITY_RECOVERY.md`);
+profile session/activity read recovery is also closed locally
 (`PROFILE_READ_RECOVERY.md`). Complete Events, Teams,
 Users, profile/dashboard/audit and Forms recovery/navigation checks remain open.
 These are implementation gaps, separate from external launch inputs.

@@ -57,7 +57,8 @@ export default function DeliveryPanel({
     [confirmation, setConfirmation] = useState(""),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false),
+    [readRetry, setReadRetry] = useState(0);
   const generation = useRef(0),
     request = useRef<AbortController>(),
     submission = useRef<{ signature: string; key: string }>();
@@ -70,6 +71,7 @@ export default function DeliveryPanel({
   useDraftGuard(dirty, { busy, label: "Form delivery review" });
   useEffect(() => onStateChange({ dirty, busy }), [onStateChange, dirty, busy]);
   useEffect(() => {
+    setError("");
     const controller = new AbortController(),
       current = ++generation.current;
     const invalidate = () => {
@@ -103,16 +105,32 @@ export default function DeliveryPanel({
       invalidate();
       window.removeEventListener("gdg:session-cleared", clear);
     };
-  }, [formId]);
+  }, [formId, readRetry]);
   if (!policy || !draft)
-    return (
+    return error ? (
       <EmptyState
-        title={
-          error ? "Delivery settings unavailable" : "Loading delivery settings…"
+        title="Delivery settings unavailable"
+        action={
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setReadRetry((value) => value + 1);
+              document.getElementById("workspace-content")?.focus();
+            }}
+          >
+            Retry delivery settings
+          </Button>
         }
       >
-        {error || "Checking your current access."}
+        {error}
       </EmptyState>
+    ) : (
+      <div role="status" aria-label="Loading delivery settings">
+        <div className="gt-skeleton gt-detail-skeleton" />
+        <span className="sr-only">
+          Checking delivery settings and current access…
+        </span>
+      </div>
     );
   const identityReady = ["verified", "invited", "internal"].includes(access);
   const changed = (values: Partial<Choices>) => {

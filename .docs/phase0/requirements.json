@@ -922,7 +922,8 @@
       "line": 485,
       "status": "unverified",
       "testIds": [
-        "FORM-TEST-002"
+        "FORM-TEST-002",
+        "FORM-TEST-036"
       ],
       "evidence": []
     },
@@ -976,7 +977,8 @@
       "status": "unverified",
       "testIds": [
         "FORM-TEST-007",
-        "FORM-TEST-031"
+        "FORM-TEST-031",
+        "FORM-TEST-036"
       ],
       "evidence": [],
       "userOverride": "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy."
@@ -1126,7 +1128,8 @@
       "line": 523,
       "status": "unverified",
       "testIds": [
-        "FORM-TEST-021"
+        "FORM-TEST-021",
+        "FORM-TEST-037"
       ],
       "evidence": []
     },
@@ -1166,7 +1169,8 @@
       "line": 531,
       "status": "unverified",
       "testIds": [
-        "FORM-TEST-024"
+        "FORM-TEST-024",
+        "FORM-TEST-037"
       ],
       "evidence": []
     },
@@ -1182,7 +1186,9 @@
         "FORM-TEST-031",
         "FORM-TEST-032",
         "FORM-TEST-033",
-        "FORM-TEST-035"
+        "FORM-TEST-035",
+        "FORM-TEST-036",
+        "FORM-TEST-037"
       ],
       "evidence": []
     },

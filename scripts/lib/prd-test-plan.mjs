@@ -1265,6 +1265,35 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 
+add(
+  "FORM-TEST-036",
+  "FORM-002 FORM-007 FORM-026",
+  "Form archive/restore/close/reopen consequence review, fresh state/grant checks, revision-bound confirmation, pending/offline/cancel and session replacement",
+  [
+    "tests/client/form-availability-review.test.tsx",
+    "tests/client/form-editor-permissions.test.tsx",
+    local("form-library"),
+  ],
+  [
+    "Full availability/invitation/privacy mutation recovery, real-browser keyboard/screen-reader/device and hosted acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
+
+add(
+  "FORM-TEST-037",
+  "FORM-021 FORM-025 FORM-026",
+  "Delivery/retention initial-read skeletons, in-place retry, request cancellation and non-mutating private configuration reads",
+  [
+    "tests/client/form-settings-read-retry.test.tsx",
+    local("form-settings-reads"),
+  ],
+  [
+    "Full delivery/privacy mutation recovery, real-browser interruption, screen-reader/device and hosted acceptance",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

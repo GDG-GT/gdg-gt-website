@@ -8,6 +8,21 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Form availability reviews and settings read retry — 2026-11-04
+
+- Archive/restore/close/reopen now use named consequence reviews and fresh
+  inventory/grant/revision checks. Pending confirmations freeze synchronously;
+  failures remain reviewable, offline reconnect sends no write and session
+  clearing resets private library state. Delivery/retention initial reads have
+  loading, error and explicit read-only retry controls.
+- All 1,197 tests/145 files pass; 53 focused Forms tests and 25 actual local
+  library/settings checks pass. Probe fixtures cleaned up. Coverage still fails
+  70%: 58.91% lines/57.78% branches; all 17 critical branch gates pass. Types/lint
+  pass (zero errors/25 warnings). Catalog: 140 unverified cases.
+- Access revocation reviews, candidate paging, broader Forms mutations and
+  browser/device/visual/hosted acceptance remain open. See
+  `FORM_AVAILABILITY_RECOVERY.md`; full PRD remains open.
+
 ### Own-profile independent session/activity reads — 2026-11-04
 
 - Replaced swallowed read failures with independent loading/error/retry/stale

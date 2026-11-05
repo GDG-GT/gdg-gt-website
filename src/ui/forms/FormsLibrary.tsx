@@ -32,6 +32,8 @@ import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import { createTemplate, type PreviewForm, type FormTemplate } from "./store";
 import { formsApi, useFormLibrary } from "./api";
 import { useAdmin } from "@/contexts/AdminContext";
+import { useDraftGuard } from "@/hooks/useDraftGuard";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import FormDeletionReview from "./FormDeletionReview";
 import FormLibraryScopeFilter, {
   type FormScopeOption,
@@ -40,8 +42,16 @@ import { formTemplateLabels } from "../../../shared/form-library.mjs";
 
 export default function FormsLibrary() {
   const { currentAdmin } = useAdmin();
+  const [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((value) => value + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
   return (
-    <FormsLibraryWorkspace key={`${currentAdmin?.id}:${currentAdmin?.role}`} />
+    <FormsLibraryWorkspace
+      key={`${currentAdmin?.id}:${currentAdmin?.role}:${epoch}`}
+    />
   );
 }
 function FormsLibraryWorkspace() {
@@ -56,6 +66,12 @@ function FormsLibraryWorkspace() {
   const navigate = useNavigate();
   const { isSuperAdmin } = useAdmin();
   const [deletion, setDeletion] = useState<PreviewForm | null>(null);
+  const [review, setReview] = useState<{
+    form: PreviewForm;
+    action: "archive" | "restore" | "close" | "reopen";
+  }>();
+  const [notice, setNotice] = useState("");
+  const { isOnline } = useOnlineStatus();
   const [page, setPage] = useState(1),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
@@ -112,6 +128,7 @@ function FormsLibraryWorkspace() {
     operationPending.current = true;
     setBusy(true);
     setError("");
+    setNotice("");
     try {
       await action();
       if (mounted.current) library.reload();
@@ -121,6 +138,39 @@ function FormsLibraryWorkspace() {
       operationPending.current = false;
       if (mounted.current) setBusy(false);
     }
+  };
+  useDraftGuard(!!review, { busy, label: "Form availability review" });
+  const reviewCurrent =
+      review && forms.find((form) => form.id === review.form.id),
+    reviewChanged =
+      !!review &&
+      !library.loading &&
+      !library.error &&
+      (!reviewCurrent ||
+        reviewCurrent.revision !== review.form.revision ||
+        reviewCurrent.status !== review.form.status),
+    reviewAllowed = !!reviewCurrent?.actions?.includes(
+      review?.action === "archive" || review?.action === "restore"
+        ? "delete"
+        : "publish",
+    ),
+    reviewLabel = review
+      ? {
+          archive: "Archive form",
+          restore: "Restore draft",
+          close: "Close form",
+          reopen: "Reopen form",
+        }[review.action]
+      : "Review form";
+  const beginReview = (
+    form: PreviewForm,
+    action: NonNullable<typeof review>["action"],
+  ) => {
+    if (operationPending.current) return;
+    setError("");
+    setNotice("");
+    setReview({ form, action });
+    library.reload();
   };
   const templates = [
     [
@@ -172,6 +222,7 @@ function FormsLibraryWorkspace() {
           <button onClick={library.reload}>Try again</button>
         </p>
       )}
+      {notice && <p role="status">{notice}</p>}
       {library.loading && <p role="status">Loading your forms…</p>}
       <div className="gt-forms-stats">
         {[
@@ -482,15 +533,14 @@ function FormsLibraryWorkspace() {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               disabled={
+                                form.status === "Archived" ||
                                 !form.versions.length ||
                                 !form.actions?.includes("publish")
                               }
                               onClick={() =>
-                                work(() =>
-                                  formsApi.state(
-                                    form,
-                                    form.status === "Open" ? "Closed" : "Open",
-                                  ),
+                                beginReview(
+                                  form,
+                                  form.status === "Open" ? "close" : "reopen",
                                 )
                               }
                             >
@@ -501,10 +551,11 @@ function FormsLibraryWorkspace() {
                             <DropdownMenuItem
                               disabled={!form.actions?.includes("delete")}
                               onClick={() =>
-                                work(() =>
+                                beginReview(
+                                  form,
                                   form.status === "Archived"
-                                    ? formsApi.restore(form)
-                                    : formsApi.archive(form),
+                                    ? "restore"
+                                    : "archive",
                                 )
                               }
                             >
@@ -622,6 +673,124 @@ function FormsLibraryWorkspace() {
           }}
         />
       )}
+      <Dialog
+        open={!!review}
+        onOpenChange={(open) => {
+          if (!open && !operationPending.current) setReview(undefined);
+        }}
+      >
+        <DialogContent
+          onEscapeKeyDown={(event) => {
+            if (operationPending.current) event.preventDefault();
+          }}
+          onPointerDownOutside={(event) => {
+            if (operationPending.current) event.preventDefault();
+          }}
+        >
+          <DialogTitle>{reviewLabel}?</DialogTitle>
+          <DialogDescription>
+            {review?.action === "archive"
+              ? "Remove this form from active use. Responses and published history are retained; the form can be restored as a private draft."
+              : review?.action === "restore"
+                ? "Restore this archived form as a private draft. This does not reopen it or collect new responses."
+                : review?.action === "close"
+                  ? "Stop new submissions to this form. Existing responses and published history are retained. You can review reopening later."
+                  : "Reopen the published form for new submissions under its existing access rules, schedule and response limit."}
+          </DialogDescription>
+          <p>
+            <strong>{review?.form.title}</strong>
+          </p>
+          {library.loading && (
+            <p role="status">
+              Checking the form's current state and permissions…
+            </p>
+          )}
+          {reviewChanged && (
+            <p role="alert">
+              The form changed or is no longer in this inventory. Cancel and
+              review its current state before continuing.
+            </p>
+          )}
+          {!reviewAllowed && !library.loading && (
+            <p role="alert">
+              Your current permissions do not allow this action.
+            </p>
+          )}
+          {(error || library.error) && (
+            <p role="alert" className="gt-form-error">
+              {error || library.error}
+            </p>
+          )}
+          {!isOnline && (
+            <p role="status">
+              You are offline. Reconnect before confirming this action.
+            </p>
+          )}
+          <div className="gt-inline-actions">
+            <Button
+              variant={
+                review?.action === "archive" || review?.action === "close"
+                  ? "danger"
+                  : "primary"
+              }
+              disabled={
+                busy ||
+                !isOnline ||
+                library.loading ||
+                !!library.error ||
+                reviewChanged ||
+                !reviewAllowed
+              }
+              onClick={() => {
+                if (
+                  !review ||
+                  !reviewCurrent ||
+                  reviewChanged ||
+                  !reviewAllowed ||
+                  !isOnline ||
+                  library.loading ||
+                  library.error
+                )
+                  return;
+                const current = review;
+                void work(async () => {
+                  if (current.action === "archive")
+                    await formsApi.archive(current.form);
+                  else if (current.action === "restore")
+                    await formsApi.restore(current.form);
+                  else
+                    await formsApi.state(
+                      current.form,
+                      current.action === "close" ? "Closed" : "Open",
+                    );
+                  if (mounted.current) {
+                    setReview(undefined);
+                    setNotice(
+                      `${current.form.title}: ${current.action === "archive" ? "archived; responses retained" : current.action === "restore" ? "restored as a private draft" : current.action === "close" ? "closed to new submissions" : "reopened under its published access rules"}.`,
+                    );
+                  }
+                });
+              }}
+            >
+              {busy ? "Saving…" : reviewLabel}
+            </Button>
+            <Button
+              variant="secondary"
+              disabled={busy}
+              onClick={() => setReview(undefined)}
+            >
+              Cancel review
+            </Button>
+            <Button
+              variant="ghost"
+              disabled={busy || library.loading || !isOnline}
+              onClick={library.reload}
+            >
+              Recheck form
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent>
           <DialogTitle>What are you creating?</DialogTitle>
