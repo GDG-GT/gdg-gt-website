@@ -137,7 +137,10 @@ export const test = base.extend<{ fixture: PublicFixture }>({
             return;
           }
           if (path === "/admin/events") {
-            await reply(200, empty);
+            await reply(200, {
+              ...empty,
+              capabilities: { globalCreate: true, teams: [] },
+            });
             return;
           }
         }

@@ -8,6 +8,32 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Events writes, consequence reviews and bounded replay — 2026-11-05
+
+- Migration 112 adds current-session/grant-bound atomic event/attendee receipts,
+  current action/create-destination projections and attendee timestamp conflicts.
+  Scoped pending/cancellation guards, explicit read-only recovery, identical
+  replay and a 47-hour client retry cutoff protect ambiguous writes. Named
+  lifecycle/removal/public-save reviews retain current revisions; cancellation
+  and archive require the target slug. Attendee edits use explicit saves and
+  navigation guards. Parent read/offline recovery preserves open mail drafts.
+- All 1,301 tests/152 files pass (59 focused; 41 new cases). The first full run
+  caught a denial-recheck cleanup race; the corrected full rerun passes without
+  relaxed timeouts/thresholds. Coverage still fails 70%: 61.03% lines/60.24%
+  branches; all 17 critical-file branch gates pass.
+- Complete SQL suites pass under both grant modes (199/200 checks), including
+  both 100-client races; all six isolated restore checks pass. All 39 real
+  API/DB/desktop-mobile browser checks pass, including ten simultaneous creates,
+  ten duplicates and four accepted-but-lost writes replayed without duplicate
+  revision/audit. Populated editor/review/attendee axe checks pass. Fixtures
+  cleaned up; no real provider send or existing record change.
+- Catalog: 146 unverified cases. Complete event-mail recovery and broader
+  browser/role/device/manual/visual/performance/hosted acceptance remain open.
+  See `EVENT_MUTATION_RECOVERY.md`; full PRD remains open.
+- Types/lint (zero errors/25 warnings), build/budgets/secrets pass. The complete
+  pinned production-build browser matrix passes 94 applicable checks with eight
+  expected profile skips. Captures remain unapproved review candidates.
+
 ### Independent private Events read recovery — 2026-11-05
 
 - Separate inventory/detail/attendee reads now expose scoped loading/retry,

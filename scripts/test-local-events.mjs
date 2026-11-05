@@ -208,7 +208,10 @@ try {
   );
   r = await call(
     "/admin/events/" + event.id + "/attendees/" + registration.registrationId,
-    { method: "PATCH", body: { attended: true } },
+    {
+      method: "PATCH",
+      body: { attended: true, updatedAt: r.json.data.items[0].updated_at },
+    },
   );
   check(r.status === 200, "check-in succeeds through protected API");
   r = await call("/admin/events/" + event.id, {

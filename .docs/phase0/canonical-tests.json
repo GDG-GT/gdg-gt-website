@@ -112,7 +112,8 @@
     "202610260108_newsletter_token_review.sql",
     "202610260109_form_library_creation_capabilities.sql",
     "202610270110_curated_content_retries.sql",
-    "202611040111_form_access_account_inventory.sql"
+    "202611040111_form_access_account_inventory.sql",
+    "202611050112_event_mutation_replay.sql"
   ],
   "tests": [
     {
@@ -564,6 +565,10 @@
       "passed": true
     },
     {
+      "name": "202611050112_event_mutation_replay.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -893,6 +898,10 @@
     },
     {
       "name": "111_form_access_account_inventory.sql",
+      "passed": true
+    },
+    {
+      "name": "112_event_mutation_replay.sql",
       "passed": true
     },
     {

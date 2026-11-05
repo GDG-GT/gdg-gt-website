@@ -37,7 +37,7 @@ vi.mock("../../src/ui/EventMailPanel", () => ({
 function event(
   id = "fictional-event",
   title = "Fictional private event",
-): ChapterEvent {
+): ChapterEvent & { actions: string[]; canExport: boolean; canEmail: boolean } {
   return {
     id,
     title,
@@ -60,6 +60,9 @@ function event(
     revision: 1,
     created_at: "2026-11-05T12:00:00Z",
     updated_at: "2026-11-05T12:00:00Z",
+    actions: ["read", "create", "update", "delete", "publish"],
+    canExport: true,
+    canEmail: true,
   };
 }
 const person = {
@@ -69,6 +72,7 @@ const person = {
   notes: "Private fixture note",
   attended: false,
   registration_date: "2026-11-05T12:00:00Z",
+  updated_at: "2026-11-05T12:00:00Z",
 };
 const inventoryPath = "/admin/events?page=1",
   detailPath = "/admin/events/fictional-event",
@@ -79,7 +83,11 @@ let read: (path: string) => unknown;
 function defaults(path: string) {
   if (path.includes("/attendees?")) return { items: [person], total: 1 };
   if (path.includes("/events?"))
-    return { items: [current], total: inventoryTotal };
+    return {
+      items: [current],
+      total: inventoryTotal,
+      capabilities: { globalCreate: true, teams: [] },
+    };
   return { event: current };
 }
 function pending() {

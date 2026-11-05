@@ -37,12 +37,14 @@ export async function localHttp() {
       sessionBinding,
     } = {},
   ) {
-    // Curated-content mutations now require explicit retry intent. A null key
+    // Content/event mutations require explicit retry intent. A null key
     // deliberately omits the header for negative contract checks.
     const requestKey =
       key === undefined &&
       method !== "GET" &&
-      /^\/admin\/(?:site-content|content-records)\//.test(path)
+      /^\/admin\/(?:(?:site-content|content-records)\/|events(?:\/|$))/.test(
+        path,
+      )
         ? randomUUID()
         : key;
     const response = await fetch(env.APP_ORIGIN + "/api/v1" + path, {

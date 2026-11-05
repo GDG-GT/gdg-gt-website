@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-05): the latest module checkpoint is
-`EVENT_READ_RECOVERY.md`; completed recovery checkpoints include tasks,
+`EVENT_MUTATION_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -36,7 +36,9 @@ profile session/activity read recovery is also closed locally
 are now closed locally (`PROFILE_MUTATION_RECOVERY.md`), including actual
 accepted-but-dropped save reconciliation. Independent Events reads are now
 closed locally (`EVENT_READ_RECOVERY.md`), including real desktop/mobile outage
-recovery. Complete Events writes/permissions/reviews/navigation, Teams,
+recovery. Core Events/attendee writes, current action capabilities, consequence
+reviews and draft navigation now have local recovery (`EVENT_MUTATION_RECOVERY.md`).
+Complete event-mail denial/uncertain-review recovery, Teams,
 Users, dashboard/audit and Forms recovery/navigation checks remain open, as do
 the remaining browser/device/manual acceptance matrices.
 These are implementation gaps, separate from external launch inputs.
@@ -159,10 +161,10 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is 60.22% lines/59.31% branches at the Events-read checkpoint, below the global
-  70% gate; 1,260 tests pass, not a percentage of completed PRD features.
+  coverage is 61.03% lines/60.24% branches at the Events-write checkpoint, below the global
+  70% gate; 1,301 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 145 reviewed logical test cases with
+  All 146 numbered requirements now map into 146 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.
@@ -170,7 +172,7 @@ Their manual/hosted/visual acceptance remains open.
   plus a blocking production dependency audit and a digest-pinned Playwright
   browser job. It has not run on GitHub here;
   the dependency gate passes locally; the independent coverage gate remains red.
-  All 88 applicable public/shared-workspace production-build browser checks pass locally across
+  All 94 applicable public/shared-workspace production-build browser checks pass locally across
   six profiles (eight explicit profile skips), plus 21 actual local public
   UI/API and six moving-hero/fallback checks (`BROWSER_VERIFICATION.md`). Full
   private/populated/Forms/PWA browser acceptance and remaining coverage are open.

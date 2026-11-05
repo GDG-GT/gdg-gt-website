@@ -15,10 +15,12 @@ export default function EventMailPanel({
   eventId,
   onClose,
   onQueued,
+  disabled = false,
 }: {
   eventId: string;
   onClose: () => void;
   onQueued: (count: number) => void;
+  disabled?: boolean;
 }) {
   const [subject, setSubject] = useState(""),
     [message, setMessage] = useState(""),
@@ -56,6 +58,7 @@ export default function EventMailPanel({
   const expired = !!review && new Date(review.expiresAt).getTime() <= now;
   async function submit(e: FormEvent) {
     e.preventDefault();
+    if (disabled || !navigator.onLine) return;
     if (!review) {
       await work(
         (signal) =>
@@ -119,7 +122,7 @@ export default function EventMailPanel({
             : "Preparing the saved audience review…"}
         </p>
       )}
-      <fieldset disabled={busy} className="gt-mail-fields">
+      <fieldset disabled={busy || disabled} className="gt-mail-fields">
         {review ? (
           <>
             <p className="gt-helper">

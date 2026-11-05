@@ -1,8 +1,17 @@
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  cloneElement,
+  type ReactElement,
+} from "react";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
 import { Link } from "react-router-dom";
 import { Plus, ArrowLeft, Save, Users, Copy, ExternalLink } from "lucide-react";
-import { api } from "@/lib/api";
+import { api, ApiFailure } from "@/lib/api";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import ScrollableTable from "./ScrollableTable";
@@ -11,6 +20,12 @@ import { Button, Field, Badge, EmptyState, SearchBox } from "./primitives";
 import type { ChapterEvent } from "./events";
 import FormIntegrations from "./forms/FormIntegrations";
 import EventMailPanel from "./EventMailPanel";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 type Attendee = {
   id: string;
   attendee_name: string;
@@ -18,6 +33,26 @@ type Attendee = {
   notes: string;
   attended: boolean;
   registration_date: string;
+  updated_at: string;
+};
+type ManagedEvent = ChapterEvent & {
+  actions?: string[];
+  canExport?: boolean;
+  canEmail?: boolean;
+};
+type Capabilities = {
+  globalCreate: boolean;
+  teams: { id: string; name: string }[];
+};
+type Intent = {
+  path: string;
+  method: string;
+  body: unknown;
+  key: string;
+  kind: "event" | "attendee";
+  label: string;
+  personId?: string;
+  createdAt: number;
 };
 type Draft = Partial<ChapterEvent>;
 const starter = (): Draft => ({
@@ -143,13 +178,40 @@ function ReadFeedback({
     </>
   );
 }
+function EventField({
+  name,
+  errors,
+  idPrefix = "event",
+  children,
+  ...props
+}: {
+  name: string;
+  errors: Record<string, string>;
+  idPrefix?: string;
+  children: ReactElement;
+  label: string;
+  hint?: string;
+  required?: boolean;
+}) {
+  const error = errors[name],
+    id = `${idPrefix}-field-${name}`;
+  return (
+    <Field {...props}>
+      {cloneElement(children, {
+        id,
+        "aria-invalid": error ? true : undefined,
+        "aria-describedby": error ? id + "-error" : undefined,
+      } as Record<string, unknown>)}
+      {error && <small id={id + "-error"}>{error}</small>}
+    </Field>
+  );
+}
 function EventWorkspaceContent() {
-  const { userTeams } = useAdmin();
+  const { currentAdmin } = useAdmin();
   const [draft, setDraft] = useState<Draft | null>(null),
-    [selected, setSelected] = useState<ChapterEvent | null>(null);
+    [selected, setSelected] = useState<ManagedEvent | null>(null);
   const [mode, setMode] = useState<"list" | "edit" | "attendees">("list");
-  const [busy, setBusy] = useState(false),
-    [error, setError] = useState(""),
+  const [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [query, setQuery] = useState("");
   const [page, setPage] = useState(1),
@@ -158,15 +220,37 @@ function EventWorkspaceContent() {
     [detailRefresh, setDetailRefresh] = useState(0),
     [attendeeRefresh, setAttendeeRefresh] = useState(0),
     [blocked, setBlocked] = useState(false);
+  const mutation = usePrivateMutation(
+      `${currentAdmin?.id}:${mode}:${selected?.id || "new"}:${attendeePage}`,
+    ),
+    busy = mutation.busy;
+  const [uncertain, setUncertain] = useState<Intent>(),
+    [needsRecheck, setNeedsRecheck] = useState(false),
+    [checkedUncertain, setCheckedUncertain] = useState(false),
+    [fieldErrors, setFieldErrors] = useState<Record<string, string>>({}),
+    [fieldTarget, setFieldTarget] = useState<string>(),
+    [attendeeDrafts, setAttendeeDrafts] = useState<
+      Record<string, Partial<Attendee>>
+    >({});
+  const feedback = useRef<HTMLDivElement>(null);
+  const reviewTarget = useRef<{
+      id: string;
+      revision: number;
+      updatedAt?: string;
+    }>(),
+    pendingMove = useRef<() => void>();
+  const [typedConfirmation, setTypedConfirmation] = useState("");
+  const [publishedSave, setPublishedSave] = useState<Intent>();
   const [confirmation, setConfirmation] = useState<string | null>(null),
     [dirty, setDirty] = useState(false);
   const [showMail, setShowMail] = useState(false),
     navigation = useNavigationSafety();
-  const inventory = usePrivateRead<{ items: ChapterEvent[]; total: number }>(
-      `/admin/events?page=${page}`,
-      listRefresh,
-    ),
-    detail = usePrivateRead<{ event: ChapterEvent }>(
+  const inventory = usePrivateRead<{
+      items: ManagedEvent[];
+      total: number;
+      capabilities?: Capabilities;
+    }>(`/admin/events?page=${page}`, listRefresh),
+    detail = usePrivateRead<{ event: ManagedEvent }>(
       selected && mode !== "list" ? `/admin/events/${selected.id}` : undefined,
       detailRefresh,
     ),
@@ -183,6 +267,12 @@ function EventWorkspaceContent() {
     total = inventory.data?.total || 0,
     attendees = audience.data?.items || [],
     attendeeTotal = audience.data?.total || 0,
+    capabilities = inventory.data?.capabilities,
+    canCreate =
+      !inventory.loading &&
+      !inventory.error &&
+      !!capabilities &&
+      (capabilities.globalCreate || capabilities.teams.length > 0),
     loading = inventory.loading,
     { isOnline } = useOnlineStatus(),
     detailReady =
@@ -200,6 +290,9 @@ function EventWorkspaceContent() {
       !audience.error &&
       !audience.denied &&
       isOnline,
+    canWrite = isOnline && !busy && !needsRecheck && !uncertain && !blocked,
+    selectedActions = detail.data?.event.actions || [],
+    canUpdate = selectedActions.includes("update"),
     clearInventory = inventory.clear,
     clearDetail = detail.clear,
     clearAudience = audience.clear,
@@ -208,8 +301,7 @@ function EventWorkspaceContent() {
     setListRefresh((value) => value + 1);
     setDetailRefresh((value) => value + 1);
   }, []);
-  useEffect(() => {
-    if (!denied) return;
+  const clearPrivate = useCallback(() => {
     setBlocked(true);
     clearInventory();
     clearDetail();
@@ -222,10 +314,26 @@ function EventWorkspaceContent() {
     setConfirmation(null);
     setError("");
     setNotice("");
-  }, [denied, clearInventory, clearDetail, clearAudience]);
+    setUncertain(undefined);
+    setNeedsRecheck(false);
+    setAttendeeDrafts({});
+    setFieldErrors({});
+    setFieldTarget(undefined);
+    setPublishedSave(undefined);
+    reviewTarget.current = undefined;
+    pendingMove.current = undefined;
+  }, [clearInventory, clearDetail, clearAudience]);
+  useEffect(() => {
+    if (denied) clearPrivate();
+  }, [denied, clearPrivate]);
+  useEffect(() => {
+    if (!confirmation) setPublishedSave(undefined);
+  }, [confirmation]);
   useEffect(() => {
     if (
       !dirty &&
+      !uncertain &&
+      !needsRecheck &&
       !busy &&
       detailReady &&
       detail.data &&
@@ -235,89 +343,251 @@ function EventWorkspaceContent() {
       setSelected(detail.data.event);
       if (mode === "edit") setDraft(detail.data.event);
     }
-  }, [detail.data, detailReady, dirty, busy, mode, selected]);
-  useEffect(() => {
-    const warn = (e: BeforeUnloadEvent) => {
-      if (dirty) {
-        e.preventDefault();
-        e.returnValue = "";
-      }
-    };
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [dirty]);
-  useDraftGuard(dirty, {
+  }, [
+    detail.data,
+    detailReady,
+    dirty,
+    busy,
+    mode,
+    selected,
+    uncertain,
+    needsRecheck,
+  ]);
+  const attendeeDirty = Object.keys(attendeeDrafts).length > 0;
+  useDraftGuard(dirty || attendeeDirty || !!uncertain, {
     busy,
     label: "Event changes or unsent event mail",
   });
   const change = (key: keyof ChapterEvent, value: unknown) => {
+    if (mutation.pending.current || uncertain) return;
     setDraft((d) => ({ ...d, [key]: value }));
     setDirty(true);
+    setFieldErrors((previous) => ({ ...previous, [key]: "" }));
   };
-  const edit = (event?: ChapterEvent) => {
+  useEffect(() => {
+    if (error || notice) {
+      if (confirmation)
+        document.getElementById("event-review-feedback")?.focus();
+      else feedback.current?.focus();
+    }
+  }, [error, notice, confirmation]);
+  const review = (kind: string, person?: Attendee) => {
+    if (mutation.pending.current) return;
+    reviewTarget.current = selected
+      ? {
+          id: selected.id,
+          revision:
+            kind === "reload"
+              ? detail.data?.event.revision || selected.revision
+              : selected.revision,
+          updatedAt: person?.updated_at,
+        }
+      : undefined;
+    setTypedConfirmation("");
+    setConfirmation(kind);
+  };
+  const requestMove = (move: () => void) => {
+    if (mutation.pending.current) return;
+    if (dirty || attendeeDirty || uncertain) {
+      pendingMove.current = move;
+      review("discard");
+    } else if (navigation) navigation.request(move);
+    else move();
+  };
+  const edit = (event?: ManagedEvent) => {
+    if (mutation.pending.current || uncertain || (!event && !canCreate)) return;
     setSelected(event || null);
-    setDraft(event ? { ...event } : starter());
+    setDraft(
+      event
+        ? { ...event }
+        : {
+            ...starter(),
+            team_id: capabilities?.globalCreate
+              ? null
+              : capabilities?.teams[0]?.id || null,
+          },
+    );
     setMode("edit");
     setError("");
     setNotice("");
     setDirty(false);
   };
+  const perform = async (intent: Intent, replay = false) => {
+    if (replay ? !isOnline || !checkedUncertain : !canWrite) return;
+    if (replay && Date.now() - intent.createdAt >= 47 * 60 * 60 * 1000) {
+      setError(
+        "The safe retry window ended. Return to Events and inspect saved records before starting another operation.",
+      );
+      return;
+    }
+    const controller = mutation.begin();
+    if (!controller) return;
+    setError("");
+    setNotice("");
+    setFieldErrors({});
+    setFieldTarget(intent.personId);
+    try {
+      const result = await api<{ event?: ManagedEvent }>(intent.path, {
+        method: intent.method,
+        protected: true,
+        body: intent.body,
+        idempotencyKey: intent.key,
+        signal: controller.signal,
+      });
+      if (!mutation.current(controller)) return;
+      if (intent.kind === "event" && result.event) {
+        setSelected(result.event);
+        setDraft(result.event);
+        setDirty(false);
+      } else {
+        setAttendeeDrafts((previous) => {
+          const next = { ...previous };
+          delete next[intent.personId || ""];
+          return next;
+        });
+        setAttendeeRefresh((value) => value + 1);
+      }
+      setUncertain(undefined);
+      setNeedsRecheck(false);
+      setCheckedUncertain(false);
+      setConfirmation(null);
+      setNotice(intent.label + " confirmed by the server.");
+      load();
+    } catch (failure) {
+      if (!mutation.current(controller)) return;
+      setError((failure as Error).message);
+      if (failure instanceof ApiFailure) {
+        setFieldErrors(
+          Object.fromEntries(
+            Object.entries(failure.fields || {}).map(([key, value]) => [
+              key.replace(/^event\./, ""),
+              value,
+            ]),
+          ),
+        );
+      }
+      if (
+        failure instanceof ApiFailure &&
+        [401, 403, 404].includes(failure.status)
+      ) {
+        clearPrivate();
+      } else if (!(failure instanceof ApiFailure) || failure.status >= 500) {
+        setUncertain(intent);
+        setNeedsRecheck(true);
+        setCheckedUncertain(false);
+        setError(
+          "The result could not be confirmed. Recheck saved data, then explicitly retry this same operation if needed. Your original retry identity is retained. " +
+            (failure as Error).message,
+        );
+      } else if (failure.status === 409) {
+        setNeedsRecheck(true);
+        setCheckedUncertain(false);
+        setError(
+          "Saved data or access changed. Recheck current values before another change. " +
+            failure.message,
+        );
+      }
+    } finally {
+      mutation.finish(controller);
+    }
+  };
+  const recheck = async () => {
+    if (!isOnline) return;
+    const controller = mutation.begin();
+    if (!controller) return;
+    setCheckedUncertain(false);
+    try {
+      await api(`/admin/events?page=${page}`, { signal: controller.signal });
+      if (selected) {
+        await api(`/admin/events/${selected.id}`, {
+          signal: controller.signal,
+        });
+        if (mode === "attendees")
+          await api(
+            `/admin/events/${selected.id}/attendees?page=${attendeePage}`,
+            { signal: controller.signal },
+          );
+      }
+      if (!mutation.current(controller)) return;
+      load();
+      setAttendeeRefresh((value) => value + 1);
+      setCheckedUncertain(true);
+      setNeedsRecheck(false);
+      setError("");
+      setNotice("Current saved data was rechecked. No change was sent.");
+    } catch (failure) {
+      if (!mutation.current(controller)) return;
+      setError((failure as Error).message);
+      if (
+        failure instanceof ApiFailure &&
+        [401, 403, 404].includes(failure.status)
+      ) {
+        clearPrivate();
+      }
+    } finally {
+      mutation.finish(controller);
+    }
+  };
   const save = async (e: FormEvent) => {
     e.preventDefault();
-    if (!draft || busy || !isOnline || !detailReady || detailChanged) return;
-    setBusy(true);
-    setError("");
-    try {
-      const event = Object.fromEntries(
-        editable
-          .filter((key) => draft[key] !== undefined)
-          .map((key) => [key, draft[key]]),
-      );
-      const result = await api<{ event: ChapterEvent }>(
-        "/admin/events" + (selected ? "/" + selected.id : ""),
-        {
-          method: selected ? "PATCH" : "POST",
-          protected: true,
-          body: { event, ...(selected ? { revision: selected.revision } : {}) },
-        },
-      );
-      setSelected(result.event);
-      setDraft(result.event);
-      setDirty(false);
-      setNotice("Saved. Publishing is a separate action.");
-      await load();
-    } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
+    if (
+      !draft ||
+      !canWrite ||
+      !detailReady ||
+      detailChanged ||
+      (selected ? !canUpdate : !canCreate)
+    )
+      return;
+    const event = Object.fromEntries(
+      editable
+        .filter((key) => draft[key] !== undefined)
+        .map((key) => [key, draft[key]]),
+    );
+    const intent: Intent = {
+      path: "/admin/events" + (selected ? "/" + selected.id : ""),
+      method: selected ? "PATCH" : "POST",
+      body: { event, ...(selected ? { revision: selected.revision } : {}) },
+      key: crypto.randomUUID(),
+      createdAt: Date.now(),
+      kind: "event",
+      label: selected ? "Event save" : "Private draft creation",
+    };
+    if (selected?.publication_status === "published") {
+      setPublishedSave(intent);
+      review("save-published");
+    } else await perform(intent);
   };
   const action = async (kind: string) => {
-    if (!selected || busy || !isOnline || !detailReady || detailChanged) return;
-    setBusy(true);
-    setError("");
-    try {
-      const result = await api<{ event: ChapterEvent }>(
+    const required =
+      kind === "archive"
+        ? "delete"
+        : kind === "duplicate"
+          ? "create"
+          : ["publish", "unpublish"].includes(kind)
+            ? "publish"
+            : "update";
+    if (
+      !selected ||
+      dirty ||
+      !canWrite ||
+      !detailReady ||
+      detailChanged ||
+      !selectedActions.includes(required)
+    )
+      return;
+    await perform({
+      path:
         "/admin/events/" + selected.id + (kind === "archive" ? "" : "/" + kind),
-        {
-          method: kind === "archive" ? "DELETE" : "POST",
-          protected: true,
-          body: { revision: selected.revision, event: {} },
-        },
-      );
-      setSelected(result.event);
-      setDraft(result.event);
-      setDirty(false);
-      setConfirmation(null);
-      setNotice("Event " + kind + " completed.");
-      await load();
-    } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
+      method: kind === "archive" ? "DELETE" : "POST",
+      body: { revision: selected.revision, event: {} },
+      key: crypto.randomUUID(),
+      createdAt: Date.now(),
+      kind: "event",
+      label: "Event " + kind,
+    });
   };
-  const loadAttendees = (event: ChapterEvent, p = 1) => {
+  const loadAttendees = (event: ManagedEvent, p = 1) => {
+    if (mutation.pending.current || uncertain) return;
     setSelected(event);
     setMode("attendees");
     setAttendeePage(p);
@@ -330,20 +600,18 @@ function EventWorkspaceContent() {
     values: Partial<Attendee>,
     remove = false,
   ) => {
-    if (!selected || busy || !audienceReady) return;
-    setBusy(true);
-    try {
-      await api(`/admin/events/${selected.id}/attendees/${person.id}`, {
-        method: remove ? "DELETE" : "PATCH",
-        protected: true,
-        ...(!remove ? { body: values } : {}),
-      });
-      await loadAttendees(selected, attendeePage);
-    } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
+    if (!selected || !canWrite || !audienceReady || !canUpdate) return;
+    const { updated_at, ...changes } = values;
+    await perform({
+      path: `/admin/events/${selected.id}/attendees/${person.id}`,
+      method: remove ? "DELETE" : "PATCH",
+      body: { ...changes, updatedAt: updated_at || person.updated_at },
+      key: crypto.randomUUID(),
+      createdAt: Date.now(),
+      kind: "attendee",
+      personId: person.id,
+      label: remove ? "Registration removal" : "Attendee update",
+    });
   };
   if (blocked || denied)
     return (
@@ -384,7 +652,12 @@ function EventWorkspaceContent() {
           </p>
         </div>
         {mode === "list" ? (
-          <Button disabled={busy} onClick={() => edit()}>
+          <Button
+            disabled={
+              !canWrite || !canCreate || inventory.loading || !!inventory.error
+            }
+            onClick={() => edit()}
+          >
             <Plus size={17} />
             Create event
           </Button>
@@ -393,16 +666,11 @@ function EventWorkspaceContent() {
             variant="secondary"
             disabled={busy}
             onClick={() => {
-              if (dirty) {
-                setConfirmation("discard");
-                return;
-              }
               const leave = () => {
                 setShowMail(false);
                 setMode("list");
               };
-              if (navigation) navigation.request(leave);
-              else leave();
+              requestMove(leave);
             }}
           >
             <ArrowLeft size={17} />
@@ -441,7 +709,7 @@ function EventWorkspaceContent() {
               <Button
                 variant="secondary"
                 disabled={busy || !detailReady}
-                onClick={() => setConfirmation("reload")}
+                onClick={() => review("reload")}
               >
                 Review loading saved event
               </Button>
@@ -449,54 +717,188 @@ function EventWorkspaceContent() {
           )}
         </>
       )}
-      {error && (
-        <div className="gt-form-error" role="alert">
-          {error}
-          <Button variant="ghost" onClick={() => setError("")}>
-            Dismiss
-          </Button>
+      {(error || notice) && (
+        <div ref={feedback} tabIndex={-1}>
+          {error && (
+            <div className="gt-form-error" role="alert">
+              {error}
+              <Button variant="ghost" onClick={() => setError("")}>
+                Dismiss
+              </Button>
+            </div>
+          )}
+          {notice && (
+            <p role="status" className="gt-helper">
+              {notice}
+            </p>
+          )}
         </div>
       )}
-      {notice && (
-        <p role="status" className="gt-helper">
-          {notice}
-        </p>
+      {!confirmation && (needsRecheck || uncertain) && (
+        <section className="gt-panel" aria-label="Event operation recovery">
+          <p>
+            {uncertain
+              ? `${uncertain.label} has an unconfirmed result. Original input and retry identity are retained.`
+              : "Recheck current saved data before another write."}
+          </p>
+          <Button
+            disabled={busy || !isOnline}
+            variant="secondary"
+            onClick={recheck}
+          >
+            Recheck saved event data
+          </Button>
+          {uncertain && (
+            <Button
+              disabled={busy || !isOnline || !checkedUncertain}
+              onClick={() => perform(uncertain, true)}
+            >
+              Retry original operation
+            </Button>
+          )}
+        </section>
       )}
-      {confirmation && !confirmation.startsWith("remove-") && (
-        <section
-          className="gt-panel gt-operational-confirm"
-          aria-labelledby="event-confirm-title"
+      <Dialog
+        open={!!confirmation}
+        onOpenChange={(open) => {
+          if (!open && !mutation.pending.current) setConfirmation(null);
+        }}
+      >
+        <DialogContent
+          className={busy ? "[&>button]:hidden" : ""}
+          onEscapeKeyDown={(event) => {
+            if (mutation.pending.current) event.preventDefault();
+          }}
+          onPointerDownOutside={(event) => {
+            if (mutation.pending.current) event.preventDefault();
+          }}
         >
-          <h2 id="event-confirm-title">
+          <DialogTitle>
             {confirmation === "discard"
               ? "Discard unsaved edits?"
               : confirmation === "reload"
                 ? "Replace this draft with the current saved event?"
-                : `${confirmation === "archive" ? "Archive" : confirmation === "cancel" ? "Cancel" : "Update"} this event?`}
-          </h2>
-          <p>
+                : confirmation?.startsWith("remove-")
+                  ? "Remove this registration?"
+                  : `${({ publish: "Publish event", unpublish: "Unpublish event", duplicate: "Duplicate event", archive: "Archive event", cancel: "Cancel event", "save-published": "Save published changes" } as Record<string, string>)[confirmation || ""] || "Update event"}: ${selected?.title || ""}`}
+          </DialogTitle>
+          <DialogDescription>
             {confirmation === "discard"
-              ? "Your saved event will not change."
+              ? uncertain
+                ? "The original operation may already have completed. Discard retained input and retry identity, then inspect saved records before starting another operation."
+                : "Unsaved event and attendee input will be discarded. Saved records will not change."
               : confirmation === "reload"
-                ? `Replace unsaved fields for ${selected?.title || "this event"} with its current saved values. This performs no server write.`
-                : "Registrations are preserved. Cancelling or archiving closes registration and removes the event from public results."}
-          </p>
+                ? `Replace unsaved fields for ${selected?.title || "this event"} with current saved values. No server write is performed.`
+                : confirmation?.startsWith("remove-")
+                  ? `Remove ${attendees.find((person) => "remove-" + person.id === confirmation)?.attendee_name || "this attendee"} from ${selected?.title}. Their registration will no longer occupy a seat. Previous audit history remains.`
+                  : confirmation === "publish"
+                    ? `Make ${selected?.title} visible publicly with its saved registration settings.`
+                    : confirmation === "unpublish"
+                      ? `Remove ${selected?.title} from public results and public registration. Existing registrations remain.`
+                      : confirmation === "duplicate"
+                        ? `Create one private draft copy of ${selected?.title}. Registrations are not copied.`
+                        : confirmation === "save-published"
+                          ? `Save these changes to ${selected?.title} immediately on the public event page. Existing registrations remain.`
+                          : `Close registration for ${selected?.title} and remove it from public results. Existing registrations and audit history remain.`}
+          </DialogDescription>
+          {error && (
+            <p id="event-review-feedback" tabIndex={-1} role="alert">
+              {error}
+            </p>
+          )}
+          {confirmation !== "discard" &&
+            selected &&
+            detailReady &&
+            reviewTarget.current?.revision !== detail.data?.event.revision && (
+              <p role="alert">
+                The saved event changed. Close this review, check current data
+                and review the action again.
+              </p>
+            )}
+          {["archive", "cancel"].includes(confirmation || "") && (
+            <Field label="Type the event slug to confirm">
+              <input
+                value={typedConfirmation}
+                disabled={busy}
+                autoComplete="off"
+                onChange={(e) => setTypedConfirmation(e.target.value)}
+              />
+            </Field>
+          )}
+          {(needsRecheck || uncertain) && (
+            <div>
+              <Button
+                disabled={busy || !isOnline}
+                variant="secondary"
+                onClick={recheck}
+              >
+                Recheck saved event data
+              </Button>
+              {uncertain && (
+                <Button
+                  disabled={busy || !isOnline || !checkedUncertain}
+                  onClick={() => perform(uncertain, true)}
+                >
+                  Retry original operation
+                </Button>
+              )}
+            </div>
+          )}
           <div className="gt-inline-actions">
             <Button
               variant="danger"
-              disabled={busy}
+              disabled={
+                busy ||
+                (confirmation !== "discard" &&
+                  (!isOnline ||
+                    !!uncertain ||
+                    needsRecheck ||
+                    !detailReady ||
+                    !selected ||
+                    reviewTarget.current?.id !== selected.id ||
+                    reviewTarget.current?.revision !==
+                      detail.data?.event.revision ||
+                    (confirmation !== "reload" && detailChanged))) ||
+                (["archive", "cancel"].includes(confirmation || "") &&
+                  typedConfirmation !== selected?.slug)
+              }
               onClick={() => {
+                if (mutation.pending.current) return;
                 if (confirmation === "discard") {
                   setDirty(false);
-                  setMode("list");
+                  setAttendeeDrafts({});
+                  setUncertain(undefined);
+                  setNeedsRecheck(false);
+                  setCheckedUncertain(false);
                   setConfirmation(null);
+                  const move = pendingMove.current;
+                  pendingMove.current = undefined;
+                  if (move) move();
+                  else setMode("list");
                 } else if (confirmation === "reload") {
-                  if (!detailReady || !detail.data || !selected) return;
+                  if (!detail.data) return;
                   setSelected(detail.data.event);
                   setDraft(detail.data.event);
                   setDirty(false);
                   setConfirmation(null);
-                } else action(confirmation);
+                } else if (confirmation === "save-published" && publishedSave) {
+                  if (canUpdate) perform(publishedSave);
+                } else if (confirmation?.startsWith("remove-")) {
+                  const person = attendees.find(
+                    (value) => "remove-" + value.id === confirmation,
+                  );
+                  if (
+                    !person ||
+                    reviewTarget.current?.updatedAt !== person.updated_at ||
+                    !audienceReady
+                  ) {
+                    setError(
+                      "The registration changed. Close this review and check the current attendee before removing it.",
+                    );
+                    return;
+                  }
+                  attendeeChange(person, {}, true);
+                } else if (confirmation) action(confirmation);
               }}
             >
               Confirm
@@ -509,8 +911,8 @@ function EventWorkspaceContent() {
               Keep editing
             </Button>
           </div>
-        </section>
-      )}
+        </DialogContent>
+      </Dialog>
       {mode === "list" && (
         <>
           <div className="gt-toolbar">
@@ -630,9 +1032,16 @@ function EventWorkspaceContent() {
               Try another title or reset this page's search.
             </EmptyState>
           ) : inventory.data && !inventory.loading && !inventory.error ? (
-            <EmptyState title="Create your first chapter event">
-              Start with a draft. Only published events appear on the public
-              site.
+            <EmptyState
+              title={
+                canCreate
+                  ? "Create your first chapter event"
+                  : "No events available"
+              }
+            >
+              {canCreate
+                ? "Start with a draft. Only published events appear on the public site."
+                : "Events available to your current access will appear here."}
             </EmptyState>
           ) : null}
           <div className="gt-inline-actions">
@@ -662,7 +1071,11 @@ function EventWorkspaceContent() {
                 kind="event"
                 resourceId={selected.id}
                 disabled={
-                  busy || dirty || !detailReady || detailChanged || !isOnline
+                  !canWrite ||
+                  dirty ||
+                  !canUpdate ||
+                  !detailReady ||
+                  detailChanged
                 }
               />
               <span className="gt-helper">
@@ -671,7 +1084,16 @@ function EventWorkspaceContent() {
             </div>
           )}
           <form onSubmit={save} className="gt-form gt-panel gt-event-editor">
-            <fieldset disabled={busy} className="gt-form gt-event-fields">
+            {selected?.publication_status === "published" && (
+              <p role="status">
+                Saving changes updates this published event. Unpublish it first
+                to work privately.
+              </p>
+            )}
+            <fieldset
+              disabled={busy || !!uncertain}
+              className="gt-form gt-event-fields"
+            >
               {selected && (
                 <div className="gt-inline-actions">
                   <Badge
@@ -687,14 +1109,15 @@ function EventWorkspaceContent() {
                     type="button"
                     variant="secondary"
                     disabled={
-                      busy ||
+                      !canWrite ||
+                      !selectedActions.includes("publish") ||
                       dirty ||
                       !isOnline ||
                       !detailReady ||
                       detailChanged
                     }
                     onClick={() =>
-                      action(
+                      review(
                         selected.publication_status === "published"
                           ? "unpublish"
                           : "publish",
@@ -709,13 +1132,14 @@ function EventWorkspaceContent() {
                     type="button"
                     variant="ghost"
                     disabled={
-                      busy ||
+                      !canWrite ||
+                      !selectedActions.includes("create") ||
                       dirty ||
                       !isOnline ||
                       !detailReady ||
                       detailChanged
                     }
-                    onClick={() => action("duplicate")}
+                    onClick={() => review("duplicate")}
                   >
                     <Copy size={16} />
                     Duplicate
@@ -724,13 +1148,14 @@ function EventWorkspaceContent() {
                     type="button"
                     variant="ghost"
                     disabled={
-                      busy ||
+                      !canWrite ||
+                      !selectedActions.includes("update") ||
                       dirty ||
                       !isOnline ||
                       !detailReady ||
                       detailChanged
                     }
-                    onClick={() => setConfirmation("cancel")}
+                    onClick={() => review("cancel")}
                   >
                     Cancel event
                   </Button>
@@ -738,20 +1163,26 @@ function EventWorkspaceContent() {
                     type="button"
                     variant="danger"
                     disabled={
-                      busy ||
+                      !canWrite ||
+                      !selectedActions.includes("delete") ||
                       dirty ||
                       !isOnline ||
                       !detailReady ||
                       detailChanged
                     }
-                    onClick={() => setConfirmation("archive")}
+                    onClick={() => review("archive")}
                   >
                     Archive
                   </Button>
                 </div>
               )}
               <div className="gt-form-grid">
-                <Field label="Event title" required>
+                <EventField
+                  name="title"
+                  errors={fieldErrors}
+                  label="Event title"
+                  required
+                >
                   <input
                     required
                     minLength={2}
@@ -759,8 +1190,10 @@ function EventWorkspaceContent() {
                     value={draft.title || ""}
                     onChange={(e) => change("title", e.target.value)}
                   />
-                </Field>
-                <Field
+                </EventField>
+                <EventField
+                  name="slug"
+                  errors={fieldErrors}
                   label="URL slug"
                   hint="Lowercase words separated by hyphens. Previous slugs redirect after a rename."
                   required
@@ -772,8 +1205,13 @@ function EventWorkspaceContent() {
                     value={draft.slug || ""}
                     onChange={(e) => change("slug", e.target.value)}
                   />
-                </Field>
-                <Field label="Start (UTC)" required>
+                </EventField>
+                <EventField
+                  name="start_at"
+                  errors={fieldErrors}
+                  label="Start (UTC)"
+                  required
+                >
                   <input
                     type="datetime-local"
                     required
@@ -785,8 +1223,12 @@ function EventWorkspaceContent() {
                       )
                     }
                   />
-                </Field>
-                <Field label="End (UTC)">
+                </EventField>
+                <EventField
+                  name="end_at"
+                  errors={fieldErrors}
+                  label="End (UTC)"
+                >
                   <input
                     type="datetime-local"
                     value={dateInput(draft.end_at)}
@@ -797,38 +1239,53 @@ function EventWorkspaceContent() {
                       )
                     }
                   />
-                </Field>
-                <Field label="Display timezone" required>
+                </EventField>
+                <EventField
+                  name="timezone"
+                  errors={fieldErrors}
+                  label="Display timezone"
+                  required
+                >
                   <input
                     required
+                    maxLength={80}
                     value={draft.timezone || ""}
                     onChange={(e) => change("timezone", e.target.value)}
                   />
-                </Field>
-                <Field label="Venue or online label" required>
+                </EventField>
+                <EventField
+                  name="location"
+                  errors={fieldErrors}
+                  label="Venue or online label"
+                  required
+                >
                   <input
                     required
                     maxLength={500}
                     value={draft.location || ""}
                     onChange={(e) => change("location", e.target.value)}
                   />
-                </Field>
-                <Field label="Room">
+                </EventField>
+                <EventField name="room" errors={fieldErrors} label="Room">
                   <input
                     maxLength={200}
                     value={draft.room || ""}
                     onChange={(e) => change("room", e.target.value)}
                   />
-                </Field>
-                <Field label="Event type">
+                </EventField>
+                <EventField name="type" errors={fieldErrors} label="Event type">
                   <input
                     required
                     maxLength={50}
                     value={draft.type || ""}
                     onChange={(e) => change("type", e.target.value)}
                   />
-                </Field>
-                <Field label="Experience level">
+                </EventField>
+                <EventField
+                  name="level"
+                  errors={fieldErrors}
+                  label="Experience level"
+                >
                   <select
                     value={draft.level}
                     onChange={(e) => change("level", e.target.value)}
@@ -844,8 +1301,12 @@ function EventWorkspaceContent() {
                       </option>
                     ))}
                   </select>
-                </Field>
-                <Field label="Registration mode">
+                </EventField>
+                <EventField
+                  name="registration_type"
+                  errors={fieldErrors}
+                  label="Registration mode"
+                >
                   <select
                     value={draft.registration_type}
                     onChange={(e) =>
@@ -856,14 +1317,17 @@ function EventWorkspaceContent() {
                       <option key={v}>{v}</option>
                     ))}
                   </select>
-                </Field>
-                <Field
+                </EventField>
+                <EventField
+                  name="max_participants"
+                  errors={fieldErrors}
                   label="Total capacity"
                   hint="Includes internal registrations plus the external attendee count. Empty means uncapped."
                 >
                   <input
                     type="number"
                     min={1}
+                    max={1000000}
                     value={draft.max_participants ?? ""}
                     onChange={(e) =>
                       change(
@@ -872,40 +1336,68 @@ function EventWorkspaceContent() {
                       )
                     }
                   />
-                </Field>
-                <Field label="External attendee count">
+                </EventField>
+                <EventField
+                  name="external_attendees"
+                  errors={fieldErrors}
+                  label="External attendee count"
+                >
                   <input
                     type="number"
                     min={0}
+                    max={1000000}
                     value={draft.external_attendees ?? 0}
                     onChange={(e) =>
                       change("external_attendees", Number(e.target.value))
                     }
                   />
-                </Field>
-                <Field label="Owning team">
+                </EventField>
+                <EventField
+                  name="team_id"
+                  errors={fieldErrors}
+                  label="Owning team"
+                >
                   <select
                     value={draft.team_id || ""}
                     onChange={(e) => change("team_id", e.target.value || null)}
                   >
-                    <option value="">Chapter-wide (Admins only)</option>
-                    {userTeams.map((m) => (
-                      <option key={m.team_id} value={m.team_id}>
-                        {m.team?.name || m.team_id}
+                    {capabilities?.globalCreate && (
+                      <option value="">Chapter-wide</option>
+                    )}
+                    {draft.team_id &&
+                      !capabilities?.teams.some(
+                        (team) => team.id === draft.team_id,
+                      ) && (
+                        <option value={draft.team_id}>
+                          Current owning team
+                        </option>
+                      )}
+                    {(capabilities?.teams || []).map((m) => (
+                      <option key={m.id} value={m.id}>
+                        {m.name}
                       </option>
                     ))}
                   </select>
-                </Field>
+                </EventField>
               </div>
-              <Field label="Short summary">
+              <EventField
+                name="short_description"
+                errors={fieldErrors}
+                label="Short summary"
+              >
                 <textarea
                   maxLength={500}
                   rows={2}
                   value={draft.short_description || ""}
                   onChange={(e) => change("short_description", e.target.value)}
                 />
-              </Field>
-              <Field label="Description" required>
+              </EventField>
+              <EventField
+                name="description"
+                errors={fieldErrors}
+                label="Description"
+                required
+              >
                 <textarea
                   required
                   minLength={2}
@@ -914,7 +1406,7 @@ function EventWorkspaceContent() {
                   value={draft.description || ""}
                   onChange={(e) => change("description", e.target.value)}
                 />
-              </Field>
+              </EventField>
               <div className="gt-form-grid">
                 {(
                   [
@@ -925,13 +1417,18 @@ function EventWorkspaceContent() {
                     ["google_event_url", "External calendar URL"],
                   ] as const
                 ).map(([key, label]) => (
-                  <Field key={key} label={label}>
+                  <EventField
+                    key={key}
+                    name={key}
+                    errors={fieldErrors}
+                    label={label}
+                  >
                     <input
                       maxLength={2000}
                       value={draft[key] || ""}
                       onChange={(e) => change(key, e.target.value)}
                     />
-                  </Field>
+                  </EventField>
                 ))}
               </div>
               {(
@@ -944,14 +1441,25 @@ function EventWorkspaceContent() {
                   ["contact_info", "Contact information"],
                 ] as const
               ).map(([key, label]) => (
-                <Field key={key} label={label}>
+                <EventField
+                  key={key}
+                  name={key}
+                  errors={fieldErrors}
+                  label={label}
+                >
                   <textarea
                     rows={3}
-                    maxLength={20000}
+                    maxLength={
+                      key === "contact_info"
+                        ? 2000
+                        : key === "schedule" || key === "additional_info"
+                          ? 20000
+                          : 10000
+                    }
                     value={draft[key] || ""}
                     onChange={(e) => change(key, e.target.value)}
                   />
-                </Field>
+                </EventField>
               ))}
               <label className="gt-check">
                 <input
@@ -973,14 +1481,27 @@ function EventWorkspaceContent() {
               </label>
               <div className="gt-inline-actions">
                 <Button
-                  disabled={busy || !isOnline || !detailReady || detailChanged}
+                  disabled={
+                    !canWrite ||
+                    !detailReady ||
+                    detailChanged ||
+                    (selected ? !canUpdate : !canCreate)
+                  }
                   type="submit"
                 >
                   <Save size={17} />
-                  {busy ? "Saving…" : "Save draft changes"}
+                  {busy
+                    ? "Saving…"
+                    : selected?.publication_status === "published"
+                      ? "Save published changes"
+                      : "Save draft changes"}
                 </Button>
                 <span className="gt-helper">
-                  {dirty ? "Unsaved changes" : "All changes saved"}
+                  {dirty
+                    ? "Unsaved changes"
+                    : selected
+                      ? "All changes saved"
+                      : "New unsaved draft"}
                 </span>
               </div>
             </fieldset>
@@ -996,7 +1517,7 @@ function EventWorkspaceContent() {
               : "Checking authorized registrations…"}
           </p>
           <div className="gt-inline-actions">
-            {audienceReady ? (
+            {audienceReady && detail.data?.event.canExport ? (
               <a
                 className="gt-button gt-button-secondary"
                 href={`/api/v1/admin/events/${selected.id}/attendees/export`}
@@ -1010,16 +1531,22 @@ function EventWorkspaceContent() {
             )}
             <Button
               variant="secondary"
-              disabled={showMail || !audienceReady || busy}
+              disabled={
+                showMail ||
+                !audienceReady ||
+                !canWrite ||
+                !detail.data?.event.canEmail
+              }
               onClick={() => setShowMail(true)}
             >
               Email registered attendees
             </Button>
           </div>
-          {showMail && audienceReady && (
+          {showMail && detail.data?.event.canEmail && (
             <EventMailPanel
               key={selected.id}
               eventId={selected.id}
+              disabled={!audienceReady || !canWrite}
               onClose={() => setShowMail(false)}
               onQueued={(count) => {
                 setShowMail(false);
@@ -1055,100 +1582,183 @@ function EventWorkspaceContent() {
                   </tr>
                 </thead>
                 <tbody>
-                  {attendees.map((person) => (
-                    <tr key={person.id}>
-                      <td>
-                        {person.attendee_name}
-                        <small>{person.attendee_email}</small>
-                      </td>
-                      <td>
-                        <input
-                          aria-label={"Notes for " + person.attendee_name}
-                          disabled={busy || !audienceReady}
-                          defaultValue={person.notes || ""}
-                          maxLength={2000}
-                          onBlur={(e) => {
-                            if (e.target.value !== (person.notes || ""))
-                              attendeeChange(person, { notes: e.target.value });
-                          }}
-                        />
-                      </td>
-                      <td>
-                        <label className="gt-check">
+                  {attendees.map((person) => {
+                    const edits = attendeeDrafts[person.id],
+                      changed =
+                        !!edits && edits.updated_at !== person.updated_at;
+                    const disabled =
+                      !canWrite || !audienceReady || !canUpdate || changed;
+                    const editPerson = (key: keyof Attendee, value: string) => {
+                      if (mutation.pending.current || uncertain) return;
+                      if (fieldTarget === person.id)
+                        setFieldErrors((previous) => ({
+                          ...previous,
+                          [key]: "",
+                        }));
+                      setAttendeeDrafts((previous) => ({
+                        ...previous,
+                        [person.id]: {
+                          updated_at: person.updated_at,
+                          ...previous[person.id],
+                          [key]: value,
+                        },
+                      }));
+                    };
+                    const clearEdits = () =>
+                      setAttendeeDrafts((previous) => {
+                        const next = { ...previous };
+                        delete next[person.id];
+                        return next;
+                      });
+                    return (
+                      <tr key={person.id}>
+                        <td>
+                          {person.attendee_name}
+                          <small>{person.attendee_email}</small>
+                        </td>
+                        <td>
                           <input
-                            type="checkbox"
-                            disabled={busy || !audienceReady}
-                            checked={person.attended}
-                            onChange={(e) =>
-                              attendeeChange(person, {
-                                attended: e.target.checked,
-                              })
+                            aria-label={"Notes for " + person.attendee_name}
+                            aria-invalid={
+                              fieldTarget === person.id && fieldErrors.notes
+                                ? true
+                                : undefined
+                            }
+                            aria-describedby={
+                              fieldTarget === person.id && fieldErrors.notes
+                                ? `${person.id}-notes-error`
+                                : undefined
+                            }
+                            disabled={!canWrite || !audienceReady || !canUpdate}
+                            value={edits?.notes ?? person.notes ?? ""}
+                            maxLength={2000}
+                            onChange={(event) =>
+                              editPerson("notes", event.target.value)
                             }
                           />
-                          {person.attended ? "Checked in" : "Not checked in"}
-                        </label>
-                      </td>
-                      <td>
-                        <details>
-                          <summary>Edit attendee</summary>
-                          <form
-                            className="gt-form"
-                            onSubmit={(e) => {
-                              e.preventDefault();
-                              const data = new FormData(e.currentTarget);
-                              attendeeChange(person, {
-                                attendee_name: String(data.get("name")),
-                                attendee_email: String(data.get("email")),
-                              });
-                            }}
-                          >
-                            <Field label="Name">
-                              <input
-                                name="name"
-                                required
-                                disabled={busy || !audienceReady}
-                                minLength={2}
-                                defaultValue={person.attendee_name}
-                              />
-                            </Field>
-                            <Field label="Email">
-                              <input
-                                name="email"
-                                type="email"
-                                disabled={busy || !audienceReady}
-                                required
-                                defaultValue={person.attendee_email}
-                              />
-                            </Field>
-                            <Button disabled={busy || !audienceReady}>
-                              Save correction
-                            </Button>
-                          </form>
-                          <button
-                            className="gt-text-button"
-                            disabled={busy || !audienceReady}
-                            onClick={() => {
-                              setConfirmation("remove-" + person.id);
-                            }}
-                          >
-                            Remove registration
-                          </button>
-                          {confirmation === "remove-" + person.id && (
+                          {fieldTarget === person.id && fieldErrors.notes && (
+                            <small id={`${person.id}-notes-error`}>
+                              {fieldErrors.notes}
+                            </small>
+                          )}
+                          {changed && (
+                            <p role="alert">
+                              This registration changed. Your edits are
+                              retained; discard them to use current saved
+                              values.
+                            </p>
+                          )}
+                          {edits && (
                             <Button
-                              variant="danger"
-                              disabled={busy || !audienceReady}
-                              onClick={() => {
-                                attendeeChange(person, {}, true);
-                                setConfirmation(null);
-                              }}
+                              variant="ghost"
+                              disabled={busy || !!uncertain}
+                              onClick={clearEdits}
                             >
-                              Confirm removal
+                              Discard attendee edits
                             </Button>
                           )}
-                        </details>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td>
+                          <label className="gt-check">
+                            <input
+                              type="checkbox"
+                              disabled={disabled || !!edits}
+                              checked={person.attended}
+                              onChange={(event) =>
+                                attendeeChange(person, {
+                                  attended: event.target.checked,
+                                })
+                              }
+                            />
+                            {person.attended ? "Checked in" : "Not checked in"}
+                          </label>
+                          {edits && (
+                            <small>
+                              Save or discard edited fields before check-in.
+                            </small>
+                          )}
+                        </td>
+                        <td>
+                          <details>
+                            <summary>Edit attendee</summary>
+                            <form
+                              className="gt-form"
+                              onSubmit={(event) => {
+                                event.preventDefault();
+                                if (edits) attendeeChange(person, edits);
+                              }}
+                            >
+                              <EventField
+                                name="attendee_name"
+                                label="Name"
+                                idPrefix={person.id}
+                                errors={
+                                  fieldTarget === person.id ? fieldErrors : {}
+                                }
+                              >
+                                <input
+                                  required
+                                  minLength={2}
+                                  maxLength={100}
+                                  disabled={
+                                    !canWrite || !audienceReady || !canUpdate
+                                  }
+                                  value={
+                                    edits?.attendee_name ?? person.attendee_name
+                                  }
+                                  onChange={(event) =>
+                                    editPerson(
+                                      "attendee_name",
+                                      event.target.value,
+                                    )
+                                  }
+                                />
+                              </EventField>
+                              <EventField
+                                name="attendee_email"
+                                label="Email"
+                                idPrefix={person.id}
+                                errors={
+                                  fieldTarget === person.id ? fieldErrors : {}
+                                }
+                              >
+                                <input
+                                  type="email"
+                                  required
+                                  maxLength={255}
+                                  disabled={
+                                    !canWrite || !audienceReady || !canUpdate
+                                  }
+                                  value={
+                                    edits?.attendee_email ??
+                                    person.attendee_email
+                                  }
+                                  onChange={(event) =>
+                                    editPerson(
+                                      "attendee_email",
+                                      event.target.value,
+                                    )
+                                  }
+                                />
+                              </EventField>
+                              <Button disabled={disabled || !edits}>
+                                Save attendee changes
+                              </Button>
+                            </form>
+                            <button
+                              className="gt-text-button"
+                              disabled={disabled || !!edits}
+                              onClick={() =>
+                                review("remove-" + person.id, person)
+                              }
+                            >
+                              Remove registration
+                            </button>
+                          </details>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </ScrollableTable>
@@ -1161,8 +1771,12 @@ function EventWorkspaceContent() {
           <div className="gt-inline-actions">
             <Button
               variant="secondary"
-              disabled={attendeePage === 1 || audience.loading || busy}
-              onClick={() => loadAttendees(selected, attendeePage - 1)}
+              disabled={
+                attendeePage === 1 || audience.loading || busy || !!uncertain
+              }
+              onClick={() =>
+                requestMove(() => loadAttendees(selected, attendeePage - 1))
+              }
             >
               Previous
             </Button>
@@ -1170,9 +1784,14 @@ function EventWorkspaceContent() {
             <Button
               variant="secondary"
               disabled={
-                attendeePage * 50 >= attendeeTotal || audience.loading || busy
+                attendeePage * 50 >= attendeeTotal ||
+                audience.loading ||
+                busy ||
+                !!uncertain
               }
-              onClick={() => loadAttendees(selected, attendeePage + 1)}
+              onClick={() =>
+                requestMove(() => loadAttendees(selected, attendeePage + 1))
+              }
             >
               Next
             </Button>

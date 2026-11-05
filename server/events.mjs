@@ -613,7 +613,23 @@ export async function eventRoutes(
       return true;
     }
     if (id) {
-      sendJson(response, 200, { event }, requestId);
+      const permissions = checked(
+        await db.rpc("event_workspace_permissions", {
+          p_actor: session.user.id,
+          p_ids: [id],
+        }),
+      );
+      sendJson(
+        response,
+        200,
+        {
+          event: {
+            ...event,
+            ...permissions.records.find((row) => row.id === id),
+          },
+        },
+        requestId,
+      );
       return true;
     }
     const p = queryValues(
@@ -652,43 +668,70 @@ export async function eventRoutes(
       p.page * p.pageSize - 1,
     );
     checked(result);
+    const permissions = checked(
+      await db.rpc("event_workspace_permissions", {
+        p_actor: session.user.id,
+        p_ids: result.data.map((row) => row.id),
+      }),
+    );
     sendJson(
       response,
       200,
-      { items: result.data, total: result.count, ...p },
+      {
+        items: result.data.map((row) => ({
+          ...row,
+          ...permissions.records.find((permission) => permission.id === row.id),
+        })),
+        total: result.count,
+        ...p,
+        capabilities: {
+          globalCreate: permissions.globalCreate,
+          teams: permissions.teams,
+        },
+      },
       requestId,
     );
     return true;
   }
   if (operation === "attendees") {
     parse(uuid, attendeeId);
-    const body =
-      request.method === "PATCH"
-        ? await jsonBody(
-            request,
-            z
-              .object({
-                attendee_name: text(100, 2),
-                attendee_email: z
-                  .string()
-                  .trim()
-                  .toLowerCase()
-                  .email()
-                  .max(255),
-                notes: text(2000).nullable(),
-                attended: z.boolean(),
-              })
-              .partial()
-              .strict(),
-          )
-        : {};
+    const { updatedAt, ...body } = await jsonBody(
+      request,
+      z
+        .object({
+          updatedAt: z.string().datetime({ offset: true }),
+          attendee_name: text(100, 2),
+          attendee_email: z.string().trim().toLowerCase().email().max(255),
+          notes: text(2000).nullable(),
+          attended: z.boolean(),
+        })
+        .partial()
+        .required({ updatedAt: true })
+        .strict(),
+    );
+    if (request.method === "DELETE" && Object.keys(body).length)
+      throw new ApiError(
+        400,
+        "VALIDATION_ERROR",
+        "Removal accepts only its saved revision.",
+      );
+    const key = idempotency(request),
+      action =
+        request.method === "DELETE" ? "attendee.remove" : "attendee.update";
     const data = checked(
-      await db.rpc("mutate_attendee", {
+      await db.rpc("mutate_event_workspace", {
         p_actor: session.user.id,
-        p_event: id,
+        p_session: session.sessionId,
+        p_id: id,
+        p_action: action,
+        p_revision: null,
         p_registration: attendeeId,
         p_document: body,
-        p_remove: request.method === "DELETE",
+        p_updated_at: updatedAt,
+        p_key_hash: tokenHash(key),
+        p_request_hash: tokenHash(
+          JSON.stringify({ id, action, attendeeId, updatedAt, body }),
+        ),
         p_request_id: requestId,
       }),
     );
@@ -721,15 +764,29 @@ export async function eventRoutes(
       "The end must be after the start.",
       { end_at: "Choose a later end time." },
     );
+  const key = idempotency(request),
+    action =
+      operation ||
+      (!id ? "create" : request.method === "DELETE" ? "archive" : "update");
   const result = checked(
-    await db.rpc("mutate_event", {
+    await db.rpc("mutate_event_workspace", {
       p_actor: session.user.id,
+      p_session: session.sessionId,
       p_id: id,
-      p_action:
-        operation ||
-        (!id ? "create" : request.method === "DELETE" ? "archive" : "update"),
-      p_expected_revision: body.revision || null,
+      p_action: action,
+      p_revision: body.revision || null,
       p_document: doc,
+      p_registration: null,
+      p_updated_at: null,
+      p_key_hash: tokenHash(key),
+      p_request_hash: tokenHash(
+        JSON.stringify({
+          id,
+          action,
+          revision: body.revision || null,
+          event: doc,
+        }),
+      ),
       p_request_id: requestId,
     }),
   );

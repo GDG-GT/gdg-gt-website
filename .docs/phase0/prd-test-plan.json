@@ -633,6 +633,34 @@
       ]
     },
     {
+      "id": "EVT-TEST-014",
+      "requirements": [
+        "EVT-001",
+        "EVT-002",
+        "EVT-006",
+        "EVT-012"
+      ],
+      "scope": "Current Events capabilities, reviewed publication/lifecycle changes, scoped writes, bounded identical replay and attendee optimistic concurrency/draft navigation",
+      "automated": [
+        "tests/client/event-admin-mutations.test.tsx",
+        "tests/client/event-mail-paused.test.tsx",
+        "tests/server/event-workspace-mutations.test.mjs",
+        "database/tests/112_event_mutation_replay.sql",
+        "scripts/test-local-event-mutation-recovery.mjs"
+      ],
+      "remaining": [
+        "Complete event-mail denial/uncertain-review recovery and supported-browser/populated role/device/manual/visual/hosted lifecycle acceptance remain open",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "28.4",
+        "31.2"
+      ]
+    },
+    {
       "id": "TEAM-TEST-001",
       "requirements": [
         "TEAM-001"

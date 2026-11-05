@@ -278,6 +278,22 @@ add(
   ],
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
+add(
+  "EVT-TEST-014",
+  "EVT-001 EVT-002 EVT-006 EVT-012",
+  "Current Events capabilities, reviewed publication/lifecycle changes, scoped writes, bounded identical replay and attendee optimistic concurrency/draft navigation",
+  [
+    "tests/client/event-admin-mutations.test.tsx",
+    "tests/client/event-mail-paused.test.tsx",
+    unit("event-workspace-mutations"),
+    sql("112_event_mutation_replay"),
+    local("event-mutation-recovery"),
+  ],
+  [
+    "Complete event-mail denial/uncertain-review recovery and supported-browser/populated role/device/manual/visual/hosted lifecycle acceptance remain open",
+  ],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
 const teams = [
   [
     "TEAM-001",

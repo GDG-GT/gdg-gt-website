@@ -1,0 +1,166 @@
+{
+  "generatedAt": "2026-11-05T22:55:34.251Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback HTTP/DB and desktop/mobile browser mutation recovery with accepted-but-dropped responses and explicit identical replay. Two fresh fictional accounts, private source/concurrent-create/duplicate drafts and one private registration fixture; never published/no delivery jobs queued. Only owned event/attendee PATCH calls allowed in the browser; every other non-read/external origin blocked and realtime paused. All events created by this invocation's unique actor archived/registration soft-deleted/accounts disabled/sessions revoked. Existing account/event/registration, quota, provider and production state unchanged. Captures ignored/private; no response bodies/credentials retained.",
+  "tests": [
+    {
+      "name": "anonymous denial for event inventory",
+      "passed": true
+    },
+    {
+      "name": "anonymous denial for selected event",
+      "passed": true
+    },
+    {
+      "name": "anonymous denial for event attendees",
+      "passed": true
+    },
+    {
+      "name": "authorized uncached inventory includes the owned private draft",
+      "passed": true
+    },
+    {
+      "name": "selected event read returns the current revision privately",
+      "passed": true
+    },
+    {
+      "name": "attendee read exposes only the authorized uncached projection",
+      "passed": true
+    },
+    {
+      "name": "unrelated team member cannot discover the private event or attendee inventory",
+      "passed": true
+    },
+    {
+      "name": "the fixture remains absent from public event detail",
+      "passed": true
+    },
+    {
+      "name": "actual creation rejects a missing retry identity",
+      "passed": true
+    },
+    {
+      "name": "ten concurrent identical create requests return one private event",
+      "passed": true
+    },
+    {
+      "name": "concurrent creation commits only one audit",
+      "passed": true
+    },
+    {
+      "name": "a reused key with changed creation intent conflicts",
+      "passed": true
+    },
+    {
+      "name": "ten concurrent identical duplicate requests create one draft copy",
+      "passed": true
+    },
+    {
+      "name": "actual attendee mutation rejects a stale saved timestamp",
+      "passed": true
+    },
+    {
+      "name": "unrelated team member cannot mutate the owned private event",
+      "passed": true
+    },
+    {
+      "name": "lost event-save response retains input and pauses blind writes at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "saved-event recovery performs only reads at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated event editor passes measured axe checks at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "explicit identical save replay returns one committed revision at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "publication review passes measured axe checks at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "publication/archive review cancellation and wrong target send no write at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated attendee editor passes measured axe checks at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "editing attendee notes and leaving the field does not auto-save at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "lost attendee-save result retains input and rechecks without another write at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "attendee replay retains the original timestamp and retry identity at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "reviewed event/attendee workflow has no accidental writes, page errors, external calls or overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "lost event-save response retains input and pauses blind writes at 375×812",
+      "passed": true
+    },
+    {
+      "name": "saved-event recovery performs only reads at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated event editor passes measured axe checks at 375×812",
+      "passed": true
+    },
+    {
+      "name": "explicit identical save replay returns one committed revision at 375×812",
+      "passed": true
+    },
+    {
+      "name": "publication review passes measured axe checks at 375×812",
+      "passed": true
+    },
+    {
+      "name": "publication/archive review cancellation and wrong target send no write at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated attendee editor passes measured axe checks at 375×812",
+      "passed": true
+    },
+    {
+      "name": "editing attendee notes and leaving the field does not auto-save at 375×812",
+      "passed": true
+    },
+    {
+      "name": "lost attendee-save result retains input and rechecks without another write at 375×812",
+      "passed": true
+    },
+    {
+      "name": "attendee replay retains the original timestamp and retry identity at 375×812",
+      "passed": true
+    },
+    {
+      "name": "reviewed event/attendee workflow has no accidental writes, page errors, external calls or overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "all mutation recovery leaves the owned event private",
+      "passed": true
+    },
+    {
+      "name": "four accepted-and-lost writes each produce one audit despite replay",
+      "passed": true
+    }
+  ]
+}
