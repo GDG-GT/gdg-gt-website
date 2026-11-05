@@ -2604,6 +2604,31 @@
         "28.4",
         "31.2"
       ]
+    },
+    {
+      "id": "A11Y-TEST-008",
+      "requirements": [],
+      "scope": "Pinned production-build public browser smoke with contrast-enabled axe, scroll/overflow checks, desktop/mobile captures, compact-menu keyboard recovery and anonymous private-route refusal",
+      "automated": [
+        "tests/browser/public-smoke.spec.ts",
+        "tests/browser/public-fixture.ts",
+        "scripts/test-local-public-browser.mjs",
+        "scripts/test-local-hero-browser.mjs"
+      ],
+      "remaining": [
+        "All 22 populated visual surfaces, approved initial baselines, pinned-container pixel comparison, real device/Safari/assistive-technology runs and remaining public/private critical browser workflows",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.6",
+        "10.10",
+        "12.1",
+        "12.4",
+        "13.3",
+        "28.3",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

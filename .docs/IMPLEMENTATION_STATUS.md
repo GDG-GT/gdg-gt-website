@@ -8,6 +8,24 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Public production-build and live browser verification — 2026-11-04
+
+- Pinned Playwright 1.64.1 now covers six Chromium/Firefox/WebKit desktop/mobile
+  profiles. All 70 applicable checks pass, with eight explicit profile skips.
+  Checks include contrast-enabled axe, real scroll/overflow, keyboard top-menu
+  recovery, anonymous private-route refusal, retry/404 and actual moving WebGL
+  frames with reduced-motion restoration. Captures remain unapproved candidates.
+- Actual local UI/API checks pass separately: 21 public page/viewport cases and
+  six hero enhancement/fallback cases. No mutations or external/provider calls.
+  All 1,222 Vitest tests pass again; types/lint (zero errors/25 warnings), build,
+  budgets, traceability and secret scan pass. Coverage remains below 70% at the
+  previous instrumented result: 59.29% lines/58.30% branches; 17 critical gates
+  pass. No high/critical current dependency findings.
+- PR CI now includes the matching digest-pinned browser container and retained
+  reports, but no GitHub execution is claimed. Catalog: 142 unverified cases.
+  Full private/Forms/device/manual/visual/performance/hosted gates remain open.
+  See `BROWSER_VERIFICATION.md`; full PRD remains open.
+
 ### Form access inventories and consequence reviews — 2026-11-04
 
 - Forward migration 111 adds authorized literal search/count/paging without the

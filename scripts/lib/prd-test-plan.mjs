@@ -1311,6 +1311,22 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
 
+add(
+  "A11Y-TEST-008",
+  "",
+  "Pinned production-build public browser smoke with contrast-enabled axe, scroll/overflow checks, desktop/mobile captures, compact-menu keyboard recovery and anonymous private-route refusal",
+  [
+    "tests/browser/public-smoke.spec.ts",
+    "tests/browser/public-fixture.ts",
+    local("public-browser"),
+    local("hero-browser"),
+  ],
+  [
+    "All 22 populated visual surfaces, approved initial baselines, pinned-container pixel comparison, real device/Safari/assistive-technology runs and remaining public/private critical browser workflows",
+  ],
+);
+prdTestCases.at(-1).normative = ["10.6", "10.10", "12.1", "12.4", "13.3", "28.3", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

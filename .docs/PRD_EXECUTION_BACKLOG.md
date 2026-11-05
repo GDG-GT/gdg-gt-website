@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-04): the latest module checkpoint is
-`FORM_ACCESS_RECOVERY.md`; completed recovery checkpoints include tasks,
+`BROWSER_VERIFICATION.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -154,17 +154,21 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is 58.47% lines/57.21% branches at the profile-read checkpoint, below the global
-  70% gate; 1,180 tests pass, not a percentage of completed PRD features.
+  coverage is 59.29% lines/58.30% branches at the form-access checkpoint, below the global
+  70% gate; 1,222 tests pass, not a percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 138 reviewed logical test cases with
+  All 146 numbered requirements now map into 142 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.
 - Complete CI: the committed foundation runs lint/type/unit/canonical SQL/build
-  plus a blocking production dependency audit. It has not run on GitHub here;
+  plus a blocking production dependency audit and a digest-pinned Playwright
+  browser job. It has not run on GitHub here;
   the dependency gate passes locally; the independent coverage gate remains red.
-  Full-stack browser/accessibility/integration and remaining coverage are open.
+  All 70 applicable public production-build browser checks pass locally across
+  six profiles (eight explicit profile skips), plus 21 actual local public
+  UI/API and six moving-hero/fallback checks (`BROWSER_VERIFICATION.md`). Full
+  private/populated/Forms/PWA browser acceptance and remaining coverage are open.
   Redacted all-local-ref history/current-file secret scanning passes locally
   (`SECRET_SCAN_OPERATIONS.md`), with two exact reviewed fictional test inputs;
   hosted credential inventory/rotation remains separate. Public byte/artifact
@@ -175,11 +179,15 @@ Their manual/hosted/visual acceptance remains open.
   Local axe structural cases and module-specific interaction audits run in the normal unit suite
   (`ACCESSIBILITY_STRUCTURE_CHECKS.md`); JSDOM contrast and incomplete axe checks
   are not certified by that result.
+  Public empty-inventory browser checks now include actual contrast-enabled axe;
+  this does not certify all populated, error, dialog or private states.
 - Public route bundles, modern images/font budgets, 3D fallbacks, Lighthouse,
   LCP/INP/CLS and load tests. Public byte budgets and bounded offline install now
   pass; runtime profiles and complete lazy-route inspection remain open.
 - Deterministic visual baselines at both PRD desktop sizes, full-page captures,
   reviewed masks, mobile/real-device review and Tejas's explicit visual sign-off.
+  Public review candidates are captured at both desktop sizes and emulated
+  mobile; all 22 populated prompt surfaces and approved pixel comparison remain.
 - Real GT-owned staging/prod infrastructure, domains, credentials, approved assets
   and chapter copy, reviewed recipients/retention/privacy settings, storage CORS,
   scanner and supervised workers/scheduler. No real email, deployment or purchase

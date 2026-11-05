@@ -12,6 +12,9 @@ node_modules.offloaded-backup/
 dist
 dist-ssr
 coverage/
+artifacts/browser/
+playwright-report/
+test-results/
 *.local
 
 # Environment variables

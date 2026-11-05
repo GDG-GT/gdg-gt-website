@@ -1,0 +1,34 @@
+{
+  "generatedAt": "2026-11-05T04:08:20.135Z",
+  "completed": true,
+  "note": "Actual anonymous loopback browser rendering using pinned Playwright Chromium and software WebGL. Non-read APIs and external origins blocked. Functional moving-frame/fallback proof only, not hardware FPS, Web Vitals, visual approval or hosted acceptance. No data/provider/production changes.",
+  "tests": [
+    {
+      "name": "initial public route uses the poster before enhancement intent",
+      "passed": true
+    },
+    {
+      "name": "capable desktop loads real WebGL after pointer intent",
+      "passed": true
+    },
+    {
+      "name": "three rendered canvas captures contain distinct moving frames",
+      "passed": true
+    },
+    {
+      "name": "changing reduced-motion preference removes WebGL and restores the poster",
+      "passed": true
+    },
+    {
+      "name": "narrow mobile viewport retains the lightweight fallback",
+      "passed": true
+    },
+    {
+      "name": "hero enhancement produces no page errors, data mutations or external requests",
+      "passed": true
+    }
+  ],
+  "pageErrors": [],
+  "blockedWrites": 0,
+  "externalRequests": 0
+}
