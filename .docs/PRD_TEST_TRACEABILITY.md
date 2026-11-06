@@ -35,3 +35,9 @@ The existing Forms read/scope case also maps archived-status editor gating and
 read-only preview/history inspection. Its local checks do not close remaining
 Forms child/access/settings/deletion, response/integration/runtime or full
 role/device/manual/visual/hosted acceptance. See `FORM_ARCHIVED_VIEW.md`.
+
+The response-edit/history case now maps independent private revision inventory
+and selected-snapshot recovery, denial clearing and sensitive/context fences.
+Actual local and production-browser evidence is recorded in
+`FORM_RESPONSE_HISTORY_RECOVERY.md`; remaining response workflows and complete
+manual/hosted acceptance stay open.

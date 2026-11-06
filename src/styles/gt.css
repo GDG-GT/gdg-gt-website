@@ -5295,7 +5295,7 @@ fieldset.gt-event-fields {
   font-weight: 600;
 }
 .gt-response-answers p {
-  color: #93704f;
+  color: var(--text-secondary);
   font-size: 0.75rem;
   margin-top: 10px;
   word-break: break-word;

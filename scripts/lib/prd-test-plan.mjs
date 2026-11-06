@@ -809,11 +809,14 @@ const forms = [
   ],
   [
     "FORM-015",
-    "Distinct response-edit capability and retained revisions",
+    "Distinct response-edit capability, retained revisions and scoped independent private history/snapshot recovery",
     [
       unit("form-public-routes"),
       sql("064_form_response_history"),
       local("form-history"),
+      "tests/client/form-response-history-recovery.test.tsx",
+      local("form-history-read"),
+      "tests/browser/form-response-history.spec.ts",
     ],
   ],
   [

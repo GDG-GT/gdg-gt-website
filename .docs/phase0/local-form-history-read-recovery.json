@@ -1,0 +1,106 @@
+{
+  "generatedAt": "2026-11-06T06:03:58.883Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and Chromium desktop/mobile response-history recovery. Two fresh owned fictional internal forms, one intended response and one respondent edit per form; no requested copy or chapter notification send. Browser mutations and external requests blocked; realtime paused. Read failures retain matching timestamped snapshots independently; denial clears history; sensitive reveal audits contain references only. No extra response revision, publication or delivery job from browser inspection. Submission queues one metadata notification job per fixture; all owned jobs disabled/secret payloads cleared without running a worker. Forms archived, accounts disabled and sessions revoked. No worker/provider send, existing chapter or production change. Captures ignored/unapproved.",
+  "tests": [
+    {
+      "name": "history conceals owned response from anonymous and unrelated readers at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original history keeps immutable questions and default sensitive masking at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "selected read failure leaves inventory usable at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "selected revision retries independently and preserves original masked answers at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "temporary selected reread retains matching timestamped snapshot at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "explicit sensitive reveal is audited and returning to masking clears revealed value at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "inventory failure retains matching history and selection with paused new choices at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated paused response history passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "denial clears inventory and selected values until explicit access recheck at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only inspection creates no additional response revision, publication or delivery job at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "history audit contains identifiers rather than answers or identity at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "history recovery has no unexpected write, script error, external request or overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "history conceals owned response from anonymous and unrelated readers at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original history keeps immutable questions and default sensitive masking at 375×812",
+      "passed": true
+    },
+    {
+      "name": "selected read failure leaves inventory usable at 375×812",
+      "passed": true
+    },
+    {
+      "name": "selected revision retries independently and preserves original masked answers at 375×812",
+      "passed": true
+    },
+    {
+      "name": "temporary selected reread retains matching timestamped snapshot at 375×812",
+      "passed": true
+    },
+    {
+      "name": "explicit sensitive reveal is audited and returning to masking clears revealed value at 375×812",
+      "passed": true
+    },
+    {
+      "name": "inventory failure retains matching history and selection with paused new choices at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated paused response history passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "denial clears inventory and selected values until explicit access recheck at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only inspection creates no additional response revision, publication or delivery job at 375×812",
+      "passed": true
+    },
+    {
+      "name": "history audit contains identifiers rather than answers or identity at 375×812",
+      "passed": true
+    },
+    {
+      "name": "history recovery has no unexpected write, script error, external request or overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

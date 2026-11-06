@@ -8,6 +8,29 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Private response-history recovery — 2026-11-06
+
+- Revision inventory and selected answers now recover independently, retaining
+  timestamped matching snapshots on outages. Denial clears both and requires
+  explicit recheck; account/role/form/response/sensitive changes cancel and clear
+  old contexts. Returning to masking clears revealed values even offline without
+  automatic reconnect reads. Fresh redaction/revision metadata invalidates answers.
+- All 46 focused cases pass (24 new). All 24 actual loopback API/DB/desktop-mobile
+  checks pass, with measured populated axe, masking/audit and unchanged response/
+  form revisions. Two fictional internal forms each have one intended response/edit;
+  their two metadata jobs are disabled without workers. Forms archived/accounts
+  disabled/sessions revoked. No provider send/existing chapter/production change.
+- Build/types/lint (zero errors/25 warnings), byte budgets, secrets/traceability
+  pass. All 54 history/shared-workspace production-browser cases and all six
+  refined history-capture cases pass across six profiles. Captures inspected,
+  unapproved; no manual/real-device/hosted sign-off.
+- All 1,708 tests/174 files pass. Global 70% coverage still fails: 66.01% lines,
+  65.82% branches, 64.25% statements and 57.28% functions; all 17 critical branch
+  gates pass. No threshold/timeout changed. Catalog stays 159 unverified cases.
+- Remaining response inventory/summary/views/exports/files/mutations, Forms access/
+  settings/deletion/integrations/runtime and complete quality/device/manual/
+  visual/hosted acceptance stay open. See `FORM_RESPONSE_HISTORY_RECOVERY.md`.
+
 ### Archived Forms read-only inspection — 2026-11-06
 
 - Archived status independently gates draft editing, autosave and publication,

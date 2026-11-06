@@ -1750,11 +1750,14 @@
       "requirements": [
         "FORM-015"
       ],
-      "scope": "Distinct response-edit capability and retained revisions",
+      "scope": "Distinct response-edit capability, retained revisions and scoped independent private history/snapshot recovery",
       "automated": [
         "tests/server/form-public-routes.test.mjs",
         "database/tests/064_form_response_history.sql",
-        "scripts/test-local-form-history.mjs"
+        "scripts/test-local-form-history.mjs",
+        "tests/client/form-response-history-recovery.test.tsx",
+        "scripts/test-local-form-history-read.mjs",
+        "tests/browser/form-response-history.spec.ts"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"
