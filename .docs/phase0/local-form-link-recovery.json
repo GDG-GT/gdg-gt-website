@@ -1,0 +1,240 @@
+{
+  "generatedAt": "2026-11-06T10:53:24.071Z",
+  "completed": true,
+  "cleanup": true,
+  "scope": "Dedicated loopback; fresh owned fictional private publications/accounts/recipient addresses only. Jobs disabled and encrypted job payloads cleared before browser acknowledgements; no worker/provider sends, responses, existing chapter or production changes. Owned tokens revoked/recipient ciphertext cleared, forms archived, accounts disabled/sessions revoked. Reports contain no request body/key/recipient/capability/proof.",
+  "tests": [
+    {
+      "name": "private links stay concealed from unrelated and anonymous readers at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link create after freezes original form/publication/audience/target/expiry at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "uncertain populated private-link review passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link create after reconciles read-only or explicitly retries identical request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link create after produces one intended audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link create after receipt inspection excludes private address/token at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link resend after freezes original form/publication/audience/target/expiry at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link resend after reconciles read-only or explicitly retries identical request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link resend after produces one intended audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link resend after receipt inspection excludes private address/token at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link revoke after freezes original form/publication/audience/target/expiry at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link revoke after reconciles read-only or explicitly retries identical request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link revoke after produces one intended audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link revoke after receipt inspection excludes private address/token at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link create before freezes original form/publication/audience/target/expiry at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link create before reconciles read-only or explicitly retries identical request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link create before produces one intended audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link create before receipt inspection excludes private address/token at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link resend before freezes original form/publication/audience/target/expiry at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link resend before reconciles read-only or explicitly retries identical request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link resend before produces one intended audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link resend before receipt inspection excludes private address/token at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link revoke before freezes original form/publication/audience/target/expiry at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link revoke before reconciles read-only or explicitly retries identical request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link revoke before produces one intended audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link revoke before receipt inspection excludes private address/token at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "ten simultaneous identical batches queue one new private link/job at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link lifecycle preserves saved draft/publication and creates no responses at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "private-link recovery has no unexpected writes/egress/errors/page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "private links stay concealed from unrelated and anonymous readers at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link create after freezes original form/publication/audience/target/expiry at 375×812",
+      "passed": true
+    },
+    {
+      "name": "uncertain populated private-link review passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link create after reconciles read-only or explicitly retries identical request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link create after produces one intended audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link create after receipt inspection excludes private address/token at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link resend after freezes original form/publication/audience/target/expiry at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link resend after reconciles read-only or explicitly retries identical request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link resend after produces one intended audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link resend after receipt inspection excludes private address/token at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link revoke after freezes original form/publication/audience/target/expiry at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link revoke after reconciles read-only or explicitly retries identical request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link revoke after produces one intended audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link revoke after receipt inspection excludes private address/token at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link create before freezes original form/publication/audience/target/expiry at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link create before reconciles read-only or explicitly retries identical request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link create before produces one intended audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link create before receipt inspection excludes private address/token at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link resend before freezes original form/publication/audience/target/expiry at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link resend before reconciles read-only or explicitly retries identical request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link resend before produces one intended audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link resend before receipt inspection excludes private address/token at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link revoke before freezes original form/publication/audience/target/expiry at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link revoke before reconciles read-only or explicitly retries identical request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link revoke before produces one intended audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link revoke before receipt inspection excludes private address/token at 375×812",
+      "passed": true
+    },
+    {
+      "name": "ten simultaneous identical batches queue one new private link/job at 375×812",
+      "passed": true
+    },
+    {
+      "name": "link lifecycle preserves saved draft/publication and creates no responses at 375×812",
+      "passed": true
+    },
+    {
+      "name": "private-link recovery has no unexpected writes/egress/errors/page overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

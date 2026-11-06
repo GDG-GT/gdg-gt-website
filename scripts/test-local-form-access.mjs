@@ -66,6 +66,9 @@ try {
     "private form title is concealed without a link",
   );
   const body = {
+      formRevision: invited.revision,
+      publishedVersionId: invited.versions.at(-1).versionId,
+      expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(),
       type: "invited",
       recipients: [recipient, recipient.toUpperCase()],
       confirmed: true,
@@ -82,10 +85,19 @@ try {
     r.status === 200 && r.json.data.queued === 1,
     "normalized duplicate recipients queue once",
   );
-  const id = r.json.data.tokenIds[0];
+  const originalReceipt = r.json.data,
+    linkRecord = await db
+      .from("form_access_tokens")
+      .select("id,revision")
+      .eq("form_id", invited.id)
+      .eq("token_type", "invited")
+      .single();
+  if (linkRecord.error) throw Error("Owned invitation reference unavailable");
+  const id = linkRecord.data.id;
   r = await call(path, { method: "POST", body, key });
   check(
-    r.status === 200 && r.json.data.tokenIds[0] === id,
+    r.status === 200 &&
+      JSON.stringify(r.json.data) === JSON.stringify(originalReceipt),
     "invitation retry returns its committed result",
   );
   r = await call(path, { method: "POST", body, key: randomUUID() });
@@ -162,7 +174,12 @@ try {
     anonymous: true,
     method: "POST",
     key: randomUUID(),
-    body: { respondent: { name: "Fictional Invitee", email: recipient }, versionId, answers, accessToken: raw },
+    body: {
+      respondent: { name: "Fictional Invitee", email: recipient },
+      versionId,
+      answers,
+      accessToken: raw,
+    },
   });
   check(
     r.status === 200,
@@ -179,17 +196,36 @@ try {
   r = await call("/admin/forms/" + other.id + "/invitations", {
     method: "POST",
     key: randomUUID(),
-    body: { type: "unlisted", recipients: [recipient], confirmed: true },
+    body: {
+      formRevision: other.revision,
+      publishedVersionId: other.versions.at(-1).versionId,
+      expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(),
+      type: "unlisted",
+      recipients: [recipient],
+      confirmed: true,
+    },
   });
   check(
     r.status === 200,
     "unlisted delivery creates a separately scoped private capability",
   );
-  const unlistedId = r.json.data.tokenIds[0],
+  const unlistedRecord = await db
+    .from("form_access_tokens")
+    .select("id,revision")
+    .eq("form_id", other.id)
+    .eq("token_type", "unlisted")
+    .single();
+  if (unlistedRecord.error) throw Error("Owned unlisted reference unavailable");
+  const unlistedId = unlistedRecord.data.id,
     unlistedSecret = await secret(other);
   r = await call("/admin/forms/" + other.id + "/invitations/" + unlistedId, {
     method: "PATCH",
-    body: { action: "revoke" },
+    body: {
+      formRevision: other.revision,
+      publishedVersionId: other.versions.at(-1).versionId,
+      revision: unlistedRecord.data.revision,
+      action: "revoke",
+    },
   });
   check(r.status === 200, "an authorized manager can revoke an unlisted link");
   r = await call("/forms/" + other.slug, {

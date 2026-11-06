@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-06): the latest module checkpoint is
-`FORM_PERMANENT_DELETION_RECOVERY.md`; completed recovery checkpoints include tasks,
+`FORM_PRIVATE_LINK_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -32,7 +32,9 @@ candidate/collaborator search/paging are now closed locally
 That original access checkpoint covers reads/consequence reviews. Collaborator grant
 lifecycle atomic replay, current-session outcome recovery and generation/revision
 protection are now implemented locally (`FORM_COLLABORATOR_RECOVERY.md`). Private
-invitation/link issuance, resend and revocation recovery remain open. Permanent
+invitation/link issuance, resend and revocation now also have versioned atomic
+receipts, current-session read-only reconciliation, fixed audience/publication/
+expiry intent and explicit identical retries locally (`FORM_PRIVATE_LINK_RECOVERY.md`). Permanent
 form-deletion private-denial, original-outcome and fresh-proof explicit retry
 recovery are now implemented locally (`FORM_PERMANENT_DELETION_RECOVERY.md`),
 including concealment after purge and the unchanged five-minute review. Delivery now has original-outcome/fresh-proof

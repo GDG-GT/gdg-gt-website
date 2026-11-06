@@ -26,6 +26,7 @@ import { formPrivacyRoutes } from "./form-privacy.mjs";
 import { formIntegrationRoutes } from "./form-integrations.mjs";
 import { formDeletionRoutes } from "./form-deletion.mjs";
 import { formCollaboratorRoutes } from "./form-collaborators.mjs";
+import { formLinkRoutes } from "./form-links.mjs";
 import { formAccessRoutes } from "./form-access.mjs";
 import { uploadRoutes } from "./uploads.mjs";
 import { jobRoutes } from "./jobs.mjs";
@@ -442,6 +443,15 @@ export function applicationHandler({
           return;
         if (
           await formCollaboratorRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
+        if (
+          await formLinkRoutes(request, response, {
             db,
             store,
             config,

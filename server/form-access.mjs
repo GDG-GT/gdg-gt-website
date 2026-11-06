@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { requireSession, requireCsrf } from "./auth.mjs";
+import { requireSession } from "./auth.mjs";
 import { ApiError, allowMethod, jsonBody, sendJson } from "./lib/http.mjs";
 import {
   databaseResult as checked,
@@ -7,10 +7,9 @@ import {
   queryValues,
   uuid,
   slug,
-  idempotency,
 } from "./lib/validation.mjs";
 import { token, tokenHash, riskHash } from "./lib/security.mjs";
-import { encryptPayload, decryptPayload } from "./lib/encryption.mjs";
+import { encryptPayload } from "./lib/encryption.mjs";
 const email = z.string().trim().toLowerCase().email().max(254);
 export async function formAccessRoutes(
   request,
@@ -19,7 +18,7 @@ export async function formAccessRoutes(
 ) {
   const url = new URL(request.url, config.origin),
     admin = url.pathname.match(
-      /^\/api\/v1\/admin\/forms\/([^/]+)\/(invitations|collaborator-candidates)(?:\/([^/]+))?$/,
+      /^\/api\/v1\/admin\/forms\/([^/]+)\/(collaborator-candidates)$/,
     ),
     verify = url.pathname.match(/^\/api\/v1\/forms\/([^/]+)\/verify$/);
   if (!admin && !verify) return false;
@@ -111,16 +110,9 @@ export async function formAccessRoutes(
     );
     return true;
   }
-  const id = parse(uuid, admin[1]),
-    candidates = admin[2] === "collaborator-candidates",
-    tokenId = admin[3] ? parse(uuid, admin[3]) : null;
-  allowMethod(
-    request,
-    response,
-    candidates ? ["GET"] : tokenId ? ["PATCH"] : ["GET", "POST"],
-  );
+  const id = parse(uuid, admin[1]);
+  allowMethod(request, response, ["GET"]);
   const session = await requireSession(request, store, config);
-  if (request.method !== "GET") await requireCsrf(request, session, store);
   if (
     !checked(
       await db.rpc("can_operate_form", {
@@ -131,7 +123,7 @@ export async function formAccessRoutes(
     )
   )
     throw new ApiError(404, "NOT_FOUND", "This form is not available.");
-  if (candidates) {
+  {
     const p = queryValues(
       url.searchParams,
       z
@@ -160,120 +152,4 @@ export async function formAccessRoutes(
     );
     return true;
   }
-  if (request.method === "GET") {
-    const p = queryValues(
-      url.searchParams,
-      z
-        .object({
-          page: z.coerce.number().int().min(1).max(10000).default(1),
-          pageSize: z.coerce.number().int().min(1).max(100).default(30),
-        })
-        .strict(),
-    );
-    const result = await db
-      .from("form_access_tokens")
-      .select(
-        "id,token_type,intended_email_encrypted,used_count,use_limit,delivery_state,last_sent_at,expires_at,revoked_at,created_at",
-        { count: "exact" },
-      )
-      .eq("form_id", id)
-      .order("created_at", { ascending: false })
-      .order("id")
-      .range((p.page - 1) * p.pageSize, p.page * p.pageSize - 1);
-    checked(result);
-    const items = result.data.map(({ intended_email_encrypted, ...row }) => {
-      const address = decryptPayload(
-          intended_email_encrypted,
-          config.encryptionSecret,
-        ).email,
-        [local, domain] = address.split("@");
-      return {
-        ...row,
-        recipientHint: local.slice(0, 2) + "…@" + domain,
-        responded: row.used_count > 0,
-      };
-    });
-    await store.audit({
-      actorId: session.user.id,
-      action: "forms.access_viewed",
-      targetType: "form",
-      targetId: id,
-      requestId,
-      metadata: { count: items.length },
-    });
-    sendJson(response, 200, { items, total: result.count, ...p }, requestId);
-    return true;
-  }
-  await rate("forms.access.admin", session.user.id, 20);
-  if (tokenId) {
-    const body = await jsonBody(
-      request,
-      z.object({ action: z.enum(["resend", "revoke"]) }).strict(),
-      1024,
-    );
-    let prepared;
-    if (body.action === "resend") {
-      const record = checked(
-        await db
-          .from("form_access_tokens")
-          .select("intended_email_encrypted")
-          .eq("id", tokenId)
-          .eq("form_id", id)
-          .maybeSingle(),
-      );
-      if (!record)
-        throw new ApiError(404, "NOT_FOUND", "This invitation was not found.");
-      prepared = prepare(
-        decryptPayload(record.intended_email_encrypted, config.encryptionSecret)
-          .email,
-        id,
-      );
-    }
-    checked(
-      await db.rpc("change_form_access", {
-        p_actor: session.user.id,
-        p_form: id,
-        p_id: tokenId,
-        p_action: body.action,
-        p_token_hash: prepared?.tokenHash || null,
-        p_secret: prepared?.secretEncrypted || null,
-        p_request_id: requestId,
-      }),
-    );
-    sendJson(response, 200, { updated: true }, requestId);
-    return true;
-  }
-  const body = await jsonBody(
-    request,
-    z
-      .object({
-        type: z.enum(["invited", "unlisted"]),
-        recipients: z.array(email).min(1).max(100),
-        expiresInDays: z.number().int().min(1).max(30).default(7),
-        confirmed: z.literal(true),
-      })
-      .strict(),
-    32768,
-  );
-  const key = idempotency(request),
-    expiresAt = new Date(
-      Date.now() + body.expiresInDays * 86400000,
-    ).toISOString();
-  const recipients = [...new Set(body.recipients)].map((address) => ({
-    ...prepare(address, id),
-    expiresAt,
-  }));
-  const result = checked(
-    await db.rpc("queue_form_access", {
-      p_actor: session.user.id,
-      p_form: id,
-      p_type: body.type,
-      p_recipients: recipients,
-      p_key_hash: tokenHash(key),
-      p_request_hash: tokenHash(JSON.stringify(body)),
-      p_request_id: requestId,
-    }),
-  );
-  sendJson(response, 200, result, requestId);
-  return true;
 }

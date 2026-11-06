@@ -1,0 +1,47 @@
+BEGIN;
+INSERT INTO public.admin_users(id,email,password_hash,role,is_active) VALUES
+ ('b1280000-0000-4000-8000-000000000001','fictional-link-owner@example.test','fictional-proof','admin',true),
+ ('b1280000-0000-4000-8000-000000000002','fictional-link-outsider@example.test','fictional-proof','team_member',true);
+DO $$ DECLARE a uuid:='b1280000-0000-4000-8000-000000000001';u uuid:='b1280000-0000-4000-8000-000000000002';s uuid;us uuid;f uuid;v uuid;link_id uuid;doc jsonb;prepared jsonb;result jsonb;expires timestamptz:=now()+interval '7 days';initial_hash text:=repeat('2',64);initial_revision integer;BEGIN
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(a,repeat('a',64)) RETURNING id INTO s;
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(u,repeat('b',64)) RETURNING id INTO us;
+ INSERT INTO public.forms(slug,title,owner_id,state,access_mode,draft_definition,settings)VALUES('fictional-link-replay','Fictional link replay',a,'Open','invited','{}','{"access":"invited"}')RETURNING id INTO f;
+ INSERT INTO public.form_versions(form_id,version,definition,schema_hash,published_by)VALUES(f,1,'{}',repeat('c',64),a)RETURNING id INTO v;UPDATE public.forms SET published_version_id=v WHERE public.forms.id=f;
+ doc:=jsonb_build_object('type','invited','expiresAt',expires);
+ prepared:=jsonb_build_array(jsonb_build_object('emailHash',repeat('1',64),'tokenHash',initial_hash,'emailEncrypted','fictional-ciphertext-only','secretEncrypted','fictional-encrypted-token','expiresAt',expires));
+ result:=public.inspect_form_access_link_write(a,s,f,NULL,'create',repeat('d',64));IF(result->>'committed')::boolean OR NOT(result->>'canRetry')::boolean THEN RAISE EXCEPTION 'Fresh link batch inspection invalid';END IF;
+ result:=public.mutate_form_access_link_write(a,s,f,NULL,'create',1,v,NULL,doc,prepared,repeat('d',64),repeat('e',64),gen_random_uuid());
+ IF result->>'queued'<>'1' OR result ? 'tokenIds' OR result::text LIKE '%ciphertext%' THEN RAISE EXCEPTION 'Link batch receipt invalid or disclosed secrets';END IF;
+ PERFORM public.mutate_form_access_link_write(a,s,f,NULL,'create',1,v,NULL,doc,prepared,repeat('d',64),repeat('e',64),gen_random_uuid());
+ IF(SELECT count(*) FROM public.delivery_jobs WHERE kind='form_access' AND payload->>'formId'=f::text)<>1 OR(SELECT count(*) FROM public.admin_actions WHERE target_id=f AND action='forms.access_queued')<>1 THEN RAISE EXCEPTION 'Accepted batch duplicated jobs/audit';END IF;
+ SELECT t.id,t.revision INTO link_id,initial_revision FROM public.form_access_tokens t WHERE t.form_id=f;
+ BEGIN PERFORM public.mutate_form_access_link_write(a,s,f,NULL,'create',1,v,NULL,doc,prepared,repeat('d',64),repeat('f',64),gen_random_uuid());RAISE EXCEPTION 'Batch body changed under original key';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ BEGIN PERFORM public.inspect_form_access_link_write(u,us,f,NULL,'create',repeat('d',64));RAISE EXCEPTION 'Unrelated actor read link receipt';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ result:=public.mutate_form_access_link_write(a,s,f,NULL,'create',1,v,NULL,doc,prepared,repeat('f',64),repeat('e',64),gen_random_uuid());IF result->>'queued'<>'0' OR result->>'existing'<>'1' THEN RAISE EXCEPTION 'Existing private link silently resent';END IF;
+ doc:=jsonb_build_object('expiresAt',expires);prepared:=jsonb_build_object('tokenHash',repeat('3',64),'secretEncrypted','fictional-replacement-secret');
+ result:=public.mutate_form_access_link_write(a,s,f,link_id,'resend',1,v,initial_revision,doc,prepared,repeat('4',64),repeat('5',64),gen_random_uuid());
+ PERFORM public.mutate_form_access_link_write(a,s,f,link_id,'resend',1,v,initial_revision,doc,jsonb_build_object('tokenHash',repeat('6',64),'secretEncrypted','unused-retry-secret'),repeat('4',64),repeat('5',64),gen_random_uuid());
+ IF(SELECT token_hash FROM public.form_access_tokens WHERE public.form_access_tokens.id=link_id)<>repeat('3',64) OR(SELECT expires_at FROM public.form_access_tokens WHERE public.form_access_tokens.id=link_id)<>expires OR(SELECT revision FROM public.form_access_tokens WHERE public.form_access_tokens.id=link_id)<>initial_revision+1 OR(SELECT count(*) FROM public.delivery_jobs WHERE kind='form_access' AND payload->>'formId'=f::text)<>2 OR(SELECT count(*) FROM public.admin_actions WHERE target_id=f AND action='forms.access_resend')<>1 THEN RAISE EXCEPTION 'Resend replay rotated/extended/queued/audited more than once';END IF;
+ BEGIN PERFORM public.mutate_form_access_link_write(a,s,f,link_id,'revoke',1,v,initial_revision,'{}',NULL,repeat('7',64),repeat('8',64),gen_random_uuid());RAISE EXCEPTION 'Stale selected link mutated';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ BEGIN PERFORM public.mutate_form_access_link_write(a,s,f,link_id,'resend',1,v,initial_revision+1,doc,prepared,repeat('7',64),repeat('8',64),gen_random_uuid());RAISE EXCEPTION 'Resend cooldown bypassed';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'RESEND_COOLDOWN' THEN RAISE;END IF;END;
+ PERFORM public.mutate_form_access_link_write(a,s,f,link_id,'revoke',1,v,initial_revision+1,'{}',NULL,repeat('7',64),repeat('8',64),gen_random_uuid());
+ PERFORM public.mutate_form_access_link_write(a,s,f,link_id,'revoke',1,v,initial_revision+1,'{}',NULL,repeat('7',64),repeat('8',64),gen_random_uuid());
+ IF(SELECT count(*) FROM public.admin_actions WHERE target_id=f AND action='forms.access_revoke')<>1 OR(SELECT revision FROM public.form_access_tokens WHERE public.form_access_tokens.id=link_id)<>initial_revision+2 THEN RAISE EXCEPTION 'Revocation replay repeated state/audit';END IF;
+ UPDATE public.forms SET state='Archived',draft_revision=2 WHERE public.forms.id=f;
+ result:=public.inspect_form_access_link_write(a,s,f,link_id,'resend',repeat('4',64));IF NOT(result->>'committed')::boolean OR result ? 'recipientHint' OR result::text LIKE '%fictional-replacement-secret%' OR result::text LIKE '%ciphertext%' OR result::text LIKE '%tokenHash%' THEN RAISE EXCEPTION 'Accepted link receipt lost after archive or exposed recipient/token';END IF;
+ result:=public.inspect_form_access_link_write(a,s,f,NULL,'create',repeat('9',64));IF(result->>'canRetry')::boolean THEN RAISE EXCEPTION 'Archived form authorized a fresh batch';END IF;
+ BEGIN PERFORM public.mutate_form_access_link_write(a,s,f,NULL,'create',1,v,NULL,jsonb_build_object('type','invited','expiresAt',expires),'[]',repeat('9',64),repeat('a',64),gen_random_uuid());RAISE EXCEPTION 'Changed form revision accepted';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ UPDATE public.idempotency_keys SET expires_at=now()-interval '1 second' WHERE scope='form-access-link-write:'||a||':'||s AND key_hash=repeat('4',64);
+ BEGIN PERFORM public.inspect_form_access_link_write(a,s,f,link_id,'resend',repeat('4',64));RAISE EXCEPTION 'Expired link receipt accepted';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'INVALID_STATE' THEN RAISE;END IF;END;
+ UPDATE public.admin_sessions SET revoked_at=now() WHERE public.admin_sessions.id=s;
+ BEGIN PERFORM public.read_form_access_links(a,s,f,1,30);RAISE EXCEPTION 'Revoked session read link inventory';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ IF has_function_privilege('anon','public.inspect_form_access_link_write(uuid,uuid,uuid,uuid,text,text,text)','EXECUTE') OR has_function_privilege('authenticated','public.mutate_form_access_link_write(uuid,uuid,uuid,uuid,text,integer,uuid,integer,jsonb,jsonb,text,text,uuid)','EXECUTE') OR NOT has_function_privilege('service_role','public.read_form_access_links(uuid,uuid,uuid,integer,integer)','EXECUTE') THEN RAISE EXCEPTION 'Private-link functions exposed';END IF;
+END $$;
+ROLLBACK;

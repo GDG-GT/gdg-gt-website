@@ -96,3 +96,11 @@ frozen identical explicit retries with fresh password proof, denied-state cleari
 and protected navigation. See `FORM_PERMANENT_DELETION_RECOVERY.md`. Private-link,
 integration/runtime and complete storage/manual/device/visual/hosted acceptance
 remain open.
+
+The access case now also maps private invitation/link batch approval, resend and
+revocation to current-session version/publication-bound atomic receipts, fixed
+audience/expiry intent, read-only reconciliation, explicit identical retries and
+protected inspector/navigation exits. The populated private-link table is a named
+keyboard-focusable scrolling region. See `FORM_PRIVATE_LINK_RECOVERY.md`; complete
+manual/device/storage/visual/hosted and remaining integration/runtime acceptance
+remain open.

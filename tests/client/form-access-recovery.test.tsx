@@ -50,6 +50,9 @@ const candidate = {
     responded: false,
     revoked_at: null,
     expires_at: "2099-11-04T12:00:00Z",
+    token_type: "invited" as const,
+    revision: 1,
+    last_sent_at: null,
   };
 function definition(id = "fictional-form") {
   const form = {
@@ -62,6 +65,7 @@ function definition(id = "fictional-form") {
   form.versions = [
     {
       version: 1,
+      versionId: "fictional-published-version",
       title: form.title,
       description: form.description,
       fields: form.fields,
@@ -95,6 +99,16 @@ function defaults(path: string) {
   return { form: current };
 }
 function ack(options: { body: { userId: string }; method: string }) {
+  if (!options.body.userId)
+    return {
+      formId: current.id,
+      sourceId: invite.id,
+      action: (options.body as Record<string, unknown>).action,
+      queued:
+        (options.body as Record<string, unknown>).action === "revoke" ? 0 : 1,
+      existing: 0,
+      total: 1,
+    };
   return {
     committed: true,
     canRetry: false,
@@ -313,11 +327,36 @@ describe("Forms access inventory, review and interruption recovery", () => {
         });
       } else {
         expect(path).toContain("/invitations/" + invite.id);
-        expect(options.body).toEqual({ action });
+        expect(options.body).toMatchObject({
+          action,
+          formRevision: 1,
+          publishedVersionId: "fictional-published-version",
+          revision: 1,
+        });
       }
       await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     },
   );
+  it("does not use a substituted form payload to review another form's access", async () => {
+    read = (path) =>
+      path.includes("?")
+        ? defaults(path)
+        : { form: { ...current, id: "fictional-substituted-form" } };
+    mount();
+    await screen.findByText("Fictional collaborator");
+    expect(
+      (
+        screen.getByRole("button", {
+          name: "Remove collaborator",
+        }) as HTMLButtonElement
+      ).disabled,
+    ).toBe(true);
+    expect(
+      (screen.getByRole("button", { name: "Resend" }) as HTMLButtonElement)
+        .disabled,
+    ).toBe(true);
+    expect(writes()).toHaveLength(0);
+  });
   it("cancels a review without any mutation", async () => {
     mount();
     await loaded();
@@ -383,7 +422,7 @@ describe("Forms access inventory, review and interruption recovery", () => {
     read = defaults;
     current = { ...current, revision: 2 };
     fireEvent.click(screen.getByRole("button", { name: "Revoke" }));
-    await screen.findByText(/selected record changed/);
+    await screen.findByText(/selected link changed/);
     expect(writes()).toHaveLength(0);
   });
   it("clears all private inventories and input on a denied read, and can explicitly recheck access", async () => {
@@ -604,7 +643,7 @@ describe("Forms access inventory, review and interruption recovery", () => {
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(writes()).toHaveLength(0);
   });
-  it("keeps exact invitation retry identity after an uncertain result and never resends on refresh", async () => {
+  it("keeps an uncertain approved audience frozen across inventory refresh", async () => {
     transport.mockImplementation((path, options) =>
       options?.method
         ? Promise.reject(Error("Fictional uncertain queue"))
@@ -616,26 +655,43 @@ describe("Forms access inventory, review and interruption recovery", () => {
       screen.getByRole("textbox", { name: "Approved recipient emails" }),
       { target: { value: "fictional-recipient@example.test" } },
     );
-    const approval = screen.getByRole("checkbox", {
-      name: /I approve these recipients/,
-    });
-    fireEvent.click(approval);
-    const button = screen.getByRole("button", { name: "Queue private links" });
-    fireEvent.click(button);
-    await screen.findByText("Fictional uncertain queue");
-    const first = writes()[0][1];
-    expect((button as HTMLButtonElement).disabled).toBe(true);
     fireEvent.click(
-      screen.getByRole("button", { name: "Recheck access inventories" }),
+      screen.getByRole("checkbox", { name: /I approve these recipients/ }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Review private links" }),
     );
     await waitFor(() =>
-      expect((button as HTMLButtonElement).disabled).toBe(false),
+      expect(
+        (
+          screen.getByRole("button", {
+            name: "Queue approved private links",
+          }) as HTMLButtonElement
+        ).disabled,
+      ).toBe(false),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Queue approved private links" }),
+    );
+    await screen.findByRole("region", {
+      name: "Unconfirmed private link change",
+    });
+    const original = writes()[0][1];
+    fireEvent.click(
+      screen.getByRole("button", { name: "Refresh delivery status" }),
     );
     expect(writes()).toHaveLength(1);
-    fireEvent.click(button);
-    await waitFor(() => expect(writes()).toHaveLength(2));
-    expect(writes()[1][1].idempotencyKey).toBe(first.idempotencyKey);
-    expect(writes()[1][1].body).toEqual(first.body);
+    expect(original.body.recipients).toEqual([
+      "fictional-recipient@example.test",
+    ]);
+    expect(original.body.expiresAt).toBeTruthy();
+    expect(
+      (
+        screen.getByRole("button", {
+          name: "Review private links",
+        }) as HTMLButtonElement
+      ).disabled,
+    ).toBe(true);
   });
   it("does not let an obsolete CSV read overwrite newer typed recipients", async () => {
     mount();

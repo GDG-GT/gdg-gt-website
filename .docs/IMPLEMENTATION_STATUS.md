@@ -8,6 +8,49 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Private invitation/link lifecycle recovery — 2026-11-06
+
+- Migration 128 adds current-session complete inventory reads, monotonic selected
+  link revisions and atomic original-request batch/resend/revoke receipts. Draft/
+  publication/selected-record versions, exact normalized audience, fixed expiry,
+  current eligibility/cooldown and request hash/key are bound. Accepted replays
+  cannot duplicate mail jobs, rotate tokens again or repeat revocation audits.
+  Read-only recovery omits recipient identity/ciphertext/raw tokens and current
+  denial clears private state. Erased recipients retain generic references.
+- A dedicated private-link child preserves independent read/proposal state and
+  consequence reviews, frozen intent, second-loss rechecks, explicit identical
+  retries, cancellation/context/session fences, reviewed stopping and protected
+  inspector/navigation exits. Verified-email tokens remain read-only here; public
+  verification stays separate. The legacy invitation HTTP mutation paths are
+  removed. Current form payload identity is checked before access proposals.
+- Both complete 128-migration SQL suites pass (230/231 checks), both 100-client
+  races and six isolated restore checks pass; migration applied locally. All
+  108 focused access/link cases pass (56 new lifecycle route/client cases plus
+  regressions and substituted-form fencing). SQL fixture ambiguity corrected in
+  its verified owned scratch, which was removed; no product guard weakened.
+- All 58 actual API/DB/desktop-mobile checks pass: all three operations and both
+  loss positions, original bytes/key/expiry, one intended lifecycle audit, ten
+  simultaneous identical batches produce one new link/job, and minimal receipt
+  inspection. Full successful probe: two private publications/six fictional links/
+  ten disabled metadata-only jobs; zero responses/workers/provider sends/existing
+  chapter/production changes. Owned recipient ciphertext cleared/tokens revoked,
+  forms archived/accounts disabled/sessions revoked. Initial API-restart and row-
+  locator probe failures/cleanup reports retained. No quota/timeout reset.
+- Production browser audit found disabled populated scrolling tables were not
+  keyboard-focusable. The table is now a named focusable region. All 144 private-
+  link/collaborator/builder/shared-workspace cases pass across six profiles after
+  the fix. Initial interrupted matrix is explicitly marked incomplete, with its
+  unexecuted cases distinguished from approved skips. Populated axe passes; mobile
+  inspected, captures unapproved. Build/types/lint (zero errors/25 existing warnings),
+  budgets, secrets and traceability pass. Catalog remains 159 unverified cases.
+- All 2,244 tests/193 files pass; all 20 critical 90% branch gates pass. Global
+  coverage remains below 70%: 69.86% lines, 69.61% branches, 68.15% statements and
+  60.84% functions. No test/coverage threshold changed. See
+  `FORM_PRIVATE_LINK_RECOVERY.md`.
+- First-party integration and respondent/runtime recovery, global coverage and
+  full storage/device/manual/visual/hosted acceptance remain open. SSO/Google and
+  Bevy/Engage remain deferred.
+
 ### Permanent deletion original-outcome recovery — 2026-11-06
 
 - Migrations 126–127 add original-session read-only deletion receipt inspection

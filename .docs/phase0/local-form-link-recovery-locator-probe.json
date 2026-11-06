@@ -1,0 +1,32 @@
+{
+  "generatedAt": "2026-11-06T10:52:06.634Z",
+  "completed": false,
+  "cleanup": true,
+  "scope": "Dedicated loopback; fresh owned fictional private publications/accounts/recipient addresses only. Jobs disabled and encrypted job payloads cleared before browser acknowledgements; no worker/provider sends, responses, existing chapter or production changes. Owned tokens revoked/recipient ciphertext cleared, forms archived, accounts disabled/sessions revoked. Reports contain no request body/key/recipient/capability/proof.",
+  "tests": [
+    {
+      "name": "private links stay concealed from unrelated and anonymous readers at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link create after freezes original form/publication/audience/target/expiry at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "uncertain populated private-link review passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link create after reconciles read-only or explicitly retries identical request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link create after produces one intended audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "link create after receipt inspection excludes private address/token at 1440×900",
+      "passed": true
+    }
+  ]
+}

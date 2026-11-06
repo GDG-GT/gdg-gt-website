@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import { api, ApiFailure } from "@/lib/api";
+import { ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { usePrivateMutation } from "@/hooks/usePrivateMutation";
@@ -20,19 +20,12 @@ import {
   type GrantVersion,
 } from "./form-collaborator-api";
 import FormCollaboratorWriteRecovery from "./FormCollaboratorWriteRecovery";
+import PrivateFormLinks from "./PrivateFormLinks";
 import type { PreviewForm } from "./store";
 export type AccessWorkState = {
   dirty: boolean;
   busy: boolean;
   uncertain: boolean;
-};
-type Invitation = {
-  id: string;
-  recipientHint: string;
-  delivery_state: string;
-  responded: boolean;
-  revoked_at: string | null;
-  expires_at: string;
 };
 type Collaborator = GrantVersion & {
   admin_user_id: string;
@@ -60,7 +53,6 @@ type ReadState = {
 };
 type ReviewAction =
   | { kind: "remove"; row: Collaborator }
-  | { kind: "revoke" | "resend"; row: Invitation }
   | { kind: "save"; row: Candidate; actions: string[] };
 type Review = ReviewAction & { formRevision: number };
 const ready = (read: ReadState) => !read.loading && !read.error && !read.denied;
@@ -159,24 +151,23 @@ function AccessWorkspace({
 }) {
   const [refresh, setRefresh] = useState({
       context: 0,
-      invitations: 0,
       collaborators: 0,
       candidates: 0,
     }),
-    [page, setPage] = useState(1),
     [collaboratorPage, setCollaboratorPage] = useState(1),
     [candidatePage, setCandidatePage] = useState(1),
     [candidateQuery, setCandidateQuery] = useState("");
-  const [recipients, setRecipients] = useState(""),
-    [days, setDays] = useState(7),
-    [confirmed, setConfirmed] = useState(false),
-    [user, setUser] = useState(""),
+  const [user, setUser] = useState(""),
     [actions, setActions] = useState(["view"]),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [review, setReview] = useState<Review>(),
-    [uncertain, setUncertain] = useState(false),
     [blocked, setBlocked] = useState(false),
+    [privateState, setPrivateState] = useState<AccessWorkState>({
+      dirty: false,
+      busy: false,
+      uncertain: false,
+    }),
     [grantIntent, setGrantIntent] = useState<CollaboratorIntent>(),
     [grantUncertain, setGrantUncertain] = useState(false),
     [recoveryBusy, setRecoveryBusy] = useState(false);
@@ -184,16 +175,11 @@ function AccessWorkspace({
   stateChange.current = onStateChange;
   const accessChanged = useRef(onAccessChanged);
   accessChanged.current = onAccessChanged;
-  const submission = useRef<{ body: string; key: string }>();
   const allowed = form.actions?.includes("manage_access");
   const root = `/admin/forms/${form.id}`,
     context = usePrivateRead<{ form: PreviewForm }>(
       allowed ? root : undefined,
       refresh.context,
-    ),
-    inviteRead = usePrivateRead<Inventory<Invitation>>(
-      allowed ? `${root}/invitations?page=${page}` : undefined,
-      refresh.invitations,
     ),
     collaboratorRead = usePrivateRead<Inventory<Collaborator>>(
       allowed ? `${root}/collaborators?page=${collaboratorPage}` : undefined,
@@ -205,37 +191,33 @@ function AccessWorkspace({
         : undefined,
       refresh.candidates,
     ),
-    invitations = inviteRead.data?.items || [],
     collaborators = collaboratorRead.data?.items || [],
     candidates = candidateRead.data?.items || [],
-    total = inviteRead.data?.total || 0,
-    currentForm = context.data?.form,
+    currentForm =
+      context.data?.form?.id === form.id ? context.data.form : undefined,
     published = currentForm?.versions[currentForm.versions.length - 1],
     { isOnline } = useOnlineStatus(),
     mutation = usePrivateMutation(root),
-    busy = mutation.busy || recoveryBusy,
+    busy = mutation.busy || recoveryBusy || privateState.busy,
     denied =
       blocked ||
       !allowed ||
       context.denied ||
-      inviteRead.denied ||
       collaboratorRead.denied ||
       candidateRead.denied ||
       (!!currentForm && !currentForm.actions?.includes("manage_access")),
     writable =
       isOnline &&
       !busy &&
-      !uncertain &&
+      !privateState.uncertain &&
       !grantIntent &&
       !denied &&
       ready(context) &&
       !!currentForm &&
       Number.isInteger(currentForm.revision) &&
       (currentForm.revision || 0) >= 1;
-  const fileRead = useRef(0),
-    feedback = useRef<HTMLParagraphElement>(null);
+  const feedback = useRef<HTMLParagraphElement>(null);
   const clearContext = context.clear,
-    clearInvitations = inviteRead.clear,
     clearCollaborators = collaboratorRead.clear,
     clearCandidates = candidateRead.clear,
     cancelMutation = mutation.cancel,
@@ -243,11 +225,9 @@ function AccessWorkspace({
   const load = useCallback(() => {
     setRefresh((value) => ({
       context: value.context + 1,
-      invitations: value.invitations + 1,
       collaborators: value.collaborators + 1,
       candidates: value.candidates + 1,
     }));
-    setUncertain(false);
     setBlocked(false);
   }, []);
   const retry = (key: keyof typeof refresh) => {
@@ -257,39 +237,28 @@ function AccessWorkspace({
   useEffect(() => {
     if (denied) {
       setBlocked(true);
-      fileRead.current++;
       cancelMutation();
       clearContext();
-      clearInvitations();
       clearCollaborators();
       clearCandidates();
-      setRecipients("");
       setUser("");
       setActions(["view"]);
-      setConfirmed(false);
       setReview(undefined);
       setError("");
       setNotice("");
-      submission.current = undefined;
       setGrantIntent(undefined);
       setGrantUncertain(false);
       setRecoveryBusy(false);
+      setPrivateState({ dirty: false, busy: false, uncertain: false });
       accessChanged.current?.();
     }
   }, [
     denied,
     cancelMutation,
     clearContext,
-    clearInvitations,
     clearCollaborators,
     clearCandidates,
   ]);
-  useEffect(
-    () => () => {
-      fileRead.current++;
-    },
-    [],
-  );
   useEffect(() => {
     if (error || notice) feedback.current?.focus();
   }, [error, notice]);
@@ -300,53 +269,18 @@ function AccessWorkspace({
       setReview(undefined);
     }
   }, [isOnline, grantIntent, cancelMutation, pendingMutation]);
-  const dirty = !!recipients || !!user || !!review || !!grantIntent;
+  const dirty = privateState.dirty || !!user || !!review || !!grantIntent;
   useEffect(() => {
-    stateChange.current?.({ dirty, busy, uncertain: grantUncertain });
-  }, [dirty, busy, grantUncertain]);
+    stateChange.current?.({
+      dirty,
+      busy,
+      uncertain: grantUncertain || privateState.uncertain,
+    });
+  }, [dirty, busy, grantUncertain, privateState.uncertain]);
   useDraftGuard(dirty, {
     busy,
     label: "Form access changes",
   });
-  const work = async (
-    run: (signal: AbortSignal) => Promise<unknown>,
-    message: string,
-    onSuccess?: () => void,
-  ) => {
-    if (!writable) return;
-    const controller = mutation.begin();
-    if (!controller) return;
-    fileRead.current++;
-    setError("");
-    setNotice("");
-    try {
-      await run(controller.signal);
-      if (!mutation.current(controller)) return;
-      setReview(undefined);
-      setUser("");
-      setActions(["view"]);
-      onSuccess?.();
-      load();
-      setNotice(message);
-    } catch (e) {
-      if (!mutation.current(controller)) return;
-      setError((e as Error).message);
-      if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
-        context.clear();
-        inviteRead.clear();
-        collaboratorRead.clear();
-        candidateRead.clear();
-        setRecipients("");
-        setUser("");
-        setReview(undefined);
-        setConfirmed(false);
-        setBlocked(true);
-      } else if (!(e instanceof ApiFailure) || e.status >= 500)
-        setUncertain(true);
-    } finally {
-      mutation.finish(controller);
-    }
-  };
   const completeGrant = () => {
     setGrantIntent(undefined);
     setGrantUncertain(false);
@@ -430,28 +364,16 @@ function AccessWorkspace({
         Your current form permissions do not include managing access.
       </EmptyState>
     );
-  const addresses = [
-    ...new Set(
-      recipients
-        .split(/[\s,;]+/)
-        .map((v) => v.trim().toLowerCase())
-        .filter((v) => v && v !== "email"),
-    ),
-  ];
   const reviewRead =
-      review?.kind === "remove"
-        ? collaboratorRead
-        : review?.kind === "save"
-          ? candidateRead
-          : inviteRead,
+      review?.kind === "remove" ? collaboratorRead : candidateRead,
     reviewRow =
       review?.kind === "remove"
         ? collaborators.find(
             (row) => row.admin_user_id === review.row.admin_user_id,
           )
-        : review?.kind === "save"
+        : review
           ? candidates.find((row) => row.id === review.row.id)
-          : review && invitations.find((row) => row.id === review.row.id),
+          : undefined,
     reviewChanged =
       !!review &&
       ((ready(reviewRead) &&
@@ -460,20 +382,16 @@ function AccessWorkspace({
     reviewLabel =
       review?.kind === "remove"
         ? "Remove collaborator"
-        : review?.kind === "revoke"
-          ? "Revoke access link"
-          : review?.kind === "resend"
-            ? "Replace access link"
-            : "Save collaborator access",
+        : "Save collaborator access",
     reviewReady =
       writable &&
       ready(reviewRead) &&
       !reviewChanged &&
       !!reviewRow &&
-      ((review?.kind !== "save" && review?.kind !== "remove") ||
-        (validGrantVersion(review.row) &&
-          (review.kind !== "remove" || review.row.grantId !== null))) &&
-      (review?.kind !== "save" ||
+      !!review &&
+      validGrantVersion(review.row) &&
+      (review.kind !== "remove" || review.row.grantId !== null) &&
+      (review.kind !== "save" ||
         review.actions.every((action) =>
           currentForm?.actions?.includes(action),
         ));
@@ -503,6 +421,12 @@ function AccessWorkspace({
         retry={() => retry("context")}
         disabled={busy || !isOnline || !!review}
       />
+      {context.data && !currentForm && (
+        <p role="alert">
+          Current form access could not be verified. Retry the current form
+          access read before reviewing a change.
+        </p>
+      )}
       {!isOnline && (
         <p role="status">
           You are offline. Access changes stay unsent until you reconnect and
@@ -523,22 +447,6 @@ function AccessWorkspace({
         <p ref={feedback} tabIndex={-1} role="status">
           {notice}
         </p>
-      )}
-      {uncertain && (
-        <div role="alert">
-          <p>
-            The result could not be confirmed. Refresh the inventories and check
-            their current state before repeating an action.
-          </p>
-          <Button
-            type="button"
-            variant="secondary"
-            disabled={!isOnline || busy}
-            onClick={load}
-          >
-            Recheck access inventories
-          </Button>
-        </div>
       )}
       {grantIntent && grantUncertain && (
         <FormCollaboratorWriteRecovery
@@ -749,240 +657,18 @@ function AccessWorkspace({
           Save collaborator access
         </Button>
       </fieldset>
-      <h3>Private access links</h3>
-      <p>
-        Invitation and unlisted links are delivered privately. Raw tokens never
-        appear in this admin workspace. Resending an unused invitation
-        invalidates its old link.
-      </p>
-      {["invited", "unlisted"].includes(published?.settings.access || "") ? (
-        <form
-          className="gt-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (
-              !writable ||
-              !!review ||
-              !ready(inviteRead) ||
-              !confirmed ||
-              addresses.length < 1 ||
-              addresses.length > 100 ||
-              !Number.isInteger(days) ||
-              days < 1 ||
-              days > 30
-            )
-              return;
-            const body = {
-                type: published?.settings.access,
-                recipients: addresses,
-                expiresInDays: days,
-                confirmed: true,
-              },
-              serialized = JSON.stringify(body);
-            if (submission.current?.body !== serialized)
-              submission.current = {
-                body: serialized,
-                key: crypto.randomUUID(),
-              };
-            work(
-              (signal) =>
-                api(`/admin/forms/${form.id}/invitations`, {
-                  method: "POST",
-                  protected: true,
-                  body,
-                  idempotencyKey: submission.current!.key,
-                  signal,
-                }),
-              "Private links queued. Refresh delivery status after the local worker runs.",
-              () => {
-                setRecipients("");
-                setConfirmed(false);
-                submission.current = undefined;
-              },
-            );
-          }}
-        >
-          <fieldset
-            disabled={busy || !!review || !!grantIntent}
-            className="gt-form gt-access-fields"
-          >
-            <Field
-              label="Approved recipient emails"
-              hint="One per line, comma-separated, or paste an email CSV column. Maximum 100."
-            >
-              <textarea
-                aria-label="Approved recipient emails"
-                rows={5}
-                value={recipients}
-                onChange={(e) => {
-                  fileRead.current++;
-                  setRecipients(e.target.value);
-                  setConfirmed(false);
-                }}
-                maxLength={30000}
-              />
-            </Field>
-            <Field label="Import email CSV">
-              <input
-                type="file"
-                accept=".csv,text/csv"
-                onChange={async (e) => {
-                  const generation = ++fileRead.current;
-                  const file = e.target.files?.[0];
-                  if (!file) return;
-                  if (file.size > 32768) {
-                    setError("Use an email CSV smaller than 32 KB.");
-                    return;
-                  }
-                  try {
-                    const text = await file.text();
-                    if (fileRead.current !== generation) return;
-                    setRecipients(text.replace(/"/g, ""));
-                    setConfirmed(false);
-                  } catch {
-                    if (fileRead.current === generation)
-                      setError(
-                        "The email CSV could not be read. Try the file again or enter addresses directly.",
-                      );
-                  }
-                }}
-              />
-            </Field>
-            <Field label="Expires in days">
-              <input
-                type="number"
-                min={1}
-                max={30}
-                value={days}
-                onChange={(e) => setDays(Number(e.target.value))}
-              />
-            </Field>
-            <p>{addresses.length} unique recipients</p>
-            <label className="gt-check">
-              <input
-                type="checkbox"
-                checked={confirmed}
-                onChange={(e) => setConfirmed(e.target.checked)}
-              />
-              I approve these recipients and understand that their links grant
-              access to this form.
-            </label>
-            <Button
-              disabled={
-                !writable ||
-                !ready(inviteRead) ||
-                !confirmed ||
-                addresses.length < 1 ||
-                addresses.length > 100
-              }
-            >
-              Queue private links
-            </Button>
-          </fieldset>
-        </form>
-      ) : (
-        <p>
-          Publish an invitation-only or unlisted form to send private access
-          links. Verified-email forms deliver links when respondents request
-          verification.
-        </p>
-      )}
-      <Button
-        type="button"
-        variant="secondary"
-        disabled={busy || !!review || !isOnline || inviteRead.loading}
-        onClick={() => {
-          retry("invitations");
-          focusWorkspace();
-        }}
-      >
-        Refresh delivery status
-      </Button>
-      <ReadStatus
-        name="private links"
-        read={inviteRead}
-        retry={() => retry("invitations")}
-        disabled={busy || !isOnline || !!review}
+      <PrivateFormLinks
+        form={currentForm || form}
+        contextReady={
+          ready(context) &&
+          !!currentForm &&
+          Number.isInteger(currentForm.revision)
+        }
+        disabled={mutation.busy || recoveryBusy || !!review || !!grantIntent}
+        onRecheck={load}
+        onDenied={() => setBlocked(true)}
+        onStateChange={setPrivateState}
       />
-      {invitations.length ? (
-        <div className="gt-table-wrap">
-          <table className="gt-data-table">
-            <thead>
-              <tr>
-                <th>Recipient</th>
-                <th>Delivery</th>
-                <th>Response</th>
-                <th>Expiry</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {invitations.map((invite) => (
-                <tr key={invite.id}>
-                  <td>{invite.recipientHint}</td>
-                  <td>
-                    {invite.revoked_at ? "Revoked" : invite.delivery_state}
-                  </td>
-                  <td>{invite.responded ? "Responded" : "Not yet"}</td>
-                  <td>{new Date(invite.expires_at).toLocaleString()}</td>
-                  <td>
-                    <Button
-                      variant="ghost"
-                      disabled={
-                        !writable ||
-                        !!review ||
-                        !ready(inviteRead) ||
-                        invite.responded ||
-                        !!invite.revoked_at
-                      }
-                      onClick={() =>
-                        beginReview({ kind: "resend", row: invite })
-                      }
-                    >
-                      Resend
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      disabled={
-                        !writable ||
-                        !!review ||
-                        !ready(inviteRead) ||
-                        !!invite.revoked_at
-                      }
-                      onClick={() =>
-                        beginReview({ kind: "revoke", row: invite })
-                      }
-                    >
-                      Revoke
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : !inviteRead.loading && !inviteRead.error ? (
-        <p>No private links have been issued.</p>
-      ) : null}
-      <div className="gt-actions">
-        <Button
-          variant="ghost"
-          disabled={page === 1 || busy || !!review || !ready(inviteRead)}
-          onClick={() => setPage(page - 1)}
-        >
-          Previous
-        </Button>
-        <span>Page {page}</span>
-        <Button
-          variant="ghost"
-          disabled={
-            page * 30 >= total || busy || !!review || !ready(inviteRead)
-          }
-          onClick={() => setPage(page + 1)}
-        >
-          Next
-        </Button>
-      </div>
       <Dialog
         open={!!review}
         onOpenChange={(open) => {
@@ -1001,19 +687,13 @@ function AccessWorkspace({
           <DialogDescription>
             {review?.kind === "remove"
               ? "Remove this account's explicit collaborator actions. Team permissions and administrator access still apply; existing responses are retained."
-              : review?.kind === "revoke"
-                ? "Invalidate this private access link so it can no longer admit new submissions. Existing responses are retained."
-                : review?.kind === "resend"
-                  ? "Invalidate the unused old link and queue its replacement to the same approved recipient. The replacement grants access under the published form's rules."
-                  : "Grant only the listed actions to this eligible account. This can expose the form and its responses when those actions are selected; team membership rules still apply."}
+              : "Grant only the listed actions to this eligible account. This can expose the form and its responses when those actions are selected; team membership rules still apply."}
           </DialogDescription>
           <p>
             <strong>{currentForm?.title || form.title}</strong> ·{" "}
-            {review?.kind === "remove" || review?.kind === "save"
-              ? review.row.display_name
-              : review?.row.recipientHint}
+            {review?.row.display_name}
           </p>
-          {(review?.kind === "save" || review?.kind === "remove") && (
+          {review && (
             <p>
               Reviewed form revision {review.formRevision}; grant revision{" "}
               {review.row.grantRevision}.
@@ -1044,31 +724,11 @@ function AccessWorkspace({
           <div className="gt-inline-actions">
             <Button
               type="button"
-              variant={
-                review?.kind === "remove" || review?.kind === "revoke"
-                  ? "danger"
-                  : "primary"
-              }
+              variant={review?.kind === "remove" ? "danger" : "primary"}
               disabled={!reviewReady}
               onClick={() => {
                 if (!review || !reviewReady) return;
-                const selected = review;
-                if (selected.kind === "save" || selected.kind === "remove") {
-                  void writeGrant(selected);
-                  return;
-                }
-                void work(
-                  (signal) =>
-                    api(`${root}/invitations/${selected.row.id}`, {
-                      method: "PATCH",
-                      protected: true,
-                      signal,
-                      body: { action: selected.kind },
-                    }),
-                  selected.kind === "revoke"
-                    ? "Access link revoked."
-                    : "Replacement private link queued; the old link is invalid.",
-                );
+                void writeGrant(review);
               }}
             >
               {busy ? "Saving…" : reviewLabel}

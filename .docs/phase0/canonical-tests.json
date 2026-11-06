@@ -128,7 +128,8 @@
     "202611060124_form_delivery_replay.sql",
     "202611060125_form_collaborator_replay.sql",
     "202611060126_form_deletion_replay.sql",
-    "202611060127_form_deletion_request_guards.sql"
+    "202611060127_form_deletion_request_guards.sql",
+    "202611060128_form_access_link_replay.sql"
   ],
   "tests": [
     {
@@ -644,6 +645,10 @@
       "passed": true
     },
     {
+      "name": "202611060128_form_access_link_replay.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -1033,6 +1038,10 @@
     },
     {
       "name": "126_form_deletion_replay.sql",
+      "passed": true
+    },
+    {
+      "name": "128_form_access_link_replay.sql",
       "passed": true
     },
     {

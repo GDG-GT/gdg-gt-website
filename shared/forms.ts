@@ -84,6 +84,7 @@ export interface FormSettings {
   shuffleOptions?: boolean;
 }
 export interface FormVersion {
+  versionId?: string;
   version: number;
   title: string;
   description: string;

@@ -11,7 +11,16 @@ const actor = "fe000000-0000-4000-8000-000000000001",
   form = "fe000000-0000-4000-8000-000000000003",
   invite = "fe000000-0000-4000-8000-000000000004",
   team = "fe000000-0000-4000-8000-000000000005",
-  peer = "fe000000-0000-4000-8000-000000000006";
+  peer = "fe000000-0000-4000-8000-000000000006",
+  publishedVersion = "fe000000-0000-4000-8000-000000000007";
+const expected = { formRevision: 1, publishedVersionId: publishedVersion };
+const expiresAt = () => new Date(Date.now() + 3 * 86400000).toISOString();
+const linkBody = (action) => ({
+  ...expected,
+  revision: 1,
+  action,
+  ...(action === "resend" ? { expiresAt: expiresAt() } : {}),
+});
 const secret = "fictional-form-access-encryption-".repeat(2),
   address = "fictional-recipient@example.test";
 function fixture() {
@@ -95,15 +104,39 @@ function fixture() {
         },
       ],
       ["request_form_verification", {}],
-      ["queue_form_access", { queued: 1 }],
-      ["change_form_access", {}],
+      ["inspect_form_access_link_write", { committed: false }],
+      [
+        "mutate_form_access_link_write",
+        ({ p_id, p_action, p_prepared }) => ({
+          formId: form,
+          sourceId: p_id,
+          action: p_action,
+          queued:
+            p_action === "revoke"
+              ? 0
+              : Array.isArray(p_prepared)
+                ? p_prepared.length
+                : 1,
+          existing: 0,
+          total: Array.isArray(p_prepared) ? p_prepared.length : 1,
+        }),
+      ],
+      [
+        "read_form_access_links",
+        () => ({
+          items: lists.get("form_access_tokens"),
+          total: lists.get("form_access_tokens").length,
+        }),
+      ],
     ]);
   const db = {
-      rpc: vi.fn(async (name) =>
-        results.get(name)?.error
-          ? { data: null, error: results.get(name).error }
-          : { data: results.get(name), error: null },
-      ),
+      rpc: vi.fn(async (name, args) => {
+        const v = results.get(name),
+          r = typeof v === "function" ? v(args) : v;
+        return r?.error
+          ? { data: null, error: r.error }
+          : { data: r, error: null };
+      }),
       from: vi.fn((table) => {
         const query = { table, steps: [] };
         queries.push(query);
@@ -238,10 +271,14 @@ describe("FORM-008/030 private invitation and verification route boundary", () =
     });
     expect(JSON.stringify(r.body)).not.toContain(address);
     expect(JSON.stringify(r.body)).not.toContain("intended_email_encrypted");
-    const query = f.queries[0];
-    expect(query.steps).toContainEqual(["eq", "form_id", form]);
-    expect(query.steps).toContainEqual(["range", 10, 19]);
-    expect(query.steps[0][1]).not.toContain("token_hash");
+    expect(f.db.rpc).toHaveBeenLastCalledWith("read_form_access_links", {
+      p_actor: actor,
+      p_session: sid,
+      p_form: form,
+      p_page: 2,
+      p_size: 10,
+    });
+    expect(f.queries).toHaveLength(0);
     expect(f.store.audit).toHaveBeenCalledWith(
       expect.objectContaining({
         actorId: actor,
@@ -306,21 +343,31 @@ describe("FORM-008/030 private invitation and verification route boundary", () =
         type: "invited",
         recipients: [" Fictional-Recipient@Example.test ", address],
         confirmed: true,
-        expiresInDays: 3,
-      },
-      before = Date.now();
+        ...expected,
+        expiresAt: expiresAt(),
+      };
     const r = await f.call(undefined, "POST", body);
-    expect(r.body.data).toEqual({ queued: 1 });
+    expect(r.body.data).toEqual({
+      formId: form,
+      sourceId: null,
+      action: "create",
+      queued: 1,
+      existing: 0,
+      total: 1,
+    });
     const [name, args] = f.db.rpc.mock.calls.at(-1);
-    expect(name).toBe("queue_form_access");
+    expect(name).toBe("mutate_form_access_link_write");
     expect(args).toMatchObject({
       p_actor: actor,
       p_form: form,
-      p_type: "invited",
+      p_action: "create",
+      p_session: sid,
+      p_form_revision: 1,
+      p_version: publishedVersion,
       p_key_hash: tokenHash("fictional-form-access-idempotency"),
     });
-    expect(args.p_recipients).toHaveLength(1);
-    const recipient = args.p_recipients[0],
+    expect(args.p_prepared).toHaveLength(1);
+    const recipient = args.p_prepared[0],
       value = decryptPayload(recipient.secretEncrypted, secret);
     expect(value.email).toBe(address);
     expect(tokenHash(value.token)).toBe(recipient.tokenHash);
@@ -330,20 +377,26 @@ describe("FORM-008/030 private invitation and verification route boundary", () =
     expect(decryptPayload(recipient.emailEncrypted, secret)).toEqual({
       email: address,
     });
-    expect(new Date(recipient.expiresAt).getTime()).toBeGreaterThanOrEqual(
-      before + 3 * 86400000,
-    );
+    expect(recipient.expiresAt).toBe(body.expiresAt);
     expect(JSON.stringify(r.body)).not.toContain(value.token);
     expect(JSON.stringify(r.body)).not.toContain(address);
   });
   it("rejects unconfirmed/malformed/oversized/mass-assigned recipients and missing idempotency before queue mutation", async () => {
     const f = fixture(),
-      body = { type: "unlisted", recipients: [address], confirmed: true };
+      body = {
+        ...expected,
+        type: "unlisted",
+        recipients: [address],
+        expiresAt: expiresAt(),
+        confirmed: true,
+      };
     for (const change of [
       { confirmed: false },
       { recipients: [] },
       { recipients: Array(101).fill(address) },
       { expiresInDays: 31 },
+      { expiresAt: "bad" },
+      { formRevision: 0 },
       { type: "verified" },
       { actorId: actor },
     ])
@@ -367,33 +420,41 @@ describe("FORM-008/030 private invitation and verification route boundary", () =
   it("revokes without reading raw token material and rotates resend only for the exact form/invitation", async () => {
     const f = fixture(),
       path = `/admin/forms/${form}/invitations/${invite}`;
-    expect(
-      (await f.call(path, "PATCH", { action: "revoke" })).body.data,
-    ).toEqual({ updated: true });
+    expect((await f.call(path, "PATCH", linkBody("revoke"))).body.data).toEqual(
+      {
+        formId: form,
+        sourceId: invite,
+        action: "revoke",
+        queued: 0,
+        existing: 0,
+        total: 1,
+      },
+    );
     expect(f.db.from).not.toHaveBeenCalled();
     expect(f.db.rpc).toHaveBeenLastCalledWith(
-      "change_form_access",
+      "mutate_form_access_link_write",
       expect.objectContaining({
         p_actor: actor,
         p_form: form,
         p_id: invite,
         p_action: "revoke",
-        p_token_hash: null,
-        p_secret: null,
+        p_session: sid,
+        p_target_revision: 1,
+        p_prepared: null,
       }),
     );
-    expect((await f.call(path, "PATCH", { action: "resend" })).statusCode).toBe(
+    expect((await f.call(path, "PATCH", linkBody("resend"))).statusCode).toBe(
       200,
     );
     const args = f.db.rpc.mock.calls.at(-1)[1],
-      value = decryptPayload(args.p_secret, secret);
-    expect(tokenHash(value.token)).toBe(args.p_token_hash);
+      value = decryptPayload(args.p_prepared.secretEncrypted, secret);
+    expect(tokenHash(value.token)).toBe(args.p_prepared.tokenHash);
     expect(value.email).toBe(address);
     expect(f.queries[0].steps).toContainEqual(["eq", "id", invite]);
     expect(f.queries[0].steps).toContainEqual(["eq", "form_id", form]);
     f.single.set("form_access_tokens", null);
-    expect((await f.call(path, "PATCH", { action: "resend" })).statusCode).toBe(
-      404,
+    expect((await f.call(path, "PATCH", linkBody("resend"))).statusCode).toBe(
+      409,
     );
     expect((await f.call(path, "PATCH", { action: "reveal" })).statusCode).toBe(
       400,
@@ -463,13 +524,13 @@ describe("FORM-008/030 private invitation and verification route boundary", () =
         })
       ).statusCode,
     ).toBe(400);
-    f.results.set("change_form_access", {
+    f.results.set("mutate_form_access_link_write", {
       error: { code: "P0001", message: "RESEND_COOLDOWN" },
     });
     expect(
       (
         await f.call(`/admin/forms/${form}/invitations/${invite}`, "PATCH", {
-          action: "resend",
+          ...linkBody("resend"),
         })
       ).body.error.code,
     ).toBe("RESEND_COOLDOWN");
