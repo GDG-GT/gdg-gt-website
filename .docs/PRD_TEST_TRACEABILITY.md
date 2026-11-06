@@ -77,3 +77,9 @@ current-session/expiry guards, retained private reads, frozen settings and
 newly entered proof for explicit identical retry. See `FORM_PRIVACY_RECOVERY.md`;
 physical retention/storage and full manual/device/visual/hosted acceptance remain
 open along with the remaining Forms child workflows.
+
+The delivery case now maps current receipt/expiry inspection, frozen original
+review and fresh-proof retry, independently recovered policy/recipient reads,
+search/paging beyond 200 and explicit unavailable-recipient removal. See
+`FORM_DELIVERY_RECOVERY.md`; provider/manual/device/hosted acceptance remains open
+along with the remaining Forms child workflows.

@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-06): the latest module checkpoint is
-`FORM_PRIVACY_RECOVERY.md`; completed recovery checkpoints include tasks,
+`FORM_DELIVERY_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -30,9 +30,11 @@ The November 4 source-audit gaps for Forms access consequence reviews and
 candidate/collaborator search/paging are now closed locally
 (`FORM_ACCESS_RECOVERY.md`), including removal of the fetched-membership ceiling.
 That access checkpoint covers reads/consequence reviews; collaborator/private-link
-lifecycle atomic replay and concurrent-record protection remain open. Complete
-delivery/deletion private-denial and uncertain-outcome recovery remain
-open beyond their earlier feature and initial-read checkpoints. Retention/hold
+lifecycle atomic replay and concurrent-record protection remain open. Permanent
+form-deletion private-denial and uncertain-outcome recovery remain open beyond
+its earlier feature checkpoint. Delivery now has original-outcome/fresh-proof
+recovery, complete eligible-recipient search/paging and explicit unavailable-account
+removal locally (`FORM_DELIVERY_RECOVERY.md`). Retention/hold
 private reads, original-intent reconciliation and fresh-proof explicit retries
 are now implemented locally (`FORM_PRIVACY_RECOVERY.md`); complete acceptance
 still requires the remaining manual/device/hosted gates.

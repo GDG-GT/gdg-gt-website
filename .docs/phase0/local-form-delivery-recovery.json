@@ -1,0 +1,162 @@
+{
+  "generatedAt": "2026-11-06T09:30:24.770Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and desktop/mobile Chromium delivery review recovery. Two fresh fictional private drafts, 215 owned fictional recipient accounts, fresh officer per viewport. Candidate inventory scoped to fixture names. Beyond-200 selection, retained proposal on candidate outage, explicit unavailable-recipient removal, both enable/disable loss positions, original policy body/key, fresh retry proof, single audits and measured axe. No publication/responses/jobs/workers/provider sends/existing chapter or production changes. Forms archived/accounts disabled/sessions revoked. Captures unapproved; no proof/key/body material retained.",
+  "tests": [
+    {
+      "name": "delivery policy conceals owned settings from unrelated/anonymous readers at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "paged recipient search reaches the 215th owned eligible account at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "candidate outage retains the proposed recipient and pauses its approval at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery enable after freezes draft/policy/recipient intent without proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated uncertain delivery review passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery enable after reconciles read-only or explicitly retries with fresh proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery enable after advances exactly one policy revision/audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "unavailable configured recipients stay visible and require explicit removal at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery disable after freezes draft/policy/recipient intent without proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery disable after reconciles read-only or explicitly retries with fresh proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery disable after advances exactly one policy revision/audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery enable before freezes draft/policy/recipient intent without proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery enable before reconciles read-only or explicitly retries with fresh proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery enable before advances exactly one policy revision/audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery disable before freezes draft/policy/recipient intent without proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery disable before reconciles read-only or explicitly retries with fresh proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery disable before advances exactly one policy revision/audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery approval leaves draft/publication/response state unchanged and queues no delivery at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery recovery has no unexpected writes, external requests, script errors or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delivery policy conceals owned settings from unrelated/anonymous readers at 375×812",
+      "passed": true
+    },
+    {
+      "name": "paged recipient search reaches the 215th owned eligible account at 375×812",
+      "passed": true
+    },
+    {
+      "name": "candidate outage retains the proposed recipient and pauses its approval at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delivery enable after freezes draft/policy/recipient intent without proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated uncertain delivery review passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delivery enable after reconciles read-only or explicitly retries with fresh proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delivery enable after advances exactly one policy revision/audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "unavailable configured recipients stay visible and require explicit removal at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delivery disable after freezes draft/policy/recipient intent without proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delivery disable after reconciles read-only or explicitly retries with fresh proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delivery disable after advances exactly one policy revision/audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delivery enable before freezes draft/policy/recipient intent without proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delivery enable before reconciles read-only or explicitly retries with fresh proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delivery enable before advances exactly one policy revision/audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delivery disable before freezes draft/policy/recipient intent without proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delivery disable before reconciles read-only or explicitly retries with fresh proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delivery disable before advances exactly one policy revision/audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delivery approval leaves draft/publication/response state unchanged and queues no delivery at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delivery recovery has no unexpected writes, external requests, script errors or page overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

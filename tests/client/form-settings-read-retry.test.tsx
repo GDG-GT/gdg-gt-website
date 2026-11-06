@@ -26,6 +26,8 @@ vi.mock("@/contexts/AdminContext", () => ({
 }));
 vi.mock("@/contexts/ContentContext", () => ({ useContent: () => ({}) }));
 const delivery = {
+  formId: "fictional-form",
+  selectedAccounts: [],
   formRevision: 1,
   revision: 2,
   matchesDraft: true,
@@ -40,7 +42,7 @@ const delivery = {
   mailReady: true,
   chapterInboxAvailable: true,
   eligible: [],
-  reference: "FORM fictional-form",
+  reference: "DELIVERY fictional-form",
 };
 const privacy = {
   formId: "fictional-form",

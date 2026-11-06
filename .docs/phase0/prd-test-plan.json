@@ -1872,8 +1872,13 @@
       "scope": "Authorized safe reviewed response notifications",
       "automated": [
         "tests/server/form-delivery.test.mjs",
+        "tests/server/form-delivery-replay.test.mjs",
         "database/tests/065_form_reviewed_delivery.sql",
-        "scripts/test-local-form-delivery.mjs"
+        "database/tests/124_form_delivery_replay.sql",
+        "scripts/test-local-form-delivery.mjs",
+        "scripts/test-local-form-delivery-recovery.mjs",
+        "tests/client/form-delivery-mutation-recovery.test.tsx",
+        "tests/browser/form-delivery-recovery.spec.ts"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"

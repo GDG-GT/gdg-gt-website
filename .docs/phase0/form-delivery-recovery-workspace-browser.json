@@ -1,0 +1,882 @@
+{
+  "generatedAt": "2026-11-06T09:39:40.802Z",
+  "completed": true,
+  "playwrightVersion": "1.64.1",
+  "platform": "darwin",
+  "arch": "arm64",
+  "stats": {
+    "startTime": "2026-11-06T09:35:59.181Z",
+    "duration": 144551.903,
+    "expected": 108,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "note": "Production-build browser checks with explicit local API fixtures, no database/credentials/provider sends. Screenshots are unapproved review candidates, not initial golden baselines or approved pixel comparisons. WebKit/mobile emulation does not certify Safari or real devices. Local execution does not certify the new CI job has run.",
+  "tests": [
+    {
+      "name": "delivery disable-only policy recovers before-acceptance loss with fresh proof",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery disable-only policy recovers after-acceptance loss with fresh proof",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery recipient policy recovers before-acceptance loss with fresh proof",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery recipient policy recovers after-acceptance loss with fresh proof",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "unavailable configured recipients require explicit removal",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "recipient paging reaches 215 and retains a proposal through an inventory outage",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery disable-only policy recovers before-acceptance loss with fresh proof",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery disable-only policy recovers after-acceptance loss with fresh proof",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery recipient policy recovers before-acceptance loss with fresh proof",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery recipient policy recovers after-acceptance loss with fresh proof",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "unavailable configured recipients require explicit removal",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "recipient paging reaches 215 and retains a proposal through an inventory outage",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery disable-only policy recovers before-acceptance loss with fresh proof",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery disable-only policy recovers after-acceptance loss with fresh proof",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery recipient policy recovers before-acceptance loss with fresh proof",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery recipient policy recovers after-acceptance loss with fresh proof",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "unavailable configured recipients require explicit removal",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "recipient paging reaches 215 and retains a proposal through an inventory outage",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery disable-only policy recovers before-acceptance loss with fresh proof",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery disable-only policy recovers after-acceptance loss with fresh proof",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery recipient policy recovers before-acceptance loss with fresh proof",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery recipient policy recovers after-acceptance loss with fresh proof",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "unavailable configured recipients require explicit removal",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "recipient paging reaches 215 and retains a proposal through an inventory outage",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery disable-only policy recovers before-acceptance loss with fresh proof",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery disable-only policy recovers after-acceptance loss with fresh proof",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery recipient policy recovers before-acceptance loss with fresh proof",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery recipient policy recovers after-acceptance loss with fresh proof",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "unavailable configured recipients require explicit removal",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "recipient paging reaches 215 and retains a proposal through an inventory outage",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery disable-only policy recovers before-acceptance loss with fresh proof",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery disable-only policy recovers after-acceptance loss with fresh proof",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery recipient policy recovers before-acceptance loss with fresh proof",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "delivery recipient policy recovers after-acceptance loss with fresh proof",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "unavailable configured recipients require explicit removal",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "recipient paging reaches 215 and retains a proposal through an inventory outage",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "form privacy review recovers before-acceptance loss with fresh retry proof",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "form privacy review recovers after-acceptance loss with fresh retry proof",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "individual privacy review recovers before-acceptance loss with fresh retry proof",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "individual privacy review recovers after-acceptance loss with fresh retry proof",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "form privacy review recovers before-acceptance loss with fresh retry proof",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "form privacy review recovers after-acceptance loss with fresh retry proof",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "individual privacy review recovers before-acceptance loss with fresh retry proof",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "individual privacy review recovers after-acceptance loss with fresh retry proof",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "form privacy review recovers before-acceptance loss with fresh retry proof",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "form privacy review recovers after-acceptance loss with fresh retry proof",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "individual privacy review recovers before-acceptance loss with fresh retry proof",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "individual privacy review recovers after-acceptance loss with fresh retry proof",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "form privacy review recovers before-acceptance loss with fresh retry proof",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "form privacy review recovers after-acceptance loss with fresh retry proof",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "individual privacy review recovers before-acceptance loss with fresh retry proof",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "individual privacy review recovers after-acceptance loss with fresh retry proof",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "form privacy review recovers before-acceptance loss with fresh retry proof",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "form privacy review recovers after-acceptance loss with fresh retry proof",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "individual privacy review recovers before-acceptance loss with fresh retry proof",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "individual privacy review recovers after-acceptance loss with fresh retry proof",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "form privacy review recovers before-acceptance loss with fresh retry proof",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "form privacy review recovers after-acceptance loss with fresh retry proof",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "individual privacy review recovers before-acceptance loss with fresh retry proof",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "individual privacy review recovers after-acceptance loss with fresh retry proof",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    }
+  ]
+}

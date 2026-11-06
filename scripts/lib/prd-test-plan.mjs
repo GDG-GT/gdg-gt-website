@@ -878,9 +878,11 @@ const forms = [
     "FORM-021",
     "Authorized safe reviewed response notifications",
     [
-      unit("form-delivery"),
-      sql("065_form_reviewed_delivery"),
-      local("form-delivery"),
+      unit("form-delivery"), unit("form-delivery-replay"),
+      sql("065_form_reviewed_delivery"), sql("124_form_delivery_replay"),
+      local("form-delivery"), local("form-delivery-recovery"),
+      "tests/client/form-delivery-mutation-recovery.test.tsx",
+      "tests/browser/form-delivery-recovery.spec.ts",
     ],
   ],
   [
