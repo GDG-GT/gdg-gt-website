@@ -4524,6 +4524,14 @@ fieldset.gt-event-fields {
 .gt-form-library-read-status > p {
   margin: 0;
 }
+.gt-form-library-recovery {
+  margin-block: 20px;
+  padding-block: 16px;
+  border-block: 1px solid hsl(var(--border));
+  overflow-wrap: anywhere;
+}
+.gt-form-library-recovery > h2 { font-size: 1.125rem; line-height: 1.4; margin: 0 0 12px; }
+.gt-form-library-recovery > p { margin-block: 10px; font-size: 0.875rem; line-height: 1.6; }
 .gt-builder-write-recovery {
   margin: 20px clamp(16px, 3vw, 25px);
   padding-block: 16px;

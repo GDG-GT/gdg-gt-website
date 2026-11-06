@@ -1,0 +1,242 @@
+{
+  "generatedAt": "2026-11-06T05:17:09.622Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and Chromium desktop/mobile library mutation recovery with fresh owned fictional accounts/forms. Ten identical concurrent creates/copies; before/after-acceptance create, duplicate, archive, restore, close and reopen; immutable key/body explicit retry, current receipt reads, single audit/result, measured axe and unchanged publication count. Inventory reads are constrained to owned fixture-marker rows. Created forms stay private drafts; two intended source publications use internal access. Forms archived/accounts disabled/sessions revoked. No responses, worker/provider sends, existing chapter or production changes. Captures ignored and no credentials/key/body material retained.",
+  "tests": [
+    {
+      "name": "ten concurrent identical creation calls create one private form",
+      "passed": true
+    },
+    {
+      "name": "ten concurrent identical duplicates create one private copy with provenance and one audit",
+      "passed": true
+    },
+    {
+      "name": "accepted copy key rejects a changed original intent",
+      "passed": true
+    },
+    {
+      "name": "unrelated account cannot inspect the copy receipt",
+      "passed": true
+    },
+    {
+      "name": "create after-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "create after-acceptance recovery commits one intended result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "create before-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "create before-acceptance recovery commits one intended result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated library copy recovery passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "duplicate after-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "duplicate after-acceptance recovery commits one intended result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "duplicate before-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "duplicate before-acceptance recovery commits one intended result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "archive after-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "archive after-acceptance recovery commits one intended result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "restore before-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "restore before-acceptance recovery commits one intended result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "archive before-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "archive before-acceptance recovery commits one intended result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "restore after-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "restore after-acceptance recovery commits one intended result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "close after-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "close after-acceptance recovery commits one intended result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "reopen before-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "reopen before-acceptance recovery commits one intended result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "close before-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "close before-acceptance recovery commits one intended result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "reopen after-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "reopen after-acceptance recovery commits one intended result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "availability retries retain one intended internal publication and never republish at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "library mutation recovery has no extra write, script error, external request or viewport overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "create after-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 375×812",
+      "passed": true
+    },
+    {
+      "name": "create after-acceptance recovery commits one intended result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "create before-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 375×812",
+      "passed": true
+    },
+    {
+      "name": "create before-acceptance recovery commits one intended result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated library copy recovery passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "duplicate after-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 375×812",
+      "passed": true
+    },
+    {
+      "name": "duplicate after-acceptance recovery commits one intended result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "duplicate before-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 375×812",
+      "passed": true
+    },
+    {
+      "name": "duplicate before-acceptance recovery commits one intended result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "archive after-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 375×812",
+      "passed": true
+    },
+    {
+      "name": "archive after-acceptance recovery commits one intended result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "restore before-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 375×812",
+      "passed": true
+    },
+    {
+      "name": "restore before-acceptance recovery commits one intended result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "archive before-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 375×812",
+      "passed": true
+    },
+    {
+      "name": "archive before-acceptance recovery commits one intended result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "restore after-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 375×812",
+      "passed": true
+    },
+    {
+      "name": "restore after-acceptance recovery commits one intended result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "close after-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 375×812",
+      "passed": true
+    },
+    {
+      "name": "close after-acceptance recovery commits one intended result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "reopen before-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 375×812",
+      "passed": true
+    },
+    {
+      "name": "reopen before-acceptance recovery commits one intended result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "close before-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 375×812",
+      "passed": true
+    },
+    {
+      "name": "close before-acceptance recovery commits one intended result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "reopen after-acceptance loss uses read-only reconciliation and an exact explicit retry only when needed at 375×812",
+      "passed": true
+    },
+    {
+      "name": "reopen after-acceptance recovery commits one intended result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "availability retries retain one intended internal publication and never republish at 375×812",
+      "passed": true
+    },
+    {
+      "name": "library mutation recovery has no extra write, script error, external request or viewport overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

@@ -12,6 +12,7 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import FormsLibrary from "../../src/ui/forms/FormsLibrary";
 import { createTemplate, type PreviewForm } from "../../shared/forms";
+import { ApiFailure } from "../../src/lib/api";
 const { apiMock, guard } = vi.hoisted(() => ({
   apiMock: vi.fn(),
   guard: vi.fn(),
@@ -52,7 +53,7 @@ beforeEach(() => {
   apiMock.mockImplementation((_path: string, options?: { method?: string }) =>
     Promise.resolve(
       options?.method
-        ? { updated: true }
+        ? { form }
         : { items: [form], total: 1, page: 1, pageSize: 30, canCreate: false },
     ),
   );
@@ -138,9 +139,11 @@ it("cancels an archive review without a write", async () => {
   await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
   expect(writes()).toHaveLength(0);
 });
-it("shows a failed operation inside the retained review", async () => {
+it("shows a rejected validation operation inside the retained review", async () => {
   const dialog = await openReview("Close form");
-  apiMock.mockRejectedValue(Error("Fictional close not confirmed"));
+  apiMock.mockRejectedValue(
+    new ApiFailure(400, "VALIDATION_ERROR", "Fictional close not confirmed"),
+  );
   fireEvent.click(within(dialog).getByRole("button", { name: "Close form" }));
   await within(dialog).findByRole("alert");
   expect(within(dialog).getByRole("alert").textContent).toContain(

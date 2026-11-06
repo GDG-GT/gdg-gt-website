@@ -153,7 +153,7 @@ try {
     [
       "/duplicate",
       "POST",
-      { slug: "fictional-denied-" + member },
+      { slug: "fictional-denied-" + member, revision: form.revision },
       "duplication",
     ],
   ]) {

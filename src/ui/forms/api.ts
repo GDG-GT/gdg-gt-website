@@ -38,12 +38,155 @@ export function draftDefinition(form: PreviewForm) {
     },
   };
 }
+export type FormLibraryAction =
+  | "create"
+  | "duplicate"
+  | "archive"
+  | "restore"
+  | "state";
+export type FormLibraryIntent = {
+  action: FormLibraryAction;
+  sourceId?: string;
+  snapshot: PreviewForm;
+  key: string;
+  startedAt: number;
+  body: {
+    revision?: number;
+    slug?: string;
+    teamId?: string | null;
+    template?: PreviewForm["templateKey"];
+    definition?: ReturnType<typeof draftDefinition>;
+    state?: "Open" | "Closed" | "Scheduled";
+  };
+};
+export const formLibraryWriteLabel = (intent: FormLibraryIntent) =>
+  intent.action === "state"
+    ? intent.body.state === "Closed"
+      ? "close"
+      : intent.body.state === "Scheduled"
+        ? "schedule"
+        : "reopen"
+    : intent.action;
+export function prepareFormLibraryWrite(
+  action: FormLibraryAction,
+  form: PreviewForm,
+  state?: "Open" | "Closed" | "Scheduled",
+): FormLibraryIntent {
+  const snapshot = structuredClone(form);
+  let body: FormLibraryIntent["body"];
+  if (action === "create") {
+    const definition = draftDefinition(snapshot);
+    Object.assign(snapshot, definition);
+    body = {
+      slug: snapshot.slug,
+      teamId: snapshot.teamId || null,
+      ...(snapshot.templateKey ? { template: snapshot.templateKey } : {}),
+      definition,
+    };
+  } else if (action === "duplicate")
+    body = {
+      slug: snapshot.slug.slice(0, 112) + "-" + crypto.randomUUID().slice(0, 6),
+      revision: snapshot.revision,
+    };
+  else
+    body = {
+      revision: snapshot.revision,
+      ...(action === "state" ? { state } : {}),
+    };
+  return {
+    action,
+    sourceId: action === "create" ? undefined : snapshot.id,
+    snapshot,
+    body,
+    key: crypto.randomUUID(),
+    startedAt: Date.now(),
+  };
+}
+export async function submitFormLibraryWrite(
+  intent: FormLibraryIntent,
+  signal?: AbortSignal,
+) {
+  const path =
+    "/admin/forms" +
+    (intent.sourceId ? "/" + intent.sourceId : "") +
+    (intent.action === "duplicate" ||
+    intent.action === "restore" ||
+    intent.action === "state"
+      ? "/" + intent.action
+      : "");
+  const result = await api<{ form: PreviewForm }>(path, {
+    method: intent.action === "archive" ? "DELETE" : "POST",
+    protected: true,
+    signal,
+    idempotencyKey: intent.key,
+    body: intent.body,
+  });
+  if (!validLibraryResult(result.form))
+    throw new ApiFailure(
+      503,
+      "UNCONFIRMED_RESULT",
+      "The saved form result could not be confirmed. Recheck the original change.",
+    );
+  return result.form;
+}
+function validLibraryResult(form: PreviewForm | null | undefined) {
+  return (
+    !!form &&
+    typeof form.id === "string" &&
+    Number.isInteger(form.revision) &&
+    form.revision! >= 1 &&
+    typeof form.status === "string" &&
+    Array.isArray(form.actions) &&
+    Array.isArray(form.versions)
+  );
+}
+export async function inspectFormLibraryWrite(
+  intent: FormLibraryIntent,
+  signal?: AbortSignal,
+) {
+  const query = new URLSearchParams({
+    action: intent.action,
+    ...(intent.sourceId ? { source: intent.sourceId } : {}),
+    ...(intent.action === "create" && intent.body.teamId
+      ? { team: intent.body.teamId }
+      : {}),
+  });
+  const result = await api<{
+    committed: boolean;
+    canCreate: boolean;
+    receipt?: {
+      id: string;
+      sourceId: string | null;
+      action: FormLibraryAction;
+      revision: number;
+    };
+    form: PreviewForm | null;
+  }>("/admin/forms/recovery?" + query, { signal, idempotencyKey: intent.key });
+  if (
+    typeof result.committed !== "boolean" ||
+    typeof result.canCreate !== "boolean" ||
+    (result.form !== null && !validLibraryResult(result.form)) ||
+    (result.committed && !result.form)
+  )
+    throw new ApiFailure(
+      503,
+      "UNCONFIRMED_RESULT",
+      "The original form outcome could not be verified. Recheck before retrying.",
+    );
+  return result;
+}
 export const formsApi = {
-  async create(form: PreviewForm) {
+  async create(
+    form: PreviewForm,
+    signal?: AbortSignal,
+    key: string = crypto.randomUUID(),
+  ) {
     return (
       await api<{ form: PreviewForm }>("/admin/forms", {
         method: "POST",
         protected: true,
+        signal,
+        idempotencyKey: key,
         body: {
           slug: form.slug,
           teamId: form.teamId || null,
@@ -107,36 +250,62 @@ export const formsApi = {
       signal,
     });
   },
-  async duplicate(form: PreviewForm) {
+  async duplicate(
+    form: PreviewForm,
+    signal?: AbortSignal,
+    key: string = crypto.randomUUID(),
+    copySlug = form.slug.slice(0, 112) + "-" + crypto.randomUUID().slice(0, 6),
+  ) {
     return (
       await api<{ form: PreviewForm }>(
         "/admin/forms/" + form.id + "/duplicate",
         {
           method: "POST",
           protected: true,
-          body: { slug: form.slug + "-" + crypto.randomUUID().slice(0, 6) },
+          signal,
+          idempotencyKey: key,
+          body: { slug: copySlug, revision: form.revision },
         },
       )
     ).form;
   },
-  async state(form: PreviewForm, state: "Open" | "Closed" | "Scheduled") {
+  async state(
+    form: PreviewForm,
+    state: "Open" | "Closed" | "Scheduled",
+    signal?: AbortSignal,
+    key: string = crypto.randomUUID(),
+  ) {
     return api("/admin/forms/" + form.id + "/state", {
       method: "POST",
       protected: true,
+      signal,
+      idempotencyKey: key,
       body: { revision: form.revision, state },
     });
   },
-  async archive(form: PreviewForm) {
+  async archive(
+    form: PreviewForm,
+    signal?: AbortSignal,
+    key: string = crypto.randomUUID(),
+  ) {
     return api("/admin/forms/" + form.id, {
       method: "DELETE",
       protected: true,
+      signal,
+      idempotencyKey: key,
       body: { revision: form.revision },
     });
   },
-  async restore(form: PreviewForm) {
+  async restore(
+    form: PreviewForm,
+    signal?: AbortSignal,
+    key: string = crypto.randomUUID(),
+  ) {
     return api("/admin/forms/" + form.id + "/restore", {
       method: "POST",
       protected: true,
+      signal,
+      idempotencyKey: key,
       body: { revision: form.revision },
     });
   },

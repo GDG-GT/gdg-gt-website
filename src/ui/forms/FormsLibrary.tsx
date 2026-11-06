@@ -30,7 +30,16 @@ import {
 } from "@/components/ui/dialog";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import { createTemplate, type PreviewForm, type FormTemplate } from "./store";
-import { formsApi, useFormLibrary } from "./api";
+import {
+  useFormLibrary,
+  prepareFormLibraryWrite,
+  submitFormLibraryWrite,
+  formLibraryWriteLabel,
+  type FormLibraryIntent,
+} from "./api";
+import { ApiFailure } from "@/lib/api";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
+import FormLibraryWriteRecovery from "./FormLibraryWriteRecovery";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
@@ -55,8 +64,11 @@ export default function FormsLibrary() {
   );
 }
 function FormsLibraryWorkspace() {
-  const mounted = useRef(false),
-    operationPending = useRef(false);
+  const mutation = usePrivateMutation("form-library"),
+    { cancel: cancelMutation } = mutation,
+    operationPending = mutation.pending,
+    mounted = useRef(false),
+    activeIntent = useRef<FormLibraryIntent>();
   useEffect(() => {
     mounted.current = true;
     return () => {
@@ -69,13 +81,16 @@ function FormsLibraryWorkspace() {
   const [deletion, setDeletion] = useState<PreviewForm | null>(null);
   const [review, setReview] = useState<{
     form: PreviewForm;
-    action: "archive" | "restore" | "close" | "reopen";
+    action: "archive" | "restore" | "close" | "reopen" | "duplicate";
   }>();
   const [notice, setNotice] = useState("");
   const { isOnline } = useOnlineStatus();
   const [page, setPage] = useState(1),
-    [busy, setBusy] = useState(false),
     [error, setError] = useState("");
+  const [uncertain, setUncertain] = useState<FormLibraryIntent>(),
+    [recoveryBusy, setRecoveryBusy] = useState(false),
+    [abandonRecovery, setAbandonRecovery] = useState(false);
+  const busy = mutation.busy || recoveryBusy;
   const [query, setQuery] = useState(""),
     [status, setStatus] = useState("All states"),
     [createOpen, setCreateOpen] = useState(false),
@@ -100,6 +115,7 @@ function FormsLibraryWorkspace() {
     updatedTo
   );
   const resetFilters = () => {
+    if (operationPending.current || recoveryBusy) return;
     setQuery("");
     setStatus("All states");
     setOwner(undefined);
@@ -129,7 +145,8 @@ function FormsLibraryWorkspace() {
     !!library.error ||
     library.denied ||
     !isOnline ||
-    dateError;
+    dateError ||
+    !!uncertain;
   const currentReadScope = useRef(library.scope);
   currentReadScope.current = library.scope;
   const recheckLibrary = async () => {
@@ -143,6 +160,11 @@ function FormsLibraryWorkspace() {
   };
   useEffect(() => {
     if (!library.denied) return;
+    cancelMutation();
+    activeIntent.current = undefined;
+    setUncertain(undefined);
+    setRecoveryBusy(false);
+    setAbandonRecovery(false);
     setReview(undefined);
     setDeletion(null);
     setShare(null);
@@ -160,26 +182,86 @@ function FormsLibraryWorkspace() {
     setUpdatedTo("");
     setPage(1);
     setFilterEpoch((value) => value + 1);
-  }, [library.denied]);
-  const work = async (action: () => Promise<unknown>) => {
+  }, [library.denied, cancelMutation]);
+  useEffect(() => {
+    if (!isOnline && operationPending.current && activeIntent.current) {
+      const original = activeIntent.current;
+      cancelMutation();
+      activeIntent.current = undefined;
+      setUncertain(original);
+      setReview(undefined);
+      setCreateOpen(false);
+      setError("");
+    }
+  }, [isOnline, cancelMutation, operationPending]);
+  const committed = (intent: FormLibraryIntent, form: PreviewForm) => {
+    if (!mounted.current) return;
+    setUncertain(undefined);
+    setRecoveryBusy(false);
+    setAbandonRecovery(false);
+    setReview(undefined);
+    setCreateOpen(false);
+    setError("");
+    if (intent.action === "create") {
+      setTitle("");
+      navigationSafety.allow(() => navigate(`/admin/forms/${form.id}/edit`));
+    } else {
+      setNotice(
+        `${intent.snapshot.title}: original ${formLibraryWriteLabel(intent)} change confirmed. Saved result: ${form.status}.`,
+      );
+      const scope = library.scope;
+      void library.reload().then(() => {
+        if (mounted.current && currentReadScope.current === scope)
+          document.getElementById("form-library-write-result")?.focus();
+      });
+    }
+  };
+  const work = async (intent: FormLibraryIntent) => {
     if (operationPending.current || paused) return;
-    operationPending.current = true;
-    setBusy(true);
+    const controller = mutation.begin();
+    if (!controller) return;
+    activeIntent.current = intent;
     setError("");
     setNotice("");
     try {
-      await action();
-      if (mounted.current) library.reload();
+      const form = await submitFormLibraryWrite(intent, controller.signal);
+      if (!mutation.current(controller)) return;
+      if (!form?.id)
+        throw new ApiFailure(
+          503,
+          "UNAVAILABLE",
+          "The saved result could not be confirmed. Recheck the original change.",
+        );
+      committed(intent, form);
     } catch (e) {
-      if (mounted.current) setError((e as Error).message);
+      if (!mutation.current(controller)) return;
+      if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
+        library.clear();
+        return;
+      }
+      if (!(e instanceof ApiFailure) || e.status >= 500) {
+        setUncertain(intent);
+        setReview(undefined);
+        setCreateOpen(false);
+        setError(
+          "The change response was interrupted. Recheck the original outcome before trying again.",
+        );
+      } else {
+        setError(e.message);
+        if (e.status === 409) void library.reload();
+      }
     } finally {
-      operationPending.current = false;
-      if (mounted.current) setBusy(false);
+      if (activeIntent.current === intent) activeIntent.current = undefined;
+      mutation.finish(controller);
     }
   };
-  useDraftGuard(!!review || !!title.trim(), {
+  useDraftGuard(!!review || !!title.trim() || !!uncertain, {
     busy,
-    label: review ? "Form availability review" : "New form draft",
+    label: uncertain
+      ? `Unconfirmed ${formLibraryWriteLabel(uncertain)} for ${uncertain.snapshot.title}; the change may already have completed`
+      : review
+        ? "Form availability review"
+        : "New form draft",
   });
   const reviewCurrent =
       review && forms.find((form) => form.id === review.form.id),
@@ -190,17 +272,21 @@ function FormsLibraryWorkspace() {
       (!reviewCurrent ||
         reviewCurrent.revision !== review.form.revision ||
         reviewCurrent.status !== review.form.status),
-    reviewAllowed = !!reviewCurrent?.actions?.includes(
-      review?.action === "archive" || review?.action === "restore"
-        ? "delete"
-        : "publish",
-    ),
+    reviewAllowed =
+      review?.action === "duplicate"
+        ? !!reviewCurrent?.canDuplicate
+        : !!reviewCurrent?.actions?.includes(
+            review?.action === "archive" || review?.action === "restore"
+              ? "delete"
+              : "publish",
+          ),
     reviewLabel = review
       ? {
           archive: "Archive form",
           restore: "Restore draft",
           close: "Close form",
           reopen: "Reopen form",
+          duplicate: "Duplicate form",
         }[review.action]
       : "Review form";
   const beginReview = (
@@ -234,14 +320,7 @@ function FormsLibraryWorkspace() {
   ] as const;
   const create = (name: string, kind: FormTemplate = "blank") => {
     if (!library.canCreate) return;
-    return work(async () => {
-      const form = await formsApi.create(createTemplate(name, kind));
-      if (mounted.current) {
-        setTitle("");
-        setCreateOpen(false);
-        navigationSafety.allow(() => navigate(`/admin/forms/${form.id}/edit`));
-      }
-    });
+    return work(prepareFormLibraryWrite("create", createTemplate(name, kind)));
   };
   const openCreate = () => {
     if (busy || paused || !library.canCreate) return;
@@ -287,14 +366,14 @@ function FormsLibraryWorkspace() {
           <Plus size={17} /> Create form
         </Button>
       </div>
-      {(error || library.error) && (
+      {((error && !uncertain) || library.error) && (
         <p role="alert" className="gt-form-error">
-          {error || library.error}{" "}
+          {library.error || error}{" "}
           <button
             disabled={busy || library.loading || !isOnline}
             onClick={() => void recheckLibrary()}
           >
-            Try again
+            {uncertain ? "Refresh library only" : "Try again"}
           </button>
         </p>
       )}
@@ -310,9 +389,11 @@ function FormsLibraryWorkspace() {
                 {new Date(library.at).toLocaleString()}
               </time>
               .
-              {paused
-                ? " Saved forms remain visible; writes are paused until current access is checked."
-                : " Current authorized inventory loaded."}
+              {uncertain
+                ? " The original change is unconfirmed; new writes remain paused."
+                : paused
+                  ? " Saved forms remain visible; writes are paused until current access is checked."
+                  : " Current authorized inventory loaded."}
             </>
           ) : library.loading ? (
             "Loading the current authorized form library…"
@@ -332,7 +413,21 @@ function FormsLibraryWorkspace() {
       {!isOnline && (
         <p role="alert">You are offline. Form library changes are paused.</p>
       )}
-      {notice && <p role="status">{notice}</p>}
+      {notice && (
+        <p id="form-library-write-result" tabIndex={-1} role="status">
+          {notice}
+        </p>
+      )}
+      {uncertain && (
+        <FormLibraryWriteRecovery
+          key={uncertain.key}
+          intent={uncertain}
+          onBusy={setRecoveryBusy}
+          onRecovered={(form) => committed(uncertain, form)}
+          onDenied={() => library.clear()}
+          onAbandon={() => setAbandonRecovery(true)}
+        />
+      )}
       {library.loading && <p role="status">Loading your forms…</p>}
       {library.at && (
         <div className="gt-forms-stats">
@@ -378,8 +473,10 @@ function FormsLibraryWorkspace() {
           </div>
           <div className="gt-toolbar">
             <SearchBox
+              disabled={busy}
               value={query}
               onChange={(value) => {
+                if (operationPending.current || recoveryBusy) return;
                 setQuery(value);
                 setPage(1);
               }}
@@ -389,8 +486,10 @@ function FormsLibraryWorkspace() {
             <label className="gt-sort">
               <span className="sr-only">Form status</span>
               <select
+                disabled={busy}
                 value={status}
                 onChange={(event) => {
+                  if (operationPending.current || recoveryBusy) return;
                   setStatus(event.target.value);
                   setPage(1);
                 }}
@@ -428,8 +527,10 @@ function FormsLibraryWorkspace() {
                 <FormLibraryScopeFilter
                   key={`owner:${filterEpoch}`}
                   kind="owner"
+                  disabled={busy}
                   value={owner}
                   onChange={(value) => {
+                    if (operationPending.current || recoveryBusy) return;
                     setOwner(value);
                     setPage(1);
                   }}
@@ -437,8 +538,10 @@ function FormsLibraryWorkspace() {
                 <FormLibraryScopeFilter
                   key={`team:${filterEpoch}`}
                   kind="team"
+                  disabled={busy}
                   value={team}
                   onChange={(value) => {
+                    if (operationPending.current || recoveryBusy) return;
                     setTeam(value);
                     setPage(1);
                   }}
@@ -446,8 +549,10 @@ function FormsLibraryWorkspace() {
                 <div className="gt-form-library-scope">
                   <Field label="Template origin">
                     <select
+                      disabled={busy}
                       value={template}
                       onChange={(event) => {
+                        if (operationPending.current || recoveryBusy) return;
                         setTemplate(event.target.value);
                         setPage(1);
                       }}
@@ -468,9 +573,11 @@ function FormsLibraryWorkspace() {
                   <Field label="Updated from (UTC)">
                     <input
                       type="date"
+                      disabled={busy}
                       value={updatedFrom}
                       max={updatedTo || "9999-12-31"}
                       onChange={(event) => {
+                        if (operationPending.current || recoveryBusy) return;
                         setUpdatedFrom(event.target.value);
                         setPage(1);
                       }}
@@ -479,6 +586,7 @@ function FormsLibraryWorkspace() {
                   <Field label="Updated through (UTC)">
                     <input
                       type="date"
+                      disabled={busy}
                       value={updatedTo}
                       min={updatedFrom || undefined}
                       max="9999-12-31"
@@ -487,6 +595,7 @@ function FormsLibraryWorkspace() {
                         dateError ? "form-library-date-error" : undefined
                       }
                       onChange={(event) => {
+                        if (operationPending.current || recoveryBusy) return;
                         setUpdatedTo(event.target.value);
                         setPage(1);
                       }}
@@ -641,9 +750,7 @@ function FormsLibraryWorkspace() {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               disabled={busy || paused || !form.canDuplicate}
-                              onClick={() =>
-                                work(() => formsApi.duplicate(form))
-                              }
+                              onClick={() => beginReview(form, "duplicate")}
                             >
                               Duplicate
                             </DropdownMenuItem>
@@ -736,7 +843,7 @@ function FormsLibraryWorkspace() {
             <div className="gt-actions">
               <Button
                 variant="ghost"
-                disabled={page === 1 || library.loading}
+                disabled={busy || page === 1 || library.loading}
                 onClick={() => setPage(page - 1)}
               >
                 Previous
@@ -744,7 +851,7 @@ function FormsLibraryWorkspace() {
               <span>Page {page}</span>
               <Button
                 variant="ghost"
-                disabled={page * 30 >= library.total || library.loading}
+                disabled={busy || page * 30 >= library.total || library.loading}
                 onClick={() => setPage(page + 1)}
               >
                 Next
@@ -795,12 +902,23 @@ function FormsLibraryWorkspace() {
         />
       )}
       <Dialog
-        open={!!review}
+        open={!!review && !uncertain}
         onOpenChange={(open) => {
           if (!open && !operationPending.current) setReview(undefined);
         }}
       >
         <DialogContent
+          onCloseAutoFocus={(event) => {
+            if (uncertain) {
+              event.preventDefault();
+              queueMicrotask(() => {
+                if (mounted.current)
+                  document
+                    .getElementById("form-library-recovery-status")
+                    ?.focus();
+              });
+            }
+          }}
           onEscapeKeyDown={(event) => {
             if (operationPending.current) event.preventDefault();
           }}
@@ -810,17 +928,26 @@ function FormsLibraryWorkspace() {
         >
           <DialogTitle>{reviewLabel}?</DialogTitle>
           <DialogDescription>
-            {review?.action === "archive"
-              ? "Remove this form from active use. Responses and published history are retained; the form can be restored as a private draft."
-              : review?.action === "restore"
-                ? "Restore this archived form as a private draft. This does not reopen it or collect new responses."
-                : review?.action === "close"
-                  ? "Stop new submissions to this form. Existing responses and published history are retained. You can review reopening later."
-                  : "Reopen the published form for new submissions under its existing access rules, schedule and response limit."}
+            {review?.action === "duplicate"
+              ? "Create one private draft copy of the current saved questions and settings in the same chapter/team scope. Responses, published versions and collaborator access are not copied."
+              : review?.action === "archive"
+                ? "Remove this form from active use. Responses and published history are retained; the form can be restored as a private draft."
+                : review?.action === "restore"
+                  ? "Restore this archived form as a private draft. This does not reopen it or collect new responses."
+                  : review?.action === "close"
+                    ? "Stop new submissions to this form. Existing responses and published history are retained. You can review reopening later."
+                    : "Reopen the published form for new submissions under its existing access rules, schedule and response limit."}
           </DialogDescription>
           <p>
             <strong>{review?.form.title}</strong>
           </p>
+          <p>
+            Saved revision {review?.form.revision} · {review?.form.status} ·{" "}
+            {review?.form.team || "Chapter"}.
+          </p>
+          {review?.action === "duplicate" && (
+            <p>New private draft title: {review.form.title} (copy).</p>
+          )}
           {library.loading && (
             <p role="status">
               Checking the form's current state and permissions…
@@ -838,7 +965,12 @@ function FormsLibraryWorkspace() {
             </p>
           )}
           {(error || library.error) && (
-            <p role="alert" className="gt-form-error">
+            <p
+              id="form-library-review-error"
+              tabIndex={-1}
+              role="alert"
+              className="gt-form-error"
+            >
               {error || library.error}
             </p>
           )}
@@ -873,24 +1005,21 @@ function FormsLibraryWorkspace() {
                   library.error
                 )
                   return;
-                const current = review;
-                void work(async () => {
-                  if (current.action === "archive")
-                    await formsApi.archive(current.form);
-                  else if (current.action === "restore")
-                    await formsApi.restore(current.form);
-                  else
-                    await formsApi.state(
-                      current.form,
-                      current.action === "close" ? "Closed" : "Open",
-                    );
-                  if (mounted.current) {
-                    setReview(undefined);
-                    setNotice(
-                      `${current.form.title}: ${current.action === "archive" ? "archived; responses retained" : current.action === "restore" ? "restored as a private draft" : current.action === "close" ? "closed to new submissions" : "reopened under its published access rules"}.`,
-                    );
-                  }
-                });
+                const action =
+                  review.action === "close" || review.action === "reopen"
+                    ? "state"
+                    : review.action;
+                void work(
+                  prepareFormLibraryWrite(
+                    action,
+                    review.form,
+                    review.action === "close"
+                      ? "Closed"
+                      : review.action === "reopen"
+                        ? "Open"
+                        : undefined,
+                  ),
+                );
               }}
             >
               {busy ? "Saving…" : reviewLabel}
@@ -912,12 +1041,46 @@ function FormsLibraryWorkspace() {
           </div>
         </DialogContent>
       </Dialog>
-      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent>
+      <Dialog
+        open={createOpen && !uncertain}
+        onOpenChange={(open) => {
+          if (!operationPending.current) setCreateOpen(open);
+        }}
+      >
+        <DialogContent
+          className={mutation.busy ? "[&>button]:hidden" : undefined}
+          onCloseAutoFocus={(event) => {
+            if (uncertain) {
+              event.preventDefault();
+              queueMicrotask(() => {
+                if (mounted.current)
+                  document
+                    .getElementById("form-library-recovery-status")
+                    ?.focus();
+              });
+            }
+          }}
+          onEscapeKeyDown={(event) => {
+            if (operationPending.current) event.preventDefault();
+          }}
+          onPointerDownOutside={(event) => {
+            if (operationPending.current) event.preventDefault();
+          }}
+        >
           <DialogTitle>What are you creating?</DialogTitle>
           <DialogDescription>
             Give your form a name. You can change it later.
           </DialogDescription>
+          {error && (
+            <p
+              id="form-library-create-error"
+              tabIndex={-1}
+              role="alert"
+              className="gt-form-error"
+            >
+              {error}
+            </p>
+          )}
           {(library.error || !isOnline) && (
             <div role="alert">
               <p>
@@ -948,7 +1111,15 @@ function FormsLibraryWorkspace() {
                 required
                 maxLength={120}
                 value={title}
-                onChange={(event) => setTitle(event.target.value)}
+                aria-describedby={
+                  error ? "form-library-create-error" : undefined
+                }
+                onChange={(event) => {
+                  if (!operationPending.current) {
+                    setTitle(event.target.value);
+                    setError("");
+                  }
+                }}
                 placeholder="For example, Workshop feedback"
               />
             </Field>
@@ -959,6 +1130,42 @@ function FormsLibraryWorkspace() {
               <Plus size={17} /> Create form
             </Button>
           </form>
+        </DialogContent>
+      </Dialog>
+      <Dialog
+        open={abandonRecovery && !!uncertain}
+        onOpenChange={(open) => {
+          if (!recoveryBusy) setAbandonRecovery(open);
+        }}
+      >
+        <DialogContent>
+          <DialogTitle>Stop recovering this form change?</DialogTitle>
+          <DialogDescription>
+            The original {uncertain && formLibraryWriteLabel(uncertain)} request
+            for “{uncertain?.snapshot.title}” may already have completed.
+            Stopping recovery does not undo or cancel it. Check the current
+            library before starting another change; existing forms and responses
+            are retained.
+          </DialogDescription>
+          <Button
+            disabled={recoveryBusy}
+            onClick={() => {
+              setUncertain(undefined);
+              setAbandonRecovery(false);
+              setError("");
+              setReview(undefined);
+              setCreateOpen(false);
+              setNotice(
+                "Recovery stopped. The original change may already have completed; inspect the current library before another action.",
+              );
+              void recheckLibrary();
+            }}
+          >
+            Stop recovery and inspect the library
+          </Button>
+          <Button variant="secondary" onClick={() => setAbandonRecovery(false)}>
+            Keep recovering this change
+          </Button>
         </DialogContent>
       </Dialog>
       <Dialog

@@ -33,6 +33,11 @@ export type PublicFixture = {
   mailCommitted: number;
   formBuilder: boolean;
   formLibrary: boolean;
+  formLibraryWrites: boolean;
+  libraryInitialState: "Draft" | "Open" | "Archived";
+  loseLibraryWrite: "" | "before" | "after";
+  libraryAttempts: { action: string; key: string | undefined; body: string }[];
+  libraryCommits: number;
   failFormSave: boolean;
   failFormRead: boolean;
   denyFormRead: boolean;
@@ -186,6 +191,11 @@ export const test = base.extend<{ fixture: PublicFixture }>({
         mailCommitted: 0,
         formBuilder: false,
         formLibrary: false,
+        formLibraryWrites: false,
+        libraryInitialState: "Open",
+        loseLibraryWrite: "",
+        libraryAttempts: [],
+        libraryCommits: 0,
         failFormSave: false,
         failFormRead: false,
         denyFormRead: false,
@@ -196,6 +206,37 @@ export const test = base.extend<{ fixture: PublicFixture }>({
       let team = { ...fictionalTeam };
       let managedInvite = { ...fictionalTeamInvite };
       let builderForm = structuredClone(fictionalBuilderForm);
+      let libraryRows: (typeof builderForm)[] = [];
+      const libraryRecords = () => {
+        if (!libraryRows.length) {
+          const row = {
+            ...structuredClone(fictionalBuilderForm),
+            status: state.libraryInitialState,
+            actions: ["view", "edit", "publish", "delete", "view_responses"],
+            responseCount: 0,
+          };
+          if (state.libraryInitialState !== "Draft")
+            row.versions = [
+              {
+                ...row,
+                version: 1,
+                publishedAt: "2026-11-05T12:00:00Z",
+              },
+            ];
+          libraryRows = [row];
+        }
+        return libraryRows;
+      };
+      const libraryReceipts = new Map<
+        string,
+        {
+          action: string;
+          sourceId: string | null;
+          id: string;
+          revision: number;
+          body: string;
+        }
+      >();
       const formReceipts = new Map<
         string,
         { revision: number; versionId: string | null; action: string }
@@ -300,6 +341,95 @@ export const test = base.extend<{ fixture: PublicFixture }>({
           return;
         }
         const formRoot = "/admin/forms/" + fictionalBuilderForm.id;
+        if (
+          state.authenticated &&
+          state.formLibraryWrites &&
+          ((request.method() === "DELETE" && path === formRoot) ||
+            (request.method() === "POST" &&
+              (path === "/admin/forms" ||
+                ["/duplicate", "/restore", "/state"].some(
+                  (suffix) => path === formRoot + suffix,
+                ))))
+        ) {
+          const body = request.postDataJSON(),
+            action =
+              path === "/admin/forms"
+                ? "create"
+                : request.method() === "DELETE"
+                  ? "archive"
+                  : path.split("/").at(-1)!,
+            key = request.headers()["idempotency-key"],
+            fingerprint = JSON.stringify(body);
+          state.libraryAttempts.push({ action, key, body: fingerprint });
+          if (!key) {
+            await reply(400, null);
+            return;
+          }
+          if (state.loseLibraryWrite === "before") {
+            state.loseLibraryWrite = "";
+            await route.abort("connectionfailed");
+            return;
+          }
+          const rows = libraryRecords(),
+            receipt = libraryReceipts.get(key),
+            source = rows[0];
+          if (receipt) {
+            if (receipt.action !== action || receipt.body !== fingerprint) {
+              await reply(409, null);
+              return;
+            }
+            await reply(200, {
+              form: rows.find((row) => row.id === receipt.id),
+            });
+            return;
+          }
+          if (action !== "create" && body.revision !== source.revision) {
+            await reply(409, null);
+            return;
+          }
+          let result: typeof builderForm;
+          if (action === "create" || action === "duplicate") {
+            result = {
+              ...structuredClone(source),
+              ...(action === "create"
+                ? body.definition
+                : { title: source.title + " (copy)" }),
+              id: "fbbb0000-0000-4000-8000-000000000010",
+              slug: body.slug,
+              revision: 1,
+              status: "Draft",
+              versions: [],
+            };
+            rows.push(result);
+          } else {
+            result = {
+              ...source,
+              revision: source.revision + 1,
+              status:
+                action === "archive"
+                  ? "Archived"
+                  : action === "restore"
+                    ? "Draft"
+                    : body.state,
+            };
+            rows[0] = result;
+          }
+          state.libraryCommits++;
+          libraryReceipts.set(key, {
+            action,
+            sourceId: action === "create" ? null : source.id,
+            id: result.id,
+            revision: result.revision,
+            body: fingerprint,
+          });
+          if (state.loseLibraryWrite === "after") {
+            state.loseLibraryWrite = "";
+            await route.abort("connectionfailed");
+            return;
+          }
+          await reply(200, { form: result });
+          return;
+        }
         if (
           state.authenticated &&
           state.formBuilder &&
@@ -700,6 +830,21 @@ export const test = base.extend<{ fixture: PublicFixture }>({
             return;
           }
           if (path === "/admin/forms" || path === "/admin/forms/filters") {
+            if (state.formLibraryWrites && path === "/admin/forms") {
+              await reply(200, {
+                ...empty,
+                items: libraryRecords().map((row) => ({
+                  ...row,
+                  canDuplicate: true,
+                  ownerId: fictionalUser.id,
+                  ownerLabel: fictionalUser.display_name,
+                  team: "Chapter",
+                })),
+                total: libraryRecords().length,
+                canCreate: true,
+              });
+              return;
+            }
             if (state.formLibrary && path === "/admin/forms") {
               if (state.failFormRead || state.denyFormRead) {
                 await reply(state.denyFormRead ? 403 : 503, null);
@@ -723,6 +868,41 @@ export const test = base.extend<{ fixture: PublicFixture }>({
             }
             await reply(200, { ...empty, canCreate: true });
             return;
+          }
+          if (state.formLibraryWrites && path === "/admin/forms/recovery") {
+            const receipt = libraryReceipts.get(
+                request.headers()["idempotency-key"],
+              ),
+              action = url.searchParams.get("action"),
+              sourceId = url.searchParams.get("source");
+            if (
+              receipt &&
+              (receipt.action !== action || receipt.sourceId !== sourceId)
+            ) {
+              await reply(409, null);
+              return;
+            }
+            const form = receipt
+              ? libraryRecords().find((row) => row.id === receipt.id)
+              : action === "create"
+                ? null
+                : libraryRecords().find((row) => row.id === sourceId);
+            await reply(200, {
+              committed: !!receipt,
+              canCreate: action === "create" || action === "duplicate",
+              ...(receipt ? { receipt } : {}),
+              form,
+            });
+            return;
+          }
+          if (state.formLibraryWrites && path.startsWith("/admin/forms/")) {
+            const form = libraryRecords().find(
+              (row) => path === "/admin/forms/" + row.id,
+            );
+            if (form) {
+              await reply(200, { form });
+              return;
+            }
           }
           if (state.formBuilder && path === formRoot) {
             if (state.denyFormRead || state.failFormRead) {

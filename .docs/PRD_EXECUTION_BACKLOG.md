@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-05): the latest module checkpoint is
-`FORM_LIBRARY_READ_RECOVERY.md`; completed recovery checkpoints include tasks,
+`FORM_LIBRARY_MUTATION_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -29,6 +29,10 @@ remain open.
 The November 4 source-audit gaps for Forms access consequence reviews and
 candidate/collaborator search/paging are now closed locally
 (`FORM_ACCESS_RECOVERY.md`), including removal of the fetched-membership ceiling.
+That access checkpoint covers reads/consequence reviews; collaborator/private-link
+lifecycle atomic replay and concurrent-record protection remain open. Complete
+delivery/retention/deletion private-denial and uncertain-outcome recovery also
+remain open beyond their earlier feature and initial-read checkpoints.
 Form library availability reviews and delivery/retention initial
 read retry are also closed locally (`FORM_AVAILABILITY_RECOVERY.md`);
 profile session/activity read recovery is also closed locally
@@ -73,8 +77,12 @@ also implemented locally (`FORM_AUTHORING_RECOVERY.md`), with read-only accepted
 write reconciliation, exact explicit retries and reviewed draft resumption.
 Library private read/proposed-title/denial recovery is also implemented locally
 (`FORM_LIBRARY_READ_RECOVERY.md`), including explicit access recheck across cleared
-filters. Library creation/duplication/availability replay, complete response/runtime/
-integration recovery and full acceptance remain open.
+filters. Library creation/duplication/availability replay is also implemented
+locally (`FORM_LIBRARY_MUTATION_RECOVERY.md`), with source-revision-bound copies,
+exact original-request recovery and reviewed abandonment. Archived builder views
+still need read-only presentation before restoration; the database already blocks
+their draft/publication writes. Remaining Forms child/access/settings/deletion,
+response/runtime/integration recovery and full acceptance remain open.
 
 Additional requests on 2026-10-21 are implemented locally: community directory
 (`/admin/members`) CSV import/export and notification Mark all read → Dismiss all.
@@ -194,8 +202,8 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is 65.52% lines/65.31% branches at the library-read checkpoint,
-  below the global 70% gate; 1,626 tests pass, not a
+  coverage is 65.76% lines/65.48% branches at the library-write checkpoint,
+  below the global 70% gate; 1,681 tests pass, not a
   percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
   All 146 numbered requirements now map into 159 reviewed logical test cases with

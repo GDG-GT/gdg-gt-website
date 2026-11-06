@@ -186,7 +186,7 @@ describe("Forms library, authoring and response route contracts", () => {
       ).statusCode,
     ).toBe(200);
     expect(f.db.rpc).toHaveBeenCalledWith(
-      "create_form_from_template",
+      "mutate_form_library",
       expect.objectContaining({
         p_actor: ids.actor,
         p_template: "interest",
@@ -206,7 +206,7 @@ describe("Forms library, authoring and response route contracts", () => {
       ).statusCode,
     ).toBe(200);
     expect(f.db.rpc).toHaveBeenCalledWith(
-      "create_form_from_template",
+      "mutate_form_library",
       expect.objectContaining({
         p_template: null,
         p_document: expect.objectContaining({ team_id: null }),
@@ -215,18 +215,21 @@ describe("Forms library, authoring and response route contracts", () => {
     f.row.team_id = ids.team;
     f.row.template_key = "survey";
     expect(
-      (await f.call(base + "/duplicate", "POST", { slug: "fictional-copy" }))
-        .statusCode,
+      (
+        await f.call(base + "/duplicate", "POST", {
+          slug: "fictional-copy",
+          revision: 3,
+        })
+      ).statusCode,
     ).toBe(200);
     expect(f.db.rpc).toHaveBeenCalledWith(
-      "create_form_from_template",
+      "mutate_form_library",
       expect.objectContaining({
-        p_template: "survey",
-        p_document: {
-          slug: "fictional-copy",
-          team_id: ids.team,
-          definition: { ...f.definition, title: f.row.title + " (copy)" },
-        },
+        p_template: null,
+        p_source: ids.form,
+        p_revision: 3,
+        p_action: "duplicate",
+        p_document: { slug: "fictional-copy" },
       }),
     );
   });
@@ -358,7 +361,7 @@ describe("Forms library, authoring and response route contracts", () => {
           .statusCode,
       ).toBe(200);
       expect(f.db.rpc).toHaveBeenCalledWith(
-        "mutate_form",
+        "mutate_form_library",
         expect.objectContaining({ p_action: action, p_revision: 3 }),
       );
     }
@@ -371,7 +374,7 @@ describe("Forms library, authoring and response route contracts", () => {
         })
       ).statusCode,
     ).toBe(400);
-    f.results.set("mutate_form", { error: { code: "40001" } });
+    f.results.set("mutate_form_library", { error: { code: "40001" } });
     expect(
       (await f.call(base + "/restore", "POST", { revision: 3 })).statusCode,
     ).toBe(409);

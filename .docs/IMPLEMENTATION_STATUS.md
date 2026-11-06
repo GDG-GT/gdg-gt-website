@@ -8,6 +8,35 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Atomic form-library write recovery — 2026-11-06
+
+- Migration 119 adds current-authority atomic create/copy/archive/restore/state
+  receipts and read-only reconciliation. Copies bind an expected source revision
+  and derive content/provenance under lock. Routes require original request keys;
+  malformed results stay unconfirmed. Frozen normalized packets, 47-hour explicit
+  retries, duplicate/availability reviews, offline cancellation, denial clearing
+  and reviewed abandonment prevent accidental replacement or repeated actions.
+- All 140 focused tests across eight files pass (55 new client/server cases).
+  Complete 119-migration clean/legacy-grant suites (213/214 checks), both 100-client
+  races and six restore checks pass; migration applied locally. All 58 actual
+  API/DB/desktop-mobile checks pass, including ten concurrent creates/copies and
+  all before/after-acceptance mutations with one result/audit and measured axe.
+  Two intended source publications use internal access; created/copied forms stay
+  private drafts. Fixtures archived/accounts disabled/sessions revoked. No
+  responses, worker/provider sends, existing chapter or production changes.
+- Build/types/lint (25 existing warnings), byte budgets, secret scan and
+  traceability pass. All 114 library write/read/shared-workspace production-browser
+  cases pass across six profiles (`phase0/form-library-write-workspace-browser.json`).
+- All 1,681 tests/173 files pass. Coverage still fails 70%: 65.76% lines/65.48%
+  branches/63.91% statements/56.82% functions; all 17 critical branch gates pass.
+  No threshold or timeout changed.
+- Archived-editor read-only presentation, remaining Forms child/access/settings/
+  deletion and response/integration/runtime recovery and full quality/device/
+  manual/visual/hosted acceptance remain open. Source review confirms collaborator/
+  private-link lifecycle concurrency/replay and settings/deletion outcome handling
+  need further work beyond their earlier read/consequence/feature checkpoints.
+  Catalog: 159 unverified cases. See `FORM_LIBRARY_MUTATION_RECOVERY.md`.
+
 ### Form library private read recovery — 2026-11-05
 
 - Timestamped matching inventory survives temporary failure; actions pause on

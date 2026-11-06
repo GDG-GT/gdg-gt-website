@@ -148,29 +148,43 @@ export async function formRoutes(
   });
   const mutate = async (session, id, action, revision, document, hash = null) =>
     checked(
-      await db.rpc(
-        ["draft", "publish"].includes(action)
-          ? "mutate_form_authoring"
-          : "mutate_form",
-        {
-          p_actor: session.user.id,
-          ...(["draft", "publish"].includes(action)
-            ? {
-                p_session: session.sessionId,
-                p_key_hash: tokenHash(idempotency(request)),
-                p_request_hash: authoringHash,
-              }
-            : {}),
-          p_id: id,
-          p_action: action,
-          p_revision: revision,
-          p_document: document,
-          p_schema_hash: hash,
-          p_request_id: requestId,
-        },
-      ),
+      await db.rpc("mutate_form_authoring", {
+        p_actor: session.user.id,
+        p_session: session.sessionId,
+        p_key_hash: tokenHash(idempotency(request)),
+        p_request_hash: authoringHash,
+        p_id: id,
+        p_action: action,
+        p_revision: revision,
+        p_document: document,
+        p_schema_hash: hash,
+        p_request_id: requestId,
+      }),
     );
   let authoringHash;
+  const libraryMutate = async (
+    session,
+    id,
+    action,
+    revision,
+    document,
+    template,
+    body,
+  ) =>
+    checked(
+      await db.rpc("mutate_form_library", {
+        p_actor: session.user.id,
+        p_session: session.sessionId,
+        p_source: id,
+        p_action: action,
+        p_revision: revision,
+        p_document: document,
+        p_template: template,
+        p_key_hash: tokenHash(idempotency(request)),
+        p_request_hash: tokenHash(JSON.stringify({ id, action, body })),
+        p_request_id: requestId,
+      }),
+    );
   const rate = async (scope, key, limit, seconds = 900) => {
     const r = await store.rateLimit(
       scope,
@@ -725,6 +739,56 @@ export async function formRoutes(
     );
     return true;
   }
+  if (admin[1] === "recovery" && !admin[2]) {
+    allowMethod(request, response, ["GET"]);
+    const session = await requireSession(request, store, config),
+      query = queryValues(
+        url.searchParams,
+        z
+          .object({
+            action: z.enum([
+              "create",
+              "duplicate",
+              "archive",
+              "restore",
+              "state",
+            ]),
+            source: uuid.optional(),
+            team: uuid.optional(),
+          })
+          .strict(),
+      );
+    if (
+      (query.action === "create") === !!query.source ||
+      (query.action !== "create" && query.team)
+    )
+      throw new ApiError(
+        400,
+        "VALIDATION_ERROR",
+        "Recheck the exact original form action and source.",
+      );
+    const result = checked(
+      await db.rpc("inspect_form_library_write", {
+        p_actor: session.user.id,
+        p_session: session.sessionId,
+        p_source: query.source || null,
+        p_action: query.action,
+        p_key_hash: tokenHash(idempotency(request)),
+        p_request_hash: null,
+        p_team: query.team || null,
+      }),
+    );
+    sendJson(
+      response,
+      200,
+      {
+        ...result,
+        form: result.form ? await project(result.form, session.user.id) : null,
+      },
+      requestId,
+    );
+    return true;
+  }
   if (admin[1] === "filters" && !admin[2]) {
     allowMethod(request, response, ["GET"]);
     const session = await requireSession(request, store, config);
@@ -789,17 +853,18 @@ export async function formRoutes(
       return true;
     }
     const body = await jsonBody(request, draftSchema, 512 * 1024),
-      row = checked(
-        await db.rpc("create_form_from_template", {
-          p_actor: session.user.id,
-          p_request_id: requestId,
-          p_template: body.template || null,
-          p_document: {
-            slug: body.slug,
-            team_id: body.teamId || null,
-            definition: body.definition,
-          },
-        }),
+      row = await libraryMutate(
+        session,
+        null,
+        "create",
+        null,
+        {
+          slug: body.slug,
+          team_id: body.teamId || null,
+          definition: body.definition,
+        },
+        body.template || null,
+        body,
       );
     sendJson(
       response,
@@ -912,21 +977,19 @@ export async function formRoutes(
     return true;
   }
   if (operation === "duplicate") {
-    const body = await jsonBody(request, z.object({ slug }).strict(), 1024),
-      copy = checked(
-        await db.rpc("create_form_from_template", {
-          p_actor: session.user.id,
-          p_request_id: requestId,
-          p_template: row.template_key,
-          p_document: {
-            slug: body.slug,
-            team_id: row.team_id,
-            definition: {
-              ...row.draft_definition,
-              title: row.title + " (copy)",
-            },
-          },
-        }),
+    const body = await jsonBody(
+        request,
+        z.object({ slug, revision: z.number().int().min(1) }).strict(),
+        1024,
+      ),
+      copy = await libraryMutate(
+        session,
+        id,
+        "duplicate",
+        body.revision,
+        { slug: body.slug },
+        null,
+        body,
       );
     sendJson(
       response,
@@ -989,6 +1052,12 @@ export async function formRoutes(
           : request.method === "DELETE"
             ? "archive"
             : "draft";
+  if (action === "state" && !body.state)
+    throw new ApiError(
+      400,
+      "VALIDATION_ERROR",
+      "Choose the intended form availability state.",
+    );
   if (["draft", "publish"].includes(action)) {
     const key = idempotency(request);
     // Fingerprint the original validated intent, including its expected
@@ -1058,19 +1127,30 @@ export async function formRoutes(
         "Save this draft, then review its delivery settings before publishing receipts.",
       );
   }
-  const changed = await mutate(
-    session,
-    id,
-    action,
-    body.revision,
-    {
-      ...(definition ? { definition: definitionBody(definition) } : {}),
-      ...(body.slug ? { slug: body.slug } : {}),
-      ...(body.teamId !== undefined ? { team_id: body.teamId } : {}),
-      ...(body.state ? { state: body.state } : {}),
-    },
-    action === "publish" ? tokenHash(JSON.stringify(definition)) : null,
-  );
+  const document = {
+    ...(definition ? { definition: definitionBody(definition) } : {}),
+    ...(body.slug ? { slug: body.slug } : {}),
+    ...(body.teamId !== undefined ? { team_id: body.teamId } : {}),
+    ...(body.state ? { state: body.state } : {}),
+  };
+  const changed = ["draft", "publish"].includes(action)
+    ? await mutate(
+        session,
+        id,
+        action,
+        body.revision,
+        document,
+        action === "publish" ? tokenHash(JSON.stringify(definition)) : null,
+      )
+    : await libraryMutate(
+        session,
+        id,
+        action,
+        body.revision,
+        document,
+        null,
+        body,
+      );
   sendJson(
     response,
     200,

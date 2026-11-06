@@ -8,10 +8,12 @@ export default function FormLibraryScopeFilter({
   kind,
   value,
   onChange,
+  disabled = false,
 }: {
   kind: "owner" | "team";
   value?: FormScopeOption;
   onChange: (value?: FormScopeOption) => void;
+  disabled?: boolean;
 }) {
   const [query, setQuery] = useState(""),
     [page, setPage] = useState(1),
@@ -57,10 +59,12 @@ export default function FormLibraryScopeFilter({
       <Field label={`Search ${plural}`}>
         <input
           type="search"
+          disabled={disabled}
           value={query}
           maxLength={100}
           placeholder={`Find ${plural}…`}
           onChange={(event) => {
+            if (disabled) return;
             setQuery(event.target.value);
             setPage(1);
           }}
@@ -68,8 +72,10 @@ export default function FormLibraryScopeFilter({
       </Field>
       <Field label={label}>
         <select
+          disabled={disabled}
           value={value?.id || ""}
           onChange={(event) => {
+            if (disabled) return;
             const id = event.target.value;
             onChange(
               id === "chapter"
@@ -100,6 +106,7 @@ export default function FormLibraryScopeFilter({
           <Button
             type="button"
             variant="ghost"
+            disabled={disabled}
             onClick={() => setRetry((n) => n + 1)}
           >
             Retry {plural}
@@ -120,7 +127,7 @@ export default function FormLibraryScopeFilter({
           <Button
             type="button"
             variant="ghost"
-            disabled={page === 1}
+            disabled={disabled || page === 1}
             onClick={() => setPage(page - 1)}
           >
             Previous {plural}
@@ -129,7 +136,7 @@ export default function FormLibraryScopeFilter({
           <Button
             type="button"
             variant="ghost"
-            disabled={page * listing.pageSize >= listing.total}
+            disabled={disabled || page * listing.pageSize >= listing.total}
             onClick={() => setPage(page + 1)}
           >
             Next {plural}

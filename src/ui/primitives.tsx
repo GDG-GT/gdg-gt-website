@@ -141,12 +141,14 @@ export function SearchBox({
   placeholder = "Search",
   label = "Search",
   maxLength,
+  disabled = false,
 }: {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   label?: string;
   maxLength?: number;
+  disabled?: boolean;
 }) {
   return (
     <label className="gt-search">
@@ -154,6 +156,7 @@ export function SearchBox({
       <span className="sr-only">{label}</span>
       <input
         type="search"
+        disabled={disabled}
         maxLength={maxLength}
         value={value}
         onChange={(event) => onChange(event.target.value)}

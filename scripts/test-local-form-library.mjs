@@ -141,6 +141,7 @@ try {
   const copy = data(
     await post(`/admin/forms/${feedback.id}/duplicate`, {
       slug: feedback.slug + "-copy",
+      revision: feedback.revision,
     }),
   ).form;
   forms.push(copy.id);

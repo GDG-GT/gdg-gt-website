@@ -842,7 +842,7 @@
         "tests/browser/form-builder-scope.spec.ts"
       ],
       "remaining": [
-        "Atomic builder draft/publication replay has separate local evidence in FORM-TEST-040; library creation/duplication/availability replay, complete response/runtime/integration recovery and supported-role/device/manual/visual/hosted acceptance remain open; paused unknown saves are not automatically retried",
+        "Atomic authoring/library mutation recovery has separate local evidence in FORM-TEST-040; archived-editor/runtime and remaining Forms child/access/settings/deletion, response/integration recovery and supported-role/device/manual/visual/hosted acceptance remain open; paused unknown saves are not automatically retried",
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified",
@@ -860,17 +860,22 @@
         "FORM-002",
         "FORM-003"
       ],
-      "scope": "Current-authority atomic draft/publication receipts, normalized original-intent retry, read-only accepted-write reconciliation and reviewed proposed-draft resumption",
+      "scope": "Current-authority atomic authoring/library receipts, normalized original-intent retry, read-only reconciliation, reviewed duplicate/availability changes, draft resumption and bounded uncertain-write abandonment",
       "automated": [
         "tests/client/form-write-recovery.test.tsx",
         "tests/client/form-builder-read-scope.test.tsx",
+        "tests/client/form-library-mutation-recovery.test.tsx",
         "tests/server/form-authoring-replay.test.mjs",
+        "tests/server/form-library-replay.test.mjs",
         "database/tests/118_form_authoring_replay.sql",
+        "database/tests/119_form_library_replay.sql",
         "scripts/test-local-form-authoring-recovery.mjs",
-        "tests/browser/form-authoring-recovery.spec.ts"
+        "scripts/test-local-form-library-write.mjs",
+        "tests/browser/form-authoring-recovery.spec.ts",
+        "tests/browser/form-library-writes.spec.ts"
       ],
       "remaining": [
-        "Library creation/duplication/availability replay, complete response/runtime/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; owned probe publishes internal fictional forms without responses or provider sends",
+        "Archived-editor/runtime and remaining Forms child/access/settings/deletion, response/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; owned probes publish internal fictional forms without responses or provider sends",
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified",
@@ -897,7 +902,7 @@
         "tests/browser/form-library-reads.spec.ts"
       ],
       "remaining": [
-        "Atomic library creation/duplication/availability replay, complete response/runtime/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; owned live probe performs no browser writes",
+        "Atomic library writes have separate local evidence in FORM-TEST-040; archived-editor/runtime and remaining Forms child/access/settings/deletion, response/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; this owned read-only probe performs no browser writes",
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified",
