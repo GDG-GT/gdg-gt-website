@@ -17,6 +17,7 @@ for (const file of [
   ".vite/manifest.json",
   "assets/hero-atmosphere-mobile.webp",
   "assets/hero-campus-mobile.webp",
+  "assets/public-entry.js",
 ]) {
   const bytes = await readFile(path.join(root, file));
   build[file] = {

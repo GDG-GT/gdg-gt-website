@@ -311,6 +311,14 @@ The dated audit/checkpoint entries above are historical. Current evidence is in
 
 ## Next implementation checkpoint
 
+Latest route-aware preloads pass 76 public browser cases/eight expected skips,
+46 HTTPS/header checks and 13 targeted helper/traceability cases. The copied
+362-byte gzip helper is counted in the 114,943-byte initial JS total. All three
+mobile LCP gates remain failing at about 3.0 seconds. Next local review includes
+the v6 router security patch and remaining rendering/secondary/acceptance work.
+Current browser inventory is 1,320 cases, 440 per shard. Earlier checkpoints below
+retain their historical counts.
+
 The guarded-navigation continuation now passes full coverage (2,673 tests/215
 files with unchanged gates), all 162 focused six-profile browser cases and nine
 real PWA update checks. Startup JavaScript is 114,581 gzip bytes. Mobile LCP still

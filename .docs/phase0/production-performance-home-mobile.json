@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-11-06T21:54:44.948Z",
+  "generatedAt": "2026-11-06T23:12:48.814Z",
   "completed": true,
   "lighthouseVersion": "13.6.0",
   "build": {
     "index.html": {
-      "bytes": 1985,
-      "sha256": "b7967d9ccb9a96137dd3b0ebf6e92c32652155dcf61b4eb3d14c54d1d4713d9a"
+      "bytes": 1851,
+      "sha256": "a6f745eac40e31ff3f1b7a6ead55724a3cfd3389cfbfe8f3e2400375abd37923"
     },
     ".vite/manifest.json": {
-      "bytes": 112259,
-      "sha256": "a86b5891e39a88c8adda3ec05ddf92a3d12f9829106ccb7d9ecd349cfb7475e9"
+      "bytes": 115931,
+      "sha256": "77d6221e0bef2ab371ee96daa8c7ef273ef0333d14a681d0bc3bc160f6e3332d"
     },
     "assets/hero-atmosphere-mobile.webp": {
       "bytes": 37624,
@@ -35,21 +35,21 @@
       "accessibility": 100,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 2999.045,
-      "cls": 0,
-      "tbtMs": 40.5,
+      "lcpMs": 2890.5909,
+      "cls": 0.03104058233119477,
+      "tbtMs": 29,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
-          "score": 0.78,
-          "display": "3.0 s"
+          "score": 0.81,
+          "display": "2.9 s"
         },
         {
           "id": "max-potential-fid",
           "title": "Max Potential First Input Delay",
-          "score": 0.95,
-          "display": "110 ms"
+          "score": 0.98,
+          "display": "90 ms"
         },
         {
           "id": "errors-in-console",
@@ -60,7 +60,7 @@
           "id": "interactive",
           "title": "Time to Interactive",
           "score": 0.96,
-          "display": "3.0 s"
+          "display": "2.9 s"
         },
         {
           "id": "label-content-name-mismatch",
@@ -77,7 +77,7 @@
           "id": "unused-javascript",
           "title": "Reduce unused JavaScript",
           "score": 0,
-          "display": "Est savings of 60 KiB"
+          "display": "Est savings of 52 KiB"
         },
         {
           "id": "bf-cache",
@@ -88,8 +88,13 @@
         {
           "id": "image-delivery-insight",
           "title": "Improve image delivery",
-          "score": 0.5,
+          "score": 0,
           "display": "Est savings of 115 KiB"
+        },
+        {
+          "id": "lcp-discovery-insight",
+          "title": "LCP request discovery",
+          "score": 0
         },
         {
           "id": "network-dependency-tree-insight",
@@ -100,7 +105,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 260 ms"
+          "display": "Est savings of 250 ms"
         }
       ],
       "runtimeError": null,

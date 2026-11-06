@@ -253,6 +253,7 @@ try {
         "public, max-age=0, must-revalidate",
       ],
       ["assets/inter-latin.woff2", "public, max-age=0, must-revalidate"],
+      ["assets/public-entry.js", "public, max-age=0, must-revalidate"],
     ]) {
       const r = await ctx.request.get(origin + "/" + file);
       check(

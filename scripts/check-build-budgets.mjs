@@ -27,6 +27,16 @@ for (const entry of ['index.html', 'offline.html']) {
     if (file.endsWith('.css')) css += gzipSync(contents).length;
     if (/\.(woff2?|ttf|otf)$/.test(file)) fonts += contents.length;
   }
+  if (entry === 'index.html') {
+    // This small classic/deferred helper deliberately runs before the React
+    // graph. Account for it even though it is copied from public/, not Rollup.
+    const html = await readFile(path.join(directory, entry), 'utf8');
+    if ((html.match(/<script\b[^>]*src="\/assets\/public-entry\.js"[^>]*><\/script>/g) || []).length !== 1)
+      failures.push('Public entry must reference exactly one route-aware preload helper');
+    const helper = await readFile(path.join(directory, 'assets/public-entry.js'));
+    limit('Route-aware public preload helper (raw)', helper.length, 1500);
+    js += gzipSync(helper).length;
+  }
   // The self-hosted variable Inter face is referenced by an absolute CSS URL.
   const inter = 'assets/inter-latin.woff2';
   if (!assets.includes(inter)) fonts += (await stat(path.join(directory, inter))).size;

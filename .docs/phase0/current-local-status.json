@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-06T23:10:52.301722+00:00",
-  "buildIndexSha256": "c7947a32b7ed07896b0780cba85fc266e05c3f68aa581890c1dbec83d3095c1b",
+  "generatedAt": "2026-11-06T23:30:33.054660+00:00",
+  "buildIndexSha256": "8a6ca5fa993ae56063e531f87a2e1ce1cd28f31af3d7a9ad7a2e07ebd25970ea",
   "quality": {
     "tests": {
       "files": 215,
@@ -49,6 +49,14 @@
       "skipped": 0,
       "unexpected": 0,
       "flaky": 0
+    },
+    "routeHintsScope": {
+      "startTime": "2026-11-06T23:27:28.733Z",
+      "duration": 96690.993,
+      "expected": 76,
+      "skipped": 8,
+      "unexpected": 0,
+      "flaky": 0
     }
   },
   "visual": {
@@ -67,7 +75,7 @@
     "changedAssetUpdatesPassed": true
   },
   "headers": {
-    "checks": 45,
+    "checks": 46,
     "localEnforcementPassed": true,
     "hosted": false
   },
@@ -76,19 +84,19 @@
     "scope": "Read-only all-local-ref history plus current tracked/nonignored untracked file snapshot. Default rules, decoded text depth 5, no baseline/rule/path exclusions or inline suppression. Ignored local credentials/dependencies/caches, archive contents and image OCR are outside the source scan. Findings are redacted; only exact reviewed source-line hashes may pass as non-secrets. Not proof that no secret could exist."
   },
   "shards": {
-    "total": 1314,
+    "total": 1320,
     "shards": [
       {
         "shard": 1,
-        "cases": 438
+        "cases": 440
       },
       {
         "shard": 2,
-        "cases": 438
+        "cases": 440
       },
       {
         "shard": 3,
-        "cases": 438
+        "cases": 440
       }
     ],
     "duplicates": 0
@@ -99,27 +107,27 @@
       {
         "route": "/",
         "preset": "mobile",
-        "score": 96,
+        "score": 95,
         "accessibility": 100,
-        "lcpMs": 2857.9660000000003,
+        "lcpMs": 3002.7645999999995,
         "cls": 0,
         "passed": false
       },
       {
         "route": "/events",
         "preset": "mobile",
-        "score": 93,
+        "score": 95,
         "accessibility": 100,
-        "lcpMs": 3160.5968,
+        "lcpMs": 3011.766599999999,
         "cls": 0,
         "passed": false
       },
       {
         "route": "/contact",
         "preset": "mobile",
-        "score": 92,
+        "score": 95,
         "accessibility": 100,
-        "lcpMs": 3304.5454,
+        "lcpMs": 3006.868000000001,
         "cls": 0,
         "passed": false
       },
@@ -128,7 +136,7 @@
         "preset": "desktop",
         "score": 100,
         "accessibility": 100,
-        "lcpMs": 667.2792,
+        "lcpMs": 666.5383999999999,
         "cls": 0,
         "passed": true
       },
@@ -137,7 +145,7 @@
         "preset": "desktop",
         "score": 100,
         "accessibility": 100,
-        "lcpMs": 683.8386,
+        "lcpMs": 603.9062,
         "cls": 0,
         "passed": true
       },
@@ -146,7 +154,7 @@
         "preset": "desktop",
         "score": 100,
         "accessibility": 100,
-        "lcpMs": 683.8517999999998,
+        "lcpMs": 659.0935999999999,
         "cls": 0,
         "passed": true
       }
@@ -154,7 +162,7 @@
     "mobileLcpPassed": false,
     "fieldP75Verified": false,
     "matchesCurrentBuild": true,
-    "note": "All three mobile LCP gates remain failing. Desktop scores 100, accessibility 100 and CLS zero; lab byte savings do not prove field p75 or causal timing improvement."
+    "note": "Current async helper is included in build digests; all three mobile LCP thresholds remain failing. No field p75/INP or causal timing improvement is inferred."
   },
   "services": [
     {
@@ -182,5 +190,11 @@
     "Bevy/Engage"
   ],
   "scope": "Local only; no deployment, push, purchase, real provider send, production change, another timer or AI commit trailer.",
-  "verificationScopeNote": "Current full coverage passes 2,673 tests/215 files and all unchanged global/critical gates. Final same-build 162-case navigation/recovery scope and nine PWA update checks pass. Earlier broad browser, primary/secondary visual and PWA boundary/header results remain dated baseline evidence. Types/build/byte gates pass; lint remains zero errors/10 inherited warnings."
+  "verificationScopeNote": "Full application-source coverage is the 49f49e6 baseline (2,673/215 with unchanged global/21 critical gates). Standalone helper/traceability adds 13 focused passes, not a new complete-run count. Latest same-build public browser scope passes 76 plus eight expected skips; all 46 HTTPS/header checks pass. Older 162 navigation cases and visual/PWA evidence remain separately dated. Types/build/byte gates pass; lint is zero errors/10 warnings.",
+  "delivery": {
+    "initialJsGzipBytes": 114943,
+    "copiedHelperGzipBytes": 362,
+    "routeAwareHeroHints": true,
+    "fontPreload": "retained"
+  }
 }

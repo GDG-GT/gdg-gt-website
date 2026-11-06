@@ -1581,18 +1581,21 @@ prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
 add(
   "A11Y-TEST-008",
   "",
-  "Pinned production-build public browser smoke with contrast-enabled axe, scroll/overflow checks, desktop/mobile captures, compact-menu keyboard recovery and anonymous private-route refusal",
+  "Pinned production-build public browser smoke with contrast-enabled axe, scroll/overflow checks, route-aware public image hints, guarded fallback, desktop/mobile captures, strict lab byte/Lighthouse budgets and anonymous private-route refusal",
   [
     "tests/browser/public-smoke.spec.ts",
     "tests/browser/public-fixture.ts",
+    "tests/public-entry-hints.test.mjs",
+    "scripts/check-build-budgets.mjs",
+    "scripts/test-production-performance.mjs",
     local("public-browser"),
     local("hero-browser"),
   ],
   [
-    "All 22 populated visual surfaces, approved initial baselines, pinned-container pixel comparison, real device/Safari/assistive-technology runs and remaining public/private critical browser workflows",
+    "Field p75 LCP/INP/CLS, representative 3D hardware/load, all 22 populated visual surfaces, approved baselines, real device/Safari/assistive-technology runs and remaining public/private critical browser workflows",
   ],
 );
-prdTestCases.at(-1).normative = ["10.6", "10.10", "12.1", "12.4", "13.3", "28.3", "31.2"];
+prdTestCases.at(-1).normative = ["10.6", "10.10", "12.1", "12.2", "12.4", "13.3", "28.3", "30", "31.2"];
 
 add(
   "A11Y-TEST-009",

@@ -8,6 +8,26 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Route-aware home artwork delivery — 2026-11-06
+
+- Other public pages no longer request the 37,624-byte mobile home atmosphere.
+  A 362-byte gzip asynchronous helper supplies Home's matching media hint;
+  normal rendering loads the pictures if the helper fails. Its bytes and digest
+  are explicitly included in build/performance gates. Initial JS is 114,943 gzip
+  bytes, including this copied asset. No private prefetch or CSP widening.
+- Final six-profile public smoke passes 76 cases/eight expected skips, with zero
+  retries/failures. All 46 current local HTTPS/header checks, 13 focused helper/
+  traceability cases, types/build/byte gates pass; lint remains zero errors/10
+  inherited warnings. The earlier full application-source coverage remains the
+  2,673-test/215-file baseline, not a new combined invocation.
+- Removing the font preload was measured and rejected because it added layout
+  shift without improving LCP. The font preload is fully restored. Initial GPU
+  warm-up sampling and rejected measurements remain documented rather than hidden.
+- Current isolated mobile scores are 95/95/95, accessibility 100, CLS zero and
+  LCP 3,003/3,012/3,007 ms; all LCP gates still fail. Desktop performance remains
+  100. The current 1,320-case browser inventory has three shards of 440. Field,
+  physical device, human visual approval and hosted acceptance remain open.
+
 ### Deferred guarded navigation and measured startup delivery — 2026-11-06
 
 - Initial JavaScript is 114,581 gzip bytes after deferring only the navigation

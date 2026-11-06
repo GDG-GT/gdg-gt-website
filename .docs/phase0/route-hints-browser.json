@@ -1,0 +1,625 @@
+{
+  "generatedAt": "2026-11-06T23:30:33.054660+00:00",
+  "completed": true,
+  "stats": {
+    "startTime": "2026-11-06T23:27:28.733Z",
+    "duration": 96690.993,
+    "expected": 76,
+    "skipped": 8,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "build": {
+    "index.html": {
+      "bytes": 1745,
+      "sha256": "8a6ca5fa993ae56063e531f87a2e1ce1cd28f31af3d7a9ad7a2e07ebd25970ea"
+    },
+    ".vite/manifest.json": {
+      "bytes": 115931,
+      "sha256": "77d6221e0bef2ab371ee96daa8c7ef273ef0333d14a681d0bc3bc160f6e3332d"
+    },
+    "assets/hero-atmosphere-mobile.webp": {
+      "bytes": 37624,
+      "sha256": "d46fa6b9bfe5d234b9f6a2e2e20b0f4ca0cf16ae484f4f1e4865fca003dde738"
+    },
+    "assets/hero-campus-mobile.webp": {
+      "bytes": 21932,
+      "sha256": "39aed7e7d2a6a02da4734fd07c6500a35257caf618a460b7a9516d3481744db6"
+    },
+    "assets/public-entry.js": {
+      "bytes": 592,
+      "sha256": "5ff218d7049b9a8dd39cb7ee8b488f7cfbc6a857a0459ebcffb3e2d0e2dbd3b8"
+    }
+  },
+  "scope": "Final async route-aware hints on the real production build; six profiles, default single-worker capture. Nonhome public pages do not fetch home artwork; Home selects exactly its matching artwork pair; blocked optional helper falls back to real pictures. Existing accessibility/scroll/menu/private-route/motion checks remain. Eight expected profile skips, no retries or actual writes/provider sends. Software-WebGL readiness is observed before both original consecutive-frame comparisons.",
+  "tests": [
+    {
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "chromium-1920",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "chromium-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "chromium-mobile",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "firefox-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "firefox-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "webkit-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "webkit-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "webkit-mobile",
+      "results": [
+        "skipped"
+      ]
+    }
+  ]
+}

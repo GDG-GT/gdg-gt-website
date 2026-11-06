@@ -1,21 +1,21 @@
 {
-  "generatedAt": "2026-11-06T23:10:52.301722+00:00",
+  "generatedAt": "2026-11-06T23:29:07.111822+00:00",
   "shards": [
     {
       "shard": 1,
-      "cases": 438
+      "cases": 440
     },
     {
       "shard": 2,
-      "cases": 438
+      "cases": 440
     },
     {
       "shard": 3,
-      "cases": 438
+      "cases": 440
     }
   ],
-  "total": 1314,
+  "total": 1320,
   "duplicates": 0,
-  "caseKeysSha256": "aebceae9ac929af3b509410f274f261d4b5f2928e93ecf2d81476f41c059c57d",
-  "note": "Pinned local Playwright list-only inventory, not execution or CI success. Includes secondary review and navigation chunk-loading cases. Three shards preserve every case and all original timeout/retry/assertion settings."
+  "caseKeysSha256": "842851a7815121a8541b0530cf046a07097e073c50d74ab84a0246147dda9cbc",
+  "note": "Pinned local list-only inventory, not a complete invocation or CI success. Includes failed-preload fallback across all six profiles. No assertion, timeout or retry limit was weakened."
 }

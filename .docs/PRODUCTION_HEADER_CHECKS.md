@@ -1,5 +1,10 @@
 # Local HTTPS and configured security headers
 
+The route-aware startup continuation adds an explicit cache-lifetime check for
+`assets/public-entry.js`: its stable URL must revalidate. The current asynchronous-
+helper probe passes all 46 checks. No CSP origin, inline-script permission or
+other policy was widened; the asynchronous helper uses the existing self origin.
+
 `node scripts/test-production-security-headers.mjs` serves the real production
 build through an owned HTTPS loopback server. It uses the exact configured
 common header values in `vercel.json`, including CSP and
@@ -8,7 +13,8 @@ by the isolated test context; it is never installed into an operating-system or
 browser trust store. The context, listener and temporary certificate/key directory
 are closed/removed in the final cleanup.
 
-All 45 checks pass locally. Home, Events, Contact and Privacy render with no page
+All 46 current checks pass locally (45 in the original baseline). Home, Events,
+Contact and Privacy render with no page
 exceptions or unexpected CSP violations. Deliberately injected inline scripts
 are blocked on every route. Their four browser-generated reports terminate in
 the owned test server without reading or retaining report bodies; no report is

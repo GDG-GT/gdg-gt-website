@@ -1,5 +1,45 @@
 # Public entry delivery and availability — 2026-11-06
 
+## Route-aware image hints
+
+The global HTML no longer preloads home artwork on other routes. A small classic
+asynchronous helper adds the same media-specific, high-priority atmosphere hints
+only on `/`, independently of the React graph and stylesheet execution. React
+still loads both real pictures if the optional helper fails. The copied helper
+has an explicit 1,500-byte raw ceiling and contributes 362 gzip bytes to the
+initial JavaScript budget; current total is 114,943 gzip bytes. It is included
+in performance build hashes, and its stable URL revalidates rather than receiving
+an immutable lifetime. No private routes or capabilities are prefetched.
+
+The complete isolated async-helper run records mobile Home/Events/Contact
+performance 95/95/95, accessibility 100, CLS zero and LCP 3,003/3,012/3,007 ms.
+Desktop performance is 100 throughout. All three mobile LCP gates remain failing;
+no field p75 or causal timing improvement is inferred from these lab runs.
+The previous navigation baseline is retained in
+`phase0/production-performance-before-route-hints.json`; the intermediate
+deferred-helper measurements are in
+`phase0/production-performance-deferred-route-hints.json`. Async execution avoids
+waiting for stylesheets before starting the optional hint.
+
+Removing the font preload was separately measured and rejected: Home mobile LCP
+2,891 ms and CLS 0.031. The original font preload is fully restored; the face and
+swap policy are unchanged. Evidence is retained in
+`phase0/production-performance-no-font-preload.json`. The initial premature
+measurement exited on missing build output before starting Lighthouse; no result
+from that ENOENT attempt is used.
+
+Nine standalone helper cases and four traceability cases pass in a focused
+invocation. The preceding deferred-helper six-profile public smoke passed 76
+cases with eight expected skips. One earlier parallel software-WebGL comparison
+sampled before rendering warmed up; its isolated original case passed. The final
+test now observes motion before retaining both original consecutive-frame
+assertions. The existing test/polling limits and 250-ms frame interval are
+unchanged. Software rendering does not certify hardware FPS. The final async
+scope passes 76 cases with eight expected skips and no failures/retries, and all
+46 current HTTPS/header checks pass. Types/build/byte gates pass; lint remains
+zero errors/10 inherited warnings. Evidence is in `phase0/route-hints-browser.json`
+and `phase0/route-hints-quality.json`.
+
 ## Deferred navigation-review continuation
 
 The guarded navigation registry and router blocker stay synchronous. Only the

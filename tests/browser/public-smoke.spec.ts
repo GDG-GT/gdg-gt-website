@@ -13,6 +13,15 @@ for (const path of pages) {
     page,
   }, info) => {
     const errors: string[] = [];
+    const homeArtwork: string[] = [];
+    page.on("request", (request) => {
+      if (
+        /\/hero-(?:atmosphere|campus)(?:-mobile)?\.webp$/.test(
+          new URL(request.url()).pathname,
+        )
+      )
+        homeArtwork.push(request.url());
+    });
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto(path);
     await expect(page.locator("h1")).toHaveCount(1);
@@ -42,6 +51,7 @@ for (const path of pages) {
       await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
     }
     expect(errors).toEqual([]);
+    if (path !== "/") expect(homeArtwork).toEqual([]);
     await expect(
       page.getByText(
         /officers can use|access code in the footer|shift\+enter to open admin/i,
@@ -77,6 +87,30 @@ test("mobile navigation stays at the top and returns keyboard focus on escape", 
     .click();
   await expect(page).toHaveURL(/\/resources$/);
   await expect(navigation).toHaveCount(0);
+});
+
+test("home artwork still loads when its optional early hint fails", async ({
+  page,
+  fixture,
+}) => {
+  await page.route("**/assets/public-entry.js", (route) =>
+    route.abort("connectionfailed"),
+  );
+  await page.goto("/");
+  await expect(page.locator("h1")).toBeVisible();
+  for (const selector of [".gt-hero-art", ".gt-hero-static-objects"]) {
+    await expect
+      .poll(() =>
+        page
+          .locator(selector)
+          .evaluate(
+            (image: HTMLImageElement) =>
+              image.complete && image.naturalWidth > 0,
+          ),
+      )
+      .toBe(true);
+  }
+  expect(fixture.unexpected).toEqual([]);
 });
 test("event read failure offers an explicit retry without a mutation", async ({
   page,
@@ -188,6 +222,19 @@ test("capable desktop hero renders moving WebGL frames and restores reduced-moti
     width: bounds.width * 0.35,
     height: Math.min(bounds.height, 350),
   };
+  // Canvas visibility precedes shader compilation/first paint on software GPUs.
+  // Require observed motion before sampling the three subsequent frames; the
+  // original consecutive-frame assertions and all timeout limits remain intact.
+  let warmup = await page.screenshot({ clip, timeout: 10000 });
+  await expect
+    .poll(async () => {
+      await page.waitForTimeout(250);
+      const next = await page.screenshot({ clip, timeout: 10000 });
+      const moving = !warmup.equals(next);
+      warmup = next;
+      return moving;
+    })
+    .toBe(true);
   const frames = [];
   for (let i = 0; i < 3; i++) {
     frames.push(await page.screenshot({ clip, timeout: 10000 }));

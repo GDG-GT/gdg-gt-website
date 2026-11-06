@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-11-06T23:30:33.054660+00:00",
+  "stats": {
+    "startTime": "2026-11-06T23:16:32.969Z",
+    "duration": 62831.565,
+    "expected": 75,
+    "skipped": 8,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "diagnostic": "First parallel deferred-helper run had one software-WebGL consecutive-frame comparison failure; original isolated case passed. A motion-readiness precondition was added while retaining both original frame assertions and all timeouts/intervals. Final async single-worker scope passes 76 with eight expected skips.",
+  "failures": [
+    {
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "chromium-1920",
+      "results": [
+        "failed"
+      ]
+    }
+  ]
+}

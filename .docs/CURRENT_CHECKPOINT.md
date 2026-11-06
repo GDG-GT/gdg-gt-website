@@ -4,6 +4,64 @@ Updated 2026-11-06. Continue the GDG GT PRD task from this verified local
 checkpoint; do not repeat completed mutations/probes or rebuild setup from scratch.
 This checkpoint does not declare the entire PRD complete.
 
+## Latest verified route-aware preload continuation after 49f49e6
+
+The navigation-review correction below is saved in local commit 49f49e6. The new
+owned changes are ready for a local checkpoint commit: asynchronous home-only
+image hints, their source/byte/digest gates and verification evidence. All jobs
+are complete. Source/history scanning covers 146 commits and 1,831 current files
+with zero unreviewed findings. Preserve the three
+unrelated files named below. No app/SQL mutations or dependency upgrades occurred.
+
+`public/assets/public-entry.js` adds the original media-specific atmosphere hints
+only on pathname `/`, before the React graph is ready. Other public pages no
+longer fetch home artwork. Normal pictures still load when the optional helper
+fails. The budget counts its 362 gzip bytes explicitly, caps its raw source at
+1,500 bytes and includes its digest in performance evidence. Initial JS totals
+114,943 gzip bytes. Stable helper URL revalidates, without any CSP widening.
+
+Removing the font preload was measured/rejected: Home LCP 2,891 ms, CLS 0.031.
+The font preload is fully restored. Evidence is retained in
+`phase0/production-performance-no-font-preload.json`. An initial premature probe
+exited on missing build output before Lighthouse started; its ENOENT log remains
+`/tmp/gdg-font-hint-trial.log`. Intermediate deferred-helper results remain in
+`phase0/production-performance-deferred-route-hints.json`; the final helper uses
+`async` to avoid waiting for stylesheet execution. Nothing from a failed attempt
+is treated as accepted measurement.
+
+Final async production public smoke: 76 pass/eight expected profile skips, zero
+failures/retries. All six profiles prove no home images on nonhome public pages,
+correct Home image pair and failed-helper fallback. An initial parallel GPU case
+sampled before software rendering warmed up; the original isolated case passed.
+The final check observes motion first, then retains both original consecutive-
+frame assertions and all timeouts/250-ms intervals. Default single-worker final
+scope passes, without certifying hardware FPS. Evidence:
+`phase0/route-hints-browser.json` and `route-hints-initial-browser.json`.
+
+All 46 current HTTPS/header checks and 13 focused helper/traceability unit cases
+pass; types/build/byte gates pass; lint remains zero errors/10 inherited warnings.
+The full application-source coverage is still the 49f49e6 invocation (2,673 tests/
+215 files, all unchanged gates), not a new sum of separate unit runs. Inventory
+contains 1,320 cases, three shards of 440, no duplicates; no complete new 1,320-
+case invocation or remote CI run is claimed.
+
+Current complete isolated Lighthouse report binds index/manifest/crops/helper
+hashes: mobile performance 95/95/95, accessibility 100, CLS zero, LCP
+3,003/3,012/3,007 ms. All mobile LCP gates remain failing. Desktop scores 100.
+Full earlier metrics remain `phase0/production-performance-before-route-hints.json`.
+The current consolidated status and quality/browser evidence state their exact
+scopes. Do not overlap future performance runs with build/types/coverage/browser.
+
+Next save this verified local checkpoint without AI trailers, then continue the
+remaining dependency review and rendering/secondary acceptance work. A read-only
+npm lookup confirmed react-router-dom 6.30.6 depends on react-router 6.30.6 and
+@remix-run/router 1.23.4. No install or source dependency change has started.
+The owned dependency cache manifest differs from the repo only because it lacks
+@playwright/test; lockfiles also differ. Do not blindly overwrite or duplicate
+node_modules. Preserve/backup any owned cache metadata before a controlled patch.
+Review upstream advisories before any later SSR/manual hydration; it is not yet
+implemented. SSO/Google/Bevy/Engage stay deferred, with no deployment or sends.
+
 ## Latest verified performance continuation after 2a92521
 
 The secondary chart/review correction below is saved in local commit 2a92521.

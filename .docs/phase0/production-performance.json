@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-06T23:03:10.093Z",
+  "generatedAt": "2026-11-06T23:26:00.705Z",
   "completed": true,
   "lighthouseVersion": "13.6.0",
   "build": {
     "index.html": {
-      "bytes": 1985,
-      "sha256": "c7947a32b7ed07896b0780cba85fc266e05c3f68aa581890c1dbec83d3095c1b"
+      "bytes": 1745,
+      "sha256": "8a6ca5fa993ae56063e531f87a2e1ce1cd28f31af3d7a9ad7a2e07ebd25970ea"
     },
     ".vite/manifest.json": {
       "bytes": 115931,
@@ -18,6 +18,10 @@
     "assets/hero-campus-mobile.webp": {
       "bytes": 21932,
       "sha256": "39aed7e7d2a6a02da4734fd07c6500a35257caf618a460b7a9516d3481744db6"
+    },
+    "assets/public-entry.js": {
+      "bytes": 592,
+      "sha256": "5ff218d7049b9a8dd39cb7ee8b488f7cfbc6a857a0459ebcffb3e2d0e2dbd3b8"
     }
   },
   "presets": [
@@ -34,25 +38,25 @@
     {
       "route": "/",
       "preset": "mobile",
-      "performance": 96,
+      "performance": 95,
       "accessibility": 100,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 2857.9660000000003,
+      "lcpMs": 3002.7645999999995,
       "cls": 0,
-      "tbtMs": 40.5,
+      "tbtMs": 55,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
-          "score": 0.82,
-          "display": "2.9 s"
+          "score": 0.78,
+          "display": "3.0 s"
         },
         {
           "id": "max-potential-fid",
           "title": "Max Potential First Input Delay",
-          "score": 0.95,
-          "display": "110 ms"
+          "score": 0.93,
+          "display": "120 ms"
         },
         {
           "id": "errors-in-console",
@@ -63,7 +67,7 @@
           "id": "interactive",
           "title": "Time to Interactive",
           "score": 0.96,
-          "display": "2.9 s"
+          "display": "3.0 s"
         },
         {
           "id": "label-content-name-mismatch",
@@ -91,7 +95,7 @@
         {
           "id": "image-delivery-insight",
           "title": "Improve image delivery",
-          "score": 0,
+          "score": 0.5,
           "display": "Est savings of 115 KiB"
         },
         {
@@ -112,19 +116,19 @@
     {
       "route": "/events",
       "preset": "mobile",
-      "performance": 93,
+      "performance": 95,
       "accessibility": 100,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 3160.5968,
+      "lcpMs": 3011.766599999999,
       "cls": 0,
-      "tbtMs": 5,
+      "tbtMs": 3,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
-          "score": 0.73,
-          "display": "3.2 s"
+          "score": 0.78,
+          "display": "3.0 s"
         },
         {
           "id": "errors-in-console",
@@ -134,8 +138,8 @@
         {
           "id": "interactive",
           "title": "Time to Interactive",
-          "score": 0.95,
-          "display": "3.2 s"
+          "score": 0.96,
+          "display": "3.0 s"
         },
         {
           "id": "label-content-name-mismatch",
@@ -184,19 +188,19 @@
     {
       "route": "/contact",
       "preset": "mobile",
-      "performance": 92,
+      "performance": 95,
       "accessibility": 100,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 3304.5454,
+      "lcpMs": 3006.868000000001,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
-          "score": 0.69,
-          "display": "3.3 s"
+          "score": 0.78,
+          "display": "3.0 s"
         },
         {
           "id": "errors-in-console",
@@ -206,8 +210,8 @@
         {
           "id": "interactive",
           "title": "Time to Interactive",
-          "score": 0.94,
-          "display": "3.3 s"
+          "score": 0.96,
+          "display": "3.0 s"
         },
         {
           "id": "label-content-name-mismatch",
@@ -224,7 +228,7 @@
           "id": "unused-javascript",
           "title": "Reduce unused JavaScript",
           "score": 0,
-          "display": "Est savings of 51 KiB"
+          "display": "Est savings of 52 KiB"
         },
         {
           "id": "bf-cache",
@@ -235,7 +239,7 @@
         {
           "id": "image-delivery-insight",
           "title": "Improve image delivery",
-          "score": 0,
+          "score": 0.5,
           "display": "Est savings of 12 KiB"
         },
         {
@@ -247,7 +251,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 280 ms"
+          "display": "Est savings of 300 ms"
         }
       ],
       "runtimeError": null,
@@ -260,7 +264,7 @@
       "accessibility": 100,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 667.2792,
+      "lcpMs": 666.5383999999999,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -326,7 +330,7 @@
       "accessibility": 100,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 683.8386,
+      "lcpMs": 603.9062,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -334,7 +338,7 @@
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
           "score": 0.99,
-          "display": "0.7 s"
+          "display": "0.6 s"
         },
         {
           "id": "errors-in-console",
@@ -349,13 +353,13 @@
         {
           "id": "unused-css-rules",
           "title": "Reduce unused CSS",
-          "score": 0.5,
+          "score": 0,
           "display": "Est savings of 25 KiB"
         },
         {
           "id": "unused-javascript",
           "title": "Reduce unused JavaScript",
-          "score": 0.5,
+          "score": 0,
           "display": "Est savings of 51 KiB"
         },
         {
@@ -392,7 +396,7 @@
       "accessibility": 100,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 683.8517999999998,
+      "lcpMs": 659.0935999999999,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
