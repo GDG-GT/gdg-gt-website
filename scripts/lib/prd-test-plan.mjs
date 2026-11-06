@@ -342,6 +342,14 @@ add(
   ["Full supported-role/device/manual/visual/SMTP-provider/hosted event-mail acceptance remains open; owned probe queues four fictional jobs and invokes no delivery worker"],
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
+add(
+  "FORM-TEST-039",
+  "FORM-001 FORM-002 FORM-003",
+  "Private saved-definition denial clearing, builder/response account-session-form scope isolation, cancelable queued autosave/publication and reviewed stale saved-draft loading",
+  ["tests/client/form-builder-read-scope.test.tsx", "tests/client/form-data-recovery.test.tsx", local("form-builder-read-scope"), "tests/browser/form-builder-scope.spec.ts"],
+  ["Full atomic builder draft/publication replay, complete response/runtime/integration recovery and supported-role/device/manual/visual/hosted acceptance remain open; paused unknown saves are not automatically retried"],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
 const teams = [
   [
     "TEAM-001",

@@ -1,6 +1,7 @@
 import { test as base, expect, type Page } from "@playwright/test";
 import { createRequire } from "node:module";
 import { teamGrantOptions } from "../../shared/teams";
+import { createTemplate } from "../../shared/forms";
 const require = createRequire(import.meta.url);
 export type PublicFixture = {
   authenticated: boolean;
@@ -30,6 +31,11 @@ export type PublicFixture = {
   loseMailApproval: "" | "before" | "after";
   mailApprovals: { key: string; fingerprint: string }[];
   mailCommitted: number;
+  formBuilder: boolean;
+  failFormSave: boolean;
+  failFormRead: boolean;
+  denyFormRead: boolean;
+  formWrites: number;
 };
 export const fictionalTeamInvite = {
   id: "fbbb0000-0000-4000-8000-000000000004",
@@ -58,6 +64,24 @@ export const fictionalTeamPost = {
   readCount: 0,
 };
 export const fictionalPublishedTitle = "Fictional published " + "A".repeat(170);
+const templateForm = createTemplate("Fictional browser form", "interest");
+export const fictionalBuilderForm = {
+  ...templateForm,
+  id: "fbbb0000-0000-4000-8000-000000000008",
+  slug: "fictional-browser-form",
+  revision: 1,
+  updatedAt: "2026-11-05T12:00:00Z",
+  actions: ["view", "edit", "publish"],
+  sections: [{ ...templateForm.sections[0], id: "fictional-section" }],
+  fields: templateForm.fields.map((field, index) => ({
+    ...field,
+    id: "fictional-field-" + index,
+    sectionId: "fictional-section",
+    optionIds: field.options.map(
+      (_, position) => `fictional-option-${index}-${position}`,
+    ),
+  })),
+};
 export const fictionalMailEvent = {
   id: "fbbb0000-0000-4000-8000-000000000006",
   title: "Fictional browser mail event",
@@ -157,9 +181,15 @@ export const test = base.extend<{ fixture: PublicFixture }>({
         loseMailApproval: "",
         mailApprovals: [],
         mailCommitted: 0,
+        formBuilder: false,
+        failFormSave: false,
+        failFormRead: false,
+        denyFormRead: false,
+        formWrites: 0,
       };
       let team = { ...fictionalTeam };
       let managedInvite = { ...fictionalTeamInvite };
+      let builderForm = structuredClone(fictionalBuilderForm);
       let managedPost = { ...fictionalTeamPost },
         postInitialized = false;
       const currentPost = () => {
@@ -257,6 +287,33 @@ export const test = base.extend<{ fixture: PublicFixture }>({
           ["/auth/realtime-token", "/realtime/token"].includes(path)
         ) {
           await reply(503, null);
+          return;
+        }
+        const formRoot = "/admin/forms/" + fictionalBuilderForm.id;
+        if (
+          state.authenticated &&
+          state.formBuilder &&
+          request.method() === "PATCH" &&
+          path === formRoot + "/draft"
+        ) {
+          const body = request.postDataJSON();
+          if (body.revision !== builderForm.revision) {
+            await reply(409, null);
+            return;
+          }
+          state.formWrites++;
+          builderForm = {
+            ...builderForm,
+            ...body.definition,
+            slug: body.slug,
+            revision: builderForm.revision + 1,
+          };
+          if (state.failFormSave) {
+            state.failFormSave = false;
+            await route.abort("connectionfailed");
+            return;
+          }
+          await reply(200, { form: builderForm });
           return;
         }
         const mailRoot = "/admin/events/" + fictionalMailEvent.id + "/email";
@@ -598,6 +655,14 @@ export const test = base.extend<{ fixture: PublicFixture }>({
           }
           if (path === "/admin/forms" || path === "/admin/forms/filters") {
             await reply(200, { ...empty, canCreate: true });
+            return;
+          }
+          if (state.formBuilder && path === formRoot) {
+            if (state.denyFormRead || state.failFormRead) {
+              await reply(state.denyFormRead ? 403 : 503, null);
+              return;
+            }
+            await reply(200, { form: builderForm });
             return;
           }
           if (path === "/admin/events") {

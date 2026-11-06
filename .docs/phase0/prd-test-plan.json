@@ -828,6 +828,32 @@
       ]
     },
     {
+      "id": "FORM-TEST-039",
+      "requirements": [
+        "FORM-001",
+        "FORM-002",
+        "FORM-003"
+      ],
+      "scope": "Private saved-definition denial clearing, builder/response account-session-form scope isolation, cancelable queued autosave/publication and reviewed stale saved-draft loading",
+      "automated": [
+        "tests/client/form-builder-read-scope.test.tsx",
+        "tests/client/form-data-recovery.test.tsx",
+        "scripts/test-local-form-builder-read-scope.mjs",
+        "tests/browser/form-builder-scope.spec.ts"
+      ],
+      "remaining": [
+        "Full atomic builder draft/publication replay, complete response/runtime/integration recovery and supported-role/device/manual/visual/hosted acceptance remain open; paused unknown saves are not automatically retried",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "28.4",
+        "31.2"
+      ]
+    },
+    {
       "id": "TEAM-TEST-001",
       "requirements": [
         "TEAM-001"

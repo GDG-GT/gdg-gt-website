@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-05): the latest module checkpoint is
-`EVENT_MAIL_RECOVERY.md`; completed recovery checkpoints include tasks,
+`FORM_BUILDER_READ_SCOPE.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -65,6 +65,11 @@ closed locally (`EVENT_MAIL_RECOVERY.md`): accepted receipt reads do not resend,
 unaccepted approvals require exact recheck/fresh-proof explicit retry, and denial
 clears private state. Full role/device/manual/visual/provider/hosted acceptance
 remains open.
+Saved-definition denial/timestamp recovery and builder/response account-session-
+form scope isolation are also closed locally (`FORM_BUILDER_READ_SCOPE.md`).
+Queued autosave/publication cancellation, paused-read/stale draft review and
+validation correction are covered. Atomic builder/library mutation replay,
+complete response/runtime/integration recovery and full acceptance remain open.
 
 Additional requests on 2026-10-21 are implemented locally: community directory
 (`/admin/members`) CSV import/export and notification Mark all read → Dismiss all.
@@ -184,11 +189,11 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is 64.75% lines/64.68% branches at the event-mail checkpoint,
-  below the global 70% gate; 1,557 tests pass, not a
+  coverage is 65.08% lines/64.86% branches at the builder-scope checkpoint,
+  below the global 70% gate; 1,577 tests pass, not a
   percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 156 reviewed logical test cases with
+  All 146 numbered requirements now map into 157 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.

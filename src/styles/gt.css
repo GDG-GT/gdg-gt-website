@@ -4508,6 +4508,11 @@ fieldset.gt-event-fields {
 .gt-builder-page {
   min-width: 0;
 }
+.gt-builder-read-status {
+  margin: 20px clamp(16px, 2vw, 25px);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
 .gt-builder-header {
   padding: 22px 25px;
   border-bottom: 1px solid #e4d5c7;
@@ -4986,7 +4991,7 @@ fieldset.gt-event-fields {
   margin-bottom: 9px;
 }
 .gt-field-description {
-  color: #947254;
+  color: var(--text-secondary);
   font-size: 0.72rem;
   margin-top: -1px;
   margin-bottom: 12px;

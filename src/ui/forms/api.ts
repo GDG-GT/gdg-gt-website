@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { api } from "@/lib/api";
+import { api, ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
 import type { PreviewForm, FormResponse } from "./store";
 type Library = {
@@ -57,11 +57,12 @@ export const formsApi = {
     return (await api<{ form: PreviewForm }>("/admin/forms/" + id, { signal }))
       .form;
   },
-  async save(form: PreviewForm) {
+  async save(form: PreviewForm, signal?: AbortSignal) {
     return (
       await api<{ form: PreviewForm }>("/admin/forms/" + form.id + "/draft", {
         method: "PATCH",
         protected: true,
+        signal,
         body: {
           revision: form.revision,
           slug: form.slug,
@@ -71,11 +72,12 @@ export const formsApi = {
       })
     ).form;
   },
-  async publish(form: PreviewForm) {
+  async publish(form: PreviewForm, signal?: AbortSignal) {
     return (
       await api<{ form: PreviewForm }>("/admin/forms/" + form.id + "/publish", {
         method: "POST",
         protected: true,
+        signal,
         body: { revision: form.revision },
       })
     ).form;
@@ -180,39 +182,99 @@ export function useServerForm(id: string | undefined) {
   const [snapshot, setSnapshot] = useState<{
       scope: string;
       form: PreviewForm;
+      at: string;
     }>(),
-    [request, setRequest] = useState({ scope, error: "", loading: !!id });
-  const activeRequest = useRef<AbortController>();
-  const load = useCallback(async () => {
+    [request, setRequest] = useState({
+      scope,
+      error: "",
+      loading: !!id,
+      denied: false,
+    });
+  const activeRequest = useRef<AbortController>(),
+    blockedScope = useRef<string>(),
+    mounted = useRef(true),
+    activeScope = useRef(scope);
+  activeScope.current = scope;
+  const clear = useCallback(() => {
     activeRequest.current?.abort();
-    if (!id) return;
-    const controller = new AbortController();
-    activeRequest.current = controller;
-    setRequest({ scope, loading: true, error: "" });
-    try {
-      const form = await formsApi.load(id, controller.signal);
-      if (!controller.signal.aborted) setSnapshot({ scope, form });
-    } catch (e) {
-      if (!controller.signal.aborted)
-        setRequest({
-          scope,
-          loading: false,
-          error:
-            e instanceof Error
-              ? e.message
-              : "This form could not load. Try again.",
-        });
-    } finally {
-      if (!controller.signal.aborted)
-        setRequest((previous) => ({ ...previous, loading: false }));
-    }
-  }, [id, scope]);
+    blockedScope.current = scope;
+    setSnapshot(undefined);
+    setRequest({
+      scope,
+      error:
+        "Private form data has been cleared. Recheck current access before continuing.",
+      loading: false,
+      denied: true,
+    });
+  }, [scope]);
   useEffect(() => {
-    void load();
-    return () => activeRequest.current?.abort();
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, [clear]);
+  const load = useCallback(
+    async (explicit = true) => {
+      if (!mounted.current || activeScope.current !== scope) return;
+      activeRequest.current?.abort();
+      if (!id) return;
+      if (!explicit && blockedScope.current === scope) return;
+      blockedScope.current = undefined;
+      const controller = new AbortController();
+      activeRequest.current = controller;
+      setRequest({ scope, loading: true, error: "", denied: false });
+      try {
+        const form = await formsApi.load(id, controller.signal);
+        if (
+          !controller.signal.aborted &&
+          mounted.current &&
+          activeScope.current === scope
+        )
+          setSnapshot({ scope, form, at: new Date().toISOString() });
+      } catch (e) {
+        if (
+          !controller.signal.aborted &&
+          mounted.current &&
+          activeScope.current === scope
+        ) {
+          const denied =
+            e instanceof ApiFailure && [401, 403, 404].includes(e.status);
+          if (denied) {
+            setSnapshot(undefined);
+            blockedScope.current = scope;
+          }
+          setRequest({
+            scope,
+            loading: false,
+            denied,
+            error:
+              e instanceof Error
+                ? e.message
+                : "This form could not load. Try again.",
+          });
+        }
+      } finally {
+        if (
+          !controller.signal.aborted &&
+          mounted.current &&
+          activeScope.current === scope
+        )
+          setRequest((previous) => ({ ...previous, loading: false }));
+      }
+    },
+    [id, scope],
+  );
+  useEffect(() => {
+    mounted.current = true;
+    void load(false);
+    return () => {
+      mounted.current = false;
+      activeRequest.current?.abort();
+    };
   }, [load]);
   return {
     form: id && snapshot?.scope === scope ? snapshot.form : undefined,
+    at: id && snapshot?.scope === scope ? snapshot.at : undefined,
+    denied: request.scope === scope && request.denied,
+    clear,
     error: request.scope === scope ? request.error : "",
     loading: !!id && (request.scope !== scope || request.loading),
     reload: load,

@@ -8,6 +8,30 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Saved Forms reads and builder scope isolation — 2026-11-05
+
+- Saved-definition reads now retain timestamped matching snapshots and clear on
+  denial/session replacement. Builder/response account-role-session-form remounts,
+  cancelable queued autosave/publication, pending latches and late read/write/focus
+  fences prevent old contexts from changing current editors. Read/offline/stale
+  states pause edits, retained draft loading requires a consequence review and
+  validation failures remain editable. Unknown writes pause pending atomic recovery.
+- All 1,577 tests/168 files pass (42 focused, 20 new cases). Coverage still fails
+  70%: 65.08% lines/64.86% branches/63.32% statements/56.40% functions; all 17
+  critical branch gates pass. All 16 actual API/DB/desktop-mobile checks pass,
+  including one accepted-but-lost save per private form, read-only review/loading,
+  retained input and denial clearing. Measured axe caught field help at 4.26:1;
+  its existing secondary-text token correction passes the final live checks.
+- Build/types/lint, entry byte budgets, secret scan and traceability pass. All 54
+  production-build builder/shared-workspace browser checks pass across six
+  profiles (`phase0/form-builder-scope-workspace-browser.json`); these are not
+  human visual approval or real-device/manual acceptance.
+- Owned private forms archived/accounts disabled/sessions revoked; no publication,
+  response/provider send/worker or existing chapter/production change. Catalog:
+  157 unverified cases. Atomic builder/library draft/publication replay and full
+  response/runtime/integration/navigation plus quality/device/manual/visual/hosted
+  acceptance remain open. See `FORM_BUILDER_READ_SCOPE.md`; full PRD remains open.
+
 ### Event-mail approval reconciliation and private sender history — 2026-11-05
 
 - Migration 117 adds current-session/event/review/key receipt/readiness lookup.

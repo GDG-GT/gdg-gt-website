@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useAdmin } from "@/contexts/AdminContext";
+import { ApiFailure } from "@/lib/api";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import {
@@ -61,11 +64,28 @@ const signature = (value: PreviewForm) =>
   ]);
 
 export default function FormBuilder() {
+  const { currentAdmin } = useAdmin(),
+    { formId } = useParams(),
+    [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((value) => value + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  if (!currentAdmin) return null;
+  return (
+    <FormBuilderContent
+      key={`${currentAdmin.id}:${currentAdmin.role}:${formId || "missing"}:${epoch}`}
+    />
+  );
+}
+function FormBuilderContent() {
   const navigationSafety = useNavigationSafety();
   const { formId } = useParams(),
     server = useServerForm(formId),
     source = server.form,
-    navigate = useNavigate();
+    navigate = useNavigate(),
+    { isOnline } = useOnlineStatus();
   const [form, setForm] = useState<PreviewForm | null>(() =>
     source ? structuredClone(source) : null,
   );
@@ -81,7 +101,9 @@ export default function FormBuilder() {
     [deliveryState, setDeliveryState] = useState({ dirty: false, busy: false }),
     [publishOpen, setPublishOpen] = useState(false),
     [saveError, setSaveError] = useState(""),
-    [publishing, setPublishing] = useState(false);
+    [publishing, setPublishing] = useState(false),
+    [remoteConflict, setRemoteConflict] = useState(false),
+    [loadReview, setLoadReview] = useState(false);
   const undo = useRef<PreviewForm[]>([]),
     redo = useRef<PreviewForm[]>([]),
     dragged = useRef<string | null>(null);
@@ -91,7 +113,58 @@ export default function FormBuilder() {
     queue = useRef<Promise<PreviewForm | undefined>>(
       Promise.resolve(undefined),
     ),
-    saved = useRef("");
+    saved = useRef(""),
+    mounted = useRef(true),
+    generation = useRef(0),
+    publicationPending = useRef(false),
+    activeWrites = useRef(new Set<AbortController>()),
+    titleInput = useRef<HTMLInputElement>(null),
+    sourceSeen = useRef<PreviewForm>(),
+    allowed = useRef(false),
+    serverRef = useRef(server);
+  serverRef.current = server;
+  const ready =
+    !!source &&
+    !server.loading &&
+    !server.error &&
+    !server.denied &&
+    isOnline &&
+    !remoteConflict;
+  allowed.current = ready;
+  const invalidateWrites = useCallback(() => {
+    generation.current++;
+    for (const controller of activeWrites.current) controller.abort();
+    activeWrites.current.clear();
+  }, []);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      invalidateWrites();
+    };
+  }, [invalidateWrites]);
+  const clearPrivate = useCallback(() => {
+    invalidateWrites();
+    queue.current = Promise.resolve(undefined);
+    latest.current = null;
+    setForm(null);
+    setSelected("");
+    undo.current = [];
+    redo.current = [];
+    setSaveError("");
+    setPublishOpen(false);
+    setHistoryOpen(false);
+    setDeliveryOpen(false);
+    setLoadReview(false);
+    setRemoteConflict(false);
+    setPublishing(false);
+    publicationPending.current = false;
+    revision.current = undefined;
+    saved.current = "";
+  }, [invalidateWrites]);
+  useEffect(() => {
+    if (server.denied) clearPrivate();
+  }, [server.denied, clearPrivate]);
   useEffect(() => {
     if (source && !latest.current) {
       setForm(structuredClone(source));
@@ -99,39 +172,94 @@ export default function FormBuilder() {
       revision.current = source.revision;
       saved.current = signature(source);
       setSaveStatus("Saved");
+      sourceSeen.current = source;
+    } else if (source && sourceSeen.current !== source) {
+      sourceSeen.current = source;
+      if (source.revision !== revision.current) setRemoteConflict(true);
+      else
+        setForm((value) =>
+          value ? { ...value, actions: source.actions } : value,
+        );
     }
   }, [source]);
-  const persist = useCallback((snapshot: PreviewForm) => {
-    queue.current = queue.current
-      .catch(() => undefined)
-      .then(async () => {
-        if (saved.current === signature(snapshot)) return snapshot;
-        setSaveStatus("Saving…");
-        setSaveError("");
-        try {
-          const result = await formsApi.save({
-            ...snapshot,
-            revision: revision.current,
-          });
-          revision.current = result.revision;
-          saved.current = signature(snapshot);
-          setSaveStatus(
-            latest.current && signature(latest.current) === saved.current
-              ? "Saved"
-              : "Unsaved changes",
-          );
-          return result;
-        } catch (e) {
-          setSaveStatus("Not saved");
-          setSaveError((e as Error).message);
-          throw e;
-        }
-      });
-    return queue.current;
-  }, []);
+  const persist = useCallback(
+    (snapshot: PreviewForm) => {
+      const operationGeneration = generation.current;
+      queue.current = queue.current
+        .catch(() => undefined)
+        .then(async () => {
+          if (
+            !mounted.current ||
+            operationGeneration !== generation.current ||
+            !allowed.current ||
+            !navigator.onLine
+          )
+            throw new DOMException(
+              "The form editor context is paused or changed.",
+              "AbortError",
+            );
+          if (saved.current === signature(snapshot)) return snapshot;
+          const controller = new AbortController();
+          activeWrites.current.add(controller);
+          setSaveStatus("Saving…");
+          setSaveError("");
+          try {
+            const result = await formsApi.save(
+              {
+                ...snapshot,
+                revision: revision.current,
+              },
+              controller.signal,
+            );
+            if (
+              !mounted.current ||
+              controller.signal.aborted ||
+              operationGeneration !== generation.current
+            )
+              throw new DOMException(
+                "The form editor context changed.",
+                "AbortError",
+              );
+            revision.current = result.revision;
+            saved.current = signature(snapshot);
+            setSaveStatus(
+              latest.current && signature(latest.current) === saved.current
+                ? "Saved"
+                : "Unsaved changes",
+            );
+            return result;
+          } catch (e) {
+            if (
+              !mounted.current ||
+              controller.signal.aborted ||
+              operationGeneration !== generation.current
+            )
+              throw e;
+            if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
+              clearPrivate();
+              serverRef.current.clear();
+              throw e;
+            }
+            if (!(e instanceof ApiFailure) || e.status !== 400) {
+              allowed.current = false;
+              setRemoteConflict(true);
+            }
+            setSaveStatus("Not saved");
+            setSaveError((e as Error).message);
+            throw e;
+          } finally {
+            activeWrites.current.delete(controller);
+          }
+        });
+      return queue.current;
+    },
+    [clearPrivate],
+  );
   useEffect(() => {
     if (
       !form ||
+      !ready ||
+      publishing ||
       saved.current === signature(form) ||
       !form.actions?.includes("edit")
     )
@@ -141,7 +269,7 @@ export default function FormBuilder() {
       void persist(structuredClone(form)).catch(() => {});
     }, 600);
     return () => clearTimeout(timer);
-  }, [form, persist]);
+  }, [form, persist, ready, publishing]);
   useEffect(() => {
     const warn = (event: BeforeUnloadEvent) => {
       if (latest.current && saved.current !== signature(latest.current)) {
@@ -156,7 +284,7 @@ export default function FormBuilder() {
     busy: publishing || saveStatus === "Saving…",
     label: "Form definition changes",
   });
-  if (!form)
+  if (!form || server.denied)
     return (
       <div className="gt-admin-page">
         {server.loading ? (
@@ -166,7 +294,11 @@ export default function FormBuilder() {
           </div>
         ) : (
           <EmptyState
-            title="This form is not available"
+            title={
+              server.denied
+                ? "Form access needs to be rechecked"
+                : "This form is not available"
+            }
             action={
               <div className="gt-inline-actions">
                 <Button
@@ -188,7 +320,7 @@ export default function FormBuilder() {
         )}
       </div>
     );
-  const editable = !!form.actions?.includes("edit"),
+  const editable = ready && !publishing && !!source?.actions?.includes("edit"),
     field = form.fields.find((item) => item.id === selected),
     issues = validateDefinition(form);
   const update = (next: PreviewForm) => {
@@ -1011,6 +1143,7 @@ export default function FormBuilder() {
             <ArrowLeft size={14} /> Forms
           </Link>
           <input
+            ref={titleInput}
             className="gt-builder-title"
             disabled={!editable}
             aria-label="Form title"
@@ -1028,6 +1161,7 @@ export default function FormBuilder() {
             disabled={!editable || !undo.current.length}
             aria-label="Undo change"
             onClick={() => {
+              if (!editable) return;
               const previous = undo.current.pop();
               if (previous) {
                 redo.current.push(form);
@@ -1042,6 +1176,7 @@ export default function FormBuilder() {
             disabled={!editable || !redo.current.length}
             aria-label="Redo change"
             onClick={() => {
+              if (!editable) return;
               const next = redo.current.pop();
               if (next) {
                 undo.current.push(form);
@@ -1069,8 +1204,10 @@ export default function FormBuilder() {
           </button>
           <Link
             to={`/forms/${form.slug}?preview=1`}
+            aria-disabled={!ready || publishing}
             onClick={async (event) => {
               event.preventDefault();
+              if (!ready || publicationPending.current) return;
               try {
                 await persist(structuredClone(form));
                 const preview = () => navigate(`/forms/${form.slug}?preview=1`);
@@ -1086,14 +1223,88 @@ export default function FormBuilder() {
             <span>Preview</span>
           </Link>
           <Button
-            disabled={!form.actions?.includes("publish") || publishing}
+            disabled={
+              !ready ||
+              !source?.actions?.includes("publish") ||
+              publishing ||
+              saveStatus === "Saving…"
+            }
             onClick={() => setPublishOpen(true)}
           >
             Publish <ArrowUp size={15} />
           </Button>
         </div>
       </div>
-      {!editable && (
+      <section
+        className="gt-builder-read-status gt-form"
+        aria-label="Saved form read status"
+      >
+        {server.loading && (
+          <p role="status">
+            Refreshing saved draft and current permissions… Editing is paused.
+          </p>
+        )}
+        {(server.error || !isOnline) && (
+          <div role="alert">
+            <p>{server.error || "You are offline. Form changes are paused."}</p>
+            {server.at && (
+              <p>
+                Last successful saved draft read:{" "}
+                <time dateTime={server.at}>
+                  {new Date(server.at).toLocaleString()}
+                </time>
+                . Unsaved input remains on this page.
+              </p>
+            )}
+          </div>
+        )}
+        {remoteConflict && (
+          <p role="alert">
+            Saved values changed or a save did not finish cleanly. Autosave is
+            paused and your proposed draft remains on this page. Recheck saved
+            values before reviewing which draft to keep.
+          </p>
+        )}
+        <div className="gt-inline-actions">
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={
+              server.loading ||
+              !isOnline ||
+              publishing ||
+              saveStatus === "Saving…"
+            }
+            onClick={() => {
+              const readGeneration = generation.current;
+              void server.reload().then(() => {
+                if (mounted.current && generation.current === readGeneration)
+                  document.getElementById("form-builder-read-status")?.focus();
+              });
+            }}
+          >
+            Recheck saved form
+          </Button>
+          {remoteConflict && (
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={
+                server.loading || !!server.error || !source || !isOnline
+              }
+              onClick={() => setLoadReview(true)}
+            >
+              Review loading saved draft
+            </Button>
+          )}
+        </div>
+        <p id="form-builder-read-status" tabIndex={-1}>
+          {server.at
+            ? `Saved draft snapshot: revision ${source?.revision ?? "unavailable"}.`
+            : "A successful saved draft read is required before changes."}
+        </p>
+      </section>
+      {!source?.actions?.includes("edit") && (
         <p className="gt-data-note" role="status">
           View only. Draft editing requires additional permission. You can
           inspect fields, settings and published versions.
@@ -1102,11 +1313,9 @@ export default function FormBuilder() {
       {saveError && (
         <p role="alert" className="gt-form-error">
           {saveError} Your changes remain on this page.{" "}
-          <button
-            onClick={() => persist(structuredClone(form)).catch(() => {})}
-          >
-            Retry save
-          </button>
+          {remoteConflict
+            ? "Recheck the saved draft before another save."
+            : "Correct the draft values before saving again."}
         </p>
       )}
       <div className="gt-builder-mobile-tools">
@@ -1332,7 +1541,9 @@ export default function FormBuilder() {
           <p className="gt-builder-hint">
             {editable
               ? "Drag to reorder, or use the move up and down buttons. Draft changes autosave securely; publication creates a separate immutable version."
-              : "Select a question to inspect its settings. Draft changes require edit permission."}
+              : source?.actions?.includes("edit")
+                ? "Editing is paused. Recheck the saved draft before changing fields or settings."
+                : "Select a question to inspect its settings. Draft changes require edit permission."}
           </p>
         </div>
         <aside className="gt-builder-inspector" aria-label="Form inspector">
@@ -1411,8 +1622,21 @@ export default function FormBuilder() {
           )}
         </DialogContent>
       </Dialog>
-      <Dialog open={publishOpen} onOpenChange={setPublishOpen}>
-        <DialogContent>
+      <Dialog
+        open={publishOpen}
+        onOpenChange={(open) => {
+          if (!publicationPending.current) setPublishOpen(open);
+        }}
+      >
+        <DialogContent
+          className={publishing ? "[&>button]:hidden" : undefined}
+          onEscapeKeyDown={(event) => {
+            if (publicationPending.current) event.preventDefault();
+          }}
+          onPointerDownOutside={(event) => {
+            if (publicationPending.current) event.preventDefault();
+          }}
+        >
           <DialogTitle>
             {issues.length
               ? "A few things before you publish"
@@ -1440,29 +1664,138 @@ export default function FormBuilder() {
             </div>
           )}
           <Button
-            disabled={!!issues.length || publishing}
+            disabled={
+              !!issues.length ||
+              publishing ||
+              !ready ||
+              !source?.actions?.includes("publish")
+            }
             onClick={async () => {
+              if (
+                publicationPending.current ||
+                !ready ||
+                !source?.actions?.includes("publish")
+              )
+                return;
+              publicationPending.current = true;
+              const currentGeneration = generation.current;
+              const controller = new AbortController();
+              activeWrites.current.add(controller);
               setPublishing(true);
               try {
                 await persist(structuredClone(form));
-                const result = await formsApi.publish({
-                  ...form,
-                  revision: revision.current,
-                });
+                if (
+                  !mounted.current ||
+                  controller.signal.aborted ||
+                  generation.current !== currentGeneration ||
+                  !allowed.current
+                )
+                  return;
+                const result = await formsApi.publish(
+                  {
+                    ...form,
+                    revision: revision.current,
+                  },
+                  controller.signal,
+                );
+                if (
+                  !mounted.current ||
+                  controller.signal.aborted ||
+                  generation.current !== currentGeneration
+                )
+                  return;
                 revision.current = result.revision;
                 saved.current = signature(result);
                 setForm(result);
                 setSaveStatus("Published and saved");
                 setPublishOpen(false);
               } catch (e) {
+                if (
+                  !mounted.current ||
+                  controller.signal.aborted ||
+                  generation.current !== currentGeneration
+                )
+                  return;
+                if (
+                  e instanceof ApiFailure &&
+                  [401, 403, 404].includes(e.status)
+                ) {
+                  clearPrivate();
+                  server.clear();
+                  return;
+                }
+                if (!(e instanceof ApiFailure) || e.status !== 400) {
+                  allowed.current = false;
+                  setRemoteConflict(true);
+                }
                 setSaveError((e as Error).message);
                 setPublishOpen(false);
               } finally {
-                setPublishing(false);
+                activeWrites.current.delete(controller);
+                publicationPending.current = false;
+                if (mounted.current && generation.current === currentGeneration)
+                  setPublishing(false);
               }
             }}
           >
             {publishing ? "Publishing…" : "Publish version"}
+          </Button>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={loadReview} onOpenChange={setLoadReview}>
+        <DialogContent
+          className="max-h-[calc(100dvh-2rem)] overflow-y-auto"
+          onCloseAutoFocus={(event) => {
+            if (!remoteConflict) {
+              event.preventDefault();
+              titleInput.current?.focus();
+            }
+          }}
+        >
+          <DialogTitle>Load the currently saved draft?</DialogTitle>
+          <DialogDescription>
+            This replaces the proposed draft for “{form.title}” on this page
+            with the current saved revision {source?.revision}. Unsaved field,
+            setting and undo/redo changes will be discarded. No saved form or
+            response is changed.
+          </DialogDescription>
+          <p>Your proposed title: {form.title}</p>
+          <p>Current saved title: {source?.title}</p>
+          <p>
+            {form.fields.length} proposed fields · {source?.fields.length ?? 0}{" "}
+            saved fields
+          </p>
+          <Button
+            disabled={
+              !source ||
+              server.loading ||
+              !!server.error ||
+              !isOnline ||
+              publishing
+            }
+            onClick={() => {
+              if (!source || server.loading || server.error || !isOnline)
+                return;
+              generation.current++;
+              for (const controller of activeWrites.current) controller.abort();
+              activeWrites.current.clear();
+              queue.current = Promise.resolve(undefined);
+              revision.current = source.revision;
+              saved.current = signature(source);
+              undo.current = [];
+              redo.current = [];
+              setForm(structuredClone(source));
+              setSelected(source.fields[0]?.id || "");
+              setRemoteConflict(false);
+              setSaveError("");
+              setSaveStatus("Saved");
+              setLoadReview(false);
+            }}
+          >
+            Load saved draft and discard proposed changes
+          </Button>
+          <Button variant="secondary" onClick={() => setLoadReview(false)}>
+            Keep proposed draft
           </Button>
         </DialogContent>
       </Dialog>

@@ -1,0 +1,74 @@
+{
+  "generatedAt": "2026-11-06T03:42:23.702Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and Chromium desktop/mobile builder scope/read verification. Only fresh owned fictional accounts and two private unpublished forms; one accepted-but-lost draft save per form, writes then paused, exact read-only refresh and reviewed saved-draft loading, transient read retention and denial clearing. Every other browser non-read/external request blocked; realtime paused. Forms archived/accounts disabled/sessions revoked. No form publication, response, worker/provider send or existing chapter/production change. Captures private/ignored; no credentials/response bodies retained.",
+  "tests": [
+    {
+      "name": "private builder definition conceals anonymous/unrelated reads at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "accepted-but-lost autosave pauses further writes and retains proposed fields at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form recheck reads accepted saved values without another write at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "loading the saved definition requires explicit review and restores editor focus at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated paused form builder passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "transient form read failure preserves unsaved input without replacing saved data at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "denial clears private fields before explicit fresh form access recovery at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form scope workflow has no extra write, provider send, script error, external request or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "private builder definition conceals anonymous/unrelated reads at 375×812",
+      "passed": true
+    },
+    {
+      "name": "accepted-but-lost autosave pauses further writes and retains proposed fields at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form recheck reads accepted saved values without another write at 375×812",
+      "passed": true
+    },
+    {
+      "name": "loading the saved definition requires explicit review and restores editor focus at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated paused form builder passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "transient form read failure preserves unsaved input without replacing saved data at 375×812",
+      "passed": true
+    },
+    {
+      "name": "denial clears private fields before explicit fresh form access recovery at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form scope workflow has no extra write, provider send, script error, external request or page overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

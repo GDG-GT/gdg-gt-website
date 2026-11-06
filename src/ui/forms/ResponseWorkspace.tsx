@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useAdmin } from "@/contexts/AdminContext";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { api } from "@/lib/api";
 import {
@@ -43,6 +44,22 @@ type View = {
   columns: string[];
 };
 export default function ResponseWorkspace() {
+  const { currentAdmin } = useAdmin(),
+    { formId } = useParams(),
+    [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((value) => value + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  if (!currentAdmin) return null;
+  return (
+    <ResponseWorkspaceContent
+      key={`${currentAdmin.id}:${currentAdmin.role}:${formId || "missing"}:${epoch}`}
+    />
+  );
+}
+function ResponseWorkspaceContent() {
   const navigationSafety = useNavigationSafety();
   const { formId } = useParams(),
     server = useServerForm(formId),
