@@ -1,0 +1,90 @@
+{
+  "generatedAt": "2026-11-06T01:54:01.699Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and Chromium desktop/mobile invitation receipt verification. Ten concurrent creates, accepted-but-lost resends, explicit read-only rechecks, identical fresh-proof retries and exact revoke replay. Only fresh owned fictional accounts/team/invitation/jobs. Sender/scheduler preflight; no delivery worker invoked or provider send. Owned jobs marked dead and secret payloads cleared, invitations cancelled/team archived/accounts disabled/sessions revoked. Existing records/production untouched. Captures masked/private; no credentials or response bodies retained.",
+  "tests": [
+    {
+      "name": "invitation mutation refuses missing retry identity",
+      "passed": true
+    },
+    {
+      "name": "ten concurrent invitation creates return one invitation identity",
+      "passed": true
+    },
+    {
+      "name": "concurrent invitation replay creates one private-mail job and one audit row",
+      "passed": true
+    },
+    {
+      "name": "changed invitation role cannot reuse an accepted intent key",
+      "passed": true
+    },
+    {
+      "name": "exact invitation recheck remains hidden from anonymous and unrelated accounts",
+      "passed": true
+    },
+    {
+      "name": "authorized exact invitation recheck is private and excludes capability material",
+      "passed": true
+    },
+    {
+      "name": "exact invitation recheck remains hidden from anonymous and unrelated accounts",
+      "passed": true
+    },
+    {
+      "name": "authorized exact invitation recheck is private and excludes capability material",
+      "passed": true
+    },
+    {
+      "name": "resend review names the exact recipient and link-rotation consequence before mutation at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "lost resend receipt clears proof and performs only an explicit read-only recheck at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "accepted-but-lost resend replay rotates once and queues one mail/audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated exact-recipient revoke review passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "invitation browser check has no extra write, provider send, external request, script error or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "resend review names the exact recipient and link-rotation consequence before mutation at 375×812",
+      "passed": true
+    },
+    {
+      "name": "lost resend receipt clears proof and performs only an explicit read-only recheck at 375×812",
+      "passed": true
+    },
+    {
+      "name": "accepted-but-lost resend replay rotates once and queues one mail/audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated exact-recipient revoke review passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "invitation browser check has no extra write, provider send, external request, script error or page overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "exact revoke replay returns current cancelled state with one revision and audit",
+      "passed": true
+    },
+    {
+      "name": "complete receipt probe retains one invitation and exactly three intended private-mail jobs",
+      "passed": true
+    }
+  ]
+}

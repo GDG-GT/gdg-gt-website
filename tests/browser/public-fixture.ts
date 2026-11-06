@@ -18,6 +18,10 @@ export type PublicFixture = {
   teamCommitted: number;
   failedTeamPanel: "" | "invitations" | "announcements";
   deniedTeamPanel: "" | "invitations" | "announcements";
+  invitationReview: boolean;
+  failInvitationSave: boolean;
+  invitationWrites: { key: string; fingerprint: string }[];
+  invitationCommitted: number;
 };
 export const fictionalTeamInvite = {
   id: "fbbb0000-0000-4000-8000-000000000004",
@@ -98,8 +102,14 @@ export const test = base.extend<{ fixture: PublicFixture }>({
         teamCommitted: 0,
         failedTeamPanel: "",
         deniedTeamPanel: "",
+        invitationReview: false,
+        failInvitationSave: false,
+        invitationWrites: [],
+        invitationCommitted: 0,
       };
       let team = { ...fictionalTeam };
+      let managedInvite = { ...fictionalTeamInvite };
+      const inviteReceipts = new Map<string, string>();
       const teamWorkspace = () => ({
         team,
         members: [],
@@ -167,6 +177,55 @@ export const test = base.extend<{ fixture: PublicFixture }>({
           ["/auth/realtime-token", "/realtime/token"].includes(path)
         ) {
           await reply(503, null);
+          return;
+        }
+        if (
+          state.authenticated &&
+          state.invitationReview &&
+          request.method() === "POST" &&
+          path ===
+            "/admin/teams/" +
+              fictionalTeam.id +
+              "/invitations/" +
+              fictionalTeamInvite.id
+        ) {
+          const body = request.postDataJSON(),
+            key = request.headers()["idempotency-key"];
+          if (
+            !key ||
+            body.currentPassword !== "Fictional browser password" ||
+            !["resend", "revoke"].includes(body.action)
+          ) {
+            state.writes.push("Invalid fictional invitation mutation");
+            await reply(403, null);
+            return;
+          }
+          const { currentPassword: _proof, ...intent } = body;
+          const fingerprint = JSON.stringify(intent),
+            receipt = inviteReceipts.get(key);
+          state.invitationWrites.push({ key, fingerprint });
+          if (
+            (receipt && receipt !== fingerprint) ||
+            (!receipt && body.revision !== managedInvite.revision)
+          ) {
+            await reply(409, null);
+            return;
+          }
+          if (!receipt) {
+            managedInvite = {
+              ...managedInvite,
+              revision: managedInvite.revision + 1,
+              status: body.action === "revoke" ? "cancelled" : "pending",
+            };
+            inviteReceipts.set(key, fingerprint);
+            state.invitationCommitted++;
+          }
+          if (state.failInvitationSave) {
+            state.failInvitationSave = false;
+            await route.abort("connectionfailed");
+            return;
+          }
+          await reply(200, { record: managedInvite });
           return;
         }
         if (
@@ -373,6 +432,17 @@ export const test = base.extend<{ fixture: PublicFixture }>({
             await reply(200, teamWorkspace());
             return;
           }
+          if (
+            state.teamReview &&
+            path ===
+              "/admin/teams/" +
+                fictionalTeam.id +
+                "/invitations/" +
+                fictionalTeamInvite.id
+          ) {
+            await reply(200, { record: managedInvite });
+            return;
+          }
           for (const panel of ["invitations", "announcements"] as const) {
             if (
               state.teamReview &&
@@ -388,9 +458,7 @@ export const test = base.extend<{ fixture: PublicFixture }>({
               await reply(200, {
                 ...empty,
                 items: [
-                  panel === "invitations"
-                    ? fictionalTeamInvite
-                    : fictionalTeamPost,
+                  panel === "invitations" ? managedInvite : fictionalTeamPost,
                 ],
                 total: 1,
                 canManage: true,

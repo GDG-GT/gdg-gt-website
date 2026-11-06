@@ -7,6 +7,7 @@ import {
   uuid,
   text,
   queryValues,
+  idempotency,
 } from "./lib/validation.mjs";
 import {
   token,
@@ -27,6 +28,8 @@ const accept = inspect
   })
   .strict();
 const password = z.string().min(1).max(128);
+const invitationColumns =
+  "id,team_id,email,role,status,expires_at,created_at,accepted_at,last_sent_at,revision,invited_by";
 const create = z
   .object({
     currentPassword: password,
@@ -147,7 +150,7 @@ export async function teamInvitationRoutes(
     /^\/api\/v1\/admin\/teams\/([^/]+)\/invitations(?:\/([^/]+))?$/,
   );
   if (!match) return false;
-  allowMethod(request, response, match[2] ? ["POST"] : ["GET", "POST"]);
+  allowMethod(request, response, ["GET", "POST"]);
   const team = parse(uuid, match[1]),
     id = match[2] ? parse(uuid, match[2]) : null,
     session = await requireSession(request, store, config);
@@ -162,19 +165,48 @@ export async function teamInvitationRoutes(
   )
     throw new ApiError(404, "NOT_FOUND", "This team was not found.");
   if (request.method === "GET") {
+    if (id) {
+      queryValues(url.searchParams, z.object({}).strict());
+      const record = checked(
+        await db
+          .from("team_invites")
+          .select(invitationColumns)
+          .eq("id", id)
+          .eq("team_id", team)
+          .maybeSingle(),
+      );
+      if (!record)
+        throw new ApiError(404, "NOT_FOUND", "This invitation was not found.");
+      return reply(
+        response,
+        {
+          record: {
+            ...record,
+            status:
+              record.status === "pending" &&
+              new Date(record.expires_at) <= new Date()
+                ? "expired"
+                : record.status,
+          },
+        },
+        requestId,
+      );
+    }
     const q = queryValues(
       url.searchParams,
       z
-        .object({ page: z.coerce.number().int().min(1).max(10000).default(1) })
+        .object({
+          page: z.coerce.number().int().min(1).max(10000).default(1),
+          email: email.optional(),
+        })
         .strict(),
     );
-    const result = await db
+    let query = db
       .from("team_invites")
-      .select(
-        "id,team_id,email,role,status,expires_at,created_at,accepted_at,last_sent_at,revision,invited_by",
-        { count: "exact" },
-      )
-      .eq("team_id", team)
+      .select(invitationColumns, { count: "exact" })
+      .eq("team_id", team);
+    if (q.email) query = query.eq("email", q.email);
+    const result = await query
       .order("created_at", { ascending: false })
       .order("id")
       .range((q.page - 1) * 20, q.page * 20 - 1);
@@ -210,6 +242,7 @@ export async function teamInvitationRoutes(
     throw new ApiError(429, "RATE_LIMITED", "Please wait before trying again.");
   }
   const body = await jsonBody(request, id ? mutate : create, 4096),
+    key = idempotency(request),
     account = await store.accountByEmail(session.user.email);
   if (!(await verifySecret(body.currentPassword, account?.password_hash))) {
     await store.recordLoginFailure(account);
@@ -241,7 +274,7 @@ export async function teamInvitationRoutes(
   }
   const raw = token(),
     result = checked(
-      await db.rpc("mutate_team_invite", {
+      await db.rpc("mutate_team_invite_workspace", {
         p_actor: session.user.id,
         p_session: session.sessionId,
         p_verified_hash: account.password_hash,
@@ -255,6 +288,17 @@ export async function teamInvitationRoutes(
         p_secret: encryptPayload(
           { token: raw, email: recipient },
           config.encryptionSecret,
+        ),
+        p_key_hash: tokenHash(key),
+        p_request_hash: tokenHash(
+          JSON.stringify({
+            team,
+            id,
+            action: id ? body.action : "create",
+            revision: body.revision ?? null,
+            email: body.email ?? null,
+            role: body.role ?? null,
+          }),
         ),
         p_request_id: requestId,
       }),

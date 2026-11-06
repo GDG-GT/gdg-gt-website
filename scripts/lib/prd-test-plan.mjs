@@ -318,6 +318,14 @@ add(
   ["Invitation/announcement atomic mutation replay and complete uncertain-write/consequence recovery remain separate work; full supported-role/device/manual/visual/hosted acceptance remains open"],
 );
 prdTestCases.at(-1).normative = ["23", "24", "28.3", "28.4", "31.2"];
+add(
+  "TEAM-TEST-009",
+  "TEAM-002 TEAM-003 TEAM-004 TEAM-005 TEAM-006",
+  "Current-authority atomic invitation create/resend/revoke receipts, exact recipient/consequence reviews and bounded fresh-proof recovery without duplicate mail or token rotation",
+  ["tests/client/invitation-mutation-recovery.test.tsx", unit("invitation-mutation-recovery"), sql("115_invitation_mutation_replay"), local("invitation-mutation-recovery"), "tests/browser/invitation-review.spec.ts"],
+  ["Complete announcement mutation recovery and full supported-role/device/manual/visual/provider/hosted invitation acceptance remain open; live probe does not invoke a delivery worker"],
+);
+prdTestCases.at(-1).normative = ["23", "24", "28.3", "28.4", "31.2"];
 const teams = [
   [
     "TEAM-001",

@@ -8,6 +8,29 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Reviewed invitation changes and atomic link replay — 2026-11-05
+
+- Migration 115 adds current-session/password/team/target-bound create/resend/
+  revoke receipts. Exact private ID/recipient reads support read-only reconciliation.
+  Recipient/role/consequence reviews, pending guards, named focus recovery, inline
+  proof correction and bounded fresh-password identical retries protect writes.
+  Uncertain abandonment and stale-action closing require reviewed consequences.
+- All 1,470 tests/163 files pass (57 focused, 30 new cases). Coverage still fails
+  70%: 63.88% lines/63.79% branches/62.21% statements/55.35% functions; all 17
+  critical branch gates pass. Complete 115-migration SQL/legacy-grant suites
+  (205/206 checks), both 100-client races and six isolated restore checks pass.
+- All 20 actual API/DB/desktop-mobile checks pass: concurrent creates and lost
+  resend receipts produce one accepted mutation/job/audit each; revoke replay
+  runs once. Measured review axe passes. Fixture jobs disabled/secrets cleared,
+  invitations cancelled/team archived/accounts disabled/sessions revoked; no
+  delivery worker/provider send or existing chapter record change.
+- Catalog: 154 unverified cases. Announcement mutation recovery and full
+  role/device/manual/visual/provider/hosted acceptance remain open. See
+  `INVITATION_MUTATION_RECOVERY.md`; full PRD remains open.
+- Types/lint (zero errors/25 warnings), build/budgets/secrets/traceability pass.
+  All 78 targeted production-build invitation/child-read/team-review/shared-
+  workspace checks pass across six pinned profiles; captures remain unapproved.
+
 ### Independent invitation and announcement reads — 2026-11-05
 
 - Child reads now retain timestamped matching rows/drafts through temporary

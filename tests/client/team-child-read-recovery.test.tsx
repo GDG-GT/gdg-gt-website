@@ -312,6 +312,13 @@ describe.each(["invitations", "announcements"] as const)(
         });
       fireEvent.submit(input.closest("form")!);
       fireEvent.submit(input.closest("form")!);
+      if (kind === "invitations") {
+        const confirm = screen.getByRole("button", {
+          name: "Confirm reviewed invitation change",
+        });
+        fireEvent.click(confirm);
+        fireEvent.click(confirm);
+      }
       expect(mutationCalls()).toHaveLength(1);
       view.rerender(panel(kind, "fictional-replacement"));
       expect(signal?.aborted).toBe(true);

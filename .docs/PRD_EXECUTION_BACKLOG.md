@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-05): the latest module checkpoint is
-`TEAM_CHILD_READ_RECOVERY.md`; completed recovery checkpoints include tasks,
+`INVITATION_MUTATION_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -59,6 +59,10 @@ full acceptance remain open.
 Independent invitation/announcement reads and stale-capability/revision navigation
 are also closed locally (`TEAM_CHILD_READ_RECOVERY.md`); complete atomic child
 mutation/uncertain-write/consequence recovery remains open.
+Invitation mutation recovery is now also closed locally
+(`INVITATION_MUTATION_RECOVERY.md`), including atomic create/resend/revoke replay
+without duplicate email jobs or token rotation. Announcement mutation recovery
+and full supported-role/device/manual/visual/provider/hosted acceptance remain open.
 
 Additional requests on 2026-10-21 are implemented locally: community directory
 (`/admin/members`) CSV import/export and notification Mark all read → Dismiss all.
@@ -178,11 +182,11 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is 63.58% lines/63.44% branches at the Team-child-read checkpoint,
-  below the global 70% gate; 1,440 tests pass, not a
+  coverage is 63.88% lines/63.79% branches at the invitation-write checkpoint,
+  below the global 70% gate; 1,470 tests pass, not a
   percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 153 reviewed logical test cases with
+  All 146 numbered requirements now map into 154 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.
@@ -226,7 +230,8 @@ Their manual/hosted/visual acceptance remains open.
 
 ## Next implementation checkpoint
 
-Complete remaining Forms/runtime/navigation and quality/coverage/device
+Complete announcement mutation and event-mail recovery, then the remaining
+Forms/runtime/navigation and quality/coverage/device
 acceptance and overall coverage beyond the now-passing 17 critical-file gates.
 Preserve the read-only Git reference and historical SQL for retired clients
 (`LEGACY_CLIENT_RETIREMENT.md`), and keep user edits intact. Track implementation separately from verified

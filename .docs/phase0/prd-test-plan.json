@@ -743,6 +743,36 @@
       ]
     },
     {
+      "id": "TEAM-TEST-009",
+      "requirements": [
+        "TEAM-002",
+        "TEAM-003",
+        "TEAM-004",
+        "TEAM-005",
+        "TEAM-006"
+      ],
+      "scope": "Current-authority atomic invitation create/resend/revoke receipts, exact recipient/consequence reviews and bounded fresh-proof recovery without duplicate mail or token rotation",
+      "automated": [
+        "tests/client/invitation-mutation-recovery.test.tsx",
+        "tests/server/invitation-mutation-recovery.test.mjs",
+        "database/tests/115_invitation_mutation_replay.sql",
+        "scripts/test-local-invitation-mutation-recovery.mjs",
+        "tests/browser/invitation-review.spec.ts"
+      ],
+      "remaining": [
+        "Complete announcement mutation recovery and full supported-role/device/manual/visual/provider/hosted invitation acceptance remain open; live probe does not invoke a delivery worker",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24",
+        "28.3",
+        "28.4",
+        "31.2"
+      ]
+    },
+    {
       "id": "TEAM-TEST-001",
       "requirements": [
         "TEAM-001"

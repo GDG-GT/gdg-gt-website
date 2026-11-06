@@ -12,6 +12,12 @@ import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import ScrollableTable from "@/ui/ScrollableTable";
 import TeamReadFeedback from "./TeamReadFeedback";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Badge, Button, EmptyState, Field } from "../primitives";
 type Invitation = {
   id: string;
@@ -28,6 +34,17 @@ type Listing = {
   total: number;
   actorId: string;
   canInviteOfficers: boolean;
+};
+type InviteIntent = {
+  key: string;
+  createdAt: number;
+  path: string;
+  body: Record<string, unknown>;
+  action: "create" | "resend" | "revoke";
+  email: string;
+  role: string;
+  id?: string;
+  consequence: string;
 };
 export default function TeamInvitations({
   teamId,
@@ -55,11 +72,20 @@ function TeamInvitationsContent({
     [email, setEmail] = useState(""),
     [role, setRole] = useState("member"),
     [password, setPassword] = useState(""),
+    [review, setReview] = useState<InviteIntent>(),
+    [uncertain, setUncertain] = useState<InviteIntent>(),
+    [abandon, setAbandon] = useState(false),
+    [conflict, setConflict] = useState(false),
+    [checked, setChecked] = useState<{ at: string; rows: Invitation[] }>(),
+    [passwordError, setPasswordError] = useState(""),
     [pending, setPending] = useState<{
       invite: Invitation;
       action: "resend" | "revoke";
     } | null>(null);
-  const heading = useRef<HTMLHeadingElement>(null),
+  const opener = useRef<HTMLElement>(),
+    receipt = useRef<HTMLParagraphElement>(null),
+    access = useRef<HTMLButtonElement>(null),
+    heading = useRef<HTMLHeadingElement>(null),
     panel = useRef<HTMLElement>(null),
     retrying = useRef(false);
   const safety = useNavigationSafety(),
@@ -74,7 +100,7 @@ function TeamInvitationsContent({
     blocked = denied || read.denied,
     ready =
       !disabled && isOnline && !!data && !loading && !read.error && !blocked,
-    dirty = !!email || !!password || !!pending,
+    dirty = !!email || !!password || !!pending || !!uncertain,
     stale =
       !!pending &&
       !data?.items.some(
@@ -99,7 +125,7 @@ function TeamInvitationsContent({
       panel.current?.focus();
     }
   }, [loading]);
-  useDraftGuard(!!email || !!password || !!pending, {
+  useDraftGuard(dirty, {
     busy,
     label: "Team invitation or confirmation",
   });
@@ -114,17 +140,30 @@ function TeamInvitationsContent({
     setPending(null);
     setError("");
     setNotice("");
+    setReview(undefined);
+    setUncertain(undefined);
+    setChecked(undefined);
+    setAbandon(false);
+    setConflict(false);
+    setPasswordError("");
     setDenied(true);
   }, [cancel, clearRead]);
   useEffect(() => {
     if (read.denied) clear();
   }, [read.denied, clear]);
   useEffect(() => {
+    if (blocked) access.current?.focus();
+  }, [blocked]);
+  useEffect(() => {
     window.addEventListener("gdg:session-cleared", clear);
     return () => window.removeEventListener("gdg:session-cleared", clear);
   }, [clear]);
   const discard = (action: () => void) => {
     if (mutation.pending.current) return;
+    if (uncertain) {
+      setAbandon(true);
+      return;
+    }
     if (dirty && safety) safety.request(action);
     else action();
   };
@@ -132,46 +171,107 @@ function TeamInvitationsContent({
   useEffect(() => {
     if (pendingKey) heading.current?.focus();
   }, [pendingKey]);
-  async function submit(event: FormEvent) {
+  function submit(event: FormEvent) {
     event.preventDefault();
-    if (!ready || stale || !allowedRole || !allowedPending) return;
+    if (
+      !ready ||
+      stale ||
+      !allowedRole ||
+      !allowedPending ||
+      uncertain ||
+      review ||
+      conflict ||
+      mutation.pending.current
+    )
+      return;
+    const action = pending?.action || "create",
+      target = pending?.invite.email || email.trim().toLowerCase();
+    opener.current =
+      ((event.nativeEvent as SubmitEvent).submitter as HTMLElement) ||
+      undefined;
+    setError("");
+    setPasswordError("");
+    setReview({
+      key: crypto.randomUUID(),
+      createdAt: Date.now(),
+      path:
+        `/admin/teams/${teamId}/invitations` +
+        (pending ? "/" + pending.invite.id : ""),
+      body: pending
+        ? { action, revision: pending.invite.revision }
+        : { email: target, role },
+      action,
+      email: target,
+      role: pending?.invite.role || role,
+      id: pending?.invite.id,
+      consequence:
+        action === "create"
+          ? "Queue a private, email-bound invitation valid for seven days. An existing pending invitation keeps its current role and link. This does not change an existing account’s password or chapter role."
+          : action === "resend"
+            ? "Rotate this recipient’s private link and restart its seven-day expiry. The previous link stops working. A private email is queued; resending is limited to once per minute."
+            : "Revoke this recipient’s invitation immediately. Its link stops working; the invitation history and any existing account or membership remain.",
+    });
+  }
+  async function perform(intent: InviteIntent, replay = false) {
+    if (
+      replay
+        ? !isOnline || disabled || !checked
+        : !ready ||
+          stale ||
+          !allowedRole ||
+          !allowedPending ||
+          !!uncertain ||
+          conflict
+    )
+      return;
+    if (Date.now() - intent.createdAt >= 47 * 60 * 60 * 1000) {
+      setError(
+        "The safe retry window ended. Review abandoning recovery, inspect saved invitations and start a new action if needed.",
+      );
+      return;
+    }
+    if (!password) {
+      setPasswordError(
+        "Enter your current password to confirm this operation.",
+      );
+      return;
+    }
     const controller = mutation.begin();
     if (!controller) return;
     setError("");
     setNotice("");
+    setPasswordError("");
     const secret = password;
     setPassword("");
     try {
-      await api(
-        `/admin/teams/${teamId}/invitations` +
-          (pending ? "/" + pending.invite.id : ""),
-        {
-          method: "POST",
-          protected: true,
-          signal: controller.signal,
-          body: pending
-            ? {
-                currentPassword: secret,
-                action: pending.action,
-                revision: pending.invite.revision,
-              }
-            : { currentPassword: secret, email, role },
-        },
-      );
+      const result = await api<{ record: Invitation }>(intent.path, {
+        method: "POST",
+        protected: true,
+        signal: controller.signal,
+        idempotencyKey: intent.key,
+        body: { ...intent.body, currentPassword: secret },
+      });
       if (!mutation.current(controller)) return;
       setNotice(
-        pending
-          ? pending.action === "revoke"
-            ? "Invitation revoked. Its link can no longer be used."
-            : "Invitation resent with a new link. The previous link is invalid."
-          : "Invitation saved. A new invitation queues a private email; an already-pending invitation is not duplicated.",
+        `Invitation change confirmed by the server for ${result.record.email}. Current state: ${result.record.status}; team role: ${result.record.role.replace(/_/g, " ")}.`,
       );
+      setReview(undefined);
+      setUncertain(undefined);
+      setChecked(undefined);
+      setConflict(false);
       setPending(null);
       setEmail("");
       setRole("member");
       setRefresh((v) => v + 1);
     } catch (e) {
       if (!mutation.current(controller)) return;
+      if (
+        e instanceof ApiFailure &&
+        e.code === "PASSWORD_CONFIRMATION_FAILED"
+      ) {
+        setPasswordError(e.message);
+        return;
+      }
       if (
         e instanceof ApiFailure &&
         [401, 403, 404].includes(e.status) &&
@@ -183,24 +283,153 @@ function TeamInvitationsContent({
       setError(
         e instanceof Error ? e.message : "The invitation could not be saved.",
       );
+      if (!(e instanceof ApiFailure) || e.status >= 500) {
+        setUncertain(intent);
+        setChecked(undefined);
+      } else if (e.status === 409) {
+        setConflict(true);
+        setReview(undefined);
+        setChecked(undefined);
+      }
     } finally {
       mutation.finish(controller);
     }
   }
+  async function recheck() {
+    const intent = uncertain || review;
+    if (!intent || !isOnline || disabled) return;
+    const controller = mutation.begin();
+    if (!controller) return;
+    setError("");
+    setChecked(undefined);
+    try {
+      const result = await api<Listing | { record: Invitation }>(
+        `/admin/teams/${teamId}/invitations` +
+          (intent.id
+            ? "/" + intent.id
+            : "?email=" + encodeURIComponent(intent.email)),
+        { signal: controller.signal },
+      );
+      if (!mutation.current(controller)) return;
+      setChecked({
+        at: new Date().toISOString(),
+        rows: "record" in result ? [result.record] : result.items,
+      });
+      setRefresh((v) => v + 1);
+    } catch (e) {
+      if (!mutation.current(controller)) return;
+      if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
+        clear();
+        return;
+      }
+      setError(
+        e instanceof Error
+          ? e.message
+          : "Saved invitations could not be rechecked.",
+      );
+    } finally {
+      mutation.finish(controller);
+    }
+  }
+  const recovery = () => (
+    <section className="gt-form" aria-label="Unconfirmed invitation recovery">
+      <p>
+        The original operation may already have completed. Recheck saved values,
+        then explicitly retry the identical operation with a fresh password.
+        Rechecking never sends an invitation.
+      </p>
+      <Button
+        type="button"
+        disabled={busy || !isOnline || disabled}
+        onClick={recheck}
+      >
+        Recheck saved invitation values
+      </Button>
+      {checked && (
+        <details>
+          <summary>Inspect current saved invitation values</summary>
+          <p>
+            Read at{" "}
+            <time dateTime={checked.at}>
+              {new Date(checked.at).toLocaleString()}
+            </time>
+          </p>
+          {checked.rows.length ? (
+            <ul>
+              {checked.rows.map((row) => (
+                <li key={row.id}>
+                  {row.email} · {row.role.replace(/_/g, " ")} · {row.status} ·
+                  revision {row.revision}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>
+              No matching invitation was returned by the current authorized
+              read.
+            </p>
+          )}
+        </details>
+      )}
+      <Field label="Current password for retry" required>
+        <input
+          type="password"
+          maxLength={128}
+          autoComplete="current-password"
+          disabled={busy}
+          value={password}
+          aria-invalid={!!passwordError}
+          aria-describedby={passwordError ? "invite-retry-error" : undefined}
+          onChange={(e) => {
+            if (!mutation.pending.current) {
+              setPassword(e.target.value);
+              setPasswordError("");
+            }
+          }}
+        />
+      </Field>
+      {passwordError && (
+        <p id="invite-retry-error" role="alert">
+          {passwordError}
+        </p>
+      )}
+      <Button
+        type="button"
+        disabled={busy || !isOnline || disabled || !checked || !password}
+        onClick={() => uncertain && perform(uncertain, true)}
+      >
+        Retry original invitation operation
+      </Button>
+      <Button
+        type="button"
+        variant="ghost"
+        disabled={busy}
+        onClick={(event) => {
+          opener.current = event.currentTarget;
+          setAbandon(true);
+        }}
+      >
+        Review abandoning invitation recovery
+      </Button>
+    </section>
+  );
   if (blocked)
     return (
       <EmptyState title="Invitation access unavailable">
         Private rows and unsent input have been cleared.
-        <Button
+        <button
+          ref={access}
+          className="gt-button gt-button-primary"
           type="button"
           disabled={!isOnline}
           onClick={() => {
+            retrying.current = true;
             setDenied(false);
             setRefresh((v) => v + 1);
           }}
         >
           Recheck invitation access
-        </Button>
+        </button>
       </EmptyState>
     );
   return (
@@ -222,12 +451,161 @@ function TeamInvitationsContent({
           busy={busy}
           retry={reload}
         />
-        {error && (
+        {error && !review && !abandon && (
           <p role="alert" className="gt-form-error">
             {error}
           </p>
         )}
-        {notice && <p role="status">{notice}</p>}
+        {notice && (
+          <p role="status" ref={receipt} tabIndex={-1}>
+            {notice}
+          </p>
+        )}
+        {!review && uncertain && recovery()}
+        {conflict && (
+          <p role="alert">
+            The invitation changed before this operation was accepted. Reload
+            invitations, then review closing the stale action before choosing
+            current values.
+          </p>
+        )}
+        <Dialog
+          open={!!review || abandon}
+          onOpenChange={(open) => {
+            if (!open && !mutation.pending.current) {
+              if (abandon) setAbandon(false);
+              else setReview(undefined);
+            }
+          }}
+        >
+          <DialogContent
+            className={`max-h-[calc(100dvh-2rem)] overflow-y-auto ${busy ? "[&>button]:hidden" : ""}`}
+            onEscapeKeyDown={(event) => {
+              if (mutation.pending.current) event.preventDefault();
+            }}
+            onPointerDownOutside={(event) => {
+              if (mutation.pending.current) event.preventDefault();
+            }}
+            onCloseAutoFocus={(event) => {
+              event.preventDefault();
+              if (notice) receipt.current?.focus();
+              else if (
+                opener.current?.isConnected &&
+                !opener.current.matches(":disabled")
+              )
+                opener.current.focus();
+              else panel.current?.focus();
+            }}
+          >
+            <DialogTitle>
+              {abandon
+                ? "Abandon unconfirmed invitation recovery?"
+                : `Review invitation ${review?.action}`}
+            </DialogTitle>
+            <DialogDescription>
+              {abandon
+                ? `${uncertain?.email}: the original operation may already have completed. Discard retained input and retry identity, then inspect saved invitations before starting another change. No accepted invitation change is reversed.`
+                : review?.consequence}
+            </DialogDescription>
+            {error && <p role="alert">{error}</p>}
+            {abandon ? (
+              <div className="gt-inline-actions">
+                <Button
+                  variant="danger"
+                  disabled={busy}
+                  onClick={() => {
+                    setReview(undefined);
+                    setUncertain(undefined);
+                    setAbandon(false);
+                    setChecked(undefined);
+                    setPending(null);
+                    setEmail("");
+                    setRole("member");
+                    setPassword("");
+                    setPasswordError("");
+                    setConflict(false);
+                    setError("");
+                    setRefresh((v) => v + 1);
+                  }}
+                >
+                  Abandon invitation recovery
+                </Button>
+                <Button
+                  variant="secondary"
+                  disabled={busy}
+                  onClick={() => setAbandon(false)}
+                >
+                  Keep recovery
+                </Button>
+              </div>
+            ) : (
+              <>
+                <p>Recipient: {review?.email}</p>
+                <p>Team membership role: {review?.role.replace(/_/g, " ")}</p>
+                {(stale || !allowedPending || !allowedRole || !ready) &&
+                  !uncertain && (
+                    <p role="alert">
+                      Current invitation access or values changed. Close this
+                      review and recheck the current invitation before
+                      continuing.
+                    </p>
+                  )}
+                {uncertain ? (
+                  recovery()
+                ) : (
+                  <>
+                    <Field label="Confirm your password again" required>
+                      <input
+                        type="password"
+                        maxLength={128}
+                        autoComplete="current-password"
+                        disabled={busy}
+                        value={password}
+                        aria-invalid={!!passwordError}
+                        aria-describedby={
+                          passwordError ? "invite-proof-error" : undefined
+                        }
+                        onChange={(event) => {
+                          if (!mutation.pending.current) {
+                            setPassword(event.target.value);
+                            setPasswordError("");
+                          }
+                        }}
+                      />
+                    </Field>
+                    {passwordError && (
+                      <p id="invite-proof-error" role="alert">
+                        {passwordError}
+                      </p>
+                    )}
+                    <Button
+                      disabled={
+                        busy ||
+                        !ready ||
+                        stale ||
+                        !allowedPending ||
+                        !allowedRole ||
+                        !password
+                      }
+                      onClick={() => review && perform(review)}
+                    >
+                      Confirm reviewed invitation change
+                    </Button>
+                  </>
+                )}
+                <Button
+                  variant="secondary"
+                  disabled={busy}
+                  onClick={() => setReview(undefined)}
+                >
+                  {uncertain
+                    ? "Continue recovery outside review"
+                    : "Keep editing"}
+                </Button>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
         {(stale || !allowedPending) && (
           <p role="alert">
             This invitation changed. Review canceling this action, then choose a
@@ -240,7 +618,15 @@ function TeamInvitationsContent({
         >
           <fieldset
             className="gt-form gt-team-fields"
-            disabled={!ready || busy || stale || !allowedPending}
+            disabled={
+              !ready ||
+              busy ||
+              stale ||
+              !allowedPending ||
+              !!review ||
+              !!uncertain ||
+              conflict
+            }
           >
             <h3 ref={heading} tabIndex={-1}>
               {pending
@@ -301,36 +687,49 @@ function TeamInvitationsContent({
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Field>
-            <div className="gt-button-row">
-              <Button
-                disabled={busy || !ready || stale || !allowedRole}
-                type="submit"
-              >
-                {busy
-                  ? "Saving…"
-                  : pending
-                    ? "Confirm invitation change"
-                    : "Queue private invitation"}
-              </Button>
-              {pending && (
-                <Button
-                  variant="secondary"
-                  type="button"
-                  disabled={busy}
-                  onClick={() =>
-                    discard(() => {
-                      setPending(null);
-                      setPassword("");
-                    })
-                  }
-                >
-                  Cancel
-                </Button>
-              )}
-            </div>
           </fieldset>
+          <div className="gt-button-row">
+            <Button
+              disabled={
+                busy ||
+                !ready ||
+                stale ||
+                !allowedRole ||
+                !allowedPending ||
+                !!review ||
+                !!uncertain ||
+                conflict
+              }
+              type="submit"
+            >
+              {busy
+                ? "Saving…"
+                : pending
+                  ? "Confirm invitation change"
+                  : "Queue private invitation"}
+            </Button>
+            {(dirty || conflict) && (
+              <Button
+                variant="secondary"
+                type="button"
+                disabled={busy}
+                onClick={() =>
+                  discard(() => {
+                    setPending(null);
+                    setPassword("");
+                    setEmail("");
+                    setRole("member");
+                    setConflict(false);
+                    setPasswordError("");
+                  })
+                }
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
         </form>
-        {(stale || !allowedPending) && (
+        {(stale || !allowedPending || conflict) && (
           <Button
             type="button"
             variant="secondary"
@@ -339,6 +738,10 @@ function TeamInvitationsContent({
               discard(() => {
                 setPending(null);
                 setPassword("");
+                setEmail("");
+                setRole("member");
+                setConflict(false);
+                setPasswordError("");
               })
             }
           >
@@ -422,6 +825,23 @@ function TeamInvitationsContent({
             <EmptyState title="No invitations recorded">
               Add a recipient above. Copyable public invitation links are not
               created.
+              {page > 1 && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={busy || !ready}
+                  onClick={() =>
+                    discard(() => {
+                      setPage(1);
+                      setEmail("");
+                      setPassword("");
+                      setPending(null);
+                    })
+                  }
+                >
+                  Return to first invitation page
+                </Button>
+              )}
             </EmptyState>
           )
         )}
