@@ -32,6 +32,7 @@ export type PublicFixture = {
   mailApprovals: { key: string; fingerprint: string }[];
   mailCommitted: number;
   formBuilder: boolean;
+  formLibrary: boolean;
   failFormSave: boolean;
   failFormRead: boolean;
   denyFormRead: boolean;
@@ -184,6 +185,7 @@ export const test = base.extend<{ fixture: PublicFixture }>({
         mailApprovals: [],
         mailCommitted: 0,
         formBuilder: false,
+        formLibrary: false,
         failFormSave: false,
         failFormRead: false,
         denyFormRead: false,
@@ -698,6 +700,27 @@ export const test = base.extend<{ fixture: PublicFixture }>({
             return;
           }
           if (path === "/admin/forms" || path === "/admin/forms/filters") {
+            if (state.formLibrary && path === "/admin/forms") {
+              if (state.failFormRead || state.denyFormRead) {
+                await reply(state.denyFormRead ? 403 : 503, null);
+                return;
+              }
+              await reply(200, {
+                ...empty,
+                items: [
+                  {
+                    ...builderForm,
+                    canDuplicate: true,
+                    ownerId: fictionalUser.id,
+                    ownerLabel: fictionalUser.display_name,
+                    team: "Chapter",
+                  },
+                ],
+                total: 1,
+                canCreate: true,
+              });
+              return;
+            }
             await reply(200, { ...empty, canCreate: true });
             return;
           }

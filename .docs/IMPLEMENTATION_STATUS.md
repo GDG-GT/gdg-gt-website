@@ -8,6 +8,33 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Form library private read recovery — 2026-11-05
+
+- Timestamped matching inventory survives temporary failure; actions pause on
+  failed/loading/offline reads. First failure remains distinct from empty data.
+  Denial clears rows, reviews, proposed titles and private filters, remaining
+  blocked across filter clearing until explicit access retry. Scoped reload/
+  cancellation and focus guards reject obsolete account/filter/unmounted work.
+- Opening creation checks current authority. Proposed titles survive temporary
+  failure and remain navigation guarded after closing the dialog; a confirmed
+  creation clears its draft and authorizes its own editor navigation. Inventory
+  horizontal scrolling is named/keyboard focusable; read feedback spacing refined.
+- All 61 focused cases across four files pass (17 new cases). Both owned live
+  API/DB/desktop-mobile runs pass 16 checks, with measured populated axe, paused
+  writes, retained input, denial clearing and unchanged form revision/audit.
+  Browser writes/external requests blocked; inventory search forced to only the
+  owned fictional form. Forms archived/accounts disabled/sessions revoked. No
+  publication/response/provider/worker/production change. Catalog: 159 unverified
+  cases. See `FORM_LIBRARY_READ_RECOVERY.md`; atomic library writes, response/
+  integration/runtime recovery and full quality/device/manual/hosted acceptance
+  remain open.
+
+- All 1,626 tests/171 files pass. Global coverage still fails 70%: 65.52% lines,
+  65.31% branches, 63.73% statements and 56.66% functions; all 17 critical branch
+  gates pass. Build/types/lint (25 existing warnings), byte budgets, secret scan
+  and traceability pass. All 54 production-browser library/shared-workspace cases
+  pass across six profiles (`phase0/form-library-read-workspace-browser.json`).
+
 ### Atomic Forms draft/publication recovery — 2026-11-05
 
 - Migration 118 adds current-session/action atomic receipts with ID/revision-only

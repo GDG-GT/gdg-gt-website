@@ -26,7 +26,10 @@ vi.mock("@/contexts/AdminContext", () => ({
     isSuperAdmin: false,
   }),
 }));
-vi.mock("@/hooks/useDraftGuard", () => ({ useDraftGuard: guard }));
+vi.mock("@/hooks/useDraftGuard", () => ({
+  useDraftGuard: guard,
+  useNavigationSafety: () => ({ allow: (run: () => void) => run() }),
+}));
 let form: PreviewForm;
 beforeEach(() => {
   form = {

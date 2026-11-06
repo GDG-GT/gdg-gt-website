@@ -358,6 +358,14 @@ add(
   ["Library creation/duplication/availability replay, complete response/runtime/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; owned probe publishes internal fictional forms without responses or provider sends"],
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
+add(
+  "FORM-TEST-030",
+  "FORM-001 FORM-002 FORM-003",
+  "Scoped timestamped form-library read recovery, retained creation proposals, denial clearing without automatic filter loops, paused actions and focused read-only retry",
+  ["tests/client/form-library-read-recovery.test.tsx", "tests/client/form-data-recovery.test.tsx", "tests/client/form-availability-review.test.tsx", local("form-library-read"), "tests/browser/form-library-reads.spec.ts"],
+  ["Atomic library creation/duplication/availability replay, complete response/runtime/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; owned live probe performs no browser writes"],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
 const teams = [
   [
     "TEAM-001",

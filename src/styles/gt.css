@@ -4513,6 +4513,17 @@ fieldset.gt-event-fields {
   font-size: 0.875rem;
   line-height: 1.6;
 }
+.gt-form-library-read-status {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  margin-block: 12px 20px;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.gt-form-library-read-status > p {
+  margin: 0;
+}
 .gt-builder-write-recovery {
   margin: 20px clamp(16px, 3vw, 25px);
   padding-block: 16px;

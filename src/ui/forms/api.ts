@@ -150,55 +150,147 @@ export const formsApi = {
   },
 };
 export function useFormLibrary(params: string, enabled = true) {
-  const { currentAdmin } = useAdmin();
-  const scope = JSON.stringify([
-    currentAdmin?.id,
-    currentAdmin?.role,
-    params,
-    enabled,
-  ]);
-  const [snapshot, setSnapshot] = useState<{ scope: string; data: Library }>(),
-    [request, setRequest] = useState({ scope, error: "", loading: true }),
-    [refresh, setRefresh] = useState(0);
-  useEffect(() => {
-    const controller = new AbortController();
-    setRequest({ scope, loading: true, error: "" });
+  const { currentAdmin } = useAdmin(),
+    actorId = currentAdmin?.id,
+    authorityScope = JSON.stringify([actorId, currentAdmin?.role]),
+    scope = JSON.stringify([
+      currentAdmin?.id,
+      currentAdmin?.role,
+      params,
+      enabled,
+    ]);
+  const [snapshot, setSnapshot] = useState<{
+      scope: string;
+      data: Library;
+      at: string;
+    }>(),
+    [request, setRequest] = useState({
+      scope,
+      error: "",
+      loading: enabled,
+      denied: false,
+    });
+  const activeRequest = useRef<AbortController>(),
+    activeScope = useRef(scope),
+    mounted = useRef(true),
+    blockedScope = useRef<string>();
+  activeScope.current = scope;
+  const clear = useCallback(() => {
+    if (!mounted.current || activeScope.current !== scope) return;
+    activeRequest.current?.abort();
+    blockedScope.current = authorityScope;
     setSnapshot(undefined);
-    if (!enabled) {
-      setRequest({ scope, loading: false, error: "" });
-      return () => controller.abort();
-    }
-    api<Library>("/admin/forms?" + params, { signal: controller.signal })
-      .then((result) => {
-        if (!controller.signal.aborted) setSnapshot({ scope, data: result });
-      })
-      .catch((e) => {
-        if (!controller.signal.aborted)
+    setRequest({
+      scope,
+      error:
+        "Private form library data has been cleared. Recheck current access before continuing.",
+      loading: false,
+      denied: true,
+    });
+  }, [scope, authorityScope]);
+  const load = useCallback(
+    async (explicit = true) => {
+      if (!mounted.current || activeScope.current !== scope) return;
+      activeRequest.current?.abort();
+      if (!enabled || !actorId) return;
+      if (!explicit && blockedScope.current === authorityScope) {
+        setRequest({
+          scope,
+          error:
+            "Private form library data has been cleared. Recheck current access before continuing.",
+          loading: false,
+          denied: true,
+        });
+        return;
+      }
+      blockedScope.current = undefined;
+      const controller = new AbortController();
+      activeRequest.current = controller;
+      setRequest({ scope, error: "", loading: true, denied: false });
+      try {
+        const data = await api<Library>("/admin/forms?" + params, {
+          signal: controller.signal,
+        });
+        if (
+          !controller.signal.aborted &&
+          mounted.current &&
+          activeScope.current === scope
+        )
+          setSnapshot({ scope, data, at: new Date().toISOString() });
+      } catch (e) {
+        if (
+          !controller.signal.aborted &&
+          mounted.current &&
+          activeScope.current === scope
+        ) {
+          const denied =
+            e instanceof ApiFailure && [401, 403, 404].includes(e.status);
+          if (denied) {
+            setSnapshot(undefined);
+            blockedScope.current = authorityScope;
+          }
           setRequest({
             scope,
             loading: false,
+            denied,
             error:
               e instanceof Error
                 ? e.message
                 : "The form library could not load. Try again.",
           });
-      })
-      .finally(() => {
-        if (!controller.signal.aborted)
-          setRequest((previous) => ({ ...previous, loading: false }));
-      });
-    return () => controller.abort();
-  }, [params, enabled, refresh, scope]);
-  const data =
-    snapshot?.scope === scope && enabled
-      ? snapshot.data
-      : { items: [], total: 0, page: 1, pageSize: 30 };
+        }
+      } finally {
+        if (
+          !controller.signal.aborted &&
+          mounted.current &&
+          activeScope.current === scope
+        )
+          setRequest((previous) =>
+            previous.scope === scope
+              ? { ...previous, loading: false }
+              : previous,
+          );
+      }
+    },
+    [scope, params, enabled, actorId, authorityScope],
+  );
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      activeRequest.current?.abort();
+    };
+  }, []);
+  useEffect(() => {
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, [clear]);
+  useEffect(() => {
+    void load(false);
+    return () => activeRequest.current?.abort();
+  }, [load]);
+  const matching = enabled && snapshot?.scope === scope ? snapshot : undefined,
+    data: Library = matching?.data || {
+      items: [],
+      total: 0,
+      page: 1,
+      pageSize: 30,
+    },
+    current = request.scope === scope,
+    loading = enabled && !!currentAdmin && (!current || request.loading),
+    error = current ? request.error : "",
+    denied =
+      (current && request.denied) || blockedScope.current === authorityScope;
   return {
     ...data,
-    canCreate: !!data.canCreate,
-    error: request.scope === scope ? request.error : "",
-    loading: enabled && (request.scope !== scope || request.loading),
-    reload: () => setRefresh((v) => v + 1),
+    scope,
+    at: matching?.at,
+    canCreate: !!data.canCreate && !loading && !error && !denied,
+    error,
+    denied,
+    loading,
+    clear,
+    reload: load,
   };
 }
 export function useServerForm(id: string | undefined) {

@@ -215,7 +215,9 @@ describe("Protected Forms read scope and recovery", () => {
       expect(hook.result.current.error).toBe("Fictional library read failure"),
     );
     expect(hook.result.current.items).toEqual([]);
-    act(() => hook.result.current.reload());
+    await act(async () => {
+      await hook.result.current.reload();
+    });
     await waitFor(() => expect(hook.result.current.items).toHaveLength(1));
     expect(hook.result.current.error).toBe("");
   });
@@ -409,8 +411,9 @@ describe("Response workspace read recovery", () => {
     expect(new Date(fromControl.value).toISOString()).toBe(from);
     expect(
       new Date(
-        (screen.getByLabelText("To (your local time)") as HTMLInputElement)
-          .value,
+        (
+          screen.getByLabelText("To (your local time)") as HTMLInputElement
+        ).value,
       ).toISOString(),
     ).toBe("2026-10-26T13:45:00.000Z");
     expect((screen.getByLabelText("Status") as HTMLSelectElement).value).toBe(
@@ -529,8 +532,9 @@ describe("Response workspace read recovery", () => {
     );
     expect(
       new Date(
-        (screen.getByLabelText("From (your local time)") as HTMLInputElement)
-          .value,
+        (
+          screen.getByLabelText("From (your local time)") as HTMLInputElement
+        ).value,
       ).toISOString(),
     ).toBe("2026-10-26T12:00:00.000Z");
     expect(document.activeElement).toBe(

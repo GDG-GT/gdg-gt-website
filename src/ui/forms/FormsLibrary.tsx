@@ -32,7 +32,7 @@ import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import { createTemplate, type PreviewForm, type FormTemplate } from "./store";
 import { formsApi, useFormLibrary } from "./api";
 import { useAdmin } from "@/contexts/AdminContext";
-import { useDraftGuard } from "@/hooks/useDraftGuard";
+import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import FormDeletionReview from "./FormDeletionReview";
 import FormLibraryScopeFilter, {
@@ -64,6 +64,7 @@ function FormsLibraryWorkspace() {
     };
   }, []);
   const navigate = useNavigate();
+  const navigationSafety = useNavigationSafety();
   const { isSuperAdmin } = useAdmin();
   const [deletion, setDeletion] = useState<PreviewForm | null>(null);
   const [review, setReview] = useState<{
@@ -123,8 +124,45 @@ function FormsLibraryWorkspace() {
       !dateError,
     ),
     forms = library.items;
+  const paused =
+    library.loading ||
+    !!library.error ||
+    library.denied ||
+    !isOnline ||
+    dateError;
+  const currentReadScope = useRef(library.scope);
+  currentReadScope.current = library.scope;
+  const recheckLibrary = async () => {
+    const scope = library.scope;
+    await library.reload();
+    if (mounted.current && currentReadScope.current === scope)
+      (
+        document.getElementById("form-library-read-status") ||
+        document.getElementById("workspace-content")
+      )?.focus();
+  };
+  useEffect(() => {
+    if (!library.denied) return;
+    setReview(undefined);
+    setDeletion(null);
+    setShare(null);
+    setCreateOpen(false);
+    setTitle("");
+    setError("");
+    setNotice("");
+    setCopied(false);
+    setOwner(undefined);
+    setTeam(undefined);
+    setQuery("");
+    setStatus("All states");
+    setTemplate("");
+    setUpdatedFrom("");
+    setUpdatedTo("");
+    setPage(1);
+    setFilterEpoch((value) => value + 1);
+  }, [library.denied]);
   const work = async (action: () => Promise<unknown>) => {
-    if (operationPending.current) return;
+    if (operationPending.current || paused) return;
     operationPending.current = true;
     setBusy(true);
     setError("");
@@ -139,7 +177,10 @@ function FormsLibraryWorkspace() {
       if (mounted.current) setBusy(false);
     }
   };
-  useDraftGuard(!!review, { busy, label: "Form availability review" });
+  useDraftGuard(!!review || !!title.trim(), {
+    busy,
+    label: review ? "Form availability review" : "New form draft",
+  });
   const reviewCurrent =
       review && forms.find((form) => form.id === review.form.id),
     reviewChanged =
@@ -166,7 +207,7 @@ function FormsLibraryWorkspace() {
     form: PreviewForm,
     action: NonNullable<typeof review>["action"],
   ) => {
-    if (operationPending.current) return;
+    if (operationPending.current || paused) return;
     setError("");
     setNotice("");
     setReview({ form, action });
@@ -195,10 +236,40 @@ function FormsLibraryWorkspace() {
     if (!library.canCreate) return;
     return work(async () => {
       const form = await formsApi.create(createTemplate(name, kind));
-      if (mounted.current) navigate(`/admin/forms/${form.id}/edit`);
+      if (mounted.current) {
+        setTitle("");
+        setCreateOpen(false);
+        navigationSafety.allow(() => navigate(`/admin/forms/${form.id}/edit`));
+      }
     });
   };
+  const openCreate = () => {
+    if (busy || paused || !library.canCreate) return;
+    setCreateOpen(true);
+    void library.reload();
+  };
   const filtered = forms;
+  if (library.denied)
+    return (
+      <div className="gt-admin-page">
+        <h1>Forms</h1>
+        <EmptyState
+          title="Form library access needs to be rechecked"
+          action={
+            <Button
+              variant="secondary"
+              disabled={!isOnline || library.loading}
+              onClick={() => void library.reload()}
+            >
+              Recheck form library access
+            </Button>
+          }
+        >
+          {library.error} Private forms, reviews and new-form input have been
+          cleared.
+        </EmptyState>
+      </div>
+    );
   return (
     <div className="gt-admin-page">
       <div className="gt-admin-page-heading">
@@ -210,8 +281,8 @@ function FormsLibraryWorkspace() {
           <p>Build, publish, and make sense of what comes back.</p>
         </div>
         <Button
-          disabled={busy || library.loading || !library.canCreate}
-          onClick={() => setCreateOpen(true)}
+          disabled={busy || paused || !library.canCreate}
+          onClick={openCreate}
         >
           <Plus size={17} /> Create form
         </Button>
@@ -219,43 +290,84 @@ function FormsLibraryWorkspace() {
       {(error || library.error) && (
         <p role="alert" className="gt-form-error">
           {error || library.error}{" "}
-          <button onClick={library.reload}>Try again</button>
+          <button
+            disabled={busy || library.loading || !isOnline}
+            onClick={() => void recheckLibrary()}
+          >
+            Try again
+          </button>
         </p>
+      )}
+      <section
+        className="gt-form-library-read-status"
+        aria-label="Form library read status"
+      >
+        <p id="form-library-read-status" role="status" tabIndex={-1}>
+          {library.at ? (
+            <>
+              Last successful form library read:{" "}
+              <time dateTime={library.at}>
+                {new Date(library.at).toLocaleString()}
+              </time>
+              .
+              {paused
+                ? " Saved forms remain visible; writes are paused until current access is checked."
+                : " Current authorized inventory loaded."}
+            </>
+          ) : library.loading ? (
+            "Loading the current authorized form library…"
+          ) : (
+            "A successful current library read is required before changes."
+          )}
+        </p>
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={busy || library.loading || !isOnline || dateError}
+          onClick={() => void recheckLibrary()}
+        >
+          Recheck form library
+        </Button>
+      </section>
+      {!isOnline && (
+        <p role="alert">You are offline. Form library changes are paused.</p>
       )}
       {notice && <p role="status">{notice}</p>}
       {library.loading && <p role="status">Loading your forms…</p>}
-      <div className="gt-forms-stats">
-        {[
-          ["Matching forms", library.total],
-          [
-            "Open on this page",
-            forms.filter((form) => form.status === "Open").length,
-          ],
-          [
-            "Drafts on this page",
-            forms.filter((form) => form.status === "Draft").length,
-          ],
-          [
-            "Visible responses on this page",
-            forms.length &&
-            !forms.some((form) => form.actions?.includes("view_responses"))
-              ? "Restricted"
-              : forms.reduce(
-                  (sum, form) =>
-                    sum +
-                    (form.actions?.includes("view_responses")
-                      ? form.responseCount || 0
-                      : 0),
-                  0,
-                ),
-          ],
-        ].map(([label, value]) => (
-          <div key={label}>
-            <span>{label}</span>
-            <strong>{value}</strong>
-          </div>
-        ))}
-      </div>
+      {library.at && (
+        <div className="gt-forms-stats">
+          {[
+            ["Matching forms", library.total],
+            [
+              "Open on this page",
+              forms.filter((form) => form.status === "Open").length,
+            ],
+            [
+              "Drafts on this page",
+              forms.filter((form) => form.status === "Draft").length,
+            ],
+            [
+              "Visible responses on this page",
+              forms.length &&
+              !forms.some((form) => form.actions?.includes("view_responses"))
+                ? "Restricted"
+                : forms.reduce(
+                    (sum, form) =>
+                      sum +
+                      (form.actions?.includes("view_responses")
+                        ? form.responseCount || 0
+                        : 0),
+                    0,
+                  ),
+            ],
+          ].map(([label, value]) => (
+            <div key={label}>
+              <span>{label}</span>
+              <strong>{value}</strong>
+            </div>
+          ))}
+        </div>
+      )}
       <div
         className={`gt-forms-library-layout ${library.canCreate ? "" : "is-view-only"}`}
       >
@@ -406,7 +518,12 @@ function FormsLibraryWorkspace() {
             </p>
           )}
           {filtered.length ? (
-            <div className="gt-table-scroll">
+            <div
+              className="gt-table-scroll"
+              role="region"
+              aria-label="Form inventory table"
+              tabIndex={0}
+            >
               <table className="gt-table">
                 <thead>
                   <tr>
@@ -523,7 +640,7 @@ function FormsLibraryWorkspace() {
                               Share
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                              disabled={busy || !form.canDuplicate}
+                              disabled={busy || paused || !form.canDuplicate}
                               onClick={() =>
                                 work(() => formsApi.duplicate(form))
                               }
@@ -533,6 +650,8 @@ function FormsLibraryWorkspace() {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               disabled={
+                                busy ||
+                                paused ||
                                 form.status === "Archived" ||
                                 !form.versions.length ||
                                 !form.actions?.includes("publish")
@@ -549,7 +668,11 @@ function FormsLibraryWorkspace() {
                                 : "Reopen form"}
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                              disabled={!form.actions?.includes("delete")}
+                              disabled={
+                                busy ||
+                                paused ||
+                                !form.actions?.includes("delete")
+                              }
                               onClick={() =>
                                 beginReview(
                                   form,
@@ -565,7 +688,7 @@ function FormsLibraryWorkspace() {
                             </DropdownMenuItem>
                             {isSuperAdmin && form.status === "Archived" && (
                               <DropdownMenuItem
-                                disabled={busy}
+                                disabled={busy || paused}
                                 onClick={() => setDeletion(form)}
                               >
                                 Review permanent deletion…
@@ -592,9 +715,7 @@ function FormsLibraryWorkspace() {
                 hasFilters || library.canCreate ? (
                   <Button
                     variant="secondary"
-                    onClick={() =>
-                      hasFilters ? resetFilters() : setCreateOpen(true)
-                    }
+                    onClick={() => (hasFilters ? resetFilters() : openCreate())}
                   >
                     {hasFilters ? "Reset filters" : "Create a form"}
                   </Button>
@@ -638,7 +759,7 @@ function FormsLibraryWorkspace() {
             {templates.map(([name, description, kind]) => (
               <button
                 key={name}
-                disabled={busy}
+                disabled={busy || paused}
                 onClick={() => create(`${name} Form`, kind)}
               >
                 <span className="gt-template-icon">
@@ -784,7 +905,7 @@ function FormsLibraryWorkspace() {
             <Button
               variant="ghost"
               disabled={busy || library.loading || !isOnline}
-              onClick={library.reload}
+              onClick={() => void library.reload()}
             >
               Recheck form
             </Button>
@@ -797,6 +918,22 @@ function FormsLibraryWorkspace() {
           <DialogDescription>
             Give your form a name. You can change it later.
           </DialogDescription>
+          {(library.error || !isOnline) && (
+            <div role="alert">
+              <p>
+                {library.error || "You are offline. Creating a form is paused."}{" "}
+                Your proposed title remains on this page.
+              </p>
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={busy || library.loading || !isOnline}
+                onClick={() => void library.reload()}
+              >
+                Recheck form creation access
+              </Button>
+            </div>
+          )}
           <form
             className="gt-form"
             onSubmit={(event) => {
@@ -815,7 +952,10 @@ function FormsLibraryWorkspace() {
                 placeholder="For example, Workshop feedback"
               />
             </Field>
-            <Button type="submit" disabled={busy || !library.canCreate}>
+            <Button
+              type="submit"
+              disabled={busy || paused || !library.canCreate}
+            >
               <Plus size={17} /> Create form
             </Button>
           </form>
