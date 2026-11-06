@@ -891,9 +891,14 @@ const forms = [
   ],
   [
     "FORM-025",
-    "Retained identity redaction, holds, archive and reviewed permanent deletion",
+    "Retained identity redaction, atomic revision-bound response deletion/redaction receipts and recovery, holds, archive and reviewed permanent deletion",
     [
       unit("form-deletion"),
+      unit("form-response-replay"),
+      sql("121_form_response_replay"),
+      "tests/client/form-response-mutation-recovery.test.tsx",
+      "tests/browser/form-response-writes.spec.ts",
+      local("form-response-write"),
       sql("066_form_retention_holds"),
       sql("072_form_permanent_deletion"),
       local("form-privacy"),

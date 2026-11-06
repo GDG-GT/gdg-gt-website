@@ -304,11 +304,21 @@ describe("Independent private response workspace reads", () => {
       screen.getByRole("button", { name: "Open response " + row.id }),
     );
     expect(
-      screen.queryByRole("button", { name: "Delete response", exact: true }),
-    ).toBeNull();
+      (
+        screen.getByRole("button", {
+          name: "Delete response",
+          exact: true,
+        }) as HTMLButtonElement
+      ).disabled,
+    ).toBe(true);
     expect(
-      screen.queryByRole("button", { name: "Redact identity", exact: true }),
-    ).toBeNull();
+      (
+        screen.getByRole("button", {
+          name: "Redact identity",
+          exact: true,
+        }) as HTMLButtonElement
+      ).disabled,
+    ).toBe(true);
     expect(screen.getByText(/Hold status could not be checked/)).toBeTruthy();
   });
   for (const source of ["responses", "summary", "views", "holds", "form"]) {

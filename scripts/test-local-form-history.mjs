@@ -49,12 +49,12 @@ try {
   form = data(await call(`/admin/forms/${form.id}/draft`, { method: "PATCH", body: { revision: form.revision, definition } })).form;
   form = data(await call(`/admin/forms/${form.id}/publish`, { method: "POST", body: { revision: form.revision } })).form;
   check(data(await call(`${base}/0`)).fields[0].label === "Original historical name", "later publication cannot rewrite prior response labels");
-  data(await call(`/admin/forms/${form.id}/responses/${committed.responseId}`, { method: "PATCH", body: { action: "redact" } }));
+  data(await call(`/admin/forms/${form.id}/responses/${committed.responseId}`, { method: "PATCH", body: { action: "redact", revision: 2, status: "complete", redacted: false, confirmation: "REDACT" } }));
   const redacted = data(await call(`${base}/0?sensitive=true`));
   check(redacted.redacted && !JSON.stringify(redacted).includes("historical-private@example.test") && !JSON.stringify(redacted).includes("Original fictional person"), "redaction removes identity from historical snapshots too");
   const audit = await db.from("admin_actions").select("metadata").eq("target_id", committed.responseId);
   check(!audit.error && !JSON.stringify(audit.data).includes("historical-private@example.test"), "history audits contain references, not historical answers");
-  data(await call(`/admin/forms/${form.id}/responses/${committed.responseId}`, { method: "DELETE" }));
+  data(await call(`/admin/forms/${form.id}/responses/${committed.responseId}`, { method: "DELETE", body: { revision: 2, status: "redacted", redacted: true, confirmation: "DELETE" } }));
   check((await call(`${base}/0?sensitive=true`)).status === 404, "deleted response has no readable historical answers");
 } finally {
   if (form) {

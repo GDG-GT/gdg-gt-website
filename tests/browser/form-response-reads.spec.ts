@@ -191,10 +191,10 @@ test("response workspace retains independent private reads and clears denied acc
   await expect(page.getByRole("dialog")).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Delete response", exact: true }),
-  ).toHaveCount(0);
+  ).toBeDisabled();
   await expect(
     page.getByRole("button", { name: "Redact identity", exact: true }),
-  ).toHaveCount(0);
+  ).toBeDisabled();
   expect(await accessibility(page)).toEqual([]);
   await page.keyboard.press("Escape");
   failed = "";

@@ -8,6 +8,34 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Atomic response deletion/redaction recovery — 2026-11-06
+
+- Migration 121 adds reviewed respondent-edit revision/privacy/hold checks,
+  current-session atomic receipts and metadata-only read reconciliation for
+  deletion/redaction. The browser withholds cached identity/answers/history/files
+  before dispatch; uncertain outcomes retain only the frozen metadata request.
+  Explicit original retries, 47-hour expiry, duplicate latch, session/offline/
+  context cancellation, denied-state clearing and reviewed abandonment prevent
+  silent replacement or restoring erased snapshots.
+- Both 121-migration SQL suites pass (217/218 checks), both 100-client races and
+  six isolated restore checks pass. Migration confirmed applied locally without
+  a reset. All 189 focused checks pass (30 new client/27 new route cases).
+  All 40 actual API/DB/desktop-mobile checks pass, including concurrent replay,
+  both loss positions, exact retries, erasure/single audit and measured axe.
+  Three fresh internal forms/ten fictional responses and edits; metadata jobs
+  disabled/secrets cleared, forms archived/accounts disabled/sessions revoked.
+  No workers/provider sends/existing chapter or production change.
+- All 126 response-action/read/history/file/export/shared-workspace production-
+  browser cases pass across six profiles. Mobile recovery inspected; captures
+  unapproved. Strict types/lint (zero errors/25 existing warnings), byte budgets,
+  secrets and traceability pass. All 1,877 tests/180 files pass. Global coverage
+  remains below 70%: 67.49% lines, 67.20% branches, 65.77% statements and
+  58.77% functions. All 17 critical branch gates pass; no threshold or timeout
+  changed. Catalog remains 159 unverified logical cases.
+- Availability/saved-view writes, Forms access/settings/deletion/integrations/
+  runtime and complete quality/storage/device/manual/visual/hosted acceptance
+  remain open. See `FORM_RESPONSE_MUTATION_RECOVERY.md`.
+
 ### Atomic background export recovery — 2026-11-06
 
 - Migration 120 adds current-session/action/target export receipts and read-only

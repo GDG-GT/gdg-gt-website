@@ -16,6 +16,9 @@ import type { FormResponse } from "./store";
 import ResponseFileLinks from "./ResponseFileLinks";
 import ResponseExports from "./ResponseExports";
 import ResponseHistory from "./ResponseHistory";
+import ResponseActionReview, {
+  type ResponseActionState,
+} from "./ResponseActionReview";
 import PrivacyPanel from "./PrivacyPanel";
 import { responseFilterLocalTime } from "./response-filters";
 import { useNavigationSafety } from "@/hooks/useDraftGuard";
@@ -75,9 +78,14 @@ function ResponseWorkspaceContent() {
     [checked, setChecked] = useState<string[]>([]),
     [columns, setColumns] = useState<string[]>([]),
     [viewName, setViewName] = useState(""),
-    [action, setAction] = useState<"delete" | "redact">(),
-    [confirm, setConfirm] = useState(""),
     [busy, setBusy] = useState(false);
+  const [responseActionState, setResponseActionState] =
+    useState<ResponseActionState>({
+      dirty: false,
+      busy: false,
+      hideDetails: false,
+    });
+  const selectedMetadata = useRef<FormResponse>();
   const [privacyTarget, setPrivacyTarget] = useState<{ responseId?: string }>(),
     [privacyState, setPrivacyState] = useState({ dirty: false, busy: false });
   const [dateError, setDateError] = useState<"from" | "to" | "">(""),
@@ -147,8 +155,28 @@ function ResponseWorkspaceContent() {
       ready && !!holdsRead.data && !holdsRead.loading && !holdsRead.error,
     formHeld = holdsReady ? holdsRead.data?.held : undefined,
     holdError = mayReviewPrivacy && !holdsReady,
-    selected = data?.items.find((row) => row.id === selectedId),
-    setSelected = (row?: FormResponse) => setSelectedId(row?.id);
+    selected =
+      data?.items.find((row) => row.id === selectedId) ||
+      (responseActionState.hideDetails &&
+      selectedMetadata.current?.id === selectedId
+        ? selectedMetadata.current
+        : undefined),
+    setSelected = (row?: FormResponse) => {
+      selectedMetadata.current = row
+        ? {
+            id: row.id,
+            formId: row.formId,
+            version: row.version,
+            submittedAt: row.submittedAt,
+            revision: row.revision,
+            status: row.status,
+            redacted: row.redacted,
+            answers: {},
+          }
+        : undefined;
+      setResponseActionState({ dirty: false, busy: false, hideDetails: false });
+      setSelectedId(row?.id);
+    };
   useEffect(() => {
     if (mayReviewResponses) hadResponseAccess.current = true;
   }, [mayReviewResponses]);
@@ -159,8 +187,8 @@ function ResponseWorkspaceContent() {
   useEffect(() => {
     setSelectedId(undefined);
     setChecked([]);
-    setAction(undefined);
-    setConfirm("");
+    selectedMetadata.current = undefined;
+    setResponseActionState({ dirty: false, busy: false, hideDetails: false });
   }, [query, tab]);
   useEffect(() => {
     if (!denied) return;
@@ -175,8 +203,8 @@ function ResponseWorkspaceContent() {
     setChecked([]);
     setColumns([]);
     setViewName("");
-    setAction(undefined);
-    setConfirm("");
+    selectedMetadata.current = undefined;
+    setResponseActionState({ dirty: false, busy: false, hideDetails: false });
     setPrivacyTarget(undefined);
     setPrivacyState({ dirty: false, busy: false });
     setError("");
@@ -900,9 +928,10 @@ function ResponseWorkspaceContent() {
       <Dialog
         open={!!selected}
         onOpenChange={(open) => {
-          if (!open) {
-            setSelected(undefined);
-            setAction(undefined);
+          if (!open && !responseActionState.busy) {
+            const close = () => setSelected(undefined);
+            if (responseActionState.dirty) navigationSafety.request(close);
+            else close();
           }
         }}
       >
@@ -923,184 +952,170 @@ function ResponseWorkspaceContent() {
           </DialogDescription>
           {selected && (
             <>
-              <p>
-                <strong>
-                  {selected.respondent?.name ||
-                    "Historical identity unavailable"}
-                </strong>
-                <br />
-                {selected.respondent?.email}
-                <br />
-                {selected.respondent?.source === "self_reported"
-                  ? "Entered details · unverified"
-                  : selected.respondent?.source === "email_verified"
-                    ? "Email access link"
-                    : selected.respondent?.source === "account"
-                      ? "Chapter account"
-                      : "Identity unavailable"}
-              </p>
-              <div className="gt-response-answers">
-                {form.versions
-                  .find((v) => v.version === selected.version)
-                  ?.fields.filter(
-                    (f) =>
-                      !["title", "description", "divider", "image"].includes(
-                        f.type,
-                      ),
-                  )
-                  .map((field) => (
-                    <div key={field.id}>
-                      <strong>
-                        {field.label}
-                        {field.sensitive ? " · Sensitive" : ""}
-                      </strong>
-                      {field.type === "file" &&
-                      Array.isArray(selected.answers[field.id]) ? (
-                        <ResponseFileLinks
-                          formId={form.id}
-                          responseId={selected.id}
-                          ids={selected.answers[field.id] as string[]}
-                          canDownload={
-                            ready &&
-                            (!field.sensitive ||
-                              !!form.actions?.includes(
-                                "view_sensitive_responses",
-                              ))
-                          }
-                        />
-                      ) : (
-                        <p>
-                          {field.sensitive &&
-                          !Object.prototype.hasOwnProperty.call(
-                            selected.answers,
-                            field.id,
-                          )
-                            ? "Hidden by default"
-                            : typeof selected.answers[field.id] === "object"
-                              ? JSON.stringify(selected.answers[field.id])
-                              : String(
-                                  selected.answers[field.id] ?? "Not answered",
-                                )}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-              </div>
-              <p className="gt-helper">
-                Reference {selected.id}.{" "}
-                {formHeld || selected.status === "held"
-                  ? "Operational hold: destructive actions are disabled."
-                  : `Original version retention: ${form.versions.find((v) => v.version === selected.version)?.settings.retentionDays || 365} days.`}
-              </p>
-              {mayReviewPrivacy && (
-                <Button
-                  variant="secondary"
-                  disabled={!holdsReady || busy}
-                  onClick={() => setPrivacyTarget({ responseId: selected.id })}
-                >
-                  Review response retention &amp; hold
-                </Button>
-              )}
-              {holdError && (
-                <p role="alert">
-                  Hold status could not be checked. Refresh before a destructive
-                  action.
-                </p>
-              )}
-              {!ready && (
-                <ResponseReadFeedback
-                  name="selected response source"
-                  read={responsesRead}
-                  offline={!isOnline}
-                  busy={busy}
-                  retry={() => retry("responses")}
-                />
-              )}
-              {!ready && (
-                <p role="status">
-                  Response review is paused. Recheck the current response read
-                  before further actions.
-                </p>
-              )}
-              <ResponseHistory
-                key={selected.id}
-                formId={form.id}
-                responseId={selected.id}
-                canSensitive={
-                  !!form.actions?.includes("view_sensitive_responses")
-                }
-              />
-              {form.actions?.includes("delete") &&
-                ready &&
-                formHeld === false &&
-                selected.status !== "held" && (
-                  <div className="gt-actions">
+              {!responseActionState.hideDetails && (
+                <>
+                  <p>
+                    <strong>
+                      {selected.respondent?.name ||
+                        "Historical identity unavailable"}
+                    </strong>
+                    <br />
+                    {selected.respondent?.email}
+                    <br />
+                    {selected.respondent?.source === "self_reported"
+                      ? "Entered details · unverified"
+                      : selected.respondent?.source === "email_verified"
+                        ? "Email access link"
+                        : selected.respondent?.source === "account"
+                          ? "Chapter account"
+                          : "Identity unavailable"}
+                  </p>
+                  <div className="gt-response-answers">
+                    {form.versions
+                      .find((v) => v.version === selected.version)
+                      ?.fields.filter(
+                        (f) =>
+                          ![
+                            "title",
+                            "description",
+                            "divider",
+                            "image",
+                          ].includes(f.type),
+                      )
+                      .map((field) => (
+                        <div key={field.id}>
+                          <strong>
+                            {field.label}
+                            {field.sensitive ? " · Sensitive" : ""}
+                          </strong>
+                          {field.type === "file" &&
+                          Array.isArray(selected.answers[field.id]) ? (
+                            <ResponseFileLinks
+                              formId={form.id}
+                              responseId={selected.id}
+                              ids={selected.answers[field.id] as string[]}
+                              canDownload={
+                                ready &&
+                                (!field.sensitive ||
+                                  !!form.actions?.includes(
+                                    "view_sensitive_responses",
+                                  ))
+                              }
+                            />
+                          ) : (
+                            <p>
+                              {field.sensitive &&
+                              !Object.prototype.hasOwnProperty.call(
+                                selected.answers,
+                                field.id,
+                              )
+                                ? "Hidden by default"
+                                : typeof selected.answers[field.id] === "object"
+                                  ? JSON.stringify(selected.answers[field.id])
+                                  : String(
+                                      selected.answers[field.id] ??
+                                        "Not answered",
+                                    )}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                  </div>
+                  <p className="gt-helper">
+                    Reference {selected.id}.{" "}
+                    {formHeld || selected.status === "held"
+                      ? "Operational hold: destructive actions are disabled."
+                      : `Original version retention: ${form.versions.find((v) => v.version === selected.version)?.settings.retentionDays || 365} days.`}
+                  </p>
+                  {mayReviewPrivacy && (
                     <Button
                       variant="secondary"
-                      onClick={() => {
-                        setAction("redact");
-                        setConfirm("");
-                      }}
+                      disabled={!holdsReady || busy}
+                      onClick={() =>
+                        setPrivacyTarget({ responseId: selected.id })
+                      }
                     >
-                      Redact identity
+                      Review response retention &amp; hold
                     </Button>
-                    <Button
-                      variant="danger"
-                      onClick={() => {
-                        setAction("delete");
-                        setConfirm("");
-                      }}
-                    >
-                      Delete response
-                    </Button>
-                  </div>
-                )}
-              {action && (
-                <div className="gt-inline-confirm">
-                  <p>
-                    {action === "delete"
-                      ? "This permanently removes answer values and their revision history. The audit record remains."
-                      : "This permanently replaces identity and sensitive values in current and historical answers. The audit record remains."}{" "}
-                    Type {action.toUpperCase()} to confirm.
-                  </p>
-                  <input
-                    aria-label="Confirm response action"
-                    value={confirm}
-                    onChange={(e) => setConfirm(e.target.value)}
+                  )}
+                  {holdError && (
+                    <p role="alert">
+                      Hold status could not be checked. Refresh before a
+                      destructive action.
+                    </p>
+                  )}
+                  {!ready && (
+                    <ResponseReadFeedback
+                      name="selected response source"
+                      read={responsesRead}
+                      offline={!isOnline}
+                      busy={busy}
+                      retry={() => retry("responses")}
+                    />
+                  )}
+                  {!ready && (
+                    <p role="status">
+                      Response review is paused. Recheck the current response
+                      read before further actions.
+                    </p>
+                  )}
+                  <ResponseHistory
+                    key={selected.id}
+                    formId={form.id}
+                    responseId={selected.id}
+                    canSensitive={
+                      !!form.actions?.includes("view_sensitive_responses")
+                    }
                   />
-                  <Button
-                    variant="danger"
-                    disabled={
-                      busy ||
-                      !ready ||
-                      !holdsReady ||
-                      confirm !== action.toUpperCase()
+                </>
+              )}
+              {form.actions?.includes("delete") && (
+                <ResponseActionReview
+                  key={selected.id}
+                  formId={form.id}
+                  response={selected}
+                  disabled={!ready || !holdsReady}
+                  held={formHeld === true || selected.status === "held"}
+                  onStateChange={(state) => {
+                    setResponseActionState(state);
+                    if (state.hideDetails) {
+                      clearResponses();
+                      clearSummary();
                     }
-                    onClick={() =>
-                      work(
-                        () =>
-                          api(
-                            `/admin/forms/${formId}/responses/${selected.id}`,
-                            {
-                              method: action === "delete" ? "DELETE" : "PATCH",
-                              protected: true,
-                              ...(action === "redact"
-                                ? { body: { action: "redact" } }
-                                : {}),
-                            },
-                          ),
-                        action === "delete"
-                          ? "Response deleted."
-                          : "Identity redacted.",
-                      )
-                    }
-                  >
-                    Confirm {action}
-                  </Button>
-                  <Button variant="ghost" onClick={() => setAction(undefined)}>
-                    Cancel
-                  </Button>
-                </div>
+                  }}
+                  onDenied={() => {
+                    clearResponses();
+                    clearSummary();
+                    clearViews();
+                    clearHolds();
+                    setBlocked(
+                      "Response privacy access changed. Private details and proposed actions have been cleared.",
+                    );
+                    setSelected(undefined);
+                  }}
+                  onComplete={(result) => {
+                    clearResponses();
+                    clearSummary();
+                    setChecked([]);
+                    setSelected(undefined);
+                    setNotice(
+                      `Original response ${result.receipt?.action === "delete" ? "deletion" : "redaction"} confirmed. Current state: ${result.response.status}.`,
+                    );
+                    setRefresh((value) => value + 1);
+                    void server.reload();
+                  }}
+                  onReload={() => {
+                    clearResponses();
+                    clearSummary();
+                    setChecked([]);
+                    setSelected(undefined);
+                    setNotice(
+                      "Reloading current responses. The previous privacy action may already have committed; review the current record before another action.",
+                    );
+                    setRefresh((value) => value + 1);
+                    void server.reload();
+                  }}
+                />
               )}
             </>
           )}

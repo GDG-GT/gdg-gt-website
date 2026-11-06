@@ -31,10 +31,15 @@ try {
   const answers = { [fields[0].id]: "Fictional privacy respondent", [fields[1].id]: "fictional-privacy-respondent@example.test" },
     committed = data(await post(`/forms/${form.slug}/submissions`, { respondent, versionId, answers, website: "" }, randomUUID(), true)),
     responsePath = `/admin/forms/${form.id}/responses/${committed.responseId}`;
+  async function reviewedResponseAction(method) {
+    const row = data(await call(responsePath)).items[0];
+    return call(responsePath, { method, body: { revision: row.revision, status: row.status, redacted: row.redacted,
+      confirmation: method === "DELETE" ? "DELETE" : "REDACT", ...(method === "PATCH" ? { action: "redact" } : {}) } });
+  }
   const original = data(await call(responsePath + "/privacy"));
   check(original.effectiveResponseHold && new Date(original.responseExpiresAt) - new Date(committed.submittedAt) === 86400000, "new response retains the original one-day policy and current form-wide hold");
-  check((await call(responsePath, { method: "DELETE" })).json?.error?.code === "RETENTION_HOLD", "form-wide hold prevents response deletion");
-  check((await call(responsePath, { method: "PATCH", body: { action: "redact" } })).json?.error?.code === "RETENTION_HOLD", "form-wide hold prevents response redaction");
+  check((await reviewedResponseAction("DELETE")).json?.error?.code === "RETENTION_HOLD", "form-wide hold prevents response deletion");
+  check((await reviewedResponseAction("PATCH")).json?.error?.code === "RETENTION_HOLD", "form-wide hold prevents response redaction");
   definition.settings.retentionDays = 365;
   form = data(await call(`/admin/forms/${form.id}/draft`, { method: "PATCH", body: { revision: form.revision, definition } })).form;
   form = data(await post(`/admin/forms/${form.id}/publish`, { revision: form.revision })).form;
@@ -46,7 +51,7 @@ try {
   check(data(await post(responsePath + "/privacy", individual)).revision === 1, "an individual response hold can be reviewed separately");
   data(await post(base, { ...hold, revision: 1, held: false, reason: "Reviewed form-wide hold release" }));
   check(!data(await call(base)).held && data(await call(responsePath + "/privacy")).effectiveResponseHold, "releasing a form-wide hold does not release a separate response hold");
-  check((await call(responsePath, { method: "DELETE" })).status === 409, "an individual hold still prevents deletion");
+  check((await reviewedResponseAction("DELETE")).status === 409, "an individual hold still prevents deletion");
   sql(await db.from("form_responses").update({ retention_expires_at: new Date(Date.now() - 60000).toISOString() }).eq("id", committed.responseId));
   check(data(await call(base)).dueResponses === 0, "held overdue response is excluded from scheduled-expiry eligibility");
   data(await post(responsePath + "/privacy", { ...individual, revision: 1, held: false, reason: "Reviewed individual hold release" }));
@@ -60,7 +65,7 @@ try {
     check(sql(await db.from("form_answers").select("id").eq("response_id", committed.responseId)).length === 0, "retention cleanup removes actual stored answer values");
     check(sql(await db.rpc("expire_form_responses", { p_limit: 500 })).responsesExpired === 0, "retention cleanup retry performs no duplicate deletion");
   } else {
-    data(await call(responsePath, { method: "DELETE" }));
+    data(await reviewedResponseAction("DELETE"));
     console.info("Skipped global worker invocation to preserve unrelated due local rows; isolated SQL covers expiry execution.");
   }
   const audit = sql(await db.from("admin_actions").select("metadata").eq("actor_id", actor).in("action", ["forms.hold_reviewed", "forms.hold_released"]));

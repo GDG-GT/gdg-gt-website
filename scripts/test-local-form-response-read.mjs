@@ -422,10 +422,10 @@ try {
       await expect(page.getByRole("dialog")).toBeVisible();
       await expect(
         page.getByRole("button", { name: "Delete response", exact: true }),
-      ).toHaveCount(0);
+      ).toBeDisabled();
       await expect(
         page.getByRole("button", { name: "Redact identity", exact: true }),
-      ).toHaveCount(0);
+      ).toBeDisabled();
       check(
         true,
         "failed hold read independently prevents destructive actions on the selected response" +

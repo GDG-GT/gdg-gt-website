@@ -82,7 +82,7 @@ try {
   check(edited.status === 200, "public response edit commits a real new revision");
   check((await post(`${base}/${csv.id}/download`, {})).status === 409, "response edits invalidate previously ready exports");
   const waiting = data(await post(base, { format: "json", filters: { selected: [response.responseId] } })).job; jobs.push(waiting.id);
-  data(await call(`/admin/forms/${form.id}/responses/${response.responseId}`, { method: "PATCH", body: { action: "redact" } }));
+  data(await call(`/admin/forms/${form.id}/responses/${response.responseId}`, { method: "PATCH", body: { action: "redact", revision: 0, status: "complete", redacted: false, confirmation: "REDACT" } }));
   await runFormExportWorker({ env, db });
   check(data(await call(`${base}/${waiting.id}`)).job.state === "failed", "redaction before worker execution rejects the frozen response snapshot");
   const audit = await db.from("admin_actions").select("metadata").eq("target_type", "form_export").in("target_id", jobs);

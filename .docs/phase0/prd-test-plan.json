@@ -1910,9 +1910,14 @@
       "requirements": [
         "FORM-025"
       ],
-      "scope": "Retained identity redaction, holds, archive and reviewed permanent deletion",
+      "scope": "Retained identity redaction, atomic revision-bound response deletion/redaction receipts and recovery, holds, archive and reviewed permanent deletion",
       "automated": [
         "tests/server/form-deletion.test.mjs",
+        "tests/server/form-response-replay.test.mjs",
+        "database/tests/121_form_response_replay.sql",
+        "tests/client/form-response-mutation-recovery.test.tsx",
+        "tests/browser/form-response-writes.spec.ts",
+        "scripts/test-local-form-response-write.mjs",
         "database/tests/066_form_retention_holds.sql",
         "database/tests/072_form_permanent_deletion.sql",
         "scripts/test-local-form-privacy.mjs"

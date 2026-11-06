@@ -55,3 +55,9 @@ The background-export case now maps current-session atomic creation/removal
 receipts, read-only reconciliation, frozen original retries and private inventory/
 download scope checks. Local recovery does not certify new physical storage,
 real-device or hosted acceptance; see `FORM_EXPORT_RECOVERY.md`.
+
+The response privacy case now maps revision/privacy-bound atomic deletion and
+redaction receipts, metadata-only read reconciliation, exact explicit retries,
+answer withholding and current hold/access checks. Local SQL/API/desktop-mobile
+evidence is recorded in `FORM_RESPONSE_MUTATION_RECOVERY.md`. Availability, saved
+views and remaining Forms/manual/device/hosted acceptance remain open.

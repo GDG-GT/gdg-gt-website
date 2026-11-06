@@ -7,6 +7,7 @@ import {
   queryValues,
   uuid,
   text,
+  idempotency,
 } from "./lib/validation.mjs";
 import { tokenHash } from "./lib/security.mjs";
 import { responseCsv, responseXlsx, safeCell } from "../shared/form-export.ts";
@@ -23,6 +24,45 @@ const pagination = {
   pageSize: z.coerce.number().int().min(1).max(100).default(30),
 };
 const filters = z.object(filterShape).strict();
+const responseWriteShape = {
+  revision: z.number().int().min(0).max(2147483647),
+  status: z.enum(["complete", "redacted", "held"]),
+  redacted: z.boolean(),
+};
+export const responseDeleteInput = z
+  .object({ ...responseWriteShape, confirmation: z.literal("DELETE") })
+  .strict();
+export const responseRedactInput = z
+  .object({
+    ...responseWriteShape,
+    confirmation: z.literal("REDACT"),
+    action: z.literal("redact"),
+  })
+  .strict();
+function responseWriteDto(value) {
+  return {
+    committed: value.committed,
+    canRetry: value.canRetry,
+    ...(typeof value.held === "boolean" ? { held: value.held } : {}),
+    ...(value.receipt
+      ? {
+          receipt: {
+            id: value.receipt.id,
+            formId: value.receipt.formId,
+            action: value.receipt.action,
+          },
+        }
+      : {}),
+    response: {
+      id: value.response.id,
+      revision: value.response.revision,
+      status: value.response.status,
+      redacted: value.response.redacted,
+      deleted: value.response.deleted,
+    },
+  };
+}
+
 function assertDateRange(p) {
   if (p.from && p.to && new Date(p.from) > new Date(p.to))
     throw new ApiError(
@@ -119,23 +159,28 @@ export async function formResponseRoutes(
 ) {
   const url = new URL(request.url, config.origin),
     match = url.pathname.match(
-      /^\/api\/v1\/admin\/forms\/([^/]+)\/(responses|analytics|views)(?:\/([^/]+))?$/,
+      /^\/api\/v1\/admin\/forms\/([^/]+)\/(responses|analytics|views)(?:\/([^/]+))?(?:\/(recovery))?$/,
     );
   if (!match) return false;
   const id = parse(uuid, match[1]),
     operation = match[2],
     child = match[3],
-    exported = operation === "responses" && child === "export";
+    exported = operation === "responses" && child === "export",
+    recovering = match[4] === "recovery";
+  if (recovering && (operation !== "responses" || !child || exported))
+    throw new ApiError(404, "NOT_FOUND", "This record was not found.");
   allowMethod(
     request,
     response,
-    operation === "views"
-      ? child
-        ? ["DELETE"]
-        : ["GET", "POST"]
-      : operation === "responses" && child && !exported
-        ? ["GET", "PATCH", "DELETE"]
-        : ["GET"],
+    recovering
+      ? ["GET"]
+      : operation === "views"
+        ? child
+          ? ["DELETE"]
+          : ["GET", "POST"]
+        : operation === "responses" && child && !exported
+          ? ["GET", "PATCH", "DELETE"]
+          : ["GET"],
   );
   const session = await requireSession(request, store, config);
   if (request.method !== "GET") await requireCsrf(request, session, store);
@@ -149,6 +194,27 @@ export async function formResponseRoutes(
     );
   if (!(await can("view")) || !(await can("view_responses")))
     throw new ApiError(404, "NOT_FOUND", "This form is not available.");
+  if (recovering) {
+    const p = queryValues(
+      url.searchParams,
+      z.object({ action: z.enum(["delete", "redact"]) }).strict(),
+    );
+    if (!(await can("delete")))
+      throw new ApiError(404, "NOT_FOUND", "This response is not available.");
+    const result = checked(
+      await db.rpc("inspect_form_response_write", {
+        p_actor: session.user.id,
+        p_session: session.sessionId,
+        p_form: id,
+        p_response: parse(uuid, child),
+        p_action: p.action,
+        p_key_hash: tokenHash(idempotency(request)),
+        p_request_hash: null,
+      }),
+    );
+    sendJson(response, 200, responseWriteDto(result), requestId);
+    return true;
+  }
   const form = checked(
     await db.from("forms").select("slug,settings,state").eq("id", id).single(),
   );
@@ -204,22 +270,37 @@ export async function formResponseRoutes(
   }
   if (child && !exported && request.method !== "GET") {
     const responseId = parse(uuid, child);
-    if (request.method === "PATCH")
-      await jsonBody(
+    if (!(await can("delete")))
+      throw new ApiError(404, "NOT_FOUND", "This response is not available.");
+    queryValues(url.searchParams, z.object({}).strict());
+    const action = request.method === "DELETE" ? "delete" : "redact",
+      body = await jsonBody(
         request,
-        z.object({ action: z.literal("redact") }).strict(),
-        1024,
+        action === "delete" ? responseDeleteInput : responseRedactInput,
+        2048,
+      ),
+      { revision, status, redacted, confirmation } = body,
+      result = checked(
+        await db.rpc("mutate_form_response_write", {
+          p_actor: session.user.id,
+          p_session: session.sessionId,
+          p_form: id,
+          p_response: responseId,
+          p_action: action,
+          p_document: { revision, status, redacted, confirmation },
+          p_key_hash: tokenHash(idempotency(request)),
+          p_request_hash: tokenHash(
+            JSON.stringify({ formId: id, responseId, action, body }),
+          ),
+          p_request_id: requestId,
+        }),
       );
-    checked(
-      await db.rpc("mutate_form_response", {
-        p_actor: session.user.id,
-        p_form: id,
-        p_response: responseId,
-        p_action: request.method === "DELETE" ? "delete" : "redact",
-        p_request_id: requestId,
-      }),
+    sendJson(
+      response,
+      200,
+      { updated: true, ...responseWriteDto(result) },
+      requestId,
     );
-    sendJson(response, 200, { updated: true }, requestId);
     return true;
   }
   const p = queryValues(
@@ -322,22 +403,23 @@ export async function formResponseRoutes(
       .eq("form_id", id)
       .order("version"),
   );
-  const auditResult = () => store.audit({
-    actorId: session.user.id,
-    action: exported
-      ? sensitive
-        ? "forms.sensitive_exported"
-        : "forms.responses_exported"
-      : "forms.analytics_viewed",
-    targetType: "form",
-    targetId: id,
-    requestId,
-    metadata: {
-      filterHash: tokenHash(JSON.stringify(scopedFilters)),
-      count: items.length,
-      ...(exported ? { format: p.format } : {}),
-    },
-  });
+  const auditResult = () =>
+    store.audit({
+      actorId: session.user.id,
+      action: exported
+        ? sensitive
+          ? "forms.sensitive_exported"
+          : "forms.responses_exported"
+        : "forms.analytics_viewed",
+      targetType: "form",
+      targetId: id,
+      requestId,
+      metadata: {
+        filterHash: tokenHash(JSON.stringify(scopedFilters)),
+        count: items.length,
+        ...(exported ? { format: p.format } : {}),
+      },
+    });
   if (!exported) {
     await auditResult();
     sendJson(response, 200, summarizeResponses(items, versions), requestId);
@@ -367,8 +449,19 @@ export async function formResponseRoutes(
       ),
     };
   });
-  if (p.format === "xlsx" && rows.some((row) => Object.entries(row).some(([key, value]) => key.length > 32767 || safeCell(value).length > 32767)))
-    throw new ApiError(413, "PAYLOAD_TOO_LARGE", "A cell exceeds Excel's text limit. Use CSV or JSON instead.");
+  if (
+    p.format === "xlsx" &&
+    rows.some((row) =>
+      Object.entries(row).some(
+        ([key, value]) => key.length > 32767 || safeCell(value).length > 32767,
+      ),
+    )
+  )
+    throw new ApiError(
+      413,
+      "PAYLOAD_TOO_LARGE",
+      "A cell exceeds Excel's text limit. Use CSV or JSON instead.",
+    );
   const content =
     p.format === "xlsx"
       ? responseXlsx(rows)
@@ -378,7 +471,11 @@ export async function formResponseRoutes(
   // Keep lightweight API responses below the serverless transport ceiling.
   // Background exports use private object storage instead of this response.
   if (Buffer.byteLength(content) > 3 * 1024 * 1024)
-    throw new ApiError(413, "PAYLOAD_TOO_LARGE", "Use a background export for this response set.");
+    throw new ApiError(
+      413,
+      "PAYLOAD_TOO_LARGE",
+      "Use a background export for this response set.",
+    );
   await auditResult();
   response.statusCode = 200;
   response.setHeader(

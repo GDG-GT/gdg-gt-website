@@ -115,6 +115,7 @@ export interface PreviewForm {
 }
 export interface FormResponse {
   id: string;
+  revision?: number;
   formId: string;
   version: number;
   submittedAt: string;

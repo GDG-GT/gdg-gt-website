@@ -1,0 +1,170 @@
+{
+  "generatedAt": "2026-11-06T07:40:20.668Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and desktop/mobile Chromium response deletion/redaction recovery on fresh fictional internal forms. Ten concurrent identical requests per action; original keys/bodies after before/after-acceptance loss, metadata-only recovery, identity/history erasure, one audit, measured axe. Intended submissions/edits only; no workers, provider sends, existing chapter or production changes. Owned metadata delivery jobs disabled/secrets cleared, forms archived, accounts disabled/sessions revoked. Captures unapproved.",
+  "tests": [
+    {
+      "name": "ten concurrent identical delete requests return one owned receipt",
+      "passed": true
+    },
+    {
+      "name": "delete erases owned identity/history as intended with exactly one action audit during concurrent replay",
+      "passed": true
+    },
+    {
+      "name": "read-only delete inspection recovers the accepted original outcome",
+      "passed": true
+    },
+    {
+      "name": "ten concurrent identical redact requests return one owned receipt",
+      "passed": true
+    },
+    {
+      "name": "redact erases owned identity/history as intended with exactly one action audit during concurrent replay",
+      "passed": true
+    },
+    {
+      "name": "read-only redact inspection recovers the accepted original outcome",
+      "passed": true
+    },
+    {
+      "name": "private response reads conceal the owned form from unrelated/anonymous readers at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "unconfirmed delete withholds answers/identity and retains only a metadata intent at 1440×900 after",
+      "passed": true
+    },
+    {
+      "name": "uncertain delete passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delete after-acceptance loss reconciles with no replacement body/key/write at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delete erases owned identity/history as intended with exactly one action audit at 1440×900 after",
+      "passed": true
+    },
+    {
+      "name": "unconfirmed delete withholds answers/identity and retains only a metadata intent at 1440×900 before",
+      "passed": true
+    },
+    {
+      "name": "delete before-acceptance loss reconciles with no replacement body/key/write at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "delete erases owned identity/history as intended with exactly one action audit at 1440×900 before",
+      "passed": true
+    },
+    {
+      "name": "unconfirmed redact withholds answers/identity and retains only a metadata intent at 1440×900 after",
+      "passed": true
+    },
+    {
+      "name": "uncertain redact passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "redact after-acceptance loss reconciles with no replacement body/key/write at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "redact erases owned identity/history as intended with exactly one action audit at 1440×900 after",
+      "passed": true
+    },
+    {
+      "name": "unconfirmed redact withholds answers/identity and retains only a metadata intent at 1440×900 before",
+      "passed": true
+    },
+    {
+      "name": "redact before-acceptance loss reconciles with no replacement body/key/write at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "redact erases owned identity/history as intended with exactly one action audit at 1440×900 before",
+      "passed": true
+    },
+    {
+      "name": "privacy inspection/retry adds no new delivery jobs at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "response recovery has no unexpected write, external request, script error or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "private response reads conceal the owned form from unrelated/anonymous readers at 375×812",
+      "passed": true
+    },
+    {
+      "name": "unconfirmed delete withholds answers/identity and retains only a metadata intent at 375×812 after",
+      "passed": true
+    },
+    {
+      "name": "uncertain delete passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delete after-acceptance loss reconciles with no replacement body/key/write at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delete erases owned identity/history as intended with exactly one action audit at 375×812 after",
+      "passed": true
+    },
+    {
+      "name": "unconfirmed delete withholds answers/identity and retains only a metadata intent at 375×812 before",
+      "passed": true
+    },
+    {
+      "name": "delete before-acceptance loss reconciles with no replacement body/key/write at 375×812",
+      "passed": true
+    },
+    {
+      "name": "delete erases owned identity/history as intended with exactly one action audit at 375×812 before",
+      "passed": true
+    },
+    {
+      "name": "unconfirmed redact withholds answers/identity and retains only a metadata intent at 375×812 after",
+      "passed": true
+    },
+    {
+      "name": "uncertain redact passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "redact after-acceptance loss reconciles with no replacement body/key/write at 375×812",
+      "passed": true
+    },
+    {
+      "name": "redact erases owned identity/history as intended with exactly one action audit at 375×812 after",
+      "passed": true
+    },
+    {
+      "name": "unconfirmed redact withholds answers/identity and retains only a metadata intent at 375×812 before",
+      "passed": true
+    },
+    {
+      "name": "redact before-acceptance loss reconciles with no replacement body/key/write at 375×812",
+      "passed": true
+    },
+    {
+      "name": "redact erases owned identity/history as intended with exactly one action audit at 375×812 before",
+      "passed": true
+    },
+    {
+      "name": "privacy inspection/retry adds no new delivery jobs at 375×812",
+      "passed": true
+    },
+    {
+      "name": "response recovery has no unexpected write, external request, script error or page overflow at 375×812",
+      "passed": true
+    }
+  ]
+}
