@@ -57,12 +57,17 @@ export const formsApi = {
     return (await api<{ form: PreviewForm }>("/admin/forms/" + id, { signal }))
       .form;
   },
-  async save(form: PreviewForm, signal?: AbortSignal) {
+  async save(
+    form: PreviewForm,
+    signal?: AbortSignal,
+    key: string = crypto.randomUUID(),
+  ) {
     return (
       await api<{ form: PreviewForm }>("/admin/forms/" + form.id + "/draft", {
         method: "PATCH",
         protected: true,
         signal,
+        idempotencyKey: key,
         body: {
           revision: form.revision,
           slug: form.slug,
@@ -72,15 +77,35 @@ export const formsApi = {
       })
     ).form;
   },
-  async publish(form: PreviewForm, signal?: AbortSignal) {
+  async publish(
+    form: PreviewForm,
+    signal?: AbortSignal,
+    key: string = crypto.randomUUID(),
+  ) {
     return (
       await api<{ form: PreviewForm }>("/admin/forms/" + form.id + "/publish", {
         method: "POST",
         protected: true,
         signal,
+        idempotencyKey: key,
         body: { revision: form.revision },
       })
     ).form;
+  },
+  async inspectWrite(
+    id: string,
+    action: "draft" | "publish",
+    key: string,
+    signal?: AbortSignal,
+  ) {
+    return api<{
+      committed: boolean;
+      receipt?: { revision: number; versionId: string | null };
+      form: PreviewForm;
+    }>("/admin/forms/" + id + "?mutation=" + action, {
+      idempotencyKey: key,
+      signal,
+    });
   },
   async duplicate(form: PreviewForm) {
     return (

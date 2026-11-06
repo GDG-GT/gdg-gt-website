@@ -8,6 +8,34 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Atomic Forms draft/publication recovery — 2026-11-05
+
+- Migration 118 adds current-session/action atomic receipts with ID/revision-only
+  storage and read-only outcome inspection. Accepted saves/publications replay
+  without duplicate revisions/versions/audit, including publication reconciliation
+  after a newer invalid draft. Original normalized body/key/revision, explicit
+  retry and 47-hour bounds protect uncertain writes; autosave stays paused.
+- Proposed edits survive reconciliation. Explicit reviewed loading or confirmed
+  autosave resumption names the consequences. Publish-only collaborators can
+  publish unchanged saved questions; unconfirmed publication guards navigation/
+  reload even without an unsaved draft. Scope/offline/denial fences remain.
+- Both complete 118-migration SQL/legacy-grant suites, both 100-client races and
+  six restore checks pass. All 18 actual API/DB/desktop-mobile checks pass, with
+  ten concurrent identical saves/publications, exact retries, measured axe and
+  audit/version deduplication. Fresh fictional internal forms archived/accounts
+  disabled/sessions revoked; no responses/worker/provider/production change.
+- All 78 authoring/builder/shared workspace production-browser checks pass across
+  six profiles. Final copy refinements remove stale error feedback after success.
+  Catalog: 158 unverified cases. Library create/duplicate/availability replay,
+  response/runtime/integration recovery and complete quality/device/manual/
+  visual/hosted acceptance remain open. See `FORM_AUTHORING_RECOVERY.md`.
+- All 1,609 tests/170 files pass (64 focused, 32 new cases). Coverage still fails
+  the global 70% gate: 65.35% lines/65.13% branches/63.57% statements/56.49%
+  functions; all 17 critical branch gates pass. No threshold or timeout changed.
+- Final build/types/lint, byte budgets, secret scan and traceability pass. All 24
+  authoring browser cases pass again after success/error copy refinement
+  (`phase0/form-authoring-final-browser.json`). No visual/manual/hosted sign-off.
+
 ### Saved Forms reads and builder scope isolation — 2026-11-05
 
 - Saved-definition reads now retain timestamped matching snapshots and clear on

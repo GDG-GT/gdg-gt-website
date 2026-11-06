@@ -334,7 +334,7 @@ describe("Forms library, authoring and response route contracts", () => {
       ).statusCode,
     ).toBe(200);
     expect(f.db.rpc).toHaveBeenCalledWith(
-      "mutate_form",
+      "mutate_form_authoring",
       expect.objectContaining({
         p_actor: ids.actor,
         p_id: ids.form,
@@ -387,7 +387,7 @@ describe("Forms library, authoring and response route contracts", () => {
       ).statusCode,
     ).toBe(200);
     expect(f.db.rpc).toHaveBeenCalledWith(
-      "mutate_form",
+      "mutate_form_authoring",
       expect.objectContaining({
         p_action: "publish",
         p_schema_hash: tokenHash(JSON.stringify(f.definition)),

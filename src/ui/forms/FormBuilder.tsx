@@ -47,7 +47,8 @@ import FormImage from "./FormImage";
 import FormImagePicker from "./FormImagePicker";
 import FieldValidationSettings from "./FieldValidationSettings";
 import { canShuffleQuestions } from "../../../shared/form-presentation";
-import { formsApi, useServerForm } from "./api";
+import { formsApi, useServerForm, draftDefinition } from "./api";
+import FormWriteRecovery, { type FormWriteIntent } from "./FormWriteRecovery";
 import AccessPanel from "./AccessPanel";
 import SectionLogic from "./SectionLogic";
 import VersionHistory from "./VersionHistory";
@@ -104,6 +105,9 @@ function FormBuilderContent() {
     [publishing, setPublishing] = useState(false),
     [remoteConflict, setRemoteConflict] = useState(false),
     [loadReview, setLoadReview] = useState(false);
+  const [uncertainWrite, setUncertainWrite] = useState<FormWriteIntent>(),
+    [recoveryBusy, setRecoveryBusy] = useState(false),
+    [recoveryConfirmed, setRecoveryConfirmed] = useState(false);
   const undo = useRef<PreviewForm[]>([]),
     redo = useRef<PreviewForm[]>([]),
     dragged = useRef<string | null>(null);
@@ -121,8 +125,10 @@ function FormBuilderContent() {
     titleInput = useRef<HTMLInputElement>(null),
     sourceSeen = useRef<PreviewForm>(),
     allowed = useRef(false),
-    serverRef = useRef(server);
+    serverRef = useRef(server),
+    unconfirmed = useRef(false);
   serverRef.current = server;
+  unconfirmed.current = !!uncertainWrite && !recoveryConfirmed;
   const ready =
     !!source &&
     !server.loading &&
@@ -156,6 +162,9 @@ function FormBuilderContent() {
     setHistoryOpen(false);
     setDeliveryOpen(false);
     setLoadReview(false);
+    setUncertainWrite(undefined);
+    setRecoveryBusy(false);
+    setRecoveryConfirmed(false);
     setRemoteConflict(false);
     setPublishing(false);
     publicationPending.current = false;
@@ -199,17 +208,31 @@ function FormBuilderContent() {
               "AbortError",
             );
           if (saved.current === signature(snapshot)) return snapshot;
+          if (!serverRef.current.form?.actions?.includes("edit"))
+            throw new ApiFailure(
+              403,
+              "FORBIDDEN",
+              "Current form editing permission is required before saving changed questions.",
+            );
           const controller = new AbortController();
           activeWrites.current.add(controller);
+          const intent: FormWriteIntent = {
+            action: "draft",
+            key: crypto.randomUUID(),
+            startedAt: Date.now(),
+            snapshot: {
+              ...structuredClone(snapshot),
+              ...draftDefinition(snapshot),
+              revision: revision.current,
+            },
+          };
           setSaveStatus("Saving…");
           setSaveError("");
           try {
             const result = await formsApi.save(
-              {
-                ...snapshot,
-                revision: revision.current,
-              },
+              intent.snapshot,
               controller.signal,
+              intent.key,
             );
             if (
               !mounted.current ||
@@ -243,9 +266,17 @@ function FormBuilderContent() {
             if (!(e instanceof ApiFailure) || e.status !== 400) {
               allowed.current = false;
               setRemoteConflict(true);
+              if (!(e instanceof ApiFailure) || e.status >= 500) {
+                setUncertainWrite(intent);
+                setRecoveryConfirmed(false);
+              }
             }
             setSaveStatus("Not saved");
-            setSaveError((e as Error).message);
+            setSaveError(
+              e instanceof TypeError
+                ? "The save response was interrupted. Recheck its outcome before trying again."
+                : (e as Error).message,
+            );
             throw e;
           } finally {
             activeWrites.current.delete(controller);
@@ -272,7 +303,10 @@ function FormBuilderContent() {
   }, [form, persist, ready, publishing]);
   useEffect(() => {
     const warn = (event: BeforeUnloadEvent) => {
-      if (latest.current && saved.current !== signature(latest.current)) {
+      if (
+        unconfirmed.current ||
+        (latest.current && saved.current !== signature(latest.current))
+      ) {
         event.preventDefault();
         event.returnValue = "";
       }
@@ -280,10 +314,16 @@ function FormBuilderContent() {
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, []);
-  useDraftGuard(!!form && saved.current !== signature(form), {
-    busy: publishing || saveStatus === "Saving…",
-    label: "Form definition changes",
-  });
+  useDraftGuard(
+    unconfirmed.current || (!!form && saved.current !== signature(form)),
+    {
+      busy: publishing || recoveryBusy || saveStatus === "Saving…",
+      label:
+        unconfirmed.current && uncertainWrite
+          ? `Form changes with an unconfirmed ${uncertainWrite.action === "draft" ? "save" : "publication"}; it may already have completed`
+          : "Form definition changes",
+    },
+  );
   if (!form || server.denied)
     return (
       <div className="gt-admin-page">
@@ -1227,6 +1267,7 @@ function FormBuilderContent() {
               !ready ||
               !source?.actions?.includes("publish") ||
               publishing ||
+              recoveryBusy ||
               saveStatus === "Saving…"
             }
             onClick={() => setPublishOpen(true)}
@@ -1273,6 +1314,7 @@ function FormBuilderContent() {
               server.loading ||
               !isOnline ||
               publishing ||
+              recoveryBusy ||
               saveStatus === "Saving…"
             }
             onClick={() => {
@@ -1290,7 +1332,11 @@ function FormBuilderContent() {
               type="button"
               variant="secondary"
               disabled={
-                server.loading || !!server.error || !source || !isOnline
+                server.loading ||
+                !!server.error ||
+                !source ||
+                !isOnline ||
+                recoveryBusy
               }
               onClick={() => setLoadReview(true)}
             >
@@ -1304,6 +1350,23 @@ function FormBuilderContent() {
             : "A successful saved draft read is required before changes."}
         </p>
       </section>
+      {uncertainWrite && (
+        <FormWriteRecovery
+          key={uncertainWrite.key}
+          intent={uncertainWrite}
+          onBusy={setRecoveryBusy}
+          onDenied={() => {
+            clearPrivate();
+            server.clear();
+          }}
+          onReconciled={() => {
+            setRecoveryConfirmed(true);
+            setSaveError("");
+            setSaveStatus("Previous change confirmed");
+            void server.reload();
+          }}
+        />
+      )}
       {!source?.actions?.includes("edit") && (
         <p className="gt-data-note" role="status">
           View only. Draft editing requires additional permission. You can
@@ -1680,6 +1743,7 @@ function FormBuilderContent() {
               publicationPending.current = true;
               const currentGeneration = generation.current;
               const controller = new AbortController();
+              let intent: FormWriteIntent | undefined;
               activeWrites.current.add(controller);
               setPublishing(true);
               try {
@@ -1688,15 +1752,23 @@ function FormBuilderContent() {
                   !mounted.current ||
                   controller.signal.aborted ||
                   generation.current !== currentGeneration ||
-                  !allowed.current
+                  !allowed.current ||
+                  !serverRef.current.form?.actions?.includes("publish")
                 )
                   return;
-                const result = await formsApi.publish(
-                  {
-                    ...form,
+                intent = {
+                  action: "publish",
+                  snapshot: {
+                    ...structuredClone(form),
                     revision: revision.current,
                   },
+                  key: crypto.randomUUID(),
+                  startedAt: Date.now(),
+                };
+                const result = await formsApi.publish(
+                  intent.snapshot,
                   controller.signal,
+                  intent.key,
                 );
                 if (
                   !mounted.current ||
@@ -1727,8 +1799,19 @@ function FormBuilderContent() {
                 if (!(e instanceof ApiFailure) || e.status !== 400) {
                   allowed.current = false;
                   setRemoteConflict(true);
+                  if (
+                    intent &&
+                    (!(e instanceof ApiFailure) || e.status >= 500)
+                  ) {
+                    setUncertainWrite(intent);
+                    setRecoveryConfirmed(false);
+                  }
                 }
-                setSaveError((e as Error).message);
+                setSaveError(
+                  e instanceof TypeError
+                    ? "The publication response was interrupted. Recheck its outcome before trying again."
+                    : (e as Error).message,
+                );
                 setPublishOpen(false);
               } finally {
                 activeWrites.current.delete(controller);
@@ -1759,6 +1842,15 @@ function FormBuilderContent() {
             setting and undo/redo changes will be discarded. No saved form or
             response is changed.
           </DialogDescription>
+          {uncertainWrite && !recoveryConfirmed && (
+            <p role="alert">
+              The previous{" "}
+              {uncertainWrite.action === "draft" ? "save" : "publication"} may
+              already have completed. Loading this draft abandons its retry
+              controls and does not undo that change. Inspect published history
+              before publishing again.
+            </p>
+          )}
           <p>Your proposed title: {form.title}</p>
           <p>Current saved title: {source?.title}</p>
           <p>
@@ -1771,7 +1863,8 @@ function FormBuilderContent() {
               server.loading ||
               !!server.error ||
               !isOnline ||
-              publishing
+              publishing ||
+              recoveryBusy
             }
             onClick={() => {
               if (!source || server.loading || server.error || !isOnline)
@@ -1787,6 +1880,8 @@ function FormBuilderContent() {
               setForm(structuredClone(source));
               setSelected(source.fields[0]?.id || "");
               setRemoteConflict(false);
+              setUncertainWrite(undefined);
+              setRecoveryConfirmed(false);
               setSaveError("");
               setSaveStatus("Saved");
               setLoadReview(false);
@@ -1797,6 +1892,59 @@ function FormBuilderContent() {
           <Button variant="secondary" onClick={() => setLoadReview(false)}>
             Keep proposed draft
           </Button>
+          {(!uncertainWrite || recoveryConfirmed) && (
+            <>
+              <p>
+                Resuming autosave instead keeps your proposed fields and
+                settings and saves them over the current saved draft. Published
+                questions and existing responses stay on their immutable
+                versions.
+              </p>
+              <Button
+                variant="secondary"
+                disabled={
+                  !source ||
+                  server.loading ||
+                  !!server.error ||
+                  !isOnline ||
+                  publishing ||
+                  recoveryBusy ||
+                  !source.actions?.includes("edit") ||
+                  source.status === "Archived"
+                }
+                onClick={() => {
+                  if (
+                    !source ||
+                    server.loading ||
+                    server.error ||
+                    !isOnline ||
+                    recoveryBusy ||
+                    !source.actions?.includes("edit")
+                  )
+                    return;
+                  invalidateWrites();
+                  queue.current = Promise.resolve(undefined);
+                  revision.current = source.revision;
+                  saved.current = signature(source);
+                  setForm({
+                    ...form,
+                    revision: source.revision,
+                    actions: source.actions,
+                    versions: source.versions,
+                    status: source.status,
+                  });
+                  setUncertainWrite(undefined);
+                  setRecoveryConfirmed(false);
+                  setRemoteConflict(false);
+                  setSaveError("");
+                  setSaveStatus("Unsaved changes");
+                  setLoadReview(false);
+                }}
+              >
+                Keep proposed draft and resume autosave
+              </Button>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </div>

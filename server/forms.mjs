@@ -148,16 +148,29 @@ export async function formRoutes(
   });
   const mutate = async (session, id, action, revision, document, hash = null) =>
     checked(
-      await db.rpc("mutate_form", {
-        p_actor: session.user.id,
-        p_id: id,
-        p_action: action,
-        p_revision: revision,
-        p_document: document,
-        p_schema_hash: hash,
-        p_request_id: requestId,
-      }),
+      await db.rpc(
+        ["draft", "publish"].includes(action)
+          ? "mutate_form_authoring"
+          : "mutate_form",
+        {
+          p_actor: session.user.id,
+          ...(["draft", "publish"].includes(action)
+            ? {
+                p_session: session.sessionId,
+                p_key_hash: tokenHash(idempotency(request)),
+                p_request_hash: authoringHash,
+              }
+            : {}),
+          p_id: id,
+          p_action: action,
+          p_revision: revision,
+          p_document: document,
+          p_schema_hash: hash,
+          p_request_id: requestId,
+        },
+      ),
     );
+  let authoringHash;
   const rate = async (scope, key, limit, seconds = 900) => {
     const r = await store.rateLimit(
       scope,
@@ -800,6 +813,35 @@ export async function formRoutes(
     throw new ApiError(404, "NOT_FOUND", "This form is not available.");
   const row = checked(await db.from("forms").select("*").eq("id", id).single());
   if (request.method === "GET") {
+    if (url.searchParams.has("mutation")) {
+      if (operation)
+        throw new ApiError(
+          400,
+          "VALIDATION_ERROR",
+          "Use the selected form to recheck a write.",
+        );
+      const query = queryValues(
+        url.searchParams,
+        z.object({ mutation: z.enum(["draft", "publish"]) }).strict(),
+      );
+      const result = checked(
+        await db.rpc("inspect_form_authoring_write", {
+          p_actor: session.user.id,
+          p_session: session.sessionId,
+          p_id: id,
+          p_action: query.mutation,
+          p_key_hash: tokenHash(idempotency(request)),
+          p_request_hash: null,
+        }),
+      );
+      sendJson(
+        response,
+        200,
+        { ...result, form: await project(result.form, session.user.id) },
+        requestId,
+      );
+      return true;
+    }
     if (operation === "versions") {
       sendJson(response, 200, { items: await versions(id) }, requestId);
       return true;
@@ -947,6 +989,31 @@ export async function formRoutes(
           : request.method === "DELETE"
             ? "archive"
             : "draft";
+  if (["draft", "publish"].includes(action)) {
+    const key = idempotency(request);
+    // Fingerprint the original validated intent, including its expected
+    // revision, before deriving publication data from a potentially newer row.
+    authoringHash = tokenHash(JSON.stringify({ id, action, body }));
+    const existing = checked(
+      await db.rpc("inspect_form_authoring_write", {
+        p_actor: session.user.id,
+        p_session: session.sessionId,
+        p_id: id,
+        p_action: action,
+        p_key_hash: tokenHash(key),
+        p_request_hash: authoringHash,
+      }),
+    );
+    if (existing.committed) {
+      sendJson(
+        response,
+        200,
+        { form: await project(existing.form, session.user.id) },
+        requestId,
+      );
+      return true;
+    }
+  }
   const definition =
     action === "publish"
       ? parse(formDefinitionSchema, row.draft_definition)

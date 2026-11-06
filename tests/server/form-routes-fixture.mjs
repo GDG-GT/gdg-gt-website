@@ -101,6 +101,8 @@ export function fixture() {
     ["list_form_library_options", { items: [], total: 0 }],
     ["create_form_from_template", row],
     ["mutate_form", row],
+    ["mutate_form_authoring", row],
+    ["inspect_form_authoring_write", { committed: false, form: row }],
     ["mutate_form_collaborator", {}],
     ["form_receipt_ready", true],
     ["save_identified_form_draft", {}],

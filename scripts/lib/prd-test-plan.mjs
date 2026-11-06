@@ -315,7 +315,7 @@ add(
   "TEAM-002 TEAM-003 TEAM-004 TEAM-005",
   "Independent invitation/announcement reads, retained timestamped drafts, denied-state clearing, scoped cancellation, fresh-capability/revision checks and reviewed local navigation",
   ["tests/client/team-child-read-recovery.test.tsx", "tests/client/team-parent-pause.test.tsx", local("team-child-read-recovery"), "tests/browser/team-child-reads.spec.ts"],
-  ["Invitation/announcement atomic mutation replay and complete uncertain-write/consequence recovery remain separate work; full supported-role/device/manual/visual/hosted acceptance remains open"],
+  ["Invitation/announcement atomic write recovery has separate local evidence in TEAM-TEST-009/010; full supported-role/device/manual/visual/hosted acceptance remains open"],
 );
 prdTestCases.at(-1).normative = ["23", "24", "28.3", "28.4", "31.2"];
 add(
@@ -323,7 +323,7 @@ add(
   "TEAM-002 TEAM-003 TEAM-004 TEAM-005 TEAM-006",
   "Current-authority atomic invitation create/resend/revoke receipts, exact recipient/consequence reviews and bounded fresh-proof recovery without duplicate mail or token rotation",
   ["tests/client/invitation-mutation-recovery.test.tsx", unit("invitation-mutation-recovery"), sql("115_invitation_mutation_replay"), local("invitation-mutation-recovery"), "tests/browser/invitation-review.spec.ts"],
-  ["Complete announcement mutation recovery and full supported-role/device/manual/visual/provider/hosted invitation acceptance remain open; live probe does not invoke a delivery worker"],
+  ["Announcement mutation recovery has separate local evidence in TEAM-TEST-010; full supported-role/device/manual/visual/provider/hosted invitation acceptance remains open; live probe does not invoke a delivery worker"],
 );
 prdTestCases.at(-1).normative = ["23", "24", "28.3", "28.4", "31.2"];
 add(
@@ -347,7 +347,15 @@ add(
   "FORM-001 FORM-002 FORM-003",
   "Private saved-definition denial clearing, builder/response account-session-form scope isolation, cancelable queued autosave/publication and reviewed stale saved-draft loading",
   ["tests/client/form-builder-read-scope.test.tsx", "tests/client/form-data-recovery.test.tsx", local("form-builder-read-scope"), "tests/browser/form-builder-scope.spec.ts"],
-  ["Full atomic builder draft/publication replay, complete response/runtime/integration recovery and supported-role/device/manual/visual/hosted acceptance remain open; paused unknown saves are not automatically retried"],
+  ["Atomic builder draft/publication replay has separate local evidence in FORM-TEST-040; library creation/duplication/availability replay, complete response/runtime/integration recovery and supported-role/device/manual/visual/hosted acceptance remain open; paused unknown saves are not automatically retried"],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
+add(
+  "FORM-TEST-040",
+  "FORM-001 FORM-002 FORM-003",
+  "Current-authority atomic draft/publication receipts, normalized original-intent retry, read-only accepted-write reconciliation and reviewed proposed-draft resumption",
+  ["tests/client/form-write-recovery.test.tsx", "tests/client/form-builder-read-scope.test.tsx", unit("form-authoring-replay"), sql("118_form_authoring_replay"), local("form-authoring-recovery"), "tests/browser/form-authoring-recovery.spec.ts"],
+  ["Library creation/duplication/availability replay, complete response/runtime/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; owned probe publishes internal fictional forms without responses or provider sends"],
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
 const teams = [

@@ -4513,6 +4513,22 @@ fieldset.gt-event-fields {
   font-size: 0.875rem;
   line-height: 1.6;
 }
+.gt-builder-write-recovery {
+  margin: 20px clamp(16px, 3vw, 25px);
+  padding-block: 16px;
+  border-block: 1px solid hsl(var(--border));
+  font-size: 0.875rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.gt-builder-write-recovery > h2 {
+  font-size: 1.125rem;
+  line-height: 1.35;
+  margin: 0 0 12px;
+}
+.gt-builder-write-recovery > p {
+  margin-block: 10px;
+}
 .gt-builder-header {
   padding: 22px 25px;
   border-bottom: 1px solid #e4d5c7;

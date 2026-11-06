@@ -16,6 +16,7 @@ import FormBuilder from "../../src/ui/forms/FormBuilder";
 import { useServerForm } from "../../src/ui/forms/api";
 import { createTemplate } from "../../shared/forms";
 import { ApiFailure } from "../../src/lib/api";
+import { useDraftGuard } from "../../src/hooks/useDraftGuard";
 const { apiMock, actor, navigation } = vi.hoisted(() => ({
   apiMock: vi.fn(),
   actor: { id: "fictional-editor", role: "admin" },
@@ -176,6 +177,123 @@ describe("Private saved form reads", () => {
   });
 });
 describe("Form builder scoped state and autosave", () => {
+  it("publishes an unchanged saved definition with publish-only permission and no draft write", async () => {
+    saved = {
+      ...createTemplate("Fictional publish-only form", "interest"),
+      id: saved.id,
+      revision: 1,
+      actions: ["view", "publish"],
+    };
+    render(panel());
+    await title();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Publish", exact: true }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Publish version", exact: true }),
+    );
+    await waitFor(() => expect(writes()).toHaveLength(1));
+    expect(writes()[0][0]).toContain("/publish");
+    await screen.findByText("Published and saved");
+  });
+  it("guards unconfirmed publication navigation and reload even when the draft itself is unchanged", async () => {
+    saved = {
+      ...createTemplate("Fictional uncertain publication", "interest"),
+      id: saved.id,
+      revision: 1,
+      actions: ["view", "edit", "publish"],
+    };
+    write = async () => {
+      throw new Error("Fictional lost publication response");
+    };
+    render(panel());
+    await title();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Publish", exact: true }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Publish version", exact: true }),
+    );
+    await screen.findByRole("heading", {
+      name: "Recheck the unconfirmed publication",
+    });
+    expect(vi.mocked(useDraftGuard).mock.lastCall).toEqual([
+      true,
+      expect.objectContaining({
+        label: expect.stringContaining("unconfirmed publication"),
+      }),
+    ]);
+    const event = new Event("beforeunload", { cancelable: true });
+    fireEvent(window, event);
+    expect(event.defaultPrevented).toBe(true);
+    expect(writes()).toHaveLength(1);
+  });
+  it("preserves newer proposed edits during lost-save reconciliation and explicitly reviews resuming autosave", async () => {
+    const lost = deferred<unknown>();
+    let first = true;
+    write = async (_path, options) => {
+      if (first) {
+        first = false;
+        await lost.promise;
+        throw new Error("Fictional lost save response");
+      }
+      const def = options.body.definition as typeof saved;
+      saved = { ...saved, ...def, revision: 3 };
+      return { form: saved };
+    };
+    render(panel());
+    const input = await title();
+    fireEvent.change(input, {
+      target: { value: "Fictional original in-flight title" },
+    });
+    await waitFor(() => expect(writes()).toHaveLength(1), { timeout: 1800 });
+    fireEvent.change(input, {
+      target: { value: "Fictional newer proposed title" },
+    });
+    saved = {
+      ...saved,
+      title: "Fictional original in-flight title",
+      revision: 2,
+    };
+    await act(async () => lost.resolve(undefined));
+    await screen.findByRole("heading", {
+      name: "Recheck the unconfirmed draft save",
+    });
+    // The real receipt route provides current data without another mutation.
+    apiMock.mockImplementation(async (path, options = {}) => {
+      if (options.method) return write(path, options);
+      return {
+        form: structuredClone(saved),
+        ...(path.includes("?mutation=") ? { committed: true } : {}),
+      };
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Recheck original write outcome" }),
+    );
+    await screen.findByText(/The original change is confirmed/);
+    expect(screen.queryByText(/Fictional lost save response/)).toBeNull();
+    expect(input.value).toBe("Fictional newer proposed title");
+    expect(input.disabled).toBe(true);
+    expect(writes()).toHaveLength(1);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Review loading saved draft" }),
+    );
+    const resume = await screen.findByRole("button", {
+      name: "Keep proposed draft and resume autosave",
+    });
+    expect((resume as HTMLButtonElement).disabled).toBe(false);
+    expect(writes()).toHaveLength(1);
+    fireEvent.click(resume);
+    await waitFor(() => expect(writes()).toHaveLength(2), { timeout: 1800 });
+    expect(writes()[1][1].body).toMatchObject({
+      revision: 2,
+      definition: { title: "Fictional newer proposed title" },
+    });
+    expect(writes()[1][1].idempotencyKey).not.toBe(
+      writes()[0][1].idempotencyKey,
+    );
+    expect(input.value).toBe("Fictional newer proposed title");
+  });
   it("does not let an old refresh completion steal focus in a replacement form", async () => {
     const pending = deferred<unknown>();
     const original = apiMock.getMockImplementation()!;

@@ -1,0 +1,82 @@
+{
+  "generatedAt": "2026-11-06T04:24:19.154Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and Chromium desktop/mobile; only fresh fictional accounts/forms with internal access. Ten concurrent identical save/publication calls and accepted-lost/unaccepted saves/publications; exact explicit retries, read-only receipts, original body/key, audit/version deduplication and measured axe. Forms archived/accounts disabled/sessions revoked. No responses, workers/provider sends, existing chapter or production changes. Screenshots private/ignored; no credentials/body/key material retained.",
+  "tests": [
+    {
+      "name": "ten concurrent identical draft requests commit one revision and audit",
+      "passed": true
+    },
+    {
+      "name": "ten concurrent identical publications create one immutable version",
+      "passed": true
+    },
+    {
+      "name": "changed authoring intent cannot reuse an accepted key",
+      "passed": true
+    },
+    {
+      "name": "unrelated account cannot inspect an authoring receipt",
+      "passed": true
+    },
+    {
+      "name": "accepted-but-lost draft reconciles read-only without another PATCH at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "unaccepted draft needs read-only check and exact explicit key/body retry at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated unconfirmed publication passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "accepted-but-lost publication reconciles without another POST/version at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "unaccepted publication requires explicit original revision/key retry once at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "two intended saves/publications have exactly two audits each at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "authoring recovery has no extra write, script error, external request or overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "accepted-but-lost draft reconciles read-only without another PATCH at 375×812",
+      "passed": true
+    },
+    {
+      "name": "unaccepted draft needs read-only check and exact explicit key/body retry at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated unconfirmed publication passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "accepted-but-lost publication reconciles without another POST/version at 375×812",
+      "passed": true
+    },
+    {
+      "name": "unaccepted publication requires explicit original revision/key retry once at 375×812",
+      "passed": true
+    },
+    {
+      "name": "two intended saves/publications have exactly two audits each at 375×812",
+      "passed": true
+    },
+    {
+      "name": "authoring recovery has no extra write, script error, external request or overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

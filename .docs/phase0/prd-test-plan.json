@@ -730,7 +730,7 @@
         "tests/browser/team-child-reads.spec.ts"
       ],
       "remaining": [
-        "Invitation/announcement atomic mutation replay and complete uncertain-write/consequence recovery remain separate work; full supported-role/device/manual/visual/hosted acceptance remains open",
+        "Invitation/announcement atomic write recovery has separate local evidence in TEAM-TEST-009/010; full supported-role/device/manual/visual/hosted acceptance remains open",
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified",
@@ -760,7 +760,7 @@
         "tests/browser/invitation-review.spec.ts"
       ],
       "remaining": [
-        "Complete announcement mutation recovery and full supported-role/device/manual/visual/provider/hosted invitation acceptance remain open; live probe does not invoke a delivery worker",
+        "Announcement mutation recovery has separate local evidence in TEAM-TEST-010; full supported-role/device/manual/visual/provider/hosted invitation acceptance remains open; live probe does not invoke a delivery worker",
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified",
@@ -842,7 +842,35 @@
         "tests/browser/form-builder-scope.spec.ts"
       ],
       "remaining": [
-        "Full atomic builder draft/publication replay, complete response/runtime/integration recovery and supported-role/device/manual/visual/hosted acceptance remain open; paused unknown saves are not automatically retried",
+        "Atomic builder draft/publication replay has separate local evidence in FORM-TEST-040; library creation/duplication/availability replay, complete response/runtime/integration recovery and supported-role/device/manual/visual/hosted acceptance remain open; paused unknown saves are not automatically retried",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "28.4",
+        "31.2"
+      ]
+    },
+    {
+      "id": "FORM-TEST-040",
+      "requirements": [
+        "FORM-001",
+        "FORM-002",
+        "FORM-003"
+      ],
+      "scope": "Current-authority atomic draft/publication receipts, normalized original-intent retry, read-only accepted-write reconciliation and reviewed proposed-draft resumption",
+      "automated": [
+        "tests/client/form-write-recovery.test.tsx",
+        "tests/client/form-builder-read-scope.test.tsx",
+        "tests/server/form-authoring-replay.test.mjs",
+        "database/tests/118_form_authoring_replay.sql",
+        "scripts/test-local-form-authoring-recovery.mjs",
+        "tests/browser/form-authoring-recovery.spec.ts"
+      ],
+      "remaining": [
+        "Library creation/duplication/availability replay, complete response/runtime/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; owned probe publishes internal fictional forms without responses or provider sends",
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified",

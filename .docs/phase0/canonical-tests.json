@@ -118,7 +118,8 @@
     "202611050114_team_mutation_replay.sql",
     "202611050115_invitation_mutation_replay.sql",
     "202611050116_team_announcement_replay.sql",
-    "202611050117_event_mail_recovery_read.sql"
+    "202611050117_event_mail_recovery_read.sql",
+    "202611050118_form_authoring_replay.sql"
   ],
   "tests": [
     {
@@ -594,6 +595,10 @@
       "passed": true
     },
     {
+      "name": "202611050118_form_authoring_replay.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -947,6 +952,10 @@
     },
     {
       "name": "117_event_mail_recovery_read.sql",
+      "passed": true
+    },
+    {
+      "name": "118_form_authoring_replay.sql",
       "passed": true
     },
     {

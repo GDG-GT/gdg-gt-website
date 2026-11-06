@@ -36,6 +36,8 @@ export type PublicFixture = {
   failFormRead: boolean;
   denyFormRead: boolean;
   formWrites: number;
+  dropFormBefore: boolean;
+  formAttempts: { action: string; key: string | undefined; body: unknown }[];
 };
 export const fictionalTeamInvite = {
   id: "fbbb0000-0000-4000-8000-000000000004",
@@ -186,10 +188,16 @@ export const test = base.extend<{ fixture: PublicFixture }>({
         failFormRead: false,
         denyFormRead: false,
         formWrites: 0,
+        dropFormBefore: false,
+        formAttempts: [],
       };
       let team = { ...fictionalTeam };
       let managedInvite = { ...fictionalTeamInvite };
       let builderForm = structuredClone(fictionalBuilderForm);
+      const formReceipts = new Map<
+        string,
+        { revision: number; versionId: string | null; action: string }
+      >();
       let managedPost = { ...fictionalTeamPost },
         postInitialized = false;
       const currentPost = () => {
@@ -293,10 +301,26 @@ export const test = base.extend<{ fixture: PublicFixture }>({
         if (
           state.authenticated &&
           state.formBuilder &&
-          request.method() === "PATCH" &&
-          path === formRoot + "/draft"
+          ((request.method() === "PATCH" && path === formRoot + "/draft") ||
+            (request.method() === "POST" && path === formRoot + "/publish"))
         ) {
-          const body = request.postDataJSON();
+          const body = request.postDataJSON(),
+            action = path.endsWith("/publish") ? "publish" : "draft",
+            key = request.headers()["idempotency-key"];
+          state.formAttempts.push({ action, key, body });
+          if (!key) {
+            await reply(400, null);
+            return;
+          }
+          if (state.dropFormBefore) {
+            state.dropFormBefore = false;
+            await route.abort("connectionfailed");
+            return;
+          }
+          if (formReceipts.has(key)) {
+            await reply(200, { form: builderForm });
+            return;
+          }
           if (body.revision !== builderForm.revision) {
             await reply(409, null);
             return;
@@ -304,10 +328,30 @@ export const test = base.extend<{ fixture: PublicFixture }>({
           state.formWrites++;
           builderForm = {
             ...builderForm,
-            ...body.definition,
-            slug: body.slug,
+            ...(action === "draft"
+              ? { ...body.definition, slug: body.slug }
+              : {
+                  status: "Open" as const,
+                  versions: [
+                    ...builderForm.versions,
+                    {
+                      ...builderForm,
+                      version: builderForm.versions.length + 1,
+                      versionId: "ba000000-0000-4000-8000-000000000009",
+                      publishedAt: "2026-11-04T12:00:00Z",
+                    },
+                  ],
+                }),
             revision: builderForm.revision + 1,
           };
+          formReceipts.set(key, {
+            revision: builderForm.revision!,
+            versionId:
+              action === "publish"
+                ? "ba000000-0000-4000-8000-000000000009"
+                : null,
+            action,
+          });
           if (state.failFormSave) {
             state.failFormSave = false;
             await route.abort("connectionfailed");
@@ -662,7 +706,16 @@ export const test = base.extend<{ fixture: PublicFixture }>({
               await reply(state.denyFormRead ? 403 : 503, null);
               return;
             }
-            await reply(200, { form: builderForm });
+            if (url.searchParams.has("mutation")) {
+              const receipt = formReceipts.get(
+                request.headers()["idempotency-key"],
+              );
+              await reply(200, {
+                committed: !!receipt,
+                ...(receipt ? { receipt } : {}),
+                form: builderForm,
+              });
+            } else await reply(200, { form: builderForm });
             return;
           }
           if (path === "/admin/events") {
