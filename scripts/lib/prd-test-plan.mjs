@@ -1151,6 +1151,15 @@ add(
 );
 prdTestCases.at(-1).normative = ["16.3", "29", "31.2"];
 add(
+  "OPS-TEST-011",
+  "",
+  "Person-data privacy cleanup metadata recovery, retained exact review/scope, current denial clearing, context cancellation, explicit offline recheck and guarded private navigation",
+  [unit("person-privacy"), sql("094_person_privacy"), "tests/client/privacy-read-recovery.test.tsx", "tests/browser/privacy-read-recovery.spec.ts", local("privacy-read-recovery")],
+  ["Original review/approval unknown-outcome recovery, institutional retention/identity/hold and physical byte cleanup, complete manual/device/visual/hosted acceptance remain open; fixture prepares only owned reviews and performs no approval or provider send"],
+);
+prdTestCases.at(-1).normative = ["24", "28.3", "28.4", "29", "31.2"];
+
+add(
   "A11Y-TEST-002",
   "",
   "Overview loading, error, stale snapshot and independent widget interaction",

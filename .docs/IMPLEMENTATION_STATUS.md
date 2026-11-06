@@ -8,6 +8,45 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Person-data privacy cleanup-read and retained review recovery — 2026-11-06
+
+- Cleanup metadata now has named loading/retry, dated retained snapshots and
+  malformed-result refusal. A transient failure preserves requester scope and
+  an exact prepared review while approval pauses. Current denial clears scope,
+  proof, review, result and counters and cancels pending requests; explicit
+  current-access recheck is required. Account/role/session replacement remounts
+  private context. Offline/reconnect also requires explicit recheck. A stuck
+  status read can be restarted explicitly; its late result is ignored.
+- Password rejection remains separate from current access loss. Back to scope
+  uses the private draft guard, comparison/history tables have distinct named
+  keyboard-scrollable regions, and expiry copy does not claim that an unknown
+  operation changed no records. Original review/commit mutation reconciliation
+  and single-use export handling remain separate pending work.
+- All 24 focused server/client cases pass (18 new read cases), and all 18 populated
+  production-browser cases pass across six profiles, no skips. Measured axe/
+  overflow pass; mobile native capture inspected and unapproved. All 15 actual
+  owned API/DB/native desktop-mobile checks pass: exact subject review preparation,
+  metadata outage/retry/denial, retained review and declined navigation, current
+  subject data unchanged and no approvals/egress/errors/overflow. Exactly two
+  unapproved fixture reviews are prepared; neither commits or sends anything.
+- Initial fixture cleanup correctly hit 42501 when it attempted protected review
+  UPDATE after all checks. Read-only inspection identified the single owned actor
+  and two reviews; contact redaction had completed. Follow-up revoked all owned
+  sessions and disabled the account with verification. Reviews remain private under
+  normal expiry/cleanup; no protected grant/row was changed. The fixture now follows
+  that restriction. No physical-erasure claim or repeat of completed review actions.
+- Build/types/lint (zero errors/25 existing warnings), budgets/secrets/traceability
+  pass. All 2,535 tests/205 files and all 21 critical 90% branch gates pass. Global
+  lines/branches/statements pass at 73.39%/73.15%/71.75%; functions remain below
+  unchanged 70% at 64.90%. A separate normative operations case brings the catalog
+  to 160 unverified logical cases, with no full-acceptance status promoted.
+  No migration; applied chain 132. See `PRIVACY_READ_RECOVERY.md`.
+- Member/merge, contact status/hold and person-data privacy review/commit unknown-
+  outcome mutation recovery, global function coverage and remaining manual/device/
+  visual/hosted acceptance remain open. SSO/Google and Bevy/Engage remain deferred;
+  no deployment, real provider send, production change, purchase or new timer.
+
+
 ### Contact-inbox private read and review recovery — 2026-11-06
 
 - Selected inquiry failures now have usable refresh/retry and a return path.

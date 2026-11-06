@@ -2421,6 +2421,30 @@
       ]
     },
     {
+      "id": "OPS-TEST-011",
+      "requirements": [],
+      "scope": "Person-data privacy cleanup metadata recovery, retained exact review/scope, current denial clearing, context cancellation, explicit offline recheck and guarded private navigation",
+      "automated": [
+        "tests/server/person-privacy.test.mjs",
+        "database/tests/094_person_privacy.sql",
+        "tests/client/privacy-read-recovery.test.tsx",
+        "tests/browser/privacy-read-recovery.spec.ts",
+        "scripts/test-local-privacy-read-recovery.mjs"
+      ],
+      "remaining": [
+        "Original review/approval unknown-outcome recovery, institutional retention/identity/hold and physical byte cleanup, complete manual/device/visual/hosted acceptance remain open; fixture prepares only owned reviews and performs no approval or provider send",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "24",
+        "28.3",
+        "28.4",
+        "29",
+        "31.2"
+      ]
+    },
+    {
       "id": "A11Y-TEST-002",
       "requirements": [],
       "scope": "Overview loading, error, stale snapshot and independent widget interaction",

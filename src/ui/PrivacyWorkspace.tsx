@@ -1,6 +1,16 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  type FormEvent,
+} from "react";
 import { api, ApiFailure } from "@/lib/api";
-import { useDraftGuard } from "@/hooks/useDraftGuard";
+import { useAdmin } from "@/contexts/AdminContext";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import ScrollableTable from "./ScrollableTable";
+import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
 import { Badge, Button, EmptyState, Field } from "./primitives";
 import {
   personPrivacyReview,
@@ -62,16 +72,29 @@ const labels: Record<string, string> = {
 };
 
 export default function PrivacyWorkspace() {
+  const { currentAdmin } = useAdmin(),
+    [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((v) => v + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  return (
+    <PrivacyRequests
+      key={JSON.stringify([currentAdmin?.id, currentAdmin?.role, epoch])}
+    />
+  );
+}
+function PrivacyRequests() {
   const [draft, setDraft] = useState(initial),
     [password, setPassword] = useState(""),
     [confirmation, setConfirmation] = useState(""),
     [review, setReview] = useState<Review>(),
     [result, setResult] = useState<Result>(),
-    [recent, setRecent] = useState<Recent[]>([]),
+    [denied, setDenied] = useState(false),
+    [needsRecheck, setNeedsRecheck] = useState(!navigator.onLine),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
-    [loading, setLoading] = useState(true),
-    [loadError, setLoadError] = useState(""),
     [completed, setCompleted] = useState(false),
     [refresh, setRefresh] = useState(0),
     [now, setNow] = useState(Date.now());
@@ -80,6 +103,86 @@ export default function PrivacyWorkspace() {
     reviewHeading = useRef<HTMLHeadingElement>(null),
     resultHeading = useRef<HTMLHeadingElement>(null),
     submission = useRef<{ signature: string; key: string }>();
+  const { isOnline } = useOnlineStatus(),
+    safety = useNavigationSafety(),
+    recentRead = usePrivateRead<{ items: Recent[] }>(
+      denied ? undefined : "/admin/privacy",
+      refresh,
+    ),
+    clearRecent = recentRead.clear;
+  const malformed =
+      recentRead.data !== undefined &&
+      (!recentRead.data ||
+        !Array.isArray(recentRead.data.items) ||
+        !recentRead.data.items.every(
+          (row) =>
+            !!row &&
+            typeof row.reviewId === "string" &&
+            ["export", "redact", "delete"].includes(row.action) &&
+            Number.isInteger(row.count) &&
+            row.count >= 0 &&
+            typeof row.createdAt === "string" &&
+            typeof row.expiresAt === "string" &&
+            (row.completedAt === null || typeof row.completedAt === "string") &&
+            Number.isInteger(row.pendingFiles) &&
+            row.pendingFiles >= 0 &&
+            Number.isInteger(row.pendingExports) &&
+            row.pendingExports >= 0,
+        )),
+    recent = malformed ? [] : recentRead.data?.items || [],
+    loading = recentRead.loading,
+    loadError = malformed
+      ? "The current privacy request reply could not be verified. Retry this read."
+      : recentRead.error,
+    unavailable =
+      denied ||
+      !isOnline ||
+      needsRecheck ||
+      loading ||
+      !!loadError ||
+      !recentRead.data;
+  const clearPrivate = useCallback(() => {
+    generation.current++;
+    request.current?.abort();
+    clearRecent();
+    setDraft(initial);
+    setPassword("");
+    setConfirmation("");
+    setReview(undefined);
+    setResult(undefined);
+    setBusy(false);
+    setError("");
+    setCompleted(false);
+    submission.current = undefined;
+  }, [clearRecent]);
+  useEffect(() => {
+    if (recentRead.denied) {
+      clearPrivate();
+      setDenied(true);
+    }
+  }, [recentRead.denied, clearPrivate]);
+  useEffect(() => {
+    if (!isOnline) setNeedsRecheck(true);
+  }, [isOnline]);
+  const refreshStatus = () => {
+    if (busy || !navigator.onLine) return;
+    setDenied(false);
+    setNeedsRecheck(false);
+    setRefresh((v) => v + 1);
+  };
+  const rejectPrivate = (error: unknown) => {
+    if (
+      error instanceof ApiFailure &&
+      (error.status === 401 ||
+        error.status === 404 ||
+        (error.status === 403 && error.code === "FORBIDDEN"))
+    ) {
+      clearPrivate();
+      setDenied(true);
+      return true;
+    }
+    return false;
+  };
   useDraftGuard(
     !completed &&
       (!!review ||
@@ -95,44 +198,8 @@ export default function PrivacyWorkspace() {
       generation.current++;
       request.current?.abort();
     };
-    const clear = () => {
-      invalidate();
-      setDraft(initial);
-      setPassword("");
-      setConfirmation("");
-      setReview(undefined);
-      setResult(undefined);
-      setRecent([]);
-      setBusy(false);
-      setError("");
-    };
-    window.addEventListener("gdg:session-cleared", clear);
-    return () => {
-      invalidate();
-      window.removeEventListener("gdg:session-cleared", clear);
-    };
+    return invalidate;
   }, []);
-  useEffect(() => {
-    const controller = new AbortController(),
-      current = generation.current;
-    setLoading(true);
-    setLoadError("");
-    api<{ items: Recent[] }>("/admin/privacy", {
-      signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]),
-    })
-      .then((data) => {
-        if (current === generation.current) setRecent(data.items);
-      })
-      .catch((e: Error) => {
-        if (!controller.signal.aborted && current === generation.current)
-          setLoadError(e.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted && current === generation.current)
-          setLoading(false);
-      });
-    return () => controller.abort();
-  }, [refresh]);
   useEffect(() => {
     if (review) reviewHeading.current?.focus();
   }, [review]);
@@ -156,7 +223,7 @@ export default function PrivacyWorkspace() {
   };
   const reviewRequest = async (event: FormEvent) => {
     event.preventDefault();
-    if (busy) return;
+    if (busy || unavailable) return;
     const parsed = personPrivacyReview.safeParse({
       ...draft,
       responseIds: draft.responseIds.trim()
@@ -192,6 +259,7 @@ export default function PrivacyWorkspace() {
       submission.current = undefined;
       setRefresh((value) => value + 1);
     } catch (e) {
+      if (current === generation.current && rejectPrivate(e)) return;
       if (current === generation.current && !controller.signal.aborted)
         setError((e as Error).message);
     } finally {
@@ -203,7 +271,7 @@ export default function PrivacyWorkspace() {
   };
   const approve = async (event: FormEvent) => {
     event.preventDefault();
-    if (!review || busy) return;
+    if (!review || busy || unavailable) return;
     const controller = new AbortController(),
       current = generation.current;
     request.current = controller;
@@ -261,6 +329,7 @@ export default function PrivacyWorkspace() {
       setCompleted(true);
       setRefresh((value) => value + 1);
     } catch (e) {
+      if (current === generation.current && rejectPrivate(e)) return;
       if (current === generation.current && !controller.signal.aborted) {
         setError((e as Error).message);
         if (
@@ -322,6 +391,22 @@ export default function PrivacyWorkspace() {
           New records created after review may require another request.
         </p>
       </section>
+      {denied && (
+        <div role="alert" className="gt-form-error">
+          <p>
+            Person-data privacy access could not be verified. Private scope,
+            reviews and cleanup counters have been cleared. Recheck current
+            access to continue.
+          </p>
+        </div>
+      )}
+      {(!isOnline || needsRecheck) && (
+        <p role="status">
+          Privacy actions are paused.{" "}
+          {!isOnline ? "You’re offline." : "Connection restored."} Explicitly
+          recheck cleanup status before continuing.
+        </p>
+      )}
       {error && (
         <p role="alert" className="gt-form-error">
           {error}
@@ -354,7 +439,7 @@ export default function PrivacyWorkspace() {
       )}
       <form className="gt-panel gt-form" onSubmit={reviewRequest}>
         <h2>1. Verify the requester and review scope</h2>
-        <fieldset className="gt-form" disabled={busy}>
+        <fieldset className="gt-form" disabled={busy || unavailable}>
           <div className="gt-form-grid">
             <Field label="Exact requester email">
               <input
@@ -443,7 +528,13 @@ export default function PrivacyWorkspace() {
           )}
           <Button
             type="submit"
-            disabled={busy || !!review || !password || !draft.identityVerified}
+            disabled={
+              busy ||
+              unavailable ||
+              !!review ||
+              !password ||
+              !draft.identityVerified
+            }
           >
             {busy && !review
               ? "Checking scope…"
@@ -470,12 +561,15 @@ export default function PrivacyWorkspace() {
           )}
           {expired && (
             <p role="alert">
-              This review expired. Generate a fresh review; no records have
-              changed.
+              This review expired. Generate a fresh record review before
+              approval.
             </p>
           )}
           {review.records.length ? (
-            <div className="gt-table-wrap">
+            <ScrollableTable
+              className="gt-table-wrap"
+              label="Reviewed privacy records"
+            >
               <table className="gt-data-table">
                 <thead>
                   <tr>
@@ -504,7 +598,7 @@ export default function PrivacyWorkspace() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </ScrollableTable>
           ) : (
             <p>
               No attributable public-workflow records match. Historical
@@ -523,6 +617,7 @@ export default function PrivacyWorkspace() {
             className="gt-form"
             disabled={
               busy ||
+              unavailable ||
               expired ||
               (review.action !== "export" &&
                 (review.heldCount > 0 || review.count === 0))
@@ -552,7 +647,9 @@ export default function PrivacyWorkspace() {
               <Button
                 type="submit"
                 variant={review.action === "export" ? "primary" : "secondary"}
-                disabled={busy || !password || confirmation !== expected}
+                disabled={
+                  busy || unavailable || !password || confirmation !== expected
+                }
               >
                 {busy
                   ? "Processing…"
@@ -566,11 +663,13 @@ export default function PrivacyWorkspace() {
             type="button"
             variant="ghost"
             disabled={busy}
-            onClick={() => {
-              setReview(undefined);
-              setPassword("");
-              setConfirmation("");
-            }}
+            onClick={() =>
+              safety.request(() => {
+                setReview(undefined);
+                setPassword("");
+                setConfirmation("");
+              })
+            }
           >
             Back to scope
           </Button>
@@ -584,18 +683,49 @@ export default function PrivacyWorkspace() {
           <h2 id="privacy-recent-heading">Recent privacy requests</h2>
           <Button
             variant="secondary"
-            disabled={busy || loading}
-            onClick={() => setRefresh((value) => value + 1)}
+            disabled={busy || !isOnline}
+            onClick={refreshStatus}
           >
             Refresh cleanup status
           </Button>
         </div>
-        {loading ? (
-          <p role="status">Checking request and cleanup counters…</p>
-        ) : loadError ? (
-          <p role="alert">{loadError}</p>
-        ) : recent.length ? (
-          <div className="gt-table-wrap">
+        {loading && !recentRead.data && (
+          <div role="status" aria-label="Loading privacy cleanup status">
+            <div className="gt-skeleton gt-detail-skeleton" />
+            <span className="sr-only">
+              Checking request and cleanup counters…
+            </span>
+          </div>
+        )}
+        {!denied && (loadError || (!isOnline && recentRead.at)) && (
+          <div role={loadError ? "alert" : "status"} className="gt-form-error">
+            {loadError && <p>{loadError}</p>}
+            {recentRead.at && (
+              <p>
+                Showing cleanup status from{" "}
+                <time dateTime={recentRead.at}>
+                  {new Date(recentRead.at).toLocaleString()}
+                </time>
+                . Counters may be out of date.
+              </p>
+            )}
+            {loadError && (
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={busy || !isOnline || loading}
+                onClick={refreshStatus}
+              >
+                Retry privacy cleanup status
+              </Button>
+            )}
+          </div>
+        )}
+        {recent.length ? (
+          <ScrollableTable
+            className="gt-table-wrap"
+            label="Privacy cleanup request table"
+          >
             <table className="gt-data-table">
               <thead>
                 <tr>
@@ -629,13 +759,13 @@ export default function PrivacyWorkspace() {
                 ))}
               </tbody>
             </table>
-          </div>
-        ) : (
+          </ScrollableTable>
+        ) : !loading && !loadError && !denied ? (
           <EmptyState title="No privacy requests yet">
             Start with an independently verified request. Review and approval
             are separate steps.
           </EmptyState>
-        )}
+        ) : null}
       </section>
     </div>
   );

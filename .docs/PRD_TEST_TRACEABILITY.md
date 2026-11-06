@@ -1,6 +1,6 @@
 # Numbered PRD test mapping
 
-All 146 explicit v1.5 requirements now map into 159 logical acceptance cases in
+All 146 explicit v1.5 requirements now map into 160 logical acceptance cases in
 `phase0/prd-test-plan.json`. Each case identifies its concrete executable source
 suites, applicable manual/hosted work and an unverified acceptance state. Cases
 may cover several related requirements; this is not a count of tests executed or
@@ -149,3 +149,9 @@ reviewed stale reload, current redaction clearing and activated short-lived
 attachment validation. `CONTACT_INBOX_READ_RECOVERY.md` records local evidence;
 status/hold original-outcome mutation and full role/manual/device/visual/hosted
 acceptance remain open.
+
+A new normative operations case maps person-data privacy cleanup-read recovery,
+retained scope/review, current-denial clearing, account/session cancellation,
+explicit offline recheck and guarded private navigation. SQL/server/client/browser/
+actual-local sources are linked in `PRIVACY_READ_RECOVERY.md`. The catalog now has
+160 unverified logical cases; no full requirement or release status is promoted.

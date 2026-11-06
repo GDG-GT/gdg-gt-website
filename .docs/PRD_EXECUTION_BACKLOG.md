@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-06): the latest module checkpoint is
-`CONTACT_INBOX_READ_RECOVERY.md`; completed recovery checkpoints include tasks,
+`PRIVACY_READ_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -19,6 +19,11 @@ blockers for the remaining original v1.5 work. Existing disabled SSO placeholder
 do not perform authentication or verification. No external integration is enabled.
 
 ## Feature implementation still required
+
+Person-data privacy cleanup-status reads and retained review/scope recovery are
+implemented locally (`PRIVACY_READ_RECOVERY.md`), including current-denial clearing,
+explicit stuck-read restart and offline/account/session fences. Original review/
+commit unknown outcomes remain, along with member/merge and contact mutations.
 
 Contact inbox independent private reads, retained proposals, current-denial and
 redaction clearing, reviewed stale reload and expiring activated attachment links
@@ -306,8 +311,8 @@ Their manual/hosted/visual acceptance remains open.
 Complete the confirmed community-directory, contact-inbox and person-data
 privacy recovery in `LOCAL_ACCEPTANCE_AUDIT.md`, then the remaining quality/
 coverage/device acceptance beyond the now-passing 21 critical-file gates.
-Latest full coverage passes lines/branches/statements at 72.91%/72.81%/71.29%;
-functions at 64.39% still fail the unchanged 70% global gate.
+Latest full coverage passes lines/branches/statements at 73.39%/73.15%/71.75%;
+functions at 64.90% still fail the unchanged 70% global gate.
 Preserve the read-only Git reference and historical SQL for retired clients
 (`LEGACY_CLIENT_RETIREMENT.md`), and keep user edits intact. Track implementation separately from verified
 acceptance; do not label the complete PRD finished until its launch gates pass.

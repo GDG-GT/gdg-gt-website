@@ -1,0 +1,69 @@
+{
+  "generatedAt": "2026-11-06T15:15:35.835Z",
+  "completed": true,
+  "cleanup": true,
+  "scope": "Loopback owned fictional Super Admin and two exact-email contact subjects. Native review preparation/read retry/outage/denial/navigation/axe only. No approvals/downloads/erasure/provider sends/production changes. Owned inquiry content redacted, actor disabled and sessions revoked. Two unapproved private review records remain under normal expiry/cleanup; no physical-erasure claim.",
+  "cleanupNote": "Initial fixture attempted a protected direct review UPDATE and was correctly denied (42501) after all 15 checks. Read-only inspection identified the single owned account and two unapproved reviews. Sessions were then revoked and account disabled with verification; no grant or protected review row was changed. Future fixture cleanup follows this restriction.",
+  "tests": [
+    {
+      "name": "actual privacy metadata retry leaves subject content unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "native exact subject review is prepared without approval or erasure at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "background privacy read outage retains dated review and pauses final approval at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "declined privacy navigation preserves the review without committing at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated exact privacy review passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "current privacy denial clears scope and explicit access recheck never reopens an old private review at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "privacy read recovery has no approvals egress errors or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "actual privacy metadata retry leaves subject content unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "native exact subject review is prepared without approval or erasure at 375×812",
+      "passed": true
+    },
+    {
+      "name": "background privacy read outage retains dated review and pauses final approval at 375×812",
+      "passed": true
+    },
+    {
+      "name": "declined privacy navigation preserves the review without committing at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated exact privacy review passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "current privacy denial clears scope and explicit access recheck never reopens an old private review at 375×812",
+      "passed": true
+    },
+    {
+      "name": "privacy read recovery has no approvals egress errors or page overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "exactly two owned privacy reviews exist and neither was approved",
+      "passed": true
+    }
+  ]
+}

@@ -21,13 +21,13 @@ be inferred from local tests.
    implemented locally (`CONTACT_INBOX_READ_RECOVERY.md`). Status/hold mutation
    unknown-outcome recovery is still required; current backend revision checks
    alone do not reconcile an accepted-but-lost reply. Do not introduce sends.
-3. Person-data privacy: `src/ui/PrivacyWorkspace.tsx` retains recent-request metadata
-   on failed reads without a timestamp, and does not clear prior metadata/review on
-   current 401/403/404 denial. Its review/commit transport has timeout and session
-   guards, but unknown outcomes do not receive the explicit original-outcome
-   inspection used elsewhere. Use the existing authorized request-status path
-   where possible, preserve proof/hold/expiry constraints, and never describe a
-   logical deletion or pending cleanup as physical erasure.
+3. Person-data privacy: retained timestamped cleanup metadata, explicit initial/
+   background/stuck-read retry, current-denial private clearing, account/session
+   isolation, offline approval fencing and guarded review navigation are now
+   implemented locally (`PRIVACY_READ_RECOVERY.md`). Original review/commit
+   unknown-outcome reconciliation remains; preserve exact source/hold/expiry/
+   password proof and the single-use export limitation. Never describe logical
+   deletion or pending cleanup as physical erasure.
 4. Global coverage: at checkpoint 130, functions (62.40%) and statements (69.44%)
    failed the unchanged 70% gate. Do not exclude active modules, lower gates or
    replace behavior verification with mirrored implementation assertions. Add
