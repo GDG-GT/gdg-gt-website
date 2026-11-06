@@ -745,6 +745,8 @@ function ResponseWorkspaceContent() {
                   <div className="gt-summary-bar" key={label}>
                     <span>{label}</span>
                     <meter
+                      aria-label={`${field.label}: ${label}`}
+                      aria-valuetext={`${count} of ${field.answered} answers`}
                       min={0}
                       max={Math.max(field.answered, 1)}
                       value={count}
@@ -759,6 +761,8 @@ function ResponseWorkspaceContent() {
                       <div className="gt-summary-bar" key={column}>
                         <span>{column}</span>
                         <meter
+                          aria-label={`${field.label}: ${row}, ${column}`}
+                          aria-valuetext={`${count} of ${field.answered} answers`}
                           min={0}
                           max={Math.max(field.answered, 1)}
                           value={count}

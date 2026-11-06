@@ -8,6 +8,24 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Secondary state review and readable response charts — 2026-11-06
+
+- Nine secondary UI states pass 54 production-browser cases across all six
+  profiles, yielding 72 unapproved captures including long-dialog lower controls.
+  The preceding same-build 60-case scope also passes existing response-read
+  recovery. No application writes, provider sends or database changes occurred.
+- Populated analytics exposed an inherited grid defect and default green meters.
+  Summaries now keep headings and answer rows together, use coral across engines,
+  and provide explicit meter names/value text. Geometry and accessibility checks
+  pass on desktop/mobile. See `POPULATED_VISUAL_REVIEW.md`.
+- Twenty-four targeted unit cases, types/build and byte gates pass. Lint remains
+  zero errors/10 inherited warnings. The current browser inventory is 1,296 cases
+  split into three shards of 432. Previous complete coverage/broad-browser/PWA/
+  header measurements below remain historical baseline evidence, not rerun claims.
+- Mobile LCP remains open; the previous failing measurements predate this scoped
+  chart correction. Remaining secondary states, approved content, human visual
+  sign-off and manual/device/hosted gates still prevent full PRD acceptance.
+
 ### Public entry, complete test catalog and acceptance verification — 2026-11-06
 
 - All 307 mandatory test IDs now have reviewed automated references and/or

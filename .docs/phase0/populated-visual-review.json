@@ -1,6 +1,7 @@
 {
-  "generatedAt": "2026-11-06T22:19:59.258Z",
+  "generatedAt": "2026-11-06T22:52:15.771Z",
   "completed": true,
+  "scope": "primary",
   "note": "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. Primary compositions are captured; every secondary drawer, editor inspector, chart, collaboration surface and confirmation state still requires its own applicable acceptance review.",
   "stats": {
     "startTime": "2026-11-06T22:06:05.614Z",
@@ -19,6 +20,7 @@
     "webkit-mobile"
   ],
   "compositionChecks": 138,
+  "captureCount": 162,
   "prompts": [
     {
       "id": "VIS-TEST-001",
@@ -1073,6 +1075,80 @@
           "file": "artifacts/browser/visual-review/workspace-compositions-pop-2c8a2-s-accessible-and-scrollable-webkit-mobile/attachments/forms-responses-b2d86a3571e7393576f0f43f7c4304ac4ee319a1.png"
         }
       ]
+    }
+  ],
+  "supplementalCaptures": [
+    {
+      "name": "private projects",
+      "project": "chromium-1920",
+      "test": "populated private projects supports reading scrolling and accessible controls",
+      "file": "artifacts/browser/visual-review/operations-compositions-po-98884-ing-and-accessible-controls-chromium-1920/attachments/private-projects-80bb6445dc0c7cab0fd150487bbb4225ec7bb469.png"
+    },
+    {
+      "name": "linktree management",
+      "project": "chromium-1920",
+      "test": "populated linktree management supports reading scrolling and accessible controls",
+      "file": "artifacts/browser/visual-review/operations-compositions-po-56745-ing-and-accessible-controls-chromium-1920/attachments/linktree-management-97eb909e5aee474c8fa0903f7dc5dfd83260df22.png"
+    },
+    {
+      "name": "private projects",
+      "project": "chromium-1440",
+      "test": "populated private projects supports reading scrolling and accessible controls",
+      "file": "artifacts/browser/visual-review/operations-compositions-po-98884-ing-and-accessible-controls-chromium-1440/attachments/private-projects-ef447aa590c729cba8a5725083ff5bf6d05c7df7.png"
+    },
+    {
+      "name": "linktree management",
+      "project": "chromium-1440",
+      "test": "populated linktree management supports reading scrolling and accessible controls",
+      "file": "artifacts/browser/visual-review/operations-compositions-po-56745-ing-and-accessible-controls-chromium-1440/attachments/linktree-management-3fa52994385830a849daa1c9a9258717ad91613f.png"
+    },
+    {
+      "name": "private projects",
+      "project": "chromium-mobile",
+      "test": "populated private projects supports reading scrolling and accessible controls",
+      "file": "artifacts/browser/visual-review/operations-compositions-po-98884-ing-and-accessible-controls-chromium-mobile/attachments/private-projects-a1998f385db603f0329c54b97f2b6233d26d61b1.png"
+    },
+    {
+      "name": "linktree management",
+      "project": "chromium-mobile",
+      "test": "populated linktree management supports reading scrolling and accessible controls",
+      "file": "artifacts/browser/visual-review/operations-compositions-po-56745-ing-and-accessible-controls-chromium-mobile/attachments/linktree-management-bed795e07a5b4f48ca7654ac12d874b8365cc2c7.png"
+    },
+    {
+      "name": "private projects",
+      "project": "firefox-1440",
+      "test": "populated private projects supports reading scrolling and accessible controls",
+      "file": "artifacts/browser/visual-review/operations-compositions-po-98884-ing-and-accessible-controls-firefox-1440/attachments/private-projects-f95a2e1478ae6d3247bd3e5a71974afa8008a899.png"
+    },
+    {
+      "name": "linktree management",
+      "project": "firefox-1440",
+      "test": "populated linktree management supports reading scrolling and accessible controls",
+      "file": "artifacts/browser/visual-review/operations-compositions-po-56745-ing-and-accessible-controls-firefox-1440/attachments/linktree-management-67f5986a2e0a1d6563747b2428e5e28506a9d41f.png"
+    },
+    {
+      "name": "private projects",
+      "project": "webkit-1440",
+      "test": "populated private projects supports reading scrolling and accessible controls",
+      "file": "artifacts/browser/visual-review/operations-compositions-po-98884-ing-and-accessible-controls-webkit-1440/attachments/private-projects-5217165a38398ccd98ba710aeb25d3ca9f0cf09c.png"
+    },
+    {
+      "name": "linktree management",
+      "project": "webkit-1440",
+      "test": "populated linktree management supports reading scrolling and accessible controls",
+      "file": "artifacts/browser/visual-review/operations-compositions-po-56745-ing-and-accessible-controls-webkit-1440/attachments/linktree-management-7820afb0d0af8e9b9db1ebf5ed8bc2e39ead8d79.png"
+    },
+    {
+      "name": "private projects",
+      "project": "webkit-mobile",
+      "test": "populated private projects supports reading scrolling and accessible controls",
+      "file": "artifacts/browser/visual-review/operations-compositions-po-98884-ing-and-accessible-controls-webkit-mobile/attachments/private-projects-f102a9b496b9ac12ccb09946f265c8737362a377.png"
+    },
+    {
+      "name": "linktree management",
+      "project": "webkit-mobile",
+      "test": "populated linktree management supports reading scrolling and accessible controls",
+      "file": "artifacts/browser/visual-review/operations-compositions-po-56745-ing-and-accessible-controls-webkit-mobile/attachments/linktree-management-350b36e985721af10ae10c501c0bb5124e375293.png"
     }
   ]
 }

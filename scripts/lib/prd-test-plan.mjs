@@ -58,6 +58,8 @@ for (const [index, title] of [
         : [15, 16, 17].includes(index)
           ? "tests/browser/operations-compositions.spec.ts"
           : "tests/browser/workspace-compositions.spec.ts",
+      ...([14, 16, 17, 19, 21].includes(index)
+        ? ["tests/browser/secondary-compositions.spec.ts"] : []),
       "scripts/summarize-visual-review.mjs",
     ],
     [

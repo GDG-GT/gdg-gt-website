@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-06T22:37:59.256Z",
-  "buildIndexSha256": "0499d42dcae0f1f2e82704e83f91a1fbc7232cb4c88297fcfbdedee175d47bed",
+  "generatedAt": "2026-11-06T22:53:43.507027+00:00",
+  "buildIndexSha256": "20cb0611f84f98c7e0eb316c98397589aabe32560615873d3bf074193068f079",
   "quality": {
     "tests": {
       "files": 214,
@@ -33,13 +33,24 @@
       "unexpected": 0,
       "flaky": 0
     },
-    "note": "Separate invocations: broad baseline precedes final route-lazy drawer/search correction; final rebuilt shell scope covers it. Not a single new 1,242-case invocation."
+    "note": "Historical complete broad baseline and 90-case shell scope remain separate; latest 54-case secondary composition invocation and earlier 60-case secondary/response-read scope use the chart-layout correction. No single complete 1,296-case run is claimed.",
+    "secondaryScope": {
+      "startTime": "2026-11-06T22:50:56.362Z",
+      "duration": 31871.398,
+      "expected": 54,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
   },
   "visual": {
     "primaryPromptGroups": 22,
-    "reviewCaptures": 150,
+    "reviewCaptures": 162,
     "compositionChecks": 138,
-    "approved": false
+    "approved": false,
+    "secondaryStates": 9,
+    "secondaryCompositionChecks": 54,
+    "secondaryCaptures": 72
   },
   "pwa": {
     "boundaries": 15,
@@ -57,19 +68,19 @@
     "scope": "Read-only all-local-ref history plus current tracked/nonignored untracked file snapshot. Default rules, decoded text depth 5, no baseline/rule/path exclusions or inline suppression. Ignored local credentials/dependencies/caches, archive contents and image OCR are outside the source scan. Findings are redacted; only exact reviewed source-line hashes may pass as non-secrets. Not proof that no secret could exist."
   },
   "shards": {
-    "total": 1242,
+    "total": 1296,
     "shards": [
       {
         "shard": 1,
-        "cases": 414
+        "cases": 432
       },
       {
         "shard": 2,
-        "cases": 414
+        "cases": 432
       },
       {
         "shard": 3,
-        "cases": 414
+        "cases": 432
       }
     ],
     "duplicates": 0
@@ -133,7 +144,9 @@
       }
     ],
     "mobileLcpPassed": false,
-    "fieldP75Verified": false
+    "fieldP75Verified": false,
+    "matchesCurrentBuild": false,
+    "note": "Preserved measurements predate the scoped response chart markup/CSS correction. The known mobile LCP failure remains open; no improved result is inferred."
   },
   "services": [
     {
@@ -160,5 +173,6 @@
     "SSO/Google",
     "Bevy/Engage"
   ],
-  "scope": "Local only; no deployment, push, purchase, real provider send, production change, another timer or AI commit trailer."
+  "scope": "Local only; no deployment, push, purchase, real provider send, production change, another timer or AI commit trailer.",
+  "verificationScopeNote": "Full coverage, broad browser, navigation, PWA and header figures are the 422970e baseline. Current chart correction adds 24 passing targeted unit cases, 60 passing browser checks and a separate 54-case capture invocation. Current types/build/byte gates pass; lint remains zero errors/10 warnings."
 }

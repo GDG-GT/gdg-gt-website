@@ -4,6 +4,32 @@ Updated 2026-11-06. Continue the GDG GT PRD task from this verified local
 checkpoint; do not repeat completed mutations/probes or rebuild setup from scratch.
 This checkpoint does not declare the entire PRD complete.
 
+## Latest continuation after checkpoint 422970e
+
+The baseline described below was saved in local commit 422970e, without AI
+trailers. The new scoped correction fixes response-summary grid layout, adds
+question/answer names and value text to meters, and styles coral chart bars
+consistently in Chromium/Firefox/WebKit. No SQL or application mutations occurred.
+
+Nine fictional secondary UI states pass all 54 cases across six profiles, with
+72 unapproved captures including dialog top/lower-control views. The preceding
+60-case invocation on the same build also passes existing response-read recovery.
+The initial two failures were wrong inline-inspector test locators after opening
+the dialog; their output is retained. No timeout/retry/assertion was weakened.
+Twenty-four targeted unit cases, types/build/byte gates pass; lint remains zero
+errors/10 inherited warnings. Current inventory is 1,296 cases, 432 per shard.
+
+Read `POPULATED_VISUAL_REVIEW.md` and
+`phase0/secondary-composition-browser.json`; browse the ignored local index at
+`artifacts/browser/secondary-review/index.html`. Primary index generation now
+also includes the existing 12 supplemental private-project/Linktree captures.
+Full prior coverage/PWA/header/broad-browser evidence below is baseline evidence.
+The preserved performance measurements predate this scoped chart correction;
+the known failing mobile LCP threshold remains open.
+
+Continue mobile LCP and remaining secondary/confirmation states, preserving the
+baseline and all authorization boundaries. There are no partially applied writes.
+
 ## Authorization and preservation
 
 Local only: no deployment/push, production changes, purchases, real provider
@@ -104,9 +130,9 @@ scan/metadata finalization may still be returning its completion output.
 
 ## Next work
 
-Save the verified local checkpoint without AI trailers, excluding the three
-unrelated user files. Next local work is mobile LCP and complete secondary visual
-review compositions. Investigate rendering/delivery with measurements; preserve
+The public-entry baseline is saved in 422970e. Save the latest scoped secondary
+review correction without AI trailers, excluding the three unrelated user files.
+Next local work is mobile LCP and remaining secondary/confirmation review states. Investigate rendering/delivery with measurements; preserve
 all private/cache/session boundaries and never prerender or cache private routes.
 Do not repeat broad checks without a new change or unresolved failure.
 

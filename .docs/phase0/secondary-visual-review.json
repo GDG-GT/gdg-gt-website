@@ -1,0 +1,494 @@
+{
+  "generatedAt": "2026-11-06T22:52:15.570Z",
+  "completed": true,
+  "scope": "secondary",
+  "note": "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. These nine secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review.",
+  "stats": {
+    "startTime": "2026-11-06T22:50:56.362Z",
+    "duration": 31871.398,
+    "expected": 54,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "projects": [
+    "chromium-1920",
+    "chromium-1440",
+    "chromium-mobile",
+    "firefox-1440",
+    "webkit-1440",
+    "webkit-mobile"
+  ],
+  "compositionChecks": 54,
+  "captureCount": 72,
+  "prompts": [
+    {
+      "id": "VIS-TEST-015",
+      "title": "Teams and collaboration",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "team announcements",
+          "project": "chromium-1920",
+          "test": "secondary team announcements composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-f005f-ins-readable-and-accessible-chromium-1920/attachments/team-announcements-f6598674fc62eba0d8e67731f07bc46a969de050.png"
+        },
+        {
+          "name": "team conversation",
+          "project": "chromium-1920",
+          "test": "secondary team conversation composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-09b47-ins-readable-and-accessible-chromium-1920/attachments/team-conversation-b961d84cdec144602e7de7f14862d5072185164d.png"
+        },
+        {
+          "name": "channel conversation",
+          "project": "chromium-1920",
+          "test": "secondary channel conversation composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-6e5e8-ins-readable-and-accessible-chromium-1920/attachments/channel-conversation-75fefb717b64c51f9caa3da3196ceb7ac5d91668.png"
+        },
+        {
+          "name": "team announcements",
+          "project": "chromium-1440",
+          "test": "secondary team announcements composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-f005f-ins-readable-and-accessible-chromium-1440/attachments/team-announcements-16cecb7ee9d8eeeba0e13338b2e8e579a147ea9f.png"
+        },
+        {
+          "name": "team conversation",
+          "project": "chromium-1440",
+          "test": "secondary team conversation composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-09b47-ins-readable-and-accessible-chromium-1440/attachments/team-conversation-3b8e77d860236f489b9b4791435e222205bf18cb.png"
+        },
+        {
+          "name": "channel conversation",
+          "project": "chromium-1440",
+          "test": "secondary channel conversation composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-6e5e8-ins-readable-and-accessible-chromium-1440/attachments/channel-conversation-989fe3743295b11d32f0302fea4c3f34f0d79367.png"
+        },
+        {
+          "name": "team announcements",
+          "project": "chromium-mobile",
+          "test": "secondary team announcements composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-f005f-ins-readable-and-accessible-chromium-mobile/attachments/team-announcements-80339e3517eb7cf3935ac8717cb21355426a4ba0.png"
+        },
+        {
+          "name": "team conversation",
+          "project": "chromium-mobile",
+          "test": "secondary team conversation composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-09b47-ins-readable-and-accessible-chromium-mobile/attachments/team-conversation-87e10b75f7ede2d1039e3b62b67e91b3de14662f.png"
+        },
+        {
+          "name": "channel conversation",
+          "project": "chromium-mobile",
+          "test": "secondary channel conversation composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-6e5e8-ins-readable-and-accessible-chromium-mobile/attachments/channel-conversation-c9fe8eb458728acad093f61af7ac16c75ef5992f.png"
+        },
+        {
+          "name": "team announcements",
+          "project": "firefox-1440",
+          "test": "secondary team announcements composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-f005f-ins-readable-and-accessible-firefox-1440/attachments/team-announcements-3d2e5288aa72ae8493811ace080050d0b031e7dc.png"
+        },
+        {
+          "name": "team conversation",
+          "project": "firefox-1440",
+          "test": "secondary team conversation composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-09b47-ins-readable-and-accessible-firefox-1440/attachments/team-conversation-50cc7a692de3bad7c9f78da61fe478921b007cb1.png"
+        },
+        {
+          "name": "channel conversation",
+          "project": "firefox-1440",
+          "test": "secondary channel conversation composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-6e5e8-ins-readable-and-accessible-firefox-1440/attachments/channel-conversation-1de30e3a7fa95a0fb8c3a1df440c3ae03be83aa4.png"
+        },
+        {
+          "name": "team announcements",
+          "project": "webkit-1440",
+          "test": "secondary team announcements composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-f005f-ins-readable-and-accessible-webkit-1440/attachments/team-announcements-bfb1259125d7b1af37e693285afd30fc97fa3f8c.png"
+        },
+        {
+          "name": "team conversation",
+          "project": "webkit-1440",
+          "test": "secondary team conversation composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-09b47-ins-readable-and-accessible-webkit-1440/attachments/team-conversation-1de661f34479b57c77798b676c32f5077b804517.png"
+        },
+        {
+          "name": "channel conversation",
+          "project": "webkit-1440",
+          "test": "secondary channel conversation composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-6e5e8-ins-readable-and-accessible-webkit-1440/attachments/channel-conversation-e9a04d01e9124cbd4e9c725128844ddf7f39c641.png"
+        },
+        {
+          "name": "team announcements",
+          "project": "webkit-mobile",
+          "test": "secondary team announcements composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-f005f-ins-readable-and-accessible-webkit-mobile/attachments/team-announcements-c61b0dae23a6fdc18650e94126064fa643ab11f0.png"
+        },
+        {
+          "name": "team conversation",
+          "project": "webkit-mobile",
+          "test": "secondary team conversation composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-09b47-ins-readable-and-accessible-webkit-mobile/attachments/team-conversation-8888f45659e2355f6ad4f52ca77be820f105b81f.png"
+        },
+        {
+          "name": "channel conversation",
+          "project": "webkit-mobile",
+          "test": "secondary channel conversation composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-6e5e8-ins-readable-and-accessible-webkit-mobile/attachments/channel-conversation-6875f6b1ed6a59cfcfba46cb72bea9468cf7d526.png"
+        }
+      ]
+    },
+    {
+      "id": "VIS-TEST-017",
+      "title": "Communications and newsletter",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "campaign preview",
+          "project": "chromium-1920",
+          "test": "secondary campaign preview composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-e5ef1-ins-readable-and-accessible-chromium-1920/attachments/campaign-preview-218be07be814052c3c494fd0f072bd65621abe7a.png"
+        },
+        {
+          "name": "campaign preview",
+          "project": "chromium-1440",
+          "test": "secondary campaign preview composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-e5ef1-ins-readable-and-accessible-chromium-1440/attachments/campaign-preview-4bafca3c0ff61f389c71e1809a315f831bb98148.png"
+        },
+        {
+          "name": "campaign preview",
+          "project": "chromium-mobile",
+          "test": "secondary campaign preview composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-e5ef1-ins-readable-and-accessible-chromium-mobile/attachments/campaign-preview-835969a3bdaf4aab1cbedda3670ac82f86141fb8.png"
+        },
+        {
+          "name": "campaign preview",
+          "project": "firefox-1440",
+          "test": "secondary campaign preview composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-e5ef1-ins-readable-and-accessible-firefox-1440/attachments/campaign-preview-f68bb883299cf5124db8d1624d39114a8f70d29d.png"
+        },
+        {
+          "name": "campaign preview",
+          "project": "webkit-1440",
+          "test": "secondary campaign preview composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-e5ef1-ins-readable-and-accessible-webkit-1440/attachments/campaign-preview-48865d2c607ae533f255d19d1c01fc647492971e.png"
+        },
+        {
+          "name": "campaign preview",
+          "project": "webkit-mobile",
+          "test": "secondary campaign preview composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-e5ef1-ins-readable-and-accessible-webkit-mobile/attachments/campaign-preview-6662e145146485a31cecc79dc256a0eb8e41a894.png"
+        }
+      ]
+    },
+    {
+      "id": "VIS-TEST-018",
+      "title": "Content and media",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "media inspector",
+          "project": "chromium-1920",
+          "test": "secondary media inspector composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-a8ae1-ins-readable-and-accessible-chromium-1920/attachments/media-inspector-c62e214d22fd1ec770e295a80bb7a4d203c57262.png"
+        },
+        {
+          "name": "media inspector",
+          "project": "chromium-1440",
+          "test": "secondary media inspector composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-a8ae1-ins-readable-and-accessible-chromium-1440/attachments/media-inspector-7c7cbbe5ec96a024bd1448d5d7a3a8ef563c3708.png"
+        },
+        {
+          "name": "media inspector",
+          "project": "chromium-mobile",
+          "test": "secondary media inspector composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-a8ae1-ins-readable-and-accessible-chromium-mobile/attachments/media-inspector-a52d620dfe9c3b9a2b9887e5e113e0fa383b394a.png"
+        },
+        {
+          "name": "media inspector",
+          "project": "firefox-1440",
+          "test": "secondary media inspector composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-a8ae1-ins-readable-and-accessible-firefox-1440/attachments/media-inspector-a24bb733e618e4c2aef409d65a56767049ed9a14.png"
+        },
+        {
+          "name": "media inspector",
+          "project": "webkit-1440",
+          "test": "secondary media inspector composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-a8ae1-ins-readable-and-accessible-webkit-1440/attachments/media-inspector-625203eac6f8c7a92c5bcbf0ddf0d1e784109ee7.png"
+        },
+        {
+          "name": "media inspector",
+          "project": "webkit-mobile",
+          "test": "secondary media inspector composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-a8ae1-ins-readable-and-accessible-webkit-mobile/attachments/media-inspector-ea13a66f5fe57ab80f2587c53c848e9bf3bcce79.png"
+        }
+      ]
+    },
+    {
+      "id": "VIS-TEST-020",
+      "title": "Form builder",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "builder logic lower controls",
+          "project": "chromium-1920",
+          "test": "secondary builder logic composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-648cb-ins-readable-and-accessible-chromium-1920/attachments/builder-logic-lower-controls-ca8d7b767fa50c4f0365cd89435014b6ba98a41c.png"
+        },
+        {
+          "name": "builder logic",
+          "project": "chromium-1920",
+          "test": "secondary builder logic composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-648cb-ins-readable-and-accessible-chromium-1920/attachments/builder-logic-19674835a71001dd6de534558fb57c9557ae3c1d.png"
+        },
+        {
+          "name": "builder settings lower controls",
+          "project": "chromium-1920",
+          "test": "secondary builder settings composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d0d4b-ins-readable-and-accessible-chromium-1920/attachments/builder-settings-lower-controls-65ebabdb5573f1cad2f745933d21ff698c1d6987.png"
+        },
+        {
+          "name": "builder settings",
+          "project": "chromium-1920",
+          "test": "secondary builder settings composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d0d4b-ins-readable-and-accessible-chromium-1920/attachments/builder-settings-478b5756059b07cb9ca3c94b6cdbb55d5f587aaa.png"
+        },
+        {
+          "name": "builder logic lower controls",
+          "project": "chromium-1440",
+          "test": "secondary builder logic composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-648cb-ins-readable-and-accessible-chromium-1440/attachments/builder-logic-lower-controls-e88460c2302d3496a6a5477eddd32e5f69c35cce.png"
+        },
+        {
+          "name": "builder logic",
+          "project": "chromium-1440",
+          "test": "secondary builder logic composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-648cb-ins-readable-and-accessible-chromium-1440/attachments/builder-logic-8baaa3d1d40916e5bfcffd892de3ec0a0e9675d3.png"
+        },
+        {
+          "name": "builder settings lower controls",
+          "project": "chromium-1440",
+          "test": "secondary builder settings composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d0d4b-ins-readable-and-accessible-chromium-1440/attachments/builder-settings-lower-controls-486b088e231ce41633547b710dcc2b48394921ef.png"
+        },
+        {
+          "name": "builder settings",
+          "project": "chromium-1440",
+          "test": "secondary builder settings composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d0d4b-ins-readable-and-accessible-chromium-1440/attachments/builder-settings-f2b49de574819c4cf24b7f076739a53ece55a426.png"
+        },
+        {
+          "name": "builder logic lower controls",
+          "project": "chromium-mobile",
+          "test": "secondary builder logic composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-648cb-ins-readable-and-accessible-chromium-mobile/attachments/builder-logic-lower-controls-3f7b0820403cd45a0a9dd989c0120d56b74efe7d.png"
+        },
+        {
+          "name": "builder logic",
+          "project": "chromium-mobile",
+          "test": "secondary builder logic composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-648cb-ins-readable-and-accessible-chromium-mobile/attachments/builder-logic-7679341ad58203e581a4488e94d43815419c2ad5.png"
+        },
+        {
+          "name": "builder settings lower controls",
+          "project": "chromium-mobile",
+          "test": "secondary builder settings composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d0d4b-ins-readable-and-accessible-chromium-mobile/attachments/builder-settings-lower-controls-75e47707023a64c5271391128ac654df1dac9778.png"
+        },
+        {
+          "name": "builder settings",
+          "project": "chromium-mobile",
+          "test": "secondary builder settings composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d0d4b-ins-readable-and-accessible-chromium-mobile/attachments/builder-settings-b0418376631f160ebfddf2f144272151f31d9a8f.png"
+        },
+        {
+          "name": "builder logic lower controls",
+          "project": "firefox-1440",
+          "test": "secondary builder logic composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-648cb-ins-readable-and-accessible-firefox-1440/attachments/builder-logic-lower-controls-c742be0b1bc26332d0b3888693fb95599536b4e9.png"
+        },
+        {
+          "name": "builder logic",
+          "project": "firefox-1440",
+          "test": "secondary builder logic composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-648cb-ins-readable-and-accessible-firefox-1440/attachments/builder-logic-abebe59783ffb273fa0c7136291d141250f71121.png"
+        },
+        {
+          "name": "builder settings lower controls",
+          "project": "firefox-1440",
+          "test": "secondary builder settings composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d0d4b-ins-readable-and-accessible-firefox-1440/attachments/builder-settings-lower-controls-3f3abb9662ea5d6caa82474bc35e9357f253b8ba.png"
+        },
+        {
+          "name": "builder settings",
+          "project": "firefox-1440",
+          "test": "secondary builder settings composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d0d4b-ins-readable-and-accessible-firefox-1440/attachments/builder-settings-92f307fe8feef44683c0207af825b1a40e748273.png"
+        },
+        {
+          "name": "builder logic lower controls",
+          "project": "webkit-1440",
+          "test": "secondary builder logic composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-648cb-ins-readable-and-accessible-webkit-1440/attachments/builder-logic-lower-controls-d4306ba9bdb80eb9fde5971066c3ab6eb1740562.png"
+        },
+        {
+          "name": "builder logic",
+          "project": "webkit-1440",
+          "test": "secondary builder logic composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-648cb-ins-readable-and-accessible-webkit-1440/attachments/builder-logic-d8a22a5265a95e11be08a9f24e1045bdaeadbb7e.png"
+        },
+        {
+          "name": "builder settings lower controls",
+          "project": "webkit-1440",
+          "test": "secondary builder settings composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d0d4b-ins-readable-and-accessible-webkit-1440/attachments/builder-settings-lower-controls-7d19e676c262d19cc6a843782f76a0bbdd226994.png"
+        },
+        {
+          "name": "builder settings",
+          "project": "webkit-1440",
+          "test": "secondary builder settings composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d0d4b-ins-readable-and-accessible-webkit-1440/attachments/builder-settings-d91678132bbc9fb0a67929b723bbc0887ac3ee10.png"
+        },
+        {
+          "name": "builder logic lower controls",
+          "project": "webkit-mobile",
+          "test": "secondary builder logic composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-648cb-ins-readable-and-accessible-webkit-mobile/attachments/builder-logic-lower-controls-3d9ed68f3b096b249122356a35e169ac53055c01.png"
+        },
+        {
+          "name": "builder logic",
+          "project": "webkit-mobile",
+          "test": "secondary builder logic composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-648cb-ins-readable-and-accessible-webkit-mobile/attachments/builder-logic-4d364fe36771c31d517119a55d1b5a85e6dd28e2.png"
+        },
+        {
+          "name": "builder settings lower controls",
+          "project": "webkit-mobile",
+          "test": "secondary builder settings composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d0d4b-ins-readable-and-accessible-webkit-mobile/attachments/builder-settings-lower-controls-9bc8550e794281c364bcc96985616107973803d1.png"
+        },
+        {
+          "name": "builder settings",
+          "project": "webkit-mobile",
+          "test": "secondary builder settings composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d0d4b-ins-readable-and-accessible-webkit-mobile/attachments/builder-settings-ae80e4d9b25c2b13823a46c01659943a140be691.png"
+        }
+      ]
+    },
+    {
+      "id": "VIS-TEST-022",
+      "title": "Form responses",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "response analytics",
+          "project": "chromium-1920",
+          "test": "secondary response analytics composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d1ee6-ins-readable-and-accessible-chromium-1920/attachments/response-analytics-60f1cc75b96493cc2af5c9e12d082aa6f8b932ac.png"
+        },
+        {
+          "name": "individual response lower controls",
+          "project": "chromium-1920",
+          "test": "secondary individual response composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-881b9-ins-readable-and-accessible-chromium-1920/attachments/individual-response-lower-controls-b559f283da2dd72906c5759ae9a7e1e8a8f11d18.png"
+        },
+        {
+          "name": "individual response",
+          "project": "chromium-1920",
+          "test": "secondary individual response composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-881b9-ins-readable-and-accessible-chromium-1920/attachments/individual-response-209fbf03ca3301fada10924acd6cf8f62496ec4a.png"
+        },
+        {
+          "name": "response analytics",
+          "project": "chromium-1440",
+          "test": "secondary response analytics composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d1ee6-ins-readable-and-accessible-chromium-1440/attachments/response-analytics-00bac029b85baab74c018bb41e8a7222eb704286.png"
+        },
+        {
+          "name": "individual response lower controls",
+          "project": "chromium-1440",
+          "test": "secondary individual response composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-881b9-ins-readable-and-accessible-chromium-1440/attachments/individual-response-lower-controls-4a230f513e49ceae70dfe305e2aa4547e42cc6de.png"
+        },
+        {
+          "name": "individual response",
+          "project": "chromium-1440",
+          "test": "secondary individual response composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-881b9-ins-readable-and-accessible-chromium-1440/attachments/individual-response-0efd9def3c534f4c4b8c3ff012e709d45524c818.png"
+        },
+        {
+          "name": "response analytics",
+          "project": "chromium-mobile",
+          "test": "secondary response analytics composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d1ee6-ins-readable-and-accessible-chromium-mobile/attachments/response-analytics-c8dd20afc14049c1840db5cec905d1b21e911eb1.png"
+        },
+        {
+          "name": "individual response lower controls",
+          "project": "chromium-mobile",
+          "test": "secondary individual response composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-881b9-ins-readable-and-accessible-chromium-mobile/attachments/individual-response-lower-controls-108b287612ef121d01f617d30cea634aa4949ce0.png"
+        },
+        {
+          "name": "individual response",
+          "project": "chromium-mobile",
+          "test": "secondary individual response composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-881b9-ins-readable-and-accessible-chromium-mobile/attachments/individual-response-75b0fa2400aa69707cd3ea5e0bda2acedf40b58a.png"
+        },
+        {
+          "name": "response analytics",
+          "project": "firefox-1440",
+          "test": "secondary response analytics composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d1ee6-ins-readable-and-accessible-firefox-1440/attachments/response-analytics-04b087f966b465d13d791f9ede51b95288d86a4a.png"
+        },
+        {
+          "name": "individual response lower controls",
+          "project": "firefox-1440",
+          "test": "secondary individual response composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-881b9-ins-readable-and-accessible-firefox-1440/attachments/individual-response-lower-controls-b269a6a218da5b779c1a7a11b8c4720b5731b81a.png"
+        },
+        {
+          "name": "individual response",
+          "project": "firefox-1440",
+          "test": "secondary individual response composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-881b9-ins-readable-and-accessible-firefox-1440/attachments/individual-response-a0d50ab1aa6eb15e9cc1b73e8c57dd05dfa37208.png"
+        },
+        {
+          "name": "response analytics",
+          "project": "webkit-1440",
+          "test": "secondary response analytics composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d1ee6-ins-readable-and-accessible-webkit-1440/attachments/response-analytics-7354b48031d8663a2bfc4d57c6e5888d66543274.png"
+        },
+        {
+          "name": "individual response lower controls",
+          "project": "webkit-1440",
+          "test": "secondary individual response composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-881b9-ins-readable-and-accessible-webkit-1440/attachments/individual-response-lower-controls-bc33af75b9960f7bc00e8c6694b0065247a1424f.png"
+        },
+        {
+          "name": "individual response",
+          "project": "webkit-1440",
+          "test": "secondary individual response composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-881b9-ins-readable-and-accessible-webkit-1440/attachments/individual-response-d3ab965d84c8c1023ea6f9cd9c17549b3464cb89.png"
+        },
+        {
+          "name": "response analytics",
+          "project": "webkit-mobile",
+          "test": "secondary response analytics composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-d1ee6-ins-readable-and-accessible-webkit-mobile/attachments/response-analytics-eb210453418b909756f916e4f24d2bf40466153a.png"
+        },
+        {
+          "name": "individual response lower controls",
+          "project": "webkit-mobile",
+          "test": "secondary individual response composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-881b9-ins-readable-and-accessible-webkit-mobile/attachments/individual-response-lower-controls-7875cb78756d3e885da7c3b77dd096ff5e53116b.png"
+        },
+        {
+          "name": "individual response",
+          "project": "webkit-mobile",
+          "test": "secondary individual response composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/secondary-compositions-sec-881b9-ins-readable-and-accessible-webkit-mobile/attachments/individual-response-2eb5641d21b720775a8a333819833359ebeed763.png"
+        }
+      ]
+    }
+  ],
+  "supplementalCaptures": []
+}

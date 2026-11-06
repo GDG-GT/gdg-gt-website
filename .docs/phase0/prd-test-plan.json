@@ -2816,6 +2816,7 @@
       "scope": "Teams and collaboration populated composition review candidates",
       "automated": [
         "tests/browser/workspace-compositions.spec.ts",
+        "tests/browser/secondary-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2854,6 +2855,7 @@
       "scope": "Communications and newsletter populated composition review candidates",
       "automated": [
         "tests/browser/operations-compositions.spec.ts",
+        "tests/browser/secondary-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2873,6 +2875,7 @@
       "scope": "Content and media populated composition review candidates",
       "automated": [
         "tests/browser/operations-compositions.spec.ts",
+        "tests/browser/secondary-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2911,6 +2914,7 @@
       "scope": "Form builder populated composition review candidates",
       "automated": [
         "tests/browser/workspace-compositions.spec.ts",
+        "tests/browser/secondary-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2949,6 +2953,7 @@
       "scope": "Form responses populated composition review candidates",
       "automated": [
         "tests/browser/workspace-compositions.spec.ts",
+        "tests/browser/secondary-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [

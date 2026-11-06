@@ -7,6 +7,14 @@ numbered requirements and 307 logical acceptance cases remain unverified against
 the complete PRD definition; hosted/device/manual/approved-visual gates cannot
 be inferred from local tests.
 
+The latest continuation adds nine secondary visual states (54 passing cases,
+72 unapproved captures) and corrects response-summary layout, meter labels and
+cross-browser chart color. The preceding same-build 60-case secondary/response-
+read scope and 24 targeted unit cases pass. Current inventory is 1,296 cases,
+432 per shard; older figures below describe the 422970e baseline. Complete
+secondary/confirmation review, mobile LCP and manual/device/hosted acceptance
+remain open. See `POPULATED_VISUAL_REVIEW.md` for the exact limits.
+
 ## Confirmed local work
 
 1. Community directory: parent permission/inventory/detail/activity reads are

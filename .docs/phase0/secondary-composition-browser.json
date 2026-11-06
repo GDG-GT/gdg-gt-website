@@ -1,0 +1,397 @@
+{
+  "generatedAt": "2026-11-06T22:53:43.507027+00:00",
+  "completed": true,
+  "stats": {
+    "startTime": "2026-11-06T22:50:56.362Z",
+    "duration": 31871.398,
+    "expected": 54,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "build": {
+    "index.html": "20cb0611f84f98c7e0eb316c98397589aabe32560615873d3bf074193068f079",
+    ".vite/manifest.json": "14bb4a72c8b5c7b2c40ff07048abc792c204b6f40cdc4c2b357a1ac582bccf8b"
+  },
+  "scope": "Read-only production-browser review of nine fictional secondary states across six profiles, plus top/lower-controls captures of three dialogs. No database writes or provider sends. Fifty-four passing cases, 72 unapproved captures. Existing six-profile response-read recovery passed separately in the earlier 60-case invocation on the same build.",
+  "tests": [
+    {
+      "name": "secondary response analytics composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary individual response composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary media inspector composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary builder logic composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary builder settings composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary team announcements composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary team conversation composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary channel conversation composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary campaign preview composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary response analytics composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary individual response composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary media inspector composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary builder logic composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary builder settings composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary team announcements composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary team conversation composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary channel conversation composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary campaign preview composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary response analytics composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary individual response composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary media inspector composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary builder logic composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary builder settings composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary team announcements composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary team conversation composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary channel conversation composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary campaign preview composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary response analytics composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary individual response composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary media inspector composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary builder logic composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary builder settings composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary team announcements composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary team conversation composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary channel conversation composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary campaign preview composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary response analytics composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary individual response composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary media inspector composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary builder logic composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary builder settings composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary team announcements composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary team conversation composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary channel conversation composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary campaign preview composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary response analytics composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary individual response composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary media inspector composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary builder logic composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary builder settings composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary team announcements composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary team conversation composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary channel conversation composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "secondary campaign preview composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    }
+  ]
+}

@@ -311,9 +311,13 @@ The dated audit/checkpoint entries above are historical. Current evidence is in
 
 ## Next implementation checkpoint
 
-This local implementation/verification pass is complete and ready for a local
-checkpoint commit. Continue mobile LCP and complete secondary visual review
-compositions next, preserving the verified baseline. Manual/device/approved-
+Checkpoint 422970e saved the verified public-entry/navigation baseline. The next
+continuation corrected response chart layout and added nine secondary states:
+54 passing six-profile cases and 72 unapproved captures. Twenty-four targeted
+unit cases and the preceding 60-case browser scope pass. Current inventory is
+1,296 cases, three shards of 432. Continue mobile LCP and the remaining secondary
+and confirmation review states listed in `POPULATED_VISUAL_REVIEW.md`.
+Manual/device/approved-
 visual and hosted acceptance remain explicitly open; no percentage or full PRD
 completion claim follows from these local checks. `CURRENT_CHECKPOINT.md` records
 the exact final evidence and authorization boundaries. Preserve unrelated user
