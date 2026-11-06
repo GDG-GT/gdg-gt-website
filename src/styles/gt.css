@@ -2936,6 +2936,7 @@ img {
 fieldset.gt-access-fields,
 fieldset.gt-profile-fields,
 fieldset.gt-account-filters,
+fieldset.gt-account-fields,
 fieldset.gt-event-fields {
   border: 0;
   padding: 0;

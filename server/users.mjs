@@ -7,6 +7,7 @@ import {
   parse,
   text,
   uuid,
+  idempotency,
 } from "./lib/validation.mjs";
 import { accountManagementAllowed } from "./lib/authorization.mjs";
 import {
@@ -224,6 +225,7 @@ export async function userRoutes(
     !id ? create : request.method === "PATCH" ? update : action,
     8192,
   );
+  const key = idempotency(request);
   if (target && !accountManagementAllowed(actor, target, body.record?.role))
     throw new ApiError(403, "FORBIDDEN", "This action is not allowed.");
   if (body.confirmation !== undefined && body.confirmation !== target.email)
@@ -263,7 +265,7 @@ export async function userRoutes(
   if (operation === "create")
     record.passwordHash = await hashSecret(token() + token()); // No temporary credential is disclosed or usable.
   const result = checked(
-    await db.rpc("mutate_account", {
+    await db.rpc("mutate_account_workspace", {
       p_actor: actor.id,
       p_session: session.sessionId,
       p_verified_hash: account.password_hash,
@@ -278,6 +280,16 @@ export async function userRoutes(
             config.encryptionSecret,
           )
         : null,
+      p_key_hash: tokenHash(key),
+      p_request_hash: tokenHash(
+        JSON.stringify({
+          target: id,
+          action: operation,
+          revision: body.revision ?? null,
+          record: body.record || {},
+          confirmation: body.confirmation ?? null,
+        }),
+      ),
       p_request_id: requestId,
     }),
   );

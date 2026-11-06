@@ -118,6 +118,7 @@ function fixture(role = "super_admin") {
           cookie: config.sessionCookie + "=" + raw,
           "x-csrf-token": csrf,
           "content-type": "application/json",
+          "idempotency-key": "fictional-account-retry-key-000001",
           ...headers,
         },
         socket: { remoteAddress: "127.0.0.1" },
@@ -161,6 +162,47 @@ function fixture(role = "super_admin") {
   };
 }
 describe("AUTH/ADMIN account lifecycle route boundary", () => {
+  it("rejects missing/malformed retry identities before password confirmation or mutation", async () => {
+    const f = fixture();
+    for (const key of [undefined, "short", ["duplicated", "header"]]) {
+      expect(
+        (
+          await f.call(
+            "/admin/users",
+            "POST",
+            { currentPassword: password, record: f.record },
+            { "idempotency-key": key },
+          )
+        ).statusCode,
+      ).toBe(400);
+    }
+    expect(f.store.accountByEmail).not.toHaveBeenCalled();
+    expect(f.db.rpc).not.toHaveBeenCalled();
+  });
+  it("hashes stable validated account intent without binding it to changing password/token material", async () => {
+    const f = fixture();
+    await f.create();
+    await f.create();
+    const first = f.db.rpc.mock.calls[0][1],
+      second = f.db.rpc.mock.calls[1][1];
+    expect(first.p_key_hash).toBe(
+      tokenHash("fictional-account-retry-key-000001"),
+    );
+    expect(second.p_request_hash).toBe(first.p_request_hash);
+    expect(first.p_token_hash).not.toBe(second.p_token_hash);
+    expect(
+      JSON.stringify({
+        key: first.p_key_hash,
+        fingerprint: first.p_request_hash,
+      }),
+    ).not.toContain(password);
+    await f.create({
+      record: { ...f.record, display_name: "Fictional changed intent" },
+    });
+    expect(f.db.rpc.mock.calls[2][1].p_request_hash).not.toBe(
+      first.p_request_hash,
+    );
+  });
   it("rejects unrelated paths, anonymous/non-admin roles and forbidden methods before account lookup", async () => {
     const f = fixture();
     expect(
@@ -322,7 +364,7 @@ describe("AUTH/ADMIN account lifecycle route boundary", () => {
     expect(r.statusCode).toBe(200);
     expect(r.body.data.accessQueued).toBe(true);
     const [name, args] = f.db.rpc.mock.calls.at(-1);
-    expect(name).toBe("mutate_account");
+    expect(name).toBe("mutate_account_workspace");
     expect(args).toMatchObject({
       p_actor: actor,
       p_session: sid,
@@ -357,7 +399,7 @@ describe("AUTH/ADMIN account lifecycle route boundary", () => {
     expect(r.statusCode).toBe(200);
     expect(r.body.data.accessQueued).toBe(false);
     expect(f.db.rpc).toHaveBeenLastCalledWith(
-      "mutate_account",
+      "mutate_account_workspace",
       expect.objectContaining({
         p_action: "update",
         p_target: targetId,

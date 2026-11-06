@@ -2795,6 +2795,30 @@
         "28.3",
         "31.2"
       ]
+    },
+    {
+      "id": "AUTH-TEST-006",
+      "requirements": [],
+      "scope": "Current selected-account revision and consequence reviews, scoped pending/cancellation, password-free bounded retry intents, atomic account/setup-link receipts and single-step revisions",
+      "automated": [
+        "tests/client/user-account-mutations.test.tsx",
+        "tests/server/users.test.mjs",
+        "database/tests/113_account_mutation_replay.sql",
+        "scripts/test-local-user-mutation-recovery.mjs",
+        "tests/browser/account-review.spec.ts"
+      ],
+      "remaining": [
+        "Complete account action/role/device/manual/visual/hosted delivery/retention acceptance remains open; production-build fixture receipts are distinct from real SQL/HTTP evidence",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24",
+        "28.3",
+        "28.4",
+        "31.2"
+      ]
     }
   ],
   "userOverrides": {

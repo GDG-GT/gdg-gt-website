@@ -1418,6 +1418,15 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "24", "28.3", "31.2"];
 
+add(
+  "AUTH-TEST-006",
+  "",
+  "Current selected-account revision and consequence reviews, scoped pending/cancellation, password-free bounded retry intents, atomic account/setup-link receipts and single-step revisions",
+  ["tests/client/user-account-mutations.test.tsx", unit("users"), sql("113_account_mutation_replay"), local("user-mutation-recovery"), "tests/browser/account-review.spec.ts"],
+  ["Complete account action/role/device/manual/visual/hosted delivery/retention acceptance remains open; production-build fixture receipts are distinct from real SQL/HTTP evidence"],
+);
+prdTestCases.at(-1).normative = ["23", "24", "28.3", "28.4", "31.2"];
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

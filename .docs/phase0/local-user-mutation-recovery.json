@@ -1,0 +1,122 @@
+{
+  "generatedAt": "2026-11-06T00:07:26.133Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and Chromium desktop/mobile account mutations, ten identical concurrent creates, setup/reset receipt deduplication and accepted-but-lost update replay. Only fresh fictional accounts touched. Owned setup/reset jobs marked dead with encrypted secrets cleared and capabilities revoked before accounts disabled/sessions revoked. Browser allows only owned target PATCH; every other mutation/external origin blocked and realtime paused. No worker/provider send, existing account/session or production change. Captures ignored/private; no passwords, credentials or response bodies retained.",
+  "tests": [
+    {
+      "name": "anonymous account read denied for directory",
+      "passed": true
+    },
+    {
+      "name": "ordinary member account read denied for directory",
+      "passed": true
+    },
+    {
+      "name": "anonymous account read denied for sessions",
+      "passed": true
+    },
+    {
+      "name": "ordinary member account read denied for sessions",
+      "passed": true
+    },
+    {
+      "name": "authorized account directory returns the literal filtered uncached safe projection",
+      "passed": true
+    },
+    {
+      "name": "authorized selected-account sessions are uncached and omit bearer/IP data",
+      "passed": true
+    },
+    {
+      "name": "actual account creation rejects a missing retry identity",
+      "passed": true
+    },
+    {
+      "name": "ten concurrent identical account creates return one account",
+      "passed": true
+    },
+    {
+      "name": "concurrent creation commits one setup capability, delivery job and audit",
+      "passed": true
+    },
+    {
+      "name": "changed account intent cannot reuse an accepted key",
+      "passed": true
+    },
+    {
+      "name": "explicit reset replay queues one setup link and advances one revision",
+      "passed": true
+    },
+    {
+      "name": "actual account edit reviews identity and session consequence before a write at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "accepted-but-lost account update clears proof and pauses blind retry at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "account recovery rechecks saved values without another write at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "identical account replay acknowledges one revision with fresh password confirmation at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "actual selected-account revision conflict preserves fields until reviewed read-only replacement at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "internal editor cancellation reviews discarded input without a write at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated account consequence review passes measured axe checks at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "account mutation workflow has no page error, unintended mutation, external request or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "actual account edit reviews identity and session consequence before a write at 375×812",
+      "passed": true
+    },
+    {
+      "name": "accepted-but-lost account update clears proof and pauses blind retry at 375×812",
+      "passed": true
+    },
+    {
+      "name": "account recovery rechecks saved values without another write at 375×812",
+      "passed": true
+    },
+    {
+      "name": "identical account replay acknowledges one revision with fresh password confirmation at 375×812",
+      "passed": true
+    },
+    {
+      "name": "actual selected-account revision conflict preserves fields until reviewed read-only replacement at 375×812",
+      "passed": true
+    },
+    {
+      "name": "internal editor cancellation reviews discarded input without a write at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated account consequence review passes measured axe checks at 375×812",
+      "passed": true
+    },
+    {
+      "name": "account mutation workflow has no page error, unintended mutation, external request or page overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "two accepted-and-lost browser saves plus two explicit remote fixtures create four update audits only",
+      "passed": true
+    }
+  ]
+}

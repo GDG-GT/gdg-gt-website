@@ -7,6 +7,22 @@ export type PublicFixture = {
   failedHome: boolean;
   writes: string[];
   unexpected: string[];
+  accountReview: boolean;
+  failAccountSave: boolean;
+  accountWrites: { key: string; fingerprint: string }[];
+  accountCommitted: number;
+};
+export const fictionalManagedAccount = {
+  id: "fbbb0000-0000-4000-8000-000000000002",
+  email: "fictional-managed@example.test",
+  display_name: "Fictional managed account",
+  role: "team_member",
+  is_active: true,
+  must_change_password: false,
+  revision: 1,
+  deleted_at: null,
+  last_login_at: null,
+  locked_until: null,
 };
 const empty = { items: [], total: 0, page: 1, pageSize: 30 };
 const fictionalUser = {
@@ -28,7 +44,16 @@ export const test = base.extend<{ fixture: PublicFixture }>({
         failedHome: false,
         writes: [],
         unexpected: [],
+        accountReview: false,
+        failAccountSave: false,
+        accountWrites: [],
+        accountCommitted: 0,
       };
+      let managedAccount = { ...fictionalManagedAccount };
+      const accountReceipts = new Map<
+        string,
+        { fingerprint: string; record: typeof managedAccount }
+      >();
       await page.clock.setFixedTime(new Date("2026-11-05T12:00:00Z"));
       await page.route("**/*", async (route) => {
         const request = route.request(),
@@ -69,6 +94,53 @@ export const test = base.extend<{ fixture: PublicFixture }>({
           ["/auth/realtime-token", "/realtime/token"].includes(path)
         ) {
           await reply(503, null);
+          return;
+        }
+        if (
+          state.authenticated &&
+          state.accountReview &&
+          request.method() === "PATCH" &&
+          path === "/admin/users/" + fictionalManagedAccount.id
+        ) {
+          const body = request.postDataJSON(),
+            key = request.headers()["idempotency-key"];
+          if (!key || body.currentPassword !== "Fictional browser password") {
+            state.writes.push("Invalid fictional account mutation");
+            await reply(403, null);
+            return;
+          }
+          const { currentPassword: _proof, ...intent } = body;
+          const fingerprint = JSON.stringify(intent),
+            receipt = accountReceipts.get(key);
+          state.accountWrites.push({ key, fingerprint });
+          if (
+            (receipt && receipt.fingerprint !== fingerprint) ||
+            (!receipt && body.revision !== managedAccount.revision)
+          ) {
+            await reply(409, null);
+            return;
+          }
+          if (!receipt) {
+            managedAccount = {
+              ...managedAccount,
+              ...body.record,
+              revision: managedAccount.revision + 1,
+            };
+            accountReceipts.set(key, {
+              fingerprint,
+              record: { ...managedAccount },
+            });
+            state.accountCommitted++;
+          }
+          if (state.failAccountSave) {
+            state.failAccountSave = false;
+            await route.abort("connectionfailed");
+            return;
+          }
+          await reply(200, {
+            record: accountReceipts.get(key)!.record,
+            accessQueued: false,
+          });
           return;
         }
         if (request.method() !== "GET") {
@@ -166,7 +238,20 @@ export const test = base.extend<{ fixture: PublicFixture }>({
             return;
           }
           if (path === "/admin/users") {
-            await reply(200, { ...empty, actorId: fictionalUser.id });
+            await reply(200, {
+              ...empty,
+              ...(state.accountReview
+                ? { items: [managedAccount], total: 1 }
+                : {}),
+              actorId: fictionalUser.id,
+            });
+            return;
+          }
+          if (
+            state.accountReview &&
+            path === "/admin/users/" + fictionalManagedAccount.id
+          ) {
+            await reply(200, { record: managedAccount });
             return;
           }
           if (path === "/admin/audit") {

@@ -8,6 +8,31 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Reviewed account writes and atomic setup-link replay — 2026-11-05
+
+- Migration 113 adds current-session/password/hierarchy-bound account receipts
+  without storing password proof or token material. It also fixes an existing
+  double revision increment found by the new SQL tests. Account creation/reset
+  replay creates one capability/job/audit. Selected-account reads preserve stale
+  drafts until reviewed loading; current revisions invalidate approval. Pending
+  guards/cancellation, named consequence reviews, fresh-proof explicit uncertain
+  retries and a 47-hour cutoff protect account writes and internal cancellation.
+- All 1,364 tests/156 files pass (50 focused; 21 new cases), including actual
+  submitter-focus regression. Full-tree coverage (including in-progress Teams
+  source) still fails 70%: 61.72% lines/60.73% branches; all 17 critical-file branch gates pass.
+  Complete 113-migration SQL suites pass under both grant modes (201/202 checks),
+  both 100-client races and all six isolated restore checks pass.
+- All 28 actual API/DB/desktop-mobile browser checks pass, including ten identical
+  concurrent creates and accepted-but-lost updates. Populated review axe passes.
+  Owned jobs marked dead/secrets cleared, capabilities revoked, accounts disabled
+  and sessions revoked. No worker/provider send or existing account/session change.
+- Catalog: 150 unverified cases. Full account-action/role/device/manual/visual/
+  hosted acceptance remains open. See `USER_MUTATION_RECOVERY.md`; full PRD remains open.
+- Types/lint (zero errors/25 warnings), build/budgets and traceability pass. A
+  WebKit focus-return defect found by the first browser run is corrected. All
+  48 final production-build account/shared-workspace checks pass across six
+  pinned profiles; actual development WebKit checks pass separately.
+
 ### Account-directory and selected-account session reads — 2026-11-05
 
 - Keyed independent directory/session reads cancel and hide replaced queries,

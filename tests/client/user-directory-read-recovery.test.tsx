@@ -45,6 +45,8 @@ const person = {
   sessionPath = "/admin/users/" + person.id + "/sessions";
 let read: (path: string) => unknown;
 function defaults(path: string) {
+  if (/^\/admin\/users\/[^/]+$/.test(path))
+    return { record: path.endsWith(second.id) ? second : person };
   return path.endsWith("/sessions")
     ? {
         items: [
