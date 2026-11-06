@@ -15,7 +15,15 @@ vi.mock("@/lib/api", async (original) => ({
   ...(await original<typeof import("../../src/lib/api")>()),
   api: apiMock,
 }));
-vi.mock("@/hooks/useDraftGuard", () => ({ useDraftGuard: vi.fn() }));
+vi.mock("@/hooks/useDraftGuard", () => ({
+  useDraftGuard: vi.fn(),
+  useNavigationSafety: () => ({ request: (run: () => void) => run() }),
+}));
+vi.mock("@/contexts/AdminContext", () => ({
+  useAdmin: () => ({
+    currentAdmin: { id: "fictional-settings-reader", role: "admin" },
+  }),
+}));
 vi.mock("@/contexts/ContentContext", () => ({ useContent: () => ({}) }));
 const delivery = {
   formRevision: 1,

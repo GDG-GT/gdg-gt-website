@@ -71,3 +71,9 @@ The response-workspace case now also maps owned saved-view create/replace/remove
 revisions, atomic minimal receipts, read-only original-outcome recovery and
 server-paged inventory search. See `FORM_SAVED_VIEW_RECOVERY.md`; remaining Forms
 children and full manual/device/visual/hosted acceptance stay open.
+
+The retention/privacy case now maps metadata-only original outcome inspection,
+current-session/expiry guards, retained private reads, frozen settings and
+newly entered proof for explicit identical retry. See `FORM_PRIVACY_RECOVERY.md`;
+physical retention/storage and full manual/device/visual/hosted acceptance remain
+open along with the remaining Forms child workflows.

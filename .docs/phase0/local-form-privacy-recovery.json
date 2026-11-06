@@ -1,0 +1,242 @@
+{
+  "generatedAt": "2026-11-06T08:41:42.442Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and desktop/mobile Chromium privacy hold/release recovery. Two fresh fictional internal forms published once, one intended response each and one fresh fictional officer per viewport. Both form/individual targets and before/after-acceptance loss retain original policy body/key, require newly entered proof only for explicit retries, produce one revision/audit and pass measured axe. Response deadlines/answer revisions/delivery jobs unchanged. No workers/provider sends/existing chapter or production changes. Owned metadata jobs disabled/secrets cleared/forms archived/accounts disabled/sessions revoked. Captures unapproved; no password/key/body material retained.",
+  "tests": [
+    {
+      "name": "retention settings conceal private owned state from unrelated/anonymous readers at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form hold after captures only the original policy intent/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form uncertain privacy review passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form hold after uses read-only acceptance or original intent plus fresh explicit proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form hold after advances one policy revision and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form release after captures only the original policy intent/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form release after uses read-only acceptance or original intent plus fresh explicit proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form release after advances one policy revision and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form hold before captures only the original policy intent/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form hold before uses read-only acceptance or original intent plus fresh explicit proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form hold before advances one policy revision and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form release before captures only the original policy intent/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form release before uses read-only acceptance or original intent plus fresh explicit proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "form release before advances one policy revision and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "individual hold after captures only the original policy intent/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "individual uncertain privacy review passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "individual hold after uses read-only acceptance or original intent plus fresh explicit proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "individual hold after advances one policy revision and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "individual release after captures only the original policy intent/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "individual release after uses read-only acceptance or original intent plus fresh explicit proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "individual release after advances one policy revision and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "individual hold before captures only the original policy intent/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "individual hold before uses read-only acceptance or original intent plus fresh explicit proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "individual hold before advances one policy revision and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "individual release before captures only the original policy intent/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "individual release before uses read-only acceptance or original intent plus fresh explicit proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "individual release before advances one policy revision and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "privacy recovery never rewrites original answer revision/deadline or queues extra delivery at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "privacy recovery has no unexpected writes, external requests, script errors or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "retention settings conceal private owned state from unrelated/anonymous readers at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form hold after captures only the original policy intent/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form uncertain privacy review passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form hold after uses read-only acceptance or original intent plus fresh explicit proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form hold after advances one policy revision and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form release after captures only the original policy intent/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form release after uses read-only acceptance or original intent plus fresh explicit proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form release after advances one policy revision and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form hold before captures only the original policy intent/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form hold before uses read-only acceptance or original intent plus fresh explicit proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form hold before advances one policy revision and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form release before captures only the original policy intent/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form release before uses read-only acceptance or original intent plus fresh explicit proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "form release before advances one policy revision and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "individual hold after captures only the original policy intent/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "individual uncertain privacy review passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "individual hold after uses read-only acceptance or original intent plus fresh explicit proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "individual hold after advances one policy revision and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "individual release after captures only the original policy intent/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "individual release after uses read-only acceptance or original intent plus fresh explicit proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "individual release after advances one policy revision and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "individual hold before captures only the original policy intent/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "individual hold before uses read-only acceptance or original intent plus fresh explicit proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "individual hold before advances one policy revision and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "individual release before captures only the original policy intent/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "individual release before uses read-only acceptance or original intent plus fresh explicit proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "individual release before advances one policy revision and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "privacy recovery never rewrites original answer revision/deadline or queues extra delivery at 375×812",
+      "passed": true
+    },
+    {
+      "name": "privacy recovery has no unexpected writes, external requests, script errors or page overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

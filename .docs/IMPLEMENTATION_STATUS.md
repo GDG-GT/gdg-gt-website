@@ -8,6 +8,40 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Retention/operational-hold outcome recovery — 2026-11-06
+
+- Migration 123 adds current-session/expiry guards and metadata-only original
+  privacy outcome inspection. Existing atomic hold/release receipts stay minimal;
+  accepted results reconcile without repeating proof/writes, including after
+  later release/erasure. Unaccepted identical retries require matching current
+  target/revisions/capability and newly entered password proof within 47 hours.
+  Password properties are excluded from frozen intent. Private reads preserve
+  proposals on outages; changed policies need explicit review. Session/context/
+  offline cancellation, denied-state clearing, duplicate latch, malformed-result
+  rejection and reviewed stopping protect uncertain changes. Mobile recovery
+  precedes an expandable frozen original-settings review.
+- Both complete 123-migration SQL suites pass (221/222 checks), both 100-client
+  races and six isolated restore checks pass; migration applied locally. All 55
+  focused checks pass (19 new route/28 new client cases plus eight existing
+  regressions). All 58 actual API/DB/desktop-mobile checks pass: two internal
+  publications/two fictional responses/sixteen intended privacy mutations, one
+  revision/audit per action, unchanged answer revisions/deadlines/jobs and measured
+  axe. Fresh officer per viewport; metadata jobs disabled/secrets cleared, forms
+  archived/accounts disabled/sessions revoked. No worker/provider send, existing
+  chapter or production change. Initial single-actor probe hit the unchanged
+  ten-review/15-minute limit and remained safely unconfirmed; cleanup/report
+  preserved. No quota or test timeout changed.
+- All 96 privacy/response-read/action-denial/shared-workspace production-browser
+  cases pass across six profiles, followed by 24 final layout/recovery checks.
+  Mobile recovery inspected; captures unapproved. Build/types/lint (zero errors/
+  25 existing warnings), budgets, secrets and traceability pass. All 2,013 tests/
+  185 files pass. Global coverage remains below 70%: 68.39% lines, 68.14% branches,
+  66.60% statements and 59.52% functions. All 17 critical branch gates pass;
+  no timeout/threshold changed. Catalog remains 159 unverified cases.
+- Delivery, collaborator/private-link lifecycle, permanent-deletion/integration/
+  runtime recovery and full quality/storage/device/manual/visual/hosted acceptance
+  remain open. See `FORM_PRIVACY_RECOVERY.md`.
+
 ### Private saved-view mutation and inventory recovery — 2026-11-06
 
 - Migration 122 adds selected revisions, current-owner/session atomic creation/

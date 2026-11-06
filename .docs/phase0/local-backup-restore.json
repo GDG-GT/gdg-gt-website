@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-06T08:04:47.549Z",
+  "generatedAt": "2026-11-06T08:34:28.942Z",
   "note": "Two invocation-owned network-isolated disposable PostgreSQL databases. No project/production data, file storage, provider backup or hosted recovery was accessed. Fictional dump remained in memory and is not persisted.",
-  "migrationCount": 122,
-  "dumpSha256": "2d0e8ec86823800f14f4bd91199e28228e01564d87269db7f0fd5ef870feed44",
+  "migrationCount": 123,
+  "dumpSha256": "0067af2546b65cb8b091057600f74b1bac979e5f33fad7fa91e9ed1324914400",
   "tableCount": 130,
   "catalog": {
     "rls": 129,
@@ -66,7 +66,7 @@
     "indexes": 458,
     "policies": 0,
     "triggers": 72,
-    "functions": 374,
+    "functions": 376,
     "constraints": 657
   },
   "tests": [

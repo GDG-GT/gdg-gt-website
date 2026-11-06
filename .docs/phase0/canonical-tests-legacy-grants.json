@@ -123,7 +123,8 @@
     "202611050119_form_library_replay.sql",
     "202611060120_form_export_replay.sql",
     "202611060121_form_response_replay.sql",
-    "202611060122_form_saved_view_replay.sql"
+    "202611060122_form_saved_view_replay.sql",
+    "202611060123_form_privacy_replay.sql"
   ],
   "tests": [
     {
@@ -623,6 +624,10 @@
       "passed": true
     },
     {
+      "name": "202611060123_form_privacy_replay.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -996,6 +1001,10 @@
     },
     {
       "name": "122_form_saved_view_replay.sql",
+      "passed": true
+    },
+    {
+      "name": "123_form_privacy_replay.sql",
       "passed": true
     },
     {
