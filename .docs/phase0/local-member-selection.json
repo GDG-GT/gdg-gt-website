@@ -1,0 +1,64 @@
+{
+  "generatedAt": "2026-11-06T13:56:01.739Z",
+  "completed": true,
+  "cleanup": true,
+  "scope": "Dedicated loopback fictional owned account/105 teams/106 directory records only. Native candidate paging/target recovery and two private review preparations; no merge or real/provider sends. One owned target is deliberately moved for source-bound denial testing. Fixture records/teams archived and account disabled/sessions revoked; retained private reviews/audit are not claimed erased. Reports contain no raw contacts, keys, proof or credentials.",
+  "tests": [
+    {
+      "name": "actual capability inventory includes all 105 owned permitted destinations",
+      "passed": true
+    },
+    {
+      "name": "actual candidate filtering precedes all three pages despite 40 other-scope records",
+      "passed": true
+    },
+    {
+      "name": "actual later eligible candidate is searchable without a first-page ceiling",
+      "passed": true
+    },
+    {
+      "name": "actual off-page selected target has its own source-bound current lookup",
+      "passed": true
+    },
+    {
+      "name": "native picker reaches and independently verifies candidate 65 without record writes at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "native selected-target outage retains the reviewed comparison and pauses merge approval at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated native scoped merge comparison passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "native scoped read recovery and declined navigation leave records unchanged without merges egress errors or overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "native picker reaches and independently verifies candidate 65 without record writes at 375×812",
+      "passed": true
+    },
+    {
+      "name": "native selected-target outage retains the reviewed comparison and pauses merge approval at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated native scoped merge comparison passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "native scoped read recovery and declined navigation leave records unchanged without merges egress errors or overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "actual selected target that changed owning scope is concealed before projection",
+      "passed": true
+    },
+    {
+      "name": "only two owned review preparations were audited and neither record was merged",
+      "passed": true
+    }
+  ]
+}

@@ -5,8 +5,12 @@ import {
   memberMergePreview,
   memberMergeCommit,
 } from "../../../shared/members.mjs";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import MemberReadFeedback from "./MemberReadFeedback";
+import ScrollableTable from "../ScrollableTable";
 import { Button, Field, SearchBox } from "../primitives";
-import type { Member, MemberSummary, Listing, Review } from "./types";
+import type { Member, MemberSummary, Review } from "./types";
 const base = "/admin/members";
 export default function MergeReview({
   source,
@@ -26,10 +30,13 @@ export default function MergeReview({
   disabled?: boolean;
 }) {
   const [q, setQ] = useState(""),
-    [candidates, setCandidates] = useState<MemberSummary[]>([]),
     [targetId, setTargetId] = useState(""),
-    [target, setTarget] = useState<Member>(),
-    [review, setReview] = useState<Review>();
+    [review, setReview] = useState<Review>(),
+    [page, setPage] = useState(1),
+    [listAttempt, setListAttempt] = useState(0),
+    [targetAttempt, setTargetAttempt] = useState(0),
+    [blocked, setBlocked] = useState(false),
+    [needsRecheck, setNeedsRecheck] = useState(!navigator.onLine);
   const [password, setPassword] = useState(""),
     [sourceConfirmation, setSourceConfirmation] = useState(""),
     [targetConfirmation, setTargetConfirmation] = useState(""),
@@ -37,10 +44,14 @@ export default function MergeReview({
     [busy, setBusy] = useState(false);
   const key = useRef<{ identity: string; value: string }>(),
     epoch = useRef(0),
-    heading = useRef<HTMLHeadingElement>(null);
+    heading = useRef<HTMLHeadingElement>(null),
+    reviewHeading = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     heading.current?.focus();
   }, []);
+  useEffect(() => {
+    if (review) reviewHeading.current?.focus();
+  }, [review]);
   useEffect(() => {
     onDirty(
       !!(
@@ -61,74 +72,90 @@ export default function MergeReview({
     sourceConfirmation,
     targetConfirmation,
   ]);
+  const { isOnline } = useOnlineStatus(),
+    prefix = base + "/" + source.id;
+  const candidatesRead = usePrivateRead<{
+      items: Pick<
+        MemberSummary,
+        "id" | "name" | "email" | "team_id" | "revision"
+      >[];
+      total: number;
+      page: number;
+      pageSize: number;
+      sourceRevision: number;
+    }>(
+      blocked
+        ? undefined
+        : prefix +
+            "/merge-candidates?" +
+            new URLSearchParams({ q, page: String(page) }),
+      tick + listAttempt,
+    ),
+    targetRead = usePrivateRead<{ member: Member; sourceRevision: number }>(
+      !blocked && targetId ? prefix + "/merge-target/" + targetId : undefined,
+      tick + targetAttempt,
+    );
+  const candidates = candidatesRead.data?.items || [],
+    target = targetRead.data?.member;
+  const unavailable =
+    blocked ||
+    disabled ||
+    !isOnline ||
+    needsRecheck ||
+    candidatesRead.loading ||
+    !!candidatesRead.error ||
+    !candidatesRead.data ||
+    candidatesRead.data.sourceRevision !== source.revision ||
+    (!!targetId &&
+      (targetRead.loading ||
+        !!targetRead.error ||
+        !target ||
+        targetRead.data?.sourceRevision !== source.revision));
+  const clearCandidates = candidatesRead.clear,
+    clearTarget = targetRead.clear;
   useEffect(() => {
-    const clear = () => {
-      epoch.current++;
-      setCandidates([]);
-      setTarget(undefined);
-      setReview(undefined);
-      setPassword("");
-      setSourceConfirmation("");
-      setTargetConfirmation("");
-      setError("");
-      key.current = undefined;
-    };
-    window.addEventListener("gdg:session-cleared", clear);
     const invalidate = () => {
       epoch.current++;
     };
-    return () => {
-      invalidate();
-      window.removeEventListener("gdg:session-cleared", clear);
-    };
+    return invalidate;
   }, []);
   useEffect(() => {
-    const c = new AbortController(),
-      readEpoch = epoch.current;
-    api<Listing>(base + "?" + new URLSearchParams({ q, active: "true" }), {
-      signal: c.signal,
-    })
-      .then((v) => {
-        if (!c.signal.aborted && epoch.current === readEpoch)
-          setCandidates(
-            v.items.filter(
-              (m) =>
-                m.id !== source.id &&
-                m.team_id === source.team_id &&
-                !m.merged_into_id,
-            ),
-          );
-      })
-      .catch((e) => {
-        if (!c.signal.aborted && epoch.current === readEpoch) {
-          setCandidates([]);
-          setError(e.message);
-        }
-      });
-    return () => c.abort();
-  }, [q, source.id, source.team_id, tick]);
+    onBusy(false);
+  }, [onBusy]);
   useEffect(() => {
-    if (!targetId) {
-      setTarget(undefined);
-      return;
-    }
-    const c = new AbortController(),
-      readEpoch = epoch.current;
-    api<{ member: Member }>(base + "/" + targetId, { signal: c.signal })
-      .then((v) => {
-        if (!c.signal.aborted && epoch.current === readEpoch)
-          setTarget(v.member);
-      })
-      .catch((e) => {
-        if (!c.signal.aborted && epoch.current === readEpoch) {
-          setTarget(undefined);
-          setReview(undefined);
-          setPassword("");
-          setError(e.message);
-        }
-      });
-    return () => c.abort();
-  }, [targetId, tick]);
+    if (!isOnline) setNeedsRecheck(true);
+  }, [isOnline]);
+  useEffect(() => {
+    if (!candidatesRead.denied && !targetRead.denied) return;
+    epoch.current++;
+    clearCandidates();
+    clearTarget();
+    setTargetId("");
+    setReview(undefined);
+    setQ("");
+    setPage(1);
+    setPassword("");
+    setSourceConfirmation("");
+    setTargetConfirmation("");
+    setError("");
+    setBlocked(true);
+    setBusy(false);
+    onBusy(false);
+    key.current = undefined;
+  }, [
+    candidatesRead.denied,
+    targetRead.denied,
+    clearCandidates,
+    clearTarget,
+    onBusy,
+  ]);
+  const recheck = () => {
+    if (busy || disabled || !navigator.onLine) return;
+    setBlocked(false);
+    setNeedsRecheck(false);
+    setListAttempt((v) => v + 1);
+    setTargetAttempt((v) => v + 1);
+  };
   const mismatch =
     !target ||
     target.team_id !== source.team_id ||
@@ -146,7 +173,7 @@ export default function MergeReview({
     return key.current.value;
   }
   async function preview() {
-    if (busy || disabled || mismatch) return;
+    if (busy || unavailable || mismatch) return;
     const current = epoch.current;
     setBusy(true);
     onBusy(true);
@@ -188,7 +215,7 @@ export default function MergeReview({
   }
   async function commit(e: FormEvent) {
     e.preventDefault();
-    if (busy || disabled || stale || !review) return;
+    if (busy || unavailable || stale || !review) return;
     const current = epoch.current,
       secret = password;
     setPassword("");
@@ -254,11 +281,66 @@ export default function MergeReview({
           {error}
         </p>
       )}
-      <fieldset disabled={busy || disabled} className="gt-plain-fieldset">
+      <div className="gt-button-row">
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={busy || disabled || !isOnline}
+          onClick={recheck}
+        >
+          Recheck merge selection
+        </Button>
+      </div>
+      {blocked ? (
+        <p role="alert" className="gt-form-error">
+          Merge selection access could not be verified. Private candidates,
+          target and review have been cleared. Recheck current selection access
+          to continue.
+        </p>
+      ) : (
+        <>
+          {(!isOnline || needsRecheck) && (
+            <p role="status">
+              Merge actions are paused. Reconnect and explicitly recheck the
+              merge selection before continuing.
+            </p>
+          )}
+          <MemberReadFeedback
+            name="merge candidates"
+            read={candidatesRead}
+            offline={!isOnline}
+            disabled={busy || disabled || !isOnline || needsRecheck}
+            retry={() => setListAttempt((v) => v + 1)}
+          />
+          {targetId && (
+            <MemberReadFeedback
+              name="canonical member"
+              read={targetRead}
+              offline={!isOnline}
+              disabled={busy || disabled || !isOnline || needsRecheck}
+              retry={() => setTargetAttempt((v) => v + 1)}
+            />
+          )}
+          {candidatesRead.data &&
+            candidatesRead.data.sourceRevision !== source.revision && (
+              <p role="alert">
+                The source member changed. Recheck member access in the
+                directory before generating a review.
+              </p>
+            )}
+        </>
+      )}
+      <fieldset
+        disabled={
+          busy || disabled || !isOnline || needsRecheck || blocked || !!review
+        }
+        className="gt-plain-fieldset"
+      >
         <SearchBox
           value={q}
           onChange={(v) => {
             setQ(v);
+            setPage(1);
             setTargetId("");
             setReview(undefined);
             setPassword("");
@@ -269,7 +351,7 @@ export default function MergeReview({
         <Field label="Canonical member to keep">
           <select
             value={targetId}
-            disabled={busy}
+            disabled={busy || candidatesRead.loading || !!candidatesRead.error}
             onChange={(e) => {
               setTargetId(e.target.value);
               setReview(undefined);
@@ -277,6 +359,9 @@ export default function MergeReview({
             }}
           >
             <option value="">Choose an active member</option>
+            {targetId && !candidates.some((m) => m.id === targetId) && (
+              <option value={targetId}>Selected canonical member</option>
+            )}
             {candidates.map((m) => (
               <option key={m.id} value={m.id}>
                 {m.name} · {m.email}
@@ -285,26 +370,78 @@ export default function MergeReview({
           </select>
         </Field>
         <p>
-          The picker shows up to 30 current matches in this scope. Narrow the
-          search for another member.
+          {candidatesRead.data
+            ? `${candidatesRead.data.total} eligible members in this owning scope · page ${page}.`
+            : "Canonical candidates require a current authorized read."}
         </p>
         <div className="gt-button-row">
-          <Button type="button" disabled={busy || mismatch} onClick={preview}>
-            Generate current review
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={busy || candidatesRead.loading || page <= 1}
+            onClick={() => setPage((v) => v - 1)}
+          >
+            Previous canonical members
           </Button>
           <Button
             type="button"
             variant="secondary"
-            disabled={busy}
-            onClick={onClose}
+            disabled={
+              busy ||
+              candidatesRead.loading ||
+              !!candidatesRead.error ||
+              !candidatesRead.data ||
+              page * candidatesRead.data.pageSize >= candidatesRead.data.total
+            }
+            onClick={() => setPage((v) => v + 1)}
           >
-            Close merge review
+            Next canonical members
+          </Button>
+        </div>
+        <div className="gt-button-row">
+          <Button
+            type="button"
+            disabled={busy || unavailable || mismatch}
+            onClick={preview}
+          >
+            Generate current review
           </Button>
         </div>
       </fieldset>
+      <div className="gt-button-row">
+        {" "}
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={busy}
+          onClick={onClose}
+        >
+          Close merge review
+        </Button>
+      </div>
+      {review && (
+        <div className="gt-button-row">
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={busy}
+            onClick={() => {
+              setReview(undefined);
+              setPassword("");
+              setSourceConfirmation("");
+              setTargetConfirmation("");
+              key.current = undefined;
+            }}
+          >
+            Discard this merge review
+          </Button>
+        </div>
+      )}
       {review && (
         <form onSubmit={commit}>
-          <h3>Compare before merging</h3>
+          <h3 ref={reviewHeading} tabIndex={-1}>
+            Compare before merging
+          </h3>
           <p>{review.policy}</p>
           {stale && (
             <p role="alert">
@@ -312,7 +449,10 @@ export default function MergeReview({
               was performed.
             </p>
           )}
-          <div className="gt-table-scroll">
+          <ScrollableTable
+            className="gt-table-scroll"
+            label="Private member comparison"
+          >
             <table className="gt-data-table">
               <caption>Private member comparison</caption>
               <thead>
@@ -363,11 +503,14 @@ export default function MergeReview({
                 </tr>
               </tbody>
             </table>
-          </div>
+          </ScrollableTable>
           <p>
             Review expires {new Date(review.expiresAt).toLocaleTimeString()}.
           </p>
-          <fieldset disabled={busy || disabled} className="gt-plain-fieldset">
+          <fieldset
+            disabled={busy || unavailable || stale}
+            className="gt-plain-fieldset"
+          >
             <Field
               label="Source reference"
               hint={review.source.reference}
@@ -402,7 +545,7 @@ export default function MergeReview({
               />
             </Field>
           </fieldset>
-          <Button type="submit" disabled={busy || disabled || stale}>
+          <Button type="submit" disabled={busy || unavailable || stale}>
             Confirm retained merge
           </Button>
         </form>

@@ -654,6 +654,7 @@ function MemberDirectory() {
       )}
       {mode === "merge" && member && !denied && cap?.merge && (
         <MergeReview
+          key={JSON.stringify([member.id, member.team_id])}
           source={member}
           disabled={unavailable}
           tick={tick}

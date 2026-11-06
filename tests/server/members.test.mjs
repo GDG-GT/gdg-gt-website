@@ -289,3 +289,198 @@ describe("community member HTTP boundaries", () => {
     expect(f.db.rpc).not.toHaveBeenCalled();
   });
 });
+
+describe("source-bound merge reads and complete creation destinations", () => {
+  const destinations = (count) =>
+    Array.from({ length: count }, (_, i) => ({
+      id: "f8320000-0000-4000-8000-" + String(i + 1).padStart(12, "0"),
+      name: "Fictional destination " + i,
+      privateExtra: "must not project",
+    }));
+  const reader = (f, read) => {
+    f.user.role = "admin";
+    f.db.rpc.mockImplementation(async (name, args) => ({
+      data: name === "can_operate_member" ? true : await read(name, args),
+    }));
+  };
+  it("returns all 107 current permitted destinations across both pages without extra fields", async () => {
+    const f = fixture(),
+      teams = destinations(107);
+    reader(f, async (name, args) => ({
+      items: teams.slice((args.p_page - 1) * 100, args.p_page * 100),
+      total: 107,
+    }));
+    const r = await f.call("/capabilities", undefined, {}, "GET");
+    expect(r.statusCode).toBe(200);
+    expect(r.body.data.teams).toHaveLength(107);
+    expect(r.body.data.teams[106]).toEqual({
+      id: teams[106].id,
+      name: teams[106].name,
+    });
+    expect(
+      f.db.rpc.mock.calls
+        .filter(([name]) => name === "member_creation_destinations")
+        .map(([, args]) => args),
+    ).toEqual(
+      [1, 2].map((page) => ({
+        p_actor: actor,
+        p_session: sessionId,
+        p_page: page,
+      })),
+    );
+  });
+  it("returns an empty permitted inventory without manufacturing chapter creation rights", async () => {
+    const f = fixture();
+    f.db.rpc.mockImplementation(async (name) => ({
+      data: name === "can_operate_member" ? false : { items: [], total: 0 },
+    }));
+    const r = await f.call("/capabilities", undefined, {}, "GET");
+    expect(r.body.data).toEqual({
+      globalCreate: false,
+      merge: false,
+      teams: [],
+    });
+  });
+  it.each([
+    null,
+    { items: [] },
+    { items: [], total: -1 },
+    { items: [], total: 1.1 },
+  ])("refuses malformed destination metadata %j", async (value) => {
+    const f = fixture();
+    reader(f, async () => value);
+    expect(
+      (await f.call("/capabilities", undefined, {}, "GET")).statusCode,
+    ).toBe(503);
+  });
+  it("refuses a destination inventory above the safe bound instead of silently truncating it", async () => {
+    const f = fixture();
+    reader(f, async () => ({ items: destinations(100), total: 10001 }));
+    const r = await f.call("/capabilities", undefined, {}, "GET");
+    expect(r.statusCode).toBe(409);
+    expect(r.body.error.code).toBe("INVENTORY_LIMIT");
+  });
+  it("refuses short, changed-count and repeated-page destination snapshots", async () => {
+    for (const mode of ["short", "count", "duplicate"]) {
+      const f = fixture();
+      reader(f, async (name, args) => ({
+        items:
+          mode === "short"
+            ? destinations(1)
+            : args.p_page === 1
+              ? destinations(100)
+              : destinations(1),
+        total: mode === "count" && args.p_page === 2 ? 102 : 101,
+      }));
+      expect(
+        (await f.call("/capabilities", undefined, {}, "GET")).statusCode,
+      ).toBe(409);
+    }
+  });
+  it("binds candidate paging/search to the current actor/session and source before projecting names", async () => {
+    const f = fixture(),
+      result = {
+        items: [
+          {
+            id: target,
+            name: "Fictional eligible target",
+            email: "fictional-target@example.test",
+          },
+        ],
+        total: 65,
+        page: 3,
+        pageSize: 30,
+        sourceRevision: 2,
+      };
+    reader(f, async () => result);
+    const r = await f.call(
+      "/" + source + "/merge-candidates?page=3&q=Fictional",
+      undefined,
+      {},
+      "GET",
+    );
+    expect(r.statusCode).toBe(200);
+    expect(r.body.data).toEqual(result);
+    expect(f.db.rpc).toHaveBeenCalledWith("member_merge_candidates", {
+      p_actor: actor,
+      p_session: sessionId,
+      p_source: source,
+      p_page: 3,
+      p_query: "Fictional",
+    });
+    expect(f.store.audit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        action: "members.merge_candidates_viewed",
+        targetId: source,
+        metadata: { count: 1, filterHash: expect.any(String) },
+      }),
+    );
+  });
+  it("loads a selected target through the source-bound RPC even when it is outside the visible candidate page", async () => {
+    const f = fixture();
+    reader(f, async () => ({
+      member: { id: target, name: "Fictional selected target" },
+      sourceRevision: 4,
+    }));
+    const r = await f.call(
+      "/" + source + "/merge-target/" + target,
+      undefined,
+      {},
+      "GET",
+    );
+    expect(r.statusCode).toBe(200);
+    expect(f.db.rpc).toHaveBeenCalledWith("member_merge_target", {
+      p_actor: actor,
+      p_session: sessionId,
+      p_source: source,
+      p_target: target,
+    });
+  });
+  it("conceals candidate and target lookup from ordinary members before database work", async () => {
+    for (const suffix of ["/merge-candidates", "/merge-target/" + target]) {
+      const f = fixture();
+      expect(
+        (await f.call("/" + source + suffix, undefined, {}, "GET")).statusCode,
+      ).toBe(404);
+      expect(f.db.rpc).not.toHaveBeenCalled();
+    }
+  });
+  it("rejects forged scope, duplicate search keys and invalid pagination", async () => {
+    for (const query of [
+      "?ownerId=" + actor,
+      "?q=a&q=b",
+      "?page=0",
+      "?page=10001",
+    ]) {
+      const f = fixture();
+      f.user.role = "admin";
+      expect(
+        (
+          await f.call(
+            "/" + source + "/merge-candidates" + query,
+            undefined,
+            {},
+            "GET",
+          )
+        ).statusCode,
+      ).toBe(400);
+      expect(f.db.rpc).not.toHaveBeenCalled();
+    }
+  });
+  it("refuses write methods and incomplete/extra selection subpaths", async () => {
+    const f = fixture();
+    f.user.role = "admin";
+    expect(
+      (await f.call("/" + source + "/merge-candidates", {}, {})).statusCode,
+    ).toBe(405);
+    for (const suffix of [
+      "/merge-target",
+      "/activity/" + target,
+      "/merge-candidates/" + target,
+    ])
+      expect(
+        (await f.call("/" + source + suffix, undefined, {}, "GET")).statusCode,
+      ).toBe(404);
+    expect(f.db.rpc).not.toHaveBeenCalled();
+  });
+});

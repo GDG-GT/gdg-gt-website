@@ -23,9 +23,9 @@ do not perform authentication or verification. No external integration is enable
 Community-directory parent permission/inventory/selected-record/activity reads now
 have local recovery (`MEMBER_READ_RECOVERY.md`), including denial clearing,
 independent retries, retained timestamped proposals, offline action fencing and
-account/session isolation. Merge-candidate/selected-target recovery, member/merge
-unknown outcomes, the destination-team ceiling, contact inbox and privacy tools
-remain confirmed local work in `LOCAL_ACCEPTANCE_AUDIT.md`.
+account/session isolation. Complete eligible merge-candidate/selected-target recovery and creation
+destinations beyond 100 are also implemented locally (`MEMBER_SELECTION_RECOVERY.md`).
+Member/merge unknown outcomes, contact inbox and privacy tools remain confirmed work in `LOCAL_ACCEPTANCE_AUDIT.md`.
 
 CMS and public-content collection mutation replay is now implemented locally
 (`CURATED_CONTENT_RETRIES.md`). Collection-editor independent reads,
@@ -301,8 +301,8 @@ Their manual/hosted/visual acceptance remains open.
 Complete the confirmed community-directory, contact-inbox and person-data
 privacy recovery in `LOCAL_ACCEPTANCE_AUDIT.md`, then the remaining quality/
 coverage/device acceptance beyond the now-passing 21 critical-file gates.
-Latest full coverage passes lines/branches/statements at 72.19%/72.08%/70.59%;
-functions at 63.58% still fail the unchanged 70% global gate.
+Latest full coverage passes lines/branches/statements at 72.48%/72.40%/70.87%;
+functions at 63.80% still fail the unchanged 70% global gate.
 Preserve the read-only Git reference and historical SQL for retired clients
 (`LEGACY_CLIENT_RETIREMENT.md`), and keep user edits intact. Track implementation separately from verified
 acceptance; do not label the complete PRD finished until its launch gates pass.

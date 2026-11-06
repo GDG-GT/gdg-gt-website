@@ -24,20 +24,25 @@ export async function memberRoutes(
 ) {
   const url = new URL(request.url, config.origin),
     match = url.pathname.match(
-      /^\/api\/v1\/admin\/members(?:\/([^/]+))?(?:\/(activity))?$/,
+      /^\/api\/v1\/admin\/members(?:\/([^/]+))?(?:\/(activity|merge-candidates|merge-target)(?:\/([^/]+))?)?$/,
     );
   if (!match) return false;
   const kind = ["capabilities", "merge-preview", "merge"].includes(match[1])
       ? match[1]
       : null,
     id = match[1] && !kind ? parse(uuid, match[1]) : null,
-    activity = !!match[2];
-  if (kind && activity)
+    activity = match[2] === "activity",
+    selection = ["merge-candidates", "merge-target"].includes(match[2]);
+  if (
+    (kind && match[2]) ||
+    (match[3] && match[2] !== "merge-target") ||
+    (match[2] === "merge-target" && !match[3])
+  )
     throw new ApiError(404, "NOT_FOUND", "This endpoint was not found.");
   allowMethod(
     request,
     response,
-    kind === "capabilities" || activity
+    kind === "capabilities" || activity || selection
       ? ["GET"]
       : kind
         ? ["POST"]
@@ -82,24 +87,105 @@ export async function memberRoutes(
     queryValues(url.searchParams, z.object({}).strict());
     const globalCreate = await can(null, "create"),
       merge = await can(null, "merge"),
-      candidates = globalCreate
-        ? checked(
-            await db
-              .from("admin_teams")
-              .select("id,name")
-              .eq("is_active", true)
-              .is("deleted_at", null)
-              .order("name")
-              .limit(100),
-          )
-        : (await store.memberships(actor.id))
-            .filter((m) => m.is_active && m.team?.is_active)
-            .map((m) => ({ id: m.team_id, name: m.team.name })),
       teams = [];
-    for (const t of candidates)
-      if ((await can(t.id, "read")) && (await can(t.id, "create")))
-        teams.push(t);
+    let total;
+    for (let page = 1; page <= 100; page++) {
+      const result = checked(
+        await db.rpc("member_creation_destinations", {
+          p_actor: actor.id,
+          p_session: session.sessionId,
+          p_page: page,
+        }),
+      );
+      if (
+        !result ||
+        !Array.isArray(result.items) ||
+        !Number.isInteger(result.total) ||
+        result.total < 0
+      )
+        throw new ApiError(
+          503,
+          "TEMPORARILY_UNAVAILABLE",
+          "The current member destinations could not be verified.",
+        );
+      if (result.total > 10000)
+        throw new ApiError(
+          409,
+          "INVENTORY_LIMIT",
+          "The member destination inventory exceeds the safe response limit. No incomplete inventory was returned.",
+        );
+      if (total !== undefined && total !== result.total)
+        throw new ApiError(
+          409,
+          "CONFLICT",
+          "Member destinations changed. Recheck current access.",
+        );
+      total = result.total;
+      teams.push(
+        ...result.items.map((team) => ({ id: team.id, name: team.name })),
+      );
+      if (teams.length >= total) break;
+      if (result.items.length !== 100)
+        throw new ApiError(
+          409,
+          "CONFLICT",
+          "Member destinations changed. Recheck current access.",
+        );
+    }
+    if (
+      teams.length !== total ||
+      new Set(teams.map((team) => team.id)).size !== total
+    )
+      throw new ApiError(
+        409,
+        "CONFLICT",
+        "Member destinations changed. Recheck current access.",
+      );
     return reply({ globalCreate, merge, teams });
+  }
+  if (selection) {
+    if (!["admin", "super_admin"].includes(actor.role))
+      throw new ApiError(
+        404,
+        "NOT_FOUND",
+        "This member selection is not available.",
+      );
+    const target = match[2] === "merge-target" ? parse(uuid, match[3]) : null;
+    const p = queryValues(
+      url.searchParams,
+      target
+        ? z.object({}).strict()
+        : z
+            .object({
+              q: text(100).default(""),
+              page: z.coerce.number().int().min(1).max(10000).default(1),
+            })
+            .strict(),
+    );
+    const result = checked(
+      await db.rpc(target ? "member_merge_target" : "member_merge_candidates", {
+        p_actor: actor.id,
+        p_session: session.sessionId,
+        p_source: id,
+        ...(target ? { p_target: target } : { p_page: p.page, p_query: p.q }),
+      }),
+    );
+    await store.audit({
+      actorId: actor.id,
+      action: target
+        ? "members.merge_target_viewed"
+        : "members.merge_candidates_viewed",
+      targetType: "member",
+      targetId: id,
+      requestId,
+      metadata: target
+        ? { targetId: target }
+        : {
+            count: result.items.length,
+            filterHash: tokenHash(JSON.stringify(p)),
+          },
+    });
+    return reply(result);
   }
   if (request.method === "GET") {
     if (id) {

@@ -929,7 +929,11 @@
         "tests/server/public-collections.test.mjs",
         "tests/client/member-directory-read-recovery.test.tsx",
         "tests/browser/member-directory-reads.spec.ts",
-        "scripts/test-local-member-read-recovery.mjs"
+        "scripts/test-local-member-read-recovery.mjs",
+        "tests/client/member-merge-read-recovery.test.tsx",
+        "tests/browser/member-merge-reads.spec.ts",
+        "database/tests/132_member_selection_reads.sql",
+        "scripts/test-local-member-selection.mjs"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"

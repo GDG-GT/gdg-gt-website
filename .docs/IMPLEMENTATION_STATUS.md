@@ -8,6 +8,48 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Scoped merge selection and complete member destinations — 2026-11-06
+
+- Migration 132 adds service-only current-session source-bound merge candidate
+  and selected-target reads, filtering eligible same-scope active/unmerged rows
+  before search/paging and exposing current source revision. The selected target
+  is verified independently, including outside the visible candidate page.
+  Destination reads now page current permitted teams before the API assembles a
+  complete inventory, removing the silent 100-team ceiling. Changing/duplicate/
+  short/malformed snapshots and an explicit 10,000-destination response limit
+  refuse partial results. Read audits contain IDs/counts/hashes, no contacts/query.
+- SQL covers 65 eligible targets behind 40 other-scope rows, later-page/exact
+  search, inactive/archive exclusion, changed target scope, session/role denial,
+  explicit service/browser grants and 107 destinations. Both 132-migration chains
+  pass (238/239 checks), both 100-client races and six restore checks pass; applied
+  locally. Any correction must be a new forward migration.
+- The picker has independent timestamped candidate/target recovery, current
+  source/target revision checks, off-page generic selection, complete paging,
+  denial clearing and explicit reconnect/access recheck. Current review must be
+  discarded before changing its selection; parent/source-owning-team context
+  changes clear child state. Comparison receives keyboard focus and its table
+  is a named focusable scrolling region. Closing uses existing draft navigation.
+- All 85 focused member/client/transfer/server cases pass; all 42 populated
+  browser picker/parent-regression cases pass across six profiles, no skips.
+  Measured axe/overflow pass; mobile comparison inspected, unapproved. All 14
+  actual owned API/DB/native desktop-mobile checks pass, including 105 fixture
+  destinations and target 65. Only two owned private reviews are prepared; no
+  merge, provider send, unexpected egress/page error/overflow. Saved rows are
+  unchanged during reads/reviews. One deliberate fixture target scope change is
+  concealed by the bound lookup. Owned records/teams archived, actor disabled/
+  sessions revoked; private reviews/audits retained, not physically erased.
+- All 2,491 tests/203 files pass; all 21 critical 90% branch gates pass. Build,
+  strict types, lint (zero errors/25 existing warnings), budgets/secrets/traceability
+  pass. Global lines/branches/statements pass at 72.48%/72.40%/70.87%; functions
+  still fail unchanged 70% at 63.80%. Catalog remains 159 unverified logical cases.
+  See `MEMBER_SELECTION_RECOVERY.md`.
+- Ordinary member/merge unknown-outcome mutation recovery, contact-inbox and
+  person-data privacy recovery, global function coverage and complete role/manual/
+  device/visual/hosted acceptance remain open (`LOCAL_ACCEPTANCE_AUDIT.md`).
+  SSO/Google and Bevy/Engage remain deferred; no deployment, production change,
+  purchase, real provider send, new timer or AI commit trailer.
+
+
 ### Community-directory parent private read recovery — 2026-11-06
 
 - Permissions, filtered inventory, selected member and activity now use separate

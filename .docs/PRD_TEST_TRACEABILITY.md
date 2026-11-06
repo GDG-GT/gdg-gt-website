@@ -136,3 +136,9 @@ selected-record/activity recovery, current-denial clearing, keyed late-response
 fences, retained proposals, offline explicit recheck and real local read-only
 verification. See `MEMBER_READ_RECOVERY.md`; complete merge/write, destination
 inventory, role/device/manual/visual/hosted acceptance remains open.
+
+The directory case now also maps current-session source-bound merge candidate/
+selected-target SQL, complete eligible paging, creation destinations beyond 100,
+private picker failure/context/offline recovery and real local native comparison.
+See `MEMBER_SELECTION_RECOVERY.md`; ordinary member/merge unknown-outcome recovery
+and full role/manual/device/visual/hosted acceptance remain open.

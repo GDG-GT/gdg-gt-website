@@ -97,6 +97,7 @@
     "test:local-site-status": "node scripts/test-local-site-status.mjs",
     "test:local-members": "node scripts/test-local-members.mjs",
     "test:local-member-read-recovery": "node scripts/test-local-member-read-recovery.mjs",
+    "test:local-member-selection": "node scripts/test-local-member-selection.mjs",
     "test:local-member-transfer": "node scripts/test-local-member-transfer.mjs",
     "test:local-notification-bulk": "node scripts/test-local-notification-bulk.mjs",
     "test:local-blog": "node scripts/test-local-blog.mjs",
