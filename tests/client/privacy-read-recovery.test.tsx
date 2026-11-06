@@ -218,13 +218,13 @@ describe("Person-data privacy independent cleanup-status recovery", () => {
     await screen.findByText("Fictional current metadata outage");
     expect(screen.getByText("Fictional contact scope")).toBeTruthy();
     expect(
-      (button("Download reviewed JSON") as HTMLButtonElement).disabled,
+      (button("Prepare reviewed JSON") as HTMLButtonElement).disabled,
     ).toBe(true);
     failure = undefined;
     click("Retry privacy cleanup status");
     await waitFor(() =>
       expect(
-        (button("Download reviewed JSON") as HTMLButtonElement).disabled,
+        (button("Prepare reviewed JSON") as HTMLButtonElement).disabled,
       ).toBe(false),
     );
     expect(posts()).toHaveLength(1);

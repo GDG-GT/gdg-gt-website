@@ -1,0 +1,178 @@
+{
+  "generatedAt": "2026-11-06T19:34:37.785Z",
+  "tests": {
+    "files": 210,
+    "passed": 2635,
+    "failed": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 23954,
+      "covered": 17788,
+      "skipped": 0,
+      "pct": 74.25
+    },
+    "statements": {
+      "total": 26481,
+      "covered": 19210,
+      "skipped": 0,
+      "pct": 72.54
+    },
+    "functions": {
+      "total": 6092,
+      "covered": 4000,
+      "skipped": 0,
+      "pct": 65.65
+    },
+    "branches": {
+      "total": 27798,
+      "covered": 20541,
+      "skipped": 0,
+      "pct": 73.89
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "globalThreshold": 70,
+  "globalPassed": false,
+  "criticalThreshold": 90,
+  "critical": [
+    {
+      "file": "server/auth.mjs",
+      "branches": 98.52,
+      "passed": true
+    },
+    {
+      "file": "server/access.mjs",
+      "branches": 98.38,
+      "passed": true
+    },
+    {
+      "file": "server/users.mjs",
+      "branches": 98.78,
+      "passed": true
+    },
+    {
+      "file": "server/forms.mjs",
+      "branches": 98.54,
+      "passed": true
+    },
+    {
+      "file": "server/form-access.mjs",
+      "branches": 90,
+      "passed": true
+    },
+    {
+      "file": "server/form-links.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-collaborators.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-deletion.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-integrations.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/uploads.mjs",
+      "branches": 98.48,
+      "passed": true
+    },
+    {
+      "file": "server/finances.mjs",
+      "branches": 97.72,
+      "passed": true
+    },
+    {
+      "file": "server/person-privacy.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/security.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/authorization.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/http.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/encryption.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/validation.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/upload-content.mjs",
+      "branches": 98.86,
+      "passed": true
+    },
+    {
+      "file": "server/lib/scanner.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/realtime-token.mjs",
+      "branches": 91.48,
+      "passed": true
+    },
+    {
+      "file": "server/lib/object-storage.mjs",
+      "branches": 100,
+      "passed": true
+    }
+  ],
+  "checks": {
+    "build": true,
+    "strictTypes": true,
+    "lintErrors": 0,
+    "lintWarnings": 25,
+    "byteBudgets": true,
+    "secrets": true,
+    "traceability": true,
+    "logicalCases": 160,
+    "focusedCombined": 60,
+    "browser": {
+      "passed": 66,
+      "failed": 0,
+      "skipped": 0
+    },
+    "live": {
+      "passed": 50,
+      "cleanup": true
+    },
+    "sql": {
+      "migrations": 137,
+      "clean": 247,
+      "legacy": 248,
+      "restoreChecks": 6,
+      "concurrentClientsPerRace": 100
+    }
+  },
+  "scope": "Local person-data privacy original review/approval recovery with single-use export metadata and explicit memory-only handoff. Initial native CSRF fixture and architecture-scan timeout retained separately and corrected. All known directory/merge/contact/privacy feature recovery gaps now have local implementation evidence; fresh final audit, global function gate and full role/manual/device/visual/PWA/performance/hosted/institutional acceptance remain. No providers/deployment/production or physical-erasure claim."
+}

@@ -8,11 +8,13 @@ import {
   parse,
   idempotency,
 } from "./lib/validation.mjs";
-import { token, tokenHash, riskHash, verifySecret } from "./lib/security.mjs";
+import { tokenHash, riskHash, verifySecret } from "./lib/security.mjs";
 import { encryptPayload, decryptPayload } from "./lib/encryption.mjs";
 import {
   personPrivacyReview,
   personPrivacyCommit,
+  personPrivacyReviewInspection,
+  personPrivacyCommitInspection,
 } from "../shared/privacy.mjs";
 
 // HMAC recipient identities were intentionally scoped to a form, so matching old
@@ -47,7 +49,9 @@ export async function personPrivacyRoutes(
       /^\/api\/v1\/admin\/privacy(?:\/(review|commit|status)(?:\/([^/]+))?)?$/,
     );
   if (!match) return false;
-  const operation = match[1];
+  const operation = match[1],
+    recovering =
+      ["review", "commit"].includes(operation) && match[2] === "recovery";
   allowMethod(
     request,
     response,
@@ -63,7 +67,7 @@ export async function personPrivacyRoutes(
     );
   if (operation === "status" && !match[2])
     throw new ApiError(404, "NOT_FOUND", "This privacy request was not found.");
-  if (match[2] && operation !== "status")
+  if (match[2] && operation !== "status" && !recovering)
     throw new ApiError(404, "NOT_FOUND", "This endpoint was not found.");
   if (!operation || operation === "status") {
     const items = checked(
@@ -78,9 +82,9 @@ export async function personPrivacyRoutes(
   }
   await requireCsrf(request, session, store);
   const rate = await store.rateLimit(
-    "person.privacy." + operation,
+    "person.privacy." + (recovering ? "recovery" : operation),
     riskHash(session.user.id, config.riskSecret),
-    operation === "review" ? 10 : 20,
+    recovering ? 120 : operation === "review" ? 10 : 20,
     900,
   );
   if (!rate.allowed) {
@@ -91,100 +95,135 @@ export async function personPrivacyRoutes(
       "Wait before another privacy review or approval.",
     );
   }
-  const { currentPassword, ...document } = await jsonBody(
+
+  const key = idempotency(request),
+    { currentPassword, ...document } = await jsonBody(
       request,
-      operation === "review" ? personPrivacyReview : personPrivacyCommit,
+      operation === "review"
+        ? recovering
+          ? personPrivacyReviewInspection
+          : personPrivacyReview
+        : recovering
+          ? personPrivacyCommitInspection
+          : personPrivacyCommit,
       8192,
-    ),
-    account = await store.accountByEmail(session.user.email);
-  if (!(await verifySecret(currentPassword, account?.password_hash)))
-    throw new ApiError(
-      403,
-      "PASSWORD_REQUIRED",
-      "Confirm your current password for this privacy request.",
     );
+  let verified = null;
+  if (!recovering) {
+    const account = await store.accountByEmail(session.user.email);
+    if (!(await verifySecret(currentPassword, account?.password_hash)))
+      throw new ApiError(
+        403,
+        "PASSWORD_REQUIRED",
+        "Confirm your current password for this privacy request.",
+      );
+    verified = account.password_hash;
+  }
+  const preview = operation === "review",
+    reviewToken = preview
+      ? Buffer.from(
+          riskHash(
+            "person.privacy.review:" +
+              session.user.id +
+              ":" +
+              session.sessionId +
+              ":" +
+              key,
+            config.riskSecret,
+          ),
+          "hex",
+        ).toString("base64url")
+      : document.reviewToken;
+  let original, internal;
+  if (preview) {
+    original = document;
+    internal = {
+      email: document.email,
+      encryptedEmail: encryptPayload(
+        { email: document.email },
+        config.encryptionSecret,
+      ),
+      subjectHash: riskHash(
+        "privacy-subject:" + document.email,
+        config.riskSecret,
+      ),
+      action: document.action,
+      responseIds: document.responseIds,
+      formHashes: await privacyFormHashes(
+        db,
+        document.email,
+        config.riskSecret,
+      ),
+      includeSensitive: document.includeSensitive,
+      purposeHash: riskHash(
+        "privacy-purpose:" + document.purpose,
+        config.riskSecret,
+      ),
+    };
+  } else {
+    original = {
+      reviewId: document.reviewId,
+      tokenHash: tokenHash(reviewToken),
+      confirmation: document.confirmation,
+    };
+    const review = checked(
+      await db
+        .from("person_privacy_reviews")
+        .select("email_encrypted")
+        .eq("id", document.reviewId)
+        .eq("actor_id", session.user.id)
+        .eq("session_id", session.sessionId)
+        .eq("token_hash", tokenHash(reviewToken))
+        .maybeSingle(),
+    );
+    if (!review)
+      throw new ApiError(
+        404,
+        "NOT_FOUND",
+        "This original privacy request is not available in the current session.",
+      );
+    internal = {
+      reviewId: document.reviewId,
+      email: review.email_encrypted
+        ? decryptPayload(review.email_encrypted, config.encryptionSecret).email
+        : null,
+      confirmation: document.confirmation,
+    };
+  }
   const args = {
     p_actor: session.user.id,
     p_session: session.sessionId,
-    p_password: account.password_hash,
-    p_request_id: requestId,
+    p_kind: operation,
+    p_document: internal,
+    p_token_hash: tokenHash(reviewToken),
+    p_key_hash: tokenHash(key),
+    p_request_hash: tokenHash(JSON.stringify(original)),
   };
-  if (operation === "review") {
-    const reviewToken = token(),
-      hashes = await privacyFormHashes(db, document.email, config.riskSecret),
-      result = checked(
-        await db.rpc("review_person_privacy", {
-          ...args,
-          p_email: document.email,
-          p_encrypted_email: encryptPayload(
-            { email: document.email },
-            config.encryptionSecret,
-          ),
-          p_subject_hash: riskHash(
-            "privacy-subject:" + document.email,
-            config.riskSecret,
-          ),
-          p_action: document.action,
-          p_ids: document.responseIds,
-          p_hashes: hashes,
-          p_sensitive: document.includeSensitive,
-          p_token_hash: tokenHash(reviewToken),
-          p_purpose_hash: riskHash(
-            "privacy-purpose:" + document.purpose,
-            config.riskSecret,
-          ),
-        }),
-      );
-    sendJson(response, 200, { ...result, reviewToken }, requestId);
+  if (recovering) {
+    const result = checked(await db.rpc("inspect_person_privacy_write", args));
+    if (preview && result.committed && result.receipt)
+      result.receipt = { ...result.receipt, reviewToken };
+    sendJson(response, 200, result, requestId);
     return true;
   }
-  const review = checked(
-    await db
-      .from("person_privacy_reviews")
-      .select("email_encrypted")
-      .eq("id", document.reviewId)
-      .eq("actor_id", session.user.id)
-      .eq("session_id", session.sessionId)
-      .eq("token_hash", tokenHash(document.reviewToken))
-      .maybeSingle(),
-  );
-  if (!review)
-    throw new ApiError(
-      409,
-      "PRIVACY_REVIEW_REQUIRED",
-      "Generate another privacy review for this session.",
-    );
   const result = checked(
-    await db.rpc("commit_person_privacy", {
+    await db.rpc("mutate_person_privacy_write", {
       ...args,
-      p_review: document.reviewId,
-      p_token_hash: tokenHash(document.reviewToken),
-      p_email: review.email_encrypted
-        ? decryptPayload(review.email_encrypted, config.encryptionSecret).email
-        : null,
-      p_confirmation: document.confirmation,
-      p_key_hash: tokenHash(idempotency(request)),
-      p_request_hash: tokenHash(
-        JSON.stringify({
-          reviewId: document.reviewId,
-          tokenHash: tokenHash(document.reviewToken),
-          confirmation: document.confirmation,
-        }),
-      ),
+      p_verified_hash: verified,
+      p_request_id: requestId,
     }),
   );
-  if (result.downloadExpired)
-    throw new ApiError(
-      409,
-      "PRIVACY_REVIEW_REQUIRED",
-      "The export was already prepared. Generate a fresh review instead of reusing an expired download.",
-    );
   if (Buffer.byteLength(JSON.stringify(result)) > 3.5 * 1024 * 1024)
     throw new ApiError(
       413,
       "PRIVACY_EXPORT_LIMIT",
       "This export exceeds the safe response size.",
     );
-  sendJson(response, 200, result, requestId);
+  sendJson(
+    response,
+    200,
+    preview ? { ...result, reviewToken } : result,
+    requestId,
+  );
   return true;
 }

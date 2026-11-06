@@ -136,7 +136,9 @@
     "202611060132_member_selection_reads.sql",
     "202611060133_member_write_replay.sql",
     "202611060134_contact_write_replay.sql",
-    "202611060135_member_merge_recovery.sql"
+    "202611060135_member_merge_recovery.sql",
+    "202611060136_person_privacy_write_recovery.sql",
+    "202611060137_privacy_retry_fingerprint.sql"
   ],
   "tests": [
     {
@@ -684,6 +686,14 @@
       "passed": true
     },
     {
+      "name": "202611060136_person_privacy_write_recovery.sql",
+      "passed": true
+    },
+    {
+      "name": "202611060137_privacy_retry_fingerprint.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -1105,6 +1115,10 @@
     },
     {
       "name": "135_member_merge_recovery.sql",
+      "passed": true
+    },
+    {
+      "name": "136_person_privacy_write_recovery.sql",
       "passed": true
     },
     {

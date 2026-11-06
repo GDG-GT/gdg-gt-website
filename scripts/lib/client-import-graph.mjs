@@ -4,7 +4,7 @@ import { execFileSync } from "node:child_process";
 import path from "node:path";
 export async function clientImportGraph(
   root,
-  { includeReferences = true } = {},
+  { includeReferences = true, inspectSource } = {},
 ) {
   root = path.resolve(root);
   const trackedFiles = execFileSync("git", ["ls-files", "-z"], {
@@ -75,8 +75,16 @@ export async function clientImportGraph(
         });
       ts.forEachChild(node, inspect);
     }
-    if (seen === app)
-      inspect(ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true));
+    if (seen === app) {
+      const ast = ts.createSourceFile(
+        file,
+        source,
+        ts.ScriptTarget.Latest,
+        true,
+      );
+      inspect(ast);
+      inspectSource?.(path.relative(root, file), ast);
+    }
     if (!imports.has(file))
       imports.set(file, ts.preProcessFile(source, true, true).importedFiles);
     for (const item of imports.get(file)) {

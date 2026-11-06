@@ -2442,10 +2442,14 @@
         "database/tests/094_person_privacy.sql",
         "tests/client/privacy-read-recovery.test.tsx",
         "tests/browser/privacy-read-recovery.spec.ts",
-        "scripts/test-local-privacy-read-recovery.mjs"
+        "scripts/test-local-privacy-read-recovery.mjs",
+        "tests/client/privacy-write-recovery.test.tsx",
+        "tests/browser/privacy-write-recovery.spec.ts",
+        "database/tests/136_person_privacy_write_recovery.sql",
+        "scripts/test-local-person-privacy-recovery.mjs"
       ],
       "remaining": [
-        "Original review/approval unknown-outcome recovery, institutional retention/identity/hold and physical byte cleanup, complete manual/device/visual/hosted acceptance remain open; fixture prepares only owned reviews and performs no approval or provider send",
+        "Institutional retention/identity/hold and physical byte cleanup, complete manual/device/visual/hosted acceptance remain open; mutation probe only approves fictional owned local records, no providers/production/physical-erasure claim",
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified",

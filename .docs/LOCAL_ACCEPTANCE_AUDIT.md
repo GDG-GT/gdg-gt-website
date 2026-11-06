@@ -1,6 +1,6 @@
 # Local implementation and acceptance audit — 2026-11-06
 
-Source inspection after respondent recovery checkpoint 131. These are concrete
+Updated through privacy recovery checkpoint 137. These are concrete
 remaining local findings, not an exhaustive acceptance certificate. All 146
 numbered requirements and 160 logical acceptance cases remain unverified against
 the complete PRD definition; hosted/device/manual/approved-visual gates cannot
@@ -28,10 +28,11 @@ be inferred from local tests.
    background/stuck-read retry, current-denial private clearing, account/session
    isolation, offline approval fencing and guarded review navigation are now
    implemented locally (`PRIVACY_READ_RECOVERY.md`). Original review/commit
-   unknown-outcome reconciliation remains; preserve exact source/hold/expiry/
-   password proof and the single-use export limitation. Never describe logical
-   deletion or pending cleanup as physical erasure.
-4. Global coverage: at checkpoint 135, functions (65.44%) still fail the
+   reconciliation is also implemented locally (`PERSON_PRIVACY_WRITE_RECOVERY.md`,
+   applied migrations 136/137), preserving exact source/hold/expiry/current proof
+   and single-use exports. A fresh final implementation audit remains required;
+   this does not certify physical erasure or complete PRD acceptance.
+4. Global coverage: at checkpoint 137, functions (65.65%) still fail the
    unchanged 70% gate; lines/branches/statements pass. Do not exclude active modules, lower gates or
    replace behavior verification with mirrored implementation assertions. Add
    meaningful recovery/role/keyboard workflow tests while addressing these gaps.

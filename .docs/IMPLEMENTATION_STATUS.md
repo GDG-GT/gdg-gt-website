@@ -9,6 +9,43 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 ## Current checkpoint
 
 
+### Person-data privacy original review/approval recovery — 2026-11-06
+
+- Applied migrations 136/137 add atomic exact original review/approval and read-only
+  current-session reconciliation. Current Super Admin/session/capability precedes
+  receipt/hash disclosure; current source fingerprints gate retry eligibility.
+  Existing independent fingerprint/hold/proof enforcement and precise refusals
+  remain. Review receipts store only review ID; approval receipts retain summary
+  only. Accepted export inspection/replay never returns private bytes.
+- UI freezes original normalized scope/review/action/count/key in memory, explicitly
+  inspects before identical fresh-proof retry, fences offline/unmount/late results,
+  clears current-denied/session private state and offers reviewed stopping. New
+  exports wait for explicit memory-only download/clear; no automatic handoff or
+  persistent raw export. Accepted lost export confirms preparation, not download.
+- Both SQL chains pass (247/248), both 100-client races and six restore checks pass.
+  All 60 combined focused checks, 66 production-browser cases across six profiles
+  and 50 actual local API/DB/native desktop-mobile checks pass. Initial 47-check
+  fixture reused rotated CSRF for its final direct probe; corrected and final full
+  50 pass, with all owned cleanup verified. Contacts redacted, officer disabled/
+  sessions revoked; private unused reviews expire normally, no provider/production
+  effects or physical-erasure claim. Mobile populated review capture inspected,
+  unapproved. See `PERSON_PRIVACY_WRITE_RECOVERY.md`.
+- Initial full run hit a five-second duplicate architecture scan timeout after
+  2,633 passes. Security inspection now shares each existing shipped AST once,
+  preserving HTML/static/lazy/offline scope and unchanged rules/timeouts/gates.
+  An isolated traversal contract verifies exact-once callbacks and non-shipped
+  exclusions. Final full run: all 2,635 tests/210 files and all 21 critical branch
+  gates pass. Privacy route branches: 100%. Global lines/branches/statements:
+  74.25%/73.89%/72.54%; functions still fail unchanged 70% at 65.65%.
+- Build/types/lint (zero errors/25 existing warnings), budgets/secrets/traceability
+  pass; 160 logical cases remain unverified for complete acceptance. The previously
+  confirmed member/merge/contact/privacy feature recovery gaps now have local code
+  and behavior evidence. Fresh final audit, function coverage and complete role/
+  manual/device/visual/performance/PWA/hosted/institutional acceptance remain.
+  SSO/Google and Bevy/Engage stay deferred; no deployment, purchases, real provider
+  sends, production changes, new timer or AI commit trailer.
+
+
 ### Member merge original review/commit recovery — 2026-11-06
 
 - Migration 135 adds current-session/body/key-bound original preview/commit

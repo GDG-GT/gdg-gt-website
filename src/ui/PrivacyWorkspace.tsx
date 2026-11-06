@@ -5,7 +5,7 @@ import {
   useCallback,
   type FormEvent,
 } from "react";
-import { api, ApiFailure } from "@/lib/api";
+import { ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
@@ -17,23 +17,16 @@ import {
   privacyConfirmation,
 } from "../../shared/privacy.mjs";
 
-type RecordItem = {
-  kind: string;
-  id: string;
-  parentId: string | null;
-  held: boolean;
-  source: string;
-  label: string;
-};
-type Review = {
-  reviewId: string;
-  reviewToken: string;
-  action: string;
-  expiresAt: string;
-  count: number;
-  heldCount: number;
-  records: RecordItem[];
-};
+import PrivacyWriteRecovery from "./privacy/PrivacyWriteRecovery";
+import {
+  privacyIntent,
+  submitPrivacyWrite,
+  type PrivacyIntent,
+  type PrivacyReceipt,
+  type PrivacyReview as Review,
+  type PrivacyResult as Result,
+} from "./privacy/privacy-write";
+
 type Recent = {
   reviewId: string;
   action: string;
@@ -43,14 +36,6 @@ type Recent = {
   expiresAt: string;
   pendingFiles: number;
   pendingExports: number;
-};
-type Result = {
-  action: string;
-  count: number;
-  pendingFiles?: number;
-  pendingExports?: number;
-  remainingMatches?: number;
-  export?: unknown[];
 };
 const initial = {
   email: "",
@@ -97,12 +82,19 @@ function PrivacyRequests() {
     [busy, setBusy] = useState(false),
     [completed, setCompleted] = useState(false),
     [refresh, setRefresh] = useState(0),
-    [now, setNow] = useState(Date.now());
+    [now, setNow] = useState(Date.now()),
+    [uncertain, setUncertain] = useState<PrivacyIntent>(),
+    [recoveryBusy, setRecoveryBusy] = useState(false),
+    [download, setDownload] = useState<{ url: string; reviewId: string }>();
+  const activeWrite = useRef<{
+      intent: PrivacyIntent;
+      controller: AbortController;
+    }>(),
+    mounted = useRef(true),
+    downloadRef = useRef<string>();
   const generation = useRef(0),
-    request = useRef<AbortController>(),
     reviewHeading = useRef<HTMLHeadingElement>(null),
-    resultHeading = useRef<HTMLHeadingElement>(null),
-    submission = useRef<{ signature: string; key: string }>();
+    resultHeading = useRef<HTMLHeadingElement>(null);
   const { isOnline } = useOnlineStatus(),
     safety = useNavigationSafety(),
     recentRead = usePrivateRead<{ items: Recent[] }>(
@@ -143,7 +135,6 @@ function PrivacyRequests() {
       !recentRead.data;
   const clearPrivate = useCallback(() => {
     generation.current++;
-    request.current?.abort();
     clearRecent();
     setDraft(initial);
     setPassword("");
@@ -153,7 +144,13 @@ function PrivacyRequests() {
     setBusy(false);
     setError("");
     setCompleted(false);
-    submission.current = undefined;
+    setUncertain(undefined);
+    setRecoveryBusy(false);
+    activeWrite.current?.controller.abort();
+    activeWrite.current = undefined;
+    if (downloadRef.current) URL.revokeObjectURL(downloadRef.current);
+    downloadRef.current = undefined;
+    setDownload(undefined);
   }, [clearRecent]);
   useEffect(() => {
     if (recentRead.denied) {
@@ -162,10 +159,15 @@ function PrivacyRequests() {
     }
   }, [recentRead.denied, clearPrivate]);
   useEffect(() => {
-    if (!isOnline) setNeedsRecheck(true);
+    if (!isOnline) {
+      setNeedsRecheck(true);
+      if (downloadRef.current) URL.revokeObjectURL(downloadRef.current);
+      downloadRef.current = undefined;
+      setDownload(undefined);
+    }
   }, [isOnline]);
   const refreshStatus = () => {
-    if (busy || !navigator.onLine) return;
+    if (busy || uncertain || !navigator.onLine) return;
     setDenied(false);
     setNeedsRecheck(false);
     setRefresh((v) => v + 1);
@@ -191,12 +193,18 @@ function PrivacyRequests() {
         !!draft.responseIds ||
         !!password ||
         draft.identityVerified),
-    { busy, privateDraft: true, label: "Person-data privacy request" },
+    {
+      busy: busy || recoveryBusy || !!uncertain,
+      privateDraft: true,
+      label: "Person-data privacy request",
+    },
   );
   useEffect(() => {
     const invalidate = () => {
       generation.current++;
-      request.current?.abort();
+      activeWrite.current?.controller.abort();
+      mounted.current = false;
+      if (downloadRef.current) URL.revokeObjectURL(downloadRef.current);
     };
     return invalidate;
   }, []);
@@ -212,18 +220,118 @@ function PrivacyRequests() {
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
   }, [review]);
+  useEffect(() => {
+    mounted.current = true;
+    const offline = () => {
+      if (activeWrite.current) {
+        activeWrite.current.controller.abort();
+        setUncertain(activeWrite.current.intent);
+        activeWrite.current = undefined;
+        setBusy(false);
+        setPassword("");
+      }
+    };
+    window.addEventListener("offline", offline);
+    return () => {
+      mounted.current = false;
+      activeWrite.current?.controller.abort();
+      window.removeEventListener("offline", offline);
+    };
+  }, []);
+  const dropDownload = () => {
+    if (downloadRef.current) URL.revokeObjectURL(downloadRef.current);
+    downloadRef.current = undefined;
+    setDownload(undefined);
+  };
   const change = (patch: Partial<typeof initial>) => {
+    if (uncertain || busy) return;
+    dropDownload();
     setDraft((value) => ({ ...value, ...patch }));
     setReview(undefined);
     setResult(undefined);
     setConfirmation("");
     setError("");
     setCompleted(false);
-    submission.current = undefined;
   };
+  function confirmed(intent: PrivacyIntent, data: PrivacyReceipt) {
+    setUncertain(undefined);
+    setPassword("");
+    setConfirmation("");
+    if (intent.action === "review") {
+      setReview(data as Review);
+      setRefresh((v) => v + 1);
+      return;
+    }
+    const value = data as Result;
+    dropDownload();
+    if (Array.isArray(value.export)) {
+      const url = URL.createObjectURL(
+        new Blob(
+          [
+            JSON.stringify(
+              {
+                format: "gdg-person-public-workflows-v1",
+                generatedAt: new Date().toISOString(),
+                records: value.export,
+              },
+              null,
+              2,
+            ),
+          ],
+          { type: "application/json" },
+        ),
+      );
+      downloadRef.current = url;
+      setDownload({ url, reviewId: JSON.parse(intent.body).reviewId });
+    }
+    const { export: privateBytes, ...summary } = value;
+    void privateBytes;
+    setResult(summary);
+    setReview(undefined);
+    setCompleted(true);
+    setRefresh((v) => v + 1);
+  }
+  async function saveOriginal(intent: PrivacyIntent, proof: string) {
+    if (activeWrite.current || !navigator.onLine) return;
+    const controller = new AbortController();
+    activeWrite.current = { intent, controller };
+    setBusy(true);
+    setError("");
+    setPassword("");
+    dropDownload();
+    try {
+      const data = await submitPrivacyWrite(
+        intent,
+        AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]),
+        proof,
+      );
+      if (mounted.current && !controller.signal.aborted)
+        confirmed(intent, data);
+    } catch (e) {
+      if (!mounted.current || controller.signal.aborted) return;
+      if (rejectPrivate(e)) return;
+      if (!(e instanceof ApiFailure) || e.status >= 500) {
+        setUncertain(intent);
+        return;
+      }
+      setError(e.message);
+      if (
+        [
+          "PRIVACY_REVIEW_REQUIRED",
+          "PRIVACY_REVIEW_CHANGED",
+          "RETENTION_HOLD",
+        ].includes(e.code)
+      )
+        setReview(undefined);
+    } finally {
+      if (activeWrite.current?.intent === intent)
+        activeWrite.current = undefined;
+      if (mounted.current && !controller.signal.aborted) setBusy(false);
+    }
+  }
   const reviewRequest = async (event: FormEvent) => {
     event.preventDefault();
-    if (busy || unavailable) return;
+    if (busy || uncertain || unavailable) return;
     const parsed = personPrivacyReview.safeParse({
       ...draft,
       responseIds: draft.responseIds.trim()
@@ -237,117 +345,29 @@ function PrivacyRequests() {
       );
       return;
     }
-    const controller = new AbortController(),
-      current = generation.current;
-    request.current = controller;
-    setBusy(true);
-    setError("");
+    const { currentPassword, ...document } = parsed.data;
     setResult(undefined);
-    try {
-      const data = await api<Review>("/admin/privacy/review", {
-        method: "POST",
-        protected: true,
-        body: parsed.data,
-        signal: AbortSignal.any([
-          controller.signal,
-          AbortSignal.timeout(20000),
-        ]),
-      });
-      if (current !== generation.current) return;
-      setReview(data);
-      setConfirmation("");
-      submission.current = undefined;
-      setRefresh((value) => value + 1);
-    } catch (e) {
-      if (current === generation.current && rejectPrivate(e)) return;
-      if (current === generation.current && !controller.signal.aborted)
-        setError((e as Error).message);
-    } finally {
-      if (current === generation.current) {
-        setPassword("");
-        setBusy(false);
-      }
-    }
+    await saveOriginal(
+      privacyIntent("review", document, document.action),
+      currentPassword,
+    );
   };
   const approve = async (event: FormEvent) => {
     event.preventDefault();
-    if (!review || busy || unavailable) return;
-    const controller = new AbortController(),
-      current = generation.current;
-    request.current = controller;
-    const approval = {
-        reviewId: review.reviewId,
-        reviewToken: review.reviewToken,
-        confirmation,
-      },
-      signature = JSON.stringify(approval);
-    if (submission.current?.signature !== signature)
-      submission.current = { signature, key: crypto.randomUUID() };
-    setBusy(true);
-    setError("");
-    try {
-      const data = await api<Result>("/admin/privacy/commit", {
-        method: "POST",
-        protected: true,
-        body: { ...approval, currentPassword: password },
-        idempotencyKey: submission.current.key,
-        signal: AbortSignal.any([
-          controller.signal,
-          AbortSignal.timeout(20000),
-        ]),
-      });
-      if (current !== generation.current) return;
-      if (data.export) {
-        const objectUrl = URL.createObjectURL(
-          new Blob(
-            [
-              JSON.stringify(
-                {
-                  format: "gdg-person-public-workflows-v1",
-                  generatedAt: new Date().toISOString(),
-                  records: data.export,
-                },
-                null,
-                2,
-              ),
-            ],
-            { type: "application/json" },
-          ),
-        );
-        const link = document.createElement("a");
-        link.href = objectUrl;
-        link.download = `privacy-export-${review.reviewId}.json`;
-        link.click();
-        setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
-      }
-      // Do not retain a full answer export in React state after handing it off.
-      const { export: ignored, ...summary } = data;
-      void ignored;
-      setResult(summary);
-      setReview(undefined);
-      setConfirmation("");
-      setCompleted(true);
-      setRefresh((value) => value + 1);
-    } catch (e) {
-      if (current === generation.current && rejectPrivate(e)) return;
-      if (current === generation.current && !controller.signal.aborted) {
-        setError((e as Error).message);
-        if (
-          e instanceof ApiFailure &&
-          [
-            "PRIVACY_REVIEW_REQUIRED",
-            "PRIVACY_REVIEW_CHANGED",
-            "RETENTION_HOLD",
-          ].includes(e.code)
-        )
-          setReview(undefined);
-      }
-    } finally {
-      if (current === generation.current) {
-        setPassword("");
-        setBusy(false);
-      }
-    }
+    if (!review || busy || uncertain || unavailable) return;
+    await saveOriginal(
+      privacyIntent(
+        "commit",
+        {
+          reviewId: review.reviewId,
+          reviewToken: review.reviewToken,
+          confirmation,
+        },
+        review.action,
+        review.count,
+      ),
+      password,
+    );
   };
   const expected = review
       ? privacyConfirmation(review.action, review.count)
@@ -412,6 +432,24 @@ function PrivacyRequests() {
           {error}
         </p>
       )}
+      {uncertain && (
+        <PrivacyWriteRecovery
+          intent={uncertain}
+          onConfirmed={(value) => confirmed(uncertain, value)}
+          onBusy={setRecoveryBusy}
+          onDenied={() => {
+            clearPrivate();
+            setDenied(true);
+          }}
+          onStop={() => {
+            clearPrivate();
+            setNeedsRecheck(true);
+            setError(
+              "Privacy recovery stopped. The original outcome remains unconfirmed. Recheck current cleanup status before preparing another request.",
+            );
+          }}
+        />
+      )}
       {result && (
         <section
           className="gt-panel gt-form"
@@ -425,9 +463,23 @@ function PrivacyRequests() {
           <p>
             {result.count} primary records.{" "}
             {result.action === "export"
-              ? "The JSON download contains only the selected person's data, with sensitive Forms answers masked unless explicitly requested. Keep the file private."
+              ? "The export was prepared once. Its contents are available only when a download link is shown below. A lost reply cannot replay private export contents; prepare a separately reviewed request if another export is needed."
               : `${result.pendingFiles || 0} files and ${result.pendingExports || 0} generated exports await physical cleanup. ${result.remainingMatches || 0} current exact-email matches remain.`}
           </p>
+          {download && (
+            <div className="gt-button-row">
+              <a
+                className="gt-button gt-button-primary"
+                href={download.url}
+                download={`privacy-export-${download.reviewId}.json`}
+              >
+                Download prepared privacy export
+              </a>
+              <Button type="button" variant="secondary" onClick={dropDownload}>
+                Clear prepared export
+              </Button>
+            </div>
+          )}
           {result.action !== "export" && (
             <p className="gt-helper">
               This is not a blanket erasure certificate. Retained record classes
@@ -439,7 +491,10 @@ function PrivacyRequests() {
       )}
       <form className="gt-panel gt-form" onSubmit={reviewRequest}>
         <h2>1. Verify the requester and review scope</h2>
-        <fieldset className="gt-form" disabled={busy || unavailable}>
+        <fieldset
+          className="gt-form"
+          disabled={busy || recoveryBusy || !!uncertain || unavailable}
+        >
           <div className="gt-form-grid">
             <Field label="Exact requester email">
               <input
@@ -530,6 +585,8 @@ function PrivacyRequests() {
             type="submit"
             disabled={
               busy ||
+              recoveryBusy ||
+              !!uncertain ||
               unavailable ||
               !!review ||
               !password ||
@@ -561,8 +618,8 @@ function PrivacyRequests() {
           )}
           {expired && (
             <p role="alert">
-              This review expired. Generate a fresh record review before
-              approval.
+              This review expired. Check any unconfirmed original outcome before
+              preparing a fresh record review.
             </p>
           )}
           {review.records.length ? (
@@ -617,6 +674,8 @@ function PrivacyRequests() {
             className="gt-form"
             disabled={
               busy ||
+              recoveryBusy ||
+              !!uncertain ||
               unavailable ||
               expired ||
               (review.action !== "export" &&
@@ -648,13 +707,18 @@ function PrivacyRequests() {
                 type="submit"
                 variant={review.action === "export" ? "primary" : "secondary"}
                 disabled={
-                  busy || unavailable || !password || confirmation !== expected
+                  busy ||
+                  recoveryBusy ||
+                  !!uncertain ||
+                  unavailable ||
+                  !password ||
+                  confirmation !== expected
                 }
               >
                 {busy
                   ? "Processing…"
                   : review.action === "export"
-                    ? "Download reviewed JSON"
+                    ? "Prepare reviewed JSON"
                     : `Confirm ${review.action}`}
               </Button>
             </div>
@@ -662,7 +726,7 @@ function PrivacyRequests() {
           <Button
             type="button"
             variant="ghost"
-            disabled={busy}
+            disabled={busy || recoveryBusy || !!uncertain}
             onClick={() =>
               safety.request(() => {
                 setReview(undefined);
@@ -683,7 +747,7 @@ function PrivacyRequests() {
           <h2 id="privacy-recent-heading">Recent privacy requests</h2>
           <Button
             variant="secondary"
-            disabled={busy || !isOnline}
+            disabled={busy || recoveryBusy || !!uncertain || !isOnline}
             onClick={refreshStatus}
           >
             Refresh cleanup status

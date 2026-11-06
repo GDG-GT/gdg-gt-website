@@ -57,11 +57,17 @@ function fixture() {
     ),
   };
   const db = {
-      rpc: vi.fn(async (name) =>
-        returns.get(name)?.error
-          ? { data: null, error: returns.get(name).error }
-          : { data: returns.get(name), error: null },
-      ),
+      rpc: vi.fn(async (name, args) => {
+        const key =
+          name === "mutate_person_privacy_write"
+            ? args.p_kind === "review"
+              ? "review_person_privacy"
+              : "commit_person_privacy"
+            : name;
+        return returns.get(key)?.error
+          ? { data: null, error: returns.get(key).error }
+          : { data: returns.get(key), error: null };
+      }),
       from: vi.fn((table) => {
         const query = { table, steps: [] };
         queries.push(query);
@@ -232,18 +238,21 @@ describe("SEC exact session-bound person privacy dispatch", () => {
     expect(r.statusCode).toBe(200);
     expect(r.body.data.reviewId).toBe(reviewId);
     const [name, args] = f.db.rpc.mock.calls.at(-1);
-    expect(name).toBe("review_person_privacy");
+    expect(name).toBe("mutate_person_privacy_write");
     expect(args).toMatchObject({
       p_actor: actor,
       p_session: sid,
-      p_password: hash,
-      p_email: "fictional-subject@example.test",
-      p_action: "export",
-      p_ids: [],
-      p_sensitive: false,
+      p_verified_hash: hash,
+      p_kind: "review",
+      p_document: expect.objectContaining({
+        email: "fictional-subject@example.test",
+        action: "export",
+        responseIds: [],
+        includeSensitive: false,
+      }),
     });
     expect(args.p_token_hash).toBe(tokenHash(r.body.data.reviewToken));
-    expect(args.p_hashes).toEqual([
+    expect(args.p_document.formHashes).toEqual([
       {
         formId: form,
         emailHash: riskHash(
@@ -252,10 +261,10 @@ describe("SEC exact session-bound person privacy dispatch", () => {
         ),
       },
     ]);
-    expect(decryptPayload(args.p_encrypted_email, secret)).toEqual({
+    expect(decryptPayload(args.p_document.encryptedEmail, secret)).toEqual({
       email: "fictional-subject@example.test",
     });
-    expect(args.p_subject_hash).toBe(
+    expect(args.p_document.subjectHash).toBe(
       riskHash(
         "privacy-subject:fictional-subject@example.test",
         f.config.riskSecret,
@@ -306,15 +315,18 @@ describe("SEC exact session-bound person privacy dispatch", () => {
       ],
     });
     expect(f.db.rpc).toHaveBeenLastCalledWith(
-      "commit_person_privacy",
+      "mutate_person_privacy_write",
       expect.objectContaining({
         p_actor: actor,
         p_session: sid,
-        p_password: hash,
-        p_review: reviewId,
+        p_verified_hash: hash,
+        p_kind: "commit",
         p_token_hash: tokenHash(f.commitBody.reviewToken),
-        p_email: "fictional-subject@example.test",
-        p_confirmation: "EXPORT 2 RECORDS",
+        p_document: {
+          reviewId,
+          email: "fictional-subject@example.test",
+          confirmation: "EXPORT 2 RECORDS",
+        },
         p_key_hash: tokenHash("fictional-privacy-idempotency"),
         p_request_hash: expect.stringMatching(/^[a-f0-9]{64}$/),
       }),
@@ -340,7 +352,7 @@ describe("SEC exact session-bound person privacy dispatch", () => {
     expect(
       (await f.call("/admin/privacy/commit", "POST", f.commitBody)).body.error
         .code,
-    ).toBe("PRIVACY_REVIEW_REQUIRED");
+    ).toBe("NOT_FOUND");
     expect(f.db.rpc).not.toHaveBeenCalled();
     f.setReview({ email_encrypted: null });
     expect(
@@ -354,15 +366,18 @@ describe("SEC exact session-bound person privacy dispatch", () => {
     expect(
       (await f.call("/admin/privacy/commit", "POST", f.commitBody)).statusCode,
     ).toBe(200);
-    expect(f.db.rpc.mock.calls.at(-1)[1].p_email).toBeNull();
+    expect(f.db.rpc.mock.calls.at(-1)[1].p_document.email).toBeNull();
   });
   it("refuses expired artifacts, changed records, oversized exports or corrupted encrypted review state", async () => {
     const f = fixture();
     f.returns.set("commit_person_privacy", { downloadExpired: true });
-    expect(
-      (await f.call("/admin/privacy/commit", "POST", f.commitBody)).body.error
-        .code,
-    ).toBe("PRIVACY_REVIEW_REQUIRED");
+    const accepted = await f.call(
+      "/admin/privacy/commit",
+      "POST",
+      f.commitBody,
+    );
+    expect(accepted.statusCode).toBe(200);
+    expect(accepted.body.data).toEqual({ downloadExpired: true });
     f.returns.set("commit_person_privacy", {
       payload: "x".repeat(4 * 1024 * 1024),
     });
@@ -381,5 +396,137 @@ describe("SEC exact session-bound person privacy dispatch", () => {
     expect(
       (await f.call("/admin/privacy/commit", "POST", f.commitBody)).statusCode,
     ).toBe(503);
+  });
+});
+
+describe("original privacy read-only recovery", () => {
+  it.each(["review", "commit"])(
+    "inspects %s without current-password lookup or mutation",
+    async (kind) => {
+      const f = fixture(),
+        body = { ...(kind === "review" ? f.reviewBody : f.commitBody) };
+      delete body.currentPassword;
+      f.returns.set("inspect_person_privacy_write", {
+        committed: false,
+        canRetry: true,
+        receipt: null,
+      });
+      const r = await f.call(
+        "/admin/privacy/" + kind + "/recovery",
+        "POST",
+        body,
+      );
+      expect(r.statusCode).toBe(200);
+      expect(f.store.accountByEmail).not.toHaveBeenCalled();
+      expect(f.db.rpc).toHaveBeenLastCalledWith(
+        "inspect_person_privacy_write",
+        expect.objectContaining({
+          p_actor: actor,
+          p_session: sid,
+          p_kind: kind,
+        }),
+      );
+      expect(JSON.stringify(f.db.rpc.mock.calls)).not.toContain(
+        f.commitBody.reviewToken,
+      );
+    },
+  );
+  it("reconstructs stable review capability only after accepted current inspection", async () => {
+    const f = fixture(),
+      body = { ...f.reviewBody };
+    delete body.currentPassword;
+    f.returns.set("inspect_person_privacy_write", {
+      committed: true,
+      canRetry: false,
+      receipt: { reviewId },
+    });
+    const first = await f.call("/admin/privacy/review", "POST", f.reviewBody),
+      inspection = await f.call("/admin/privacy/review/recovery", "POST", body);
+    expect(inspection.body.data.receipt.reviewToken).toBe(
+      first.body.data.reviewToken,
+    );
+    expect(JSON.stringify(f.db.rpc.mock.calls)).not.toContain(
+      first.body.data.reviewToken,
+    );
+  });
+  it("requires strict password-free original recovery bodies and keys", async () => {
+    const f = fixture();
+    expect(
+      (await f.call("/admin/privacy/review/recovery", "POST", f.reviewBody))
+        .statusCode,
+    ).toBe(400);
+    expect(
+      (await f.call("/admin/privacy/commit/recovery", "POST", f.commitBody))
+        .statusCode,
+    ).toBe(400);
+    const body = { ...f.commitBody };
+    delete body.currentPassword;
+    expect(
+      (
+        await f.call("/admin/privacy/commit/recovery", "POST", body, {
+          "idempotency-key": "",
+        })
+      ).statusCode,
+    ).toBe(400);
+    expect(f.db.rpc).not.toHaveBeenCalled();
+  });
+  it("bounds recovery separately without consuming scope-review password proof", async () => {
+    const f = fixture(),
+      body = { ...f.reviewBody };
+    delete body.currentPassword;
+    f.returns.set("inspect_person_privacy_write", {
+      committed: false,
+      canRetry: true,
+      receipt: null,
+    });
+    await f.call("/admin/privacy/review/recovery", "POST", body);
+    expect(f.store.rateLimit).toHaveBeenCalledWith(
+      "person.privacy.recovery",
+      expect.any(String),
+      120,
+      900,
+    );
+    expect(f.store.accountByEmail).not.toHaveBeenCalled();
+    f.store.rateLimit.mockResolvedValueOnce({ allowed: false, retryAfter: 30 });
+    expect(
+      (await f.call("/admin/privacy/review/recovery", "POST", body)).statusCode,
+    ).toBe(429);
+  });
+  it("rejects unavailable original review and malformed recovery scope before returning any private receipt", async () => {
+    const f = fixture(),
+      body = { ...f.commitBody };
+    delete body.currentPassword;
+    f.setReview(null);
+    expect(
+      (await f.call("/admin/privacy/commit/recovery", "POST", body)).statusCode,
+    ).toBe(404);
+    const scope = { ...f.reviewBody, identityVerified: false };
+    delete scope.currentPassword;
+    expect(
+      (await f.call("/admin/privacy/review/recovery", "POST", scope))
+        .statusCode,
+    ).toBe(400);
+    expect(f.db.rpc).not.toHaveBeenCalled();
+  });
+  it("denies GET recovery and requires current authority and CSRF", async () => {
+    const f = fixture(),
+      body = { ...f.commitBody };
+    delete body.currentPassword;
+    expect(
+      (await f.call("/admin/privacy/commit/recovery", "GET")).statusCode,
+    ).toBe(405);
+    for (const headers of [
+      { "x-csrf-token": "" },
+      { origin: "https://other.example.test" },
+    ])
+      expect(
+        (await f.call("/admin/privacy/commit/recovery", "POST", body, headers))
+          .statusCode,
+      ).toBe(403);
+    f.user.role = "admin";
+    expect(
+      (await f.call("/admin/privacy/commit/recovery", "POST", body)).statusCode,
+    ).toBe(403);
+    expect(f.db.rpc).not.toHaveBeenCalled();
   });
 });

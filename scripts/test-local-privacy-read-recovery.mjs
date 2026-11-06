@@ -211,7 +211,7 @@ try {
       ).toBeVisible();
       await expect(
         page.getByRole("button", {
-          name: "Download reviewed JSON",
+          name: "Prepare reviewed JSON",
           exact: true,
         }),
       ).toBeDisabled();

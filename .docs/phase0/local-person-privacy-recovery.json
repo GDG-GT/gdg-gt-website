@@ -1,0 +1,208 @@
+{
+  "generatedAt": "2026-11-06T19:26:57.853Z",
+  "completed": true,
+  "cleanup": true,
+  "scope": "Loopback fictional owned subject inquiries and officer only. Native original review/approval before/after loss at desktop/mobile, readonly unchanged-source inspection, exact proof-free body/key and fresh explicit retry; lost export metadata vs explicit native handoff/clear, current Super Admin loss. Ten scope reviews maximum under existing quota, no resets/bypass. No providers/workers/production or real chapter changes. Owned contacts redacted, actor disabled/sessions revoked; unused reviews/audit expire under ordinary rules, no direct protected review changes or physical-erasure claim. No raw subject/proof/body/key/capability/export content in report.",
+  "tests": [
+    {
+      "name": "review redact before loss freezes original scope/review at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only review redact inspection preserves source record at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original review inspection uses exact document/key without proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "explicit review retry preserves original scope/review/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "one review redact outcome after before loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "review redact after loss freezes original scope/review at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only review redact inspection preserves source record at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original review inspection uses exact document/key without proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "one review redact outcome after after loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "native privacy comparison passes automated accessibility at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "commit redact before loss freezes original scope/review at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only commit redact inspection preserves source record at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original commit inspection uses exact document/key without proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "explicit commit retry preserves original scope/review/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "one commit redact outcome after before loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "commit redact after loss freezes original scope/review at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only commit redact inspection preserves source record at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original commit inspection uses exact document/key without proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "one commit redact outcome after after loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "commit export after loss freezes original scope/review at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only commit export inspection preserves source record at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original commit inspection uses exact document/key without proof at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "one commit export outcome after after loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "accepted lost export confirms preparation without replaying private bytes at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "one commit export outcome after none loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "prepared private export waits for explicit native download at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "clearing private export removes its memory-only handoff at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "native privacy recovery has no page errors egress or overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "review redact before loss freezes original scope/review at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only review redact inspection preserves source record at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original review inspection uses exact document/key without proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "explicit review retry preserves original scope/review/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "one review redact outcome after before loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "review redact after loss freezes original scope/review at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only review redact inspection preserves source record at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original review inspection uses exact document/key without proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "one review redact outcome after after loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "native privacy comparison passes automated accessibility at 375×812",
+      "passed": true
+    },
+    {
+      "name": "commit redact before loss freezes original scope/review at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only commit redact inspection preserves source record at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original commit inspection uses exact document/key without proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "explicit commit retry preserves original scope/review/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "one commit redact outcome after before loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "commit redact after loss freezes original scope/review at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only commit redact inspection preserves source record at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original commit inspection uses exact document/key without proof at 375×812",
+      "passed": true
+    },
+    {
+      "name": "one commit redact outcome after after loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "same current browser session can inspect accepted privacy outcome at 375×812",
+      "passed": true
+    },
+    {
+      "name": "current Super Admin loss conceals accepted privacy outcome at 375×812",
+      "passed": true
+    },
+    {
+      "name": "native privacy recovery has no page errors egress or overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

@@ -188,7 +188,7 @@ test("privacy prepared review survives private metadata outage and protects navi
     page.getByText("Fictional reviewed contact scope", { exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Download reviewed JSON", exact: true }),
+    page.getByRole("button", { name: "Prepare reviewed JSON", exact: true }),
   ).toBeDisabled();
   await verify(page);
   await page.screenshot({
@@ -201,7 +201,7 @@ test("privacy prepared review survives private metadata outage and protects navi
     .getByRole("button", { name: "Retry privacy cleanup status", exact: true })
     .click();
   await expect(
-    page.getByRole("button", { name: "Download reviewed JSON", exact: true }),
+    page.getByRole("button", { name: "Prepare reviewed JSON", exact: true }),
   ).toBeEnabled();
   await page
     .getByRole("button", { name: "Back to scope", exact: true })

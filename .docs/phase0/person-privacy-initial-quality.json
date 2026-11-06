@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-11-06T19:32:29.872Z",
+  "passed": 2633,
+  "failed": 1,
+  "files": 210,
+  "failure": {
+    "file": "tests/client-architecture.test.mjs",
+    "case": "keeps direct database calls out of the browser and confines SDK initialization to scoped Realtime",
+    "durationMs": 5061.78,
+    "scope": "Five-second timeout during duplicate shipped-source disk read/AST parse; rules/gates unchanged. Shared existing AST callback removes that duplicate work; isolated exact-once traversal contract added. Final complete rerun recorded separately."
+  },
+  "coverage": {
+    "lines": 74.25,
+    "branches": 73.89,
+    "statements": 72.54,
+    "functions": 65.65
+  },
+  "globalFunctionsRequired": 70
+}

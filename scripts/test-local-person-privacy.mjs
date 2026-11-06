@@ -371,7 +371,7 @@ try {
   );
   check(
     (await post(sameOfficer, "/admin/privacy/commit", commit(review)))
-      .status === 409,
+      .status === 404,
     "another valid same-account session cannot reuse a privacy capability",
   );
   await sameOfficer.logout();

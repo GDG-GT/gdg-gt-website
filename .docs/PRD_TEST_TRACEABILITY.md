@@ -172,3 +172,9 @@ minimal session-bound receipts, exact read-only reconciliation/explicit fresh-pr
 retry, current source/target authority, null legacy fields, current parent private
 clearing and accepted replay preserving later canonical edits. Local evidence in
 `MEMBER_MERGE_WRITE_RECOVERY.md` does not certify full manual/hosted acceptance.
+
+The normative person-data privacy case also maps current-session original review/
+approval recovery, exact source/hold/proof fences, summary-only accepted export
+reconciliation and explicit memory-only export handoff/clear. SQL/API/native and
+production-browser evidence is in `PERSON_PRIVACY_WRITE_RECOVERY.md`; institutional
+identity/retention, physical bytes and full manual/device/hosted approval remain.

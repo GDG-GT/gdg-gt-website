@@ -53,3 +53,19 @@ export function privacyConfirmation(action, count) {
     throw Error("Invalid privacy confirmation");
   return `${action.toUpperCase()} ${count} RECORDS`;
 }
+
+export const personPrivacyReviewInspection = z
+  .object(personPrivacyReview.shape)
+  .omit({ currentPassword: true })
+  .strict()
+  .superRefine((value, context) => {
+    if (value.action !== "export" && value.includeSensitive)
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["includeSensitive"],
+        message: "Sensitive-answer export is separate from erasure.",
+      });
+  });
+export const personPrivacyCommitInspection = personPrivacyCommit.omit({
+  currentPassword: true,
+});

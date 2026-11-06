@@ -63,6 +63,23 @@ describe("Application import security versus complete retirement references", ()
     expect(full.candidates).toContain("src/retired.ts");
     expect(full.candidates).not.toContain("src/test-only.ts");
   });
+  it("shares each shipped AST exactly once with security inspection, including lazy and offline roots", async () => {
+    const root = await fixture(),
+      seen = new Map();
+    const graph = await clientImportGraph(root, {
+      includeReferences: false,
+      inspectSource(file, ast) {
+        expect(ast.fileName).toBe(path.join(root, file));
+        seen.set(file, (seen.get(file) || 0) + 1);
+      },
+    });
+    expect([...seen.keys()].sort()).toEqual(graph.app);
+    expect([...seen.values()].every((count) => count === 1)).toBe(true);
+    expect(seen.has("src/dynamic.ts")).toBe(true);
+    expect(seen.has("src/pwa/offline.tsx")).toBe(true);
+    expect(seen.has("src/test-only.ts")).toBe(false);
+    expect(seen.has("src/user-work.ts")).toBe(false);
+  });
   it("still rejects opaque dynamic imports reachable only from a lazy application module", async () => {
     const root = await fixture();
     await writeFile(
