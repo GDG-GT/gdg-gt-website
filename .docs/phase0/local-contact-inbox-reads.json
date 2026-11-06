@@ -1,0 +1,64 @@
+{
+  "generatedAt": "2026-11-06T15:04:18.294Z",
+  "completed": true,
+  "cleanup": true,
+  "scope": "Loopback fictional owned inquiries/account only. Native private read/retry/proposal/navigation/axe at desktop/mobile. Deliberate owned status/revision/redaction changes simulate another editor/retention; no native mutations/provider sends/workers/files. Fixture inquiry content redacted and actor disabled/sessions revoked; tombstones/audit retained, no physical-erasure claim. No contacts/proof/keys/credentials in report.",
+  "tests": [
+    {
+      "name": "initial selected inquiry retry leaves the saved record unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "failed private inquiry refresh retains proposal and dated snapshot without saving at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "inquiry retry and declined navigation preserve proposal without a status mutation at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "explicit reviewed reload adopts only the current saved inquiry revision at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated private inquiry passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "current redaction metadata removes old private review fields immediately at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "inquiry read recovery has no native writes egress errors or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "initial selected inquiry retry leaves the saved record unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "failed private inquiry refresh retains proposal and dated snapshot without saving at 375×812",
+      "passed": true
+    },
+    {
+      "name": "inquiry retry and declined navigation preserve proposal without a status mutation at 375×812",
+      "passed": true
+    },
+    {
+      "name": "explicit reviewed reload adopts only the current saved inquiry revision at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated private inquiry passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "current redaction metadata removes old private review fields immediately at 375×812",
+      "passed": true
+    },
+    {
+      "name": "inquiry read recovery has no native writes egress errors or page overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

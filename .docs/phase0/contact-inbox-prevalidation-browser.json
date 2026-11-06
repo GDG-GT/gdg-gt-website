@@ -1,0 +1,210 @@
+{
+  "generatedAt": "2026-11-06T15:05:54.025Z",
+  "completed": true,
+  "playwrightVersion": "1.64.1",
+  "platform": "darwin",
+  "arch": "arm64",
+  "stats": {
+    "startTime": "2026-11-06T15:04:24.156Z",
+    "duration": 38454.721,
+    "expected": 24,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "note": "Production-build browser checks with explicit local API fixtures, no database/credentials/provider sends. Screenshots are unapproved review candidates, not initial golden baselines or approved pixel comparisons. WebKit/mobile emulation does not certify Safari or real devices. Local execution does not certify the new CI job has run.",
+  "tests": [
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    }
+  ]
+}

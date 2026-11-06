@@ -142,3 +142,10 @@ selected-target SQL, complete eligible paging, creation destinations beyond 100,
 private picker failure/context/offline recovery and real local native comparison.
 See `MEMBER_SELECTION_RECOVERY.md`; ordinary member/merge unknown-outcome recovery
 and full role/manual/device/visual/hosted acceptance remain open.
+
+The contact case now also maps private inbox/selected read recovery, retained
+timestamped proposals, malformed-result refusal, current-denial/context fences,
+reviewed stale reload, current redaction clearing and activated short-lived
+attachment validation. `CONTACT_INBOX_READ_RECOVERY.md` records local evidence;
+status/hold original-outcome mutation and full role/manual/device/visual/hosted
+acceptance remain open.

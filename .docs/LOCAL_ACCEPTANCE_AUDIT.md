@@ -15,13 +15,12 @@ be inferred from local tests.
    `MEMBER_SELECTION_RECOVERY.md`, applied migration 132. Ordinary member and
    merge original-outcome mutation recovery remains. Preserve source/target/
    revision/current proof/profile rules and CSV transfers while completing it.
-2. Contact inbox: `src/ui/communications/ContactInbox.tsx` disables its sole refresh
-   button whenever a selected inquiry is present. A failed selected-detail read has
-   no available retry. Refresh also unmounts detail editors and drops snapshots;
-   selected empty/malformed results can reach `list.items[0].id`. Add independent
-   private reads, recoverable selected inspection, context cancellation and a safe
-   unavailable-result view. Inspect attachment capability and status/hold recovery
-   against current authority; do not introduce provider sends.
+2. Contact inbox: selected refresh/retry, retained dated snapshots/proposals,
+   denial/context/offline clearing, malformed-result refusal, reviewed stale reload,
+   immediate redaction clearing and scoped short-lived attachment links are now
+   implemented locally (`CONTACT_INBOX_READ_RECOVERY.md`). Status/hold mutation
+   unknown-outcome recovery is still required; current backend revision checks
+   alone do not reconcile an accepted-but-lost reply. Do not introduce sends.
 3. Person-data privacy: `src/ui/PrivacyWorkspace.tsx` retains recent-request metadata
    on failed reads without a timestamp, and does not clear prior metadata/review on
    current 401/403/404 denial. Its review/commit transport has timeout and session

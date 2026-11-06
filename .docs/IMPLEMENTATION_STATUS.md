@@ -8,6 +8,43 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Contact-inbox private read and review recovery — 2026-11-06
+
+- Selected inquiry failures now have usable refresh/retry and a return path.
+  Private reads retain dated same-view snapshots and proposed status/hold fields
+  while pausing actions. New selection/filter/page contexts hide old data; malformed
+  and empty/mismatched selected replies are refused. Current 401/403/404 clears
+  private records/reviews/proof and pauses until explicit refresh. Account/role/
+  session changes cancel old work. Offline/reconnected actions require current
+  recheck. Later-page/filter errors have Previous/reset escape controls.
+- Changed revisions preserve proposals while requiring reviewed current-record
+  reload. Stay here retains input; current redaction metadata clears old private
+  content immediately. Activated download links clear on stale/unverified context,
+  expiry and session change, refuse late old results and current-denial disclosure,
+  and use the existing bounded private-download URL/expiry validator. Table regions
+  are named keyboard-focusable scroll containers. Status/hold unknown-outcome
+  mutation replay remains separate pending work; no backend behavior bypass.
+- All 44 focused inbox/public-contact/server cases pass, including 26 new inbox
+  cases. Initial browser matrix retained (12 pass/12 exact-label lookup failures);
+  role/name status-control lookup passes targeted and full matrices. All 24 final
+  production-browser cases pass across six profiles, no skips. Measured axe/
+  overflow pass; mobile native capture inspected, unapproved.
+- All 14 actual loopback API/DB/native desktop-mobile checks pass: initial/detail
+  retry, retained proposals, declined navigation, reviewed current revision,
+  immediate redaction clearing and no native writes/egress/errors/overflow.
+  Deliberate saved status/redaction changes affect only owned fixture records;
+  fixture content redacted, actor disabled/sessions revoked, private tombstones/
+  audit retained. No provider sends, workers/files, production change or physical
+  erasure claim. No SQL migration; applied chain remains 132.
+- Build/strict types/lint (zero errors/25 existing warnings), budgets/secrets/
+  traceability pass. All 2,517 tests/204 files and all 21 critical 90% branch gates
+  pass. Global lines/branches/statements pass at 72.91%/72.81%/71.29%; functions
+  remain below unchanged 70% at 64.39%. Catalog stays 159 unverified cases. See
+  `CONTACT_INBOX_READ_RECOVERY.md`. Member/merge and contact mutation recovery,
+  person-data privacy, remaining coverage and full manual/device/visual/hosted
+  acceptance remain open. SSO/Google and Bevy/Engage stay deferred.
+
+
 ### Scoped merge selection and complete member destinations — 2026-11-06
 
 - Migration 132 adds service-only current-session source-bound merge candidate

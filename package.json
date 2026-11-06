@@ -55,6 +55,7 @@
     "test:local-newsletter": "node scripts/test-local-newsletter.mjs",
     "test:local-newsletter-review": "node scripts/test-local-newsletter-review.mjs",
     "test:local-contact-files": "node scripts/test-local-contact-files.mjs",
+    "test:local-contact-inbox-reads": "node scripts/test-local-contact-inbox-reads.mjs",
     "test:local-event-mail": "node scripts/test-local-event-mail.mjs",
     "setup:local-push": "node scripts/setup-local-push.mjs",
     "test:local-push": "node scripts/test-local-push.mjs",

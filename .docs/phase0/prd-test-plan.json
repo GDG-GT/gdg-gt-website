@@ -1245,7 +1245,10 @@
         "tests/server/mail-transport.test.mjs",
         "database/tests/007_public_submissions.sql",
         "database/tests/088_contact_attachments.sql",
-        "scripts/test-local-contact-files.mjs"
+        "scripts/test-local-contact-files.mjs",
+        "tests/client/contact-inbox-read-recovery.test.tsx",
+        "tests/browser/contact-inbox-reads.spec.ts",
+        "scripts/test-local-contact-inbox-reads.mjs"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"

@@ -1,4 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { useAdmin } from "@/contexts/AdminContext";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import ScrollableTable from "../ScrollableTable";
+import { authorizedPrivateDownload } from "../forms/private-download";
 import { api, ApiFailure } from "@/lib/api";
 import { usePrivateOperation } from "@/hooks/usePrivateOperation";
 import {
@@ -37,24 +42,78 @@ type Inquiry = {
   } | null;
 };
 type Listing = { items: Inquiry[]; total: number; page: number };
+function validInquiry(value: Inquiry) {
+  return (
+    !!value &&
+    typeof value.id === "string" &&
+    [
+      value.name,
+      value.email,
+      value.type,
+      value.message,
+      value.status,
+      value.createdAt,
+    ].every((v) => typeof v === "string") &&
+    Array.isArray(value.interests) &&
+    value.interests.every((v) => typeof v === "string") &&
+    Number.isInteger(value.revision) &&
+    value.revision >= 1 &&
+    typeof value.hold === "boolean" &&
+    [value.resolvedAt, value.redactedAt, value.holdReason].every(
+      (v) => v === null || typeof v === "string",
+    ) &&
+    (value.attachment === null ||
+      (!!value.attachment &&
+        typeof value.attachment.id === "string" &&
+        typeof value.attachment.filename === "string" &&
+        typeof value.attachment.state === "string" &&
+        Number.isFinite(value.attachment.bytes) &&
+        value.attachment.bytes >= 0 &&
+        typeof value.attachment.canDownload === "boolean"))
+  );
+}
 const date = (v?: string) => (v ? new Date(v).toLocaleString() : "—");
 function InquiryReview({
-  record,
+  record: currentRecord,
+  paused,
+  onReload,
+  onBusy,
+  onDenied,
   onSaved,
   onClose,
 }: {
   record: Inquiry;
+  paused: boolean;
+  onReload: () => void;
+  onBusy: (busy: boolean) => void;
+  onDenied: () => void;
   onSaved: () => void;
   onClose: () => void;
 }) {
+  const record = useRef(currentRecord).current,
+    stale = currentRecord.revision !== record.revision,
+    attachmentEpoch = useRef(0);
   const [status, setStatus] = useState(record.status),
     [hold, setHold] = useState(false),
     [reason, setReason] = useState(""),
     [password, setPassword] = useState(""),
     [confirmation, setConfirmation] = useState(""),
-    [capability, setCapability] = useState<{ url: string; filename: string }>();
+    [capability, setCapability] = useState<{
+      url: string;
+      filename: string;
+      expiresAt: number;
+    }>();
   const { busy, error, work } = usePrivateOperation(),
     safety = useNavigationSafety();
+  useEffect(() => {
+    onBusy(busy);
+  }, [busy, onBusy]);
+  useEffect(() => {
+    if (paused || stale) {
+      attachmentEpoch.current++;
+      setCapability(undefined);
+    }
+  }, [paused, stale]);
   useDraftGuard(hold || status !== record.status, {
     busy,
     label: "Contact inquiry review",
@@ -67,7 +126,10 @@ function InquiryReview({
   };
   useEffect(() => {
     if (!capability) return;
-    const timer = setTimeout(() => setCapability(undefined), 60000);
+    const timer = setTimeout(
+      () => setCapability(undefined),
+      Math.max(0, capability.expiresAt - Date.now()),
+    );
     return () => clearTimeout(timer);
   }, [capability]);
   const path = "/admin/contact-submissions/" + record.id,
@@ -75,6 +137,7 @@ function InquiryReview({
   const saveHold = () => {
     const currentPassword = password;
     setPassword("");
+    if (paused || stale) return;
     return work(
       (signal) =>
         api(path, {
@@ -113,6 +176,25 @@ function InquiryReview({
           Back to inbox
         </Button>
       </header>
+      {(paused || stale) && (
+        <div role="status" className="gt-form-error">
+          <p>
+            {stale
+              ? "This inquiry changed. Your proposed fields are preserved; review the current saved inquiry before continuing."
+              : "Inquiry actions are paused until a current private read is verified."}
+          </p>
+          {stale && (
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={busy || paused}
+              onClick={() => navigate(onReload)}
+            >
+              Review loading current inquiry
+            </Button>
+          )}
+        </div>
+      )}
       {error && (
         <p role="alert" className="gt-form-error">
           {error}
@@ -149,22 +231,50 @@ function InquiryReview({
           {record.attachment.canDownload && (
             <Button
               variant="secondary"
-              disabled={busy}
-              onClick={() =>
+              disabled={busy || paused || stale}
+              onClick={() => {
+                if (paused || stale) return;
+                const expectedEpoch = attachmentEpoch.current;
+                const startedAt = Date.now();
                 void work(
-                  (signal) =>
-                    api<{ url: string; filename: string }>(
-                      path + "/attachment",
-                      { signal },
-                    ),
-                  setCapability,
-                )
-              }
+                  async (signal) => {
+                    try {
+                      const value = await api<{
+                        url: string;
+                        filename: string;
+                        expiresIn: number;
+                      }>(path + "/attachment", { signal });
+                      if (
+                        typeof value?.filename !== "string" ||
+                        !value.filename.length
+                      )
+                        throw Error(
+                          "The private download filename could not be verified. Prepare a new authorized link.",
+                        );
+                      return {
+                        ...authorizedPrivateDownload(value, startedAt),
+                        filename: value.filename,
+                      };
+                    } catch (error) {
+                      if (
+                        error instanceof ApiFailure &&
+                        [401, 403, 404].includes(error.status)
+                      )
+                        onDenied();
+                      throw error;
+                    }
+                  },
+                  (value) => {
+                    if (attachmentEpoch.current === expectedEpoch)
+                      setCapability(value);
+                  },
+                );
+              }}
             >
               Prepare private download
             </Button>
           )}
-          {capability && (
+          {capability && !paused && !stale && (
             <p>
               <a
                 href={capability.url}
@@ -189,6 +299,7 @@ function InquiryReview({
             className="gt-form"
             onSubmit={(e) => {
               e.preventDefault();
+              if (paused || stale) return;
               void work(
                 (signal) =>
                   api(path, {
@@ -207,7 +318,7 @@ function InquiryReview({
             <Field label="Inquiry status">
               <select
                 value={status}
-                disabled={busy || hold}
+                disabled={busy || paused || stale || hold}
                 onChange={(e) => setStatus(e.target.value)}
               >
                 <option value="new">New</option>
@@ -220,14 +331,18 @@ function InquiryReview({
               days unless an operational/legal hold applies. Reopening removes
               the resolution deadline; it does not remove a hold.
             </p>
-            <Button disabled={busy || status === record.status || hold}>
+            <Button
+              disabled={
+                busy || paused || stale || status === record.status || hold
+              }
+            >
               {busy ? "Working…" : "Save inquiry status"}
             </Button>
           </form>
           {!hold ? (
             <Button
               variant="secondary"
-              disabled={busy || status !== record.status}
+              disabled={busy || paused || stale || status !== record.status}
               onClick={() => setHold(true)}
             >
               {record.hold
@@ -256,7 +371,7 @@ function InquiryReview({
                     maxLength={1000}
                     rows={3}
                     value={reason}
-                    disabled={busy}
+                    disabled={busy || paused || stale}
                     onChange={(e) => setReason(e.target.value)}
                   />
                 </Field>
@@ -267,7 +382,7 @@ function InquiryReview({
                   autoComplete="current-password"
                   value={password}
                   maxLength={1024}
-                  disabled={busy}
+                  disabled={busy || paused || stale}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </Field>
@@ -276,7 +391,7 @@ function InquiryReview({
                   value={confirmation}
                   maxLength={30}
                   autoComplete="off"
-                  disabled={busy}
+                  disabled={busy || paused || stale}
                   onChange={(e) => setConfirmation(e.target.value)}
                 />
               </Field>
@@ -284,6 +399,8 @@ function InquiryReview({
                 <Button
                   disabled={
                     busy ||
+                    paused ||
+                    stale ||
                     !password ||
                     confirmation !== expected ||
                     (!record.hold && reason.trim().length < 10)
@@ -294,7 +411,7 @@ function InquiryReview({
                 </Button>
                 <Button
                   variant="ghost"
-                  disabled={busy}
+                  disabled={busy || paused || stale}
                   onClick={() =>
                     navigate(() => {
                       setHold(false);
@@ -315,6 +432,20 @@ function InquiryReview({
   );
 }
 export default function ContactInbox() {
+  const { currentAdmin } = useAdmin(),
+    [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((v) => v + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  return (
+    <Inbox
+      key={JSON.stringify([currentAdmin?.id, currentAdmin?.role, epoch])}
+    />
+  );
+}
+function Inbox() {
   const [params, setParams] = useApprovedSearchParams(),
     id = params.get("contact"),
     [query, setQuery] = useState(""),
@@ -322,68 +453,59 @@ export default function ContactInbox() {
     [status, setStatus] = useState(""),
     [page, setPage] = useState(1),
     [tick, setTick] = useState(0),
-    [response, setResponse] = useState<{ key: string; result: Listing }>(),
-    [error, setError] = useState(""),
-    [loading, setLoading] = useState(true);
+    [denied, setDenied] = useState(false),
+    [needsRecheck, setNeedsRecheck] = useState(!navigator.onLine),
+    [reviewEpoch, setReviewEpoch] = useState(0),
+    [detailBusy, setDetailBusy] = useState(false);
   const safety = useNavigationSafety(),
-    epoch = useRef(0),
-    key = JSON.stringify([id, q, status, page]),
-    list = response?.key === key ? response.result : undefined;
+    { isOnline } = useOnlineStatus();
+  const path =
+    "/admin/contact-submissions" +
+    (id
+      ? "/" + encodeURIComponent(id)
+      : "?" +
+        new URLSearchParams({
+          q,
+          ...(status ? { status } : {}),
+          page: String(page),
+        }));
+  const read = usePrivateRead<Listing>(denied ? undefined : path, tick),
+    clear = read.clear;
+  const malformed =
+      read.data !== undefined &&
+      (!read.data ||
+        !Array.isArray(read.data.items) ||
+        !read.data.items.every(validInquiry) ||
+        !Number.isInteger(read.data.total) ||
+        read.data.total < 0 ||
+        (!!id &&
+          (read.data.items.length !== 1 || read.data.items[0]?.id !== id))),
+    list = malformed ? undefined : read.data,
+    error = malformed
+      ? "The current inquiry reply could not be verified. Refresh this view to retry."
+      : read.error,
+    paused = !isOnline || needsRecheck || denied || read.loading || !!error;
   useEffect(() => {
-    const invalidate = () => {
-        epoch.current++;
-      },
-      clear = () => {
-        invalidate();
-        setResponse(undefined);
-        setError("");
-      };
-    window.addEventListener("gdg:session-cleared", clear);
-    return () => {
-      invalidate();
-      window.removeEventListener("gdg:session-cleared", clear);
-    };
-  }, []);
+    if (read.denied) {
+      clear();
+      setDenied(true);
+      setDetailBusy(false);
+    }
+  }, [read.denied, clear]);
   useEffect(() => {
-    const controller = new AbortController(),
-      current = epoch.current;
-    setLoading(true);
-    setError("");
-    setResponse(undefined);
-    api<Listing>(
-      "/admin/contact-submissions" +
-        (id
-          ? "/" + encodeURIComponent(id)
-          : "?" +
-            new URLSearchParams({
-              q,
-              ...(status ? { status } : {}),
-              page: String(page),
-            })),
-      { signal: controller.signal },
-    )
-      .then((result) => {
-        if (!controller.signal.aborted && current === epoch.current)
-          setResponse({ key, result });
-      })
-      .catch((e: Error) => {
-        if (!controller.signal.aborted && current === epoch.current) {
-          setError(
-            e instanceof ApiFailure && e.status === 404
-              ? "This inbox is available only to current chapter administrators."
-              : e.message,
-          );
-        }
-      })
-      .finally(() => {
-        if (!controller.signal.aborted && current === epoch.current)
-          setLoading(false);
-      });
-    return () => controller.abort();
-  }, [id, q, status, page, tick, key]);
+    if (!isOnline) setNeedsRecheck(true);
+  }, [isOnline]);
+  const refresh = () => {
+    if (!navigator.onLine || detailBusy) return;
+    setDenied(false);
+    setNeedsRecheck(false);
+    setTick((n) => n + 1);
+  };
   const navigate = (contact?: string) => {
-    const run = () =>
+    const run = () => {
+      setDetailBusy(false);
       setParams({ tab: "contact", ...(contact ? { contact } : {}) });
+    };
     if (safety) safety.request(run);
     else run();
   };
@@ -396,10 +518,10 @@ export default function ContactInbox() {
         </div>
         <Button
           variant="secondary"
-          disabled={!!id}
-          onClick={() => setTick((n) => n + 1)}
+          disabled={detailBusy || !isOnline}
+          onClick={refresh}
         >
-          Refresh inbox
+          {id ? "Refresh inquiry" : "Refresh inbox"}
         </Button>
       </header>
       <nav
@@ -422,21 +544,118 @@ export default function ContactInbox() {
           Contact inbox
         </span>
       </nav>
-      {error && (
-        <p role="alert" className="gt-form-error">
-          {error}
+      {!isOnline || needsRecheck ? (
+        <p role="status">
+          Contact actions are paused.{" "}
+          {!isOnline ? "You’re offline." : "Connection restored."} Refresh this
+          private view before continuing.
         </p>
+      ) : null}
+      {denied ? (
+        <p role="alert" className="gt-form-error">
+          Contact inbox access could not be verified. Private records and
+          reviews have been cleared. Refresh current access to continue.
+        </p>
+      ) : (
+        <>
+          {read.loading && !list && (
+            <div
+              role="status"
+              aria-label={
+                id ? "Loading selected inquiry" : "Loading contact inbox"
+              }
+            >
+              <div className="gt-skeleton gt-detail-skeleton" />
+              <span className="sr-only">Loading protected inquiries…</span>
+            </div>
+          )}
+          {(error || (!isOnline && read.at)) && (
+            <div role={error ? "alert" : "status"} className="gt-form-error">
+              {error && <p>{error}</p>}
+              {read.at && (
+                <p>
+                  Showing inquiries from{" "}
+                  <time dateTime={read.at}>
+                    {new Date(read.at).toLocaleString()}
+                  </time>
+                  . This snapshot may be out of date.
+                </p>
+              )}
+              {error && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={detailBusy || !isOnline || read.loading}
+                  onClick={refresh}
+                >
+                  {id ? "Retry selected inquiry" : "Retry contact inbox"}
+                </Button>
+              )}
+            </div>
+          )}
+        </>
       )}
-      {loading || (!list && !error) ? (
-        <p role="status">Loading protected inquiries…</p>
-      ) : !list ? (
-        <EmptyState title="Contact inbox unavailable">{error}</EmptyState>
+      {id && !list && (
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={detailBusy}
+          onClick={() => navigate()}
+        >
+          Back to inbox
+        </Button>
+      )}
+      {!id && (q || status || page > 1) && (
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={detailBusy || !isOnline}
+          onClick={() => {
+            setQ("");
+            setQuery("");
+            setStatus("");
+            setPage(1);
+          }}
+        >
+          Reset inquiry filters
+        </Button>
+      )}
+      {!id && !list && page > 1 && (
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={detailBusy || !isOnline || read.loading}
+          onClick={() => setPage((n) => Math.max(1, n - 1))}
+        >
+          Previous
+        </Button>
+      )}
+      {!list ? (
+        !read.loading && !denied ? (
+          <EmptyState title="Contact inbox unavailable">
+            Refresh current access to load these inquiries. Saved records have
+            not been changed.
+          </EmptyState>
+        ) : null
       ) : id ? (
         <InquiryReview
-          key={list.items[0].id + ":" + list.items[0].revision}
+          key={JSON.stringify([id, reviewEpoch, list.items[0].redactedAt])}
           record={list.items[0]}
+          paused={paused}
+          onBusy={setDetailBusy}
+          onDenied={() => {
+            clear();
+            setDenied(true);
+            setDetailBusy(false);
+          }}
+          onReload={() => setReviewEpoch((n) => n + 1)}
           onClose={() => navigate()}
-          onSaved={() => setTick((n) => n + 1)}
+          onSaved={() => {
+            setDetailBusy(false);
+            clear();
+            setReviewEpoch((n) => n + 1);
+            setTick((n) => n + 1);
+          }}
         />
       ) : (
         <>
@@ -477,7 +696,10 @@ export default function ContactInbox() {
               Attachments remain private.
             </EmptyState>
           ) : (
-            <div className="gt-table-wrap">
+            <ScrollableTable
+              className="gt-table-wrap"
+              label="Protected contact inquiries"
+            >
               <table className="gt-table">
                 <caption className="sr-only">
                   Protected chapter inquiries
@@ -494,7 +716,11 @@ export default function ContactInbox() {
                   {list.items.map((r) => (
                     <tr key={r.id}>
                       <th scope="row">
-                        <Button variant="ghost" onClick={() => navigate(r.id)}>
+                        <Button
+                          variant="ghost"
+                          disabled={paused}
+                          onClick={() => navigate(r.id)}
+                        >
                           {r.name}
                         </Button>
                         <small>{r.email}</small>
@@ -516,7 +742,7 @@ export default function ContactInbox() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </ScrollableTable>
           )}
           <div className="gt-inline-actions">
             <span>
@@ -524,14 +750,14 @@ export default function ContactInbox() {
             </span>
             <Button
               variant="secondary"
-              disabled={page === 1}
+              disabled={!isOnline || read.loading || page === 1}
               onClick={() => setPage((n) => n - 1)}
             >
               Previous
             </Button>
             <Button
               variant="secondary"
-              disabled={page * 50 >= list.total}
+              disabled={!isOnline || read.loading || page * 50 >= list.total}
               onClick={() => setPage((n) => n + 1)}
             >
               Next

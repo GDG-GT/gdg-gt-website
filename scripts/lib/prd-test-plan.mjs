@@ -538,6 +538,9 @@ add(
     sql("007_public_submissions"),
     sql("088_contact_attachments"),
     local("contact-files"),
+    "tests/client/contact-inbox-read-recovery.test.tsx",
+    "tests/browser/contact-inbox-reads.spec.ts",
+    local("contact-inbox-reads"),
   ],
 );
 add(
