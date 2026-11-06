@@ -98,6 +98,7 @@ export default function FormLibraryWriteRecovery({
     setError("");
     try {
       if (retry) {
+        setInspection(undefined);
         const form = await submitFormLibraryWrite(intent, controller.signal);
         if (mounted.current && !controller.signal.aborted)
           callbacks.current.onRecovered(form);

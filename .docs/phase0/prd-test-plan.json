@@ -1827,7 +1827,10 @@
         "tests/client/form-response-workspace-read.test.tsx",
         "tests/client/form-data-recovery.test.tsx",
         "scripts/test-local-form-response-read.mjs",
-        "tests/browser/form-response-reads.spec.ts"
+        "tests/browser/form-response-reads.spec.ts",
+        "tests/client/form-response-availability.test.tsx",
+        "scripts/test-local-form-response-availability.mjs",
+        "tests/browser/form-response-availability.spec.ts"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"

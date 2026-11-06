@@ -1,0 +1,162 @@
+{
+  "generatedAt": "2026-11-06T07:50:48.392Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and desktop/mobile Chromium response-workspace close/reopen recovery. Two fresh fictional internal forms each published once, four intended availability changes each. Before/after-acceptance loss, original revision/state/key/body, read-only accepted reconciliation, exact explicit retries, single state revision/audit and measured axe. Zero responses/delivery jobs/workers/provider sends/existing chapter or production changes. Owned forms archived/accounts disabled/sessions revoked. Captures unapproved.",
+  "tests": [
+    {
+      "name": "response workspace remains private at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "reviewed close freezes the original revision/state before after loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "uncertain close after passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "close after recovers read-only or retries exactly one original key/body at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "close after commits one state revision without publication at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "reviewed reopen freezes the original revision/state before after loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "uncertain reopen after passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "reopen after recovers read-only or retries exactly one original key/body at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "reopen after commits one state revision without publication at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "reviewed close freezes the original revision/state before before loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "uncertain close before passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "close before recovers read-only or retries exactly one original key/body at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "close before commits one state revision without publication at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "reviewed reopen freezes the original revision/state before before loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "uncertain reopen before passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "reopen before recovers read-only or retries exactly one original key/body at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "reopen before commits one state revision without publication at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "four reviewed availability changes create four audits and no responses/delivery jobs at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "availability recovery has no unexpected writes, external requests, script errors or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "response workspace remains private at 375×812",
+      "passed": true
+    },
+    {
+      "name": "reviewed close freezes the original revision/state before after loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "uncertain close after passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "close after recovers read-only or retries exactly one original key/body at 375×812",
+      "passed": true
+    },
+    {
+      "name": "close after commits one state revision without publication at 375×812",
+      "passed": true
+    },
+    {
+      "name": "reviewed reopen freezes the original revision/state before after loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "uncertain reopen after passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "reopen after recovers read-only or retries exactly one original key/body at 375×812",
+      "passed": true
+    },
+    {
+      "name": "reopen after commits one state revision without publication at 375×812",
+      "passed": true
+    },
+    {
+      "name": "reviewed close freezes the original revision/state before before loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "uncertain close before passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "close before recovers read-only or retries exactly one original key/body at 375×812",
+      "passed": true
+    },
+    {
+      "name": "close before commits one state revision without publication at 375×812",
+      "passed": true
+    },
+    {
+      "name": "reviewed reopen freezes the original revision/state before before loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "uncertain reopen before passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "reopen before recovers read-only or retries exactly one original key/body at 375×812",
+      "passed": true
+    },
+    {
+      "name": "reopen before commits one state revision without publication at 375×812",
+      "passed": true
+    },
+    {
+      "name": "four reviewed availability changes create four audits and no responses/delivery jobs at 375×812",
+      "passed": true
+    },
+    {
+      "name": "availability recovery has no unexpected writes, external requests, script errors or page overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

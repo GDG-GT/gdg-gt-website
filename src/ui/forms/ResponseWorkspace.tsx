@@ -11,10 +11,11 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button, Field, EmptyState, Badge } from "../primitives";
-import { useServerForm, formsApi } from "./api";
+import { useServerForm } from "./api";
 import type { FormResponse } from "./store";
 import ResponseFileLinks from "./ResponseFileLinks";
 import ResponseExports from "./ResponseExports";
+import ResponseAvailability from "./ResponseAvailability";
 import ResponseHistory from "./ResponseHistory";
 import ResponseActionReview, {
   type ResponseActionState,
@@ -345,29 +346,35 @@ function ResponseWorkspaceContent() {
           >
             Edit form
           </Link>
-          {form.actions?.includes("publish") && (
-            <Button
-              variant="secondary"
-              disabled={
-                busy ||
-                !ready ||
-                form.status === "Archived" ||
-                !form.versions.length
-              }
-              onClick={() =>
-                work(
-                  () =>
-                    formsApi.state(
-                      form,
-                      form.status === "Open" ? "Closed" : "Open",
-                    ),
-                  "Form state updated.",
-                )
-              }
-            >
-              {form.status === "Open" ? "Close form" : "Reopen form"}
-            </Button>
-          )}
+          <ResponseAvailability
+            form={form}
+            disabled={busy || !ready}
+            onComplete={(saved) => {
+              setNotice(
+                `Original availability change confirmed. Current saved state: ${saved.status}.`,
+              );
+              setRefresh((value) => value + 1);
+              void server.reload();
+            }}
+            onDenied={() => {
+              clearResponses();
+              clearSummary();
+              clearViews();
+              clearHolds();
+              setSelected(undefined);
+              setBlocked(
+                "Availability access changed. Private response details and the proposed change have been cleared.",
+              );
+            }}
+            onReload={() => {
+              setNotice(
+                "Reloading the current saved form. The original availability change may already have completed; review the current state before another change.",
+              );
+              setRefresh((value) => value + 1);
+              setNeedsRecheck(false);
+              void server.reload();
+            }}
+          />
           <Button
             variant="secondary"
             disabled={busy || !isOnline}

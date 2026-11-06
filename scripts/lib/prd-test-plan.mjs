@@ -853,6 +853,9 @@ const forms = [
       "tests/client/form-data-recovery.test.tsx",
       local("form-response-read"),
       "tests/browser/form-response-reads.spec.ts",
+      "tests/client/form-response-availability.test.tsx",
+      local("form-response-availability"),
+      "tests/browser/form-response-availability.spec.ts",
     ],
   ],
   [

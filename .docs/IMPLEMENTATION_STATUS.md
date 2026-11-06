@@ -8,6 +8,31 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Response-workspace close/reopen recovery — 2026-11-06
+
+- Close/reopen now has saved-revision/state consequence review and uses existing
+  atomic library receipts. Current source/response reads, publication/archived
+  status and permissions gate dispatch. Frozen original intent, duplicate latch,
+  read-only accepted reconciliation, 47-hour explicit retry, session/account/
+  offline cancellation, target validation, denied-state clearing and reviewed
+  stopping protect uncertain availability changes. A second failed retry clears
+  the shared recovery inspection before dispatch and requires a new check.
+- All 114 focused cases pass. All 38 actual API/DB/desktop-mobile checks pass:
+  two fresh internal forms published once each, four intended availability
+  changes per form, one revision/audit per change and measured axe. Zero
+  responses/delivery jobs/workers/provider sends/existing chapter or production
+  change. Forms archived/accounts disabled/sessions revoked.
+- All 162 library/response/shared-workspace production-browser checks pass across
+  six profiles, followed by 24 final layout checks. Mobile recovery inspected,
+  captures unapproved. Build/types/lint (zero errors/25 existing warnings),
+  byte budgets, secrets and traceability pass. All 1,900 tests/181 files pass.
+  Global coverage remains below 70%: 67.59% lines, 67.31% branches, 65.86%
+  statements and 58.81% functions. All 17 critical branch gates pass; no
+  timeout/threshold changed. Catalog remains 159 unverified cases.
+- Saved-view writes, Forms access/settings/deletion/integrations/runtime and
+  complete coverage/storage/device/manual/visual/hosted acceptance remain open.
+  See `FORM_RESPONSE_AVAILABILITY_RECOVERY.md`.
+
 ### Atomic response deletion/redaction recovery — 2026-11-06
 
 - Migration 121 adds reviewed respondent-edit revision/privacy/hold checks,

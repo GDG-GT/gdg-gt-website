@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-06): the latest module checkpoint is
-`FORM_RESPONSE_MUTATION_RECOVERY.md`; completed recovery checkpoints include tasks,
+`FORM_RESPONSE_AVAILABILITY_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -83,7 +83,7 @@ exact original-request recovery and reviewed abandonment. Archived builder views
 now enforce read-only draft/publication presentation while preserving saved preview
 and immutable published history (`FORM_ARCHIVED_VIEW.md`). This also guards an
 archive discovered during a retained local proposal. Remaining Forms child/access/settings/deletion,
-response availability/saved-view mutation replay,
+response saved-view mutation replay,
 proposal/navigation workflows, runtime/integration recovery and full acceptance
 remain open. Independent response inventory/summary/saved-view/hold reads are
 implemented locally (`FORM_RESPONSE_READ_RECOVERY.md`). Background export
@@ -92,8 +92,10 @@ short-lived downloads are also implemented locally (`FORM_EXPORT_RECOVERY.md`);
 complete physical storage/device/manual/hosted acceptance remains open.
 Response deletion/redaction now has atomic reviewed revision/privacy receipts,
 metadata-only reconciliation, identical explicit retry and synchronous answer
-withholding (`FORM_RESPONSE_MUTATION_RECOVERY.md`). Availability and saved-view
-writes and the other Forms recovery gaps remain open.
+withholding (`FORM_RESPONSE_MUTATION_RECOVERY.md`). Response-workspace close/
+reopen reviews and original-intent recovery are implemented locally
+(`FORM_RESPONSE_AVAILABILITY_RECOVERY.md`). Saved-view writes and the other Forms
+recovery gaps remain open.
 Private response history now has independent inventory/snapshot recovery, denial
 clearing and account/role/sensitive-context cancellation locally
 (`FORM_RESPONSE_HISTORY_RECOVERY.md`). Private response attachment authorization

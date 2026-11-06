@@ -61,3 +61,8 @@ redaction receipts, metadata-only read reconciliation, exact explicit retries,
 answer withholding and current hold/access checks. Local SQL/API/desktop-mobile
 evidence is recorded in `FORM_RESPONSE_MUTATION_RECOVERY.md`. Availability, saved
 views and remaining Forms/manual/device/hosted acceptance remain open.
+
+The response-workspace case also maps reviewed close/reopen with original
+revision/state intent, read-only library receipt recovery and explicit exact
+retry. See `FORM_RESPONSE_AVAILABILITY_RECOVERY.md`; saved-view and remaining
+Forms/device/manual/hosted acceptance remain open.
