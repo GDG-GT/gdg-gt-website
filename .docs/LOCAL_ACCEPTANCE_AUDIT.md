@@ -14,9 +14,9 @@ be inferred from local tests.
    and the destination-team ceiling are now addressed locally in
    `MEMBER_SELECTION_RECOVERY.md`. Ordinary create/update/archive/restore/profile-
    sync/unmerge original-outcome recovery is now implemented locally in
-   `MEMBER_WRITE_RECOVERY.md`, applied migration 133. Merge review/commit unknown-
-   outcome recovery remains. Preserve source/target/
-   revision/current proof/profile rules and CSV transfers while completing it.
+   `MEMBER_WRITE_RECOVERY.md`, applied migration 133. Merge review/commit original-outcome recovery is also
+   implemented locally (`MEMBER_MERGE_WRITE_RECOVERY.md`, applied migration 135),
+   preserving source/target/revision/current proof/profile rules and CSV transfers.
 2. Contact inbox: selected refresh/retry, retained dated snapshots/proposals,
    denial/context/offline clearing, malformed-result refusal, reviewed stale reload,
    immediate redaction clearing and scoped short-lived attachment links are now
@@ -31,7 +31,7 @@ be inferred from local tests.
    unknown-outcome reconciliation remains; preserve exact source/hold/expiry/
    password proof and the single-use export limitation. Never describe logical
    deletion or pending cleanup as physical erasure.
-4. Global coverage: at checkpoint 134, functions (65.25%) still fail the
+4. Global coverage: at checkpoint 135, functions (65.44%) still fail the
    unchanged 70% gate; lines/branches/statements pass. Do not exclude active modules, lower gates or
    replace behavior verification with mirrored implementation assertions. Add
    meaningful recovery/role/keyboard workflow tests while addressing these gaps.

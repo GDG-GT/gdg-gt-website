@@ -87,3 +87,7 @@ export const memberMergeCommit = z
     currentPassword,
   })
   .strict();
+
+export const memberMergeInspection = memberMergeCommit.omit({
+  currentPassword: true,
+});

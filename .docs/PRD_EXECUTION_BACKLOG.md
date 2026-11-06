@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-06): the latest module checkpoint is
-`CONTACT_WRITE_RECOVERY.md`; completed recovery checkpoints include tasks,
+`MEMBER_MERGE_WRITE_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -24,14 +24,15 @@ Ordinary member create/update/archive/restore/profile-sync/unmerge now preserve
 unknown original intent, inspect current-session receipts read-only and support
 exact explicit retries with fresh lifecycle proof (`MEMBER_WRITE_RECOVERY.md`).
 Contact status/hold original-outcome recovery is implemented locally
-(`CONTACT_WRITE_RECOVERY.md`, migration 134). Merge review/commit and privacy
-review/approval unknown outcomes remain. Parent directory, picker and privacy/inbox reads have separate
+(`CONTACT_WRITE_RECOVERY.md`, migration 134). Merge review/commit original-outcome recovery is also implemented locally
+(`MEMBER_MERGE_WRITE_RECOVERY.md`, migration 135). Privacy review/approval unknown
+outcomes remain. Parent directory, picker and privacy/inbox reads have separate
 completed local evidence below.
 
 Person-data privacy cleanup-status reads and retained review/scope recovery are
 implemented locally (`PRIVACY_READ_RECOVERY.md`), including current-denial clearing,
 explicit stuck-read restart and offline/account/session fences. Original review/
-commit unknown outcomes remain, along with merge mutations.
+commit unknown outcomes remain, Complete manual/device/hosted acceptance remains separate.
 
 Contact inbox independent private reads, retained proposals, current-denial and
 redaction clearing, reviewed stale reload and expiring activated attachment links
@@ -44,7 +45,7 @@ have local recovery (`MEMBER_READ_RECOVERY.md`), including denial clearing,
 independent retries, retained timestamped proposals, offline action fencing and
 account/session isolation. Complete eligible merge-candidate/selected-target recovery and creation
 destinations beyond 100 are also implemented locally (`MEMBER_SELECTION_RECOVERY.md`).
-Merge unknown outcomes and privacy mutations remain confirmed work in `LOCAL_ACCEPTANCE_AUDIT.md`.
+Privacy mutations remain confirmed work in `LOCAL_ACCEPTANCE_AUDIT.md`.
 
 CMS and public-content collection mutation replay is now implemented locally
 (`CURATED_CONTENT_RETRIES.md`). Collection-editor independent reads,

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { api, ApiFailure } from "@/lib/api";
+import { ApiFailure } from "@/lib/api";
 import { validationMessage } from "@/lib/validationMessage";
 import {
   memberMergePreview,
@@ -7,6 +7,13 @@ import {
 } from "../../../shared/members.mjs";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import MergeWriteRecovery from "./MergeWriteRecovery";
+import {
+  mergeIntent,
+  submitMergeWrite,
+  type MergeWriteIntent,
+  type MergeReceipt,
+} from "./merge-write";
 import MemberReadFeedback from "./MemberReadFeedback";
 import ScrollableTable from "../ScrollableTable";
 import { Button, Field, SearchBox } from "../primitives";
@@ -20,6 +27,7 @@ export default function MergeReview({
   onBusy,
   onDirty,
   disabled = false,
+  onDenied,
 }: {
   source: Member;
   tick: number;
@@ -28,6 +36,7 @@ export default function MergeReview({
   onBusy: (v: boolean) => void;
   onDirty: (v: boolean) => void;
   disabled?: boolean;
+  onDenied?: () => void;
 }) {
   const [q, setQ] = useState(""),
     [targetId, setTargetId] = useState(""),
@@ -41,10 +50,15 @@ export default function MergeReview({
     [sourceConfirmation, setSourceConfirmation] = useState(""),
     [targetConfirmation, setTargetConfirmation] = useState(""),
     [error, setError] = useState(""),
-    [busy, setBusy] = useState(false);
-  const key = useRef<{ identity: string; value: string }>(),
-    epoch = useRef(0),
-    heading = useRef<HTMLHeadingElement>(null),
+    [busy, setBusy] = useState(false),
+    [uncertain, setUncertain] = useState<MergeWriteIntent>(),
+    [recoveryBusy, setRecoveryBusy] = useState(false);
+  const activeWrite = useRef<{
+      intent: MergeWriteIntent;
+      controller: AbortController;
+    }>(),
+    mounted = useRef(true);
+  const heading = useRef<HTMLHeadingElement>(null),
     reviewHeading = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     heading.current?.focus();
@@ -60,7 +74,8 @@ export default function MergeReview({
         review ||
         password ||
         sourceConfirmation ||
-        targetConfirmation
+        targetConfirmation ||
+        uncertain
       ),
     );
   }, [
@@ -71,6 +86,7 @@ export default function MergeReview({
     password,
     sourceConfirmation,
     targetConfirmation,
+    uncertain,
   ]);
   const { isOnline } = useOnlineStatus(),
     prefix = base + "/" + source.id;
@@ -102,6 +118,7 @@ export default function MergeReview({
     disabled ||
     !isOnline ||
     needsRecheck ||
+    !!uncertain ||
     candidatesRead.loading ||
     !!candidatesRead.error ||
     !candidatesRead.data ||
@@ -114,20 +131,38 @@ export default function MergeReview({
   const clearCandidates = candidatesRead.clear,
     clearTarget = targetRead.clear;
   useEffect(() => {
-    const invalidate = () => {
-      epoch.current++;
+    onBusy(busy || recoveryBusy || !!uncertain);
+  }, [busy, recoveryBusy, uncertain, onBusy]);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      activeWrite.current?.controller.abort();
     };
-    return invalidate;
   }, []);
   useEffect(() => {
-    onBusy(false);
-  }, [onBusy]);
+    const offline = () => {
+      if (activeWrite.current) {
+        activeWrite.current.controller.abort();
+        setUncertain(activeWrite.current.intent);
+        activeWrite.current = undefined;
+        setBusy(false);
+        setPassword("");
+      }
+    };
+    window.addEventListener("offline", offline);
+    return () => window.removeEventListener("offline", offline);
+  }, []);
   useEffect(() => {
     if (!isOnline) setNeedsRecheck(true);
   }, [isOnline]);
   useEffect(() => {
     if (!candidatesRead.denied && !targetRead.denied) return;
-    epoch.current++;
+    activeWrite.current?.controller.abort();
+    activeWrite.current = undefined;
+    setUncertain(undefined);
+    setRecoveryBusy(false);
+    onDenied?.();
     clearCandidates();
     clearTarget();
     setTargetId("");
@@ -141,16 +176,36 @@ export default function MergeReview({
     setBlocked(true);
     setBusy(false);
     onBusy(false);
-    key.current = undefined;
   }, [
     candidatesRead.denied,
     targetRead.denied,
     clearCandidates,
     clearTarget,
     onBusy,
+    onDenied,
   ]);
+  const deny = () => {
+    activeWrite.current?.controller.abort();
+    activeWrite.current = undefined;
+    clearCandidates();
+    clearTarget();
+    setTargetId("");
+    setReview(undefined);
+    setQ("");
+    setPage(1);
+    setPassword("");
+    setSourceConfirmation("");
+    setTargetConfirmation("");
+    setError("");
+    setBlocked(true);
+    setBusy(false);
+    setRecoveryBusy(false);
+    setUncertain(undefined);
+    onBusy(false);
+    onDenied?.();
+  };
   const recheck = () => {
-    if (busy || disabled || !navigator.onLine) return;
+    if (busy || uncertain || disabled || !navigator.onLine) return;
     setBlocked(false);
     setNeedsRecheck(false);
     setListAttempt((v) => v + 1);
@@ -167,97 +222,90 @@ export default function MergeReview({
     (review.source.revision !== source.revision ||
       review.target.revision !== target?.revision ||
       new Date(review.expiresAt).getTime() <= Date.now());
-  function requestKey(identity: string) {
-    if (key.current?.identity !== identity)
-      key.current = { identity, value: crypto.randomUUID() };
-    return key.current.value;
-  }
-  async function preview() {
-    if (busy || unavailable || mismatch) return;
-    const current = epoch.current;
-    setBusy(true);
-    onBusy(true);
-    setError("");
+  function confirmed(intent: MergeWriteIntent, result: MergeReceipt) {
+    setUncertain(undefined);
     setPassword("");
     setSourceConfirmation("");
     setTargetConfirmation("");
+    if (intent.action === "preview") setReview(result as Review);
+    else onSaved((result as { id: string }).id);
+  }
+  async function saveOriginal(intent: MergeWriteIntent, proof?: string) {
+    if (activeWrite.current || !navigator.onLine) return;
+    const controller = new AbortController();
+    activeWrite.current = { intent, controller };
+    setBusy(true);
+    setError("");
+    setPassword("");
     try {
-      const body = memberMergePreview.parse({
+      const result = await submitMergeWrite(intent, controller.signal, proof);
+      if (mounted.current && !controller.signal.aborted)
+        confirmed(intent, result);
+    } catch (e) {
+      if (!mounted.current || controller.signal.aborted) return;
+      if (
+        e instanceof ApiFailure &&
+        (e.status === 401 ||
+          e.status === 404 ||
+          (e.status === 403 && e.code !== "PASSWORD_REQUIRED"))
+      ) {
+        deny();
+        return;
+      }
+      if (!(e instanceof ApiFailure) || e.status >= 500) {
+        setUncertain(intent);
+        return;
+      }
+      if (
+        e instanceof ApiFailure &&
+        ["CONFLICT", "MEMBER_REVIEW_EXPIRED"].includes(e.code)
+      )
+        setReview(undefined);
+      setError(
+        validationMessage(
+          e,
+          "The original merge request could not be completed.",
+        ),
+      );
+    } finally {
+      if (activeWrite.current?.intent === intent)
+        activeWrite.current = undefined;
+      if (mounted.current && !controller.signal.aborted) setBusy(false);
+    }
+  }
+  async function preview() {
+    if (busy || unavailable || mismatch || !target) return;
+    try {
+      const document = memberMergePreview.parse({
         sourceId: source.id,
         targetId: target.id,
         sourceRevision: source.revision,
         targetRevision: target.revision,
       });
-      const result = await api<Review>(base + "/merge-preview", {
-        method: "POST",
-        protected: true,
-        body,
-        idempotencyKey: requestKey("preview:" + JSON.stringify(body)),
-      });
-      if (current === epoch.current) {
-        setReview(result);
-        key.current = undefined;
-      }
+      setSourceConfirmation("");
+      setTargetConfirmation("");
+      await saveOriginal(mergeIntent("preview", document, source, target));
     } catch (e) {
-      if (current === epoch.current) {
-        setReview(undefined);
-        key.current = undefined;
-        setError(
-          validationMessage(e, "The merge review could not be prepared."),
-        );
-      }
-    } finally {
-      if (current === epoch.current) {
-        setBusy(false);
-        onBusy(false);
-      }
+      setError(validationMessage(e, "The merge review could not be prepared."));
     }
   }
   async function commit(e: FormEvent) {
     e.preventDefault();
     if (busy || unavailable || stale || !review) return;
-    const current = epoch.current,
-      secret = password;
-    setPassword("");
-    setBusy(true);
-    onBusy(true);
-    setError("");
     try {
-      const body = memberMergeCommit.parse({
+      const { currentPassword, ...document } = memberMergeCommit.parse({
         reviewId: review.reviewId,
         reviewToken: review.reviewToken,
         sourceConfirmation,
         targetConfirmation,
-        currentPassword: secret,
+        currentPassword: password,
       });
-      const result = await api<{ id: string }>(base + "/merge", {
-        method: "POST",
-        protected: true,
-        body,
-        idempotencyKey: requestKey(
-          "commit:" +
-            JSON.stringify({
-              reviewId: review.reviewId,
-              sourceConfirmation,
-              targetConfirmation,
-            }),
-        ),
-      });
-      if (current === epoch.current) onSaved(result.id);
+      await saveOriginal(
+        mergeIntent("commit", document, review.source, review.target),
+        currentPassword,
+      );
     } catch (e) {
-      if (current === epoch.current) {
-        if (
-          e instanceof ApiFailure &&
-          ["CONFLICT", "MEMBER_REVIEW_EXPIRED"].includes(e.code)
-        )
-          setReview(undefined);
-        setError(validationMessage(e, "This merge could not be committed."));
-      }
-    } finally {
-      if (current === epoch.current) {
-        setBusy(false);
-        onBusy(false);
-      }
+      setError(validationMessage(e, "This merge could not be committed."));
     }
   }
   return (
@@ -276,6 +324,28 @@ export default function MergeReview({
         public profile. Only chapter administrators can merge, and both records
         must share the same owning scope.
       </p>
+      {uncertain && (
+        <MergeWriteRecovery
+          intent={uncertain}
+          onConfirmed={(result) => confirmed(uncertain, result)}
+          onDenied={deny}
+          onBusy={setRecoveryBusy}
+          onStop={() => {
+            setUncertain(undefined);
+            setReview(undefined);
+            setTargetId("");
+            setQ("");
+            setPage(1);
+            setPassword("");
+            setSourceConfirmation("");
+            setTargetConfirmation("");
+            setNeedsRecheck(true);
+            setError(
+              "Merge recovery stopped. The original outcome remains unconfirmed. Recheck the current member records before preparing another change.",
+            );
+          }}
+        />
+      )}
       {error && (
         <p role="alert" className="gt-form-error">
           {error}
@@ -285,7 +355,7 @@ export default function MergeReview({
         <Button
           type="button"
           variant="secondary"
-          disabled={busy || disabled || !isOnline}
+          disabled={busy || !!uncertain || disabled || !isOnline}
           onClick={recheck}
         >
           Recheck merge selection
@@ -332,7 +402,13 @@ export default function MergeReview({
       )}
       <fieldset
         disabled={
-          busy || disabled || !isOnline || needsRecheck || blocked || !!review
+          busy ||
+          !!uncertain ||
+          disabled ||
+          !isOnline ||
+          needsRecheck ||
+          blocked ||
+          !!review
         }
         className="gt-plain-fieldset"
       >
@@ -413,7 +489,7 @@ export default function MergeReview({
         <Button
           type="button"
           variant="secondary"
-          disabled={busy}
+          disabled={busy || !!uncertain}
           onClick={onClose}
         >
           Close merge review
@@ -424,13 +500,12 @@ export default function MergeReview({
           <Button
             type="button"
             variant="secondary"
-            disabled={busy}
+            disabled={busy || !!uncertain}
             onClick={() => {
               setReview(undefined);
               setPassword("");
               setSourceConfirmation("");
               setTargetConfirmation("");
-              key.current = undefined;
             }}
           >
             Discard this merge review
@@ -445,8 +520,8 @@ export default function MergeReview({
           <p>{review.policy}</p>
           {stale && (
             <p role="alert">
-              This review changed or expired. Generate a fresh review; no merge
-              was performed.
+              This review changed or expired. Check any unconfirmed original
+              outcome before preparing a fresh review.
             </p>
           )}
           <ScrollableTable

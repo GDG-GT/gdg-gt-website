@@ -9,6 +9,36 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 ## Current checkpoint
 
 
+### Member merge original review/commit recovery — 2026-11-06
+
+- Migration 135 adds current-session/body/key-bound original preview/commit
+  inspection and atomic replay. Both source/target current permissions precede
+  receipt disclosure. Preview receipts retain only review ID, reconstructing
+  comparison only under the original unused live review/current revisions; commit
+  receipts retain only IDs/revision. Existing exact references, same scope,
+  project/profile rules, five-minute review and fresh new-commit proof remain.
+- UI freezes unknown original request, explicitly inspects before identical retry,
+  clears all parent private state on current denial, fences offline/unmount/late
+  results and requires current recheck after reviewed stopping. Accepted old replay
+  preserves newer canonical edits; accepted inspection needs no retained password.
+- Both SQL chains pass (244/245), both 100-client races and six restore checks pass;
+  applied locally. All 105 combined focused cases pass, 54 combined browser read/
+  write and 36 final nullable-field browser cases pass across six profiles. All
+  53 actual local API/DB/native desktop-mobile checks pass, including ten concurrent
+  identical reviews and commits. No providers/production/egress/errors/overflow.
+  Initial owned fixture assertion/label failures and actual legacy-null rejection
+  are retained; nullable boundary fixed with regression. Owned members archived,
+  actors disabled/sessions revoked; unused private reviews expire ordinarily.
+- All 2,612 tests/209 files and 21 critical branch gates pass. Global lines/branches/
+  statements: 74.01%/73.63%/72.31%; functions still fail unchanged 70% at 65.44%.
+  Build/types/lint (zero errors/25 existing warnings), budgets/secrets/traceability
+  pass; 160 unverified logical cases. See `MEMBER_MERGE_WRITE_RECOVERY.md`.
+- Person-data privacy review/commit recovery, global function coverage and full
+  role/manual/device/visual/hosted acceptance remain. SSO/Google and Bevy/Engage stay
+  deferred; no deployment, purchases, provider sends, production changes, timer
+  or AI commit trailer.
+
+
 ### Contact status and retention-hold original-outcome recovery — 2026-11-06
 
 - Applied migration 134 binds atomic status/hold writes and password-free receipt

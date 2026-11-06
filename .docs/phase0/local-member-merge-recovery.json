@@ -1,0 +1,220 @@
+{
+  "generatedAt": "2026-11-06T19:08:40.822Z",
+  "completed": true,
+  "cleanup": true,
+  "scope": "Loopback owned fictional members/account only. Native merge preview/commit before/after loss, read-only original inspection, fresh-proof explicit retry; ten concurrent same-key previews/merges, accepted old replay and current role loss. No provider/production/real chapter changes. Owned members archived/account disabled/sessions revoked; reviews/audit/tombstones retained under ordinary expiry, no physical-erasure claim. No raw contact/body/key/proof/capability retained in report.",
+  "tests": [
+    {
+      "name": "preview before loss freezes exact original merge request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only preview inspection leaves both member records unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original preview inspection preserves body/key without password at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "explicit preview retry preserves original intent at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "one preview outcome and unchanged canonical fields after before loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "exactly one preview audit outcome at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "preview after loss freezes exact original merge request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only preview inspection leaves both member records unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original preview inspection preserves body/key without password at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "one preview outcome and unchanged canonical fields after after loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "exactly one preview audit outcome at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "native populated merge comparison passes automated accessibility at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "commit before loss freezes exact original merge request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only commit inspection leaves both member records unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original commit inspection preserves body/key without password at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "explicit commit retry preserves original intent at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "one commit outcome and unchanged canonical fields after before loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "exactly one commit audit outcome at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "commit after loss freezes exact original merge request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only commit inspection leaves both member records unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original commit inspection preserves body/key without password at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "one commit outcome and unchanged canonical fields after after loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "exactly one commit audit outcome at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "native merge recovery has no page errors egress or horizontal overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "preview before loss freezes exact original merge request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only preview inspection leaves both member records unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original preview inspection preserves body/key without password at 375×812",
+      "passed": true
+    },
+    {
+      "name": "explicit preview retry preserves original intent at 375×812",
+      "passed": true
+    },
+    {
+      "name": "one preview outcome and unchanged canonical fields after before loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "exactly one preview audit outcome at 375×812",
+      "passed": true
+    },
+    {
+      "name": "preview after loss freezes exact original merge request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only preview inspection leaves both member records unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original preview inspection preserves body/key without password at 375×812",
+      "passed": true
+    },
+    {
+      "name": "one preview outcome and unchanged canonical fields after after loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "exactly one preview audit outcome at 375×812",
+      "passed": true
+    },
+    {
+      "name": "native populated merge comparison passes automated accessibility at 375×812",
+      "passed": true
+    },
+    {
+      "name": "commit before loss freezes exact original merge request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only commit inspection leaves both member records unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original commit inspection preserves body/key without password at 375×812",
+      "passed": true
+    },
+    {
+      "name": "explicit commit retry preserves original intent at 375×812",
+      "passed": true
+    },
+    {
+      "name": "one commit outcome and unchanged canonical fields after before loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "exactly one commit audit outcome at 375×812",
+      "passed": true
+    },
+    {
+      "name": "commit after loss freezes exact original merge request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only commit inspection leaves both member records unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original commit inspection preserves body/key without password at 375×812",
+      "passed": true
+    },
+    {
+      "name": "one commit outcome and unchanged canonical fields after after loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "exactly one commit audit outcome at 375×812",
+      "passed": true
+    },
+    {
+      "name": "native merge recovery has no page errors egress or horizontal overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "ten simultaneous identical previews create one merge review",
+      "passed": true
+    },
+    {
+      "name": "ten simultaneous identical merges change each member revision once",
+      "passed": true
+    },
+    {
+      "name": "accepted merge inspection preserves later canonical revision without password",
+      "passed": true
+    },
+    {
+      "name": "accepted old merge replay preserves later canonical data",
+      "passed": true
+    },
+    {
+      "name": "current role loss conceals accepted merge receipt",
+      "passed": true
+    }
+  ]
+}

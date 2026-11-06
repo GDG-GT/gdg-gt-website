@@ -937,7 +937,11 @@
         "tests/client/member-write-recovery.test.tsx",
         "tests/browser/member-write-recovery.spec.ts",
         "database/tests/133_member_write_replay.sql",
-        "scripts/test-local-member-write-recovery.mjs"
+        "scripts/test-local-member-write-recovery.mjs",
+        "tests/client/member-merge-write-recovery.test.tsx",
+        "tests/browser/member-merge-writes.spec.ts",
+        "database/tests/135_member_merge_recovery.sql",
+        "scripts/test-local-member-merge-recovery.mjs"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"

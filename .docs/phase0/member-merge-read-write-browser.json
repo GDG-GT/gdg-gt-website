@@ -1,0 +1,447 @@
+{
+  "generatedAt": "2026-11-06T19:09:49.063Z",
+  "completed": true,
+  "stats": {
+    "startTime": "2026-11-06T19:07:46.765Z",
+    "duration": 102617.076,
+    "expected": 54,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "note": "Production-build fixtures, automated axe/overflow only; native nullable-member fix has separate actual UI evidence and final fixture rerun. Browser emulation and unapproved captures do not certify real Safari/device/visual/hosted acceptance.",
+  "tests": [
+    {
+      "name": "merge candidate paging reaches eligible target 65 and preserves independent off-page selection",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge reviewed target read failure preserves comparison and pauses approval until independent retry",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge selected target denial conceals private comparison and requires explicit selection recheck",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge candidate paging reaches eligible target 65 and preserves independent off-page selection",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge reviewed target read failure preserves comparison and pauses approval until independent retry",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge selected target denial conceals private comparison and requires explicit selection recheck",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge candidate paging reaches eligible target 65 and preserves independent off-page selection",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge reviewed target read failure preserves comparison and pauses approval until independent retry",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge selected target denial conceals private comparison and requires explicit selection recheck",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge candidate paging reaches eligible target 65 and preserves independent off-page selection",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge reviewed target read failure preserves comparison and pauses approval until independent retry",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge selected target denial conceals private comparison and requires explicit selection recheck",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge candidate paging reaches eligible target 65 and preserves independent off-page selection",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge reviewed target read failure preserves comparison and pauses approval until independent retry",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge selected target denial conceals private comparison and requires explicit selection recheck",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge candidate paging reaches eligible target 65 and preserves independent off-page selection",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge reviewed target read failure preserves comparison and pauses approval until independent retry",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge selected target denial conceals private comparison and requires explicit selection recheck",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge preview before loss preserves review and explicit identical recovery",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge preview after loss preserves review and explicit identical recovery",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge commit before loss preserves review and explicit identical recovery",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge commit after loss preserves review and explicit identical recovery",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge outcome denial clears the private parent and prepared review",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stopping an uncertain accepted merge clears private proposals without a replacement",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge preview before loss preserves review and explicit identical recovery",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge preview after loss preserves review and explicit identical recovery",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge commit before loss preserves review and explicit identical recovery",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge commit after loss preserves review and explicit identical recovery",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge outcome denial clears the private parent and prepared review",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stopping an uncertain accepted merge clears private proposals without a replacement",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge preview before loss preserves review and explicit identical recovery",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge preview after loss preserves review and explicit identical recovery",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge commit before loss preserves review and explicit identical recovery",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge commit after loss preserves review and explicit identical recovery",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge outcome denial clears the private parent and prepared review",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stopping an uncertain accepted merge clears private proposals without a replacement",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge preview before loss preserves review and explicit identical recovery",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge preview after loss preserves review and explicit identical recovery",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge commit before loss preserves review and explicit identical recovery",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge commit after loss preserves review and explicit identical recovery",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge outcome denial clears the private parent and prepared review",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stopping an uncertain accepted merge clears private proposals without a replacement",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge preview before loss preserves review and explicit identical recovery",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge preview after loss preserves review and explicit identical recovery",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge commit before loss preserves review and explicit identical recovery",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge commit after loss preserves review and explicit identical recovery",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge outcome denial clears the private parent and prepared review",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stopping an uncertain accepted merge clears private proposals without a replacement",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge preview before loss preserves review and explicit identical recovery",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge preview after loss preserves review and explicit identical recovery",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge commit before loss preserves review and explicit identical recovery",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original merge commit after loss preserves review and explicit identical recovery",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge outcome denial clears the private parent and prepared review",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stopping an uncertain accepted merge clears private proposals without a replacement",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    }
+  ]
+}

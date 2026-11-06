@@ -166,3 +166,9 @@ The contact inbox case now also maps current-session original status/hold mutati
 receipt inspection, atomic exact replay, fresh hold/release proof, current access/
 redaction fences and reviewed stopping. See `CONTACT_WRITE_RECOVERY.md`; local
 checks do not close manual/device/visual/hosted approval.
+
+The community directory case now maps original merge preview/commit recovery:
+minimal session-bound receipts, exact read-only reconciliation/explicit fresh-proof
+retry, current source/target authority, null legacy fields, current parent private
+clearing and accepted replay preserving later canonical edits. Local evidence in
+`MEMBER_MERGE_WRITE_RECOVERY.md` does not certify full manual/hosted acceptance.

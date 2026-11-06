@@ -150,7 +150,7 @@ beforeEach(() => {
             "Fictional retained source; canonical fields remain unchanged.",
           expiresAt: new Date(Date.now() + 60000).toISOString(),
         };
-      return { id: records[0].id };
+      return { id: records[0].id, revision: 2, sourceId: source.id };
     },
   );
 });

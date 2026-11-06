@@ -725,6 +725,10 @@ function MemberDirectory() {
         <MergeReview
           key={JSON.stringify([member.id, member.team_id])}
           source={member}
+          onDenied={() => {
+            clearPrivate();
+            setAccessDenied(true);
+          }}
           disabled={unavailable}
           tick={tick}
           onBusy={setBusy}

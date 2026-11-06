@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-11-06T19:07:51.728Z",
+  "completed": false,
+  "cleanup": true,
+  "scope": "Loopback owned fictional members/account only. Native merge preview/commit before/after loss, read-only original inspection, fresh-proof explicit retry; ten concurrent same-key previews/merges, accepted old replay and current role loss. No provider/production/real chapter changes. Owned members archived/account disabled/sessions revoked; reviews/audit/tombstones retained under ordinary expiry, no physical-erasure claim. No raw contact/body/key/proof/capability retained in report.",
+  "tests": [
+    {
+      "name": "preview before loss freezes exact original merge request at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "read-only preview inspection leaves both member records unchanged at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "original preview inspection preserves body/key without password at 1440\u00d7900",
+      "passed": true
+    }
+  ],
+  "note": "Third probe reached accepted original preview retry, but client rejected legitimate nullable phone/year/major fields from legacy member records. Owned pair archived/account disabled/sessions revoked; one unused review remains under ordinary expiry. Fixed client boundary to accept null for these optional fields, no migration change."
+}

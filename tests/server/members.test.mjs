@@ -215,12 +215,12 @@ describe("community member HTTP boundaries", () => {
       a.body.data.reviewToken,
     );
     expect(f.db.rpc).toHaveBeenCalledWith(
-      "preview_member_merge",
+      "mutate_member_merge_write",
       expect.objectContaining({
         p_actor: actor,
         p_session: sessionId,
-        p_source: source,
-        p_target: target,
+        p_action: "preview",
+        p_document: body,
         p_token_hash: tokenHash(a.body.data.reviewToken),
       }),
     );
@@ -245,11 +245,16 @@ describe("community member HTTP boundaries", () => {
     expect(calls).not.toContain(password);
     expect(calls).not.toContain(proof);
     expect(f.db.rpc).toHaveBeenCalledWith(
-      "commit_member_merge",
+      "mutate_member_merge_write",
       expect.objectContaining({
         p_actor: actor,
         p_session: sessionId,
-        p_review: source,
+        p_action: "commit",
+        p_document: {
+          reviewId: source,
+          sourceConfirmation: "MEM-source",
+          targetConfirmation: "MEM-target",
+        },
         p_token_hash: tokenHash(proof),
       }),
     );
@@ -552,6 +557,107 @@ describe("ordinary member original-outcome recovery route", () => {
         (await f.call("/recovery", { record: record(), teamId: null }, headers))
           .statusCode,
       ).toBe(403);
+    expect(f.db.rpc).not.toHaveBeenCalled();
+  });
+});
+
+describe("merge original outcome inspection", () => {
+  const preview = {
+      sourceId: source,
+      targetId: target,
+      sourceRevision: 1,
+      targetRevision: 1,
+    },
+    proof = "f".repeat(43),
+    commit = {
+      reviewId: source,
+      reviewToken: proof,
+      sourceConfirmation: "MEM-source",
+      targetConfirmation: "MEM-target",
+    };
+  it.each([
+    ["merge-preview", preview],
+    ["merge", commit],
+  ])(
+    "inspects original %s without checking password or mutating",
+    async (kind, body) => {
+      const f = fixture();
+      f.user.role = "admin";
+      f.db.rpc.mockResolvedValue({
+        data: { committed: false, canRetry: true, receipt: null },
+      });
+      expect((await f.call("/" + kind + "/recovery", body)).statusCode).toBe(
+        200,
+      );
+      expect(f.store.accountByEmail).not.toHaveBeenCalled();
+      expect(f.db.rpc).toHaveBeenCalledExactlyOnceWith(
+        "inspect_member_merge_write",
+        expect.objectContaining({
+          p_actor: actor,
+          p_session: sessionId,
+          p_action: kind === "merge" ? "commit" : "preview",
+        }),
+      );
+    },
+  );
+  it("restores deterministic preview capability only after current authorized inspection", async () => {
+    const f = fixture();
+    f.user.role = "admin";
+    const headers = { "idempotency-key": "fictional-stable-merge-key" };
+    f.db.rpc
+      .mockResolvedValueOnce({ data: { reviewId: source } })
+      .mockResolvedValueOnce({
+        data: {
+          committed: true,
+          canRetry: false,
+          receipt: { reviewId: source },
+        },
+      });
+    const a = await f.call("/merge-preview", preview, headers),
+      b = await f.call("/merge-preview/recovery", preview, headers);
+    expect(b.body.data.receipt.reviewToken).toBe(a.body.data.reviewToken);
+    expect(JSON.stringify(f.db.rpc.mock.calls)).not.toContain(
+      a.body.data.reviewToken,
+    );
+  });
+  it("rejects retained passwords, absent keys, missing CSRF, and wrong origin before inspecting", async () => {
+    const f = fixture();
+    f.user.role = "admin";
+    expect(
+      (
+        await f.call("/merge/recovery", {
+          ...commit,
+          currentPassword: "retained",
+        })
+      ).statusCode,
+    ).toBe(400);
+    expect(
+      (await f.call("/merge/recovery", commit, { "idempotency-key": "" }))
+        .statusCode,
+    ).toBe(400);
+    for (const headers of [
+      { "x-csrf-token": "" },
+      { origin: "https://other.example.test" },
+    ])
+      expect(
+        (await f.call("/merge/recovery", commit, headers)).statusCode,
+      ).toBe(403);
+    expect(f.db.rpc).not.toHaveBeenCalled();
+  });
+  it("does not expose merge receipts to ordinary team accounts", async () => {
+    const f = fixture();
+    expect((await f.call("/merge/recovery", commit)).statusCode).toBe(403);
+    expect(f.db.rpc).not.toHaveBeenCalled();
+  });
+  it("allows neither GET recovery nor extra recovery path segments", async () => {
+    const f = fixture();
+    f.user.role = "admin";
+    expect(
+      (await f.call("/merge/recovery", undefined, {}, "GET")).statusCode,
+    ).toBe(405);
+    expect((await f.call("/merge/recovery/" + target, commit)).statusCode).toBe(
+      404,
+    );
     expect(f.db.rpc).not.toHaveBeenCalled();
   });
 });

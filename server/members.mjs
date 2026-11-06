@@ -17,6 +17,7 @@ import {
   memberCategories,
   memberMergePreview,
   memberMergeCommit,
+  memberMergeInspection,
 } from "../shared/members.mjs";
 export async function memberRoutes(
   request,
@@ -38,7 +39,11 @@ export async function memberRoutes(
     activity = match[2] === "activity",
     selection = ["merge-candidates", "merge-target"].includes(match[2]);
   if (
-    (kind && match[2]) ||
+    (kind &&
+      match[2] &&
+      !(
+        ["merge-preview", "merge"].includes(kind) && match[2] === "recovery"
+      )) ||
     (match[3] && match[2] !== "merge-target") ||
     (match[2] === "merge-target" && !match[3])
   )
@@ -278,50 +283,97 @@ export async function memberRoutes(
   queryValues(url.searchParams, z.object({}).strict());
   await quota(recovering ? "members.recovery" : "members.mutation", 120, 60);
   const key = idempotency(request);
-  if (kind === "merge-preview") {
+  if (kind === "merge-preview" || kind === "merge") {
     if (!["admin", "super_admin"].includes(actor.role))
       throw new ApiError(
         403,
         "FORBIDDEN",
-        "Only chapter administrators can review merges.",
+        "Only chapter administrators can review or merge records.",
       );
-    await quota("members.merge_preview", 30);
-    const body = await jsonBody(request, memberMergePreview, 4096),
-      reviewToken = Buffer.from(
-        riskHash(
-          "members.merge.preview:" +
-            actor.id +
-            ":" +
-            session.sessionId +
-            ":" +
-            key,
-          config.riskSecret,
-        ),
-        "hex",
-      ).toString("base64url");
-    const review = checked(
-      await db.rpc("preview_member_merge", {
+    const preview = kind === "merge-preview";
+    await quota(
+      recovering
+        ? "members.merge_recovery"
+        : preview
+          ? "members.merge_preview"
+          : "members.confirm",
+      recovering ? 120 : 30,
+    );
+    const body = await jsonBody(
+        request,
+        preview
+          ? memberMergePreview
+          : recovering
+            ? memberMergeInspection
+            : memberMergeCommit,
+        4096,
+      ),
+      { currentPassword, ...original } = body,
+      reviewToken = preview
+        ? Buffer.from(
+            riskHash(
+              "members.merge.preview:" +
+                actor.id +
+                ":" +
+                session.sessionId +
+                ":" +
+                key,
+              config.riskSecret,
+            ),
+            "hex",
+          ).toString("base64url")
+        : original.reviewToken,
+      document = Object.fromEntries(
+        Object.entries(original).filter(([name]) => name !== "reviewToken"),
+      ),
+      args = {
         p_actor: actor.id,
         p_session: session.sessionId,
-        p_source: body.sourceId,
-        p_target: body.targetId,
-        p_source_revision: body.sourceRevision,
-        p_target_revision: body.targetRevision,
+        p_action: preview ? "preview" : "commit",
+        p_document: document,
         p_token_hash: tokenHash(reviewToken),
+        p_key_hash: tokenHash(key),
+        p_request_hash: tokenHash(
+          JSON.stringify(
+            preview
+              ? document
+              : { ...document, reviewTokenHash: tokenHash(reviewToken) },
+          ),
+        ),
+      };
+    if (recovering) {
+      const result = checked(await db.rpc("inspect_member_merge_write", args));
+      if (preview && result.committed && result.receipt)
+        result.receipt = { ...result.receipt, reviewToken };
+      return reply(result);
+    }
+    let verified = null;
+    if (!preview) {
+      const account = await store.accountByEmail(actor.email);
+      if (!(await verifySecret(currentPassword, account?.password_hash)))
+        throw new ApiError(
+          403,
+          "PASSWORD_REQUIRED",
+          "Confirm your current password.",
+        );
+      verified = account.password_hash;
+    }
+    const result = checked(
+      await db.rpc("mutate_member_merge_write", {
+        ...args,
+        p_verified_hash: verified,
         p_request_id: requestId,
       }),
     );
-    return reply({ ...review, reviewToken });
+    return reply(preview ? { ...result, reviewToken } : result);
   }
   const body = await jsonBody(
       request,
-      kind === "merge"
-        ? memberMergeCommit
-        : id
-          ? recovering
-            ? communityMemberInspection
-            : communityMemberMutation
-          : communityMemberCreate,
+      id
+        ? recovering
+          ? communityMemberInspection
+          : communityMemberMutation
+        : communityMemberCreate,
       32768,
     ),
     { currentPassword, ...document } = body;
@@ -341,12 +393,6 @@ export async function memberRoutes(
       ),
     );
   let verified = null;
-  if (kind === "merge" && !["admin", "super_admin"].includes(actor.role))
-    throw new ApiError(
-      403,
-      "FORBIDDEN",
-      "Only chapter administrators can merge records.",
-    );
   if (request.method === "DELETE" && document.action !== "archive")
     throw new ApiError(
       400,
@@ -363,30 +409,6 @@ export async function memberRoutes(
         "Confirm your current password.",
       );
     verified = a.password_hash;
-  }
-  if (kind === "merge") {
-    const { reviewToken, ...fingerprint } = document;
-    return reply(
-      checked(
-        await db.rpc("commit_member_merge", {
-          p_actor: actor.id,
-          p_session: session.sessionId,
-          p_verified_hash: verified,
-          p_review: document.reviewId,
-          p_token_hash: tokenHash(reviewToken),
-          p_source_confirmation: document.sourceConfirmation,
-          p_target_confirmation: document.targetConfirmation,
-          p_key_hash: tokenHash(key),
-          p_request_hash: tokenHash(
-            JSON.stringify({
-              ...fingerprint,
-              reviewTokenHash: tokenHash(reviewToken),
-            }),
-          ),
-          p_request_id: requestId,
-        }),
-      ),
-    );
   }
   return reply(
     checked(

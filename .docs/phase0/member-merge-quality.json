@@ -1,0 +1,182 @@
+{
+  "generatedAt": "2026-11-06T19:13:59.999Z",
+  "tests": {
+    "files": 209,
+    "passed": 2612,
+    "failed": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 23817,
+      "covered": 17627,
+      "skipped": 0,
+      "pct": 74.01
+    },
+    "statements": {
+      "total": 26337,
+      "covered": 19045,
+      "skipped": 0,
+      "pct": 72.31
+    },
+    "functions": {
+      "total": 6065,
+      "covered": 3969,
+      "skipped": 0,
+      "pct": 65.44
+    },
+    "branches": {
+      "total": 27613,
+      "covered": 20332,
+      "skipped": 0,
+      "pct": 73.63
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "globalThreshold": 70,
+  "globalPassed": false,
+  "criticalThreshold": 90,
+  "critical": [
+    {
+      "file": "server/auth.mjs",
+      "branches": 98.52,
+      "passed": true
+    },
+    {
+      "file": "server/access.mjs",
+      "branches": 98.38,
+      "passed": true
+    },
+    {
+      "file": "server/users.mjs",
+      "branches": 98.78,
+      "passed": true
+    },
+    {
+      "file": "server/forms.mjs",
+      "branches": 98.54,
+      "passed": true
+    },
+    {
+      "file": "server/form-access.mjs",
+      "branches": 90,
+      "passed": true
+    },
+    {
+      "file": "server/form-links.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-collaborators.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-deletion.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-integrations.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/uploads.mjs",
+      "branches": 98.48,
+      "passed": true
+    },
+    {
+      "file": "server/finances.mjs",
+      "branches": 97.72,
+      "passed": true
+    },
+    {
+      "file": "server/person-privacy.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/security.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/authorization.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/http.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/encryption.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/validation.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/upload-content.mjs",
+      "branches": 98.86,
+      "passed": true
+    },
+    {
+      "file": "server/lib/scanner.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/realtime-token.mjs",
+      "branches": 91.48,
+      "passed": true
+    },
+    {
+      "file": "server/lib/object-storage.mjs",
+      "branches": 100,
+      "passed": true
+    }
+  ],
+  "checks": {
+    "build": true,
+    "strictTypes": true,
+    "lintErrors": 0,
+    "lintWarnings": 25,
+    "byteBudgets": true,
+    "secrets": true,
+    "traceability": true,
+    "logicalCases": 160,
+    "focusedCombined": 105,
+    "browser": {
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0
+    },
+    "live": {
+      "passed": 53,
+      "cleanup": true
+    },
+    "sql": {
+      "migrations": 135,
+      "clean": 244,
+      "legacy": 245,
+      "restoreChecks": 6,
+      "concurrentClientsPerRace": 100
+    },
+    "combinedReadWriteBrowser": {
+      "passed": 54,
+      "failed": 0
+    }
+  },
+  "scope": "Local merge preview/commit original-outcome recovery. Legacy nullable optional field issue found in actual probe, fixed and regression covered. Initial owned fixture failures retained separately, final cleanup verified. Privacy recovery and complete manual/device/visual/hosted acceptance remain open."
+}

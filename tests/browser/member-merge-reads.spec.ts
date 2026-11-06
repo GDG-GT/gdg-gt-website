@@ -263,7 +263,7 @@ test("merge selected target denial conceals private comparison and requires expl
     .getByRole("button", { name: "Recheck merge selection", exact: true })
     .click();
   await expect(
-    page.getByText(/Private candidates, target and review have been cleared/),
+    page.getByText(/Private records and edits have been cleared/),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Compare before merging", exact: true }),
@@ -276,14 +276,14 @@ test("merge selected target denial conceals private comparison and requires expl
   await verify(page);
   state.denied = false;
   await page
-    .getByRole("button", { name: "Recheck merge selection", exact: true })
+    .getByRole("button", { name: "Recheck member access", exact: true })
     .click();
+  await page
+    .getByRole("button", { name: "Review duplicate merge", exact: true })
+    .click();
+  await select(page);
   await expect(
-    page.getByRole("option", {
-      name: targets[0].name + " · " + targets[0].email,
-    }),
-  ).toHaveCount(1);
-  expect(state.previews).toBe(1);
-  expect(state.merges).toBe(0);
-  expect(fixture.unexpected).toEqual([]);
+    page.getByRole("button", { name: "Generate current review", exact: true }),
+  ).toBeEnabled();
+  await verify(page);
 });
