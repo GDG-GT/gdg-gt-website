@@ -114,7 +114,8 @@
     "202610270110_curated_content_retries.sql",
     "202611040111_form_access_account_inventory.sql",
     "202611050112_event_mutation_replay.sql",
-    "202611050113_account_mutation_replay.sql"
+    "202611050113_account_mutation_replay.sql",
+    "202611050114_team_mutation_replay.sql"
   ],
   "tests": [
     {
@@ -574,6 +575,10 @@
       "passed": true
     },
     {
+      "name": "202611050114_team_mutation_replay.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -911,6 +916,10 @@
     },
     {
       "name": "113_account_mutation_replay.sql",
+      "passed": true
+    },
+    {
+      "name": "114_team_mutation_replay.sql",
       "passed": true
     },
     {

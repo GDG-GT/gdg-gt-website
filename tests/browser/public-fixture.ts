@@ -1,5 +1,6 @@
 import { test as base, expect, type Page } from "@playwright/test";
 import { createRequire } from "node:module";
+import { teamGrantOptions } from "../../shared/teams";
 const require = createRequire(import.meta.url);
 export type PublicFixture = {
   authenticated: boolean;
@@ -11,6 +12,21 @@ export type PublicFixture = {
   failAccountSave: boolean;
   accountWrites: { key: string; fingerprint: string }[];
   accountCommitted: number;
+  teamReview: boolean;
+  failTeamSave: boolean;
+  teamWrites: { key: string; fingerprint: string }[];
+  teamCommitted: number;
+};
+export const fictionalTeam = {
+  id: "fbbb0000-0000-4000-8000-000000000003",
+  name: "Fictional browser team",
+  slug: "fictional-browser-team",
+  description: "Fictional team for local browser checks",
+  color: "#4285F4",
+  icon: "users",
+  revision: 1,
+  is_active: true,
+  deleted_at: null,
 };
 export const fictionalManagedAccount = {
   id: "fbbb0000-0000-4000-8000-000000000002",
@@ -48,7 +64,34 @@ export const test = base.extend<{ fixture: PublicFixture }>({
         failAccountSave: false,
         accountWrites: [],
         accountCommitted: 0,
+        teamReview: false,
+        failTeamSave: false,
+        teamWrites: [],
+        teamCommitted: 0,
       };
+      let team = { ...fictionalTeam };
+      const teamWorkspace = () => ({
+        team,
+        members: [],
+        actions: { settings: true, manage: true, permissions: true },
+        actorRole: "super_admin",
+        pages: teamGrantOptions.map((option) => ({
+          page_path: option.path,
+          can_access: true,
+        })),
+        permissions: teamGrantOptions.flatMap((option) =>
+          ["crud", ...option.extras].map((permission) => ({
+            resource_type: option.resource,
+            permission,
+            can_create: true,
+            can_read: true,
+            can_update: true,
+            can_delete: true,
+          })),
+        ),
+        statistics: { activeMembers: 0, activeLeads: 0, membershipChanges: 0 },
+      });
+      const teamReceipts = new Map<string, string>();
       let managedAccount = { ...fictionalManagedAccount };
       const accountReceipts = new Map<
         string,
@@ -94,6 +137,43 @@ export const test = base.extend<{ fixture: PublicFixture }>({
           ["/auth/realtime-token", "/realtime/token"].includes(path)
         ) {
           await reply(503, null);
+          return;
+        }
+        if (
+          state.authenticated &&
+          state.teamReview &&
+          request.method() === "PATCH" &&
+          path === "/admin/teams/" + fictionalTeam.id
+        ) {
+          const body = request.postDataJSON(),
+            key = request.headers()["idempotency-key"];
+          if (!key || body.currentPassword !== "Fictional browser password") {
+            state.writes.push("Invalid fictional team mutation");
+            await reply(403, null);
+            return;
+          }
+          const { currentPassword: _proof, ...intent } = body;
+          const fingerprint = JSON.stringify(intent),
+            receipt = teamReceipts.get(key);
+          state.teamWrites.push({ key, fingerprint });
+          if (
+            (receipt && receipt !== fingerprint) ||
+            (!receipt && body.revision !== team.revision)
+          ) {
+            await reply(409, null);
+            return;
+          }
+          if (!receipt) {
+            team = { ...team, ...body.record, revision: team.revision + 1 };
+            teamReceipts.set(key, fingerprint);
+            state.teamCommitted++;
+          }
+          if (state.failTeamSave) {
+            state.failTeamSave = false;
+            await route.abort("connectionfailed");
+            return;
+          }
+          await reply(200, teamWorkspace());
           return;
         }
         if (
@@ -182,6 +262,9 @@ export const test = base.extend<{ fixture: PublicFixture }>({
                 "/admin/audit-log",
                 "/admin/users",
                 "/admin/teams",
+                ...(state.teamReview
+                  ? ["/admin/team/" + fictionalTeam.id]
+                  : []),
               ],
             });
             return;
@@ -249,7 +332,15 @@ export const test = base.extend<{ fixture: PublicFixture }>({
             return;
           }
           if (path === "/admin/teams") {
-            await reply(200, { ...empty, canCreate: true });
+            await reply(200, {
+              ...empty,
+              canCreate: true,
+              ...(state.teamReview ? { items: [team], total: 1 } : {}),
+            });
+            return;
+          }
+          if (state.teamReview && path === "/admin/teams/" + fictionalTeam.id) {
+            await reply(200, teamWorkspace());
             return;
           }
           if (

@@ -26,6 +26,9 @@ function client() {
         Cookie: [...cookies].map(([k, v]) => k + "=" + v).join("; "),
         ...(csrf ? { "X-CSRF-Token": csrf } : {}),
         ...(body ? { "Content-Type": "application/json" } : {}),
+        ...(method !== "GET" && /^\/admin\/teams(?:\/|$)/.test(path)
+          ? { "Idempotency-Key": randomUUID() }
+          : {}),
       },
       ...(body ? { body: JSON.stringify(body) } : {}),
       signal: AbortSignal.timeout(15000),

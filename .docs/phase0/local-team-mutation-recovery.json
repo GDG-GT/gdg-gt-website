@@ -1,0 +1,142 @@
+{
+  "generatedAt": "2026-11-06T01:23:57.678Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and Chromium desktop/mobile team mutations, concurrent identical creates, accepted-but-lost team/transfer receipts and explicit identical replay with fresh password proof. Only fresh fictional teams/accounts touched. Browser allows only owned source PATCH/member-transfer POST; all other non-read/external origins blocked and realtime paused. Original unrelated-read checks run before fictional member assignment. Grant review cancelled without applying changes. All teams created by this invocation archived/accounts disabled/sessions revoked. No email/provider send, existing record or production change. Captures ignored/private; no passwords, credentials or response bodies retained.",
+  "tests": [
+    {
+      "name": "anonymous team read denied for inventory",
+      "passed": true
+    },
+    {
+      "name": "authorized inventory is read privately without caching",
+      "passed": true
+    },
+    {
+      "name": "anonymous team read denied for selected team",
+      "passed": true
+    },
+    {
+      "name": "authorized selected team is read privately without caching",
+      "passed": true
+    },
+    {
+      "name": "unrelated member cannot discover selected team",
+      "passed": true
+    },
+    {
+      "name": "anonymous team read denied for team activity",
+      "passed": true
+    },
+    {
+      "name": "authorized team activity is read privately without caching",
+      "passed": true
+    },
+    {
+      "name": "unrelated member cannot discover team activity",
+      "passed": true
+    },
+    {
+      "name": "anonymous team read denied for transfer history",
+      "passed": true
+    },
+    {
+      "name": "authorized transfer history is read privately without caching",
+      "passed": true
+    },
+    {
+      "name": "unrelated member cannot discover transfer history",
+      "passed": true
+    },
+    {
+      "name": "actual team creation rejects a missing retry identity",
+      "passed": true
+    },
+    {
+      "name": "ten identical concurrent creates return one team",
+      "passed": true
+    },
+    {
+      "name": "concurrent team creation commits one audit and team activity row",
+      "passed": true
+    },
+    {
+      "name": "changed team intent cannot reuse an accepted create key",
+      "passed": true
+    },
+    {
+      "name": "actual team edit reviews current/proposed identity before submission at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "lost team-save result clears password and rechecks read-only before explicit replay at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "identical real team-save replay commits one revision and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "real membership transfer names source/destination/recipient and privilege consequence at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "lost transfer receipt performs only current-authorized rechecks at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "identical transfer replay does not create another membership/history occurrence at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated grant consequence review passes measured axe without applying an unapproved grant set at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "team-write workflow has no page error, unintended mutation, external request or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "actual team edit reviews current/proposed identity before submission at 375×812",
+      "passed": true
+    },
+    {
+      "name": "lost team-save result clears password and rechecks read-only before explicit replay at 375×812",
+      "passed": true
+    },
+    {
+      "name": "identical real team-save replay commits one revision and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "real membership transfer names source/destination/recipient and privilege consequence at 375×812",
+      "passed": true
+    },
+    {
+      "name": "lost transfer receipt performs only current-authorized rechecks at 375×812",
+      "passed": true
+    },
+    {
+      "name": "identical transfer replay does not create another membership/history occurrence at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated grant consequence review passes measured axe without applying an unapproved grant set at 375×812",
+      "passed": true
+    },
+    {
+      "name": "team-write workflow has no page error, unintended mutation, external request or page overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "two viewport transfers and their replay create exactly two source-to-destination history rows",
+      "passed": true
+    },
+    {
+      "name": "two accepted-but-lost team saves and their replay create exactly two update audits",
+      "passed": true
+    }
+  ]
+}

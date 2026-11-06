@@ -5,6 +5,8 @@ import {
   useRef,
   useState,
   type FormEvent,
+  cloneElement,
+  type ReactElement,
 } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
@@ -13,7 +15,13 @@ import {
   useNavigationSafety,
 } from "@/hooks/useDraftGuard";
 import { useAdmin } from "@/contexts/AdminContext";
-import { api } from "@/lib/api";
+import { api, ApiFailure } from "@/lib/api";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
@@ -84,6 +92,46 @@ type Mode =
   | "member_remove"
   | "member_transfer"
   | "permissions";
+type Intent = {
+  mode: Mode;
+  path: string;
+  method: string;
+  body: Record<string, unknown>;
+  key: string;
+  createdAt: number;
+  teamId?: string;
+  revision?: number;
+  title: string;
+  consequence: string;
+  lines: string[];
+};
+type Review = { kind: "save"; intent: Intent } | { kind: "abandon" };
+function TeamField({
+  name,
+  errors,
+  children,
+  ...props
+}: {
+  name: string;
+  errors: Record<string, string>;
+  children: ReactElement;
+  label: string;
+  required?: boolean;
+  hint?: string;
+}) {
+  const id = "team-field-" + name,
+    error = errors[name];
+  return (
+    <Field {...props}>
+      {cloneElement(children, {
+        id,
+        "aria-invalid": error ? true : undefined,
+        "aria-describedby": error ? id + "-error" : undefined,
+      } as Record<string, unknown>)}
+      {error && <small id={id + "-error"}>{error}</small>}
+    </Field>
+  );
+}
 const names: Record<Mode, string> = {
   create: "Create a chapter team",
   update: "Edit team details",
@@ -173,6 +221,7 @@ function ReadFeedback({
             </p>
           )}
           <Button
+            type="button"
             variant="secondary"
             disabled={disabled || read.loading}
             onClick={() => {
@@ -234,15 +283,34 @@ function TeamWorkspaceContent() {
     [listRefresh, setListRefresh] = useState(0),
     [detailRefresh, setDetailRefresh] = useState(0),
     [historyRefresh, setHistoryRefresh] = useState(0),
-    [destinationRefresh, setDestinationRefresh] = useState(0);
-  const mutation = usePrivateMutation(
-      mode === "create" ? "create" : selected || "directory",
-    ),
+    [destinationRefresh, setDestinationRefresh] = useState(0),
+    [review, setReview] = useState<Review>(),
+    [uncertain, setUncertain] = useState<Intent>(),
+    [needsRecheck, setNeedsRecheck] = useState(false),
+    [checkedUncertain, setCheckedUncertain] = useState(false),
+    [fieldErrors, setFieldErrors] = useState<Record<string, string>>({}),
+    [checkedWorkspace, setCheckedWorkspace] = useState<{
+      at: string;
+      record: Workspace;
+    }>();
+  const mutation = usePrivateMutation(selected || "directory"),
     busy = mutation.busy,
     cancelMutation = mutation.cancel;
-  const heading = useRef<HTMLHeadingElement>(null);
+  const heading = useRef<HTMLHeadingElement>(null),
+    feedback = useRef<HTMLDivElement>(null),
+    reviewOpener = useRef<HTMLElement>();
+  const openReview = (next: Review, opener?: HTMLElement) => {
+    if (opener && !opener.closest('[role="dialog"]'))
+      reviewOpener.current = opener;
+    else if (
+      document.activeElement instanceof HTMLElement &&
+      !document.activeElement.closest('[role="dialog"]')
+    )
+      reviewOpener.current = document.activeElement;
+    setReview(next);
+  };
   const navigationSafety = useNavigationSafety();
-  useDraftGuard(!!mode || !!password || !!confirmation, {
+  useDraftGuard(!!mode || !!password || !!confirmation || !!uncertain, {
     busy,
     label: "Team or permission changes",
   });
@@ -308,6 +376,8 @@ function TeamWorkspaceContent() {
                 member?.role === "member"),
     canSave =
       !busy &&
+      !uncertain &&
+      !needsRecheck &&
       !!modeAllowed &&
       (mode === "create" ? listReady : teamReady && !draftStale) &&
       (mode !== "member_transfer" ||
@@ -340,6 +410,13 @@ function TeamWorkspaceContent() {
     setError("");
     setNotice("");
     setDestinationQuery("");
+    setReview(undefined);
+    setUncertain(undefined);
+    setNeedsRecheck(false);
+    setCheckedUncertain(false);
+    setFieldErrors({});
+    setCheckedWorkspace(undefined);
+    reviewOpener.current = undefined;
     setTab("members");
     setHistoryPage(1);
   }, [
@@ -370,9 +447,13 @@ function TeamWorkspaceContent() {
   useEffect(() => {
     if (mode) heading.current?.focus();
   }, [mode]);
+  useEffect(() => {
+    if (!review && (notice || error)) feedback.current?.focus();
+  }, [notice, error, review]);
   function open(next: Mode, m?: Member) {
     if (
       mutation.pending.current ||
+      uncertain ||
       mode ||
       !isOnline ||
       (next === "create" ? !listReady || !list?.canCreate : !teamReady)
@@ -397,14 +478,26 @@ function TeamWorkspaceContent() {
     });
     setGrants(workspace ? grantsFor(workspace) : []);
     setDestinationQuery("");
+    setNeedsRecheck(false);
+    setFieldErrors({});
+    setCheckedWorkspace(undefined);
   }
   function close() {
     if (mutation.pending.current) return;
+    if (uncertain) {
+      openReview({ kind: "abandon" });
+      return;
+    }
     setMode(null);
     setPassword("");
     setConfirmation("");
   }
   function choose(id: string) {
+    if (mutation.pending.current) return;
+    if (uncertain) {
+      openReview({ kind: "abandon" });
+      return;
+    }
     const change = () => {
       close();
       setSelected(id);
@@ -421,93 +514,374 @@ function TeamWorkspaceContent() {
         HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
       >,
     ) => {
-      if (!mutation.pending.current)
+      if (!mutation.pending.current && !uncertain && !review) {
         setValues((v) => ({ ...v, [key]: event.target.value }));
+        setFieldErrors((previous) => ({ ...previous, [key]: "" }));
+      }
     },
   });
-  async function save(event: FormEvent) {
-    event.preventDefault();
-    if (!mode || !canSave) return;
+  async function perform(intent: Intent, replay = false) {
+    if (replay ? !isOnline || !checkedUncertain : !canSave) return;
+    if (replay && Date.now() - intent.createdAt >= 47 * 60 * 60 * 1000) {
+      setError(
+        "The safe retry window ended. Inspect current team and membership records before abandoning this operation and starting another change.",
+      );
+      return;
+    }
+    if (!password) {
+      setFieldErrors({
+        currentPassword:
+          "Enter your current password to authorize this team change.",
+      });
+      return;
+    }
     const controller = mutation.begin();
     if (!controller) return;
-    setError("");
-    setNotice("");
     const secret = password;
     setPassword("");
+    setError("");
+    setNotice("");
+    setFieldErrors({});
     try {
-      const record = {
-        name: values.name,
-        description: values.description,
-        color: values.color,
-        icon: values.icon,
-      };
-      let body: Record<string, unknown> = { currentPassword: secret };
-      if (mode === "create")
-        body.record = {
-          ...record,
-          slug: values.slug,
-          leadId: currentAdmin!.id,
-        };
-      else if (mode === "update")
-        body = { ...body, revision: workspace!.team.revision, record };
-      else {
-        body = { ...body, action: mode, revision: workspace!.team.revision };
-        if (mode === "permissions")
-          Object.assign(body, { confirmation, grants });
-        else if (mode === "archive" || mode === "restore")
-          body.confirmation = confirmation;
-        else if (mode === "member_add")
-          Object.assign(body, { email: values.email, role: values.role });
-        else {
-          Object.assign(body, {
-            membershipId: member!.id,
-            membershipRevision: member!.revision,
-          });
-          if (mode === "member_transfer")
-            Object.assign(body, {
-              destinationId: values.destinationId,
-              reason: values.reason,
-            });
-          else body.role = values.role;
-        }
-      }
-      const result = await api<Workspace>(
-        "/admin/teams" + (mode === "create" ? "" : "/" + workspace!.team.id),
-        {
-          method: mode === "update" ? "PATCH" : "POST",
-          protected: true,
-          body,
-          signal: controller.signal,
-        },
-      );
+      const result = await api<Workspace>(intent.path, {
+        method: intent.method,
+        protected: true,
+        body: { ...intent.body, currentPassword: secret },
+        idempotencyKey: intent.key,
+        signal: controller.signal,
+      });
       if (!mutation.current(controller)) return;
       setSelected(result.team.id);
       setMode(null);
+      setMember(undefined);
+      setModeRevision(undefined);
+      setValues({});
+      setConfirmation("");
+      setGrants([]);
+      setReview(undefined);
+      setUncertain(undefined);
+      setNeedsRecheck(false);
+      setCheckedUncertain(false);
+      setCheckedWorkspace(undefined);
       setNotice(
-        mode === "permissions"
-          ? "Grants saved. New requests use the updated permissions immediately."
-          : mode === "restore"
-            ? "Team restored. Previous page grants remain disabled until explicitly approved."
-            : "Team change saved with an audit entry.",
+        names[intent.mode] +
+          " confirmed by the server." +
+          (intent.mode === "restore"
+            ? " Previous page grants remain disabled until explicitly approved."
+            : ""),
       );
-      setRefresh((v) => v + 1);
+      setRefresh((value) => value + 1);
       try {
         await refreshTeams();
       } catch {
         if (mutation.current(controller))
           setError(
-            "The team change was saved, but your membership list could not refresh. Retry current reads before another change.",
+            "The team change was saved, but your membership list could not refresh. Refresh current reads before another change.",
           );
       }
-    } catch (e) {
+    } catch (failure) {
       if (!mutation.current(controller)) return;
-      setError(
-        e instanceof Error ? e.message : "The team change could not be saved.",
-      );
+      setError((failure as Error).message);
+      if (failure instanceof ApiFailure)
+        setFieldErrors(
+          Object.fromEntries(
+            Object.entries(failure.fields || {}).map(([key, value]) => [
+              key.replace(/^record\./, ""),
+              value,
+            ]),
+          ),
+        );
+      if (
+        failure instanceof ApiFailure &&
+        failure.code === "PASSWORD_CONFIRMATION_FAILED"
+      )
+        setFieldErrors({ currentPassword: failure.message });
+      else if (
+        failure instanceof ApiFailure &&
+        [401, 403, 404].includes(failure.status)
+      )
+        clearPrivate();
+      else if (!(failure instanceof ApiFailure) || failure.status >= 500) {
+        setUncertain(intent);
+        setNeedsRecheck(true);
+        setCheckedUncertain(false);
+        setError(
+          "The result could not be confirmed. Original intent and retry identity are retained without your password. Recheck current saved values, then explicitly retry with fresh password proof. " +
+            (failure as Error).message,
+        );
+      } else if (failure.status === 409) {
+        setNeedsRecheck(true);
+        setCheckedUncertain(false);
+        setError(
+          "The team, membership or grants changed. Recheck saved values before another change. " +
+            failure.message,
+        );
+      }
     } finally {
       mutation.finish(controller);
     }
   }
+  async function recheck() {
+    if (!isOnline) return;
+    const controller = mutation.begin();
+    if (!controller) return;
+    setCheckedUncertain(false);
+    setPassword("");
+    try {
+      let record: Workspace | undefined;
+      const id = uncertain?.teamId || selected;
+      if (id)
+        record = await api<Workspace>("/admin/teams/" + id, {
+          signal: controller.signal,
+        });
+      else {
+        const result = await api<Listing>(
+          "/admin/teams?" +
+            new URLSearchParams({
+              q: uncertain?.title || values.name || "",
+              state: "current",
+              page: "1",
+            }),
+          { signal: controller.signal },
+        );
+        const slug =
+          (uncertain?.body.record as { slug?: string } | undefined)?.slug ||
+          values.slug;
+        const match = result.items.find((item) => item.slug === slug);
+        if (match)
+          record = await api<Workspace>("/admin/teams/" + match.id, {
+            signal: controller.signal,
+          });
+      }
+      const destinationId = uncertain?.body.destinationId;
+      if (destinationId)
+        await api<Workspace>("/admin/teams/" + destinationId, {
+          signal: controller.signal,
+        });
+      if (!mutation.current(controller)) return;
+      setCheckedWorkspace(
+        record ? { at: new Date().toISOString(), record } : undefined,
+      );
+      setCheckedUncertain(true);
+      setNeedsRecheck(false);
+      setError("");
+      setNotice(
+        "Saved team and membership values were rechecked. No change was sent.",
+      );
+      setRefresh((value) => value + 1);
+    } catch (failure) {
+      if (!mutation.current(controller)) return;
+      setError((failure as Error).message);
+      if (
+        failure instanceof ApiFailure &&
+        [401, 403, 404].includes(failure.status)
+      )
+        clearPrivate();
+    } finally {
+      mutation.finish(controller);
+    }
+  }
+  function save(event: FormEvent) {
+    event.preventDefault();
+    if (!mode || !canSave || mutation.pending.current) return;
+    const record = {
+      name: values.name,
+      description: values.description,
+      color: values.color,
+      icon: values.icon,
+    };
+    let body: Record<string, unknown> = {};
+    if (mode === "create")
+      body.record = { ...record, slug: values.slug, leadId: currentAdmin!.id };
+    else if (mode === "update") body = { revision: modeRevision, record };
+    else {
+      body = { action: mode, revision: modeRevision };
+      if (mode === "permissions") Object.assign(body, { confirmation, grants });
+      else if (mode === "archive" || mode === "restore")
+        body.confirmation = confirmation;
+      else if (mode === "member_add")
+        Object.assign(body, {
+          email: values.email.trim().toLowerCase(),
+          role: values.role,
+        });
+      else {
+        Object.assign(body, {
+          membershipId: member!.id,
+          membershipRevision: member!.revision,
+        });
+        if (mode === "member_transfer")
+          Object.assign(body, {
+            destinationId: values.destinationId,
+            reason: values.reason,
+          });
+        else body.role = values.role;
+      }
+    }
+    if (
+      ["archive", "restore", "permissions"].includes(mode) &&
+      confirmation !== workspace?.team.name
+    )
+      return;
+    const name = mode === "create" ? values.name : workspace!.team.name,
+      person = member?.user.email || member?.user.display_name || values.email,
+      destination = destinations.find(
+        (item) => item.id === values.destinationId,
+      ),
+      consequence =
+        mode === "create"
+          ? `Create ${name} and assign you as its lead. Page/action grants start disabled.`
+          : mode === "update"
+            ? `Update saved details for ${name}. Current team memberships and page grants remain.`
+            : mode === "archive"
+              ? `Archive ${name}, disable its page grants and remove active team access. Accounts and membership history remain.`
+              : mode === "restore"
+                ? `Restore ${name}. Previous page grants stay disabled until explicitly approved.`
+                : mode === "permissions"
+                  ? `Replace page/action grants for ${name} with the reviewed set. New requests use the changed access immediately. Sensitive grants control response/export/publication capabilities.`
+                  : mode === "member_add"
+                    ? `Add ${person} to ${name} as ${readable(values.role)}. Their account role remains unchanged.`
+                    : mode === "member_role"
+                      ? `Change ${person} in ${name} from ${readable(member!.role)} to ${readable(values.role)}. Team access changes immediately; their account role remains unchanged.`
+                      : mode === "member_remove"
+                        ? `Remove ${person} from ${name}. Team-derived access ends immediately; their account and historical membership remain.`
+                        : `Transfer ${person} from ${name} to ${destination?.name || "the selected team"}. Source access ends and destination membership starts as Member. Officer privileges are not inherited. Reason: ${values.reason}`;
+    const lines =
+      mode === "permissions"
+        ? [
+            "Current grants:",
+            ...(grantsFor(workspace!).length ? [] : ["No page/action grants"]),
+            ...grantsFor(workspace!).map(
+              (grant) =>
+                `${grant.path}: ${
+                  ["create", "read", "update", "delete"]
+                    .filter(
+                      (action) => grant[action as keyof TeamGrant] === true,
+                    )
+                    .concat(grant.extras)
+                    .join(", ") || "No actions"
+                }`,
+            ),
+            "Proposed grants:",
+            ...(grants.length ? [] : ["No page/action grants"]),
+            ...grants.map(
+              (grant) =>
+                `${grant.path}: ${
+                  ["create", "read", "update", "delete"]
+                    .filter(
+                      (action) => grant[action as keyof TeamGrant] === true,
+                    )
+                    .concat(grant.extras)
+                    .join(", ") || "No actions"
+                }`,
+            ),
+          ]
+        : mode === "update"
+          ? [
+              `Name: ${workspace!.team.name} → ${values.name}`,
+              `Description: ${values.description}`,
+              `Color: ${values.color}`,
+              `Icon: ${values.icon}`,
+            ]
+          : [];
+    const intent: Intent = {
+      mode,
+      path: "/admin/teams" + (mode === "create" ? "" : "/" + selected),
+      method: mode === "update" ? "PATCH" : "POST",
+      body,
+      key: crypto.randomUUID(),
+      createdAt: Date.now(),
+      teamId: mode === "create" ? undefined : selected,
+      revision: modeRevision,
+      title: name,
+      consequence,
+      lines,
+    };
+    const submitter = (event.nativeEvent as SubmitEvent).submitter;
+    openReview(
+      { kind: "save", intent },
+      submitter instanceof HTMLElement ? submitter : undefined,
+    );
+  }
+  const recovery = () => (
+    <section aria-label="Team operation recovery">
+      <p>
+        {uncertain
+          ? `${names[uncertain.mode]} for ${uncertain.title} has an unconfirmed result. Original input and retry identity are retained without password proof.`
+          : "Recheck current team and membership values before another change."}
+      </p>
+      <Button
+        variant="secondary"
+        disabled={busy || !isOnline}
+        onClick={recheck}
+      >
+        Recheck saved team values
+      </Button>
+      {checkedWorkspace && (
+        <details>
+          <summary>Inspect current saved team and memberships</summary>
+          <p>
+            Read at{" "}
+            <time dateTime={checkedWorkspace.at}>
+              {new Date(checkedWorkspace.at).toLocaleString()}
+            </time>
+          </p>
+          <p>
+            {checkedWorkspace.record.team.name} · revision{" "}
+            {checkedWorkspace.record.team.revision} ·{" "}
+            {checkedWorkspace.record.team.deleted_at ? "Archived" : "Active"}
+          </p>
+          <ul>
+            {checkedWorkspace.record.members.map((value) => (
+              <li key={value.id}>
+                {value.user.email || value.user.display_name} ·{" "}
+                {readable(value.role)} ·{" "}
+                {value.is_active ? "Active" : "Former member"}
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+      {uncertain && (
+        <>
+          <TeamField
+            name="retryPassword"
+            label="Current password for retry"
+            required
+            errors={{ retryPassword: fieldErrors.currentPassword }}
+          >
+            <input
+              type="password"
+              maxLength={128}
+              autoComplete="current-password"
+              disabled={busy}
+              value={password}
+              onChange={(event) => {
+                if (!mutation.pending.current) {
+                  setPassword(event.target.value);
+                  setFieldErrors({});
+                }
+              }}
+            />
+          </TeamField>
+          <Button
+            disabled={busy || !isOnline || !checkedUncertain || !password}
+            onClick={() => perform(uncertain, true)}
+          >
+            Retry original team operation
+          </Button>
+          <Button
+            variant="ghost"
+            disabled={busy}
+            onClick={(event) =>
+              openReview({ kind: "abandon" }, event.currentTarget)
+            }
+          >
+            Review abandoning team recovery
+          </Button>
+        </>
+      )}
+    </section>
+  );
   function toggleGrant(path: string, resource: string, enabled: boolean) {
     if (mutation.pending.current) return;
     setGrants((v) =>
@@ -633,33 +1007,168 @@ function TeamWorkspaceContent() {
           </Button>
         </div>
       )}
-      {error && (
-        <p role="alert" className="gt-form-error">
-          {error}{" "}
-          <button onClick={() => setRefresh((v) => v + 1)}>Reload teams</button>
-        </p>
+      {(error || notice) && !review && (
+        <div ref={feedback} tabIndex={-1}>
+          {error && (
+            <p role="alert" className="gt-form-error">
+              {error}{" "}
+              <button onClick={() => setRefresh((v) => v + 1)}>
+                Reload teams
+              </button>
+            </p>
+          )}
+          {notice && <p role="status">{notice}</p>}
+        </div>
       )}
-      {notice && <p role="status">{notice}</p>}
+      {!review && (needsRecheck || uncertain) && recovery()}
+      <Dialog
+        open={!!review}
+        onOpenChange={(open) => {
+          if (!open && !mutation.pending.current) setReview(undefined);
+        }}
+      >
+        <DialogContent
+          className={`max-h-[calc(100dvh-2rem)] overflow-y-auto ${busy ? "[&>button]:hidden" : ""}`}
+          onEscapeKeyDown={(event) => {
+            if (mutation.pending.current) event.preventDefault();
+          }}
+          onPointerDownOutside={(event) => {
+            if (mutation.pending.current) event.preventDefault();
+          }}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            if (notice) feedback.current?.focus();
+            else if (
+              reviewOpener.current?.isConnected &&
+              !reviewOpener.current.matches(":disabled")
+            )
+              reviewOpener.current.focus();
+            else if (heading.current?.isConnected) heading.current.focus();
+            else document.getElementById("workspace-content")?.focus();
+          }}
+        >
+          <DialogTitle>
+            {review?.kind === "abandon"
+              ? "Abandon unconfirmed team recovery?"
+              : review?.kind === "save"
+                ? `Review: ${names[review.intent.mode]}`
+                : "Review team change"}
+          </DialogTitle>
+          <DialogDescription>
+            {review?.kind === "abandon"
+              ? `${uncertain?.title}: the original operation may already have completed. Discard retained input and retry identity, then inspect saved team/member records before starting another change. No saved operation is reversed.`
+              : review?.kind === "save"
+                ? review.intent.consequence
+                : ""}
+          </DialogDescription>
+          {review?.kind === "save" && !!review.intent.lines.length && (
+            <ul>
+              {review.intent.lines.map((line, index) => (
+                <li key={index}>{line}</li>
+              ))}
+            </ul>
+          )}
+          {error && <p role="alert">{error}</p>}
+          {review?.kind === "save" && draftStale && (
+            <p role="alert">
+              The saved team or membership changed. Close this review, inspect
+              current values and choose a current action.
+            </p>
+          )}
+          {review?.kind === "save" && (needsRecheck || uncertain) && recovery()}
+          {review?.kind === "save" && !uncertain && (
+            <TeamField
+              name="reviewPassword"
+              label="Confirm your password again"
+              required
+              errors={{ reviewPassword: fieldErrors.currentPassword }}
+            >
+              <input
+                disabled={busy}
+                type="password"
+                maxLength={128}
+                autoComplete="current-password"
+                value={password}
+                onChange={(event) => {
+                  if (!mutation.pending.current) {
+                    setPassword(event.target.value);
+                    setFieldErrors({});
+                  }
+                }}
+              />
+            </TeamField>
+          )}
+          <div className="gt-inline-actions">
+            <Button
+              variant="danger"
+              disabled={
+                busy || (review?.kind === "save" && (!canSave || !password))
+              }
+              onClick={() => {
+                if (mutation.pending.current) return;
+                if (review?.kind === "save") perform(review.intent);
+                else if (review?.kind === "abandon") {
+                  setMode(null);
+                  setMember(undefined);
+                  setValues({});
+                  setPassword("");
+                  setConfirmation("");
+                  setGrants([]);
+                  setUncertain(undefined);
+                  setNeedsRecheck(false);
+                  setCheckedUncertain(false);
+                  setCheckedWorkspace(undefined);
+                  setFieldErrors({});
+                  setError("");
+                  setReview(undefined);
+                  setRefresh((value) => value + 1);
+                }
+              }}
+            >
+              {review?.kind === "abandon"
+                ? "Abandon team recovery"
+                : "Confirm team change"}
+            </Button>
+            <Button
+              variant="secondary"
+              disabled={busy}
+              onClick={() => setReview(undefined)}
+            >
+              Keep editing
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
       {mode && (
         <section className="gt-panel gt-event-editor">
           <h2 tabIndex={-1} ref={heading}>
             {names[mode]}
           </h2>
           <form className="gt-form" onSubmit={save}>
-            <fieldset disabled={busy} className="gt-form gt-team-fields">
+            <fieldset
+              disabled={busy || !!review || !!uncertain}
+              className="gt-form gt-team-fields"
+            >
               {(mode === "create" || mode === "update") && (
                 <>
                   <div className="gt-form-grid">
-                    <Field label="Team name" required>
+                    <TeamField
+                      name="name"
+                      errors={fieldErrors}
+                      label="Team name"
+                      required
+                    >
                       <input
                         required
                         minLength={2}
                         maxLength={100}
                         {...input("name")}
                       />
-                    </Field>
+                    </TeamField>
                     {mode === "create" && (
-                      <Field
+                      <TeamField
+                        name="slug"
+                        errors={fieldErrors}
                         label="Team URL identifier"
                         required
                         hint="Lowercase letters, numbers and hyphens. This identifier cannot be changed later."
@@ -670,9 +1179,13 @@ function TeamWorkspaceContent() {
                           maxLength={150}
                           {...input("slug")}
                         />
-                      </Field>
+                      </TeamField>
                     )}
-                    <Field label="Accent color">
+                    <TeamField
+                      name="color"
+                      errors={fieldErrors}
+                      label="Accent color"
+                    >
                       <select {...input("color")}>
                         {colors.map((c, i) => (
                           <option value={c} key={c}>
@@ -688,22 +1201,30 @@ function TeamWorkspaceContent() {
                           </option>
                         ))}
                       </select>
-                    </Field>
-                    <Field label="Team icon">
+                    </TeamField>
+                    <TeamField
+                      name="icon"
+                      errors={fieldErrors}
+                      label="Team icon"
+                    >
                       <select {...input("icon")}>
                         {icons.map((i) => (
                           <option key={i}>{i}</option>
                         ))}
                       </select>
-                    </Field>
+                    </TeamField>
                   </div>
-                  <Field label="Description">
+                  <TeamField
+                    name="description"
+                    errors={fieldErrors}
+                    label="Description"
+                  >
                     <textarea
                       rows={3}
                       maxLength={2000}
                       {...input("description")}
                     />
-                  </Field>
+                  </TeamField>
                   {mode === "create" && (
                     <p className="gt-helper">
                       You become this team's founding lead. Add another lead
@@ -724,7 +1245,9 @@ function TeamWorkspaceContent() {
                     </p>
                   )}
                   {mode === "member_add" && (
-                    <Field
+                    <TeamField
+                      name="email"
+                      errors={fieldErrors}
                       label="Existing account email"
                       required
                       hint="The account must be active and have completed password setup. New-account invitations are a separate workflow."
@@ -735,10 +1258,14 @@ function TeamWorkspaceContent() {
                         maxLength={255}
                         {...input("email")}
                       />
-                    </Field>
+                    </TeamField>
                   )}
                   {["member_add", "member_role"].includes(mode) && (
-                    <Field label="Team role">
+                    <TeamField
+                      name="role"
+                      errors={fieldErrors}
+                      label="Team role"
+                    >
                       <select {...input("role")}>
                         {(workspace?.actorRole === "team_member"
                           ? ["member"]
@@ -749,7 +1276,7 @@ function TeamWorkspaceContent() {
                           </option>
                         ))}
                       </select>
-                    </Field>
+                    </TeamField>
                   )}
                   {mode === "member_remove" && (
                     <p>
@@ -794,7 +1321,12 @@ function TeamWorkspaceContent() {
                             name.
                           </p>
                         )}
-                      <Field label="Destination team" required>
+                      <TeamField
+                        name="destinationId"
+                        errors={fieldErrors}
+                        label="Destination team"
+                        required
+                      >
                         <select
                           required
                           disabled={!destinationReady}
@@ -807,15 +1339,20 @@ function TeamWorkspaceContent() {
                             </option>
                           ))}
                         </select>
-                      </Field>
-                      <Field label="Transfer reason" required>
+                      </TeamField>
+                      <TeamField
+                        name="reason"
+                        errors={fieldErrors}
+                        label="Transfer reason"
+                        required
+                      >
                         <textarea
                           required
                           minLength={2}
                           maxLength={1000}
                           {...input("reason")}
                         />
-                      </Field>
+                      </TeamField>
                       <p className="gt-helper">
                         Transfers preserve the source history, remove source
                         access, and create a member-level destination
@@ -932,13 +1469,26 @@ function TeamWorkspaceContent() {
               {(["archive", "restore", "permissions"] as Mode[]).includes(
                 mode,
               ) && (
-                <Field label="Type the complete team name to confirm" required>
+                <TeamField
+                  name="confirmation"
+                  errors={fieldErrors}
+                  label="Type the complete team name to confirm"
+                  required
+                >
                   <input
                     required
                     value={confirmation}
-                    onChange={(e) => setConfirmation(e.target.value)}
+                    onChange={(e) => {
+                      if (!mutation.pending.current) {
+                        setConfirmation(e.target.value);
+                        setFieldErrors((previous) => ({
+                          ...previous,
+                          confirmation: "",
+                        }));
+                      }
+                    }}
                   />
-                </Field>
+                </TeamField>
               )}
               {mode === "archive" && (
                 <p>
@@ -953,16 +1503,29 @@ function TeamWorkspaceContent() {
                   disabled and must be explicitly reviewed.
                 </p>
               )}
-              <Field label="Confirm your own password" required>
+              <TeamField
+                name="currentPassword"
+                errors={fieldErrors}
+                label="Confirm your own password"
+                required
+              >
                 <input
                   required
                   type="password"
                   maxLength={128}
                   autoComplete="current-password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    if (!mutation.pending.current) {
+                      setPassword(e.target.value);
+                      setFieldErrors((previous) => ({
+                        ...previous,
+                        currentPassword: "",
+                      }));
+                    }
+                  }}
                 />
-              </Field>
+              </TeamField>
               <div className="gt-button-row">
                 <Button
                   type="submit"

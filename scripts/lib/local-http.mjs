@@ -42,7 +42,7 @@ export async function localHttp() {
     const requestKey =
       key === undefined &&
       method !== "GET" &&
-      /^\/admin\/(?:(?:site-content|content-records)\/|(?:events|users)(?:\/|$))/.test(
+      /^\/admin\/(?:(?:site-content|content-records)\/|(?:events|users|teams)(?:\/|$))/.test(
         path,
       )
         ? randomUUID()

@@ -687,6 +687,34 @@
       ]
     },
     {
+      "id": "TEAM-TEST-007",
+      "requirements": [
+        "TEAM-002",
+        "TEAM-006",
+        "TEAM-007"
+      ],
+      "scope": "Current-authority team mutation receipts, exact consequence reviews, pending isolation and bounded explicit recovery of uncertain team/member/grant changes",
+      "automated": [
+        "tests/client/team-mutation-recovery.test.tsx",
+        "tests/server/team-mutation-recovery.test.mjs",
+        "database/tests/114_team_mutation_replay.sql",
+        "scripts/test-local-team-mutation-recovery.mjs",
+        "tests/browser/team-review.spec.ts"
+      ],
+      "remaining": [
+        "Complete invitation/announcement recovery and populated supported-browser/role/device/manual/visual/hosted acceptance remain open; local mutation and fake browser receipts are separate evidence",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24",
+        "28.3",
+        "28.4",
+        "31.2"
+      ]
+    },
+    {
       "id": "TEAM-TEST-001",
       "requirements": [
         "TEAM-001"

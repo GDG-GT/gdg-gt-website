@@ -8,6 +8,29 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Reviewed team writes and atomic membership replay — 2026-11-05
+
+- Migration 114 binds team mutation receipts to current session/password/action,
+  target hierarchy and transfer-destination authority. Replay reprojects current
+  authorized data. Named reviews show exact grant sets and member/transfer/lifecycle
+  consequences; pending guards, fresh-proof explicit uncertain retry, read-only
+  recheck, stale revision review and a 47-hour cutoff protect writes.
+- All 1,416 tests/160 files pass (52 focused, 30 new cases). Coverage still fails
+  70%: 63.37% lines/63.02% branches/61.73% statements/54.78% functions; all 17
+  critical branch gates pass. The initial resource-contention import-graph timeout
+  is absent in the clean sequential rerun. Thresholds/timeouts were not changed.
+- All 33 actual API/DB/desktop-mobile checks pass: concurrent creates and lost
+  edit/transfer receipts produce one accepted mutation each. Populated review axe
+  passes. Owned fixtures archived/accounts disabled/sessions revoked; no existing
+  chapter records/provider sends changed. Complete SQL/legacy-grant suites, both
+  100-client races and six isolated restore checks pass.
+- Catalog: 152 unverified cases. Complete invitation/announcement recovery and
+  supported-browser/role/device/manual/visual/hosted acceptance remain open.
+  See `TEAM_MUTATION_RECOVERY.md`; full PRD remains open.
+- Types/lint (zero errors/25 warnings), build/budgets/secrets/traceability pass.
+  All 60 targeted production-build team-review/shared-workspace browser checks
+  pass across six pinned profiles; screenshots remain unapproved candidates.
+
 ### Independent team workspace reads — 2026-11-05
 
 - Team inventory/detail/history/transfer destinations now read independently,

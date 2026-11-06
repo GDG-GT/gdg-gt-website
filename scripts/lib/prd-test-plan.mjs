@@ -302,6 +302,14 @@ add(
   ["Team mutation replay/consequence hardening, complete invitation/announcement recovery and supported-browser/role/device/manual/visual/hosted acceptance remain separate work"],
 );
 prdTestCases.at(-1).normative = ["23", "24", "28.3", "31.2"];
+add(
+  "TEAM-TEST-007",
+  "TEAM-002 TEAM-006 TEAM-007",
+  "Current-authority team mutation receipts, exact consequence reviews, pending isolation and bounded explicit recovery of uncertain team/member/grant changes",
+  ["tests/client/team-mutation-recovery.test.tsx", unit("team-mutation-recovery"), sql("114_team_mutation_replay"), local("team-mutation-recovery"), "tests/browser/team-review.spec.ts"],
+  ["Complete invitation/announcement recovery and populated supported-browser/role/device/manual/visual/hosted acceptance remain open; local mutation and fake browser receipts are separate evidence"],
+);
+prdTestCases.at(-1).normative = ["23", "24", "28.3", "28.4", "31.2"];
 const teams = [
   [
     "TEAM-001",

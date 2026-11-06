@@ -8,8 +8,9 @@ import {
   uuid,
   text,
   slug,
+  idempotency,
 } from "./lib/validation.mjs";
-import { verifySecret, riskHash } from "./lib/security.mjs";
+import { verifySecret, riskHash, tokenHash } from "./lib/security.mjs";
 import { teamGrantOptions } from "../shared/teams.ts";
 const colors = ["#4285F4", "#E6705F", "#0F9D58", "#F4B400", "#666666"];
 const teamRecord = z
@@ -371,10 +372,11 @@ export async function teamRoutes(
     );
   }
   const { currentPassword, revision, action, ...document } = body;
+  const key = idempotency(request);
   void currentPassword;
   void action;
   const result = checked(
-    await db.rpc("mutate_team", {
+    await db.rpc("mutate_team_workspace", {
       p_actor: actor.id,
       p_session: session.sessionId,
       p_verified_hash: account.password_hash,
@@ -382,6 +384,15 @@ export async function teamRoutes(
       p_action: operation,
       p_revision: revision ?? null,
       p_document: body.record || document,
+      p_key_hash: tokenHash(key),
+      p_request_hash: tokenHash(
+        JSON.stringify({
+          team: id,
+          action: operation,
+          revision: revision ?? null,
+          document: body.record || document,
+        }),
+      ),
       p_request_id: requestId,
     }),
   );
