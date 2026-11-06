@@ -1927,6 +1927,11 @@
       "scope": "Retained identity redaction, atomic revision-bound response deletion/redaction receipts and recovery, holds, archive and reviewed permanent deletion",
       "automated": [
         "tests/server/form-deletion.test.mjs",
+        "tests/server/form-deletion-routes.test.mjs",
+        "tests/client/form-deletion-recovery.test.tsx",
+        "tests/browser/form-deletion-recovery.spec.ts",
+        "database/tests/126_form_deletion_replay.sql",
+        "scripts/test-local-form-deletion-recovery.mjs",
         "tests/server/form-privacy-replay.test.mjs",
         "database/tests/123_form_privacy_replay.sql",
         "scripts/test-local-form-privacy-recovery.mjs",

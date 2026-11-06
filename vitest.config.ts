@@ -10,6 +10,7 @@ const criticalModules = [
   "server/forms.mjs",
   "server/form-access.mjs",
   "server/form-collaborators.mjs",
+  "server/form-deletion.mjs",
   "server/uploads.mjs",
   "server/finances.mjs",
   "server/person-privacy.mjs",

@@ -905,6 +905,11 @@ const forms = [
     "Retained identity redaction, atomic revision-bound response deletion/redaction receipts and recovery, holds, archive and reviewed permanent deletion",
     [
       unit("form-deletion"),
+      unit("form-deletion-routes"),
+      "tests/client/form-deletion-recovery.test.tsx",
+      "tests/browser/form-deletion-recovery.spec.ts",
+      sql("126_form_deletion_replay"),
+      local("form-deletion-recovery"),
       unit("form-privacy-replay"),
       sql("123_form_privacy_replay"),
       local("form-privacy-recovery"),

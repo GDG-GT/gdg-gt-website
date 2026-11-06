@@ -1,0 +1,128 @@
+{
+  "generatedAt": "2026-11-06T10:21:42.801Z",
+  "completed": true,
+  "cleanup": true,
+  "scope": "Dedicated loopback only. Fresh owned fictional private draft forms are archived then irreversibly purged only through reviewed UI. No publications/responses/files/exports/jobs/workers/provider sends/existing chapter or production changes. Remaining owned drafts archived, accounts disabled, sessions revoked. No proof/capability/body/key retained in report.",
+  "tests": [
+    {
+      "name": "deletion eligibility is concealed from ordinary/anonymous readers after at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "deletion retains original review/revision/key and clears proof after loss after at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "uncertain permanent deletion passes measured axe after at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "deletion reconciles accepted receipt or explicitly retries identical unexpired request with new proof after at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "one owned erasure/audit leaves only the expected tombstone after at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only accepted receipt remains minimal/current-authority bound after erasure after at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "owned purge queues no responses/mail and normal form route stays unavailable after at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "permanent deletion recovery has no unexpected writes/egress/errors/overflow after at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "deletion eligibility is concealed from ordinary/anonymous readers before at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "deletion retains original review/revision/key and clears proof after loss before at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "deletion reconciles accepted receipt or explicitly retries identical unexpired request with new proof before at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "one owned erasure/audit leaves only the expected tombstone before at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only accepted receipt remains minimal/current-authority bound after erasure before at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "owned purge queues no responses/mail and normal form route stays unavailable before at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "permanent deletion recovery has no unexpected writes/egress/errors/overflow before at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "deletion eligibility is concealed from ordinary/anonymous readers after at 375×812",
+      "passed": true
+    },
+    {
+      "name": "deletion retains original review/revision/key and clears proof after loss after at 375×812",
+      "passed": true
+    },
+    {
+      "name": "uncertain permanent deletion passes measured axe after at 375×812",
+      "passed": true
+    },
+    {
+      "name": "deletion reconciles accepted receipt or explicitly retries identical unexpired request with new proof after at 375×812",
+      "passed": true
+    },
+    {
+      "name": "one owned erasure/audit leaves only the expected tombstone after at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only accepted receipt remains minimal/current-authority bound after erasure after at 375×812",
+      "passed": true
+    },
+    {
+      "name": "owned purge queues no responses/mail and normal form route stays unavailable after at 375×812",
+      "passed": true
+    },
+    {
+      "name": "permanent deletion recovery has no unexpected writes/egress/errors/overflow after at 375×812",
+      "passed": true
+    },
+    {
+      "name": "deletion eligibility is concealed from ordinary/anonymous readers before at 375×812",
+      "passed": true
+    },
+    {
+      "name": "deletion retains original review/revision/key and clears proof after loss before at 375×812",
+      "passed": true
+    },
+    {
+      "name": "deletion reconciles accepted receipt or explicitly retries identical unexpired request with new proof before at 375×812",
+      "passed": true
+    },
+    {
+      "name": "one owned erasure/audit leaves only the expected tombstone before at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only accepted receipt remains minimal/current-authority bound after erasure before at 375×812",
+      "passed": true
+    },
+    {
+      "name": "owned purge queues no responses/mail and normal form route stays unavailable before at 375×812",
+      "passed": true
+    },
+    {
+      "name": "permanent deletion recovery has no unexpected writes/egress/errors/overflow before at 375×812",
+      "passed": true
+    }
+  ]
+}

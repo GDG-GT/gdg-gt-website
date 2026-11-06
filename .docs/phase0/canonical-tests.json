@@ -126,7 +126,9 @@
     "202611060122_form_saved_view_replay.sql",
     "202611060123_form_privacy_replay.sql",
     "202611060124_form_delivery_replay.sql",
-    "202611060125_form_collaborator_replay.sql"
+    "202611060125_form_collaborator_replay.sql",
+    "202611060126_form_deletion_replay.sql",
+    "202611060127_form_deletion_request_guards.sql"
   ],
   "tests": [
     {
@@ -634,6 +636,14 @@
       "passed": true
     },
     {
+      "name": "202611060126_form_deletion_replay.sql",
+      "passed": true
+    },
+    {
+      "name": "202611060127_form_deletion_request_guards.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -1019,6 +1029,10 @@
     },
     {
       "name": "125_form_collaborator_replay.sql",
+      "passed": true
+    },
+    {
+      "name": "126_form_deletion_replay.sql",
       "passed": true
     },
     {

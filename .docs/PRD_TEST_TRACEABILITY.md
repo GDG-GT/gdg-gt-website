@@ -89,3 +89,10 @@ collaborator grant mutation receipts, read-only accepted reconciliation, exact
 explicit retries, concurrent creation/removal and delete/recreate protection.
 Inspector exits protect uncertain work. See `FORM_COLLABORATOR_RECOVERY.md`.
 Private-link lifecycle and full manual/device/visual/hosted acceptance remain open.
+
+The permanent-deletion case now also maps original-session read-only receipt
+inspection after content erasure, short-lived snapshot/retention/hold gates,
+frozen identical explicit retries with fresh password proof, denied-state clearing
+and protected navigation. See `FORM_PERMANENT_DELETION_RECOVERY.md`. Private-link,
+integration/runtime and complete storage/manual/device/visual/hosted acceptance
+remain open.

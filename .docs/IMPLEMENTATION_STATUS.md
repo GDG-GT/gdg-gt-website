@@ -8,6 +8,45 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Permanent deletion original-outcome recovery — 2026-11-06
+
+- Migrations 126–127 add original-session read-only deletion receipt inspection
+  after content erasure, with current Super Admin authority, receipt expiry and
+  form/review/key binding. Unaccepted retries preserve the original five-minute
+  eligibility snapshot, retention/hold/reference gates and require fresh password
+  proof. Accepted mutation replays still require current proof and a mandatory
+  original request hash. The original atomic erasure/audit protections remain.
+- Eligibility reads now have retained snapshots, independent retry/loading,
+  current-role/form/session isolation and denial clearing. Offline clears proof
+  and requires explicit recheck. Frozen original intent, unknown-outcome pause,
+  identical explicit retry, second-loss recheck, dispatch-time expiry, protected
+  dialog/navigation and reviewed stopping prevent blind irreversible repetition.
+  Failed non-destructive review preparation requires fresh eligibility before a
+  new review; no erasure can be dispatched from an unknown capability request.
+- Both complete 127-migration SQL suites pass (228/229 checks), both 100-client
+  races and six isolated restore checks pass; both migrations applied locally.
+  All 48 focused route/client/schema cases pass. All 2,187 tests/191 files pass;
+  all 19 critical 90% branch gates pass. Global coverage remains below 70%:
+  69.62% lines, 69.32% branches, 67.93% statements and 60.64% functions. No test
+  timeout, quota or coverage threshold was relaxed.
+- Thirty actual API/DB/desktop-mobile checks pass. Four fresh fictional private
+  drafts were archived then purged via reviewed UI, one tombstone revision/audit
+  each. Other-session and ordinary-admin recovery is refused. Accepted loss reads
+  the original receipt; unaccepted loss retries original bytes/key with fresh
+  proof. Populated axe passes. Initial probe incorrectly used a different session
+  for an accepted receipt; expected 404 preserved, corrected probe passes. Zero
+  publications/responses/files/exports/jobs/workers/provider sends/existing chapter
+  or production changes. Owned remaining drafts archived/accounts disabled/sessions
+  revoked. No physical byte-erasure claim is made by empty-byte fixtures.
+- All 84 deletion/library production-browser cases and 30 final deletion cases
+  pass across six profiles, including capability-outage recheck. Mobile recovery
+  inspected; captures remain unapproved. Build/types/lint (zero errors/25 existing
+  warnings), byte budgets, secrets and traceability pass; catalog remains 159
+  unverified cases. See `FORM_PERMANENT_DELETION_RECOVERY.md`.
+- Private invitation/link lifecycle, first-party integration and respondent/runtime
+  recovery, global coverage and full storage/device/manual/visual/hosted acceptance
+  remain open. SSO/Google and Bevy/Engage remain deferred.
+
 ### Versioned collaborator grant outcome recovery — 2026-11-06
 
 - Migration 125 adds immutable grant generation IDs/monotonic revisions, complete
