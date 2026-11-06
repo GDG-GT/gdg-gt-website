@@ -50,3 +50,8 @@ The response-workspace case now maps independent private inventory, summary,
 saved-view and hold-status reads, including explicit denial/filter recovery.
 Response mutation/export/navigation and full device/manual/hosted acceptance
 remain open; see `FORM_RESPONSE_READ_RECOVERY.md`.
+
+The background-export case now maps current-session atomic creation/removal
+receipts, read-only reconciliation, frozen original retries and private inventory/
+download scope checks. Local recovery does not certify new physical storage,
+real-device or hosted acceptance; see `FORM_EXPORT_RECOVERY.md`.

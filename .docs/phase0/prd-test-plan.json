@@ -1839,11 +1839,16 @@
       "requirements": [
         "FORM-020"
       ],
-      "scope": "Safe version-aware CSV/XLSX/JSON and background export",
+      "scope": "Safe version-aware CSV/XLSX/JSON, atomic export intent receipts, private inventory and explicit bounded recovery",
       "automated": [
         "tests/server/form-exports.test.mjs",
+        "tests/server/form-export-replay.test.mjs",
         "database/tests/063_form_background_exports.sql",
-        "scripts/test-local-form-exports.mjs"
+        "database/tests/120_form_export_replay.sql",
+        "scripts/test-local-form-exports.mjs",
+        "scripts/test-local-form-export-recovery.mjs",
+        "tests/client/form-export-recovery.test.tsx",
+        "tests/browser/form-export-recovery.spec.ts"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"

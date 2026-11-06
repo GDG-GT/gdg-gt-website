@@ -1,0 +1,834 @@
+{
+  "generatedAt": "2026-11-06T07:03:29.985Z",
+  "completed": true,
+  "playwrightVersion": "1.64.1",
+  "platform": "darwin",
+  "arch": "arm64",
+  "stats": {
+    "startTime": "2026-11-06T06:58:22.673Z",
+    "duration": 161012.496,
+    "expected": 102,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "note": "Production-build browser checks with explicit local API fixtures, no database/credentials/provider sends. Screenshots are unapproved review candidates, not initial golden baselines or approved pixel comparisons. WebKit/mobile emulation does not certify Safari or real devices. Local execution does not certify the new CI job has run.",
+  "tests": [
+    {
+      "name": "export create recovers before-acceptance response loss with original intent",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export create recovers after-acceptance response loss with original intent",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export cancel recovers before-acceptance response loss with original intent",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export cancel recovers after-acceptance response loss with original intent",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ready export downloads expire before activation without opening a file",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export create recovers before-acceptance response loss with original intent",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export create recovers after-acceptance response loss with original intent",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export cancel recovers before-acceptance response loss with original intent",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export cancel recovers after-acceptance response loss with original intent",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ready export downloads expire before activation without opening a file",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export create recovers before-acceptance response loss with original intent",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export create recovers after-acceptance response loss with original intent",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export cancel recovers before-acceptance response loss with original intent",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export cancel recovers after-acceptance response loss with original intent",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ready export downloads expire before activation without opening a file",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export create recovers before-acceptance response loss with original intent",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export create recovers after-acceptance response loss with original intent",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export cancel recovers before-acceptance response loss with original intent",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export cancel recovers after-acceptance response loss with original intent",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ready export downloads expire before activation without opening a file",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export create recovers before-acceptance response loss with original intent",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export create recovers after-acceptance response loss with original intent",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export cancel recovers before-acceptance response loss with original intent",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export cancel recovers after-acceptance response loss with original intent",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ready export downloads expire before activation without opening a file",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export create recovers before-acceptance response loss with original intent",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export create recovers after-acceptance response loss with original intent",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export cancel recovers before-acceptance response loss with original intent",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "export cancel recovers after-acceptance response loss with original intent",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ready export downloads expire before activation without opening a file",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response attachment authorization handles expiry and denial",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response attachment authorization handles late response after close",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response attachment authorization handles expiry and denial",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response attachment authorization handles late response after close",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response attachment authorization handles expiry and denial",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response attachment authorization handles late response after close",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response attachment authorization handles expiry and denial",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response attachment authorization handles late response after close",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response attachment authorization handles expiry and denial",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response attachment authorization handles late response after close",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response attachment authorization handles expiry and denial",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response attachment authorization handles late response after close",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response history recovers list and selected answers independently",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response history recovers list and selected answers independently",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response history recovers list and selected answers independently",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response history recovers list and selected answers independently",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response history recovers list and selected answers independently",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "private response history recovers list and selected answers independently",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "response workspace retains independent private reads and clears denied access",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "response workspace retains independent private reads and clears denied access",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "response workspace retains independent private reads and clears denied access",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "response workspace retains independent private reads and clears denied access",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "response workspace retains independent private reads and clears denied access",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "response workspace retains independent private reads and clears denied access",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    }
+  ]
+}

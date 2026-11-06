@@ -1,0 +1,162 @@
+{
+  "generatedAt": "2026-11-06T06:56:54.069Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and desktop/mobile Chromium export intent recovery. Fresh fictional private draft forms with zero responses and no publication. Ten concurrent identical API creations/cancellations add one intended job with one audit per action. Each viewport creates and cancels two intended empty export jobs, covering before/after-acceptance loss, exact retries, one audit per action, retained inventory, denial clearing and measured axe. All other browser writes/external requests blocked, realtime paused. No export worker, file generation/download, provider send, existing chapter or production change. Owned jobs cancelled, forms archived/accounts disabled/sessions revoked; captures unapproved.",
+  "tests": [
+    {
+      "name": "ten concurrent identical export creations produce one owned job",
+      "passed": true
+    },
+    {
+      "name": "ten concurrent identical export removals preserve exactly one creation and cancellation audit",
+      "passed": true
+    },
+    {
+      "name": "private export inventory conceals owned form from unrelated and anonymous readers at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "export creation after-acceptance loss reconciles without replacement writes at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "creation after loss leaves exactly one intended zero-response job at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "export inventory outage retains matching jobs with actions paused at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated uncertain export removal passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "export removal after-acceptance loss reconciles without repeat cancellation at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "creation/removal after loss each has exactly one accepted audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "unaccepted export creation retries its identical original key/body at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "export creation before-acceptance loss reconciles without replacement writes at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "creation before loss leaves exactly one intended zero-response job at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "export inventory outage retains matching jobs with actions paused at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated uncertain export removal passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "unaccepted export removal retries its identical original key/body at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "export removal before-acceptance loss reconciles without repeat cancellation at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "creation/removal before loss each has exactly one accepted audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "export denial clears private inventory until explicit access recheck at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "export verification creates only two cancelled jobs, no publication, response or draft mutation at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "export recovery has no unexpected write, external request, script error or overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "private export inventory conceals owned form from unrelated and anonymous readers at 375×812",
+      "passed": true
+    },
+    {
+      "name": "export creation after-acceptance loss reconciles without replacement writes at 375×812",
+      "passed": true
+    },
+    {
+      "name": "creation after loss leaves exactly one intended zero-response job at 375×812",
+      "passed": true
+    },
+    {
+      "name": "export inventory outage retains matching jobs with actions paused at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated uncertain export removal passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "export removal after-acceptance loss reconciles without repeat cancellation at 375×812",
+      "passed": true
+    },
+    {
+      "name": "creation/removal after loss each has exactly one accepted audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "unaccepted export creation retries its identical original key/body at 375×812",
+      "passed": true
+    },
+    {
+      "name": "export creation before-acceptance loss reconciles without replacement writes at 375×812",
+      "passed": true
+    },
+    {
+      "name": "creation before loss leaves exactly one intended zero-response job at 375×812",
+      "passed": true
+    },
+    {
+      "name": "export inventory outage retains matching jobs with actions paused at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated uncertain export removal passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "unaccepted export removal retries its identical original key/body at 375×812",
+      "passed": true
+    },
+    {
+      "name": "export removal before-acceptance loss reconciles without repeat cancellation at 375×812",
+      "passed": true
+    },
+    {
+      "name": "creation/removal before loss each has exactly one accepted audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "export denial clears private inventory until explicit access recheck at 375×812",
+      "passed": true
+    },
+    {
+      "name": "export verification creates only two cancelled jobs, no publication, response or draft mutation at 375×812",
+      "passed": true
+    },
+    {
+      "name": "export recovery has no unexpected write, external request, script error or overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

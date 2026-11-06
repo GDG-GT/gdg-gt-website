@@ -8,6 +8,34 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Atomic background export recovery — 2026-11-06
+
+- Migration 120 adds current-session/action/target export receipts and read-only
+  reconciliation. Original intent, source permissions, minimal receipt content,
+  one creation/removal audit, 47-hour explicit retry, denied-state clearing and
+  reviewed abandonment protect uncertain changes. Private inventory retains
+  timestamped matching jobs on outages and pauses polling/actions. Scope/session/
+  offline changes cancel obsolete work; shared bounded download links require
+  explicit activation and preserve focus on background expiry.
+- Both 120-migration SQL suites pass (215/216 checks), both 100-client capacity
+  races and six restore checks pass; migration applied locally. All 164 focused
+  checks pass (33 new client, 26 new route cases). All 38 actual API/DB/desktop-
+  mobile checks pass, including ten concurrent identical creates/removals, both
+  response-loss positions and measured axe with one job/audit per action.
+  Three fictional private drafts/five empty export jobs; no publications,
+  responses, workers/files/provider sends or existing chapter/production change.
+  Jobs cancelled/forms archived/accounts disabled/sessions revoked.
+- Build/types/lint (zero errors/25 warnings), byte budgets, secrets/traceability
+  pass. All 102 export/response/shared-workspace production-browser checks pass
+  across six profiles; mobile recovery inspected, captures unapproved.
+- All 1,820 tests/178 files pass. Overall 70% coverage remains red: 67.17% lines,
+  66.87% branches, 65.47% statements and 58.47% functions. All 17 critical branch
+  gates pass; no timeout/threshold changed. Catalog stays 159 unverified cases.
+- Response availability/destructive/saved-view mutations, remaining proposal/
+  navigation, Forms access/settings/deletion/integrations/runtime and complete
+  quality/physical storage/device/manual/visual/hosted acceptance remain open.
+  See `FORM_EXPORT_RECOVERY.md`.
+
 ### Independent response-workspace reads — 2026-11-06
 
 - Responses, summary, saved views and holds have independent explicit retries,

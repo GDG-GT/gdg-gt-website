@@ -4,6 +4,7 @@ import { useAdmin } from "@/contexts/AdminContext";
 import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { Button } from "../primitives";
+import { authorizedPrivateDownload } from "./private-download";
 type Props = {
   formId: string;
   responseId: string;
@@ -16,41 +17,6 @@ type Download = {
   expiresAt: number;
   startedAt: number;
 };
-function authorizedLink(
-  result: { url: string; expiresIn: number },
-  startedAt: number,
-) {
-  let url: URL;
-  try {
-    url = new URL(result.url);
-  } catch {
-    throw Error(
-      "The private download link could not be verified. Authorize it again.",
-    );
-  }
-  if (
-    (url.protocol !== "https:" &&
-      !(
-        url.protocol === "http:" &&
-        ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)
-      )) ||
-    url.username ||
-    url.password ||
-    url.hash ||
-    !Number.isFinite(result.expiresIn) ||
-    result.expiresIn <= 0 ||
-    result.expiresIn > 60
-  )
-    throw Error(
-      "The private download link could not be verified. Authorize it again.",
-    );
-  const expiresAt = startedAt + Math.min(55, result.expiresIn) * 1000;
-  if (Date.now() < startedAt || Date.now() >= expiresAt)
-    throw Error(
-      "The download authorization expired before it arrived. Authorize it again.",
-    );
-  return { url: url.href, expiresAt, startedAt };
-}
 export default function ResponseFileLinks(props: Props) {
   const { currentAdmin } = useAdmin();
   if (!currentAdmin) return null;
@@ -133,7 +99,7 @@ function PrivateFiles({ formId, responseId, ids, canDownload = true }: Props) {
         { signal: controller.signal },
       );
       if (!current(controller)) return;
-      const download = authorizedLink(result, startedAt);
+      const download = authorizedPrivateDownload(result, startedAt);
       setLink({ id, ...download });
       setNotice(
         "Attachment authorized. Use its download link within one minute. Downloaded copies cannot be recalled.",

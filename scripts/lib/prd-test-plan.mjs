@@ -857,11 +857,12 @@ const forms = [
   ],
   [
     "FORM-020",
-    "Safe version-aware CSV/XLSX/JSON and background export",
+    "Safe version-aware CSV/XLSX/JSON, atomic export intent receipts, private inventory and explicit bounded recovery",
     [
-      unit("form-exports"),
-      sql("063_form_background_exports"),
-      local("form-exports"),
+      unit("form-exports"), unit("form-export-replay"),
+      sql("063_form_background_exports"), sql("120_form_export_replay"),
+      local("form-exports"), local("form-export-recovery"),
+      "tests/client/form-export-recovery.test.tsx", "tests/browser/form-export-recovery.spec.ts",
     ],
   ],
   [
