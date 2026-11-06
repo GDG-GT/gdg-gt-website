@@ -8,15 +8,15 @@ be inferred from local tests.
 
 ## Confirmed local work
 
-1. Community directory: `src/ui/members/MembersWorkspace.tsx` combines independent
-   capability, inventory and selected-record errors into one message. A successful
-   inventory refresh can hide a failed capability read; selected activity failure
-   silently removes the activity view. Refresh failure discards successful private
-   snapshots, and query/selection changes can temporarily display another context's
-   state. Add independent keyed/timestamped read recovery, explicit current access
-   recheck, offline/action fencing and account/session cancellation. Preserve CSV
-   import/export and reviewed merge/profile behavior. Verify both allowed and
-   denied paths before evaluating the native mutation recovery separately.
+1. Community directory: the parent independent inventory/permission/detail/activity
+   read findings are implemented and verified locally (`MEMBER_READ_RECOVERY.md`).
+   Remaining source-confirmed work: `MergeReview.tsx` filters only the first 30
+   general inventory results in the browser, so eligible same-scope targets can
+   be absent; its selected-target reads need independent recovery and current
+   denial handling. Ordinary member/merge original-outcome mutation recovery also
+   remains, and `server/members.mjs` limits create-destination teams to 100. Preserve
+   CSV import/export, source/target/revision/current proof/hold rules and private
+   profile behavior while completing these workflows.
 2. Contact inbox: `src/ui/communications/ContactInbox.tsx` disables its sole refresh
    button whenever a selected inquiry is present. A failed selected-detail read has
    no available retry. Refresh also unmounts detail editors and drops snapshots;

@@ -2,7 +2,10 @@ import ts from "typescript";
 import { readFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import path from "node:path";
-export async function clientImportGraph(root) {
+export async function clientImportGraph(
+  root,
+  { includeReferences = true } = {},
+) {
   root = path.resolve(root);
   const trackedFiles = execFileSync("git", ["ls-files", "-z"], {
       cwd: root,
@@ -116,13 +119,14 @@ export async function clientImportGraph(root) {
   for (const file of app) all.add(file);
   // Preserve anything referenced by scripts/tests or an existing untracked
   // source file. A user's untracked work is never a retirement candidate.
-  for (const file of [...tracked, ...untracked].filter(
-    (file) =>
-      !file.startsWith("src/") ||
-      /\.test\./.test(file) ||
-      untracked.includes(file),
-  ))
-    await visit(file, all);
+  if (includeReferences)
+    for (const file of [...tracked, ...untracked].filter(
+      (file) =>
+        !file.startsWith("src/") ||
+        /\.test\./.test(file) ||
+        untracked.includes(file),
+    ))
+      await visit(file, all);
   const relative = (set) =>
     [...set]
       .filter((file) => file.startsWith(path.join(root, "src") + path.sep))
@@ -131,12 +135,14 @@ export async function clientImportGraph(root) {
   return {
     app: relative(app),
     referenced: relative(all),
-    candidates: tracked.filter(
-      (file) =>
-        file.startsWith("src/") &&
-        !file.endsWith(".d.ts") &&
-        !all.has(path.resolve(root, file)),
-    ),
+    candidates: includeReferences
+      ? tracked.filter(
+          (file) =>
+            file.startsWith("src/") &&
+            !file.endsWith(".d.ts") &&
+            !all.has(path.resolve(root, file)),
+        )
+      : [],
     unresolved,
   };
 }

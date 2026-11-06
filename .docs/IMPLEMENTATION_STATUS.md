@@ -8,6 +8,43 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Community-directory parent private read recovery — 2026-11-06
+
+- Permissions, filtered inventory, selected member and activity now use separate
+  keyed requests, named loading/retry and dated retained snapshots. Inventory
+  success cannot mask a permissions failure. New filter/record/page contexts hide
+  prior data immediately and late replies are ignored. Malformed results have
+  a retry path; a failed later inventory page retains Previous members.
+- Dependent creation/management/transfers/editor saves and open merge controls
+  pause during unverified parent reads. Proposed fields survive transient outages;
+  a newer saved revision cannot silently replace them. Current 401/403/404 clears
+  private state and pauses polling until explicit access recheck. Offline and
+  reconnected states remain paused until rechecked. Account/role/session boundaries
+  clear child state and abort old reads. Existing CSV and merge proof rules remain.
+- All 57 focused parent/transfer/server cases pass (22 new parent cases). All 24
+  populated production-browser cases pass across six profiles with no skips;
+  measured axe/overflow pass, mobile capture inspected and unapproved. All 14
+  actual loopback desktop/mobile checks pass; failed/retried reads and declined
+  navigation leave owned saved rows unchanged. No native record writes, unexpected
+  egress/page errors/overflow; fixture records archived, actors disabled/sessions
+  revoked. Initial wrong-table-name fixture failure and completed cleanup retained.
+- Full coverage initially hit the unchanged 10-second architecture setup timeout:
+  its shared graph also visited test/script retirement references. Application-only
+  scanning now keeps both HTML roots and the identical shipped static/dynamic graph;
+  complete retirement analysis stays default and application mode returns no
+  retirement candidates. Three small-repository negative/default-boundary checks
+  plus the two shipped architecture checks pass. No timeout/gate was raised.
+- All 2,463 tests/202 files pass; all 21 critical 90% branch gates pass. Statements
+  now pass 70% at 70.59%; lines 72.19% and branches 72.08% also pass. Functions
+  remain below unchanged 70% at 63.58%. Build/types/lint (zero errors/25 existing
+  warnings), budgets/secrets/traceability pass. No SQL migration; applied chain 131.
+  Catalog remains 159 unverified logical cases. See `MEMBER_READ_RECOVERY.md`.
+- Next confirmed local work: complete merge candidate/destination inventories,
+  selected-target and member/merge mutation recovery, contact inbox and person-data
+  privacy workflows (`LOCAL_ACCEPTANCE_AUDIT.md`), then remaining global/manual/
+  device/visual/hosted acceptance. SSO/Google and Bevy/Engage remain deferred.
+
+
 ### Respondent submission/edit/draft original-outcome recovery — 2026-11-06
 
 - Migration 131 adds monotonic draft revisions, fixed client resume-token intent,

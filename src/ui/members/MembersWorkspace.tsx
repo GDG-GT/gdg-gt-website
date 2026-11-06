@@ -13,6 +13,10 @@ import {
   useDraftGuard,
   useNavigationSafety,
 } from "@/hooks/useDraftGuard";
+import { useAdmin } from "@/contexts/AdminContext";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import MemberReadFeedback from "./MemberReadFeedback";
 import { validationMessage } from "@/lib/validationMessage";
 import {
   communityMemberCreate,
@@ -33,14 +37,36 @@ import {
   type Mode,
 } from "./types";
 const base = "/admin/members";
+function checkedRead<T>(
+  read: ReturnType<typeof usePrivateRead<T>>,
+  valid: (value: T) => boolean,
+) {
+  return read.data !== undefined && !valid(read.data)
+    ? {
+        ...read,
+        data: undefined,
+        error: "The member data reply could not be verified. Retry this read.",
+      }
+    : read;
+}
 export default function MembersWorkspace() {
+  const { currentAdmin } = useAdmin(),
+    [sessionEpoch, setSessionEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setSessionEpoch((v) => v + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  return (
+    <MemberDirectory
+      key={JSON.stringify([currentAdmin?.id, currentAdmin?.role, sessionEpoch])}
+    />
+  );
+}
+function MemberDirectory() {
   const [params, setParams] = useApprovedSearchParams(),
     selected = params.get("member") || "",
     navigation = useNavigationSafety();
-  const [listing, setListing] = useState<Listing>(),
-    [member, setMember] = useState<Member>(),
-    [cap, setCap] = useState<Capabilities>(),
-    [activity, setActivity] = useState<Activity>();
   const [q, setQ] = useState(""),
     [state, setState] = useState("current"),
     [category, setCategory] = useState(""),
@@ -58,7 +84,12 @@ export default function MembersWorkspace() {
     [confirmation, setConfirmation] = useState("");
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
-    [loadError, setLoadError] = useState(""),
+    [accessDenied, setAccessDenied] = useState(false),
+    [needsRecheck, setNeedsRecheck] = useState(!navigator.onLine),
+    [capAttempt, setCapAttempt] = useState(0),
+    [listAttempt, setListAttempt] = useState(0),
+    [detailAttempt, setDetailAttempt] = useState(0),
+    [activityAttempt, setActivityAttempt] = useState(0),
     [notice, setNotice] = useState(""),
     [conflict, setConflict] = useState(false),
     [mergeDirty, setMergeDirty] = useState(false);
@@ -72,12 +103,111 @@ export default function MembersWorkspace() {
     epoch = useRef(0),
     heading = useRef<HTMLHeadingElement>(null),
     editorHeading = useRef<HTMLHeadingElement>(null);
+  const { isOnline } = useOnlineStatus();
+  const query = new URLSearchParams({
+    q,
+    state,
+    page: String(page),
+    ...(category ? { category } : {}),
+    ...(year ? { year } : {}),
+    ...(active ? { active } : {}),
+    ...(core ? { core } : {}),
+  });
+  const capRead = checkedRead(
+      usePrivateRead<Capabilities>(
+        accessDenied ? undefined : base + "/capabilities",
+        tick + capAttempt,
+      ),
+      (v) =>
+        !!v &&
+        typeof v.globalCreate === "boolean" &&
+        typeof v.merge === "boolean" &&
+        Array.isArray(v.teams) &&
+        v.teams.every(
+          (team) =>
+            typeof team.id === "string" && typeof team.name === "string",
+        ),
+    ),
+    listRead = checkedRead(
+      usePrivateRead<Listing>(
+        accessDenied ? undefined : base + "?" + query,
+        tick + listAttempt,
+      ),
+      (v) =>
+        !!v &&
+        Array.isArray(v.items) &&
+        v.items.every(
+          (item) =>
+            !!item &&
+            typeof item.id === "string" &&
+            typeof item.name === "string" &&
+            typeof item.email === "string" &&
+            Array.isArray(item.actions),
+        ) &&
+        Number.isInteger(v.total) &&
+        v.total >= 0 &&
+        v.pageSize > 0 &&
+        !!v.stats &&
+        typeof v.stats.active === "number" &&
+        typeof v.stats.core === "number",
+    ),
+    detailRead = checkedRead(
+      usePrivateRead<{ member: Member }>(
+        !accessDenied && selected ? base + "/" + selected : undefined,
+        tick + detailAttempt,
+      ),
+      (v) =>
+        !!v?.member &&
+        v.member.id === selected &&
+        typeof v.member.name === "string" &&
+        Array.isArray(v.member.actions) &&
+        Array.isArray(v.member.interests) &&
+        Number.isInteger(v.member.revision),
+    ),
+    activityRead = checkedRead(
+      usePrivateRead<Activity>(
+        !accessDenied && selected
+          ? base + "/" + selected + "/activity?page=" + activityPage
+          : undefined,
+        tick + activityAttempt,
+      ),
+      (v) =>
+        !!v &&
+        v.pageSize > 0 &&
+        Array.isArray(v.items) &&
+        v.items.every(
+          (item) =>
+            !!item &&
+            typeof item.id === "string" &&
+            typeof item.action === "string" &&
+            typeof item.created_at === "string",
+        ),
+    );
+  const cap = capRead.data,
+    listing = listRead.data,
+    member = detailRead.data?.member,
+    activity = activityRead.data;
+  const unavailable =
+    accessDenied ||
+    !isOnline ||
+    needsRecheck ||
+    capRead.loading ||
+    !!capRead.error ||
+    !cap ||
+    listRead.loading ||
+    !!listRead.error ||
+    !listing ||
+    (!!selected && (detailRead.loading || !!detailRead.error || !member));
+  const clearCap = capRead.clear,
+    clearList = listRead.clear,
+    clearDetail = detailRead.clear,
+    clearActivity = activityRead.clear;
   const clearPrivate = useCallback(() => {
     epoch.current++;
-    setListing(undefined);
-    setMember(undefined);
-    setCap(undefined);
-    setActivity(undefined);
+    clearList();
+    clearDetail();
+    clearCap();
+    clearActivity();
     setMode(null);
     setValues(memberFields());
     setInterests("");
@@ -91,7 +221,7 @@ export default function MembersWorkspace() {
     baseline.current = undefined;
     snapshot.current = undefined;
     key.current = undefined;
-  }, []);
+  }, [clearCap, clearList, clearDetail, clearActivity]);
   const dirty =
     mode === "create" || mode === "update"
       ? JSON.stringify({ values, interests, team }) !== baseline.current
@@ -100,100 +230,53 @@ export default function MembersWorkspace() {
         : !!mode && !!(password || confirmation);
   useDraftGuard(dirty, { busy, label: "Private community member changes" });
   useEffect(() => {
-    const timer = window.setInterval(() => setTick((v) => v + 1), 30000);
-    window.addEventListener("gdg:session-cleared", clearPrivate);
+    if (
+      !(
+        capRead.denied ||
+        listRead.denied ||
+        detailRead.denied ||
+        activityRead.denied
+      )
+    )
+      return;
+    clearPrivate();
+    setAccessDenied(true);
+  }, [
+    capRead.denied,
+    listRead.denied,
+    detailRead.denied,
+    activityRead.denied,
+    clearPrivate,
+  ]);
+  useEffect(() => {
+    if (!isOnline) setNeedsRecheck(true);
+  }, [isOnline]);
+  useEffect(() => {
     const invalidate = () => {
       epoch.current++;
     };
+    return invalidate;
+  }, []);
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      if (
+        navigator.onLine &&
+        !document.hidden &&
+        !accessDenied &&
+        !needsRecheck
+      )
+        setTick((v) => v + 1);
+    }, 30000);
     return () => {
-      invalidate();
       window.clearInterval(timer);
-      window.removeEventListener("gdg:session-cleared", clearPrivate);
     };
-  }, [clearPrivate]);
-  useEffect(() => {
-    const c = new AbortController(),
-      readEpoch = epoch.current;
-    api<Capabilities>(base + "/capabilities", { signal: c.signal })
-      .then((v) => {
-        if (!c.signal.aborted && epoch.current === readEpoch) setCap(v);
-      })
-      .catch((e) => {
-        if (!c.signal.aborted && epoch.current === readEpoch) {
-          setCap(undefined);
-          setLoadError(e.message);
-        }
-      });
-    return () => c.abort();
-  }, [tick]);
-  useEffect(() => {
-    const c = new AbortController(),
-      readEpoch = epoch.current,
-      query = new URLSearchParams({
-        q,
-        state,
-        page: String(page),
-        ...(category ? { category } : {}),
-        ...(year ? { year } : {}),
-        ...(active ? { active } : {}),
-        ...(core ? { core } : {}),
-      });
-    api<Listing>(base + "?" + query, { signal: c.signal })
-      .then((v) => {
-        if (!c.signal.aborted && epoch.current === readEpoch) {
-          setListing(v);
-          setLoadError("");
-        }
-      })
-      .catch((e) => {
-        if (!c.signal.aborted && epoch.current === readEpoch) {
-          setListing(undefined);
-          setLoadError(e.message);
-        }
-      });
-    return () => c.abort();
-  }, [q, state, page, category, year, active, core, tick]);
-  useEffect(() => {
-    if (!selected) {
-      setMember(undefined);
-      setActivity(undefined);
-      return;
-    }
-    const c = new AbortController(),
-      readEpoch = epoch.current;
-    api<{ member: Member }>(base + "/" + selected, { signal: c.signal })
-      .then((v) => {
-        if (!c.signal.aborted && epoch.current === readEpoch)
-          setMember(v.member);
-      })
-      .catch((e) => {
-        if (!c.signal.aborted && epoch.current === readEpoch) {
-          if (e instanceof ApiFailure && [403, 404].includes(e.status))
-            clearPrivate();
-          else setMember(undefined);
-          setLoadError(
-            "This member is unavailable. Close the selection to browse current records.",
-          );
-        }
-      });
-    return () => c.abort();
-  }, [selected, tick, clearPrivate]);
-  useEffect(() => {
-    if (!selected) return;
-    const c = new AbortController(),
-      readEpoch = epoch.current;
-    api<Activity>(base + "/" + selected + "/activity?page=" + activityPage, {
-      signal: c.signal,
-    })
-      .then((v) => {
-        if (!c.signal.aborted && epoch.current === readEpoch) setActivity(v);
-      })
-      .catch(() => {
-        if (!c.signal.aborted && epoch.current === readEpoch)
-          setActivity(undefined);
-      });
-    return () => c.abort();
-  }, [selected, activityPage, tick]);
+  }, [accessDenied, needsRecheck]);
+  const recheck = () => {
+    if (!navigator.onLine || busy) return;
+    setAccessDenied(false);
+    setNeedsRecheck(false);
+    setTick((v) => v + 1);
+  };
   useEffect(() => {
     if (mode) editorHeading.current?.focus();
     else heading.current?.focus();
@@ -218,8 +301,8 @@ export default function MembersWorkspace() {
   };
   const choose = (id: string) =>
     leave(() => {
-      setMember(undefined);
-      setActivity(undefined);
+      clearDetail();
+      clearActivity();
       setActivityPage(1);
       setParams(id ? { member: id } : {});
     });
@@ -276,15 +359,23 @@ export default function MembersWorkspace() {
   function finished(id: string, message: string) {
     setBusy(false);
     reset();
-    setMember(undefined);
-    setActivity(undefined);
+    clearDetail();
+    clearActivity();
     setParams({ member: id });
     setTick((v) => v + 1);
     setNotice(message);
   }
   async function save(e: FormEvent) {
     e.preventDefault();
-    if (!mode || mode === "merge" || busy || stale || denied || conflict)
+    if (
+      !mode ||
+      mode === "merge" ||
+      busy ||
+      unavailable ||
+      stale ||
+      denied ||
+      conflict
+    )
       return;
     const current = epoch.current,
       secret = password;
@@ -350,9 +441,7 @@ export default function MembersWorkspace() {
           ["FORBIDDEN", "NOT_FOUND"].includes(e.code)
         ) {
           clearPrivate();
-          setLoadError(
-            "This action or record is no longer available. Close the selection to browse current records.",
-          );
+          setAccessDenied(true);
           return;
         }
         if (e instanceof ApiFailure && e.code === "CONFLICT") setConflict(true);
@@ -377,20 +466,28 @@ export default function MembersWorkspace() {
         <div className="gt-button-row">
           <Button
             disabled={
-              busy || !!mode || !cap || (!cap.globalCreate && !cap.teams.length)
+              busy ||
+              unavailable ||
+              !!mode ||
+              !cap ||
+              (!cap.globalCreate && !cap.teams.length)
             }
             onClick={() => edit("create")}
           >
             New member
           </Button>
-          <Button variant="secondary" onClick={() => setTick((v) => v + 1)}>
-            Refresh members
+          <Button
+            variant="secondary"
+            disabled={busy || !isOnline}
+            onClick={recheck}
+          >
+            Recheck member access
           </Button>
         </div>
       </header>
       <MemberTransfers
         cap={cap}
-        disabled={busy || !!mode}
+        disabled={busy || unavailable || !!mode}
         onImported={() => setTick((v) => v + 1)}
         filters={{
           q,
@@ -407,10 +504,55 @@ export default function MembersWorkspace() {
           {error}
         </p>
       )}
-      {loadError && (
-        <p className="gt-form-error" role="alert">
-          {loadError}
-        </p>
+      {accessDenied ? (
+        <div role="alert" className="gt-form-error">
+          <p>
+            Community member access could not be verified. Private records and
+            edits have been cleared. Recheck current access to continue.
+          </p>
+        </div>
+      ) : (
+        <>
+          {(!isOnline || needsRecheck) && (
+            <p role="status">
+              Member actions are paused.{" "}
+              {!isOnline ? "You’re offline." : "Connection restored."} Recheck
+              member access before continuing.
+            </p>
+          )}
+          <MemberReadFeedback
+            name="member permissions"
+            read={capRead}
+            offline={!isOnline}
+            retry={() => setCapAttempt((v) => v + 1)}
+            disabled={busy || !isOnline || needsRecheck}
+          />
+          <MemberReadFeedback
+            name="member inventory"
+            read={listRead}
+            offline={!isOnline}
+            retry={() => setListAttempt((v) => v + 1)}
+            disabled={busy || !isOnline || needsRecheck}
+          />
+          {selected && (
+            <>
+              <MemberReadFeedback
+                name="selected member"
+                read={detailRead}
+                offline={!isOnline}
+                retry={() => setDetailAttempt((v) => v + 1)}
+                disabled={busy || !isOnline || needsRecheck}
+              />
+              <MemberReadFeedback
+                name="member activity"
+                read={activityRead}
+                offline={!isOnline}
+                retry={() => setActivityAttempt((v) => v + 1)}
+                disabled={busy || !isOnline || needsRecheck}
+              />
+            </>
+          )}
+        </>
       )}
       {mode && mode !== "merge" && (
         <form className="gt-panel gt-event-editor" onSubmit={save}>
@@ -433,7 +575,10 @@ export default function MembersWorkspace() {
               reload before saving.
             </p>
           )}
-          <fieldset className="gt-plain-fieldset" disabled={busy}>
+          <fieldset
+            className="gt-plain-fieldset"
+            disabled={busy || unavailable}
+          >
             {mode === "create" || mode === "update" ? (
               <MemberFields
                 values={values}
@@ -481,7 +626,7 @@ export default function MembersWorkspace() {
           <div className="gt-button-row">
             <Button
               type="submit"
-              disabled={busy || stale || denied || conflict}
+              disabled={busy || unavailable || stale || denied || conflict}
             >
               Save member changes
             </Button>
@@ -510,6 +655,7 @@ export default function MembersWorkspace() {
       {mode === "merge" && member && !denied && cap?.merge && (
         <MergeReview
           source={member}
+          disabled={unavailable}
           tick={tick}
           onBusy={setBusy}
           onDirty={setMergeDirty}
@@ -649,7 +795,8 @@ export default function MembersWorkspace() {
                     <td>
                       <Button
                         variant="secondary"
-                        disabled={busy || m.id === selected}
+                        aria-label={"Manage " + m.name}
+                        disabled={busy || unavailable || m.id === selected}
                         onClick={() => choose(m.id)}
                       >
                         Manage<span className="sr-only"> {m.name}</span>
@@ -668,7 +815,7 @@ export default function MembersWorkspace() {
           <nav aria-label="Community member pages" className="gt-button-row">
             <Button
               variant="secondary"
-              disabled={page <= 1}
+              disabled={busy || !isOnline || listRead.loading || page <= 1}
               onClick={() => setPage((v) => v - 1)}
             >
               Previous members
@@ -676,13 +823,27 @@ export default function MembersWorkspace() {
             <span>Page {page}</span>
             <Button
               variant="secondary"
-              disabled={page * listing.pageSize >= listing.total}
+              disabled={
+                busy ||
+                !isOnline ||
+                listRead.loading ||
+                page * listing.pageSize >= listing.total
+              }
               onClick={() => setPage((v) => v + 1)}
             >
               Next members
             </Button>
           </nav>
         </>
+      )}
+      {!listing && page > 1 && (
+        <Button
+          variant="secondary"
+          disabled={busy || !isOnline || listRead.loading}
+          onClick={() => setPage((v) => Math.max(1, v - 1))}
+        >
+          Previous members
+        </Button>
       )}
       {selected && !member && !mode && (
         <Button variant="secondary" onClick={() => choose("")}>
@@ -752,16 +913,23 @@ export default function MembersWorkspace() {
           </p>
           <div className="gt-button-row">
             {!member.deleted_at && member.actions.includes("update") && (
-              <Button onClick={() => edit("update")}>Edit member</Button>
+              <Button disabled={unavailable} onClick={() => edit("update")}>
+                Edit member
+              </Button>
             )}
             {member.canSyncProfile && (
-              <Button variant="secondary" onClick={() => edit("sync_profile")}>
+              <Button
+                variant="secondary"
+                disabled={unavailable}
+                onClick={() => edit("sync_profile")}
+              >
                 Sync draft public profile
               </Button>
             )}
             {!member.merged_into_id && member.actions.includes("delete") && (
               <Button
                 variant="secondary"
+                disabled={unavailable}
                 onClick={() => edit(member.deleted_at ? "restore" : "archive")}
               >
                 {member.deleted_at
@@ -770,14 +938,22 @@ export default function MembersWorkspace() {
               </Button>
             )}
             {member.merged_into_id && member.actions.includes("merge") && (
-              <Button variant="secondary" onClick={() => edit("unmerge")}>
+              <Button
+                variant="secondary"
+                disabled={unavailable}
+                onClick={() => edit("unmerge")}
+              >
                 Unmerge to inactive record
               </Button>
             )}
             {!member.merged_into_id &&
               member.actions.includes("merge") &&
               cap?.merge && (
-                <Button variant="secondary" onClick={() => edit("merge")}>
+                <Button
+                  variant="secondary"
+                  disabled={unavailable}
+                  onClick={() => edit("merge")}
+                >
                   Review duplicate merge
                 </Button>
               )}
@@ -805,7 +981,12 @@ export default function MembersWorkspace() {
               <nav aria-label="Member activity pages" className="gt-button-row">
                 <Button
                   variant="secondary"
-                  disabled={activityPage <= 1}
+                  disabled={
+                    busy ||
+                    !isOnline ||
+                    activityRead.loading ||
+                    activityPage <= 1
+                  }
                   onClick={() => setActivityPage((v) => v - 1)}
                 >
                   Previous activity
@@ -813,7 +994,12 @@ export default function MembersWorkspace() {
                 <span>Page {activityPage}</span>
                 <Button
                   variant="secondary"
-                  disabled={activity.items.length < activity.pageSize}
+                  disabled={
+                    busy ||
+                    !isOnline ||
+                    activityRead.loading ||
+                    activity.items.length < activity.pageSize
+                  }
                   onClick={() => setActivityPage((v) => v + 1)}
                 >
                   Next activity

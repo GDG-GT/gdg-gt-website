@@ -130,3 +130,9 @@ reviewed reload, anonymous-bootstrap/session distinction and guarded same-form
 private-fragment replacement. See `RESPONDENT_WRITE_RECOVERY.md`; local evidence
 does not approve remaining directory/inbox/privacy recovery or full manual/
 device/visual/hosted acceptance.
+
+The private directory case now also maps independent member permission/inventory/
+selected-record/activity recovery, current-denial clearing, keyed late-response
+fences, retained proposals, offline explicit recheck and real local read-only
+verification. See `MEMBER_READ_RECOVERY.md`; complete merge/write, destination
+inventory, role/device/manual/visual/hosted acceptance remains open.

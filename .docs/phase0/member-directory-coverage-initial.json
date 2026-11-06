@@ -1,0 +1,21 @@
+{
+  "completed": false,
+  "testFiles": {
+    "passed": 200,
+    "failed": 1
+  },
+  "tests": {
+    "passed": 2458,
+    "skipped": 2,
+    "failed": 0
+  },
+  "failure": "client-architecture beforeAll complete retirement-reference scan timed out at unchanged 10000ms. Application dependency security checks did not execute. Separate application-only graph preserves both HTML entries/static/dynamic imports; complete retirement mode remains default. No timeout or coverage threshold raised.",
+  "coverage": {
+    "statements": 70.59,
+    "branches": 72.08,
+    "functions": 63.58,
+    "lines": 72.19
+  },
+  "globalPassed": false,
+  "criticalBranchGatesPassed": 21
+}

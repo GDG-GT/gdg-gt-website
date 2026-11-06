@@ -21,7 +21,7 @@ add(
   "SEC-TEST-030",
   "",
   "Browser database isolation and separate HTML entry preservation",
-  ["tests/client-architecture.test.mjs", "tests/phase0-inventory.test.mjs"],
+  ["tests/client-architecture.test.mjs", "tests/client-import-graph.test.mjs", "tests/phase0-inventory.test.mjs"],
   ["Hosted source and runtime network inspection"],
 );
 prdTestCases.at(-1).normative = ["26.1", "30", "32"];
@@ -370,7 +370,8 @@ const teams = [
   [
     "TEAM-001",
     "Public profiles versus private directory/accounts",
-    [unit("members"), sql("058_community_members"), unit("public-collections")],
+    [unit("members"), sql("058_community_members"), unit("public-collections"),
+      "tests/client/member-directory-read-recovery.test.tsx", "tests/browser/member-directory-reads.spec.ts", local("member-read-recovery")],
   ],
   [
     "TEAM-002",

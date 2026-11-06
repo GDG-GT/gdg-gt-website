@@ -15,6 +15,7 @@ export default function MergeReview({
   onClose,
   onBusy,
   onDirty,
+  disabled = false,
 }: {
   source: Member;
   tick: number;
@@ -22,6 +23,7 @@ export default function MergeReview({
   onClose: () => void;
   onBusy: (v: boolean) => void;
   onDirty: (v: boolean) => void;
+  disabled?: boolean;
 }) {
   const [q, setQ] = useState(""),
     [candidates, setCandidates] = useState<MemberSummary[]>([]),
@@ -144,7 +146,7 @@ export default function MergeReview({
     return key.current.value;
   }
   async function preview() {
-    if (busy || mismatch) return;
+    if (busy || disabled || mismatch) return;
     const current = epoch.current;
     setBusy(true);
     onBusy(true);
@@ -186,7 +188,7 @@ export default function MergeReview({
   }
   async function commit(e: FormEvent) {
     e.preventDefault();
-    if (busy || stale || !review) return;
+    if (busy || disabled || stale || !review) return;
     const current = epoch.current,
       secret = password;
     setPassword("");
@@ -252,7 +254,7 @@ export default function MergeReview({
           {error}
         </p>
       )}
-      <fieldset disabled={busy} className="gt-plain-fieldset">
+      <fieldset disabled={busy || disabled} className="gt-plain-fieldset">
         <SearchBox
           value={q}
           onChange={(v) => {
@@ -365,7 +367,7 @@ export default function MergeReview({
           <p>
             Review expires {new Date(review.expiresAt).toLocaleTimeString()}.
           </p>
-          <fieldset disabled={busy} className="gt-plain-fieldset">
+          <fieldset disabled={busy || disabled} className="gt-plain-fieldset">
             <Field
               label="Source reference"
               hint={review.source.reference}
@@ -400,7 +402,7 @@ export default function MergeReview({
               />
             </Field>
           </fieldset>
-          <Button type="submit" disabled={busy || stale}>
+          <Button type="submit" disabled={busy || disabled || stale}>
             Confirm retained merge
           </Button>
         </form>

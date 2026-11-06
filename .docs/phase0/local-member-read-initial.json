@@ -1,0 +1,8 @@
+{
+  "generatedAt": "2026-11-06T13:37:15.675Z",
+  "completed": false,
+  "cleanup": true,
+  "scope": "Loopback fictional owned private records/accounts only. Native read outages/retries/proposal/navigation and measured axe at desktop/mobile. No native directory mutations or provider sends. Fixture records archived, accounts disabled and sessions revoked; retained audit/private records are not claimed physically erased. No raw contacts, keys, credentials or proposal bodies in evidence.",
+  "tests": [],
+  "failureNote": "Initial fixture snapshot used a nonexistent community_members table; no browser assertions ran. Actual table is members. Owned record/account cleanup completed before correcting the fixture."
+}

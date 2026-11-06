@@ -1,0 +1,64 @@
+{
+  "generatedAt": "2026-11-06T13:37:56.711Z",
+  "completed": true,
+  "cleanup": true,
+  "scope": "Loopback fictional owned private records/accounts only. Native read outages/retries/proposal/navigation and measured axe at desktop/mobile. No native directory mutations or provider sends. Fixture records archived, accounts disabled and sessions revoked; retained audit/private records are not claimed physically erased. No raw contacts, keys, credentials or proposal bodies in evidence.",
+  "tests": [
+    {
+      "name": "independent permissions outage preserves current private record without writes at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "background detail outage preserves dated snapshot and local proposal only at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "current selected retry restores save availability without changing the proposed or saved record at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated retained member editor passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "declined member navigation retains the proposal without saving at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "independent activity retry neither changes records nor reopens the discarded editor at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "member read recovery has no writes external egress errors or overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "independent permissions outage preserves current private record without writes at 375×812",
+      "passed": true
+    },
+    {
+      "name": "background detail outage preserves dated snapshot and local proposal only at 375×812",
+      "passed": true
+    },
+    {
+      "name": "current selected retry restores save availability without changing the proposed or saved record at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated retained member editor passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "declined member navigation retains the proposal without saving at 375×812",
+      "passed": true
+    },
+    {
+      "name": "independent activity retry neither changes records nor reopens the discarded editor at 375×812",
+      "passed": true
+    },
+    {
+      "name": "member read recovery has no writes external egress errors or overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

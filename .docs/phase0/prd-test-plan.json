@@ -9,6 +9,7 @@
       "scope": "Browser database isolation and separate HTML entry preservation",
       "automated": [
         "tests/client-architecture.test.mjs",
+        "tests/client-import-graph.test.mjs",
         "tests/phase0-inventory.test.mjs"
       ],
       "remaining": [
@@ -925,7 +926,10 @@
       "automated": [
         "tests/server/members.test.mjs",
         "database/tests/058_community_members.sql",
-        "tests/server/public-collections.test.mjs"
+        "tests/server/public-collections.test.mjs",
+        "tests/client/member-directory-read-recovery.test.tsx",
+        "tests/browser/member-directory-reads.spec.ts",
+        "scripts/test-local-member-read-recovery.mjs"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"

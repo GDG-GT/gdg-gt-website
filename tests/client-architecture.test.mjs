@@ -7,7 +7,10 @@ import { clientImportGraph } from "../scripts/lib/client-import-graph.mjs";
 const root = fileURLToPath(new URL("../", import.meta.url));
 let graph;
 beforeAll(async () => {
-  graph = await clientImportGraph(root);
+  // Security checks cover every shipped HTML root and reachable static/dynamic
+  // dependency. Test/script-only references belong to the retirement audit;
+  // scanning those here duplicates unrelated work under coverage contention.
+  graph = await clientImportGraph(root, { includeReferences: false });
 });
 
 describe("shipped browser architecture", () => {
@@ -44,7 +47,8 @@ describe("shipped browser architecture", () => {
           ts.isPropertyAccessExpression(node.expression)
         ) {
           const name = node.expression.name.text;
-          const standardArray = ts.isIdentifier(node.expression.expression) &&
+          const standardArray =
+            ts.isIdentifier(node.expression.expression) &&
             ["Array", "Uint8Array"].includes(node.expression.expression.text);
           if (name === "rpc" || (name === "from" && !standardArray))
             violations.push({ file, call: name });
