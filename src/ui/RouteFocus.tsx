@@ -23,12 +23,30 @@ export default function RouteFocus() {
   useEffect(() => {
     if (previous.current === context) return;
     previous.current = context;
-    const target = document.getElementById(
+    const id =
       pathname.startsWith("/admin") && !pathname.startsWith("/admin/invite/")
         ? "workspace-content"
-        : "main-content",
-    );
-    target?.focus({ preventScroll: true });
+        : "main-content";
+    const target = document.getElementById(id);
+    if (target) {
+      target.focus({ preventScroll: true });
+      return;
+    }
+    // A route-lazy shell may not have mounted its landmark yet. Wait for that
+    // mount, but let a visitor's intervening focus choice take precedence.
+    const observer = new MutationObserver(() => {
+      const ready = document.getElementById(id);
+      if (!ready) return;
+      stop();
+      ready.focus({ preventScroll: true });
+    });
+    function stop() {
+      observer.disconnect();
+      document.removeEventListener("focusin", stop);
+    }
+    observer.observe(document.body, { childList: true, subtree: true });
+    document.addEventListener("focusin", stop);
+    return stop;
   }, [context, pathname]);
   return null;
 }

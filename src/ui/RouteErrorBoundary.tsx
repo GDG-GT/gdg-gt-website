@@ -15,8 +15,8 @@ export default class RouteErrorBoundary extends Component<
           <p className="gt-eyebrow">Something went wrong</p>
           <h1>This page couldn’t load.</h1>
           <p>
-            Your saved data hasn’t been changed. Reload to try again, or return
-            to the home page.
+            Reload to try again, or return to the home page. If a save was
+            interrupted, check its outcome before submitting again.
           </p>
           <div className="gt-inline-actions">
             <button

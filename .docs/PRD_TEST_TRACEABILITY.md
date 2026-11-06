@@ -1,6 +1,6 @@
 # Numbered PRD test mapping
 
-All 146 explicit v1.5 requirements now map into 160 logical acceptance cases in
+All 146 explicit v1.5 requirements now map into 307 logical acceptance cases in
 `phase0/prd-test-plan.json`. Each case identifies its concrete executable source
 suites, applicable manual/hosted work and an unverified acceptance state. Cases
 may cover several related requirements; this is not a count of tests executed or
@@ -17,9 +17,15 @@ All 146 remain `unverified` against the full acceptance definition, even when
 their automated local suites pass. Device installation, manual accessibility,
 provider delivery and staging/visual approval are explicitly still open. The
 optional `--release` check refuses a release while any requirement is unverified.
-The catalog also includes the normative isolated backup/restore case. The
-remaining unused IDs in the mandatory ranges and normative test groups must
-also be completed before phase/launch sign-off.
+The catalog includes every ID in all 14 mandatory ranges, including 22 visual
+groups and explicitly manual/hosted cases. The checker rejects a missing
+mandatory ID even if all 146 feature bullets still map successfully. References
+are reviewed by domain in `scripts/lib/prd-normative-cases.mjs`; listing a suite
+does not assert that it alone completes a logical case. Seven cases deliberately
+have no automated source: real installation, installed push, actual zoom, screen
+readers, Safari/devices, forced colors and rollout observation. Hosted headers
+have a separate local HTTPS/CSP probe; actual hosting still requires verification.
+Those require their stated manual/hosted evidence before phase/launch sign-off.
 
 Three Forms rows retain the original PRD wording plus Tejas's overriding decision:
 no anonymous forms, declared name/email now, SSO/Google deferred, and optional

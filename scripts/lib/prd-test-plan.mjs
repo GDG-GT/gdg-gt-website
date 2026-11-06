@@ -1,5 +1,6 @@
 // Reviewed logical acceptance cases. File references identify executable suites,
 // not a claim that every assertion, manual review or hosted gate has passed.
+import { normativeCases } from "./prd-normative-cases.mjs";
 export const prdTestCases = [];
 const add = (id, requirements, scope, automated, remaining = []) =>
   prdTestCases.push({
@@ -17,6 +18,61 @@ const unit = (name) => `tests/server/${name}.test.mjs`;
 const sql = (name) => `database/tests/${name}.sql`;
 const local = (name) =>
   `scripts/test-local-${["form-presentation", "form-navigation"].includes(name) ? "form-images" : name}.mjs`;
+for (const row of normativeCases) {
+  add(row.id, "", row.scope, row.automated, row.remaining);
+  prdTestCases.at(-1).normative = row.normative;
+}
+// Populated composition captures are evidence for review, never approval or
+// pixel baselines. Secondary dialogs/panels require their own acceptance.
+for (const [index, title] of [
+  "Homepage",
+  "Hero and shared navigation",
+  "Chapter statistics",
+  "Upcoming events",
+  "Footer",
+  "Events listing",
+  "Event detail",
+  "Public team",
+  "Resources",
+  "Sponsors",
+  "Gallery",
+  "Contact",
+  "Admin overview",
+  "Admin events",
+  "Teams and collaboration",
+  "Finances",
+  "Communications and newsletter",
+  "Content and media",
+  "Forms library",
+  "Form builder",
+  "Public form",
+  "Form responses",
+].entries()) {
+  add(
+    "VIS-TEST-" + String(index + 1).padStart(3, "0"),
+    "",
+    title + " populated composition review candidates",
+    [
+      index < 12
+        ? "tests/browser/public-compositions.spec.ts"
+        : [15, 16, 17].includes(index)
+          ? "tests/browser/operations-compositions.spec.ts"
+          : "tests/browser/workspace-compositions.spec.ts",
+      "scripts/summarize-visual-review.mjs",
+    ],
+    [
+      "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+    ],
+  );
+  prdTestCases.at(-1).normative = ["10.9", "16.5", "31.2"];
+}
+add(
+  "A11Y-TEST-011", "",
+  "Progressive public homepage availability with native inert controls, live/maintenance redirects, route-lazy landmark focus and footer sign-in entry",
+  ["tests/client/site-availability-loading.test.tsx", "tests/client/route-focus.test.tsx", "tests/browser/lazy-shell-focus.spec.ts"],
+  ["Manual assistive technology, actual supported devices and complete public/private navigation acceptance"],
+);
+prdTestCases.at(-1).normative = ["22.1", "22.2", "23", "28.3", "31.2"];
 add(
   "SEC-TEST-030",
   "",
@@ -1041,7 +1097,7 @@ add(
   "CONTENT-TEST-009",
   "STATUS-001 STATUS-002 STATUS-003",
   "Authorized maintenance, escape paths, health and safe redirects",
-  [unit("site-status"), sql("057_site_status_control"), local("site-status")],
+  [unit("site-status"), unit("public-site-status"), sql("057_site_status_control"), local("site-status")],
   ["Actual offline/device maintenance behavior"],
 );
 add(
@@ -1543,6 +1599,8 @@ add(
   [
     "tests/client/scrollable-table.test.tsx",
     "tests/browser/workspace-smoke.spec.ts",
+    "tests/client/admin-navigation-focus.test.tsx",
+    "tests/browser/full-workspace-navigation.spec.ts",
     local("workspace-browser"),
   ],
   [

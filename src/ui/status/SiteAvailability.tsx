@@ -6,10 +6,8 @@ import {
   useSiteAvailability,
   type SiteState,
 } from "@/contexts/SiteAvailabilityContext";
-import {
-  publicSiteStatus,
-  maintenanceExemptPath,
-} from "../../../shared/site-status.mjs";
+import { publicSiteStatus } from "../../../shared/public-site-status.mjs";
+import { maintenanceExemptPath } from "../../../shared/site-status-policy.mjs";
 const storageKey = "gdg:public-availability:v1";
 function offlineSnapshot(): SiteState | undefined {
   try {
@@ -100,7 +98,10 @@ export default function SiteAvailability({
     pathname,
     navigate,
   ]);
-  if (!status && !unavailable && !maintenanceExemptPath(pathname))
+  const checking = !status && !unavailable,
+    homeChecking = checking && pathname === "/",
+    blocked = status?.is_live === false && !maintenanceExemptPath(pathname);
+  if (checking && pathname !== "/" && !maintenanceExemptPath(pathname))
     return (
       <div className="gt-container gt-route-loading" role="status">
         Checking site availability…
@@ -110,7 +111,19 @@ export default function SiteAvailability({
     <Context.Provider
       value={{ status, unavailable, refresh: () => setTick((v) => v + 1) }}
     >
-      {children}
+      {homeChecking && (
+        <span className="sr-only" role="status">
+          Checking site availability…
+        </span>
+      )}
+      <div
+        className="gt-availability-frame"
+        ref={(node) => {
+          if (node) node.inert = homeChecking || blocked;
+        }}
+      >
+        {children}
+      </div>
     </Context.Provider>
   );
 }

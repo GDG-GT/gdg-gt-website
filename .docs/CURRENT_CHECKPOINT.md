@@ -1,0 +1,125 @@
+# Current local continuation checkpoint
+
+Updated 2026-11-06. Continue the GDG GT PRD task from this verified local
+checkpoint; do not repeat completed mutations/probes or rebuild setup from scratch.
+This checkpoint does not declare the entire PRD complete.
+
+## Authorization and preservation
+
+Local only: no deployment/push, production changes, purchases, real provider
+sends, another auto-resume timer or AI commit trailers. SSO/Google and
+Bevy/Engage remain deferred. Preserve unrelated modified
+`supabase/.temp/cli-latest` and untracked
+`src/components/admin/PageAccessGuard 2.tsx` and
+`src/ui/linktree/useLinktreeRead 2.ts`; keep them out of staging.
+Never print `.env.server.local` or `.docs/local-auth.local`.
+
+Applied canonical migrations stop at immutable 137. No SQL changed in this
+checkpoint. Existing canonical/legacy-grants/concurrency/restore evidence remains
+applicable; do not reset, bootstrap, replay applied migrations or recreate actors.
+The earlier directory/contact/merge/privacy recovery probes are complete; their
+owned cleanup already passed. Do not resend invitations/mail/exports or replay
+those completed API mutations.
+
+## Verified implementation and evidence
+
+- Full unit/coverage invocation: 2,672 tests/214 files, all unchanged global 70%
+  and 21 critical 90%-branch gates pass. Lines 78.09%, statements 76.10%, branches
+  75.59%, functions 70.75%. Raw JSON: `artifacts/quality/final-unit-coverage.json`;
+  summary: `.docs/phase0/final-public-entry-quality.json`.
+- Complete broad production-browser baseline: 1,228 passed, eight expected profile
+  skips, zero failures/retries. `.docs/phase0/final-public-entry-browser.json`.
+  After the final drawer/search correction, all 90 rebuilt-artifact shell cases
+  pass across six profiles: `.docs/phase0/final-navigation-browser.json`. These
+  are separate invocations, not a single new 1,242-case run.
+- Complete current inventory: 1,242 cases, three balanced shards of 414, no
+  duplicates or omissions. CI configuration is ready, not remotely executed.
+- Primary 22 prompt groups: 138 populated composition cases and 162 unapproved
+  captures. Browse `artifacts/browser/visual-review/index.html`; the index and
+  `.docs/phase0/populated-visual-review.json` come from the broad baseline.
+  Secondary surfaces, approved content/assets, fidelity approval and 1% approved
+  baselines remain separate gates.
+- Source fixes include route-lazy admin/sign-in/public-page loading, a canonical
+  small public availability parser with parity tests, progressive natively inert
+  homepage identity, deferred landmark focus and safe shell-load fallback.
+  Unused query/toast/tooltip startup mounts have no consumers and were removed;
+  packages/helper files remain preserved.
+- Portrait crops derive from existing local artwork; both are <=50 kB and now
+  mode 0644 for separate static servers. Regeneration is byte-identical. All six
+  profiles request exactly the selected hero pair; WebKit's premature fallback
+  fetch was corrected by assigning fallback at DOM commit.
+- Full 26-link drawer testing found actual mobile opener-focus loss and Chromium
+  mobile command Escape refusal. Both are corrected. Search retains invoking
+  field/button focus, same-page selections focus existing content, different
+  routes retain destination focus, and active IME composition does not close
+  the palette. All nine unit cases and final 90 browser cases pass.
+- WebKit link traversal uses Option+Tab per Apple's documented behavior, without
+  changing browser preferences. Initial wrong-role/readiness/keyboard fixture
+  diagnostics and the genuine failures are retained in separate ignored outputs.
+- Production PWA checks: 15 real CacheStorage/IndexedDB boundary cases and nine
+  changed-offline-asset/two-tab activation/cache-cleanup cases pass. No actual
+  application writes/provider sends. `.docs/phase0/production-pwa-*.json`.
+- Local HTTPS/CSP checks: 45 pass, including exact configured common headers,
+  inline-script refusal and stable-versus-hashed cache responses. Browser CSP
+  reports terminate in the owned no-op server. Its initial report-refusal
+  harness failure is preserved. Certificates/contexts/listeners were cleaned up.
+  Stable artwork/fonts revalidate; only hashed JS/CSS are immutable. Actual
+  provider pattern parsing, hosted headers and report-only staging remain open.
+- Strict types/build and byte gates pass; lint is zero errors/10 inherited
+  warnings (one belongs to preserved untracked user source). Initial gzip JS is
+  about 126,480 bytes, CSS 29,746, font 48,432; offline raw install 463,800 bytes.
+- Current/history source secret scan passes zero unreviewed findings. The SHA-256
+  of public test IDs/profile names has an exact non-secret line review alongside
+  two earlier fictional inputs. No scanner rule/path was excluded. Its reviewed
+  digest was refreshed for the final 1,242-case inventory. Production audit has
+  zero high/critical advisories, with two moderate/four low findings remaining.
+- All 307 mandatory IDs and all 146 numbered requirements have reviewed mappings;
+  normative Sections 21–33 are represented. Every case/requirement remains
+  unverified against complete manual/device/visual/hosted acceptance. The checker
+  refuses missing IDs or fabricated acceptance; seven cases are manual-only.
+
+## Performance and running services
+
+Final six-route isolated Lighthouse measurement matches the current build hashes:
+mobile performance 94/94/95, accessibility 100, CLS zero, LCP 3,021/3,147/2,899 ms.
+Desktop performance 100, accessibility 100, CLS zero. The 2.5-second mobile LCP
+threshold is still missed and the script correctly exits nonzero. Do not weaken
+it or call field p75 verified. Source: `.docs/phase0/production-performance.json`.
+Pinned CLI: `/Users/tejas/.npm/_npx/ba16b138af87a83e/node_modules/lighthouse/cli/index.js`;
+set `GDG_LIGHTHOUSE_CLI` for `scripts/test-production-performance.mjs`.
+Run measurements without competing build/types/coverage/browser loads.
+
+Main local app `http://127.0.0.1:8080/` and API health on 8081 were verified 200.
+Existing Supabase remains on 54361/54362, Mailpit 54364, Colima context
+`colima-gdg-gt`, DB `supabase_db_gdg-gt-prd-local`. Do not duplicate services.
+Owned production preview 4173 session 93659 remains for browser tests; it is a
+review origin, not the primary app origin for real admin mutations. Native zoom
+review was deferred because shared Chrome was in use; no zoom changes or tab
+closures were made. Do not close the user's current browser tab.
+
+All verification invocations above completed. There are no active mutations or
+partially applied database changes. Earlier active session numbers in conversation
+are historical; inspect current state before rerunning. The latest source secret
+scan/metadata finalization may still be returning its completion output.
+
+## Next work
+
+Save the verified local checkpoint without AI trailers, excluding the three
+unrelated user files. Next local work is mobile LCP and complete secondary visual
+review compositions. Investigate rendering/delivery with measurements; preserve
+all private/cache/session boundaries and never prerender or cache private routes.
+Do not repeat broad checks without a new change or unresolved failure.
+
+Full PRD acceptance still needs mobile/field p75 LCP-INP-CLS and representative
+3D/load profiles, complete secondary visuals and approved chapter content/assets,
+human fidelity/brand approval, manual keyboard/assistive technology/actual 200%
+zoom/forced colors, physical Safari/device/install/push acceptance, actual GT
+staging/hosting/domains/secrets/providers/report-only CSP/CI/scheduler/monitoring,
+PITR/object restore with measured RPO-RTO, migration rehearsal, rollback/48-hour
+observation and institutional privacy/retention/finance sign-off. Local-only
+constraints remain; no accepted PRD percentage or full-completion claim is earned.
+
+Machine-readable consolidated evidence: `.docs/phase0/current-local-status.json`.
+Current audit and ledgers: `LOCAL_ACCEPTANCE_AUDIT.md`, `IMPLEMENTATION_STATUS.md`,
+`PRD_EXECUTION_BACKLOG.md`. Dedicated public/PWA/header/navigation documents explain
+changes, failed diagnostics, results and limits.

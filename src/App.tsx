@@ -7,16 +7,11 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
 import { AdminProvider } from "@/contexts/AdminContext";
 import { ContentProvider } from "@/contexts/ContentContext";
 import PageAccessGuard from "@/components/admin/PageAccessGuard";
 import SiteStatusRedirect from "@/components/SiteStatusRedirect";
 import SiteShell from "@/ui/SiteShell";
-import AdminShell from "@/ui/AdminShell";
 import RouteErrorBoundary from "@/ui/RouteErrorBoundary";
 import NavigationSafety from "@/ui/NavigationSafety";
 import CapabilityBoundary from "@/ui/CapabilityBoundary";
@@ -24,18 +19,46 @@ import RouteFocus from "@/ui/RouteFocus";
 import { PwaUpdateNotice } from "@/pwa/PwaControls";
 import { QueueRuntime } from "@/pwa/SubmissionQueue";
 import { MaintenancePage } from "@/ui/status/SiteAvailability";
-import {
-  HomePage,
-  EventsPage,
-  EventDetailPage,
-  TeamPage,
-  ResourcesPage,
-  SponsorsPage,
-  GalleryPage,
-  ContactPage,
-  NotFoundPage,
-  InfoPage,
-} from "@/ui/PublicPages";
+import { HomePage } from "@/ui/HomePage";
+
+const AdminShell = lazy(() => import("@/ui/AdminShell"));
+const loadPublicPages = () => import("@/ui/PublicPages");
+// Start the selected public route while availability is checked, instead of
+// discovering its chunk only after that read completes. Forms/admin stay lazy.
+if (
+  typeof window !== "undefined" &&
+  /^\/(?:events(?:\/|$)|team$|resources$|sponsors$|gallery$|contact$|privacy$|accessibility$|offline$)/.test(
+    window.location.pathname,
+  )
+)
+  void loadPublicPages().catch(() => {});
+const EventsPage = lazy(() =>
+  import("@/ui/PublicPages").then((m) => ({ default: m.EventsPage })),
+);
+const EventDetailPage = lazy(() =>
+  import("@/ui/PublicPages").then((m) => ({ default: m.EventDetailPage })),
+);
+const TeamPage = lazy(() =>
+  import("@/ui/PublicPages").then((m) => ({ default: m.TeamPage })),
+);
+const ResourcesPage = lazy(() =>
+  import("@/ui/PublicPages").then((m) => ({ default: m.ResourcesPage })),
+);
+const SponsorsPage = lazy(() =>
+  import("@/ui/PublicPages").then((m) => ({ default: m.SponsorsPage })),
+);
+const GalleryPage = lazy(() =>
+  import("@/ui/PublicPages").then((m) => ({ default: m.GalleryPage })),
+);
+const ContactPage = lazy(() =>
+  import("@/ui/PublicPages").then((m) => ({ default: m.ContactPage })),
+);
+const NotFoundPage = lazy(() =>
+  import("@/ui/PublicPages").then((m) => ({ default: m.NotFoundPage })),
+);
+const InfoPage = lazy(() =>
+  import("@/ui/PublicPages").then((m) => ({ default: m.InfoPage })),
+);
 
 const Overview = lazy(() => import("@/ui/AdminOverview"));
 const Forms = lazy(() => import("@/ui/forms/FormsLibrary"));
@@ -108,11 +131,10 @@ const adminRoutes = [
   ["blog-editor", lazy(() => import("@/pages/admin/BlogEditorDashboard"))],
   ["blog-media", lazy(() => import("@/pages/admin/BlogEditorMedia"))],
 ] as const;
-const queryClient = new QueryClient();
 function LoadingPage() {
   return (
     <div
-      className="gt-container gt-route-loading"
+      className="gt-container gt-route-loading gt-initial-route-loading"
       role="status"
       aria-label="Loading page"
     >
@@ -131,13 +153,19 @@ function Frame({ children }: { children: ReactNode }) {
     return <RouteErrorBoundary>{children}</RouteErrorBoundary>;
   return pathname.startsWith("/admin") &&
     !pathname.startsWith("/admin/invite/") ? (
-    <AdminShell>
-      <RouteErrorBoundary key={pathname}>{children}</RouteErrorBoundary>
-    </AdminShell>
+    <RouteErrorBoundary key={pathname}>
+      <Suspense fallback={<LoadingPage />}>
+        <AdminShell>
+          <RouteErrorBoundary key={pathname}>{children}</RouteErrorBoundary>
+        </AdminShell>
+      </Suspense>
+    </RouteErrorBoundary>
   ) : (
-    <SiteShell>
-      <RouteErrorBoundary key={pathname}>{children}</RouteErrorBoundary>
-    </SiteShell>
+    <RouteErrorBoundary key={pathname}>
+      <SiteShell>
+        <RouteErrorBoundary key={pathname}>{children}</RouteErrorBoundary>
+      </SiteShell>
+    </RouteErrorBoundary>
   );
 }
 function protectedPage(children: ReactNode) {
@@ -247,19 +275,13 @@ const router = createBrowserRouter(
 );
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AdminProvider>
-        <ContentProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <RouterProvider
-              router={router}
-              future={{ v7_startTransition: true }}
-            />
-          </TooltipProvider>
-        </ContentProvider>
-      </AdminProvider>
-    </QueryClientProvider>
+    <AdminProvider>
+      <ContentProvider>
+        <RouterProvider
+          router={router}
+          future={{ v7_startTransition: true }}
+        />
+      </ContentProvider>
+    </AdminProvider>
   );
 }

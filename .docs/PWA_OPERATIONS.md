@@ -117,13 +117,17 @@ No worker or cache policy was changed. Both attempts are recorded in
 mobile/device UI, dirty multi-tab version updates, actual push permissions/provider
 and hosted cache headers remain separate acceptance.
 
-Five production two-tab update checks also pass (`phase0/production-pwa-update.json`).
+Nine production two-tab update checks also pass (`phase0/production-pwa-update.json`).
 A waiting worker remains waiting after declining the real unsaved-work dialog;
 fields and document survive. Explicit discard/update activates it and reloads
 only the requester. A second dirty tab preserves its document and entered fields.
-The probe changes worker bytes only through an appended version comment and
-uses the production registration/update/dirty-navigation UI, then closes its
-isolated context/server. The initial harness tried an input in collapsed details
+The updated probe varies the offline HTML through an inert version comment and
+changes its exact worker precache entry to the matching SHA-256 revision. The
+active worker keeps serving revision one while revision two waits. Approval
+activates revision two and removes the obsolete offline asset cache entry.
+It uses the production registration/update/dirty-navigation UI, then closes its
+isolated context/server. The original comment-only worker probe is retained in
+Git history. The initial harness tried an input in collapsed details
 and was corrected before any update; that evidence remains separately recorded.
 Hosted changed-asset rollout/rollback and real installed devices still require
 separate acceptance.

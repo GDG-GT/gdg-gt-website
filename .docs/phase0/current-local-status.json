@@ -1,0 +1,164 @@
+{
+  "generatedAt": "2026-11-06T22:37:59.256Z",
+  "buildIndexSha256": "0499d42dcae0f1f2e82704e83f91a1fbc7232cb4c88297fcfbdedee175d47bed",
+  "quality": {
+    "tests": {
+      "files": 214,
+      "passed": 2672,
+      "failed": 0
+    },
+    "coverage": {
+      "lines": 78.09,
+      "branches": 75.59,
+      "statements": 76.1,
+      "functions": 70.75
+    },
+    "globalAndCriticalGatesPassed": true,
+    "criticalModules": 21
+  },
+  "browser": {
+    "broadBaseline": {
+      "startTime": "2026-11-06T22:06:05.614Z",
+      "duration": 800052.445,
+      "expected": 1228,
+      "skipped": 8,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "finalShellScope": {
+      "startTime": "2026-11-06T22:29:49.772Z",
+      "duration": 52985.818999999996,
+      "expected": 90,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "note": "Separate invocations: broad baseline precedes final route-lazy drawer/search correction; final rebuilt shell scope covers it. Not a single new 1,242-case invocation."
+  },
+  "visual": {
+    "primaryPromptGroups": 22,
+    "reviewCaptures": 150,
+    "compositionChecks": 138,
+    "approved": false
+  },
+  "pwa": {
+    "boundaries": 15,
+    "boundariesPassed": true,
+    "changedAssetUpdates": 9,
+    "changedAssetUpdatesPassed": true
+  },
+  "headers": {
+    "checks": 45,
+    "localEnforcementPassed": true,
+    "hosted": false
+  },
+  "secrets": {
+    "unreviewed": 0,
+    "scope": "Read-only all-local-ref history plus current tracked/nonignored untracked file snapshot. Default rules, decoded text depth 5, no baseline/rule/path exclusions or inline suppression. Ignored local credentials/dependencies/caches, archive contents and image OCR are outside the source scan. Findings are redacted; only exact reviewed source-line hashes may pass as non-secrets. Not proof that no secret could exist."
+  },
+  "shards": {
+    "total": 1242,
+    "shards": [
+      {
+        "shard": 1,
+        "cases": 414
+      },
+      {
+        "shard": 2,
+        "cases": 414
+      },
+      {
+        "shard": 3,
+        "cases": 414
+      }
+    ],
+    "duplicates": 0
+  },
+  "performance": {
+    "scope": "Isolated loopback static production build, gzip-negotiated HTML/JS/CSS/JSON/SVG, anonymous allowlisted reads to local API only; HTTPS requests blocked, no account or writes/provider sends. Lighthouse default simulated mobile and desktop presets; measurements must run without competing browser/build/coverage load. Compression models a required hosting delivery setting, not evidence that it is deployed. Lab LCP/CLS/TBT and accessibility only; TBT is not INP and these runs do not certify field p75 INP/LCP, representative 3D hardware or hosted latency. Raw reports in ignored artifacts/performance.",
+    "routes": [
+      {
+        "route": "/",
+        "preset": "mobile",
+        "score": 94,
+        "accessibility": 100,
+        "lcpMs": 3020.8062,
+        "cls": 0,
+        "passed": false
+      },
+      {
+        "route": "/events",
+        "preset": "mobile",
+        "score": 94,
+        "accessibility": 100,
+        "lcpMs": 3147.0562500000005,
+        "cls": 0,
+        "passed": false
+      },
+      {
+        "route": "/contact",
+        "preset": "mobile",
+        "score": 95,
+        "accessibility": 100,
+        "lcpMs": 2899.3086000000003,
+        "cls": 0,
+        "passed": false
+      },
+      {
+        "route": "/",
+        "preset": "desktop",
+        "score": 100,
+        "accessibility": 100,
+        "lcpMs": 673.1590499999999,
+        "cls": 0,
+        "passed": true
+      },
+      {
+        "route": "/events",
+        "preset": "desktop",
+        "score": 100,
+        "accessibility": 100,
+        "lcpMs": 681.9648,
+        "cls": 0,
+        "passed": true
+      },
+      {
+        "route": "/contact",
+        "preset": "desktop",
+        "score": 100,
+        "accessibility": 100,
+        "lcpMs": 683.8674000000002,
+        "cls": 0,
+        "passed": true
+      }
+    ],
+    "mobileLcpPassed": false,
+    "fieldP75Verified": false
+  },
+  "services": [
+    {
+      "label": "Local application",
+      "url": "http://127.0.0.1:8080/",
+      "status": 200
+    },
+    {
+      "label": "Local API health",
+      "url": "http://127.0.0.1:8081/api/v1/health",
+      "status": 200
+    }
+  ],
+  "prdComplete": false,
+  "remaining": [
+    "Mobile LCP and representative hardware/load/field p75 LCP-INP-CLS",
+    "Complete secondary visual prompt surfaces, approved chapter assets/content, blocking human fidelity approval and approved 1% screenshot baselines",
+    "Complete keyboard/assistive-technology/actual 200% zoom/forced-colors and physical Safari/device/install/push acceptance",
+    "Actual GT staging/hosting/domains/secrets/provider configuration, report-only CSP rollout and hosted headers/cache/CI/scheduler/monitoring/alerts",
+    "Hosted PITR/object restore with measured RPO-RTO, migration rehearsal, rollback and 48-hour observation",
+    "Institutional brand/privacy/retention/finance sign-off; inherited warning and moderate dependency review"
+  ],
+  "deferred": [
+    "SSO/Google",
+    "Bevy/Engage"
+  ],
+  "scope": "Local only; no deployment, push, purchase, real provider send, production change, another timer or AI commit trailer."
+}

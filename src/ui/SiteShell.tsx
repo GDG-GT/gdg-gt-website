@@ -2,6 +2,8 @@ import {
   useEffect,
   useRef,
   useState,
+  lazy,
+  Suspense,
   type FormEvent,
   type ReactNode,
 } from "react";
@@ -19,7 +21,6 @@ import {
   LogIn,
 } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
-import AdminLoginModal from "@/components/AdminLoginModal";
 import { PublicNewsletterService as NewsletterService } from "@/services/publicWorkflows";
 import { Brand, Button } from "./primitives";
 import { chapterName, localPreviewEnabled, publicLinks } from "./preview-data";
@@ -28,6 +29,7 @@ import { newsletterEntryIntent } from "./newsletter-entry";
 import { MaintenanceBanner } from "./status/SiteAvailability";
 import { useSiteAvailability } from "@/contexts/SiteAvailabilityContext";
 import { InstallApp } from "@/pwa/PwaControls";
+const AdminLoginModal = lazy(() => import("@/components/AdminLoginModal"));
 
 export default function SiteShell({ children }: { children: ReactNode }) {
   const { status: availability } = useSiteAvailability();
@@ -449,19 +451,23 @@ export default function SiteShell({ children }: { children: ReactNode }) {
           <ArrowUpRight size={13} />
         </button>
       )}
-      <AdminLoginModal
-        isOpen={loginOpen}
-        onClose={() => setLoginOpen(false)}
-        onLogin={async (credentials) => {
-          if (await login(credentials)) {
-            setLoginOpen(false);
-            setEmail("");
-            navigate("/admin");
-          }
-        }}
-        isLoading={isLoading}
-        error={error || undefined}
-      />
+      {loginOpen && (
+        <Suspense fallback={<p role="status">Opening sign in…</p>}>
+          <AdminLoginModal
+            isOpen={loginOpen}
+            onClose={() => setLoginOpen(false)}
+            onLogin={async (credentials) => {
+              if (await login(credentials)) {
+                setLoginOpen(false);
+                setEmail("");
+                navigate("/admin");
+              }
+            }}
+            isLoading={isLoading}
+            error={error || undefined}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

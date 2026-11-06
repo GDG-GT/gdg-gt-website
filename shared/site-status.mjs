@@ -1,33 +1,13 @@
 import { z } from "zod";
+import { isMaintenanceDestination } from "./site-status-policy.mjs";
 export const maintenanceDestination = z
   .string()
   .trim()
   .max(2000)
-  .refine((value) => {
-    if (
-      value === "" ||
-      /^\/l\/[a-z0-9](?:[a-z0-9_-]{0,48}[a-z0-9])?$/.test(value)
-    )
-      return true;
-    try {
-      const u = new URL(value);
-      return (
-        u.protocol === "https:" &&
-        ["gatech.edu", "www.gatech.edu", "gdg.community.dev"].includes(
-          u.hostname,
-        ) &&
-        !u.username &&
-        !u.password &&
-        !u.port &&
-        !u.search &&
-        !u.hash &&
-        !/[\u0000-\u0020\u007f]/.test(value) &&
-        !/%(?:0[0-9a-f]|1[0-9a-f]|7f|2f|5c)/i.test(u.pathname)
-      );
-    } catch {
-      return false;
-    }
-  }, "Use a local /l/ profile or an approved Georgia Tech/GDG HTTPS destination without query parameters.");
+  .refine(
+    isMaintenanceDestination,
+    "Use a local /l/ profile or an approved Georgia Tech/GDG HTTPS destination without query parameters.",
+  );
 export const siteStatusFields = z
   .object({
     is_live: z.boolean(),
@@ -58,38 +38,5 @@ export const siteStatusChange = z
   .refine(
     (v) => v.confirmation === (v.record.is_live ? "LIVE" : "MAINTENANCE"),
   );
-export const publicSiteStatus = z
-  .object({
-    revision: z.number().int().min(1),
-    ...siteStatusFields.shape,
-    message: siteStatusFields.shape.message.or(z.literal("")),
-  })
-  .strict()
-  .superRefine((v, ctx) => {
-    if (
-      !siteStatusFields.safeParse({
-        is_live: v.is_live,
-        message: v.is_live && v.message === "" ? "Live" : v.message,
-        redirect_url: v.redirect_url,
-        button_text: v.button_text,
-        auto_redirect: v.auto_redirect,
-      }).success
-    )
-      ctx.addIssue({
-        code: "custom",
-        message: "Invalid public maintenance configuration.",
-      });
-  });
-export const maintenanceExemptPath = (path) =>
-  /^\/admin(?:\/|$)/.test(path) ||
-  /^\/l\/[a-z0-9_-]+$/.test(path) ||
-  [
-    "/maintenance",
-    "/offline",
-    "/privacy",
-    "/accessibility",
-    "/newsletter/confirm",
-    "/newsletter/unsubscribe",
-    "/account/setup",
-    "/team/join",
-  ].includes(path);
+export { publicSiteStatus } from "./public-site-status.mjs";
+export { maintenanceExemptPath } from "./site-status-policy.mjs";

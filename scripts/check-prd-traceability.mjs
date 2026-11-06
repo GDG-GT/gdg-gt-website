@@ -20,6 +20,17 @@ const ranges = {
   VIS: 22,
   OPS: 15,
 };
+export function validateMandatoryTestRanges(cases) {
+  const mapped = new Set(cases.map((row) => row.id)),
+    missing = [];
+  for (const [prefix, maximum] of Object.entries(ranges))
+    for (let n = 1; n <= maximum; n++) {
+      const id = `${prefix}-TEST-${String(n).padStart(3, "0")}`;
+      if (!mapped.has(id)) missing.push(id);
+    }
+  if (missing.length)
+    throw Error("Unmapped mandatory test IDs: " + missing.join(", "));
+}
 export async function validatePrdTestPlan(
   inventory,
   cases,
@@ -95,6 +106,7 @@ export async function checkPrdTraceability({
       "PRD changed; review the requirement inventory before mapping tests",
     );
   const mapping = await validatePrdTestPlan(inventory, prdTestCases);
+  validateMandatoryTestRanges(prdTestCases);
   const plan = {
     prd: inventory.prd,
     prdSha256: inventory.prdSha256,

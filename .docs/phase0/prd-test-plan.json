@@ -4,6 +4,2987 @@
   "note": "Reviewed test-source mapping only. Source references are not executed evidence or acceptance. Every requirement remains unverified until its full definition of done, normative sections and phase gates pass.",
   "cases": [
     {
+      "id": "AUTH-TEST-007",
+      "requirements": [],
+      "scope": "Disabled, archived, temporary-expired and locked accounts cannot receive a session",
+      "automated": [
+        "tests/server/auth.test.mjs",
+        "tests/server/users.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "24.2",
+        "25.3",
+        "28.3"
+      ]
+    },
+    {
+      "id": "AUTH-TEST-008",
+      "requirements": [],
+      "scope": "Password reuse, current-proof failure and other-session revocation remain distinct safe outcomes",
+      "automated": [
+        "tests/server/auth.test.mjs",
+        "tests/client/profile-mutation-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "24.2",
+        "25.3",
+        "28.3"
+      ]
+    },
+    {
+      "id": "AUTH-TEST-009",
+      "requirements": [],
+      "scope": "Account lifecycle and recovery capabilities exclude changing proof/token material from stable intent",
+      "automated": [
+        "tests/server/users.test.mjs",
+        "tests/client/user-account-mutations.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "24.2",
+        "25.3",
+        "28.3"
+      ]
+    },
+    {
+      "id": "AUTH-TEST-010",
+      "requirements": [],
+      "scope": "Current session/bootstrap transport failures cancel obsolete private generations",
+      "automated": [
+        "tests/client/api-session-generation.test.mjs",
+        "tests/client/profile-read-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "24.2",
+        "25.3",
+        "28.3"
+      ]
+    },
+    {
+      "id": "AUTH-TEST-020",
+      "requirements": [],
+      "scope": "Production cookie parsing, secure attributes and production HTTPS configuration fail closed",
+      "automated": [
+        "tests/server/security.test.mjs",
+        "tests/server/auth.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "24.2",
+        "25.3",
+        "28.3"
+      ]
+    },
+    {
+      "id": "SEC-TEST-001",
+      "requirements": [],
+      "scope": "Anonymous, forbidden and retired protected routes preserve their different safe status boundaries",
+      "automated": [
+        "tests/server/entry.test.mjs",
+        "tests/server/users.test.mjs",
+        "tests/server/http.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-003",
+      "requirements": [],
+      "scope": "JSON decoding rejects unsupported types, malformed UTF-8/object bodies and actual oversized streams",
+      "automated": [
+        "tests/server/http.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-004",
+      "requirements": [],
+      "scope": "Browser Origin, method, session binding and CSRF are enforced independently of UI route guards",
+      "automated": [
+        "tests/server/auth.test.mjs",
+        "tests/server/http.test.mjs",
+        "tests/client/api-session-generation.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-006",
+      "requirements": [],
+      "scope": "Public destinations, rich content and calendar/export strings reject executable or ambiguous input",
+      "automated": [
+        "tests/server/validation.test.mjs",
+        "tests/server/events.test.mjs",
+        "tests/server/newsletter.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-016",
+      "requirements": [],
+      "scope": "Session revocation or changed actor authority fences already-pending private work",
+      "automated": [
+        "tests/server/users.test.mjs",
+        "tests/client/api-session-generation.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-017",
+      "requirements": [],
+      "scope": "Private upload preparation and download routes require current scoped authority",
+      "automated": [
+        "tests/server/upload-routes.test.mjs",
+        "tests/server/object-storage.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-018",
+      "requirements": [],
+      "scope": "File byte/MIME and stream limits are checked before scanner acceptance",
+      "automated": [
+        "tests/server/upload-content.test.mjs",
+        "tests/server/scanner.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-019",
+      "requirements": [],
+      "scope": "Sensitive Forms data and exports retain privacy scope and authenticated encryption boundaries",
+      "automated": [
+        "tests/server/forms.test.mjs",
+        "tests/server/form-exports.test.mjs",
+        "tests/client/form-response-mutation-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-020",
+      "requirements": [],
+      "scope": "Audit and telemetry use bounded safe identifiers rather than user-controlled fields or exception text",
+      "automated": [
+        "tests/server/telemetry.test.mjs",
+        "tests/server/http.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-023",
+      "requirements": [],
+      "scope": "CSP violation ingestion uses bounded categories and operational counters",
+      "automated": [
+        "tests/server/telemetry.test.mjs",
+        "database/tests/097_operational_monitoring.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-024",
+      "requirements": [],
+      "scope": "Development server and browser import boundaries do not expose private source or database SDK access",
+      "automated": [
+        "tests/client-architecture.test.mjs",
+        "scripts/test-local-dev-security.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-025",
+      "requirements": [],
+      "scope": "Public build artifacts exclude secrets, private source and production source maps",
+      "automated": [
+        "tests/server/secret-scan.test.mjs",
+        "scripts/check-build-budgets.mjs",
+        "scripts/scan-secrets.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-026",
+      "requirements": [],
+      "scope": "Opaque and encrypted capabilities reject malformed encodings, changed keys and authentication failures",
+      "automated": [
+        "tests/server/security.test.mjs",
+        "tests/server/events.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-027",
+      "requirements": [],
+      "scope": "Private Forms links stay publication/generation bound and conceal unavailable targets",
+      "automated": [
+        "tests/server/form-links-routes.test.mjs",
+        "tests/client/form-link-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-028",
+      "requirements": [],
+      "scope": "Scanner startup, framing and verdict failures never manufacture a clean upload",
+      "automated": [
+        "tests/server/scanner.test.mjs",
+        "tests/server/upload-content.test.mjs",
+        "scripts/test-local-scanner.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "SEC-TEST-029",
+      "requirements": [],
+      "scope": "Public document projections conceal private routes and encode all published HTML/JSON metadata",
+      "automated": [
+        "tests/server/site-document.test.mjs",
+        "tests/server/projects.test.mjs",
+        "tests/server/blog.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "21.3",
+        "24",
+        "25.1",
+        "28",
+        "29"
+      ]
+    },
+    {
+      "id": "EVT-TEST-001",
+      "requirements": [],
+      "scope": "Event writes reject client-owned columns, unsafe URLs, invalid slugs and invalid current revisions",
+      "automated": [
+        "tests/server/events.test.mjs",
+        "tests/server/event-workspace-mutations.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.3",
+        "22.4",
+        "25.5",
+        "26.3",
+        "26.4",
+        "27.4"
+      ]
+    },
+    {
+      "id": "EVT-TEST-002",
+      "requirements": [],
+      "scope": "Event inventory filters, selected reads and explicit retry retain the current public/private context",
+      "automated": [
+        "tests/client/event-admin-read-recovery.test.tsx",
+        "tests/client/event-ui.test.tsx",
+        "scripts/test-local-event-inventory.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.3",
+        "22.4",
+        "25.5",
+        "26.3",
+        "26.4",
+        "27.4"
+      ]
+    },
+    {
+      "id": "EVT-TEST-016",
+      "requirements": [],
+      "scope": "Attendee edits and check-in preserve exact original intent across lost responses",
+      "automated": [
+        "tests/server/event-workspace-mutations.test.mjs",
+        "tests/client/event-admin-mutations.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.3",
+        "22.4",
+        "25.5",
+        "26.3",
+        "26.4",
+        "27.4"
+      ]
+    },
+    {
+      "id": "EVT-TEST-017",
+      "requirements": [],
+      "scope": "Calendar downloads fold UTF-8, escape content and preserve stable identity on cancellation",
+      "automated": [
+        "tests/server/events.test.mjs",
+        "tests/client/event-ui.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.3",
+        "22.4",
+        "25.5",
+        "26.3",
+        "26.4",
+        "27.4"
+      ]
+    },
+    {
+      "id": "EVT-TEST-018",
+      "requirements": [],
+      "scope": "Attendee CSV neutralizes every formula-bearing exported string",
+      "automated": [
+        "tests/server/events.test.mjs",
+        "scripts/test-local-events.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.3",
+        "22.4",
+        "25.5",
+        "26.3",
+        "26.4",
+        "27.4"
+      ]
+    },
+    {
+      "id": "EVT-TEST-019",
+      "requirements": [],
+      "scope": "Attendee email requires an event-bound reviewed audience and exactly-once queue outcome",
+      "automated": [
+        "tests/server/event-mail.test.mjs",
+        "tests/server/event-mail-recovery.test.mjs",
+        "tests/client/event-mail-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.3",
+        "22.4",
+        "25.5",
+        "26.3",
+        "26.4",
+        "27.4"
+      ]
+    },
+    {
+      "id": "EVT-TEST-020",
+      "requirements": [],
+      "scope": "External registration destinations and internal consent are separately validated",
+      "automated": [
+        "tests/server/events.test.mjs",
+        "tests/client/event-ui.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.3",
+        "22.4",
+        "25.5",
+        "26.3",
+        "26.4",
+        "27.4"
+      ]
+    },
+    {
+      "id": "EVT-TEST-021",
+      "requirements": [],
+      "scope": "Public event image failures keep readable titles and safe fallback imagery",
+      "automated": [
+        "tests/client/event-ui.test.tsx",
+        "tests/browser/public-compositions.spec.ts"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.3",
+        "22.4",
+        "25.5",
+        "26.3",
+        "26.4",
+        "27.4"
+      ]
+    },
+    {
+      "id": "EVT-TEST-022",
+      "requirements": [],
+      "scope": "Publication, cancellation and archive consequences use current authority and reviewed versions",
+      "automated": [
+        "tests/server/event-workspace-mutations.test.mjs",
+        "tests/client/event-admin-mutations.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.3",
+        "22.4",
+        "25.5",
+        "26.3",
+        "26.4",
+        "27.4"
+      ]
+    },
+    {
+      "id": "EVT-TEST-023",
+      "requirements": [],
+      "scope": "Creating or duplicating an event freezes the original key and never creates a replacement after uncertainty",
+      "automated": [
+        "tests/server/event-workspace-mutations.test.mjs",
+        "tests/client/event-admin-mutations.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.3",
+        "22.4",
+        "25.5",
+        "26.3",
+        "26.4",
+        "27.4"
+      ]
+    },
+    {
+      "id": "TEAM-TEST-011",
+      "requirements": [],
+      "scope": "Team active state and record updates preserve current team and actor authority",
+      "automated": [
+        "tests/server/team-mutation-recovery.test.mjs",
+        "tests/client/team-mutation-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.2",
+        "24.3",
+        "25.5",
+        "27.1"
+      ]
+    },
+    {
+      "id": "TEAM-TEST-012",
+      "requirements": [],
+      "scope": "Explicit action grants and page/resource dependencies cannot invent inherited security access",
+      "automated": [
+        "tests/server/teams.test.mjs",
+        "database/tests/026_explicit_team_actions.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.2",
+        "24.3",
+        "25.5",
+        "27.1"
+      ]
+    },
+    {
+      "id": "TEAM-TEST-013",
+      "requirements": [],
+      "scope": "Team roles cannot become organization account roles or security administration grants",
+      "automated": [
+        "tests/server/teams.test.mjs",
+        "database/tests/025_teams.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.2",
+        "24.3",
+        "25.5",
+        "27.1"
+      ]
+    },
+    {
+      "id": "TEAM-TEST-014",
+      "requirements": [],
+      "scope": "Member transfers are reviewed, atomic and destination-scoped",
+      "automated": [
+        "tests/server/teams.test.mjs",
+        "database/tests/025_teams.sql",
+        "scripts/test-local-teams.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.2",
+        "24.3",
+        "25.5",
+        "27.1"
+      ]
+    },
+    {
+      "id": "TEAM-TEST-015",
+      "requirements": [],
+      "scope": "Invitation issuance/resend/revocation keeps the original recipient and action identity",
+      "automated": [
+        "tests/server/invitation-mutation-recovery.test.mjs",
+        "tests/client/invitation-mutation-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.2",
+        "24.3",
+        "25.5",
+        "27.1"
+      ]
+    },
+    {
+      "id": "TEAM-TEST-016",
+      "requirements": [],
+      "scope": "Invitation expiry, revocation and stored capability hashes are enforced before acceptance",
+      "automated": [
+        "database/tests/027_team_invitations.sql",
+        "scripts/test-local-team-invitations.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.2",
+        "24.3",
+        "25.5",
+        "27.1"
+      ]
+    },
+    {
+      "id": "TEAM-TEST-017",
+      "requirements": [],
+      "scope": "Permission changes expose dependencies and require current consequence review",
+      "automated": [
+        "tests/server/teams.test.mjs",
+        "tests/client/team-mutation-recovery.test.tsx",
+        "tests/browser/team-review.spec.ts"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.2",
+        "24.3",
+        "25.5",
+        "27.1"
+      ]
+    },
+    {
+      "id": "TEAM-TEST-018",
+      "requirements": [],
+      "scope": "Team announcements retain schedule, pin, publication and current read scope",
+      "automated": [
+        "tests/server/team-announcements.test.mjs",
+        "tests/client/team-announcement-mutations.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.2",
+        "24.3",
+        "25.5",
+        "27.1"
+      ]
+    },
+    {
+      "id": "TEAM-TEST-019",
+      "requirements": [],
+      "scope": "Team summary, memberships and independent panels clear when current access is denied",
+      "automated": [
+        "tests/client/team-read-recovery.test.tsx",
+        "tests/client/team-child-read-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.2",
+        "24.3",
+        "25.5",
+        "27.1"
+      ]
+    },
+    {
+      "id": "TEAM-TEST-020",
+      "requirements": [],
+      "scope": "Team candidate and directory reads use bounded server paging rather than a fetched-list ceiling",
+      "automated": [
+        "tests/server/teams.test.mjs",
+        "scripts/test-local-team-read-recovery.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.2",
+        "24.3",
+        "25.5",
+        "27.1"
+      ]
+    },
+    {
+      "id": "TEAM-TEST-021",
+      "requirements": [],
+      "scope": "Team chat access uses current membership and authorized scoped Realtime",
+      "automated": [
+        "tests/server/team-chat.test.mjs",
+        "tests/server/realtime-token.test.mjs",
+        "database/tests/048_managed_team_chat.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.2",
+        "24.3",
+        "25.5",
+        "27.1"
+      ]
+    },
+    {
+      "id": "TEAM-TEST-022",
+      "requirements": [],
+      "scope": "Team lifecycle consequences remain version-bound through concurrent changes",
+      "automated": [
+        "tests/server/team-mutation-recovery.test.mjs",
+        "database/tests/114_team_mutation_replay.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.2",
+        "24.3",
+        "25.5",
+        "27.1"
+      ]
+    },
+    {
+      "id": "TEAM-TEST-023",
+      "requirements": [],
+      "scope": "Transient parent/child failures retain proposals while offline or denied work pauses safely",
+      "automated": [
+        "tests/client/team-parent-pause.test.tsx",
+        "tests/client/team-child-read-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.2",
+        "24.3",
+        "25.5",
+        "27.1"
+      ]
+    },
+    {
+      "id": "TEAM-TEST-024",
+      "requirements": [],
+      "scope": "Invitation accept/decline transitions cannot cross actor, team, status or expiry boundaries",
+      "automated": [
+        "database/tests/027_team_invitations.sql",
+        "scripts/test-local-team-invitations.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.2",
+        "24.3",
+        "25.5",
+        "27.1"
+      ]
+    },
+    {
+      "id": "COMM-TEST-005",
+      "requirements": [],
+      "scope": "Task comments and task lifecycle actions remain current-authority scoped",
+      "automated": [
+        "tests/server/tasks.test.mjs",
+        "tests/client/task-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.3",
+        "25.5",
+        "27.1",
+        "27.2",
+        "27.4"
+      ]
+    },
+    {
+      "id": "COMM-TEST-006",
+      "requirements": [],
+      "scope": "Personal tasks and direct-message inventories reveal only the current recipient/actor scope",
+      "automated": [
+        "tests/server/direct-message-routes.test.mjs",
+        "tests/client/direct-message-lifecycle.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.3",
+        "25.5",
+        "27.1",
+        "27.2",
+        "27.4"
+      ]
+    },
+    {
+      "id": "COMM-TEST-007",
+      "requirements": [],
+      "scope": "Channel replies, pinning and message removal require current channel membership",
+      "automated": [
+        "tests/server/channels.test.mjs",
+        "database/tests/029_channels.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.3",
+        "25.5",
+        "27.1",
+        "27.2",
+        "27.4"
+      ]
+    },
+    {
+      "id": "COMM-TEST-008",
+      "requirements": [],
+      "scope": "Reconnect cursors and Realtime tokens retain scope without duplicating recovered messages",
+      "automated": [
+        "tests/server/realtime-token.test.mjs",
+        "tests/server/realtime-route.test.mjs",
+        "database/tests/049_channel_reconnect_cursor.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.3",
+        "25.5",
+        "27.1",
+        "27.2",
+        "27.4"
+      ]
+    },
+    {
+      "id": "COMM-TEST-009",
+      "requirements": [],
+      "scope": "Channel creation and archive lifecycle obey membership and action grants",
+      "automated": [
+        "tests/server/channels.test.mjs",
+        "tests/client/channel-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.3",
+        "25.5",
+        "27.1",
+        "27.2",
+        "27.4"
+      ]
+    },
+    {
+      "id": "COMM-TEST-010",
+      "requirements": [],
+      "scope": "Message edits, deletes and lost-response recovery preserve one exact message intent",
+      "automated": [
+        "tests/server/direct-messages.test.mjs",
+        "tests/client/direct-message-lifecycle.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.3",
+        "25.5",
+        "27.1",
+        "27.2",
+        "27.4"
+      ]
+    },
+    {
+      "id": "COMM-TEST-011",
+      "requirements": [],
+      "scope": "Team chat writes and independent read recovery clear private data after denial",
+      "automated": [
+        "tests/server/team-chat.test.mjs",
+        "scripts/test-local-team-chat.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.3",
+        "25.5",
+        "27.1",
+        "27.2",
+        "27.4"
+      ]
+    },
+    {
+      "id": "COMM-TEST-012",
+      "requirements": [],
+      "scope": "Task status, priority and date validation cannot be replaced by stale UI values",
+      "automated": [
+        "tests/server/tasks.test.mjs",
+        "tests/client/task-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.3",
+        "25.5",
+        "27.1",
+        "27.2",
+        "27.4"
+      ]
+    },
+    {
+      "id": "COMM-TEST-013",
+      "requirements": [],
+      "scope": "Announcement scheduling and publication use stable reviewed audience and content",
+      "automated": [
+        "tests/server/chapter-announcements.test.mjs",
+        "tests/client/announcement-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.3",
+        "25.5",
+        "27.1",
+        "27.2",
+        "27.4"
+      ]
+    },
+    {
+      "id": "COMM-TEST-014",
+      "requirements": [],
+      "scope": "Scoped announcement email is separately authorized and never inferred from UI visibility",
+      "automated": [
+        "tests/server/chapter-announcements.test.mjs",
+        "scripts/test-local-announcements.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.3",
+        "25.5",
+        "27.1",
+        "27.2",
+        "27.4"
+      ]
+    },
+    {
+      "id": "COMM-TEST-015",
+      "requirements": [],
+      "scope": "Whiteboard revisions and recovery refuse silent concurrent overwrites",
+      "automated": [
+        "tests/server/whiteboards.test.mjs",
+        "tests/client/whiteboard-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.3",
+        "25.5",
+        "27.1",
+        "27.2",
+        "27.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-004",
+      "requirements": [],
+      "scope": "Canonical decimal money never relies on floating-point rounding",
+      "automated": [
+        "tests/server/finances.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-005",
+      "requirements": [],
+      "scope": "Submission requires current authorized scope and valid server-owned request fields",
+      "automated": [
+        "tests/server/finance-routes.test.mjs",
+        "database/tests/050_finance_ledger.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-006",
+      "requirements": [],
+      "scope": "Approval chain and self-approval prohibitions are enforced in the ledger transaction",
+      "automated": [
+        "database/tests/050_finance_ledger.sql",
+        "scripts/test-local-finances.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-007",
+      "requirements": [],
+      "scope": "Rejection requires current proof, revision and a deliberate decision",
+      "automated": [
+        "tests/server/finances.test.mjs",
+        "tests/server/finance-routes.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-008",
+      "requirements": [],
+      "scope": "Completion preserves actual money and retained supporting evidence",
+      "automated": [
+        "database/tests/050_finance_ledger.sql",
+        "database/tests/051_finance_attachments.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-009",
+      "requirements": [],
+      "scope": "Cancellation and terminal transitions cannot silently overwrite later decisions",
+      "automated": [
+        "database/tests/050_finance_ledger.sql",
+        "tests/client/finance-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-010",
+      "requirements": [],
+      "scope": "Financial decisions and exact report/export scopes are audited",
+      "automated": [
+        "tests/server/finance-routes.test.mjs",
+        "scripts/test-local-finances.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-011",
+      "requirements": [],
+      "scope": "Finance attachments remain private, bounded and scanner-authorized",
+      "automated": [
+        "tests/server/finances.test.mjs",
+        "scripts/test-local-finance-uploads.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-012",
+      "requirements": [],
+      "scope": "Budget dates, decimal allocations and activation transitions validate server-side",
+      "automated": [
+        "tests/server/finances.test.mjs",
+        "tests/server/finance-routes.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-013",
+      "requirements": [],
+      "scope": "Budget changes preserve exact current version and allocation constraints",
+      "automated": [
+        "database/tests/050_finance_ledger.sql",
+        "tests/client/finance-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-014",
+      "requirements": [],
+      "scope": "Report totals and state counts use the same authorized filtered inventory",
+      "automated": [
+        "tests/server/finance-routes.test.mjs",
+        "tests/browser/operations-compositions.spec.ts"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-015",
+      "requirements": [],
+      "scope": "Finance CSV retains exact cents, masks identities and neutralizes formulas",
+      "automated": [
+        "tests/server/finances.test.mjs",
+        "tests/server/finance-routes.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-016",
+      "requirements": [],
+      "scope": "Retained financial records cannot be erased through ordinary delete routes or cleanup",
+      "automated": [
+        "tests/server/finance-routes.test.mjs",
+        "database/tests/051_finance_attachments.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-017",
+      "requirements": [],
+      "scope": "Selected-request refresh failure retains a dated proposal and pauses stale actions",
+      "automated": [
+        "tests/client/finance-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-018",
+      "requirements": [],
+      "scope": "Unknown finance saves reconcile before exact fresh-proof retries",
+      "automated": [
+        "tests/client/finance-recovery.test.tsx",
+        "scripts/test-local-finance-recovery.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "FIN-TEST-019",
+      "requirements": [],
+      "scope": "Inactive budget and inventory reads remain explicit and recoverable",
+      "automated": [
+        "database/tests/052_finance_inactive_budgets_cleanup.sql",
+        "tests/client/finance-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24.4",
+        "25.5",
+        "26.8",
+        "28.4"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-006",
+      "requirements": [],
+      "scope": "Subscription normalization and consent do not silently activate a subscriber",
+      "automated": [
+        "tests/server/newsletter.test.mjs",
+        "tests/client/newsletter-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-007",
+      "requirements": [],
+      "scope": "Repeated subscription requests preserve generic privacy responses",
+      "automated": [
+        "tests/server/newsletter-gate.test.mjs",
+        "scripts/test-local-newsletter.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-008",
+      "requirements": [],
+      "scope": "Confirmation token inspection does not consume a pending subscription",
+      "automated": [
+        "tests/server/newsletter-token-review.test.mjs",
+        "tests/client/newsletter-token-ui.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-009",
+      "requirements": [],
+      "scope": "Unsubscribe inspection and explicit confirmation preserve the original token action",
+      "automated": [
+        "tests/server/newsletter-token-review.test.mjs",
+        "tests/client/newsletter-token-ui.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-010",
+      "requirements": [],
+      "scope": "Token expiry, hashes and cleanup keep raw capabilities out of routine records",
+      "automated": [
+        "database/tests/108_newsletter_token_review.sql",
+        "database/tests/087_newsletter_token_bulk_cleanup.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-011",
+      "requirements": [],
+      "scope": "Subscriber management uses current state and bounded paginated selectors",
+      "automated": [
+        "tests/server/newsletter.test.mjs",
+        "tests/client/newsletter-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-012",
+      "requirements": [],
+      "scope": "Campaign subjects, templates and copied drafts remain normalized and escaped",
+      "automated": [
+        "tests/server/newsletter.test.mjs",
+        "tests/client/newsletter-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-013",
+      "requirements": [],
+      "scope": "Recipient selectors and final review create a fixed eligible audience snapshot",
+      "automated": [
+        "database/tests/083_newsletter_send_review.sql",
+        "scripts/test-local-newsletter-review.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-014",
+      "requirements": [],
+      "scope": "Scheduled campaign work is lease-bound and validates saved dates",
+      "automated": [
+        "database/tests/084_newsletter_delivery.sql",
+        "scripts/test-local-newsletter.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-015",
+      "requirements": [],
+      "scope": "Approving an uncertain campaign cannot create another audience or send intent",
+      "automated": [
+        "tests/client/newsletter-recovery.test.tsx",
+        "database/tests/083_newsletter_send_review.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-016",
+      "requirements": [],
+      "scope": "Campaign delivery attempts retain bounded retry/lease semantics",
+      "automated": [
+        "database/tests/084_newsletter_delivery.sql",
+        "scripts/test-local-newsletter.mjs"
+      ],
+      "remaining": [
+        "Actual authorized provider delivery and accepted-but-lost provider callbacks remain hosted acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-017",
+      "requirements": [],
+      "scope": "Provider callbacks verify original bytes, timestamp and rotation signatures",
+      "automated": [
+        "tests/server/newsletter-webhook.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-018",
+      "requirements": [],
+      "scope": "Terminal campaign detail and subscriber capabilities follow explicit retention cleanup",
+      "automated": [
+        "database/tests/085_newsletter_results_cleanup.sql",
+        "database/tests/087_newsletter_token_bulk_cleanup.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-019",
+      "requirements": [],
+      "scope": "Unsubscribe state suppresses recipients at the actual delivery boundary",
+      "automated": [
+        "database/tests/084_newsletter_delivery.sql",
+        "scripts/test-local-newsletter.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "NEWS-TEST-020",
+      "requirements": [],
+      "scope": "Audience authority and campaign permission are enforced independently of visible editor controls",
+      "automated": [
+        "tests/server/newsletter.test.mjs",
+        "database/tests/082_newsletter_workspace.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.12",
+        "23",
+        "26.5",
+        "27.3",
+        "27.4",
+        "29.2"
+      ]
+    },
+    {
+      "id": "CONTENT-TEST-013",
+      "requirements": [],
+      "scope": "Curated collections preserve ordering, inactive state, private proposals and current denial clearing",
+      "automated": [
+        "tests/server/content-records.test.mjs",
+        "tests/client/public-content-recovery.test.tsx",
+        "tests/client/cms-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22",
+        "23",
+        "25.5",
+        "28.3"
+      ]
+    },
+    {
+      "id": "CONTENT-TEST-014",
+      "requirements": [],
+      "scope": "Published navigation, footer and page copy use validated public projections and recoverable publishing",
+      "automated": [
+        "tests/server/site-content.test.mjs",
+        "tests/server/curated-content-retries.test.mjs",
+        "tests/client/cms-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22",
+        "23",
+        "25.5",
+        "28.3"
+      ]
+    },
+    {
+      "id": "PRIVATE-TEST-005",
+      "requirements": [],
+      "scope": "Blog content stays private and cannot create public document or discovery projections",
+      "automated": [
+        "tests/server/blog.test.mjs",
+        "tests/server/site-document.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "6.2",
+        "23",
+        "24",
+        "26.1",
+        "28.1"
+      ]
+    },
+    {
+      "id": "PRIVATE-TEST-006",
+      "requirements": [],
+      "scope": "Editor ownership and approval actions cannot become publishing or moderation authority",
+      "automated": [
+        "tests/server/blog.test.mjs",
+        "tests/client/blog-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "6.2",
+        "23",
+        "24",
+        "26.1",
+        "28.1"
+      ]
+    },
+    {
+      "id": "PRIVATE-TEST-009",
+      "requirements": [],
+      "scope": "Project membership, dates, links, status and tags use current private authority",
+      "automated": [
+        "tests/server/projects.test.mjs",
+        "tests/client/project-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "6.2",
+        "23",
+        "24",
+        "26.1",
+        "28.1"
+      ]
+    },
+    {
+      "id": "PRIVATE-TEST-010",
+      "requirements": [],
+      "scope": "Private editorial/project files require scoped authorization and safe upload handling",
+      "automated": [
+        "tests/server/blog.test.mjs",
+        "tests/server/projects.test.mjs",
+        "scripts/test-local-blog-uploads.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "6.2",
+        "23",
+        "24",
+        "26.1",
+        "28.1"
+      ]
+    },
+    {
+      "id": "PWA-TEST-002",
+      "requirements": [],
+      "scope": "GT manifest and icons expose the intended install surface without claiming actual device installation",
+      "automated": [
+        "tests/server/pwa-policy.test.mjs",
+        "scripts/prepare-pwa-icons.mjs"
+      ],
+      "remaining": [
+        "Physical Chromium/Android/iOS installability and icon presentation",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "11",
+        "27.3",
+        "28.3",
+        "30"
+      ]
+    },
+    {
+      "id": "PWA-TEST-003",
+      "requirements": [],
+      "scope": "Waiting updates require explicit guarded activation and preserve another dirty tab",
+      "automated": [
+        "scripts/test-production-pwa-update.mjs"
+      ],
+      "remaining": [
+        "Hosted retention of prior hashed JavaScript and deployed rollback",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "11",
+        "27.3",
+        "28.3",
+        "30"
+      ]
+    },
+    {
+      "id": "PWA-TEST-012",
+      "requirements": [],
+      "scope": "CacheStorage excludes APIs, admin, Forms and capability/query application URLs",
+      "automated": [
+        "tests/server/pwa-policy.test.mjs",
+        "tests/server/pwa-worker.test.mjs",
+        "scripts/test-production-pwa-boundaries.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "11",
+        "27.3",
+        "28.3",
+        "30"
+      ]
+    },
+    {
+      "id": "PWA-TEST-013",
+      "requirements": [],
+      "scope": "Offline public submissions do not turn validation, capacity or authorization refusal into automatic retry",
+      "automated": [
+        "tests/server/public-queue.test.mjs",
+        "tests/client/submission-queue-ui.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "11",
+        "27.3",
+        "28.3",
+        "30"
+      ]
+    },
+    {
+      "id": "PWA-TEST-014",
+      "requirements": [],
+      "scope": "IndexedDB multi-tab claims serialize one in-flight submission and expose storage failures",
+      "automated": [
+        "tests/server/public-queue.test.mjs",
+        "tests/client/submission-queue-ui.test.tsx",
+        "scripts/test-production-pwa-boundaries.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "11",
+        "27.3",
+        "28.3",
+        "30"
+      ]
+    },
+    {
+      "id": "PWA-TEST-015",
+      "requirements": [],
+      "scope": "Logout epochs and expiry erase stored personal payload and fence late acknowledgements",
+      "automated": [
+        "tests/server/public-queue.test.mjs",
+        "scripts/test-production-pwa-boundaries.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "11",
+        "27.3",
+        "28.3",
+        "30"
+      ]
+    },
+    {
+      "id": "PWA-TEST-016",
+      "requirements": [],
+      "scope": "Push permission is requested only after a deliberate eligible user action",
+      "automated": [
+        "tests/server/push.test.mjs"
+      ],
+      "remaining": [
+        "Actual supported-device permission prompts and denial/re-prompt behavior",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "11",
+        "27.3",
+        "28.3",
+        "30"
+      ]
+    },
+    {
+      "id": "PWA-TEST-017",
+      "requirements": [],
+      "scope": "Push subscriptions require a current session or verified registration capability",
+      "automated": [
+        "tests/server/push.test.mjs",
+        "scripts/test-local-push.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "11",
+        "27.3",
+        "28.3",
+        "30"
+      ]
+    },
+    {
+      "id": "PWA-TEST-018",
+      "requirements": [],
+      "scope": "Notification click destinations reject unsafe origins, paths and capability material",
+      "automated": [
+        "tests/server/push.test.mjs",
+        "tests/server/pwa-worker.test.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "11",
+        "27.3",
+        "28.3",
+        "30"
+      ]
+    },
+    {
+      "id": "PWA-TEST-019",
+      "requirements": [],
+      "scope": "Installed iOS/Android permission, delivery and click flows work on actual supported devices",
+      "automated": [],
+      "remaining": [
+        "Physical installed-device permission, real opt-in delivery/click and browser support acceptance; no provider send is authorized in this local task",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "11",
+        "27.3",
+        "28.3",
+        "30"
+      ]
+    },
+    {
+      "id": "PWA-TEST-020",
+      "requirements": [],
+      "scope": "Push worker delivery preserves leases, terminal failures and retry limits",
+      "automated": [
+        "tests/server/push.test.mjs",
+        "scripts/test-local-push.mjs"
+      ],
+      "remaining": [
+        "Actual authorized VAPID/provider delivery, device receipt and monitoring",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "11",
+        "27.3",
+        "28.3",
+        "30"
+      ]
+    },
+    {
+      "id": "A11Y-TEST-012",
+      "requirements": [],
+      "scope": "Real 200-percent browser zoom and reflow preserve all workflows and controls",
+      "automated": [],
+      "remaining": [
+        "Actual browser zoom/reflow across public, workspace and Forms routes; CSS or viewport emulation is insufficient",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "12.1",
+        "22.1",
+        "23",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
+      "id": "A11Y-TEST-013",
+      "requirements": [],
+      "scope": "Screen-reader critical paths work with VoiceOver, NVDA or JAWS",
+      "automated": [],
+      "remaining": [
+        "Manual assistive-technology paths, names, announcements and reading order",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "12.1",
+        "22.1",
+        "23",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
+      "id": "A11Y-TEST-014",
+      "requirements": [],
+      "scope": "Actual Safari/devices preserve orientation, viewport and software-keyboard behavior",
+      "automated": [],
+      "remaining": [
+        "Physical supported devices and Safari; emulated WebKit is separate evidence",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "12.1",
+        "22.1",
+        "23",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
+      "id": "A11Y-TEST-015",
+      "requirements": [],
+      "scope": "Validation errors are associated, readable and focus the actionable invalid field",
+      "automated": [
+        "tests/client/contact-ui.test.tsx",
+        "tests/client/event-ui.test.tsx",
+        "tests/client/form-settings-ui.test.tsx",
+        "tests/client/accessibility-structure.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "12.1",
+        "22.1",
+        "23",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
+      "id": "A11Y-TEST-016",
+      "requirements": [],
+      "scope": "Gallery lightbox retains keyboard operation, accessible labels and return focus",
+      "automated": [
+        "tests/client/public-gallery-ui.test.tsx",
+        "tests/client/accessibility-structure.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "12.1",
+        "22.1",
+        "23",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
+      "id": "A11Y-TEST-017",
+      "requirements": [],
+      "scope": "Builder and respondent field ordering remain operable without pointer dragging",
+      "automated": [
+        "tests/client/form-editor-permissions.test.tsx",
+        "tests/client/accessibility-structure.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "12.1",
+        "22.1",
+        "23",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
+      "id": "A11Y-TEST-018",
+      "requirements": [],
+      "scope": "Charts provide meaningful labels and accessible data alternatives without invented totals",
+      "automated": [
+        "tests/client/workspace-ui.test.tsx",
+        "tests/browser/workspace-compositions.spec.ts",
+        "tests/browser/operations-compositions.spec.ts"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "12.1",
+        "22.1",
+        "23",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
+      "id": "A11Y-TEST-019",
+      "requirements": [],
+      "scope": "Forced-colors and user transparency/motion preferences retain readable controls",
+      "automated": [],
+      "remaining": [
+        "Actual forced-colors/high-contrast and user preference review on supported systems",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "12.1",
+        "22.1",
+        "23",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
+      "id": "A11Y-TEST-020",
+      "requirements": [],
+      "scope": "File transfer, cancellation, retries and scanning states have accessible progress and focus",
+      "automated": [
+        "tests/client/respondent-file-recovery.test.tsx",
+        "tests/client/form-response-file-recovery.test.tsx"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "12.1",
+        "22.1",
+        "23",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
+      "id": "OPS-TEST-002",
+      "requirements": [],
+      "scope": "Hosted CSP, HSTS, framing, referrer, permissions and cache headers match the required route matrix",
+      "automated": [
+        "scripts/test-production-security-headers.mjs",
+        "tests/server/asset-cache-policy.test.mjs"
+      ],
+      "remaining": [
+        "Actual deployed header requests, CSP reporting, allowed embed/connect origins and private/no-store routes",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "14",
+        "16",
+        "26.8",
+        "27.3",
+        "29",
+        "31.2",
+        "32",
+        "33"
+      ]
+    },
+    {
+      "id": "OPS-TEST-003",
+      "requirements": [],
+      "scope": "Scheduled work requires server-only credentials, correct occurrence and current lease",
+      "automated": [
+        "tests/server/jobs.test.mjs",
+        "scripts/test-local-jobs.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "14",
+        "16",
+        "26.8",
+        "27.3",
+        "29",
+        "31.2",
+        "32",
+        "33"
+      ]
+    },
+    {
+      "id": "OPS-TEST-004",
+      "requirements": [],
+      "scope": "Queued mail maintains bounded retry and authenticated payload handling",
+      "automated": [
+        "tests/server/events.test.mjs",
+        "tests/server/event-mail.test.mjs",
+        "scripts/test-local-jobs.mjs"
+      ],
+      "remaining": [
+        "Actual authorized mail provider acceptance and delivery monitoring",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "14",
+        "16",
+        "26.8",
+        "27.3",
+        "29",
+        "31.2",
+        "32",
+        "33"
+      ]
+    },
+    {
+      "id": "OPS-TEST-005",
+      "requirements": [],
+      "scope": "Pinned malware scanner, signatures, startup trust and actual framed scanning are verified",
+      "automated": [
+        "tests/server/scanner.test.mjs",
+        "scripts/test-local-scanner.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "14",
+        "16",
+        "26.8",
+        "27.3",
+        "29",
+        "31.2",
+        "32",
+        "33"
+      ]
+    },
+    {
+      "id": "OPS-TEST-006",
+      "requirements": [],
+      "scope": "Media publication/purge jobs preserve private originals, current scope and held data",
+      "automated": [
+        "tests/server/media.test.mjs",
+        "tests/server/media-content.test.mjs",
+        "scripts/test-local-media-files.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "14",
+        "16",
+        "26.8",
+        "27.3",
+        "29",
+        "31.2",
+        "32",
+        "33"
+      ]
+    },
+    {
+      "id": "OPS-TEST-007",
+      "requirements": [],
+      "scope": "Form export expiry, abandoned jobs and protected downloads preserve lease and access rules",
+      "automated": [
+        "tests/server/form-exports.test.mjs",
+        "scripts/test-local-form-exports.mjs"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "14",
+        "16",
+        "26.8",
+        "27.3",
+        "29",
+        "31.2",
+        "32",
+        "33"
+      ]
+    },
+    {
+      "id": "OPS-TEST-008",
+      "requirements": [],
+      "scope": "Retention cleanup stops at batch/time budgets and reports unfinished or lost-lease work",
+      "automated": [
+        "tests/server/retention-worker.test.mjs",
+        "tests/server/jobs.test.mjs",
+        "database/tests/096_operational_retention.sql"
+      ],
+      "remaining": [
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "14",
+        "16",
+        "26.8",
+        "27.3",
+        "29",
+        "31.2",
+        "32",
+        "33"
+      ]
+    },
+    {
+      "id": "OPS-TEST-012",
+      "requirements": [],
+      "scope": "Hosted monitors, alerts and scheduled dependencies are active under supervised operations",
+      "automated": [
+        "tests/server/telemetry.test.mjs",
+        "database/tests/097_operational_monitoring.sql"
+      ],
+      "remaining": [
+        "Hosted alert delivery, receiver ownership and missed-cadence observation",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "14",
+        "16",
+        "26.8",
+        "27.3",
+        "29",
+        "31.2",
+        "32",
+        "33"
+      ]
+    },
+    {
+      "id": "OPS-TEST-013",
+      "requirements": [],
+      "scope": "Hosted PITR plus object recovery meets the agreed RPO/RTO",
+      "automated": [
+        "scripts/test-backup-restore.mjs"
+      ],
+      "remaining": [
+        "Actual hosted PITR/object restore and measured RPO/RTO; isolated local restore does not certify these",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "14",
+        "16",
+        "26.8",
+        "27.3",
+        "29",
+        "31.2",
+        "32",
+        "33"
+      ]
+    },
+    {
+      "id": "OPS-TEST-014",
+      "requirements": [],
+      "scope": "Migration rehearsal works with explicit API grants on fresh and legacy-default databases",
+      "automated": [
+        "scripts/test-database.mjs",
+        "scripts/source-db-audit.mjs"
+      ],
+      "remaining": [
+        "Staging migration rehearsal and exact artifact/rollback review",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "14",
+        "16",
+        "26.8",
+        "27.3",
+        "29",
+        "31.2",
+        "32",
+        "33"
+      ]
+    },
+    {
+      "id": "OPS-TEST-015",
+      "requirements": [],
+      "scope": "Exact-artifact promotion, rollback and 48-hour observation are signed off",
+      "automated": [],
+      "remaining": [
+        "Authorized staging/production rollout, rollback drill and full 48-hour observation; deployment remains outside this local task",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "14",
+        "16",
+        "26.8",
+        "27.3",
+        "29",
+        "31.2",
+        "32",
+        "33"
+      ]
+    },
+    {
+      "id": "VIS-TEST-001",
+      "requirements": [],
+      "scope": "Homepage populated composition review candidates",
+      "automated": [
+        "tests/browser/public-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-002",
+      "requirements": [],
+      "scope": "Hero and shared navigation populated composition review candidates",
+      "automated": [
+        "tests/browser/public-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-003",
+      "requirements": [],
+      "scope": "Chapter statistics populated composition review candidates",
+      "automated": [
+        "tests/browser/public-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-004",
+      "requirements": [],
+      "scope": "Upcoming events populated composition review candidates",
+      "automated": [
+        "tests/browser/public-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-005",
+      "requirements": [],
+      "scope": "Footer populated composition review candidates",
+      "automated": [
+        "tests/browser/public-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-006",
+      "requirements": [],
+      "scope": "Events listing populated composition review candidates",
+      "automated": [
+        "tests/browser/public-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-007",
+      "requirements": [],
+      "scope": "Event detail populated composition review candidates",
+      "automated": [
+        "tests/browser/public-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-008",
+      "requirements": [],
+      "scope": "Public team populated composition review candidates",
+      "automated": [
+        "tests/browser/public-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-009",
+      "requirements": [],
+      "scope": "Resources populated composition review candidates",
+      "automated": [
+        "tests/browser/public-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-010",
+      "requirements": [],
+      "scope": "Sponsors populated composition review candidates",
+      "automated": [
+        "tests/browser/public-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-011",
+      "requirements": [],
+      "scope": "Gallery populated composition review candidates",
+      "automated": [
+        "tests/browser/public-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-012",
+      "requirements": [],
+      "scope": "Contact populated composition review candidates",
+      "automated": [
+        "tests/browser/public-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-013",
+      "requirements": [],
+      "scope": "Admin overview populated composition review candidates",
+      "automated": [
+        "tests/browser/workspace-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-014",
+      "requirements": [],
+      "scope": "Admin events populated composition review candidates",
+      "automated": [
+        "tests/browser/workspace-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-015",
+      "requirements": [],
+      "scope": "Teams and collaboration populated composition review candidates",
+      "automated": [
+        "tests/browser/workspace-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-016",
+      "requirements": [],
+      "scope": "Finances populated composition review candidates",
+      "automated": [
+        "tests/browser/operations-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-017",
+      "requirements": [],
+      "scope": "Communications and newsletter populated composition review candidates",
+      "automated": [
+        "tests/browser/operations-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-018",
+      "requirements": [],
+      "scope": "Content and media populated composition review candidates",
+      "automated": [
+        "tests/browser/operations-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-019",
+      "requirements": [],
+      "scope": "Forms library populated composition review candidates",
+      "automated": [
+        "tests/browser/workspace-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-020",
+      "requirements": [],
+      "scope": "Form builder populated composition review candidates",
+      "automated": [
+        "tests/browser/workspace-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-021",
+      "requirements": [],
+      "scope": "Public form populated composition review candidates",
+      "automated": [
+        "tests/browser/workspace-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "VIS-TEST-022",
+      "requirements": [],
+      "scope": "Form responses populated composition review candidates",
+      "automated": [
+        "tests/browser/workspace-compositions.spec.ts",
+        "scripts/summarize-visual-review.mjs"
+      ],
+      "remaining": [
+        "Approved chapter content/assets, complete prompt-specific secondary surfaces, human fidelity approval, then deterministic approved baselines and 1% pixel diffs at both desktop sizes and mobile",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "10.9",
+        "16.5",
+        "31.2"
+      ]
+    },
+    {
+      "id": "A11Y-TEST-011",
+      "requirements": [],
+      "scope": "Progressive public homepage availability with native inert controls, live/maintenance redirects, route-lazy landmark focus and footer sign-in entry",
+      "automated": [
+        "tests/client/site-availability-loading.test.tsx",
+        "tests/client/route-focus.test.tsx",
+        "tests/browser/lazy-shell-focus.spec.ts"
+      ],
+      "remaining": [
+        "Manual assistive technology, actual supported devices and complete public/private navigation acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "22.1",
+        "22.2",
+        "23",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
       "id": "SEC-TEST-030",
       "requirements": [],
       "scope": "Browser database isolation and separate HTML entry preservation",
@@ -2169,6 +5150,7 @@
       "scope": "Authorized maintenance, escape paths, health and safe redirects",
       "automated": [
         "tests/server/site-status.test.mjs",
+        "tests/server/public-site-status.test.mjs",
         "database/tests/057_site_status_control.sql",
         "scripts/test-local-site-status.mjs"
       ],
@@ -3118,6 +6100,8 @@
       "automated": [
         "tests/client/scrollable-table.test.tsx",
         "tests/browser/workspace-smoke.spec.ts",
+        "tests/client/admin-navigation-focus.test.tsx",
+        "tests/browser/full-workspace-navigation.spec.ts",
         "scripts/test-local-workspace-browser.mjs"
       ],
       "remaining": [

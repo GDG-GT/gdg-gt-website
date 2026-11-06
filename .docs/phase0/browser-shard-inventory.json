@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-11-06T22:34:35.769Z",
+  "shards": [
+    {
+      "shard": 1,
+      "cases": 414
+    },
+    {
+      "shard": 2,
+      "cases": 414
+    },
+    {
+      "shard": 3,
+      "cases": 414
+    }
+  ],
+  "total": 1242,
+  "duplicates": 0,
+  "caseKeysSha256": "cb938a2283c99c54759a1dcf7a86338893b31d6f692d7fb6d8630a9c107a004d",
+  "note": "Local pinned Playwright --list inventory only, not execution or CI success. Final complete-navigation spec is included. Three configured shards preserve every case and all assertions/timeouts/retry settings."
+}

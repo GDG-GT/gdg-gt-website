@@ -2798,6 +2798,13 @@ img {
 .gt-route-loading {
   padding-block: 150px 80px;
 }
+.gt-initial-route-loading {
+  min-height: 100svh;
+}
+.gt-availability-frame,
+.gt-hero-picture {
+  display: contents;
+}
 @keyframes gt-shimmer {
   to {
     background-position: -200% 0;
@@ -5718,6 +5725,7 @@ fieldset.gt-event-fields {
     border-radius: 13px;
     padding-inline: 16px 10px;
     gap: 10px;
+    backdrop-filter: none;
   }
   .gt-brand > span {
     font-size: 1.08rem;
@@ -5757,7 +5765,7 @@ fieldset.gt-event-fields {
     text-align: center;
     background: #fff4e7df;
     border-radius: 20px;
-    backdrop-filter: blur(8px);
+    backdrop-filter: none;
   }
   .gt-hero-intro {
     font-size: 0.62rem;

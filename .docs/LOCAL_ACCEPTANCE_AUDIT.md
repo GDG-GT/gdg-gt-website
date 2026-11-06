@@ -1,8 +1,9 @@
 # Local implementation and acceptance audit — 2026-11-06
 
-Updated through privacy recovery checkpoint 137. These are concrete
+Updated through privacy recovery checkpoint 137 and the populated-browser/PWA
+acceptance pass. These are concrete
 remaining local findings, not an exhaustive acceptance certificate. All 146
-numbered requirements and 160 logical acceptance cases remain unverified against
+numbered requirements and 307 logical acceptance cases remain unverified against
 the complete PRD definition; hosted/device/manual/approved-visual gates cannot
 be inferred from local tests.
 
@@ -32,19 +33,46 @@ be inferred from local tests.
    applied migrations 136/137), preserving exact source/hold/expiry/current proof
    and single-use exports. A fresh final implementation audit remains required;
    this does not certify physical erasure or complete PRD acceptance.
-4. Global coverage now passes unchanged gates: all 2,649 tests/210 files pass,
-   lines 77.73%, branches 75.40%, statements 75.79%, functions 70.35%; all 21
-   critical branch gates pass. Unused-helper retirement changes the denominator
-   separately from 99 newly exercised active workflow functions; provenance and
-   full evidence in `UNUSED_HELPER_RETIREMENT.md`. Complete 1,062-case browser
-   regression is running; final local performance/PWA/security/visual audit remains.
+4. Final coverage passes unchanged gates: all 2,672 tests/214 files pass,
+   lines 78.09%, branches 75.59%, statements 76.10%, functions 70.75%; all 21
+   critical branch gates pass. See `phase0/final-public-entry-quality.json`.
+   The earlier unused-helper retirement denominator change is separately
+   documented in `UNUSED_HELPER_RETIREMENT.md`. Complete broad browser baseline
+   passed 1,228 cases plus eight expected skips, with zero failures. Final
+   rebuilt-artifact navigation/lazy-shell/workspace scope passes all 90 cases.
+   The current catalog partitions 1,242 cases into three shards of 414, with no
+   missing/duplicate cases; no GitHub run is claimed.
+   The 22 primary prompt groups have 162 unapproved screenshots from 138 passing
+   composition checks. See `POPULATED_VISUAL_REVIEW.md`.
+5. Production PWA: 15 real CacheStorage/IndexedDB boundary checks and nine
+   two-tab update checks pass locally. The latter now covers changed offline HTML,
+   exact precache revision changes, approved activation and obsolete cache cleanup;
+   no real application writes or provider sends. Actual installed-device and
+   hosted hashed-asset rollout/rollback acceptance remains open.
+6. Public entry: route-lazy shell/sign-in/public-page loading, preserved pending
+   route focus, safe shell-error fallback and progressive homepage availability
+   are implemented. Public identity paints while controls remain natively inert
+   until availability resolves; live confirmation preserves mounted content and
+   maintenance still redirects. Current public JavaScript is about 126 kB gzip.
+   Drawer/search invocation and destination focus are corrected, including
+   Chromium-mobile Escape and active composition. All nine unit cases and the
+   final 90-case browser scope pass (`WORKSPACE_NAVIGATION_CHECKS.md`). Mobile
+   LCP remains a confirmed performance gap; actual zoom remains unverified.
+7. Local HTTPS/CSP enforcement passes 45 checks, including inline-script refusal
+   and stable-versus-hashed asset response caching. Stable artwork/fonts revalidate;
+   only hashed JS/CSS are immutable (`PRODUCTION_HEADER_CHECKS.md`). Local secret
+   scanning passes with exact non-secret line reviews; no rules or paths excluded.
+   Types/build/budgets pass; lint has zero errors/10 existing warnings. The
+   production dependency audit has zero high/critical findings, with two moderate
+   and four low findings remaining. Actual hosted/staging security sign-off is open.
 
 ## Acceptance work still separate
 
-- All mandatory ID ranges and normative Sections 21–33, negative role/team and
-  supported-browser populated/mutation/dialog states.
-- The 22 populated visual compositions at 1920×1080, 1440×900 and mobile;
-  approved assets/content and Tejas's blocking visual approval, then 1% diffs.
+- Full acceptance of all mapped mandatory IDs and normative Sections 21–33,
+  including complete negative-role/team and populated/mutation/dialog states.
+- Complete secondary prompt surfaces, approved assets/content and Tejas's
+  blocking fidelity approval, then approved baselines and 1% visual diffs at
+  1920×1080, 1440×900 and mobile. Primary review captures do not close this gate.
 - Manual keyboard, assistive technology, 200% zoom, actual Safari/devices,
   Lighthouse accessibility 100/performance targets, runtime Web Vitals and
   representative 3D hardware/load testing.

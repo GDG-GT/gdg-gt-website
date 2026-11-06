@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { readFile } from "node:fs/promises";
-import { validatePrdTestPlan } from "../scripts/check-prd-traceability.mjs";
+import {
+  validatePrdTestPlan,
+  validateMandatoryTestRanges,
+} from "../scripts/check-prd-traceability.mjs";
 import { prdTestCases } from "../scripts/lib/prd-test-plan.mjs";
 const inventory = JSON.parse(
   await readFile(
@@ -52,5 +55,19 @@ describe("reviewed PRD test traceability", () => {
         },
       }),
     ).rejects.toThrow("Missing source");
+  });
+  it("refuses a catalog with an unmapped mandatory test even when requirement mapping survives", () => {
+    expect(() => validateMandatoryTestRanges(prdTestCases)).not.toThrow();
+    expect(() =>
+      validateMandatoryTestRanges(
+        prdTestCases.filter((row) => row.id !== "OPS-TEST-015"),
+      ),
+    ).toThrow("Unmapped mandatory test IDs: OPS-TEST-015");
+    const physicalPush = prdTestCases.find((row) => row.id === "PWA-TEST-019");
+    expect(physicalPush?.automated).toEqual([]);
+    expect(physicalPush?.acceptance).toBe("unverified");
+    expect(physicalPush?.remaining.join(" ")).toContain(
+      "Physical installed-device",
+    );
   });
 });

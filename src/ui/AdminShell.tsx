@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { useNavigationSafety } from "@/hooks/useDraftGuard";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -116,12 +123,35 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   const navigationSafety = useNavigationSafety();
   const location = useLocation(),
     navigate = useNavigate();
+  const navigationOpener = useRef<HTMLButtonElement>(null),
+    navigationOrigin = useRef(location.pathname),
+    currentPath = useRef(location.pathname),
+    restoreNavigationFocus = useRef(false),
+    navigationSamePage = useRef(false),
+    searchOpener = useRef<HTMLButtonElement>(null),
+    searchPrevious = useRef<HTMLElement | null>(null),
+    searchOrigin = useRef(location.pathname),
+    restoreSearchFocus = useRef(false),
+    searchSamePage = useRef(false);
+  currentPath.current = location.pathname;
   const [mobileOpen, setMobileOpen] = useState(false),
     [searchOpen, setSearchOpen] = useState(false),
     [query, setQuery] = useState("");
   const [allowed, setAllowed] = useState<string[]>([]),
     [navFailed, setNavFailed] = useState(false),
     [navRetry, setNavRetry] = useState(0);
+  const openSearch = useCallback((invoker?: HTMLElement) => {
+    const focused = document.activeElement;
+    searchPrevious.current =
+      invoker ||
+      (focused instanceof HTMLElement && focused !== document.body
+        ? focused
+        : null);
+    searchOrigin.current = currentPath.current;
+    restoreSearchFocus.current = true;
+    searchSamePage.current = false;
+    setSearchOpen(true);
+  }, []);
   useEffect(() => {
     if (!currentAdmin) return;
     let cancelled = false;
@@ -157,12 +187,13 @@ export default function AdminShell({ children }: { children: ReactNode }) {
     const key = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key === "k") {
         event.preventDefault();
-        setSearchOpen((value) => !value);
+        if (searchOpen) setSearchOpen(false);
+        else openSearch();
       }
     };
     document.addEventListener("keydown", key);
     return () => document.removeEventListener("keydown", key);
-  }, []);
+  }, [searchOpen, openSearch]);
   const title = location.pathname.startsWith("/admin/team/")
     ? "Team workspace"
     : [...workspaceDestinations]
@@ -220,7 +251,11 @@ export default function AdminShell({ children }: { children: ReactNode }) {
                       ? "active"
                       : undefined
                   }
-                  onClick={() => setMobileOpen(false)}
+                  onClick={() => {
+                    restoreNavigationFocus.current = false;
+                    navigationSamePage.current = href === currentPath.current;
+                    setMobileOpen(false);
+                  }}
                 >
                   <Icon size={17} />
                   <span>{label}</span>
@@ -232,7 +267,13 @@ export default function AdminShell({ children }: { children: ReactNode }) {
         })}
       </nav>
       <div className="gt-sidebar-bottom">
-        <Link to="/">
+        <Link
+          to="/"
+          onClick={() => {
+            restoreNavigationFocus.current = false;
+            setMobileOpen(false);
+          }}
+        >
           <ArrowUpRight size={17} /> View public site
         </Link>
         <button
@@ -266,7 +307,13 @@ export default function AdminShell({ children }: { children: ReactNode }) {
         <header className="gt-workspace-topbar">
           <button
             className="gt-icon-button gt-admin-menu"
-            onClick={() => setMobileOpen(true)}
+            ref={navigationOpener}
+            onClick={() => {
+              navigationOrigin.current = location.pathname;
+              restoreNavigationFocus.current = true;
+              navigationSamePage.current = false;
+              setMobileOpen(true);
+            }}
             aria-label="Open workspace navigation"
           >
             <Menu size={21} />
@@ -279,7 +326,8 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           <button
             className="gt-command-trigger"
             aria-label="Search the workspace"
-            onClick={() => setSearchOpen(true)}
+            ref={searchOpener}
+            onClick={(event) => openSearch(event.currentTarget)}
           >
             <Search size={16} />
             <span>Search the workspace…</span>
@@ -319,7 +367,21 @@ export default function AdminShell({ children }: { children: ReactNode }) {
         </main>
       </div>
       <Dialog open={mobileOpen} onOpenChange={setMobileOpen}>
-        <DialogContent className="gt-mobile-sidebar">
+        <DialogContent
+          className="gt-mobile-sidebar"
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            if (navigationSamePage.current)
+              document
+                .getElementById("workspace-content")
+                ?.focus({ preventScroll: true });
+            else if (
+              restoreNavigationFocus.current &&
+              navigationOrigin.current === currentPath.current
+            )
+              navigationOpener.current?.focus({ preventScroll: true });
+          }}
+        >
           <DialogTitle className="sr-only">Workspace navigation</DialogTitle>
           <DialogDescription className="sr-only">
             Navigate chapter management tools.
@@ -328,7 +390,37 @@ export default function AdminShell({ children }: { children: ReactNode }) {
         </DialogContent>
       </Dialog>
       <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
-        <DialogContent className="gt-command-dialog">
+        <DialogContent
+          className="gt-command-dialog"
+          onEscapeKeyDown={(event) => {
+            if (event.isComposing) event.preventDefault();
+          }}
+          onKeyDownCapture={(event) => {
+            if (event.key !== "Escape") return;
+            // Handle palette dismissal before a search input or another layer
+            // consumes Escape. An IME may still use it to finish composition.
+            event.stopPropagation();
+            if (!event.nativeEvent.isComposing) {
+              event.preventDefault();
+              setSearchOpen(false);
+            }
+          }}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            if (searchSamePage.current)
+              document
+                .getElementById("workspace-content")
+                ?.focus({ preventScroll: true });
+            else if (
+              restoreSearchFocus.current &&
+              searchOrigin.current === currentPath.current
+            ) {
+              if (searchPrevious.current?.isConnected)
+                searchPrevious.current.focus({ preventScroll: true });
+              else searchOpener.current?.focus({ preventScroll: true });
+            }
+          }}
+        >
           <DialogTitle>Go to a workspace</DialogTitle>
           <DialogDescription>
             Find chapter tools and management pages.
@@ -345,6 +437,8 @@ export default function AdminShell({ children }: { children: ReactNode }) {
                 key={href}
                 to={href}
                 onClick={() => {
+                  restoreSearchFocus.current = false;
+                  searchSamePage.current = href === currentPath.current;
                   setSearchOpen(false);
                   setQuery("");
                 }}

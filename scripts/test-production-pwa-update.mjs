@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 import { readFile, writeFile } from "node:fs/promises";
 import { once } from "node:events";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { chromium, expect } from "@playwright/test";
 const root = path.resolve("dist"),
   tests = [],
@@ -11,6 +12,14 @@ const root = path.resolve("dist"),
 let browser,
   completed = false,
   buildRevision = 1;
+const offlineDocument = await readFile(path.join(root, "offline.html"), "utf8");
+const offlineBytes = () =>
+  Buffer.from(
+    offlineDocument +
+      "\n<!-- Owned offline asset revision " +
+      buildRevision +
+      " -->\n",
+  );
 const mime = {
   ".js": "text/javascript",
   ".css": "text/css",
@@ -75,16 +84,23 @@ const server = createServer(async (req, res) => {
       "Content-Type",
       mime[path.extname(file)] || "application/octet-stream",
     );
-    res.end(
-      file === path.join(root, "sw.js")
-        ? Buffer.concat([
-            bytes,
-            Buffer.from(
-              "\n// Owned update probe revision " + buildRevision + "\n",
-            ),
-          ])
-        : bytes,
-    );
+    if (file === path.join(root, "offline.html")) bytes = offlineBytes();
+    if (file === path.join(root, "sw.js")) {
+      const source = bytes.toString(),
+        pattern = /\{"revision":"[a-f0-9]+","url":"offline\.html"\}/g;
+      if ([...source.matchAll(pattern)].length !== 1)
+        throw Error("Expected exactly one production offline precache entry");
+      bytes = Buffer.from(
+        source.replace(
+          pattern,
+          JSON.stringify({
+            revision: createHash("sha256").update(offlineBytes()).digest("hex"),
+            url: "offline.html",
+          }),
+        ),
+      );
+    }
+    res.end(bytes);
   } catch {
     res.statusCode = 500;
     res.end("Owned static fixture failure");
@@ -107,6 +123,14 @@ try {
     await expect
       .poll(() => one.evaluate(() => !!navigator.serviceWorker.controller))
       .toBe(true);
+    check(
+      await one.evaluate(async () =>
+        (await (await fetch("/offline.html")).text()).includes(
+          "Owned offline asset revision 1",
+        ),
+      ),
+      "initial production worker serves its reviewed offline asset revision",
+    );
     const two = await ctx.newPage();
     await two.goto(origin + "/offline");
     for (const [page, email] of [
@@ -153,6 +177,14 @@ try {
         )),
       "declining production worker update preserves dirty fields and waiting version",
     );
+    check(
+      await one.evaluate(async () =>
+        (await (await fetch("/offline.html")).text()).includes(
+          "Owned offline asset revision 1",
+        ),
+      ),
+      "waiting changed offline asset does not replace the active version before explicit approval",
+    );
     await one
       .getByRole("button", { name: "Update this tab", exact: true })
       .click();
@@ -184,6 +216,32 @@ try {
       "explicit update activates the waiting worker without automatic fleet reload",
     );
     check(
+      await one.evaluate(async () =>
+        (await (await fetch("/offline.html")).text()).includes(
+          "Owned offline asset revision 2",
+        ),
+      ),
+      "approved worker activates the newly revisioned offline asset",
+    );
+    await expect
+      .poll(() =>
+        one.evaluate(async () => {
+          const entries = [];
+          for (const name of await caches.keys()) {
+            const cache = await caches.open(name);
+            for (const key of await cache.keys())
+              if (new URL(key.url).pathname === "/offline.html")
+                entries.push(await (await cache.match(key)).text());
+          }
+          return (
+            entries.length === 1 &&
+            entries[0].includes("Owned offline asset revision 2")
+          );
+        }),
+      )
+      .toBe(true);
+    check(true, "activation removes the obsolete offline asset cache revision");
+    check(
       !requests.some((r) => !["GET", "HEAD"].includes(r.method)),
       "multi-tab update probe performs no actual application mutation or provider send",
     );
@@ -201,7 +259,7 @@ try {
         generatedAt: new Date().toISOString(),
         completed,
         scope:
-          "Owned loopback production build. Worker bytes vary only by an appended probe-version comment; real waiting/activation and actual production dirty-navigation UI used in two tabs. Isolated context closed and static server stopped. Does not certify real device install/push, hosted retention of old hashed assets or changed-deployment rollback.",
+          "Owned loopback production build. Offline HTML bytes vary by an inert revision comment, and the production worker's exact precache entry receives the matching SHA-256 revision. Real waiting/activation/cache cleanup and actual production dirty-navigation UI used in two tabs. Isolated context closed and static server stopped. Does not certify real device install/push, hosted retention of old hashed JS assets or changed-deployment rollback.",
         tests,
       },
       null,

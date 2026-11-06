@@ -22,12 +22,15 @@ const routers: ReturnType<typeof createMemoryRouter>[] = [];
 function Page({
   customFocus = false,
   landmark = true,
+  delayed = false,
 }: {
   customFocus?: boolean;
   landmark?: boolean;
+  delayed?: boolean;
 }) {
   const location = useLocation(),
     [dirty, setDirty] = useState(false),
+    [ready, setReady] = useState(false),
     heading = useRef<HTMLHeadingElement>(null),
     previous = useRef(location.pathname);
   useDraftGuard(dirty, { privateDraft: false, label: "Fictional page draft" });
@@ -47,26 +50,30 @@ function Page({
         <Link to="/admin/forms">Forms workspace</Link>
         <Link to="/team">Team</Link>
       </nav>
-      <main
-        id={
-          landmark
-            ? privatePage
-              ? "workspace-content"
-              : "main-content"
-            : undefined
-        }
-        tabIndex={-1}
-        key={location.pathname}
-      >
-        <h1 ref={heading} tabIndex={-1}>
-          Fictional destination
-        </h1>
-        <label>
-          Fictional draft
-          <input onChange={() => setDirty(true)} />
-        </label>
-        <button>Local action</button>
-      </main>
+      {delayed && privatePage && !ready ? (
+        <button onClick={() => setReady(true)}>Finish loading workspace</button>
+      ) : (
+        <main
+          id={
+            landmark
+              ? privatePage
+                ? "workspace-content"
+                : "main-content"
+              : undefined
+          }
+          tabIndex={-1}
+          key={location.pathname}
+        >
+          <h1 ref={heading} tabIndex={-1}>
+            Fictional destination
+          </h1>
+          <label>
+            Fictional draft
+            <input onChange={() => setDirty(true)} />
+          </label>
+          <button>Local action</button>
+        </main>
+      )}
     </>
   );
 }
@@ -194,5 +201,49 @@ describe("Page navigation focus", () => {
       await r.navigate("/admin/content");
     });
     expect(document.activeElement).toBe(document.body);
+  });
+  it("waits for a route-lazy workspace landmark to mount", async () => {
+    const r = mount("/", { delayed: true });
+    await act(async () => {
+      await r.navigate("/admin/forms");
+    });
+    expect(document.activeElement).toBe(document.body);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Finish loading workspace" }),
+    );
+    await waitFor(() =>
+      expect(document.activeElement?.id).toBe("workspace-content"),
+    );
+  });
+  it("preserves an intervening focus choice while the workspace loads", async () => {
+    const r = mount("/", { delayed: true });
+    await act(async () => {
+      await r.navigate("/admin/forms");
+    });
+    const control = screen.getByRole("link", { name: "Team" });
+    control.focus();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Finish loading workspace" }),
+    );
+    await waitFor(() =>
+      expect(document.getElementById("workspace-content")).toBeTruthy(),
+    );
+    expect(document.activeElement).toBe(control);
+  });
+  it("cancels a pending landmark focus when another route replaces it", async () => {
+    const r = mount("/", { delayed: true });
+    await act(async () => {
+      await r.navigate("/admin/forms");
+    });
+    await act(async () => {
+      await r.navigate("/team");
+    });
+    expect(document.activeElement?.id).toBe("main-content");
+    const control = screen.getByRole("button", { name: "Local action" });
+    control.focus();
+    await act(async () => {
+      await r.navigate("/team?page=2");
+    });
+    expect(document.activeElement).toBe(control);
   });
 });

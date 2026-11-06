@@ -13,6 +13,8 @@ dist
 dist-ssr
 coverage/
 artifacts/browser/
+artifacts/performance/
+artifacts/quality/
 playwright-report/
 test-results/
 *.local
@@ -43,4 +45,5 @@ infra/supabase/migrations/
 infra/supabase/.temp/
 infra/supabase/.branches/
 public/assets/excalidraw/
+public/assets/hero-*-mobile.webp
 excalidraw.offloaded-backup/

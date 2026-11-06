@@ -125,14 +125,31 @@ test("anonymous administration never renders a private form inventory", async ({
 test("reduced motion keeps an accessible static hero without WebGL downloads", async ({
   page,
 }) => {
-  const enhancements: string[] = [];
+  const enhancements: string[] = [],
+    heroImages: string[] = [];
   page.on("request", (request) => {
     if (/HeroObjects|three-vendor|three\.core/.test(request.url()))
       enhancements.push(request.url());
+    if (/\/hero-(?:atmosphere|campus)(?:-mobile)?\.webp$/.test(request.url()))
+      heroImages.push(new URL(request.url()).pathname);
   });
   await page.goto("/");
   await page.mouse.move(300, 250);
   await expect(page.locator(".gt-hero-static-objects")).toBeVisible();
+  await expect
+    .poll(() =>
+      page
+        .locator(".gt-hero-static-objects")
+        .evaluate(
+          (node: HTMLImageElement) => node.complete && node.naturalWidth > 0,
+        ),
+    )
+    .toBe(true);
+  const suffix = page.viewportSize()!.width <= 480 ? "-mobile" : "";
+  expect(heroImages.sort()).toEqual([
+    `/assets/hero-atmosphere${suffix}.webp`,
+    `/assets/hero-campus${suffix}.webp`,
+  ]);
   await expect(page.locator(".gt-home-hero canvas")).toHaveCount(0);
   expect(enhancements).toEqual([]);
 });

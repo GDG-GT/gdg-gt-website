@@ -8,6 +8,55 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Public entry, complete test catalog and acceptance verification — 2026-11-06
+
+- All 307 mandatory test IDs now have reviewed automated references and/or
+  explicit manual/hosted steps. All 146 numbered requirements remain unverified
+  against full acceptance. The structural checker rejects a missing mandatory
+  ID even when feature mapping still passes; four checker tests pass. This is
+  traceability, not a completion percentage.
+- Final complete coverage: 2,672 tests/214 files, all unchanged global 70% and
+  21 critical 90%-branch gates pass. Lines 78.09%, statements 76.10%, branches
+  75.59%, functions 70.75%. Nine drawer/search/composition unit cases pass within
+  that run; source/cache policy cases are also included.
+- Complete production-browser baseline passed 1,228 cases with eight expected
+  skips and zero failures. Its 138 populated composition checks yield 162
+  unapproved captures for all 22 primary prompt groups. Final rebuilt-artifact
+  navigation/lazy-shell/workspace scope passes all 90 cases across six profiles.
+  These are separate invocations, not one new 1,242-case run. No approved golden/
+  pixel or actual Safari/device acceptance is claimed (`POPULATED_VISUAL_REVIEW.md`).
+- Route-lazy admin/sign-in/public pages, canonical small availability parser,
+  progressive natively inert home identity, deferred landmark focus and safe
+  shell-error fallback are implemented. Unused query/toast/tooltip startup
+  mounts were removed after confirming no consumers. Initial JavaScript is
+  about 126 kB gzip. Existing local artwork supplies the two smaller mobile
+  crops; every emulated browser now requests exactly its selected image pair.
+- Isolated Lighthouse scores are 94/94/95 mobile and 100 desktop, accessibility
+  100 and CLS zero. Mobile lab LCP remains about 3.0 seconds, above 2.5 seconds.
+  Diagnostics and failed thresholds remain recorded; no budget was weakened
+  (`PUBLIC_ENTRY_PERFORMANCE.md`). This is not field p75/INP or hardware evidence.
+- Production PWA boundary checks pass 15 real CacheStorage/IndexedDB cases;
+  two-tab update probe passes nine checks including a genuinely changed offline
+  asset revision and removal of its old cache entry. No actual app writes/sends.
+- Local HTTPS enforcement passes 45 security/header/cache checks, including
+  inline-script refusal. The initial test harness refused expected browser CSP
+  reports; its failure is preserved. Reports now terminate in an explicit owned
+  no-op sink. Stable artwork/fonts revalidate; only hashed JS/CSS are immutable.
+  Actual hosted headers/CDN behavior remains open (`PRODUCTION_HEADER_CHECKS.md`).
+- Full 26-link navigation testing exposed mobile drawer focus loss and Chromium
+  mobile command Escape refusal. Both are corrected, preserving destination
+  focus and active text composition. All nine unit cases and the final 90-case
+  rebuilt-artifact scope pass (`WORKSPACE_NAVIGATION_CHECKS.md`). Native zoom
+  review was deferred while shared Chrome was in use; no zoom changes or tab
+  closures were made.
+- Types/build and byte gates pass, lint has zero errors/10 existing warnings,
+  source/history secret scan has zero unreviewed findings. A public test-ID digest
+  received an exact non-secret line review; no scanner rule/path was excluded.
+  CI configuration adds three balanced browser shards of 414 cases, full-history secret scan
+  and a high/critical production dependency audit. No remote CI run is claimed.
+- Remaining full-PRD gates are listed in `LOCAL_ACCEPTANCE_AUDIT.md`; active
+  sessions and preserve/resume instructions are in `CURRENT_CHECKPOINT.md`.
+  Local-only constraints, unrelated edits and deferred integrations remain intact.
 
 ### Global coverage and active workflow completion checks — 2026-11-06
 

@@ -1,0 +1,189 @@
+{
+  "generatedAt": "2026-11-06T22:34:36.657Z",
+  "completed": true,
+  "isolatedReports": 4,
+  "scope": "Isolated HTTPS loopback production build with the exact common CSP/security header values from vercel.json, including upgrade-insecure-requests. Ephemeral one-day self-signed loopback certificate is trusted only by this isolated context and removed afterward. Actual hosted TLS/certificate/header precedence, third-party frames, authenticated editors, WebGL, service workers and deployed caching remain separate acceptance. Anonymous allowlisted reads plus browser CSP reports terminated without inspecting/storing their bodies in this owned server; reports never reach the application API. All external requests and other non-read methods are refused. No credentials/application writes/provider sends.",
+  "tests": [
+    {
+      "name": "configured X-Content-Type-Options served on /",
+      "passed": true
+    },
+    {
+      "name": "configured X-Frame-Options served on /",
+      "passed": true
+    },
+    {
+      "name": "configured Referrer-Policy served on /",
+      "passed": true
+    },
+    {
+      "name": "configured Permissions-Policy served on /",
+      "passed": true
+    },
+    {
+      "name": "configured Strict-Transport-Security served on /",
+      "passed": true
+    },
+    {
+      "name": "configured Content-Security-Policy served on /",
+      "passed": true
+    },
+    {
+      "name": "production route renders without page exceptions under enforced CSP: /",
+      "passed": true
+    },
+    {
+      "name": "production route raises no policy violations: /",
+      "passed": true
+    },
+    {
+      "name": "inline executable probe is blocked: /",
+      "passed": true
+    },
+    {
+      "name": "configured X-Content-Type-Options served on /events",
+      "passed": true
+    },
+    {
+      "name": "configured X-Frame-Options served on /events",
+      "passed": true
+    },
+    {
+      "name": "configured Referrer-Policy served on /events",
+      "passed": true
+    },
+    {
+      "name": "configured Permissions-Policy served on /events",
+      "passed": true
+    },
+    {
+      "name": "configured Strict-Transport-Security served on /events",
+      "passed": true
+    },
+    {
+      "name": "configured Content-Security-Policy served on /events",
+      "passed": true
+    },
+    {
+      "name": "production route renders without page exceptions under enforced CSP: /events",
+      "passed": true
+    },
+    {
+      "name": "production route raises no policy violations: /events",
+      "passed": true
+    },
+    {
+      "name": "inline executable probe is blocked: /events",
+      "passed": true
+    },
+    {
+      "name": "configured X-Content-Type-Options served on /contact",
+      "passed": true
+    },
+    {
+      "name": "configured X-Frame-Options served on /contact",
+      "passed": true
+    },
+    {
+      "name": "configured Referrer-Policy served on /contact",
+      "passed": true
+    },
+    {
+      "name": "configured Permissions-Policy served on /contact",
+      "passed": true
+    },
+    {
+      "name": "configured Strict-Transport-Security served on /contact",
+      "passed": true
+    },
+    {
+      "name": "configured Content-Security-Policy served on /contact",
+      "passed": true
+    },
+    {
+      "name": "production route renders without page exceptions under enforced CSP: /contact",
+      "passed": true
+    },
+    {
+      "name": "production route raises no policy violations: /contact",
+      "passed": true
+    },
+    {
+      "name": "inline executable probe is blocked: /contact",
+      "passed": true
+    },
+    {
+      "name": "configured X-Content-Type-Options served on /privacy",
+      "passed": true
+    },
+    {
+      "name": "configured X-Frame-Options served on /privacy",
+      "passed": true
+    },
+    {
+      "name": "configured Referrer-Policy served on /privacy",
+      "passed": true
+    },
+    {
+      "name": "configured Permissions-Policy served on /privacy",
+      "passed": true
+    },
+    {
+      "name": "configured Strict-Transport-Security served on /privacy",
+      "passed": true
+    },
+    {
+      "name": "configured Content-Security-Policy served on /privacy",
+      "passed": true
+    },
+    {
+      "name": "production route renders without page exceptions under enforced CSP: /privacy",
+      "passed": true
+    },
+    {
+      "name": "production route raises no policy violations: /privacy",
+      "passed": true
+    },
+    {
+      "name": "inline executable probe is blocked: /privacy",
+      "passed": true
+    },
+    {
+      "name": "configured Cache-Control served on /sw.js",
+      "passed": true
+    },
+    {
+      "name": "configured Service-Worker-Allowed served on /sw.js",
+      "passed": true
+    },
+    {
+      "name": "configured Cache-Control served on /manifest.json",
+      "passed": true
+    },
+    {
+      "name": "configured Cache-Control served on /api/v1/site-status",
+      "passed": true
+    },
+    {
+      "name": "configured Pragma served on /api/v1/site-status",
+      "passed": true
+    },
+    {
+      "name": "hashed bundles and stable public artwork/fonts receive separate cache lifetimes: assets/main-DUhSx7V4.js",
+      "passed": true
+    },
+    {
+      "name": "hashed bundles and stable public artwork/fonts receive separate cache lifetimes: assets/hero-atmosphere-mobile.webp",
+      "passed": true
+    },
+    {
+      "name": "hashed bundles and stable public artwork/fonts receive separate cache lifetimes: assets/inter-latin.woff2",
+      "passed": true
+    },
+    {
+      "name": "TLS/CSP probe performs only allowlisted local reads and isolated CSP reports, with no application writes/provider sends",
+      "passed": true
+    }
+  ],
+  "unexpected": []
+}

@@ -37,6 +37,23 @@ for (const entry of ['index.html', 'offline.html']) {
 }
 for (const image of ['hero-atmosphere.webp', 'hero-campus.webp', 'google-wordmark.png'])
   limit(`Above-fold ${image}`, (await stat(path.join(directory, 'assets', image))).size, 250_000);
+for (const name of ['hero-atmosphere-mobile.webp', 'hero-campus-mobile.webp'])
+  limit(`Narrow portrait hero ${name}`, (await stat(path.join(directory, 'assets', name))).size, 50_000);
+const publicInitial = entryAssets(manifest, 'index.html');
+const deferred = [
+  'src/ui/AdminShell.tsx',
+  'src/components/AdminLoginModal.tsx',
+  'src/ui/PublicPages.tsx',
+  'src/ui/HeroObjects.tsx',
+  'src/ui/forms/FormBuilder.tsx',
+  'src/ui/forms/ResponseWorkspace.tsx',
+];
+for (const module of deferred) {
+  const chunk = manifest[module];
+  if (!chunk?.isDynamicEntry || publicInitial.has(chunk.file))
+    failures.push(`Public startup must keep ${module} route-lazy`);
+}
+report.deferredModules = deferred;
 let offline = 0;
 for (const file of offlinePrecacheAssets(manifest)) offline += (await stat(path.join(directory, file))).size;
 limit('Offline install (raw, application-specific ceiling)', offline, 750_000);

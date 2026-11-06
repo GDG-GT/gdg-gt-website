@@ -5,8 +5,9 @@ Reviewed against the complete v1.5 PRD on 2026-10-21, including normative sectio
 documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
-Current local verification update (2026-11-06): the latest module checkpoint is
-`PERSON_PRIVACY_WRITE_RECOVERY.md`; completed recovery checkpoints include tasks,
+Current local verification update (2026-11-06): public-entry, populated-browser,
+PWA, header/cache and mandatory-ID verification now extend the latest functional
+module checkpoint, `PERSON_PRIVACY_WRITE_RECOVERY.md`. Completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -18,7 +19,7 @@ Georgia Tech SSO and Bevy/Engage integration are deferred, not implementation
 blockers for the remaining original v1.5 work. Existing disabled SSO placeholders
 do not perform authentication or verification. No external integration is enabled.
 
-## Feature implementation still required
+## Local implementation checkpoints
 
 Ordinary member create/update/archive/restore/profile-sync/unmerge now preserve
 unknown original intent, inspect current-session receipts read-only and support
@@ -262,69 +263,58 @@ Their manual/hosted/visual acceptance remains open.
 
 ## Acceptance and infrastructure still required
 
-- Fresh November 4 audits report zero high/critical findings: production has two
-  moderate/four low; the complete tree has fifteen moderate/seven low. The earlier
-  five development high findings are absent from the current full audit. The
-  patched Zod migration is documented in `ZOD_VALIDATION_UPGRADE.md`; keep the
-  dependency gate and recheck before launch.
-- Strict application/build TypeScript now passes. Lint remediation remains:
-  zero errors/25 warnings after reviewed unused-client retirement and typed CMS recovery;
-  conditional-hook violations in active code were fixed. An existing untracked
-  user file still has its separate hook warning and is preserved.
-- All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is 67.17% lines/66.87% branches at the export checkpoint,
-  below the global 70% gate; 1,820 tests pass, not a
-  percentage of completed PRD features.
-  See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 159 reviewed logical test cases with
-  real source references (`phase0/prd-test-plan.json`). Normative sections and
-  manual/hosted acceptance remain; the inventory is not a completion percentage
-  and its `unverified` statuses are not promoted from local build success.
-- Complete CI: the committed foundation runs lint/type/unit/canonical SQL/build
-  plus a blocking production dependency audit and a digest-pinned Playwright
-  browser job. It has not run on GitHub here;
-  the dependency gate passes locally; the independent coverage gate remains red.
-  All 112 applicable public/shared-workspace production-build browser checks pass locally across
-  six profiles (eight explicit profile skips), plus 21 actual local public
-  UI/API and six moving-hero/fallback checks (`BROWSER_VERIFICATION.md`). Full
-  private/populated/Forms/PWA browser acceptance and remaining coverage are open.
-  Redacted all-local-ref history/current-file secret scanning passes locally
-  (`SECRET_SCAN_OPERATIONS.md`), with two exact reviewed fictional test inputs;
-  hosted credential inventory/rotation remains separate. Public byte/artifact
-  gates are implemented and pass locally.
-- Every public/protected route and negative role/team/resource/storage boundary,
-  remaining stale-data/navigation states, outage/reconnect recovery, supported
-  browsers, keyboard/zoom and manual screen-reader paths.
-  Local axe structural cases and module-specific interaction audits run in the normal unit suite
-  (`ACCESSIBILITY_STRUCTURE_CHECKS.md`); JSDOM contrast and incomplete axe checks
-  are not certified by that result.
-  Public empty-inventory browser checks now include actual contrast-enabled axe;
-  this does not certify all populated, error, dialog or private states.
-  All 93 actual authenticated loopback checks pass across 31 default workspace
-  routes/states at both desktop sizes and mobile. Measured contrast and
-  keyboard-table issues are corrected (`WORKSPACE_BROWSER_ACCESSIBILITY.md`).
-  This is not full mutation/role/dialog/manual accessibility acceptance.
-- Public route bundles, modern images/font budgets, 3D fallbacks, Lighthouse,
-  LCP/INP/CLS and load tests. Public byte budgets and bounded offline install now
-  pass; runtime profiles and complete lazy-route inspection remain open.
-- Deterministic visual baselines at both PRD desktop sizes, full-page captures,
-  reviewed masks, mobile/real-device review and Tejas's explicit visual sign-off.
-  Public review candidates are captured at both desktop sizes and emulated
-  mobile; all 22 populated prompt surfaces and approved pixel comparison remain.
-- Real GT-owned staging/prod infrastructure, domains, credentials, approved assets
-  and chapter copy, reviewed recipients/retention/privacy settings, storage CORS,
-  scanner and supervised workers/scheduler. No real email, deployment or purchase
-  is authorized by the local-only task.
-- Hosted 404/SEO/security-header/CSP behavior, database migration rehearsal,
-  backup/restore, monitoring, alerting, rollback and release observation.
+The dated audit/checkpoint entries above are historical. Current evidence is in
+`LOCAL_ACCEPTANCE_AUDIT.md`, `CURRENT_CHECKPOINT.md` and the newest
+`IMPLEMENTATION_STATUS.md` entry.
+
+- All 307 mandatory test IDs now map to reviewed source suites and/or explicit
+  manual/hosted steps. All 146 numbered requirements remain unverified against
+  complete acceptance. A missing mandatory ID now fails the structural checker.
+- The last complete coverage invocation passes all unchanged global 70% and all
+  21 individual critical 90%-branch gates: 2,672 tests/214 files. Lines 78.09%,
+  branches 75.59%, statements 76.10%, functions 70.75%. Cache-policy and all nine
+  drawer/search/composition checks are included in that final run.
+- Production-browser coverage expanded to all six configured profiles, with
+  138 populated composition cases and 162 review screenshots for the 22 primary
+  prompt groups. Complete approved pixel comparisons, secondary surfaces,
+  negative-role/dialog/manual/device acceptance remain separate. Full navigation
+  testing exposed mobile drawer/command focus defects; the corrections pass nine
+  unit cases and the separate final 90-case scope across all six profiles. Native
+  zoom review was deferred while shared Chrome was in use.
+- PWA local production probes pass 15 real CacheStorage/IndexedDB boundary checks
+  and nine changed-offline-asset/two-tab activation checks. Physical installs,
+  actual push permissions/delivery/clicks and hosted hashed-asset rollout/rollback
+  remain open.
+- Local HTTPS enforcement passes 45 configured security/header/cache checks.
+  Stable artwork/fonts now revalidate; only hashed JS/CSS are immutable. Current
+  source/history secret scanning passes with exact non-secret fixture/digest
+  reviews. Production dependency audit has zero high/critical findings; two
+  moderate/four low advisories remain. Actual hosted CSP/headers and dependency
+  re-audit at launch remain required.
+- Isolated Lighthouse public mobile scores are 94/94/95, accessibility 100 and
+  CLS zero; desktop scores 100. Mobile lab LCP is about 3.0 seconds and misses
+  2.5 seconds. Field p75 LCP/INP/CLS and representative 3D hardware/load testing
+  remain open. Source-byte budgets pass; initial gzip JavaScript is about 126 kB.
+- Strict types/build pass; lint has zero errors/10 existing warnings. CI now
+  defines balanced browser shards, full-history secret scanning and a blocking
+  high/critical production dependency audit. No GitHub run is claimed.
+- Real GT-owned staging/production infrastructure, controlled domains, provider
+  credentials, mail DNS/VAPID, approved chapter assets/copy, reviewed recipients,
+  storage CORS, supervised scanners/workers/scheduler and operational alerts are
+  still required. Local-only authorization excludes deployment, production
+  changes, purchases and real provider sends.
+- Manual assistive technology, actual 200% browser zoom, forced colors, physical
+  Safari/devices, complete keyboard paths, institutional brand/privacy/retention/
+  finance approvals and Tejas's blocking visual sign-off remain open. Hosted
+  migration rehearsal, PITR/object restore, measured RPO/RTO, rollback and
+  48-hour release observation cannot be inferred from local checks.
 
 ## Next implementation checkpoint
 
-Complete the confirmed community-directory, contact-inbox and person-data
-privacy recovery in `LOCAL_ACCEPTANCE_AUDIT.md`, then the remaining quality/
-coverage/device acceptance beyond the now-passing 21 critical-file gates.
-Latest full coverage passes lines/branches/statements at 73.53%/73.32%/71.87%;
-functions at 65.04% still fail the unchanged 70% global gate.
-Preserve the read-only Git reference and historical SQL for retired clients
-(`LEGACY_CLIENT_RETIREMENT.md`), and keep user edits intact. Track implementation separately from verified
-acceptance; do not label the complete PRD finished until its launch gates pass.
+This local implementation/verification pass is complete and ready for a local
+checkpoint commit. Continue mobile LCP and complete secondary visual review
+compositions next, preserving the verified baseline. Manual/device/approved-
+visual and hosted acceptance remain explicitly open; no percentage or full PRD
+completion claim follows from these local checks. `CURRENT_CHECKPOINT.md` records
+the exact final evidence and authorization boundaries. Preserve unrelated user
+edits and immutable applied migrations; do not deploy or send through real providers.

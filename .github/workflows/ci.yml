@@ -19,14 +19,19 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
+          fetch-depth: 0
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '24'
           package-manager-cache: false
       - run: npm ci
       - name: Lint without increasing the inherited warning budget
-        run: npm run lint -- --max-warnings=25
+        run: npm run lint -- --max-warnings=10
       - run: npm run typecheck
+      - name: Reject high or critical production dependency advisories
+        run: npm audit --omit=dev --audit-level=high
+      - name: Scan complete checked-out history and current source with pinned rules
+        run: npm run test:secrets
       # Includes axe structural regression checks; real-browser contrast,
       # geometry, Lighthouse and manual assistive-technology gates stay separate.
       - run: npm test
@@ -57,6 +62,10 @@ jobs:
   browser-smoke:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     container:
       image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:2f05f8a734509a7b3f26a912639488ee08f58a7b292d14d62271bcff9038768f
       options: --ipc=host
@@ -70,9 +79,10 @@ jobs:
           package-manager-cache: false
       - run: npm ci
       - run: npm run build
-      # Controlled empty public inventories and denied anonymous sessions. All
-      # API calls are intercepted; no database, credentials, sends or providers.
-      - run: npm run test:browser
+      # Empty and populated public/private fixtures, including recovery flows.
+      # Each case still runs once; shards keep the expanded suite within the
+      # existing per-job timeout. No database, credentials, sends or providers.
+      - run: npm run test:browser -- --shard=${{ matrix.shard }}/3
       - name: Summarize the recorded browser invocation
         if: ${{ always() && hashFiles('artifacts/browser/results.json') != '' }}
         run: npm run test:browser:report
@@ -80,7 +90,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
-          name: browser-review-candidates
+          name: browser-review-candidates-${{ matrix.shard }}
           path: artifacts/browser/
           retention-days: 7
           if-no-files-found: warn
