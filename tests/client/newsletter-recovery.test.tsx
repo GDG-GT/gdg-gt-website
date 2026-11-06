@@ -709,4 +709,210 @@ describe("Newsletter bulk subscriber review", () => {
     ).toBe(true);
     expect(writes()).toHaveLength(0);
   });
+  it("keeps subscriber identity and explicit consent together before a simulated opt-in request", async () => {
+    const saved = vi.fn();
+    render(
+      <main>
+        <NewsletterEditor
+          kind="subscribers"
+          scope="chapter"
+          onSaved={saved}
+          onClose={vi.fn()}
+        />
+      </main>,
+    );
+    fireEvent.change(screen.getByLabelText(/^Email address/), {
+      target: { value: "REVIEWED@example.test" },
+    });
+    fireEvent.change(screen.getByLabelText(/^Name$/), {
+      target: { value: "Reviewed subscriber" },
+    });
+    const button = screen.getByRole("button", {
+      name: "Send confirmation request",
+      exact: true,
+    });
+    fireEvent.submit(button.closest("form")!);
+    await screen.findByText(/acknowledge the subscriber/);
+    expect(writes()).toHaveLength(0);
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: /This person requested to join/ }),
+    );
+    fireEvent.click(button);
+    await waitFor(() => expect(saved).toHaveBeenCalled());
+    expect(writes()).toHaveLength(1);
+    expect(writes()[0][1].body).toEqual({
+      teamId: null,
+      email: "reviewed@example.test",
+      name: "Reviewed subscriber",
+      consentAcknowledged: true,
+    });
+  });
+  it("saves a complete reusable template as private text without preparing a campaign", async () => {
+    const saved = vi.fn();
+    render(
+      <main>
+        <NewsletterEditor
+          kind="templates"
+          scope="chapter"
+          onSaved={saved}
+          onClose={vi.fn()}
+        />
+      </main>,
+    );
+    fireEvent.change(screen.getByLabelText(/^Template name/), {
+      target: { value: "Reviewed workshop template" },
+    });
+    fireEvent.change(screen.getByLabelText(/^Description$/), {
+      target: { value: "Reusable chapter workshop context" },
+    });
+    fireEvent.change(screen.getByLabelText(/^Message/), {
+      target: { value: "Hello chapter,\nA new workshop is ready for review." },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save private changes", exact: true }),
+    );
+    await waitFor(() =>
+      expect(saved).toHaveBeenCalledWith("Saved newsletter changes.", id),
+    );
+    expect(writes()).toHaveLength(1);
+    expect(writes()[0][0]).toBe(base + "/templates");
+    expect(writes()[0][1].body).toEqual({
+      teamId: null,
+      record: {
+        name: "Reviewed workshop template",
+        description: "Reusable chapter workshop context",
+        content: "Hello chapter,\nA new workshop is ready for review.",
+      },
+    });
+  });
+  it("copies template text and preserves explicitly selected confirmed recipients across paging and search", async () => {
+    const other = "f1600000-0000-4000-8000-000000000009",
+      saved = vi.fn();
+    apiMock.mockImplementation(async (p, o) => {
+      if (o?.method === "POST") return { id };
+      if (p.startsWith(base + "/templates?"))
+        return {
+          items: [
+            {
+              ...record,
+              name: "Reviewed source template",
+              content: "Copied approved workshop text",
+            },
+          ],
+          total: 1,
+          page: 1,
+          pageSize: 50,
+        };
+      if (p.startsWith(base + "/subscribers?")) {
+        const page = Number(
+          new URL(p, "https://fixture.invalid").searchParams.get("page"),
+        );
+        return {
+          items: [
+            page === 2
+              ? {
+                  ...subscriber,
+                  id: other,
+                  email: "fictional-second@example.test",
+                }
+              : subscriber,
+          ],
+          total: 80,
+          page,
+          pageSize: 50,
+        };
+      }
+      return response(p);
+    });
+    render(
+      <main>
+        <NewsletterEditor
+          kind="campaigns"
+          record={record}
+          scope="chapter"
+          onSaved={saved}
+          onClose={vi.fn()}
+        />
+      </main>,
+    );
+    fireEvent.click(screen.getByText("Start from a saved template"));
+    fireEvent.change(screen.getByLabelText("Find templates"), {
+      target: { value: "workshop" },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Find templates", exact: true }),
+    );
+    await screen.findByText("Reviewed source template");
+    fireEvent.click(
+      screen.getByRole("button", { name: "Use this template", exact: true }),
+    );
+    expect(screen.getByLabelText(/^Message/)).toHaveProperty(
+      "value",
+      "Copied approved workshop text",
+    );
+    fireEvent.change(screen.getByLabelText(/^Subject/), {
+      target: { value: "Reviewed workshop announcement" },
+    });
+    fireEvent.change(screen.getByLabelText(/^Message/), {
+      target: {
+        value: "Copied approved workshop text\nWith a reviewed update.",
+      },
+    });
+    fireEvent.change(screen.getByRole("combobox", { name: /^Audience/ }), {
+      target: { value: "custom" },
+    });
+    fireEvent.click(
+      await screen.findByRole("checkbox", {
+        name: /fictional-subscriber@example.test/,
+      }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Next recipients", exact: true }),
+    );
+    fireEvent.click(
+      await screen.findByRole("checkbox", {
+        name: /fictional-second@example.test/,
+      }),
+    );
+    await screen.findByText(/Custom confirmed audience · 2 selected/);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Clear selected", exact: true }),
+    );
+    await screen.findByText(/Custom confirmed audience · 0 selected/);
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: /fictional-second@example.test/ }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Previous recipients", exact: true }),
+    );
+    fireEvent.click(
+      await screen.findByRole("checkbox", {
+        name: /fictional-subscriber@example.test/,
+      }),
+    );
+    fireEvent.change(screen.getByLabelText("Find confirmed subscribers"), {
+      target: { value: "fictional" },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Find subscribers", exact: true }),
+    );
+    await screen.findByText(/Custom confirmed audience · 2 selected/);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save private changes", exact: true }),
+    );
+    await waitFor(() => expect(saved).toHaveBeenCalled());
+    expect(writes()).toHaveLength(1);
+    expect(writes()[0][1].body).toEqual({
+      action: "update",
+      revision: 1,
+      record: {
+        subject: "Reviewed workshop announcement",
+        content: "Copied approved workshop text\nWith a reviewed update.",
+        audience: "custom",
+        recipientIds: [other, id],
+      },
+    });
+    expect(writes()[0][0]).toBe(path);
+    expect(apiMock.mock.calls.some(([p]) => p.endsWith("/send"))).toBe(false);
+  });
 });

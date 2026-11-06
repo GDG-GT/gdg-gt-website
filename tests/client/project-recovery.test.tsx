@@ -609,4 +609,95 @@ describe("Project mutations and retained participants", () => {
     );
     await audit();
   });
+  it("keeps every project field in one normalized revision-bound save", async () => {
+    mount();
+    await edit();
+    const fill = (label: RegExp, value: string) =>
+      fireEvent.change(screen.getByLabelText(label), { target: { value } });
+    fill(/^Project title/, "Reviewed project details");
+    fill(/^Category/, "research");
+    fireEvent.change(
+      screen.getByRole("combobox", { name: /^Project status/ }),
+      { target: { value: "on_hold" } },
+    );
+    fireEvent.change(screen.getByRole("combobox", { name: /^Difficulty/ }), {
+      target: { value: "advanced" },
+    });
+    fill(/^Planned team size/, "12");
+    fill(/^Start date/, "2027-01-10");
+    fill(/^End date/, "2027-02-10");
+    fill(/^Repository URL/, "https://github.com/example/reviewed");
+    fill(/^Demo URL/, "https://example.com/demo");
+    fill(/^Image URL/, "/assets/hero-campus.webp");
+    fill(/^Technologies/, "Rust, TypeScript");
+    fill(/^Tags/, "research, community");
+    fill(/^Short description/, "Reviewed concise summary");
+    fill(
+      /^Description/,
+      "Reviewed project description with all changes included.",
+    );
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "Featured internally" }),
+    );
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "Open-source project" }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save changes", exact: true }),
+    );
+    await waitFor(() => expect(writes()).toHaveLength(1));
+    expect(writes()[0][1]).toMatchObject({
+      idempotencyKey: expect.any(String),
+      body: {
+        action: "update",
+        revision: 1,
+        record: {
+          title: "Reviewed project details",
+          category: "research",
+          status: "on_hold",
+          difficulty_level: "advanced",
+          team_size: 12,
+          start_date: "2027-01-10",
+          end_date: "2027-02-10",
+          github_url: "https://github.com/example/reviewed",
+          demo_url: "https://example.com/demo",
+          image_url: "/assets/hero-campus.webp",
+          tech_stack: ["Rust", "TypeScript"],
+          tags: ["research", "community"],
+          short_description: "Reviewed concise summary",
+          description:
+            "Reviewed project description with all changes included.",
+          is_featured: true,
+          is_open_source: false,
+        },
+      },
+    });
+  });
+  it("keeps a date correction in the editor and never sends a reversed project range", async () => {
+    mount();
+    await edit();
+    fireEvent.change(screen.getByLabelText(/^Start date/), {
+      target: { value: "2027-02-10" },
+    });
+    fireEvent.change(screen.getByLabelText(/^End date/), {
+      target: { value: "2027-01-10" },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save changes", exact: true }),
+    );
+    await screen.findByText(/end date must follow/);
+    expect(writes()).toHaveLength(0);
+    expect(screen.getByLabelText(/^End date/)).toHaveProperty(
+      "value",
+      "2027-01-10",
+    );
+    fireEvent.change(screen.getByLabelText(/^End date/), {
+      target: { value: "2027-03-10" },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save changes", exact: true }),
+    );
+    await waitFor(() => expect(writes()).toHaveLength(1));
+    expect(writes()[0][1].body.record.end_date).toBe("2027-03-10");
+  });
 });

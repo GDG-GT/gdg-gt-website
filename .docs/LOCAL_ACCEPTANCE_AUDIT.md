@@ -32,10 +32,12 @@ be inferred from local tests.
    applied migrations 136/137), preserving exact source/hold/expiry/current proof
    and single-use exports. A fresh final implementation audit remains required;
    this does not certify physical erasure or complete PRD acceptance.
-4. Global coverage: at checkpoint 137, functions (65.65%) still fail the
-   unchanged 70% gate; lines/branches/statements pass. Do not exclude active modules, lower gates or
-   replace behavior verification with mirrored implementation assertions. Add
-   meaningful recovery/role/keyboard workflow tests while addressing these gaps.
+4. Global coverage now passes unchanged gates: all 2,649 tests/210 files pass,
+   lines 77.73%, branches 75.40%, statements 75.79%, functions 70.35%; all 21
+   critical branch gates pass. Unused-helper retirement changes the denominator
+   separately from 99 newly exercised active workflow functions; provenance and
+   full evidence in `UNUSED_HELPER_RETIREMENT.md`. Complete 1,062-case browser
+   regression is running; final local performance/PWA/security/visual audit remains.
 
 ## Acceptance work still separate
 

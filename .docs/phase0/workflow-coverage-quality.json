@@ -1,0 +1,182 @@
+{
+  "generatedAt": "2026-11-06T19:49:02.393Z",
+  "tests": {
+    "files": 210,
+    "passed": 2649,
+    "failed": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 23015,
+      "covered": 17890,
+      "skipped": 0,
+      "pct": 77.73
+    },
+    "statements": {
+      "total": 25513,
+      "covered": 19338,
+      "skipped": 0,
+      "pct": 75.79
+    },
+    "functions": {
+      "total": 5826,
+      "covered": 4099,
+      "skipped": 0,
+      "pct": 70.35
+    },
+    "branches": {
+      "total": 27380,
+      "covered": 20647,
+      "skipped": 0,
+      "pct": 75.4
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "globalThreshold": 70,
+  "globalPassed": true,
+  "criticalThreshold": 90,
+  "critical": [
+    {
+      "file": "server/auth.mjs",
+      "branches": 98.52,
+      "passed": true
+    },
+    {
+      "file": "server/access.mjs",
+      "branches": 98.38,
+      "passed": true
+    },
+    {
+      "file": "server/users.mjs",
+      "branches": 98.78,
+      "passed": true
+    },
+    {
+      "file": "server/forms.mjs",
+      "branches": 98.54,
+      "passed": true
+    },
+    {
+      "file": "server/form-access.mjs",
+      "branches": 90,
+      "passed": true
+    },
+    {
+      "file": "server/form-links.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-collaborators.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-deletion.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-integrations.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/uploads.mjs",
+      "branches": 98.48,
+      "passed": true
+    },
+    {
+      "file": "server/finances.mjs",
+      "branches": 97.72,
+      "passed": true
+    },
+    {
+      "file": "server/person-privacy.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/security.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/authorization.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/http.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/encryption.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/validation.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/upload-content.mjs",
+      "branches": 98.86,
+      "passed": true
+    },
+    {
+      "file": "server/lib/scanner.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/realtime-token.mjs",
+      "branches": 91.48,
+      "passed": true
+    },
+    {
+      "file": "server/lib/object-storage.mjs",
+      "branches": 100,
+      "passed": true
+    }
+  ],
+  "checks": {
+    "strictTypes": true,
+    "build": true,
+    "lintErrors": 0,
+    "lintWarnings": 10,
+    "byteBudgets": true,
+    "secrets": true,
+    "traceability": true,
+    "logicalCases": 160,
+    "focusedPrior": 106,
+    "splitBuilder": 28,
+    "fullBrowser": {
+      "status": "running",
+      "planned": 1062,
+      "files": 38
+    }
+  },
+  "attribution": {
+    "unusedRetirement": {
+      "files": 47,
+      "functionsRemoved": 266,
+      "previouslyExercised": 0,
+      "tag": "reference/shared-ui-before-retirement-20261106"
+    },
+    "activeWorkflows": {
+      "functionsCoveredBefore": 4000,
+      "functionsCoveredNow": 4099,
+      "additionalFunctions": 99,
+      "note": "Exercises and asserts complete project, Linktree, newsletter and Forms edits; denominator cleanup is separately reported."
+    }
+  },
+  "scope": "Local automated quality only. No claim of full PRD, manual/device/visual/performance/PWA/hosted/institutional signoff. Existing global/critical gates unchanged."
+}

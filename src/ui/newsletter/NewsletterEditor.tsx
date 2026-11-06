@@ -393,11 +393,15 @@ export default function NewsletterEditor({
             name: draft.name,
             consentAcknowledged: draft.consent,
           };
-      if (!record && !subscriberCreate.safeParse(body).success) {
-        setError(
-          "Enter a valid email and acknowledge the subscriber’s request. Confirmation is still required.",
-        );
-        return;
+      if (!record) {
+        const parsed = subscriberCreate.safeParse(body);
+        if (!parsed.success) {
+          setError(
+            "Enter a valid email and acknowledge the subscriber’s request. Confirmation is still required.",
+          );
+          return;
+        }
+        body = parsed.data;
       }
     } else {
       const value =

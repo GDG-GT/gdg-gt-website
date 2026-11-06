@@ -619,4 +619,151 @@ describe("Linktree mutation lifecycle", () => {
       ).toBe(false),
     );
   });
+  it.each(["color", "image", "gradient"])(
+    "saves all profile metadata with a reviewed %s background",
+    async (background) => {
+      apiMock.mockImplementation((p, o) =>
+        Promise.resolve(o?.method === "POST" ? { id } : response(p)),
+      );
+      mount(id);
+      await editProfile();
+      const fill = (label: RegExp, value: string) =>
+        fireEvent.change(screen.getByLabelText(label), { target: { value } });
+      fill(/^Public username/, "reviewed-hub");
+      fill(/^Display name/, "Reviewed chapter hub");
+      fill(/^Avatar URL/, "/assets/hero-campus.webp");
+      fill(/^Bio/, "Reviewed chapter links and resources.");
+      fireEvent.change(screen.getByRole("combobox", { name: /^Theme/ }), {
+        target: { value: "dark" },
+      });
+      fireEvent.change(
+        screen.getByRole("combobox", { name: /^Background type/ }),
+        { target: { value: background } },
+      );
+      const expected =
+        background === "gradient"
+          ? { type: "gradient", from: "#112244", to: "#445566", angle: 220 }
+          : background === "image"
+            ? { type: "image", value: "/assets/hero-campus.webp" }
+            : { type: "color", value: "#112244" };
+      if (background === "gradient") {
+        fill(/^Gradient start/, "#112244");
+        fill(/^Gradient end/, "#445566");
+        fill(/^Gradient angle/, "220");
+      } else
+        fill(
+          background === "image"
+            ? /^Public background image URL/
+            : /^Background color/,
+          background === "image" ? "/assets/hero-campus.webp" : "#112244",
+        );
+      fireEvent.click(
+        screen.getByRole("button", { name: "Save changes", exact: true }),
+      );
+      await screen.findByText("Linktree changes saved.");
+      const writes = apiMock.mock.calls.filter(([, o]) => o?.method === "POST");
+      expect(writes).toHaveLength(1);
+      expect(writes[0][1].body).toMatchObject({
+        action: "update",
+        revision: 1,
+        record: {
+          username: "reviewed-hub",
+          displayName: "Reviewed chapter hub",
+          avatarUrl: "/assets/hero-campus.webp",
+          bio: "Reviewed chapter links and resources.",
+          theme: "dark",
+          background: expected,
+        },
+      });
+    },
+  );
+  it("preserves destination, embed, appearance and click-count choices in one inactive draft link", async () => {
+    apiMock.mockImplementation((p, o) =>
+      Promise.resolve(o?.method === "POST" ? { id } : response(p)),
+    );
+    mount(id);
+    await screen.findByRole("button", { name: "Add draft link" });
+    fireEvent.click(screen.getByRole("button", { name: "Add draft link" }));
+    for (const [label, value] of [
+      [/^Link title/, "Reviewed video"],
+      [/^Public destination/, "https://www.youtube.com/watch?v=abcdefghijk"],
+      [/^Link description/, "Reviewed video description"],
+      [/^Button color/, "#112244"],
+      [/^Button text color/, "#f4f5f7"],
+    ] as const)
+      fireEvent.change(screen.getByLabelText(label), { target: { value } });
+    for (const [name, value] of [
+      [/^Icon/, "video"],
+      [/^Button style/, "filled"],
+      [/^Embed option/, "youtube"],
+    ] as const)
+      fireEvent.change(screen.getByRole("combobox", { name }), {
+        target: { value },
+      });
+    fireEvent.click(
+      screen.getByRole("checkbox", {
+        name: /Show this link's approximate click count/,
+      }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save changes", exact: true }),
+    );
+    await screen.findByText(
+      "Private draft saved. Activate it separately after review.",
+    );
+    const writes = apiMock.mock.calls.filter(([, o]) => o?.method === "POST");
+    expect(writes).toHaveLength(1);
+    expect(writes[0][1].body).toMatchObject({
+      action: "link_create",
+      revision: 1,
+      record: {
+        title: "Reviewed video",
+        url: "https://www.youtube.com/watch?v=abcdefghijk",
+        description: "Reviewed video description",
+        icon: "video",
+        buttonStyle: "filled",
+        embedType: "youtube",
+        buttonColor: "#112244",
+        textColor: "#f4f5f7",
+        showClickCount: true,
+      },
+    });
+  });
+  it("keeps an unsafe private capability destination editable until corrected to a public path", async () => {
+    apiMock.mockImplementation((p, o) =>
+      Promise.resolve(o?.method === "POST" ? { id } : response(p)),
+    );
+    mount(id);
+    await screen.findByRole("button", { name: "Add draft link" });
+    fireEvent.click(screen.getByRole("button", { name: "Add draft link" }));
+    fireEvent.change(screen.getByLabelText(/^Link title/), {
+      target: { value: "Public interest form" },
+    });
+    const url = screen.getByLabelText(/^Public destination/);
+    fireEvent.change(url, {
+      target: { value: "/forms/club-interest#resume=fictional-private" },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save changes", exact: true }),
+    );
+    await screen.findByRole("alert");
+    expect(
+      apiMock.mock.calls.filter(([, o]) => o?.method === "POST"),
+    ).toHaveLength(0);
+    expect(url).toHaveProperty(
+      "value",
+      "/forms/club-interest#resume=fictional-private",
+    );
+    fireEvent.change(url, { target: { value: "/forms/club-interest" } });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save changes", exact: true }),
+    );
+    await screen.findByText(
+      "Private draft saved. Activate it separately after review.",
+    );
+    expect(
+      apiMock.mock.calls.filter(([, o]) => o?.method === "POST")[0][1].body
+        .record.url,
+    ).toBe("/forms/club-interest");
+  });
 });

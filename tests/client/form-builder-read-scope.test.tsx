@@ -622,4 +622,176 @@ describe("Form builder scoped state and autosave", () => {
       screen.getByText("You are offline. Form changes are paused."),
     ).toBeTruthy();
   });
+
+  async function saveConfiguredFields(
+    count: number,
+    configure: (tools: {
+      add: (name: string) => void;
+      fill: (name: RegExp, value: string) => void;
+    }) => void,
+  ) {
+    const originalFields = structuredClone(saved.fields);
+    write = async (_p, o) => {
+      saved = {
+        ...saved,
+        ...(o.body.definition as typeof saved),
+        revision: saved.revision + 1,
+      };
+      return { form: saved };
+    };
+    render(panel());
+    await title();
+    vi.useFakeTimers();
+    try {
+      const library = within(
+        screen.getByRole("complementary", { name: "Field library" }),
+      );
+      configure({
+        add: (name) =>
+          fireEvent.click(library.getByRole("button", { name, exact: true })),
+        fill: (name, value) =>
+          fireEvent.change(screen.getByLabelText(name), { target: { value } }),
+      });
+      await act(async () => vi.advanceTimersByTimeAsync(650));
+      expect(writes()).toHaveLength(1);
+      const document = writes()[0][1].body.definition as typeof saved;
+      expect(document.fields).toHaveLength(originalFields.length + count);
+      expect(document.fields).toEqual(expect.arrayContaining(originalFields));
+      return document;
+    } finally {
+      vi.useRealTimers();
+    }
+  }
+  it("autosaves exact text, pattern and numeric answer constraints while preserving existing questions", async () => {
+    const document = await saveConfiguredFields(2, ({ add, fill }) => {
+      fill(
+        /^Form description/,
+        "A chapter form with reviewed answer constraints.",
+      );
+      add("Short text");
+      fill(/^Question label/, "Project code");
+      fill(/^Description/, "Use uppercase letters and digits.");
+      fireEvent.click(
+        screen.getByRole("switch", { name: "Required question" }),
+      );
+      fireEvent.click(screen.getByRole("switch", { name: "Sensitive answer" }));
+      fill(/^Minimum length/, "3");
+      fill(/^Maximum length/, "12");
+      fill(/^Required answer pattern/, "^[A-Z0-9]+$");
+      add("Number");
+      fill(/^Question label/, "Team size");
+      fill(/^Minimum$/, "2");
+      fill(/^Maximum$/, "10");
+    });
+    expect(document.description).toBe(
+      "A chapter form with reviewed answer constraints.",
+    );
+    expect(
+      document.fields.find((v) => v.label === "Project code"),
+    ).toMatchObject({
+      type: "short",
+      description: "Use uppercase letters and digits.",
+      required: true,
+      sensitive: true,
+      minLength: 3,
+      maxLength: 12,
+      pattern: "^[A-Z0-9]+$",
+    });
+    expect(document.fields.find((v) => v.label === "Team size")).toMatchObject({
+      type: "number",
+      min: 2,
+      max: 10,
+    });
+  });
+  it("autosaves domain and maximum-choice rules with their exact option labels", async () => {
+    const document = await saveConfiguredFields(2, ({ add, fill }) => {
+      add("Email");
+      fill(/^Question label/, "GT contact");
+      fill(/^Allowed email domain/, "@gatech.edu");
+      add("Multiple choice");
+      fill(/^Question label/, "Topics");
+      fill(/^Options/, "Cloud\nData\nMobile");
+      fill(/^Maximum choices/, "2");
+    });
+    expect(document.fields.find((v) => v.label === "GT contact")).toMatchObject(
+      { allowedDomain: "gatech.edu" },
+    );
+    expect(document.fields.find((v) => v.label === "Topics")).toMatchObject({
+      options: ["Cloud", "Data", "Mobile"],
+      maxChoices: 2,
+    });
+  });
+  it("autosaves date bounds and independent grid row/column labels", async () => {
+    const document = await saveConfiguredFields(2, ({ add, fill }) => {
+      add("Date");
+      fill(/^Question label/, "Preferred date");
+      fill(/^Earliest date/, "2027-01-01");
+      fill(/^Latest date/, "2027-12-31");
+      add("Checkbox grid");
+      fill(/^Question label/, "Session preferences");
+      fill(/^Options/, "Cloud\nWeb");
+      fill(/^Grid columns/, "Morning\nEvening");
+    });
+    expect(
+      document.fields.find((v) => v.label === "Preferred date"),
+    ).toMatchObject({ dateFrom: "2027-01-01", dateTo: "2027-12-31" });
+    expect(
+      document.fields.find((v) => v.label === "Session preferences"),
+    ).toMatchObject({
+      options: ["Cloud", "Web"],
+      columns: ["Morning", "Evening"],
+    });
+  });
+  it("autosaves private file limits with verified identity, availability and retention settings", async () => {
+    const document = await saveConfiguredFields(1, ({ add, fill }) => {
+      add("File upload");
+      fill(/^Question label/, "Project proposal");
+      fill(/^Maximum files/, "2");
+      fill(/^Maximum file size/, "8");
+      fireEvent.click(
+        screen.getByRole("checkbox", { name: "PNG", exact: true }),
+      );
+      fireEvent.click(
+        screen.getByRole("tab", { name: "Settings", exact: true }),
+      );
+      fireEvent.change(screen.getByRole("combobox", { name: /^Access mode/ }), {
+        target: { value: "verified" },
+      });
+      fireEvent.change(screen.getByRole("combobox", { name: /^Form theme/ }), {
+        target: { value: "charcoal" },
+      });
+      fill(/^Response limit/, "25");
+      fill(/^Opens at/, "2027-01-01T09:00");
+      fill(/^Closes at/, "2027-02-01T17:00");
+      fill(/^Response retention/, "120");
+      fill(/^Closed-form message/, "This collection is closed.");
+      fill(/^Confirmation message/, "Your reviewed response was saved.");
+      for (const name of [
+        "Save & resume",
+        "Allow response edits",
+        "One response per verified identity",
+      ])
+        fireEvent.click(screen.getByRole("switch", { name, exact: true }));
+    });
+    const file = document.fields.find((v) => v.label === "Project proposal")!;
+    expect(file).toMatchObject({ maxFiles: 2, maxFileBytes: 8 * 1048576 });
+    expect(file.allowedMime).not.toContain("image/png");
+    expect(document.settings).toMatchObject({
+      access: "verified",
+      theme: "charcoal",
+      limit: 25,
+      retentionDays: 120,
+      closedMessage: "This collection is closed.",
+      confirmation: "Your reviewed response was saved.",
+      resume: false,
+      editing: false,
+      oneResponse: true,
+    });
+    expect(document.settings.opensAt).toBe(
+      new Date("2027-01-01T09:00").toISOString(),
+    );
+    expect(document.settings.closesAt).toBe(
+      new Date("2027-02-01T17:00").toISOString(),
+    );
+  });
 });

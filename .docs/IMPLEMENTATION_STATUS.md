@@ -9,6 +9,30 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 ## Current checkpoint
 
 
+### Global coverage and active workflow completion checks — 2026-11-06
+
+- All 2,649 tests/210 files now pass all unchanged global 70% gates and all 21
+  critical branch gates. Lines 77.73%, branches 75.40%, statements 75.79%,
+  functions 70.35%. No thresholds/exclusions/timeouts were weakened.
+- Full import/reference audit retired 47 unreferenced tracked helpers, preserving
+  all 207 shipped/228 referenced modules, both HTML entries, dynamic/offline
+  imports, scripts/tests and existing untracked work. SHA-256 manifest and local
+  recoverable tag `reference/shared-ui-before-retirement-20261106` preserve sources.
+  The retired code contained 266 unexercised functions; denominator change is
+  reported separately from 99 additional active functions exercised by new
+  project, Linktree, newsletter and Forms saved-document assertions.
+- New subscriber test found validation normalized an email but the editor sent
+  original casing; the editor now sends its validated canonical record. All
+  newsletter writes are mocked assertions; no provider sends. The initial long
+  Forms workflow exceeded its unchanged five-second test limit under coverage;
+  split into four independent validation/settings groups retaining every assertion.
+- Build/types/lint (zero errors/10 existing warnings), budgets/secrets/traceability
+  pass. Offline raw install is 463,659 bytes. See `UNUSED_HELPER_RETIREMENT.md`.
+  Complete production-browser regression (1,062 cases/38 specs) is running.
+  Real-worker/IndexedDB PWA probe has separate pending evidence; no full PRD,
+  manual/device/approved visual/performance/hosted/institutional signoff claimed.
+
+
 ### Person-data privacy original review/approval recovery — 2026-11-06
 
 - Applied migrations 136/137 add atomic exact original review/approval and read-only
