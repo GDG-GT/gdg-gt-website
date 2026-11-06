@@ -1,0 +1,7 @@
+{
+  "generatedAt": "2026-11-06T19:51:23.141Z",
+  "completed": false,
+  "scope": "Owned loopback production build. Worker bytes vary only by an appended probe-version comment; real waiting/activation and actual production dirty-navigation UI used in two tabs. Isolated context closed and static server stopped. Does not certify real device install/push, hosted retention of old hashed assets or changed-deployment rollback.",
+  "tests": [],
+  "note": "Initial harness tried filling a field inside collapsed newsletter details before opening it. No update request or application mutation occurred. Opened the details and corrected probe sw.js version response before fresh isolated run."
+}

@@ -1078,6 +1078,8 @@ add(
     unit("pwa-worker"),
     unit("build-graph"),
     "scripts/check-build-budgets.mjs",
+    "scripts/test-production-pwa-boundaries.mjs",
+    "scripts/test-production-pwa-update.mjs",
   ],
 );
 add(
@@ -1101,9 +1103,9 @@ add(
   "PWA-TEST-005",
   "",
   "Minimal public queue, retry classification, leases, interrupted-final-attempt recovery, expiry and logout fences",
-  [unit("public-queue"), "tests/client/submission-queue-ui.test.tsx"],
+  [unit("public-queue"), "tests/client/submission-queue-ui.test.tsx", "scripts/test-production-pwa-boundaries.mjs"],
   [
-    "Real multi-tab/worker interruption, lost-response, 48-hour expiry and logout storage-failure acceptance",
+    "Actual installed supported-device storage failures, hosted changed-build rollback/old-asset retention and worker interruption acceptance; local real IndexedDB multi-tab/expiry/lost-response/epoch probes have evidence",
   ],
 );
 prdTestCases.at(-1).normative = ["11.3", "28.3", "31.2"];

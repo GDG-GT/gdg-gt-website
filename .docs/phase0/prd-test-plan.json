@@ -2248,7 +2248,9 @@
         "tests/server/pwa-policy.test.mjs",
         "tests/server/pwa-worker.test.mjs",
         "tests/server/build-graph.test.mjs",
-        "scripts/check-build-budgets.mjs"
+        "scripts/check-build-budgets.mjs",
+        "scripts/test-production-pwa-boundaries.mjs",
+        "scripts/test-production-pwa-update.mjs"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"
@@ -2297,10 +2299,11 @@
       "scope": "Minimal public queue, retry classification, leases, interrupted-final-attempt recovery, expiry and logout fences",
       "automated": [
         "tests/server/public-queue.test.mjs",
-        "tests/client/submission-queue-ui.test.tsx"
+        "tests/client/submission-queue-ui.test.tsx",
+        "scripts/test-production-pwa-boundaries.mjs"
       ],
       "remaining": [
-        "Real multi-tab/worker interruption, lost-response, 48-hour expiry and logout storage-failure acceptance",
+        "Actual installed supported-device storage failures, hosted changed-build rollback/old-asset retention and worker interruption acceptance; local real IndexedDB multi-tab/expiry/lost-response/epoch probes have evidence",
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified",

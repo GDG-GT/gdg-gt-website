@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-11-06T19:51:36.390Z",
+  "completed": true,
+  "scope": "Owned loopback production build. Worker bytes vary only by an appended probe-version comment; real waiting/activation and actual production dirty-navigation UI used in two tabs. Isolated context closed and static server stopped. Does not certify real device install/push, hosted retention of old hashed assets or changed-deployment rollback.",
+  "tests": [
+    {
+      "name": "declining production worker update preserves dirty fields and waiting version",
+      "passed": true
+    },
+    {
+      "name": "approved production update reloads only the requesting dirty tab",
+      "passed": true
+    },
+    {
+      "name": "second dirty tab keeps its fields and document across another tab's worker activation",
+      "passed": true
+    },
+    {
+      "name": "explicit update activates the waiting worker without automatic fleet reload",
+      "passed": true
+    },
+    {
+      "name": "multi-tab update probe performs no actual application mutation or provider send",
+      "passed": true
+    }
+  ]
+}

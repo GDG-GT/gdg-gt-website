@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-11-06T19:48:33.466Z",
+  "completed": true,
+  "scope": "Owned loopback static production build with fictional API/fetch responses. Real worker/CacheStorage/offline routing and IndexedDB multi-tab/expiry/lost-reply/capacity/clear. Fresh isolated browser context closed, static server stopped, no real providers/production/application writes. Does not certify installed-device UI, multi-build update rollout, actual push permission/delivery or hosted cache headers.",
+  "tests": [
+    {
+      "name": "real service-worker CacheStorage contains only public enumerated assets",
+      "passed": true
+    },
+    {
+      "name": "standalone offline fallback is cached and probe code is not",
+      "passed": true
+    },
+    {
+      "name": "real offline public navigation loads truthful standalone fallback",
+      "passed": true
+    },
+    {
+      "name": "real worker refuses private admin navigation fallback",
+      "passed": true
+    },
+    {
+      "name": "real worker refuses private form/capability navigation fallback",
+      "passed": true
+    },
+    {
+      "name": "two real tabs serialize queue claims through IndexedDB and do not duplicate an in-flight request",
+      "passed": true
+    },
+    {
+      "name": "confirmed queue outcome removes stored personal payload",
+      "passed": true
+    },
+    {
+      "name": "real queue preserves original key and exact public endpoint without credentials",
+      "passed": true
+    },
+    {
+      "name": "real 48-hour IndexedDB expiry erases payload and prevents replay without waiting or changing system clock",
+      "passed": true
+    },
+    {
+      "name": "real event-capacity 409 permanently stops device replay and clears personal payload",
+      "passed": true
+    },
+    {
+      "name": "lost accepted queue reply remains unconfirmed rather than claiming success",
+      "passed": true
+    },
+    {
+      "name": "explicit lost-reply retry reuses the original persisted key",
+      "passed": true
+    },
+    {
+      "name": "cross-tab logout-style clear epoch prevents late network acknowledgement resurrecting private queue data",
+      "passed": true
+    },
+    {
+      "name": "real queue personal payload never enters localStorage or sessionStorage",
+      "passed": true
+    },
+    {
+      "name": "PWA/queue probe performs no provider or actual application mutations",
+      "passed": true
+    }
+  ]
+}

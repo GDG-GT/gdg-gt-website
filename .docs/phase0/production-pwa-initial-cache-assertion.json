@@ -1,0 +1,7 @@
+{
+  "generatedAt": "2026-11-06T19:48:04.345Z",
+  "completed": false,
+  "scope": "Owned loopback static production build with fictional API/fetch responses. Real worker/CacheStorage/offline routing and IndexedDB multi-tab/expiry/lost-reply/capacity/clear. Fresh isolated browser context closed, static server stopped, no real providers/production/application writes. Does not certify installed-device UI, multi-build update rollout, actual push permission/delivery or hosted cache headers.",
+  "tests": [],
+  "note": "Initial harness refused any query in internal cache keys; Workbox precache revision keys use __WB_REVISION__. Refine to only permit that internal key while continuing to reject private/form/API/query application routes. No source or worker-policy change."
+}

@@ -93,3 +93,37 @@ supported-device installation/push acceptance and hosted operations.
 
 Implementation references: [Vite PWA injectManifest guide](https://vite-pwa-org.netlify.app/guide/inject-manifest)
 and [Workbox precaching](https://developer.chrome.com/docs/workbox/modules/workbox-precaching).
+
+
+## Production browser boundaries — 2026-11-06
+
+All 15 additional checks pass against an isolated loopback production build with
+real service worker, CacheStorage and IndexedDB. The cache excludes API/admin/
+Forms/private capability requests, public offline navigation loads the standalone
+truthful fallback and private routes refuse fallback. Two tabs serialize in-flight
+queue claims through real IndexedDB; accepted/409/48-hour-expired records lose their
+stored personal payload. Lost acceptance remains pending and explicit retry keeps
+the same key. Cross-tab clear increments the epoch so a late reply cannot recreate
+personal data. No queue payload enters local/session storage. The static fixture
+server stops and its isolated browser context closes at completion. No actual
+application mutations or provider sends occur.
+
+The first harness assertion refused every query in internal cache keys; Workbox
+uses its own `__WB_REVISION__` query for revisioned assets. The assertion now permits
+only that internal key while still rejecting application/private/query routes.
+No worker or cache policy was changed. Both attempts are recorded in
+`phase0/production-pwa-initial-cache-assertion.json` and
+`phase0/production-pwa-boundaries.json`. This is local behavior evidence; installed
+mobile/device UI, dirty multi-tab version updates, actual push permissions/provider
+and hosted cache headers remain separate acceptance.
+
+Five production two-tab update checks also pass (`phase0/production-pwa-update.json`).
+A waiting worker remains waiting after declining the real unsaved-work dialog;
+fields and document survive. Explicit discard/update activates it and reloads
+only the requester. A second dirty tab preserves its document and entered fields.
+The probe changes worker bytes only through an appended version comment and
+uses the production registration/update/dirty-navigation UI, then closes its
+isolated context/server. The initial harness tried an input in collapsed details
+and was corrected before any update; that evidence remains separately recorded.
+Hosted changed-asset rollout/rollback and real installed devices still require
+separate acceptance.
