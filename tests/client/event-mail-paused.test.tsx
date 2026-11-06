@@ -10,7 +10,10 @@ import {
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import EventMailPanel from "../../src/ui/EventMailPanel";
 const { apiMock } = vi.hoisted(() => ({ apiMock: vi.fn() }));
-vi.mock("@/lib/api", () => ({ api: apiMock }));
+vi.mock("@/lib/api", async (original) => ({
+  ...(await original<typeof import("../../src/lib/api")>()),
+  api: apiMock,
+}));
 vi.mock("@/hooks/useDraftGuard", () => ({
   useDraftGuard: vi.fn(),
   useNavigationSafety: () => ({ request: vi.fn() }),
@@ -65,5 +68,9 @@ it("clears unsent message fields when the private session is cleared", () => {
   const subject = screen.getByLabelText(/^Subject/) as HTMLInputElement;
   fireEvent.change(subject, { target: { value: "Fictional private subject" } });
   act(() => window.dispatchEvent(new Event("gdg:session-cleared")));
-  expect(subject.value).toBe("");
+  expect(screen.queryByLabelText(/^Subject/)).toBeNull();
+  expect(screen.queryByDisplayValue("Fictional private subject")).toBeNull();
+  expect(
+    screen.getByRole("button", { name: "Recheck event email access" }),
+  ).toBeTruthy();
 });

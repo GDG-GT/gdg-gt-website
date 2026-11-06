@@ -334,6 +334,14 @@ add(
   ["Complete supported-role/device/manual/visual/notification-provider/hosted announcement acceptance remains open; owned live probe queues metadata jobs without invoking a delivery worker"],
 );
 prdTestCases.at(-1).normative = ["23", "24", "28.3", "28.4", "31.2"];
+add(
+  "EVT-TEST-015",
+  "EVT-001 EVT-009",
+  "Private event-mail approval receipt reconciliation, exact review readiness, scoped denial clearing, fresh-proof immutable retry and current-sender paginated history",
+  ["tests/client/event-mail-recovery.test.tsx", "tests/client/event-mail-paused.test.tsx", unit("event-mail-recovery"), sql("117_event_mail_recovery_read"), local("event-mail-recovery"), "tests/browser/event-mail-recovery.spec.ts"],
+  ["Full supported-role/device/manual/visual/SMTP-provider/hosted event-mail acceptance remains open; owned probe queues four fictional jobs and invokes no delivery worker"],
+);
+prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
 const teams = [
   [
     "TEAM-001",

@@ -1,0 +1,86 @@
+{
+  "generatedAt": "2026-11-06T03:27:04.804Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and desktop/mobile Chromium event-mail recovery. Lost accepted approvals reconciled by GET even after owned review expiry; unaccepted requests rechecked read-only then explicitly retried with fresh proof/identical intent. Controlled denied lookup clears private fields. Only fresh owned fictional accounts/event/registration/reviews/messages/jobs. Sender/scheduler preflight; no worker/provider send. Owned jobs marked dead/secrets cleared, reviews expired, registration soft-deleted/events archived/accounts disabled with credential generation retired/sessions revoked. Immutable fictional message audit retained. Existing chapter/production records untouched. Captures masked/private; no credentials or response bodies retained.",
+  "tests": [
+    {
+      "name": "anonymous mail approval recovery is denied",
+      "passed": true
+    },
+    {
+      "name": "unrelated account cannot discover mail review or approval receipts",
+      "passed": true
+    },
+    {
+      "name": "mail receipt lookup requires a valid original retry identity",
+      "passed": true
+    },
+    {
+      "name": "unavailable owned review returns no audience or fabricated success and is uncached",
+      "passed": true
+    },
+    {
+      "name": "populated exact-audience/message approval passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "private current-sender message history is available during uncertain approval without another POST at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "lost accepted approval reconciles its receipt after review expiry with no second approval POST at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only recheck of an unaccepted approval does not queue a message at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "fresh-proof explicit retry uses the identical intent/key and queues one message at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "denied approval lookup clears recipients/content/proof before actual access recheck without another message at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "mail recovery has no script error, extra mutation, external request or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated exact-audience/message approval passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "private current-sender message history is available during uncertain approval without another POST at 375×812",
+      "passed": true
+    },
+    {
+      "name": "lost accepted approval reconciles its receipt after review expiry with no second approval POST at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only recheck of an unaccepted approval does not queue a message at 375×812",
+      "passed": true
+    },
+    {
+      "name": "fresh-proof explicit retry uses the identical intent/key and queues one message at 375×812",
+      "passed": true
+    },
+    {
+      "name": "denied approval lookup clears recipients/content/proof before actual access recheck without another message at 375×812",
+      "passed": true
+    },
+    {
+      "name": "mail recovery has no script error, extra mutation, external request or page overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "complete probe creates four intended messages and four owned pending jobs with no delivery worker",
+      "passed": true
+    }
+  ]
+}

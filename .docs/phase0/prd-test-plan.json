@@ -801,6 +801,33 @@
       ]
     },
     {
+      "id": "EVT-TEST-015",
+      "requirements": [
+        "EVT-001",
+        "EVT-009"
+      ],
+      "scope": "Private event-mail approval receipt reconciliation, exact review readiness, scoped denial clearing, fresh-proof immutable retry and current-sender paginated history",
+      "automated": [
+        "tests/client/event-mail-recovery.test.tsx",
+        "tests/client/event-mail-paused.test.tsx",
+        "tests/server/event-mail-recovery.test.mjs",
+        "database/tests/117_event_mail_recovery_read.sql",
+        "scripts/test-local-event-mail-recovery.mjs",
+        "tests/browser/event-mail-recovery.spec.ts"
+      ],
+      "remaining": [
+        "Full supported-role/device/manual/visual/SMTP-provider/hosted event-mail acceptance remains open; owned probe queues four fictional jobs and invokes no delivery worker",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "28.3",
+        "28.4",
+        "31.2"
+      ]
+    },
+    {
       "id": "TEAM-TEST-001",
       "requirements": [
         "TEAM-001"

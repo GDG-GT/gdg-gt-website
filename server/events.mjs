@@ -404,7 +404,20 @@ export async function eventRoutes(
   if (operation === "email" || operation === "email-review") {
     if (attendeeId)
       throw new ApiError(404, "NOT_FOUND", "This email action was not found.");
-    queryValues(url.searchParams, z.object({}).strict());
+    const emailRead = queryValues(
+      url.searchParams,
+      request.method === "GET" && operation === "email"
+        ? z.union([
+            z.object({ reviewId: uuid.optional() }).strict(),
+            z
+              .object({
+                history: z.literal("true"),
+                page: z.coerce.number().int().min(1).max(10000).default(1),
+              })
+              .strict(),
+          ])
+        : z.object({}).strict(),
+    );
     if (
       !checked(
         await db.rpc("can_event_audience", {
@@ -420,6 +433,49 @@ export async function eventRoutes(
         "You do not have permission to email this audience.",
       );
     if (request.method === "GET") {
+      if ("history" in emailRead) {
+        const result = await db
+          .from("event_messages")
+          .select("id,subject,message,recipient_count,created_at", {
+            count: "exact",
+          })
+          .eq("event_id", id)
+          .eq("created_by", session.user.id)
+          .order("created_at", { ascending: false })
+          .order("id")
+          .range((emailRead.page - 1) * 20, emailRead.page * 20 - 1);
+        checked(result);
+        sendJson(
+          response,
+          200,
+          {
+            items: result.data,
+            total: result.count,
+            page: emailRead.page,
+            pageSize: 20,
+          },
+          requestId,
+        );
+        return true;
+      }
+      if (emailRead.reviewId) {
+        const key = idempotency(request);
+        sendJson(
+          response,
+          200,
+          checked(
+            await db.rpc("inspect_event_mail_recovery", {
+              p_actor: session.user.id,
+              p_session: session.sessionId,
+              p_event: id,
+              p_review: emailRead.reviewId,
+              p_key_hash: tokenHash(key),
+            }),
+          ),
+          requestId,
+        );
+        return true;
+      }
       const result = await db
         .from("event_attendance")
         .select("id", { head: true, count: "exact" })

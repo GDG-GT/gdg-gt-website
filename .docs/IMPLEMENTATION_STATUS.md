@@ -8,6 +8,32 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Event-mail approval reconciliation and private sender history — 2026-11-05
+
+- Migration 117 adds current-session/event/review/key receipt/readiness lookup.
+  Accepted lost approvals reconcile read-only even after review expiry/purge.
+  Unaccepted approvals require exact ready review, fresh proof and explicit
+  immutable retry. Scoped cancellation, denial clearing, action-time expiry,
+  47-hour cutoff, offline rechecking and reviewed abandonment protect the panel.
+  Current-sender paginated queued history now has independent private read recovery.
+- All 1,557 tests/167 files pass (46 new mail cases; 52 focused mail checks).
+  Coverage still fails 70%: 64.75% lines/64.68% branches/63.02% statements/56.00%
+  functions; all 17 critical branch gates pass. Complete 117-migration SQL/legacy-
+  grant suites (209/210 checks), both 100-client races and six restore checks pass.
+- All 19 actual API/DB/desktop-mobile checks pass, including measured review axe,
+  expiry receipt reconciliation without another POST, exact fresh-proof retry and
+  accessible private history. Four fictional messages/jobs created; jobs disabled,
+  reviews expired, events/registration archived, credentials retired/accounts
+  disabled/sessions revoked; immutable audit retained. No worker/provider send or
+  existing chapter/production record change. Interrupted probe fixture inspected
+  and recovered; see `EVENT_MAIL_RECOVERY.md` for failed-probe corrections.
+- Catalog: 156 unverified cases. Remaining Forms/builder/runtime/navigation and
+  quality/device/manual/visual/hosted acceptance remain open. Full PRD remains open.
+- Types/lint (zero errors/25 warnings), build/budgets/secrets/traceability pass.
+  All 96 targeted production-build mail/team/shared-workspace checks pass across
+  six pinned profiles, including both approval-loss cases and private history.
+  Captures remain unapproved review candidates.
+
 ### Atomic team announcement writes and typed publication reviews — 2026-11-05
 
 - Migration 116 adds current-authority atomic draft/lifecycle/pin/read receipts

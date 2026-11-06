@@ -26,6 +26,10 @@ export type PublicFixture = {
   failAnnouncementSave: boolean;
   announcementWrites: { key: string; fingerprint: string }[];
   announcementCommitted: number;
+  eventMail: boolean;
+  loseMailApproval: "" | "before" | "after";
+  mailApprovals: { key: string; fingerprint: string }[];
+  mailCommitted: number;
 };
 export const fictionalTeamInvite = {
   id: "fbbb0000-0000-4000-8000-000000000004",
@@ -54,6 +58,40 @@ export const fictionalTeamPost = {
   readCount: 0,
 };
 export const fictionalPublishedTitle = "Fictional published " + "A".repeat(170);
+export const fictionalMailEvent = {
+  id: "fbbb0000-0000-4000-8000-000000000006",
+  title: "Fictional browser mail event",
+  slug: "fictional-browser-mail-event",
+  description: "Fictional private mail fixture",
+  start_at: "2099-11-05T18:00:00Z",
+  end_at: "2099-11-05T20:00:00Z",
+  timezone: "America/New_York",
+  location: "Fictional room",
+  type: "Workshop",
+  level: "beginner",
+  registration_type: "internal",
+  registration_enabled: true,
+  publication_status: "published",
+  max_participants: 20,
+  external_attendees: 0,
+  is_featured: false,
+  team_id: null,
+  revision: 1,
+  created_at: "2026-11-05T12:00:00Z",
+  updated_at: "2026-11-05T12:00:00Z",
+  actions: ["read", "create", "update", "delete", "publish"],
+  canExport: true,
+  canEmail: true,
+};
+export const fictionalMailAttendee = {
+  id: "fbbb0000-0000-4000-8000-000000000007",
+  attendee_name: "Fictional mail participant",
+  attendee_email: "fictional-mail-attendee@example.test",
+  notes: "",
+  attended: false,
+  registration_date: "2026-11-05T12:00:00Z",
+  updated_at: "2026-11-05T12:00:00Z",
+};
 export const fictionalTeam = {
   id: "fbbb0000-0000-4000-8000-000000000003",
   name: "Fictional browser team",
@@ -115,6 +153,10 @@ export const test = base.extend<{ fixture: PublicFixture }>({
         failAnnouncementSave: false,
         announcementWrites: [],
         announcementCommitted: 0,
+        eventMail: false,
+        loseMailApproval: "",
+        mailApprovals: [],
+        mailCommitted: 0,
       };
       let team = { ...fictionalTeam };
       let managedInvite = { ...fictionalTeamInvite };
@@ -132,6 +174,21 @@ export const test = base.extend<{ fixture: PublicFixture }>({
         return managedPost;
       };
       const postReceipts = new Map<string, string>();
+      let mailReview:
+        | {
+            reviewId: string;
+            count: number;
+            expiresAt: string;
+            subject: string;
+            message: string;
+            recipients: { id: string; email: string }[];
+          }
+        | undefined;
+      const mailReceipts = new Map<
+        string,
+        { fingerprint: string; reviewId: string }
+      >();
+      let mailReviewNumber = 0;
       const inviteReceipts = new Map<string, string>();
       const teamWorkspace = () => ({
         team,
@@ -200,6 +257,84 @@ export const test = base.extend<{ fixture: PublicFixture }>({
           ["/auth/realtime-token", "/realtime/token"].includes(path)
         ) {
           await reply(503, null);
+          return;
+        }
+        const mailRoot = "/admin/events/" + fictionalMailEvent.id + "/email";
+        if (
+          state.authenticated &&
+          state.eventMail &&
+          request.method() === "POST" &&
+          path === mailRoot + "-review"
+        ) {
+          const body = request.postDataJSON();
+          if (
+            typeof body.subject !== "string" ||
+            typeof body.message !== "string"
+          ) {
+            state.writes.push("Invalid fictional mail review");
+            await reply(403, null);
+            return;
+          }
+          mailReviewNumber++;
+          mailReview = {
+            reviewId:
+              "fbbb0000-0000-4000-8000-" +
+              String(mailReviewNumber).padStart(12, "0"),
+            subject: body.subject,
+            message: body.message,
+            count: 1,
+            expiresAt: "2026-11-05T14:00:00Z",
+            recipients: [
+              {
+                id: fictionalMailAttendee.id,
+                email: fictionalMailAttendee.attendee_email,
+              },
+            ],
+          };
+          await reply(200, mailReview);
+          return;
+        }
+        if (
+          state.authenticated &&
+          state.eventMail &&
+          request.method() === "POST" &&
+          path === mailRoot
+        ) {
+          const body = request.postDataJSON(),
+            key = request.headers()["idempotency-key"];
+          if (
+            !key ||
+            body.currentPassword !== "Fictional browser password" ||
+            body.confirmation !== "SEND 1" ||
+            body.reviewId !== mailReview?.reviewId
+          ) {
+            state.writes.push("Invalid fictional mail approval");
+            await reply(403, null);
+            return;
+          }
+          const { currentPassword: _proof, ...intent } = body;
+          const fingerprint = JSON.stringify(intent),
+            receipt = mailReceipts.get(key);
+          state.mailApprovals.push({ key, fingerprint });
+          if (receipt && receipt.fingerprint !== fingerprint) {
+            await reply(409, null);
+            return;
+          }
+          if (state.loseMailApproval === "before") {
+            state.loseMailApproval = "";
+            await route.abort("connectionfailed");
+            return;
+          }
+          if (!receipt) {
+            mailReceipts.set(key, { fingerprint, reviewId: body.reviewId });
+            state.mailCommitted++;
+          }
+          if (state.loseMailApproval === "after") {
+            state.loseMailApproval = "";
+            await route.abort("connectionfailed");
+            return;
+          }
+          await reply(200, { queued: true, recipientCount: 1 });
           return;
         }
         if (
@@ -468,8 +603,71 @@ export const test = base.extend<{ fixture: PublicFixture }>({
           if (path === "/admin/events") {
             await reply(200, {
               ...empty,
+              ...(state.eventMail
+                ? { items: [fictionalMailEvent], total: 1 }
+                : {}),
               capabilities: { globalCreate: true, teams: [] },
             });
+            return;
+          }
+          if (
+            state.eventMail &&
+            path === "/admin/events/" + fictionalMailEvent.id
+          ) {
+            await reply(200, { event: fictionalMailEvent });
+            return;
+          }
+          if (
+            state.eventMail &&
+            path === "/admin/events/" + fictionalMailEvent.id + "/attendees"
+          ) {
+            await reply(200, {
+              ...empty,
+              items: [fictionalMailAttendee],
+              total: 1,
+            });
+            return;
+          }
+          if (state.eventMail && path === mailRoot) {
+            if (!url.searchParams.has("reviewId")) {
+              if (url.searchParams.get("history") === "true") {
+                await reply(200, {
+                  ...empty,
+                  items: state.mailCommitted
+                    ? [
+                        {
+                          id: "fictional-queued-mail",
+                          subject: mailReview?.subject,
+                          message: mailReview?.message,
+                          recipient_count: 1,
+                          created_at: "2026-11-05T12:00:00Z",
+                        },
+                      ]
+                    : [],
+                  total: state.mailCommitted,
+                });
+                return;
+              }
+              await reply(200, { recipientCount: 1, maxBatch: 1000 });
+              return;
+            }
+            const key = request.headers()["idempotency-key"],
+              receipt = mailReceipts.get(key);
+            if (
+              receipt &&
+              receipt.reviewId === url.searchParams.get("reviewId")
+            )
+              await reply(200, {
+                state: "queued",
+                at: "2026-11-05T12:00:00Z",
+                receipt: { queued: true, recipientCount: 1 },
+              });
+            else
+              await reply(200, {
+                state: "ready",
+                at: "2026-11-05T12:00:00Z",
+                review: mailReview,
+              });
             return;
           }
           if (path === "/admin/dashboard") {

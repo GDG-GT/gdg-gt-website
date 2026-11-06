@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-05): the latest module checkpoint is
-`TEAM_ANNOUNCEMENT_MUTATION_RECOVERY.md`; completed recovery checkpoints include tasks,
+`EVENT_MAIL_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -38,7 +38,6 @@ accepted-but-dropped save reconciliation. Independent Events reads are now
 closed locally (`EVENT_READ_RECOVERY.md`), including real desktop/mobile outage
 recovery. Core Events/attendee writes, current action capabilities, consequence
 reviews and draft navigation now have local recovery (`EVENT_MUTATION_RECOVERY.md`).
-Complete event-mail denial/uncertain-review recovery,
 Forms recovery/navigation checks remain open, as do
 the remaining browser/device/manual acceptance matrices.
 These are implementation gaps, separate from external launch inputs.
@@ -52,21 +51,19 @@ Account-write/selected-record revision recovery is now also closed locally
 (`USER_MUTATION_RECOVERY.md`), including atomic setup-link replay and actual
 accepted-but-lost browser saves. Full account-action/role/device/manual/hosted
 acceptance remains open.
-Independent Team inventory/detail/history/destination reads are now closed locally
-(`TEAM_READ_RECOVERY.md`); team/member/grant mutation replay and reviews are also
-closed locally (`TEAM_MUTATION_RECOVERY.md`). Invitation/announcement recovery and
-full acceptance remain open.
-Independent invitation/announcement reads and stale-capability/revision navigation
-are also closed locally (`TEAM_CHILD_READ_RECOVERY.md`); complete atomic child
-mutation/uncertain-write/consequence recovery remains open.
-Invitation mutation recovery is now also closed locally
-(`INVITATION_MUTATION_RECOVERY.md`), including atomic create/resend/revoke replay
-without duplicate email jobs or token rotation. Announcement mutation recovery
-and full supported-role/device/manual/visual/provider/hosted acceptance remain open.
-Team announcement mutation recovery is now also closed locally
-(`TEAM_ANNOUNCEMENT_MUTATION_RECOVERY.md`), including atomic publication/draft/
-archive replay, typed lifecycle/published-edit reviews and exact private reads.
-Full supported-role/device/manual/visual/notification-provider/hosted acceptance
+Team inventory/detail/history/destination reads, team/member/grant reviews and
+atomic mutation replay are closed locally (`TEAM_READ_RECOVERY.md`,
+`TEAM_MUTATION_RECOVERY.md`). Invitation/announcement private reads, stale-state
+navigation and atomic write recovery are also closed locally
+(`TEAM_CHILD_READ_RECOVERY.md`, `INVITATION_MUTATION_RECOVERY.md`,
+`TEAM_ANNOUNCEMENT_MUTATION_RECOVERY.md`). These include bounded immutable retries,
+typed lifecycle/published-edit reviews, exact private reconciliation and prevention
+of duplicate invitation mail or publication notification jobs. Full supported-role/
+device/manual/visual/provider/hosted acceptance remains open.
+Event-mail approval reconciliation and private current-sender history are now
+closed locally (`EVENT_MAIL_RECOVERY.md`): accepted receipt reads do not resend,
+unaccepted approvals require exact recheck/fresh-proof explicit retry, and denial
+clears private state. Full role/device/manual/visual/provider/hosted acceptance
 remains open.
 
 Additional requests on 2026-10-21 are implemented locally: community directory
@@ -187,11 +184,11 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is 64.29% lines/64.32% branches at the announcement-write checkpoint,
-  below the global 70% gate; 1,511 tests pass, not a
+  coverage is 64.75% lines/64.68% branches at the event-mail checkpoint,
+  below the global 70% gate; 1,557 tests pass, not a
   percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 155 reviewed logical test cases with
+  All 146 numbered requirements now map into 156 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.
@@ -235,8 +232,7 @@ Their manual/hosted/visual acceptance remains open.
 
 ## Next implementation checkpoint
 
-Complete event-mail recovery, then the remaining
-Forms/runtime/navigation and quality/coverage/device
+Complete the remaining Forms/builder/runtime/navigation and quality/coverage/device
 acceptance and overall coverage beyond the now-passing 17 critical-file gates.
 Preserve the read-only Git reference and historical SQL for retired clients
 (`LEGACY_CLIENT_RETIREMENT.md`), and keep user edits intact. Track implementation separately from verified
