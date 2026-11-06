@@ -326,6 +326,14 @@ add(
   ["Complete announcement mutation recovery and full supported-role/device/manual/visual/provider/hosted invitation acceptance remain open; live probe does not invoke a delivery worker"],
 );
 prdTestCases.at(-1).normative = ["23", "24", "28.3", "28.4", "31.2"];
+add(
+  "TEAM-TEST-010",
+  "TEAM-002 TEAM-005 TEAM-006",
+  "Current-authority atomic announcement draft/lifecycle/read receipts, typed lifecycle and published-edit reviews, exact private reconciliation and bounded immutable uncertain retries",
+  ["tests/client/team-announcement-mutations.test.tsx", unit("team-announcement-recovery"), sql("116_team_announcement_replay"), local("team-announcement-mutation-recovery"), "tests/browser/announcement-review.spec.ts"],
+  ["Complete supported-role/device/manual/visual/notification-provider/hosted announcement acceptance remains open; owned live probe queues metadata jobs without invoking a delivery worker"],
+);
+prdTestCases.at(-1).normative = ["23", "24", "28.3", "28.4", "31.2"];
 const teams = [
   [
     "TEAM-001",

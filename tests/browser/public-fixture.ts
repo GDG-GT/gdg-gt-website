@@ -22,6 +22,10 @@ export type PublicFixture = {
   failInvitationSave: boolean;
   invitationWrites: { key: string; fingerprint: string }[];
   invitationCommitted: number;
+  announcementReview: boolean;
+  failAnnouncementSave: boolean;
+  announcementWrites: { key: string; fingerprint: string }[];
+  announcementCommitted: number;
 };
 export const fictionalTeamInvite = {
   id: "fbbb0000-0000-4000-8000-000000000004",
@@ -49,6 +53,7 @@ export const fictionalTeamPost = {
   isRead: false,
   readCount: 0,
 };
+export const fictionalPublishedTitle = "Fictional published " + "A".repeat(170);
 export const fictionalTeam = {
   id: "fbbb0000-0000-4000-8000-000000000003",
   name: "Fictional browser team",
@@ -106,9 +111,27 @@ export const test = base.extend<{ fixture: PublicFixture }>({
         failInvitationSave: false,
         invitationWrites: [],
         invitationCommitted: 0,
+        announcementReview: false,
+        failAnnouncementSave: false,
+        announcementWrites: [],
+        announcementCommitted: 0,
       };
       let team = { ...fictionalTeam };
       let managedInvite = { ...fictionalTeamInvite };
+      let managedPost = { ...fictionalTeamPost },
+        postInitialized = false;
+      const currentPost = () => {
+        if (state.announcementReview && !postInitialized) {
+          managedPost = {
+            ...managedPost,
+            is_published: true,
+            title: fictionalPublishedTitle,
+          };
+          postInitialized = true;
+        }
+        return managedPost;
+      };
+      const postReceipts = new Map<string, string>();
       const inviteReceipts = new Map<string, string>();
       const teamWorkspace = () => ({
         team,
@@ -177,6 +200,64 @@ export const test = base.extend<{ fixture: PublicFixture }>({
           ["/auth/realtime-token", "/realtime/token"].includes(path)
         ) {
           await reply(503, null);
+          return;
+        }
+        if (
+          state.authenticated &&
+          state.announcementReview &&
+          request.method() === "PATCH" &&
+          path ===
+            "/admin/teams/" +
+              fictionalTeam.id +
+              "/announcements/" +
+              fictionalTeamPost.id
+        ) {
+          const body = request.postDataJSON(),
+            key = request.headers()["idempotency-key"],
+            saved = currentPost();
+          if (
+            !key ||
+            typeof body.record?.title !== "string" ||
+            typeof body.record?.message !== "string"
+          ) {
+            state.writes.push("Invalid fictional announcement mutation");
+            await reply(403, null);
+            return;
+          }
+          const fingerprint = JSON.stringify(body),
+            receipt = postReceipts.get(key);
+          state.announcementWrites.push({ key, fingerprint });
+          if (
+            (receipt && receipt !== fingerprint) ||
+            (!receipt &&
+              (body.revision !== saved.revision ||
+                body.confirmation !== saved.title))
+          ) {
+            await reply(409, null);
+            return;
+          }
+          if (!receipt) {
+            managedPost = {
+              ...saved,
+              title: body.record.title,
+              message: body.record.message,
+              priority: body.record.priority,
+              is_pinned: body.record.pinned,
+              is_published: false,
+              revision: saved.revision + 1,
+            };
+            postReceipts.set(key, fingerprint);
+            state.announcementCommitted++;
+          }
+          if (state.failAnnouncementSave) {
+            state.failAnnouncementSave = false;
+            await route.abort("connectionfailed");
+            return;
+          }
+          await reply(200, {
+            id: managedPost.id,
+            revision: managedPost.revision,
+          });
           return;
         }
         if (
@@ -458,7 +539,7 @@ export const test = base.extend<{ fixture: PublicFixture }>({
               await reply(200, {
                 ...empty,
                 items: [
-                  panel === "invitations" ? managedInvite : fictionalTeamPost,
+                  panel === "invitations" ? managedInvite : currentPost(),
                 ],
                 total: 1,
                 canManage: true,
@@ -467,6 +548,17 @@ export const test = base.extend<{ fixture: PublicFixture }>({
               });
               return;
             }
+          }
+          if (
+            state.teamReview &&
+            path ===
+              "/admin/teams/" +
+                fictionalTeam.id +
+                "/announcements/" +
+                fictionalTeamPost.id
+          ) {
+            await reply(200, { record: currentPost(), canManage: true });
+            return;
           }
           if (
             state.accountReview &&

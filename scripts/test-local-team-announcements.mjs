@@ -121,7 +121,7 @@ try {
   check(r.status === 404, "ordinary members cannot create team announcements");
   r = await call(prefix + "/" + id, {
     method: "POST",
-    body: { action: "publish", revision: 1 },
+    body: { action: "publish", revision: 1, confirmation: record.title },
   });
   check(r.status === 200, "publication is a separate explicit mutation");
   r = await reader(prefix);
@@ -174,6 +174,7 @@ try {
     body: {
       revision: post.revision,
       record: { ...record, message: message + " revised" },
+      confirmation: post.title,
     },
   });
   check(
@@ -189,7 +190,11 @@ try {
   post = r.json.data.items.find((p) => p.id === id);
   await call(prefix + "/" + id, {
     method: "POST",
-    body: { action: "publish", revision: post.revision },
+    body: {
+      action: "publish",
+      revision: post.revision,
+      confirmation: post.title,
+    },
   });
   let workspace = (await call("/admin/teams/" + teamId)).json.data,
     membership = workspace.members.find((m) => m.admin_user_id === member.id);
@@ -232,7 +237,11 @@ try {
   const scheduled = r.json.data.id;
   await call(prefix + "/" + scheduled, {
     method: "POST",
-    body: { action: "publish", revision: 1 },
+    body: {
+      action: "publish",
+      revision: 1,
+      confirmation: "Future fictional post",
+    },
   });
   const futureJob = await db
     .from("delivery_jobs")
@@ -276,7 +285,11 @@ try {
   post = r.json.data.items.find((p) => p.id === id);
   r = await call(prefix + "/" + id, {
     method: "POST",
-    body: { action: "archive", revision: post.revision },
+    body: {
+      action: "archive",
+      revision: post.revision,
+      confirmation: post.title,
+    },
   });
   check(
     r.status === 200,
@@ -286,7 +299,11 @@ try {
   post = r.json.data.items.find((p) => p.id === id);
   r = await call(prefix + "/" + id, {
     method: "POST",
-    body: { action: "restore", revision: post.revision },
+    body: {
+      action: "restore",
+      revision: post.revision,
+      confirmation: post.title,
+    },
   });
   check(r.status === 200, "announcement restores as a private draft");
   r = await reader(prefix);

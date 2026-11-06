@@ -7,8 +7,9 @@ import {
   uuid,
   text,
   queryValues,
+  idempotency,
 } from "./lib/validation.mjs";
-import { riskHash } from "./lib/security.mjs";
+import { riskHash, tokenHash } from "./lib/security.mjs";
 export const announcementRecord = z
   .object({
     title: text(200, 2),
@@ -31,6 +32,7 @@ const create = z.object({ record: announcementRecord }).strict(),
     .object({
       revision: z.number().int().positive(),
       record: announcementRecord,
+      confirmation: text(200, 2).optional(),
     })
     .strict();
 const action = z.discriminatedUnion("action", [
@@ -38,6 +40,7 @@ const action = z.discriminatedUnion("action", [
     .object({
       action: z.enum(["publish", "unpublish", "archive", "restore"]),
       revision: z.number().int().positive(),
+      confirmation: text(200, 2),
     })
     .strict(),
   z
@@ -62,12 +65,28 @@ export async function teamAnnouncementRoutes(
   allowMethod(
     request,
     response,
-    match[2] ? ["POST", "PATCH"] : ["GET", "POST"],
+    match[2] ? ["GET", "POST", "PATCH"] : ["GET", "POST"],
   );
   const team = parse(uuid, match[1]),
     id = match[2] ? parse(uuid, match[2]) : null,
     session = await requireSession(request, store, config);
   if (request.method === "GET") {
+    if (id) {
+      queryValues(url.searchParams, z.object({}).strict());
+      sendJson(
+        response,
+        200,
+        checked(
+          await db.rpc("team_announcement_record", {
+            p_actor: session.user.id,
+            p_team: team,
+            p_id: id,
+          }),
+        ),
+        requestId,
+      );
+      return true;
+    }
     const q = queryValues(
       url.searchParams,
       z
@@ -76,15 +95,17 @@ export async function teamAnnouncementRoutes(
           state: z
             .enum(["current", "drafts", "published", "archived"])
             .default("current"),
+          title: text(200, 2).optional(),
         })
         .strict(),
     );
     const result = checked(
-      await db.rpc("list_team_announcements", {
+      await db.rpc("list_team_announcements_filtered", {
         p_actor: session.user.id,
         p_team: team,
         p_page: q.page,
         p_state: q.state,
+        p_title: q.title ?? null,
       }),
     );
     sendJson(response, 200, result, requestId);
@@ -106,8 +127,9 @@ export async function teamAnnouncementRoutes(
     !id ? create : request.method === "PATCH" ? update : action,
     32768,
   );
+  const key = idempotency(request);
   const result = checked(
-    await db.rpc("mutate_team_announcement", {
+    await db.rpc("mutate_team_announcement_workspace", {
       p_actor: session.user.id,
       p_session: session.sessionId,
       p_team: team,
@@ -118,7 +140,13 @@ export async function teamAnnouncementRoutes(
           ? "update"
           : body.action,
       p_revision: body.revision ?? null,
-      p_document: body.record || { pinned: body.pinned },
+      p_document: body.record
+        ? { ...body.record, confirmation: body.confirmation }
+        : { pinned: body.pinned, confirmation: body.confirmation },
+      p_key_hash: tokenHash(key),
+      p_request_hash: tokenHash(
+        JSON.stringify({ team, id, method: request.method, body }),
+      ),
       p_request_id: requestId,
     }),
   );

@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-05): the latest module checkpoint is
-`INVITATION_MUTATION_RECOVERY.md`; completed recovery checkpoints include tasks,
+`TEAM_ANNOUNCEMENT_MUTATION_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -38,7 +38,7 @@ accepted-but-dropped save reconciliation. Independent Events reads are now
 closed locally (`EVENT_READ_RECOVERY.md`), including real desktop/mobile outage
 recovery. Core Events/attendee writes, current action capabilities, consequence
 reviews and draft navigation now have local recovery (`EVENT_MUTATION_RECOVERY.md`).
-Complete event-mail denial/uncertain-review recovery, Team child workflows,
+Complete event-mail denial/uncertain-review recovery,
 Forms recovery/navigation checks remain open, as do
 the remaining browser/device/manual acceptance matrices.
 These are implementation gaps, separate from external launch inputs.
@@ -63,6 +63,11 @@ Invitation mutation recovery is now also closed locally
 (`INVITATION_MUTATION_RECOVERY.md`), including atomic create/resend/revoke replay
 without duplicate email jobs or token rotation. Announcement mutation recovery
 and full supported-role/device/manual/visual/provider/hosted acceptance remain open.
+Team announcement mutation recovery is now also closed locally
+(`TEAM_ANNOUNCEMENT_MUTATION_RECOVERY.md`), including atomic publication/draft/
+archive replay, typed lifecycle/published-edit reviews and exact private reads.
+Full supported-role/device/manual/visual/notification-provider/hosted acceptance
+remains open.
 
 Additional requests on 2026-10-21 are implemented locally: community directory
 (`/admin/members`) CSV import/export and notification Mark all read → Dismiss all.
@@ -182,11 +187,11 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is 63.88% lines/63.79% branches at the invitation-write checkpoint,
-  below the global 70% gate; 1,470 tests pass, not a
+  coverage is 64.29% lines/64.32% branches at the announcement-write checkpoint,
+  below the global 70% gate; 1,511 tests pass, not a
   percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
-  All 146 numbered requirements now map into 154 reviewed logical test cases with
+  All 146 numbered requirements now map into 155 reviewed logical test cases with
   real source references (`phase0/prd-test-plan.json`). Normative sections and
   manual/hosted acceptance remain; the inventory is not a completion percentage
   and its `unverified` statuses are not promoted from local build success.
@@ -230,7 +235,7 @@ Their manual/hosted/visual acceptance remains open.
 
 ## Next implementation checkpoint
 
-Complete announcement mutation and event-mail recovery, then the remaining
+Complete event-mail recovery, then the remaining
 Forms/runtime/navigation and quality/coverage/device
 acceptance and overall coverage beyond the now-passing 17 critical-file gates.
 Preserve the read-only Git reference and historical SQL for retired clients

@@ -116,7 +116,8 @@
     "202611050112_event_mutation_replay.sql",
     "202611050113_account_mutation_replay.sql",
     "202611050114_team_mutation_replay.sql",
-    "202611050115_invitation_mutation_replay.sql"
+    "202611050115_invitation_mutation_replay.sql",
+    "202611050116_team_announcement_replay.sql"
   ],
   "tests": [
     {
@@ -588,6 +589,10 @@
       "passed": true
     },
     {
+      "name": "202611050116_team_announcement_replay.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -933,6 +938,10 @@
     },
     {
       "name": "115_invitation_mutation_replay.sql",
+      "passed": true
+    },
+    {
+      "name": "116_team_announcement_replay.sql",
       "passed": true
     },
     {

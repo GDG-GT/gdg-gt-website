@@ -1,0 +1,146 @@
+{
+  "generatedAt": "2026-11-06T02:15:30.683Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and Chromium desktop/mobile announcement receipt verification: ten concurrent creates/publications, accepted-but-lost published edits/publications/archives, read-only exact rechecks and immutable retries. Sender/scheduler preflight; no worker invoked or provider send. Only fresh owned fictional accounts/team/post/jobs, jobs marked dead/secrets cleared, post/team archived/accounts disabled/sessions revoked. No existing chapter record or production change. Captures private/ignored; no credentials/response bodies retained.",
+  "tests": [
+    {
+      "name": "announcement mutation refuses missing retry identity",
+      "passed": true
+    },
+    {
+      "name": "ten concurrent draft creates commit one post and audit",
+      "passed": true
+    },
+    {
+      "name": "changed private draft cannot reuse an accepted intent key",
+      "passed": true
+    },
+    {
+      "name": "publication requires typed target confirmation",
+      "passed": true
+    },
+    {
+      "name": "ten identical publications snapshot one audience/version and queue one metadata-only notification job",
+      "passed": true
+    },
+    {
+      "name": "exact announcement recheck conceals unrelated and anonymous reads",
+      "passed": true
+    },
+    {
+      "name": "authorized exact announcement read remains private and uncached",
+      "passed": true
+    },
+    {
+      "name": "exact announcement recheck conceals unrelated and anonymous reads",
+      "passed": true
+    },
+    {
+      "name": "authorized exact announcement read remains private and uncached",
+      "passed": true
+    },
+    {
+      "name": "published edit reviews original/proposed body and unpublication consequence before writing at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated long published-edit review passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "lost update performs only a read-only recheck before explicit replay at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "recovered update uses exactly one immutable intent/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "lost published-edit replay commits one private-draft revision/audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "lost publish performs only a read-only recheck before explicit replay at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "recovered publish uses exactly one immutable intent/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "lost publication replay queues one metadata-only notification job at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "lost archive performs only a read-only recheck before explicit replay at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "recovered archive uses exactly one immutable intent/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "lost archive receipt replays once after the current-view row disappears at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "announcement recovery has no extra write, worker send, external request, script error or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "published edit reviews original/proposed body and unpublication consequence before writing at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated long published-edit review passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "lost update performs only a read-only recheck before explicit replay at 375×812",
+      "passed": true
+    },
+    {
+      "name": "recovered update uses exactly one immutable intent/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "lost published-edit replay commits one private-draft revision/audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "lost publish performs only a read-only recheck before explicit replay at 375×812",
+      "passed": true
+    },
+    {
+      "name": "recovered publish uses exactly one immutable intent/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "lost publication replay queues one metadata-only notification job at 375×812",
+      "passed": true
+    },
+    {
+      "name": "lost archive performs only a read-only recheck before explicit replay at 375×812",
+      "passed": true
+    },
+    {
+      "name": "recovered archive uses exactly one immutable intent/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "lost archive receipt replays once after the current-view row disappears at 375×812",
+      "passed": true
+    },
+    {
+      "name": "announcement recovery has no extra write, worker send, external request, script error or page overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "complete probe retains one post and four explicitly intended publication jobs",
+      "passed": true
+    }
+  ]
+}

@@ -773,6 +773,34 @@
       ]
     },
     {
+      "id": "TEAM-TEST-010",
+      "requirements": [
+        "TEAM-002",
+        "TEAM-005",
+        "TEAM-006"
+      ],
+      "scope": "Current-authority atomic announcement draft/lifecycle/read receipts, typed lifecycle and published-edit reviews, exact private reconciliation and bounded immutable uncertain retries",
+      "automated": [
+        "tests/client/team-announcement-mutations.test.tsx",
+        "tests/server/team-announcement-recovery.test.mjs",
+        "database/tests/116_team_announcement_replay.sql",
+        "scripts/test-local-team-announcement-mutation-recovery.mjs",
+        "tests/browser/announcement-review.spec.ts"
+      ],
+      "remaining": [
+        "Complete supported-role/device/manual/visual/notification-provider/hosted announcement acceptance remains open; owned live probe queues metadata jobs without invoking a delivery worker",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24",
+        "28.3",
+        "28.4",
+        "31.2"
+      ]
+    },
+    {
       "id": "TEAM-TEST-001",
       "requirements": [
         "TEAM-001"

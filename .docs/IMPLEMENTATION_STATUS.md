@@ -8,6 +8,32 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Atomic team announcement writes and typed publication reviews — 2026-11-05
+
+- Migration 116 adds current-authority atomic draft/lifecycle/pin/read receipts
+  and exact private record/title reads. Lifecycle and published-edit saves require
+  typed current titles on UI/server/SQL. Reviews show original/proposed content,
+  settings and return-to-draft consequences. Scoped pending guards, immutable
+  bounded retries, exact read-only rechecking, denial clearing and reviewed
+  uncertainty abandonment protect writes; filtered empty views have reset actions.
+- All 1,511 tests/165 files pass (72 focused, 41 new cases). Coverage still fails
+  70%: 64.29% lines/64.32% branches/62.59% statements/55.68% functions; all 17
+  critical branch gates pass. Complete 116-migration SQL/legacy-grant suites
+  (207/208 checks), both 100-client races and six isolated restore checks pass.
+- All 34 actual API/DB/desktop-mobile checks pass: concurrent creates/publications
+  and lost published-edit/publication/archive receipts commit once. Archive replay
+  works after current-view removal; populated long-review axe passes. Fixture jobs
+  disabled/secrets cleared, posts/teams archived/accounts disabled/sessions revoked.
+  No worker/provider sends or existing chapter/production records changed.
+- Catalog: 155 unverified cases. Complete event-mail and remaining Forms/runtime/
+  navigation recovery plus role/device/manual/visual/hosted acceptance remain open.
+  See `TEAM_ANNOUNCEMENT_MUTATION_RECOVERY.md`; full PRD remains open.
+- Types/lint (zero errors/25 warnings), build/budgets/secrets/traceability pass.
+  All 84 targeted production-build announcement/invitation/team-review/child-read/
+  shared-workspace checks pass across six pinned profiles, including long unbroken
+  titles/content. Final sequential coverage confirms the same results; captures
+  remain unapproved review candidates.
+
 ### Reviewed invitation changes and atomic link replay — 2026-11-05
 
 - Migration 115 adds current-session/password/team/target-bound create/resend/
