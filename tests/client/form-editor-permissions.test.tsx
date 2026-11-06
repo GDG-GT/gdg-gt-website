@@ -60,6 +60,10 @@ function mountBuilder(form: PreviewForm) {
             </main>
           }
         />
+        <Route
+          path="/forms/:slug"
+          element={<h1>Fictional read-only preview</h1>}
+        />
       </Routes>
     </MemoryRouter>,
   );
@@ -91,6 +95,48 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 describe("Action-aware form definition inspection", () => {
+  it("keeps archived fields and publication read-only despite editing grants, rejecting local change and autosave", async () => {
+    const form = fixture(["view", "edit", "publish"]);
+    form.status = "Archived";
+    mountBuilder(form);
+    const input = await screen.findByLabelText("Form title");
+    expect(input).toHaveProperty("disabled", true);
+    expect(screen.getByLabelText("Form description")).toHaveProperty(
+      "disabled",
+      true,
+    );
+    expect(
+      screen.getByRole("region", { name: "Archived form status" }).textContent,
+    ).toContain("Restore it as a private draft");
+    expect(
+      screen.getByRole("button", { name: "Publish", exact: true }),
+    ).toHaveProperty("disabled", true);
+    vi.useFakeTimers();
+    fireEvent.change(input, {
+      target: { value: "Fictional forbidden archived edit" },
+    });
+    fireEvent.change(screen.getByLabelText(/Question label/), {
+      target: { value: "Fictional forbidden archived question" },
+    });
+    await act(async () => vi.advanceTimersByTimeAsync(1000));
+    expect(input).toHaveProperty("value", form.title);
+    expect(apiMock.mock.calls.every(([, options]) => !options?.method)).toBe(
+      true,
+    );
+  });
+  it("keeps an unchanged archived saved preview available without attempting a save", async () => {
+    const form = fixture(["view", "edit", "publish"]);
+    form.status = "Archived";
+    mountBuilder(form);
+    await screen.findByLabelText("Form title");
+    const preview = screen.getByRole("link", { name: "Preview", exact: true });
+    expect(preview.getAttribute("aria-disabled")).toBe("false");
+    fireEvent.click(preview);
+    await screen.findByRole("heading", { name: "Fictional read-only preview" });
+    expect(apiMock.mock.calls.every(([, options]) => !options?.method)).toBe(
+      true,
+    );
+  });
   it("makes view-only title, description, section, fields and add/reorder controls truly read-only", async () => {
     mountBuilder(fixture());
     await screen.findByLabelText("Form title");

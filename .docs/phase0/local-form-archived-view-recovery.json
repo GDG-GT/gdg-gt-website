@@ -1,0 +1,74 @@
+{
+  "generatedAt": "2026-11-06T05:46:37.745Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and Chromium desktop/mobile archived builder inspection. Two fresh owned fictional internal forms are published once and archived before inspection. Raw grants still include edit/publish; UI disables draft/publication changes, retains immutable history and opens a saved preview with response submission disabled. All browser mutations/external requests blocked, realtime paused; draft/version/availability unchanged and no responses. Accounts disabled/sessions revoked, forms remain archived. No worker/provider send or existing chapter/production change. Captures ignored/unapproved.",
+  "tests": [
+    {
+      "name": "owned archived fixture retains raw grants and one immutable version at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "archived draft stays private to authorized readers at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "archived builder disables draft editing and publication while preserving saved preview at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated archived builder passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "archived published history remains readable without a mutation at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "archived saved preview opens read-only and cannot submit a response at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "archived inspection leaves draft, version, availability and responses unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "archived inspection has no unexpected write, script error, external request or overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "owned archived fixture retains raw grants and one immutable version at 375×812",
+      "passed": true
+    },
+    {
+      "name": "archived draft stays private to authorized readers at 375×812",
+      "passed": true
+    },
+    {
+      "name": "archived builder disables draft editing and publication while preserving saved preview at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated archived builder passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "archived published history remains readable without a mutation at 375×812",
+      "passed": true
+    },
+    {
+      "name": "archived saved preview opens read-only and cannot submit a response at 375×812",
+      "passed": true
+    },
+    {
+      "name": "archived inspection leaves draft, version, availability and responses unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "archived inspection has no unexpected write, script error, external request or overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

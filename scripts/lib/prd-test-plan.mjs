@@ -345,9 +345,9 @@ prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
 add(
   "FORM-TEST-039",
   "FORM-001 FORM-002 FORM-003",
-  "Private saved-definition denial clearing, builder/response account-session-form scope isolation, cancelable queued autosave/publication and reviewed stale saved-draft loading",
-  ["tests/client/form-builder-read-scope.test.tsx", "tests/client/form-data-recovery.test.tsx", local("form-builder-read-scope"), "tests/browser/form-builder-scope.spec.ts"],
-  ["Atomic authoring/library mutation recovery has separate local evidence in FORM-TEST-040; archived-editor/runtime and remaining Forms child/access/settings/deletion, response/integration recovery and supported-role/device/manual/visual/hosted acceptance remain open; paused unknown saves are not automatically retried"],
+  "Private saved-definition denial clearing, builder/response account-session-form scope isolation, cancelable queued autosave/publication and reviewed stale saved-draft loading, archived-status draft/publication gating and read-only saved preview/history inspection",
+  ["tests/client/form-builder-read-scope.test.tsx", "tests/client/form-data-recovery.test.tsx", local("form-builder-read-scope"), "tests/browser/form-builder-scope.spec.ts", "tests/client/form-editor-permissions.test.tsx", local("form-archived-view"), "tests/browser/form-archived.spec.ts"],
+  ["Atomic authoring/library mutation recovery has separate local evidence in FORM-TEST-040; runtime and remaining Forms child/access/settings/deletion, response/integration recovery and supported-role/device/manual/visual/hosted acceptance remain open; paused unknown saves are not automatically retried"],
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
 add(
@@ -355,7 +355,7 @@ add(
   "FORM-001 FORM-002 FORM-003",
   "Current-authority atomic authoring/library receipts, normalized original-intent retry, read-only reconciliation, reviewed duplicate/availability changes, draft resumption and bounded uncertain-write abandonment",
   ["tests/client/form-write-recovery.test.tsx", "tests/client/form-builder-read-scope.test.tsx", "tests/client/form-library-mutation-recovery.test.tsx", unit("form-authoring-replay"), unit("form-library-replay"), sql("118_form_authoring_replay"), sql("119_form_library_replay"), local("form-authoring-recovery"), local("form-library-write"), "tests/browser/form-authoring-recovery.spec.ts", "tests/browser/form-library-writes.spec.ts"],
-  ["Archived-editor/runtime and remaining Forms child/access/settings/deletion, response/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; owned probes publish internal fictional forms without responses or provider sends"],
+  ["Runtime and remaining Forms child/access/settings/deletion, response/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; owned probes publish internal fictional forms without responses or provider sends"],
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
 add(
@@ -363,7 +363,7 @@ add(
   "FORM-001 FORM-002 FORM-003",
   "Scoped timestamped form-library read recovery, retained creation proposals, denial clearing without automatic filter loops, paused actions and focused read-only retry",
   ["tests/client/form-library-read-recovery.test.tsx", "tests/client/form-data-recovery.test.tsx", "tests/client/form-availability-review.test.tsx", local("form-library-read"), "tests/browser/form-library-reads.spec.ts"],
-  ["Atomic library writes have separate local evidence in FORM-TEST-040; archived-editor/runtime and remaining Forms child/access/settings/deletion, response/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; this owned read-only probe performs no browser writes"],
+  ["Atomic library writes have separate local evidence in FORM-TEST-040; runtime and remaining Forms child/access/settings/deletion, response/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; this owned read-only probe performs no browser writes"],
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
 const teams = [

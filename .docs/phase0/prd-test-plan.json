@@ -834,15 +834,18 @@
         "FORM-002",
         "FORM-003"
       ],
-      "scope": "Private saved-definition denial clearing, builder/response account-session-form scope isolation, cancelable queued autosave/publication and reviewed stale saved-draft loading",
+      "scope": "Private saved-definition denial clearing, builder/response account-session-form scope isolation, cancelable queued autosave/publication and reviewed stale saved-draft loading, archived-status draft/publication gating and read-only saved preview/history inspection",
       "automated": [
         "tests/client/form-builder-read-scope.test.tsx",
         "tests/client/form-data-recovery.test.tsx",
         "scripts/test-local-form-builder-read-scope.mjs",
-        "tests/browser/form-builder-scope.spec.ts"
+        "tests/browser/form-builder-scope.spec.ts",
+        "tests/client/form-editor-permissions.test.tsx",
+        "scripts/test-local-form-archived-view.mjs",
+        "tests/browser/form-archived.spec.ts"
       ],
       "remaining": [
-        "Atomic authoring/library mutation recovery has separate local evidence in FORM-TEST-040; archived-editor/runtime and remaining Forms child/access/settings/deletion, response/integration recovery and supported-role/device/manual/visual/hosted acceptance remain open; paused unknown saves are not automatically retried",
+        "Atomic authoring/library mutation recovery has separate local evidence in FORM-TEST-040; runtime and remaining Forms child/access/settings/deletion, response/integration recovery and supported-role/device/manual/visual/hosted acceptance remain open; paused unknown saves are not automatically retried",
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified",
@@ -875,7 +878,7 @@
         "tests/browser/form-library-writes.spec.ts"
       ],
       "remaining": [
-        "Archived-editor/runtime and remaining Forms child/access/settings/deletion, response/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; owned probes publish internal fictional forms without responses or provider sends",
+        "Runtime and remaining Forms child/access/settings/deletion, response/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; owned probes publish internal fictional forms without responses or provider sends",
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified",
@@ -902,7 +905,7 @@
         "tests/browser/form-library-reads.spec.ts"
       ],
       "remaining": [
-        "Atomic library writes have separate local evidence in FORM-TEST-040; archived-editor/runtime and remaining Forms child/access/settings/deletion, response/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; this owned read-only probe performs no browser writes",
+        "Atomic library writes have separate local evidence in FORM-TEST-040; runtime and remaining Forms child/access/settings/deletion, response/integration recovery and full supported-role/device/manual/visual/hosted acceptance remain open; this owned read-only probe performs no browser writes",
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified",

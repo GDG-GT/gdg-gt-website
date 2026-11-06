@@ -177,6 +177,49 @@ describe("Private saved form reads", () => {
   });
 });
 describe("Form builder scoped state and autosave", () => {
+  it("preserves a proposed draft when a refresh finds an archive and requires explicit saved loading without resuming autosave", async () => {
+    render(panel());
+    const input = await title();
+    fireEvent.change(input, {
+      target: { value: "Fictional proposal preserved after archive" },
+    });
+    saved = { ...saved, status: "Archived", revision: 2 };
+    fireEvent.click(
+      screen.getByRole("button", { name: "Recheck saved form", exact: true }),
+    );
+    await screen.findByRole("region", { name: "Archived form status" });
+    expect(input.value).toBe("Fictional proposal preserved after archive");
+    expect(input.disabled).toBe(true);
+    expect(
+      screen.getByRole("button", { name: "Publish", exact: true }),
+    ).toHaveProperty("disabled", true);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Review loading saved draft" }),
+    );
+    expect(
+      screen.getByRole("button", {
+        name: "Keep proposed draft and resume autosave",
+      }),
+    ).toHaveProperty("disabled", true);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Keep proposed draft", exact: true }),
+    );
+    expect(input.value).toBe("Fictional proposal preserved after archive");
+    fireEvent.click(
+      screen.getByRole("button", { name: "Review loading saved draft" }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Load saved draft and discard proposed changes",
+      }),
+    );
+    expect(input.value).toBe(saved.title);
+    expect(input.disabled).toBe(true);
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 700));
+    });
+    expect(writes()).toHaveLength(0);
+  });
   it("publishes an unchanged saved definition with publish-only permission and no draft write", async () => {
     saved = {
       ...createTemplate("Fictional publish-only form", "interest"),

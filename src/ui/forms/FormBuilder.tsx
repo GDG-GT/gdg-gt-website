@@ -208,6 +208,12 @@ function FormBuilderContent() {
               "AbortError",
             );
           if (saved.current === signature(snapshot)) return snapshot;
+          if (serverRef.current.form?.status === "Archived")
+            throw new ApiFailure(
+              409,
+              "FORM_ARCHIVED",
+              "Restore the archived form as a private draft before saving changes.",
+            );
           if (!serverRef.current.form?.actions?.includes("edit"))
             throw new ApiFailure(
               403,
@@ -290,6 +296,7 @@ function FormBuilderContent() {
     if (
       !form ||
       !ready ||
+      source?.status === "Archived" ||
       publishing ||
       saved.current === signature(form) ||
       !form.actions?.includes("edit")
@@ -300,7 +307,7 @@ function FormBuilderContent() {
       void persist(structuredClone(form)).catch(() => {});
     }, 600);
     return () => clearTimeout(timer);
-  }, [form, persist, ready, publishing]);
+  }, [form, persist, ready, publishing, source?.status]);
   useEffect(() => {
     const warn = (event: BeforeUnloadEvent) => {
       if (
@@ -360,9 +367,13 @@ function FormBuilderContent() {
         )}
       </div>
     );
-  const editable = ready && !publishing && !!source?.actions?.includes("edit"),
+  const archived = source?.status === "Archived";
+  const editable =
+      ready && !archived && !publishing && !!source?.actions?.includes("edit"),
     field = form.fields.find((item) => item.id === selected),
-    issues = validateDefinition(form);
+    issues = validateDefinition(form),
+    canPreview =
+      ready && !publishing && (saved.current === signature(form) || editable);
   const update = (next: PreviewForm) => {
     if (!editable) return;
     undo.current.push(structuredClone(form));
@@ -1244,10 +1255,10 @@ function FormBuilderContent() {
           </button>
           <Link
             to={`/forms/${form.slug}?preview=1`}
-            aria-disabled={!ready || publishing}
+            aria-disabled={!canPreview}
             onClick={async (event) => {
               event.preventDefault();
-              if (!ready || publicationPending.current) return;
+              if (!canPreview || publicationPending.current) return;
               try {
                 await persist(structuredClone(form));
                 const preview = () => navigate(`/forms/${form.slug}?preview=1`);
@@ -1265,12 +1276,16 @@ function FormBuilderContent() {
           <Button
             disabled={
               !ready ||
+              archived ||
               !source?.actions?.includes("publish") ||
               publishing ||
               recoveryBusy ||
               saveStatus === "Saving…"
             }
-            onClick={() => setPublishOpen(true)}
+            onClick={() => {
+              if (!archived && ready && !publicationPending.current)
+                setPublishOpen(true);
+            }}
           >
             Publish <ArrowUp size={15} />
           </Button>
@@ -1367,7 +1382,21 @@ function FormBuilderContent() {
           }}
         />
       )}
-      {!source?.actions?.includes("edit") && (
+      {archived && (
+        <section
+          className="gt-builder-read-status"
+          aria-label="Archived form status"
+        >
+          <p>
+            This saved form is archived. Draft editing and publication are
+            read-only. Restore it as a private draft from the{" "}
+            <Link to="/admin/forms">Forms library</Link> before making changes.
+            Fields, settings, saved preview and published history remain
+            available to inspect.
+          </p>
+        </section>
+      )}
+      {!archived && !source?.actions?.includes("edit") && (
         <p className="gt-data-note" role="status">
           View only. Draft editing requires additional permission. You can
           inspect fields, settings and published versions.
@@ -1604,9 +1633,11 @@ function FormBuilderContent() {
           <p className="gt-builder-hint">
             {editable
               ? "Drag to reorder, or use the move up and down buttons. Draft changes autosave securely; publication creates a separate immutable version."
-              : source?.actions?.includes("edit")
-                ? "Editing is paused. Recheck the saved draft before changing fields or settings."
-                : "Select a question to inspect its settings. Draft changes require edit permission."}
+              : archived
+                ? "Archived forms are read-only. Restore a private draft from the Forms library before editing."
+                : source?.actions?.includes("edit")
+                  ? "Editing is paused. Recheck the saved draft before changing fields or settings."
+                  : "Select a question to inspect its settings. Draft changes require edit permission."}
           </p>
         </div>
         <aside className="gt-builder-inspector" aria-label="Form inspector">
@@ -1701,14 +1732,18 @@ function FormBuilderContent() {
           }}
         >
           <DialogTitle>
-            {issues.length
-              ? "A few things before you publish"
-              : "Ready to share?"}
+            {archived
+              ? "Archived form is read-only"
+              : issues.length
+                ? "A few things before you publish"
+                : "Ready to share?"}
           </DialogTitle>
           <DialogDescription>
-            {issues.length
-              ? "Resolve these checks to create a published version."
-              : `This publishes immutable version ${form.versions.length + 1}. Existing responses keep their original questions and labels.`}
+            {archived
+              ? "Restore this form as a private draft from the Forms library before publishing."
+              : issues.length
+                ? "Resolve these checks to create a published version."
+                : `This publishes immutable version ${form.versions.length + 1}. Existing responses keep their original questions and labels.`}
           </DialogDescription>
           {issues.length ? (
             <ul className="gt-validation-list">
@@ -1731,12 +1766,14 @@ function FormBuilderContent() {
               !!issues.length ||
               publishing ||
               !ready ||
+              archived ||
               !source?.actions?.includes("publish")
             }
             onClick={async () => {
               if (
                 publicationPending.current ||
                 !ready ||
+                archived ||
                 !source?.actions?.includes("publish")
               )
                 return;
@@ -1753,6 +1790,7 @@ function FormBuilderContent() {
                   controller.signal.aborted ||
                   generation.current !== currentGeneration ||
                   !allowed.current ||
+                  serverRef.current.form?.status === "Archived" ||
                   !serverRef.current.form?.actions?.includes("publish")
                 )
                   return;
@@ -1919,7 +1957,8 @@ function FormBuilderContent() {
                     server.error ||
                     !isOnline ||
                     recoveryBusy ||
-                    !source.actions?.includes("edit")
+                    !source.actions?.includes("edit") ||
+                    source.status === "Archived"
                   )
                     return;
                   invalidateWrites();

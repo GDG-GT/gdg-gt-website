@@ -8,6 +8,27 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Archived Forms read-only inspection — 2026-11-06
+
+- Archived status independently gates draft editing, autosave and publication,
+  including retained local proposals and action-time checks. Saved preview,
+  immutable history and fields/settings inspection stay available; preview cannot
+  submit. Restoring a private draft is required before further authoring.
+- All 54 focused cases pass (three new regressions); all 16 actual loopback
+  API/DB/desktop-mobile cases pass, with measured axe and unchanged draft/version/
+  availability and zero responses. Only fresh fictional internal forms were
+  published once then archived; actors disabled/sessions revoked. No worker,
+  provider send, existing chapter or production change.
+- Build/types/lint (zero errors/25 warnings), byte budgets, secret scan and
+  traceability pass. All 54 archived/shared-workspace production-browser cases
+  pass across six profiles (`phase0/form-archived-workspace-browser.json`).
+- All 1,684 tests/173 files pass. Global 70% coverage remains red: 65.79% lines,
+  65.52% branches, 63.94% statements and 56.85% functions. All 17 individual
+  critical branch gates pass. No timeout or threshold changed.
+- Remaining Forms child/access/settings/deletion, response/integration/runtime
+  recovery and full quality/device/manual/visual/hosted acceptance remain open.
+  Catalog stays 159 unverified cases. See `FORM_ARCHIVED_VIEW.md`.
+
 ### Atomic form-library write recovery — 2026-11-06
 
 - Migration 119 adds current-authority atomic create/copy/archive/restore/state

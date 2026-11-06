@@ -30,3 +30,8 @@ respondent-requested copy.
 The inventory generator remains deliberately conservative and preserves reviewed
 mappings/statuses when refreshing inventory. Its ordinary extraction tests still
 assert that a newly generated inventory cannot auto-approve anything.
+
+The existing Forms read/scope case also maps archived-status editor gating and
+read-only preview/history inspection. Its local checks do not close remaining
+Forms child/access/settings/deletion, response/integration/runtime or full
+role/device/manual/visual/hosted acceptance. See `FORM_ARCHIVED_VIEW.md`.
