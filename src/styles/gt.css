@@ -6505,6 +6505,9 @@ fieldset.gt-event-fields {
     display: none;
   }
 }
+.gt-form-integration-dialog {
+  --coral: #ad4033;
+}
 .gt-notification-dialog {
   max-width: 44rem;
   max-height: min(48rem, 90dvh);

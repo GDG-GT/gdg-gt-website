@@ -536,6 +536,11 @@ export default function NewsletterEditor({
             <FormIntegrations
               kind="campaign"
               resourceId={record.id}
+              onDenied={() => {
+                onRefresh?.();
+                onClose();
+              }}
+              onRecheck={onRefresh}
               disabled={busy || dirty}
             />
           )}

@@ -1569,6 +1569,8 @@ function TeamWorkspaceContent() {
               <FormIntegrations
                 kind="team"
                 resourceId={workspace.team.id}
+                onDenied={clearPrivate}
+                onRecheck={() => setDetailRefresh((v) => v + 1)}
                 disabled={!!mode || busy || !teamReady}
               />
               {workspace.actions.settings && (

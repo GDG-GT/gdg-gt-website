@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-06): the latest module checkpoint is
-`FORM_PRIVATE_LINK_RECOVERY.md`; completed recovery checkpoints include tasks,
+`FORM_INTEGRATION_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -52,8 +52,11 @@ accepted-but-dropped save reconciliation. Independent Events reads are now
 closed locally (`EVENT_READ_RECOVERY.md`), including real desktop/mobile outage
 recovery. Core Events/attendee writes, current action capabilities, consequence
 reviews and draft navigation now have local recovery (`EVENT_MUTATION_RECOVERY.md`).
-Forms recovery/navigation checks remain open, as do
-the remaining browser/device/manual acceptance matrices.
+First-party event/team/campaign linked-form inventories, consequence reviews,
+version/generation-bound replay and current-session outcome recovery are also
+implemented locally (`FORM_INTEGRATION_RECOVERY.md`). Respondent/runtime,
+respondent-file and image-picker child recovery/navigation checks remain open,
+as do the remaining browser/device/manual acceptance matrices.
 These are implementation gaps, separate from external launch inputs.
 Audit history/detail read recovery is now closed locally (`AUDIT_READ_RECOVERY.md`);
 complete browser/device/manual/export/hosted acceptance remains open.
@@ -92,9 +95,10 @@ locally (`FORM_LIBRARY_MUTATION_RECOVERY.md`), with source-revision-bound copies
 exact original-request recovery and reviewed abandonment. Archived builder views
 now enforce read-only draft/publication presentation while preserving saved preview
 and immutable published history (`FORM_ARCHIVED_VIEW.md`). This also guards an
-archive discovered during a retained local proposal. Remaining Forms child/access/settings/deletion,
-remaining Forms proposal/navigation workflows, runtime/integration recovery and full acceptance
-remain open. Independent response inventory/summary/saved-view/hold reads are
+archive discovered during a retained local proposal. The newer access, deletion,
+integration and response checkpoints above/below supersede that original scope.
+Remaining respondent/runtime/file/image child recovery and full acceptance stay
+open. Independent response inventory/summary/saved-view/hold reads are
 implemented locally (`FORM_RESPONSE_READ_RECOVERY.md`). Background export
 creation/removal receipts, private inventory, exact explicit retry and scoped
 short-lived downloads are also implemented locally (`FORM_EXPORT_RECOVERY.md`);
@@ -281,7 +285,9 @@ Their manual/hosted/visual acceptance remains open.
 ## Next implementation checkpoint
 
 Complete the remaining Forms/builder/runtime/navigation and quality/coverage/device
-acceptance and overall coverage beyond the now-passing 17 critical-file gates.
+acceptance and overall coverage beyond the now-passing 21 critical-file gates.
+Latest full coverage passes lines/branches at 70.40%/70.44%, but statements at
+68.84% and functions at 61.57% still fail the unchanged 70% global gate.
 Preserve the read-only Git reference and historical SQL for retired clients
 (`LEGACY_CLIENT_RETIREMENT.md`), and keep user edits intact. Track implementation separately from verified
 acceptance; do not label the complete PRD finished until its launch gates pass.

@@ -1070,13 +1070,9 @@ function EventWorkspaceContent() {
               <FormIntegrations
                 kind="event"
                 resourceId={selected.id}
-                disabled={
-                  !canWrite ||
-                  dirty ||
-                  !canUpdate ||
-                  !detailReady ||
-                  detailChanged
-                }
+                onDenied={clearPrivate}
+                onRecheck={load}
+                disabled={!canWrite || dirty || !detailReady || detailChanged}
               />
               <span className="gt-helper">
                 Save event changes before managing linked forms.

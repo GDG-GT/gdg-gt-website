@@ -940,8 +940,13 @@ const forms = [
     "Event/team/campaign references and access-preserving integration",
     [
       unit("form-integrations"),
+      unit("form-integration-routes"),
+      "tests/client/form-integration-recovery.test.tsx",
+      "tests/browser/form-integration-recovery.spec.ts",
       sql("071_form_integrations"),
+      sql("129_form_integration_replay"),
       local("form-integrations"),
+      local("form-integration-recovery"),
     ],
   ],
   [

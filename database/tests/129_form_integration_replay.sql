@@ -1,0 +1,55 @@
+BEGIN;
+INSERT INTO public.admin_users(id,email,password_hash,role,is_active)VALUES
+ ('b1290000-0000-4000-8000-000000000001','fictional-reference-owner@example.test','fictional-proof','admin',true),
+ ('b1290000-0000-4000-8000-000000000002','fictional-reference-member@example.test','fictional-proof','team_member',true);
+DO $$ DECLARE a uuid:='b1290000-0000-4000-8000-000000000001';u uuid:='b1290000-0000-4000-8000-000000000002';s uuid;us uuid;f uuid;v uuid;eid uuid;tid uuid;cid uuid;record_id uuid;replacement uuid;doc jsonb;value jsonb;resource record;BEGIN
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash)VALUES(a,repeat('a',64))RETURNING id INTO s;
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash)VALUES(u,repeat('b',64))RETURNING id INTO us;
+ INSERT INTO public.forms(slug,title,owner_id,state,access_mode,draft_definition,settings)VALUES('fictional-reference-replay','Fictional private reference target',a,'Open','internal','{}','{"access":"internal"}')RETURNING id INTO f;
+ INSERT INTO public.form_versions(form_id,version,definition,schema_hash,published_by)VALUES(f,1,'{}',repeat('c',64),a)RETURNING id INTO v;UPDATE public.forms SET published_version_id=v WHERE id=f;
+ INSERT INTO public.events(slug,title,description,start_at,location)VALUES('fictional-reference-replay','Fictional reference event','Fictional',now()+interval '2 days','Fictional room')RETURNING id INTO eid;
+ value:=public.mutate_team(a,s,'fictional-proof',NULL,'create',NULL,jsonb_build_object('name','Fictional reference team','description','Fictional','slug','fictional-reference-team','leadId',u,'color','#4285F4','icon','users'),gen_random_uuid());tid:=(value->'team'->>'id')::uuid;
+ INSERT INTO public.newsletter_campaigns(subject,content,status,created_by)VALUES('Fictional reference campaign','Never sent','draft',a)RETURNING id INTO cid;
+ INSERT INTO public.forms(slug,title,owner_id,state,access_mode,draft_definition)SELECT'fictional-reference-candidate-'||i,'Fictional reference candidate '||lpad(i::text,3,'0'),a,'Open','internal','{}' FROM generate_series(1,105)i;
+ INSERT INTO public.form_versions(form_id,version,definition,schema_hash,published_by)SELECT id,1,'{}',repeat('d',64),a FROM public.forms WHERE slug LIKE 'fictional-reference-candidate-%';
+ UPDATE public.forms SET published_version_id=published.id FROM public.form_versions published WHERE published.form_id=public.forms.id AND public.forms.slug LIKE 'fictional-reference-candidate-%';
+ value:=public.read_form_integration_candidates(a,s,'event',eid,4,30,'Fictional reference candidate');
+ IF(value->>'total')::integer<>105 OR jsonb_array_length(value->'items')<>15 OR value::text NOT LIKE '%candidate 105%' OR NOT(value->'items'->0 ? 'publishedVersionId') OR NOT(value->'items'->0 ? 'formRevision') OR value::text LIKE '%fields%' THEN RAISE EXCEPTION 'Integration candidates truncated before paging or omitted reviewed metadata';END IF;
+ value:=public.read_form_integration_candidates(u,us,'team',tid,1,30,'');IF(value->>'total')::integer<>0 THEN RAISE EXCEPTION 'Unmanaged private form candidate metadata disclosed';END IF;
+ doc:=jsonb_build_object('formId',f,'formRevision',1,'publishedVersionId',v,'versionPolicy','latest_published','label','Open fictional form');
+ BEGIN PERFORM public.mutate_form_integration_write(u,us,'team',tid,'primary',NULL,0,doc,repeat('1',64),repeat('2',64),gen_random_uuid());RAISE EXCEPTION 'Source manager linked a private form without target authority';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ FOR resource IN SELECT * FROM(VALUES('event',eid),('team',tid),('campaign',cid))x(kind,resource_id) LOOP
+  value:=public.inspect_form_integration_write(a,s,resource.kind,resource.resource_id,'primary',NULL,'save',f,repeat('1',64));IF(value->>'committed')::boolean OR NOT(value->>'canRetry')::boolean OR value->'reference'<>'null'::jsonb OR(value->'target'->>'id')::uuid<>f THEN RAISE EXCEPTION 'Fresh integration inspection invalid';END IF;
+  value:=public.mutate_form_integration_write(a,s,resource.kind,resource.resource_id,'primary',NULL,0,doc,repeat('1',64),repeat('2',64),gen_random_uuid());record_id:=(value->>'id')::uuid;
+  PERFORM public.mutate_form_integration_write(a,s,resource.kind,resource.resource_id,'primary',NULL,0,doc,repeat('1',64),repeat('2',64),gen_random_uuid());
+  IF(SELECT revision FROM public.form_integrations WHERE id=record_id)<>1 OR(SELECT count(*) FROM public.admin_actions WHERE target_id=record_id AND action='forms.integration_linked')<>1 THEN RAISE EXCEPTION 'Accepted reference creation duplicated mutation/audit';END IF;
+  BEGIN PERFORM public.mutate_form_integration_write(a,s,resource.kind,resource.resource_id,'primary',NULL,0,doc,repeat('3',64),repeat('4',64),gen_random_uuid());RAISE EXCEPTION 'Missing-reference review overwrote concurrent creation';
+  EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+  PERFORM public.mutate_form_integration_write(a,s,resource.kind,resource.resource_id,'primary',record_id,1,doc||'{"label":"Reviewed replacement"}',repeat('3',64),repeat('4',64),gen_random_uuid());
+  IF(SELECT revision FROM public.form_integrations WHERE id=record_id)<>2 THEN RAISE EXCEPTION 'One replacement advanced revision incorrectly';END IF;
+  PERFORM public.mutate_form_integration_write(a,s,resource.kind,resource.resource_id,'primary',record_id,2,NULL,repeat('5',64),repeat('6',64),gen_random_uuid());
+  value:=public.mutate_form_integration_write(a,s,resource.kind,resource.resource_id,'primary',NULL,0,doc,repeat('7',64),repeat('8',64),gen_random_uuid());replacement:=(value->>'id')::uuid;
+  IF replacement=record_id THEN RAISE EXCEPTION 'Reference recreation reused generation';END IF;
+  value:=public.mutate_form_integration_write(a,s,resource.kind,resource.resource_id,'primary',record_id,2,NULL,repeat('5',64),repeat('6',64),gen_random_uuid());
+  IF(value->>'id')::uuid<>record_id OR NOT EXISTS(SELECT 1 FROM public.form_integrations WHERE id=replacement) OR(SELECT count(*) FROM public.admin_actions WHERE target_id=record_id AND action='forms.integration_removed')<>1 THEN RAISE EXCEPTION 'Accepted old removal erased a recreated reference or repeated audit';END IF;
+  BEGIN PERFORM public.mutate_form_integration_write(a,s,resource.kind,resource.resource_id,'primary',record_id,1,NULL,repeat('9',64),repeat('0',64),gen_random_uuid());RAISE EXCEPTION 'Same-revision delete/recreate ABA accepted';
+  EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+  BEGIN PERFORM public.inspect_form_integration_write(a,s,resource.kind,resource.resource_id,'primary',record_id,'remove',NULL,repeat('1',64));RAISE EXCEPTION 'Original receipt crossed action/source';
+  EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ END LOOP;
+ UPDATE public.forms SET draft_revision=2 WHERE id=f;
+ BEGIN PERFORM public.mutate_form_integration_write(a,s,'event',eid,'form-2',NULL,0,doc,repeat('a',64),repeat('b',64),gen_random_uuid());RAISE EXCEPTION 'Stale target form revision linked';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ UPDATE public.forms SET state='Archived' WHERE id=f;
+ value:=public.inspect_form_integration_write(a,s,'event',eid,'primary',NULL,'save',f,repeat('1',64));
+ IF NOT(value->>'committed')::boolean OR value->'target'<>'null'::jsonb OR value::text LIKE '%Fictional private reference target%' OR value ? 'label' THEN RAISE EXCEPTION 'Minimal original receipt lost after later target archive or disclosed private title';END IF;
+ UPDATE public.idempotency_keys SET expires_at=now()-interval '1 second' WHERE scope='form-integration-write:'||a||':'||s||':event:'||eid||':primary' AND key_hash=repeat('1',64);
+ BEGIN PERFORM public.inspect_form_integration_write(a,s,'event',eid,'primary',NULL,'save',f,repeat('1',64));RAISE EXCEPTION 'Expired integration receipt accepted';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'INVALID_STATE' THEN RAISE;END IF;END;
+ UPDATE public.admin_sessions SET revoked_at=now() WHERE id=s;
+ BEGIN PERFORM public.read_form_integration_candidates(a,s,'event',eid,1,30,'');RAISE EXCEPTION 'Revoked session read integration candidates';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ IF has_function_privilege('anon','public.inspect_form_integration_write(uuid,uuid,text,uuid,text,uuid,text,uuid,text,text)','EXECUTE') OR has_function_privilege('authenticated','public.mutate_form_integration_write(uuid,uuid,text,uuid,text,uuid,integer,jsonb,text,text,uuid)','EXECUTE') OR NOT has_function_privilege('service_role','public.read_form_integration_candidates(uuid,uuid,text,uuid,integer,integer,text,uuid)','EXECUTE') THEN RAISE EXCEPTION 'Integration recovery functions exposed';END IF;
+END $$;
+ROLLBACK;

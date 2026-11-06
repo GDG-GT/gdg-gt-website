@@ -8,6 +8,45 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### First-party linked-form recovery — 2026-11-06
+
+- Migration 129 adds complete session-bound authorized published-form candidates,
+  monotonic link revisions, immutable generation/version checks and atomic
+  actor/session/body/key-bound original save/removal receipts. Current source
+  authority precedes receipt inspection. Target eligibility precedes reviewed
+  version comparisons; an accepted old removal preserves a recreated link.
+  Minimal recovery omits private definitions, answers, titles and capabilities.
+- Event/team/campaign linked-form children now have independent current source,
+  candidate and selected-target reads, retained proposals, named retries,
+  consequence reviews, frozen unknown intent, explicit inspected identical
+  retries, second-loss/offline/session fences and protected dismissal/navigation.
+  A successful empty target check masks cached target title/URL/option while
+  retaining the permitted manual source label, including during a later outage.
+  View-only source inspection does not fetch candidates or enable mutations.
+- Both complete 129-migration SQL suites pass (232/233 checks), both 100-client
+  races and six isolated restore checks pass; migration applied locally. All
+  76 focused client/route/schema cases and 15 legacy actual integration checks
+  pass. All 48 new actual API/DB/desktop-mobile recovery checks pass, including
+  ten simultaneous identical saves and accepted old removal after recreation.
+  Fresh owned fictional private publications/draft sources/accounts only; no
+  responses/jobs/workers/provider sends/existing chapter or production changes.
+  Sources/forms archived, accounts disabled/sessions revoked; cleanup recorded.
+- Production-browser initial failures were a wrong concealed-parent test heading
+  and actual 4.45:1 hovered pager contrast. Corrected assertion and narrowly scoped
+  existing admin coral token; interrupted initial report retained as incomplete.
+  All 144 final linked-form/event-mail/team/shared-workspace cases pass across six
+  profiles, no skips. Populated axe passes; desktop/mobile captures inspected but
+  unapproved. Build/types/lint (zero errors/25 existing warnings), byte budgets,
+  secrets and traceability pass. Catalog remains 159 unverified logical cases.
+- All 2,317 tests/195 files pass; all 21 critical 90% branch gates pass. Global
+  coverage still fails its unchanged gate: 70.40% lines, 70.44% branches,
+  68.84% statements and 61.57% functions. No quota/timeout/threshold weakened.
+  See `FORM_INTEGRATION_RECOVERY.md`.
+- Respondent/runtime/file/image child recovery, global coverage and full storage/
+  device/manual/visual/hosted acceptance remain open. Source review found uncertain
+  respondent submissions can change keys after answer edits; that recovery gap is
+  next. SSO/Google and Bevy/Engage remain deferred.
+
 ### Private invitation/link lifecycle recovery — 2026-11-06
 
 - Migration 128 adds current-session complete inventory reads, monotonic selected

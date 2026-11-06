@@ -1,0 +1,200 @@
+{
+  "generatedAt": "2026-11-06T11:28:38.238Z",
+  "completed": true,
+  "cleanup": true,
+  "scope": "Dedicated loopback; fresh owned fictional internal publications/draft events/accounts only. No public event publication, responses, jobs/workers/provider sends/existing chapter or production changes. Owned sources/forms archived/accounts disabled/sessions revoked. No original body/key/proof/private definition retained in reports.",
+  "tests": [
+    {
+      "name": "integration scope is concealed from unrelated and anonymous readers at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration create after freezes original generation/revision/publication/body at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration create after reconciles read-only or explicitly retries original bytes/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration create after produces one intended record change/audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration replace after freezes original generation/revision/publication/body at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated unconfirmed integration passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration replace after reconciles read-only or explicitly retries original bytes/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration replace after produces one intended record change/audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration remove after freezes original generation/revision/publication/body at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration remove after reconciles read-only or explicitly retries original bytes/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration remove after produces one intended record change/audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration create before freezes original generation/revision/publication/body at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration create before reconciles read-only or explicitly retries original bytes/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration create before produces one intended record change/audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration replace before freezes original generation/revision/publication/body at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration replace before reconciles read-only or explicitly retries original bytes/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration replace before produces one intended record change/audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration remove before freezes original generation/revision/publication/body at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration remove before reconciles read-only or explicitly retries original bytes/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration remove before produces one intended record change/audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "ten simultaneous identical integration saves create one generation/revision at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "accepted old removal preserves a recreated link and a new stale removal conflicts at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration recovery preserves draft/publication/source state and creates no responses/mail at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration recovery has no unexpected writes/egress/errors/page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "integration scope is concealed from unrelated and anonymous readers at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration create after freezes original generation/revision/publication/body at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration create after reconciles read-only or explicitly retries original bytes/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration create after produces one intended record change/audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration replace after freezes original generation/revision/publication/body at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated unconfirmed integration passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration replace after reconciles read-only or explicitly retries original bytes/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration replace after produces one intended record change/audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration remove after freezes original generation/revision/publication/body at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration remove after reconciles read-only or explicitly retries original bytes/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration remove after produces one intended record change/audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration create before freezes original generation/revision/publication/body at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration create before reconciles read-only or explicitly retries original bytes/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration create before produces one intended record change/audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration replace before freezes original generation/revision/publication/body at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration replace before reconciles read-only or explicitly retries original bytes/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration replace before produces one intended record change/audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration remove before freezes original generation/revision/publication/body at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration remove before reconciles read-only or explicitly retries original bytes/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration remove before produces one intended record change/audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "ten simultaneous identical integration saves create one generation/revision at 375×812",
+      "passed": true
+    },
+    {
+      "name": "accepted old removal preserves a recreated link and a new stale removal conflicts at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration recovery preserves draft/publication/source state and creates no responses/mail at 375×812",
+      "passed": true
+    },
+    {
+      "name": "integration recovery has no unexpected writes/egress/errors/page overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

@@ -104,3 +104,10 @@ protected inspector/navigation exits. The populated private-link table is a name
 keyboard-focusable scrolling region. See `FORM_PRIVATE_LINK_RECOVERY.md`; complete
 manual/device/storage/visual/hosted and remaining integration/runtime acceptance
 remain open.
+
+The first-party integration case now maps session-bound published-form candidates,
+version/generation-bound link mutations, minimal read-only original-outcome
+reconciliation, explicit identical retries and selected-target concealment after
+an empty current read. SQL, client, route, actual local API and production-browser
+sources are mapped in `FORM_INTEGRATION_RECOVERY.md`. This does not approve the
+remaining respondent/runtime or full manual/device/visual/hosted acceptance.

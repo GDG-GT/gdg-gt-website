@@ -1989,8 +1989,13 @@
       "scope": "Event/team/campaign references and access-preserving integration",
       "automated": [
         "tests/server/form-integrations.test.mjs",
+        "tests/server/form-integration-routes.test.mjs",
+        "tests/client/form-integration-recovery.test.tsx",
+        "tests/browser/form-integration-recovery.spec.ts",
         "database/tests/071_form_integrations.sql",
-        "scripts/test-local-form-integrations.mjs"
+        "database/tests/129_form_integration_replay.sql",
+        "scripts/test-local-form-integrations.mjs",
+        "scripts/test-local-form-integration-recovery.mjs"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"
