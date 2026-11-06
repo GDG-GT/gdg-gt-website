@@ -7,6 +7,7 @@ for (const path of [
   "/admin/events",
   "/admin/audit-log",
   "/admin/users",
+  "/admin/teams",
 ]) {
   test(`workspace ${path} keeps shared labels and actions readable`, async ({
     page,

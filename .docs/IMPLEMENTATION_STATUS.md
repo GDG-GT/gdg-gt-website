@@ -8,6 +8,25 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Independent team workspace reads — 2026-11-05
+
+- Team inventory/detail/history/transfer destinations now read independently,
+  retain timestamped matching snapshots and cancel/hide replaced keys. Denial
+  clears private team/member/editor state; account/role/session/route replacement
+  resets it. Stale team/member revisions and destination reads block saves.
+  Parent outages pause mounted invitation/announcement drafts without losing input.
+- All 1,386 tests/158 files pass (22 new focused cases). Coverage still fails 70%:
+  62.89% lines/62.57% branches; all 17 critical-file branch gates pass. All 28
+  actual API/DB/desktop-mobile browser checks pass, including populated transfer
+  axe. Team/memberships unchanged before owned teams archived/accounts disabled/
+  sessions revoked. Existing records/providers untouched. Catalog: 151 unverified cases.
+- Team mutation replay/reviews/uncertain recovery, complete invitation/announcement
+  recovery and full supported-browser/role/device/manual/visual/hosted acceptance
+  remain open. See `TEAM_READ_RECOVERY.md`; full PRD remains open.
+- Types/lint (zero errors/25 warnings), build/budgets/secrets and traceability
+  pass. All 48 targeted production-build workspace checks pass across six pinned
+  profiles; captures remain unapproved review candidates.
+
 ### Reviewed account writes and atomic setup-link replay — 2026-11-05
 
 - Migration 113 adds current-session/password/hierarchy-bound account receipts

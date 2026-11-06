@@ -1,5 +1,11 @@
 import ScrollableTable from "@/ui/ScrollableTable";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   useApprovedSearchParams as useSearchParams,
@@ -8,6 +14,9 @@ import {
 } from "@/hooks/useDraftGuard";
 import { useAdmin } from "@/contexts/AdminContext";
 import { api } from "@/lib/api";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import TeamInvitations from "./TeamInvitations";
 import TeamAnnouncements from "./TeamAnnouncements";
@@ -121,19 +130,90 @@ function grantsFor(w: Workspace): TeamGrant[] {
       };
     });
 }
+function ReadFeedback({
+  name,
+  read,
+  retry,
+  disabled,
+  offline,
+}: {
+  name: string;
+  read: { loading: boolean; data?: unknown; error: string; at?: string };
+  retry: () => void;
+  disabled: boolean;
+  offline: boolean;
+}) {
+  return (
+    <>
+      {read.loading && !read.data && (
+        <div role="status" aria-label={`Loading ${name}`}>
+          <div className="gt-skeleton gt-detail-skeleton" />
+          <span className="sr-only">Loading {name}…</span>
+        </div>
+      )}
+      {offline && read.at && (
+        <p role="status">
+          {name} snapshot from{" "}
+          <time dateTime={read.at}>{new Date(read.at).toLocaleString()}</time>;
+          offline information may be out of date.
+        </p>
+      )}
+      {read.error && (
+        <div role="alert" className="gt-form-error">
+          <p>
+            {name} could not {read.at ? "refresh" : "load"}. {read.error}
+          </p>
+          {read.at && (
+            <p>
+              Last successful read:{" "}
+              <time dateTime={read.at}>
+                {new Date(read.at).toLocaleString()}
+              </time>
+              .
+            </p>
+          )}
+          <Button
+            variant="secondary"
+            disabled={disabled || read.loading}
+            onClick={() => {
+              retry();
+              document.getElementById("workspace-content")?.focus();
+            }}
+          >
+            Retry {name}
+          </Button>
+        </div>
+      )}
+    </>
+  );
+}
 export default function TeamWorkspace() {
+  const { teamId } = useParams(),
+    { currentAdmin } = useAdmin();
+  const [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((value) => value + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  if (!currentAdmin) return null;
+  return (
+    <TeamWorkspaceContent
+      key={`${currentAdmin.id}:${currentAdmin.role}:${teamId || "directory"}:${epoch}`}
+    />
+  );
+}
+function TeamWorkspaceContent() {
   const [searchParams, setSearchParams] = useSearchParams(),
     section = searchParams.get("section");
   const { teamId } = useParams(),
     { currentAdmin, refreshTeams } = useAdmin();
-  const [list, setList] = useState<Listing>(),
-    [workspace, setWorkspace] = useState<Workspace>(),
-    [selected, setSelected] = useState(teamId || ""),
+  const [selected, setSelected] = useState(teamId || ""),
     [q, setQ] = useState(""),
     [state, setState] = useState("current"),
     [page, setPage] = useState(1),
     [refresh, setRefresh] = useState(0),
-    [loading, setLoading] = useState(true),
+    [blocked, setBlocked] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
   const [mode, setMode] = useState<Mode | null>(null),
@@ -142,7 +222,7 @@ export default function TeamWorkspace() {
     [password, setPassword] = useState(""),
     [confirmation, setConfirmation] = useState(""),
     [grants, setGrants] = useState<TeamGrant[]>([]),
-    [busy, setBusy] = useState(false),
+    [modeRevision, setModeRevision] = useState<number>(),
     [tab, setTab] = useState(
       section === "announcements"
         ? "announcements"
@@ -151,39 +231,127 @@ export default function TeamWorkspace() {
           : "members",
     ),
     [historyPage, setHistoryPage] = useState(1),
-    [history, setHistory] = useState<{
-      items: Record<string, unknown>[];
-      total: number;
-    }>(),
-    [historyLoading, setHistoryLoading] = useState(false);
+    [listRefresh, setListRefresh] = useState(0),
+    [detailRefresh, setDetailRefresh] = useState(0),
+    [historyRefresh, setHistoryRefresh] = useState(0),
+    [destinationRefresh, setDestinationRefresh] = useState(0);
+  const mutation = usePrivateMutation(
+      mode === "create" ? "create" : selected || "directory",
+    ),
+    busy = mutation.busy,
+    cancelMutation = mutation.cancel;
   const heading = useRef<HTMLHeadingElement>(null);
   const navigationSafety = useNavigationSafety();
   useDraftGuard(!!mode || !!password || !!confirmation, {
     busy,
     label: "Team or permission changes",
   });
-  const [destinationQuery, setDestinationQuery] = useState(""),
-    [destinations, setDestinations] = useState<Team[]>([]);
+  const [destinationQuery, setDestinationQuery] = useState("");
+  const inventory = usePrivateRead<Listing>(
+      `/admin/teams?${new URLSearchParams({ q, state, page: String(page) })}`,
+      refresh + listRefresh,
+    ),
+    detail = usePrivateRead<Workspace>(
+      selected ? "/admin/teams/" + selected : undefined,
+      refresh + detailRefresh,
+    ),
+    activity = usePrivateRead<{
+      items: Record<string, unknown>[];
+      total: number;
+    }>(
+      selected && ["activity", "transfers"].includes(tab)
+        ? `/admin/teams/${selected}/${tab}?page=${historyPage}`
+        : undefined,
+      refresh + historyRefresh,
+    ),
+    destinationRead = usePrivateRead<Listing>(
+      mode === "member_transfer"
+        ? `/admin/teams?${new URLSearchParams({ q: destinationQuery, pageSize: "100" })}`
+        : undefined,
+      refresh + destinationRefresh,
+    ),
+    list = inventory.data,
+    workspace = detail.data,
+    history = activity.data,
+    historyLoading = activity.loading,
+    destinations = (destinationRead.data?.items || []).filter(
+      (team) => team.id !== selected && team.is_active && !team.deleted_at,
+    ),
+    { isOnline } = useOnlineStatus(),
+    listReady = !!list && !inventory.loading && !inventory.error && isOnline,
+    teamReady = !!workspace && !detail.loading && !detail.error && isOnline,
+    destinationReady =
+      !!destinationRead.data &&
+      !destinationRead.loading &&
+      !destinationRead.error &&
+      isOnline,
+    draftStale =
+      !!mode &&
+      mode !== "create" &&
+      !!workspace &&
+      (modeRevision !== workspace.team.revision ||
+        (!!member &&
+          workspace.members.find((value) => value.id === member.id)
+            ?.revision !== member.revision)),
+    modeAllowed =
+      mode === "create"
+        ? !!list?.canCreate
+        : mode === "update" || mode === "archive" || mode === "restore"
+          ? workspace?.actions.settings
+          : mode === "permissions"
+            ? workspace?.actions.permissions
+            : workspace?.actions.manage &&
+              (!["member_role", "member_transfer"].includes(mode || "") ||
+                workspace.actorRole !== "team_member") &&
+              (mode !== "member_remove" ||
+                workspace.actorRole !== "team_member" ||
+                member?.role === "member"),
+    canSave =
+      !busy &&
+      !!modeAllowed &&
+      (mode === "create" ? listReady : teamReady && !draftStale) &&
+      (mode !== "member_transfer" ||
+        (destinationReady &&
+          destinations.some((team) => team.id === values.destinationId))),
+    clearInventory = inventory.clear,
+    clearDetail = detail.clear,
+    clearActivity = activity.clear,
+    clearDestination = destinationRead.clear,
+    denied =
+      inventory.denied ||
+      detail.denied ||
+      activity.denied ||
+      destinationRead.denied;
+  const clearPrivate = useCallback(() => {
+    cancelMutation();
+    setBlocked(true);
+    clearInventory();
+    clearDetail();
+    clearActivity();
+    clearDestination();
+    setSelected("");
+    setMode(null);
+    setMember(undefined);
+    setModeRevision(undefined);
+    setValues({});
+    setPassword("");
+    setConfirmation("");
+    setGrants([]);
+    setError("");
+    setNotice("");
+    setDestinationQuery("");
+    setTab("members");
+    setHistoryPage(1);
+  }, [
+    cancelMutation,
+    clearInventory,
+    clearDetail,
+    clearActivity,
+    clearDestination,
+  ]);
   useEffect(() => {
-    if (mode !== "member_transfer") return;
-    const controller = new AbortController();
-    api<Listing>(
-      `/admin/teams?${new URLSearchParams({ q: destinationQuery, pageSize: "100" })}`,
-      { signal: controller.signal },
-    )
-      .then((r) =>
-        setDestinations(
-          r.items.filter(
-            (t) => t.id !== selected && t.is_active && !t.deleted_at,
-          ),
-        ),
-      )
-      .catch((e) => {
-        if (!controller.signal.aborted) setError(e.message);
-      });
-    return () => controller.abort();
-  }, [mode, destinationQuery, selected]);
-  useEffect(() => setSelected(teamId || ""), [teamId]);
+    if (denied) clearPrivate();
+  }, [denied, clearPrivate]);
   useEffect(() => {
     if (
       section &&
@@ -200,65 +368,17 @@ export default function TeamWorkspace() {
       setTab(section);
   }, [section, teamId]);
   useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    setError("");
-    Promise.all([
-      api<Listing>(
-        `/admin/teams?${new URLSearchParams({ q, state, page: String(page) })}`,
-        { signal: controller.signal },
-      ),
-      ...(selected
-        ? [
-            api<Workspace>("/admin/teams/" + selected, {
-              signal: controller.signal,
-            }),
-          ]
-        : []),
-    ])
-      .then(([listing, detail]) => {
-        setList(listing as Listing);
-        setWorkspace(detail as Workspace | undefined);
-      })
-      .catch((e) => {
-        if (!controller.signal.aborted) setError(e.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
-      });
-    return () => controller.abort();
-  }, [q, state, page, selected, refresh]);
-  useEffect(() => {
     if (mode) heading.current?.focus();
   }, [mode]);
-  useEffect(() => {
-    if (!mode) return;
-    const warn = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = "";
-    };
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [mode]);
-  useEffect(() => {
-    if (!selected || !["activity", "transfers"].includes(tab)) return;
-    const controller = new AbortController();
-    setHistoryLoading(true);
-    setHistory(undefined);
-    api<{ items: Record<string, unknown>[]; total: number }>(
-      `/admin/teams/${selected}/${tab}?page=${historyPage}`,
-      { signal: controller.signal },
-    )
-      .then(setHistory)
-      .catch((e) => {
-        if (!controller.signal.aborted) setError(e.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setHistoryLoading(false);
-      });
-    return () => controller.abort();
-  }, [selected, tab, historyPage, refresh]);
   function open(next: Mode, m?: Member) {
+    if (
+      mutation.pending.current ||
+      mode ||
+      !isOnline ||
+      (next === "create" ? !listReady || !list?.canCreate : !teamReady)
+    )
+      return;
+    setModeRevision(workspace?.team.revision);
     setMode(next);
     setMember(m);
     setPassword("");
@@ -279,7 +399,7 @@ export default function TeamWorkspace() {
     setDestinationQuery("");
   }
   function close() {
-    if (busy) return;
+    if (mutation.pending.current) return;
     setMode(null);
     setPassword("");
     setConfirmation("");
@@ -290,7 +410,6 @@ export default function TeamWorkspace() {
       setSelected(id);
       setTab("members");
       setHistoryPage(1);
-      setWorkspace(undefined);
     };
     if (navigationSafety) navigationSafety.request(change);
     else change();
@@ -301,12 +420,16 @@ export default function TeamWorkspace() {
       event: React.ChangeEvent<
         HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
       >,
-    ) => setValues((v) => ({ ...v, [key]: event.target.value })),
+    ) => {
+      if (!mutation.pending.current)
+        setValues((v) => ({ ...v, [key]: event.target.value }));
+    },
   });
   async function save(event: FormEvent) {
     event.preventDefault();
-    if (!mode) return;
-    setBusy(true);
+    if (!mode || !canSave) return;
+    const controller = mutation.begin();
+    if (!controller) return;
     setError("");
     setNotice("");
     const secret = password;
@@ -350,10 +473,15 @@ export default function TeamWorkspace() {
       }
       const result = await api<Workspace>(
         "/admin/teams" + (mode === "create" ? "" : "/" + workspace!.team.id),
-        { method: mode === "update" ? "PATCH" : "POST", protected: true, body },
+        {
+          method: mode === "update" ? "PATCH" : "POST",
+          protected: true,
+          body,
+          signal: controller.signal,
+        },
       );
+      if (!mutation.current(controller)) return;
       setSelected(result.team.id);
-      setWorkspace(result);
       setMode(null);
       setNotice(
         mode === "permissions"
@@ -363,16 +491,25 @@ export default function TeamWorkspace() {
             : "Team change saved with an audit entry.",
       );
       setRefresh((v) => v + 1);
-      await refreshTeams();
+      try {
+        await refreshTeams();
+      } catch {
+        if (mutation.current(controller))
+          setError(
+            "The team change was saved, but your membership list could not refresh. Retry current reads before another change.",
+          );
+      }
     } catch (e) {
+      if (!mutation.current(controller)) return;
       setError(
         e instanceof Error ? e.message : "The team change could not be saved.",
       );
     } finally {
-      setBusy(false);
+      mutation.finish(controller);
     }
   }
   function toggleGrant(path: string, resource: string, enabled: boolean) {
+    if (mutation.pending.current) return;
     setGrants((v) =>
       enabled
         ? [
@@ -390,6 +527,26 @@ export default function TeamWorkspace() {
         : v.filter((g) => g.path !== path),
     );
   }
+  if (blocked || denied)
+    return (
+      <EmptyState
+        title="Team access needs to be rechecked"
+        action={
+          <Button
+            disabled={!isOnline}
+            onClick={() => {
+              setBlocked(false);
+              setListRefresh((value) => value + 1);
+            }}
+          >
+            Recheck team access
+          </Button>
+        }
+      >
+        Previous team, membership, history and unsaved permission information
+        has been cleared. Recheck current access before continuing.
+      </EmptyState>
+    );
   return (
     <div className="gt-admin-page">
       <header className="gt-admin-heading">
@@ -411,12 +568,71 @@ export default function TeamWorkspace() {
             </Button>
           )}
           {list?.canCreate && (
-            <Button disabled={busy || !!mode} onClick={() => open("create")}>
+            <Button
+              disabled={busy || !!mode || !listReady}
+              onClick={() => open("create")}
+            >
               Create team
             </Button>
           )}
         </div>
       </header>
+      {!isOnline && (
+        <p role="status">
+          You are offline. Draft input remains here; refresh current team data
+          before another change.
+        </p>
+      )}
+      <ReadFeedback
+        name="team inventory"
+        read={inventory}
+        retry={() => setListRefresh((value) => value + 1)}
+        disabled={!isOnline || busy}
+        offline={!isOnline}
+      />
+      <Button
+        variant="ghost"
+        disabled={!isOnline || busy || inventory.loading}
+        onClick={() => setListRefresh((value) => value + 1)}
+      >
+        Refresh team inventory
+      </Button>
+      {selected && (
+        <>
+          <ReadFeedback
+            name="selected team"
+            read={detail}
+            retry={() => setDetailRefresh((value) => value + 1)}
+            disabled={!isOnline || busy}
+            offline={!isOnline}
+          />
+          <Button
+            variant="ghost"
+            disabled={!isOnline || busy || detail.loading}
+            onClick={() => setDetailRefresh((value) => value + 1)}
+          >
+            Refresh selected team
+          </Button>
+        </>
+      )}
+      {draftStale && (
+        <div role="alert">
+          <p>
+            The saved team or membership changed. Your unsaved fields are
+            retained. Close this editor after reviewing discarded input, then
+            choose a current team action.
+          </p>
+          <Button
+            variant="secondary"
+            disabled={busy}
+            onClick={() =>
+              navigationSafety ? navigationSafety.request(close) : close()
+            }
+          >
+            Review closing stale team editor
+          </Button>
+        </div>
+      )}
       {error && (
         <p role="alert" className="gt-form-error">
           {error}{" "}
@@ -430,320 +646,351 @@ export default function TeamWorkspace() {
             {names[mode]}
           </h2>
           <form className="gt-form" onSubmit={save}>
-            {(mode === "create" || mode === "update") && (
-              <>
-                <div className="gt-form-grid">
-                  <Field label="Team name" required>
-                    <input
-                      required
-                      minLength={2}
-                      maxLength={100}
-                      {...input("name")}
-                    />
-                  </Field>
-                  {mode === "create" && (
-                    <Field
-                      label="Team URL identifier"
-                      required
-                      hint="Lowercase letters, numbers and hyphens. This identifier cannot be changed later."
-                    >
+            <fieldset disabled={busy} className="gt-form gt-team-fields">
+              {(mode === "create" || mode === "update") && (
+                <>
+                  <div className="gt-form-grid">
+                    <Field label="Team name" required>
                       <input
                         required
-                        pattern="[a-z0-9]+(-[a-z0-9]+)*"
-                        maxLength={150}
-                        {...input("slug")}
+                        minLength={2}
+                        maxLength={100}
+                        {...input("name")}
                       />
                     </Field>
-                  )}
-                  <Field label="Accent color">
-                    <select {...input("color")}>
-                      {colors.map((c, i) => (
-                        <option value={c} key={c}>
-                          {
-                            [
-                              "Google blue",
-                              "Chapter coral",
-                              "Google green",
-                              "Google gold",
-                              "Neutral gray",
-                            ][i]
-                          }
-                        </option>
-                      ))}
-                    </select>
-                  </Field>
-                  <Field label="Team icon">
-                    <select {...input("icon")}>
-                      {icons.map((i) => (
-                        <option key={i}>{i}</option>
-                      ))}
-                    </select>
-                  </Field>
-                </div>
-                <Field label="Description">
-                  <textarea
-                    rows={3}
-                    maxLength={2000}
-                    {...input("description")}
-                  />
-                </Field>
-                {mode === "create" && (
-                  <p className="gt-helper">
-                    You become this team's founding lead. Add another lead
-                    before transferring or removing your final required lead
-                    membership. Team grants start empty.
-                  </p>
-                )}
-              </>
-            )}
-            {mode?.startsWith("member_") && (
-              <>
-                {member && (
-                  <p>
-                    {member.user.display_name ||
-                      member.user.email ||
-                      "Selected member"}{" "}
-                    · {readable(member.role)}
-                  </p>
-                )}
-                {mode === "member_add" && (
-                  <Field
-                    label="Existing account email"
-                    required
-                    hint="The account must be active and have completed password setup. New-account invitations are a separate workflow."
-                  >
-                    <input
-                      type="email"
-                      required
-                      maxLength={255}
-                      {...input("email")}
-                    />
-                  </Field>
-                )}
-                {["member_add", "member_role"].includes(mode) && (
-                  <Field label="Team role">
-                    <select {...input("role")}>
-                      {(workspace?.actorRole === "team_member"
-                        ? ["member"]
-                        : ["member", "co_lead", "lead"]
-                      ).map((r) => (
-                        <option key={r} value={r}>
-                          {readable(r)}
-                        </option>
-                      ))}
-                    </select>
-                  </Field>
-                )}
-                {mode === "member_remove" && (
-                  <p>
-                    This removes team access but preserves the account and
-                    membership history. A team's final active lead cannot be
-                    removed.
-                  </p>
-                )}
-                {mode === "member_transfer" && (
-                  <>
-                    <SearchBox
-                      label="Find a destination team"
-                      placeholder="Search destination teams"
-                      value={destinationQuery}
-                      onChange={setDestinationQuery}
-                    />
-                    <Field label="Destination team" required>
-                      <select required {...input("destinationId")}>
-                        <option value="">Choose an active team</option>
-                        {destinations.map((t) => (
-                          <option key={t.id} value={t.id}>
-                            {t.name}
+                    {mode === "create" && (
+                      <Field
+                        label="Team URL identifier"
+                        required
+                        hint="Lowercase letters, numbers and hyphens. This identifier cannot be changed later."
+                      >
+                        <input
+                          required
+                          pattern="[a-z0-9]+(-[a-z0-9]+)*"
+                          maxLength={150}
+                          {...input("slug")}
+                        />
+                      </Field>
+                    )}
+                    <Field label="Accent color">
+                      <select {...input("color")}>
+                        {colors.map((c, i) => (
+                          <option value={c} key={c}>
+                            {
+                              [
+                                "Google blue",
+                                "Chapter coral",
+                                "Google green",
+                                "Google gold",
+                                "Neutral gray",
+                              ][i]
+                            }
                           </option>
                         ))}
                       </select>
                     </Field>
-                    <Field label="Transfer reason" required>
-                      <textarea
+                    <Field label="Team icon">
+                      <select {...input("icon")}>
+                        {icons.map((i) => (
+                          <option key={i}>{i}</option>
+                        ))}
+                      </select>
+                    </Field>
+                  </div>
+                  <Field label="Description">
+                    <textarea
+                      rows={3}
+                      maxLength={2000}
+                      {...input("description")}
+                    />
+                  </Field>
+                  {mode === "create" && (
+                    <p className="gt-helper">
+                      You become this team's founding lead. Add another lead
+                      before transferring or removing your final required lead
+                      membership. Team grants start empty.
+                    </p>
+                  )}
+                </>
+              )}
+              {mode?.startsWith("member_") && (
+                <>
+                  {member && (
+                    <p>
+                      {member.user.display_name ||
+                        member.user.email ||
+                        "Selected member"}{" "}
+                      · {readable(member.role)}
+                    </p>
+                  )}
+                  {mode === "member_add" && (
+                    <Field
+                      label="Existing account email"
+                      required
+                      hint="The account must be active and have completed password setup. New-account invitations are a separate workflow."
+                    >
+                      <input
+                        type="email"
                         required
-                        minLength={2}
-                        maxLength={1000}
-                        {...input("reason")}
+                        maxLength={255}
+                        {...input("email")}
                       />
                     </Field>
-                    <p className="gt-helper">
-                      Transfers preserve the source history, remove source
-                      access, and create a member-level destination membership.
-                      Destination officer privileges are never inherited. Up to
-                      100 matching destination teams are shown; search by name
-                      to narrow the list.
+                  )}
+                  {["member_add", "member_role"].includes(mode) && (
+                    <Field label="Team role">
+                      <select {...input("role")}>
+                        {(workspace?.actorRole === "team_member"
+                          ? ["member"]
+                          : ["member", "co_lead", "lead"]
+                        ).map((r) => (
+                          <option key={r} value={r}>
+                            {readable(r)}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+                  )}
+                  {mode === "member_remove" && (
+                    <p>
+                      This removes team access but preserves the account and
+                      membership history. A team's final active lead cannot be
+                      removed.
                     </p>
-                  </>
-                )}
-              </>
-            )}
-            {mode === "permissions" && (
-              <>
-                <p>
-                  Page visibility and individual actions are separate. These
-                  grants apply only to this team's active members. Chapter
-                  account/security access cannot be delegated here.
-                </p>
-                <div className="gt-team-grants">
-                  {teamGrantOptions.map((option) => {
-                    const value = grants.find((g) => g.path === option.path);
-                    return (
-                      <fieldset key={option.path}>
-                        <legend>{option.label}</legend>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={!!value}
-                            onChange={(e) =>
-                              toggleGrant(
-                                option.path,
-                                option.resource,
-                                e.target.checked,
-                              )
-                            }
-                          />{" "}
-                          Allow this page
-                        </label>
-                        {value && (
-                          <div className="gt-grant-actions">
-                            {(
-                              ["create", "read", "update", "delete"] as const
-                            ).map((action) => (
-                              <label key={action}>
-                                <input
-                                  type="checkbox"
-                                  checked={value[action]}
-                                  onChange={(e) =>
-                                    setGrants((v) =>
-                                      v.map((g) =>
-                                        g.path === option.path
-                                          ? {
-                                              ...g,
-                                              [action]: e.target.checked,
-                                              ...(action === "update" &&
-                                              !e.target.checked
-                                                ? {
-                                                    extras: g.extras.filter(
-                                                      (a) => a !== "publish",
-                                                    ),
-                                                  }
-                                                : {}),
-                                            }
-                                          : g,
-                                      ),
-                                    )
-                                  }
-                                />
-                                {action === "read"
-                                  ? "View records"
-                                  : action === "update"
-                                    ? "Edit records"
-                                    : action === "delete"
-                                      ? "Archive records"
-                                      : "Create records"}
-                              </label>
-                            ))}
-                            {option.extras.map((action) => (
-                              <label key={action}>
-                                <input
-                                  type="checkbox"
-                                  checked={value.extras.includes(action)}
-                                  disabled={
-                                    action === "publish" && !value.update
-                                  }
-                                  onChange={(e) =>
-                                    setGrants((v) =>
-                                      v.map((g) =>
-                                        g.path === option.path
-                                          ? {
-                                              ...g,
-                                              extras: e.target.checked
-                                                ? [...g.extras, action]
-                                                : g.extras.filter(
-                                                    (a) => a !== action,
-                                                  ),
-                                            }
-                                          : g,
-                                      ),
-                                    )
-                                  }
-                                />
-                                {readable(action)}
-                              </label>
-                            ))}
-                          </div>
+                  )}
+                  {mode === "member_transfer" && (
+                    <>
+                      <SearchBox
+                        label="Find a destination team"
+                        placeholder="Search destination teams"
+                        value={destinationQuery}
+                        onChange={setDestinationQuery}
+                      />
+                      <ReadFeedback
+                        name="destination teams"
+                        read={destinationRead}
+                        retry={() =>
+                          setDestinationRefresh((value) => value + 1)
+                        }
+                        disabled={!isOnline || busy}
+                        offline={!isOnline}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        disabled={!isOnline || busy || destinationRead.loading}
+                        onClick={() =>
+                          setDestinationRefresh((value) => value + 1)
+                        }
+                      >
+                        Refresh destination teams
+                      </Button>
+                      {destinationRead.data &&
+                        !destinationRead.loading &&
+                        !destinationRead.error &&
+                        !destinations.length && (
+                          <p>
+                            No active matching destination teams. Try another
+                            name.
+                          </p>
                         )}
-                      </fieldset>
-                    );
-                  })}
-                </div>
-              </>
-            )}
-            {(["archive", "restore", "permissions"] as Mode[]).includes(
-              mode,
-            ) && (
-              <Field label="Type the complete team name to confirm" required>
+                      <Field label="Destination team" required>
+                        <select
+                          required
+                          disabled={!destinationReady}
+                          {...input("destinationId")}
+                        >
+                          <option value="">Choose an active team</option>
+                          {destinations.map((t) => (
+                            <option key={t.id} value={t.id}>
+                              {t.name}
+                            </option>
+                          ))}
+                        </select>
+                      </Field>
+                      <Field label="Transfer reason" required>
+                        <textarea
+                          required
+                          minLength={2}
+                          maxLength={1000}
+                          {...input("reason")}
+                        />
+                      </Field>
+                      <p className="gt-helper">
+                        Transfers preserve the source history, remove source
+                        access, and create a member-level destination
+                        membership. Destination officer privileges are never
+                        inherited. Up to 100 matching destination teams are
+                        shown; search by name to narrow the list.
+                      </p>
+                    </>
+                  )}
+                </>
+              )}
+              {mode === "permissions" && (
+                <>
+                  <p>
+                    Page visibility and individual actions are separate. These
+                    grants apply only to this team's active members. Chapter
+                    account/security access cannot be delegated here.
+                  </p>
+                  <div className="gt-team-grants">
+                    {teamGrantOptions.map((option) => {
+                      const value = grants.find((g) => g.path === option.path);
+                      return (
+                        <fieldset key={option.path}>
+                          <legend>{option.label}</legend>
+                          <label>
+                            <input
+                              type="checkbox"
+                              checked={!!value}
+                              onChange={(e) =>
+                                toggleGrant(
+                                  option.path,
+                                  option.resource,
+                                  e.target.checked,
+                                )
+                              }
+                            />{" "}
+                            Allow this page
+                          </label>
+                          {value && (
+                            <div className="gt-grant-actions">
+                              {(
+                                ["create", "read", "update", "delete"] as const
+                              ).map((action) => (
+                                <label key={action}>
+                                  <input
+                                    type="checkbox"
+                                    checked={value[action]}
+                                    onChange={(e) =>
+                                      setGrants((v) =>
+                                        v.map((g) =>
+                                          g.path === option.path
+                                            ? {
+                                                ...g,
+                                                [action]: e.target.checked,
+                                                ...(action === "update" &&
+                                                !e.target.checked
+                                                  ? {
+                                                      extras: g.extras.filter(
+                                                        (a) => a !== "publish",
+                                                      ),
+                                                    }
+                                                  : {}),
+                                              }
+                                            : g,
+                                        ),
+                                      )
+                                    }
+                                  />
+                                  {action === "read"
+                                    ? "View records"
+                                    : action === "update"
+                                      ? "Edit records"
+                                      : action === "delete"
+                                        ? "Archive records"
+                                        : "Create records"}
+                                </label>
+                              ))}
+                              {option.extras.map((action) => (
+                                <label key={action}>
+                                  <input
+                                    type="checkbox"
+                                    checked={value.extras.includes(action)}
+                                    disabled={
+                                      action === "publish" && !value.update
+                                    }
+                                    onChange={(e) =>
+                                      setGrants((v) =>
+                                        v.map((g) =>
+                                          g.path === option.path
+                                            ? {
+                                                ...g,
+                                                extras: e.target.checked
+                                                  ? [...g.extras, action]
+                                                  : g.extras.filter(
+                                                      (a) => a !== action,
+                                                    ),
+                                              }
+                                            : g,
+                                        ),
+                                      )
+                                    }
+                                  />
+                                  {readable(action)}
+                                </label>
+                              ))}
+                            </div>
+                          )}
+                        </fieldset>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+              {(["archive", "restore", "permissions"] as Mode[]).includes(
+                mode,
+              ) && (
+                <Field label="Type the complete team name to confirm" required>
+                  <input
+                    required
+                    value={confirmation}
+                    onChange={(e) => setConfirmation(e.target.value)}
+                  />
+                </Field>
+              )}
+              {mode === "archive" && (
+                <p>
+                  Archiving preserves memberships and history, disables team
+                  access and page grants, and can be reversed. It does not
+                  delete chapter records owned by the team.
+                </p>
+              )}
+              {mode === "restore" && (
+                <p>
+                  Restoration requires an active lead. Previous page grants stay
+                  disabled and must be explicitly reviewed.
+                </p>
+              )}
+              <Field label="Confirm your own password" required>
                 <input
                   required
-                  value={confirmation}
-                  onChange={(e) => setConfirmation(e.target.value)}
+                  type="password"
+                  maxLength={128}
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </Field>
-            )}
-            {mode === "archive" && (
-              <p>
-                Archiving preserves memberships and history, disables team
-                access and page grants, and can be reversed. It does not delete
-                chapter records owned by the team.
-              </p>
-            )}
-            {mode === "restore" && (
-              <p>
-                Restoration requires an active lead. Previous page grants stay
-                disabled and must be explicitly reviewed.
-              </p>
-            )}
-            <Field label="Confirm your own password" required>
-              <input
-                required
-                type="password"
-                maxLength={128}
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Field>
-            <div className="gt-button-row">
-              <Button
-                type="submit"
-                disabled={
-                  busy ||
-                  (["archive", "restore", "permissions"].includes(mode) &&
-                    confirmation !== workspace?.team.name)
-                }
-              >
-                {busy ? "Saving…" : "Save team change"}
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                disabled={busy}
-                onClick={close}
-              >
-                Cancel
-              </Button>
-            </div>
+              <div className="gt-button-row">
+                <Button
+                  type="submit"
+                  disabled={
+                    !canSave ||
+                    busy ||
+                    (["archive", "restore", "permissions"].includes(mode) &&
+                      confirmation !== workspace?.team.name)
+                  }
+                >
+                  {busy ? "Saving…" : "Save team change"}
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={busy}
+                  onClick={() =>
+                    navigationSafety ? navigationSafety.request(close) : close()
+                  }
+                >
+                  Cancel
+                </Button>
+              </div>
+            </fieldset>
           </form>
         </section>
       )}
-      {loading ? (
-        <div
-          className="gt-skeleton gt-detail-skeleton"
-          role="status"
-          aria-label="Loading teams"
-        />
-      ) : selected && workspace ? (
+      {selected && workspace ? (
         <>
           <div className="gt-toolbar">
             <div className="gt-button-row">
@@ -759,13 +1006,13 @@ export default function TeamWorkspace() {
               <FormIntegrations
                 kind="team"
                 resourceId={workspace.team.id}
-                disabled={!!mode || busy}
+                disabled={!!mode || busy || !teamReady}
               />
               {workspace.actions.settings && (
                 <>
                   <Button
                     variant="secondary"
-                    disabled={!!mode || busy}
+                    disabled={!!mode || busy || !teamReady}
                     onClick={() =>
                       open(workspace.team.deleted_at ? "restore" : "update")
                     }
@@ -777,7 +1024,7 @@ export default function TeamWorkspace() {
                   {!workspace.team.deleted_at && (
                     <Button
                       variant="ghost"
-                      disabled={!!mode || busy}
+                      disabled={!!mode || busy || !teamReady}
                       onClick={() => open("archive")}
                     >
                       Archive team
@@ -803,6 +1050,7 @@ export default function TeamWorkspace() {
                 key={t}
                 variant={tab === t ? "primary" : "ghost"}
                 aria-current={tab === t ? "page" : undefined}
+                disabled={busy}
                 onClick={() => {
                   const change = () => {
                     setTab(t);
@@ -825,7 +1073,7 @@ export default function TeamWorkspace() {
                 <h2>Memberships</h2>
                 {workspace.actions.manage && !workspace.team.deleted_at && (
                   <Button
-                    disabled={!!mode || busy}
+                    disabled={!!mode || busy || !teamReady}
                     onClick={() => open("member_add")}
                   >
                     Add member
@@ -873,6 +1121,7 @@ export default function TeamWorkspace() {
                                       variant="ghost"
                                       disabled={
                                         busy ||
+                                        !teamReady ||
                                         !!mode ||
                                         m.admin_user_id === currentAdmin?.id
                                       }
@@ -882,7 +1131,7 @@ export default function TeamWorkspace() {
                                     </Button>
                                     <Button
                                       variant="ghost"
-                                      disabled={busy || !!mode}
+                                      disabled={busy || !!mode || !teamReady}
                                       onClick={() => open("member_transfer", m)}
                                     >
                                       Transfer
@@ -893,7 +1142,7 @@ export default function TeamWorkspace() {
                                   m.role === "member") && (
                                   <Button
                                     variant="ghost"
-                                    disabled={busy || !!mode}
+                                    disabled={busy || !!mode || !teamReady}
                                     onClick={() => open("member_remove", m)}
                                   >
                                     Remove
@@ -913,6 +1162,7 @@ export default function TeamWorkspace() {
             <TeamAnnouncements
               teamId={workspace.team.id}
               canManage={workspace.actions.manage && !workspace.team.deleted_at}
+              disabled={!teamReady || busy}
             />
           )}
           {tab === "chat" && (
@@ -921,7 +1171,10 @@ export default function TeamWorkspace() {
           {tab === "invitations" &&
             workspace.actions.manage &&
             !workspace.team.deleted_at && (
-              <TeamInvitations teamId={workspace.team.id} />
+              <TeamInvitations
+                teamId={workspace.team.id}
+                disabled={!teamReady || busy}
+              />
             )}
           {tab === "permissions" && (
             <section className="gt-panel gt-event-editor">
@@ -954,7 +1207,9 @@ export default function TeamWorkspace() {
                 </p>
               )}
               <Button
-                disabled={!!mode || busy || !!workspace.team.deleted_at}
+                disabled={
+                  !!mode || busy || !teamReady || !!workspace.team.deleted_at
+                }
                 onClick={() => open("permissions")}
               >
                 Review & change grants
@@ -968,7 +1223,22 @@ export default function TeamWorkspace() {
                   ? "Append-only team activity"
                   : "Membership transfer history"}
               </h2>
-              {historyLoading ? (
+              <ReadFeedback
+                name={tab === "activity" ? "team activity" : "team transfers"}
+                read={activity}
+                retry={() => setHistoryRefresh((value) => value + 1)}
+                disabled={!isOnline || busy}
+                offline={!isOnline}
+              />
+              <Button
+                variant="ghost"
+                disabled={!isOnline || busy || activity.loading}
+                onClick={() => setHistoryRefresh((value) => value + 1)}
+              >
+                Refresh{" "}
+                {tab === "activity" ? "team activity" : "team transfers"}
+              </Button>
+              {historyLoading && !history ? (
                 <p role="status">Loading history…</p>
               ) : history?.items.length ? (
                 <ul className="gt-team-history">
@@ -995,15 +1265,21 @@ export default function TeamWorkspace() {
                     </li>
                   ))}
                 </ul>
-              ) : (
+              ) : history && !activity.error && !activity.loading ? (
                 <p>
                   No {tab === "activity" ? "activity" : "transfers"} recorded.
                 </p>
-              )}
+              ) : null}
               <nav className="gt-button-row" aria-label="Team history pages">
                 <Button
                   variant="secondary"
-                  disabled={historyPage <= 1 || historyLoading}
+                  disabled={
+                    historyPage <= 1 ||
+                    historyLoading ||
+                    !!activity.error ||
+                    !isOnline ||
+                    busy
+                  }
                   onClick={() => setHistoryPage((v) => v - 1)}
                 >
                   Previous
@@ -1014,7 +1290,10 @@ export default function TeamWorkspace() {
                   disabled={
                     !history ||
                     historyPage * 20 >= history.total ||
-                    historyLoading
+                    historyLoading ||
+                    !!activity.error ||
+                    !isOnline ||
+                    busy
                   }
                   onClick={() => setHistoryPage((v) => v + 1)}
                 >
@@ -1059,33 +1338,59 @@ export default function TeamWorkspace() {
                       <p>{t.description || "No description added."}</p>
                       <Badge>{t.deleted_at ? "Archived" : "Active"}</Badge>
                     </div>
-                    <Button variant="secondary" onClick={() => choose(t.id)}>
+                    <Button
+                      variant="secondary"
+                      disabled={!listReady || busy}
+                      onClick={() => choose(t.id)}
+                    >
                       Open {t.name}
                     </Button>
                   </article>
                 ))}
               </div>
-            ) : (
-              <EmptyState title="No teams in this view">
+            ) : list && !inventory.loading && !inventory.error ? (
+              <EmptyState
+                title="No teams in this view"
+                action={
+                  q || state !== "current" ? (
+                    <Button
+                      variant="secondary"
+                      onClick={() => {
+                        setQ("");
+                        setState("current");
+                        setPage(1);
+                      }}
+                    >
+                      Reset team filters
+                    </Button>
+                  ) : undefined
+                }
+              >
                 {list?.canCreate
                   ? "Create a chapter team and assign deliberate page/action grants. Nothing is shared by default."
                   : "Your active team memberships will appear here. Ask a chapter administrator if an assignment is missing."}
               </EmptyState>
-            )}
+            ) : null}
             <nav className="gt-button-row" aria-label="Team directory pages">
               <Button
                 variant="secondary"
-                disabled={page <= 1}
+                disabled={page <= 1 || !listReady || busy}
                 onClick={() => setPage((v) => v - 1)}
               >
                 Previous
               </Button>
               <span>
-                Page {page} · {list?.total || 0} teams
+                Page {page} ·{" "}
+                {list ? `${list.total} teams` : "Checking inventory…"}
               </span>
               <Button
                 variant="secondary"
-                disabled={!list || page * list.pageSize >= list.total}
+                disabled={
+                  !listReady ||
+                  busy ||
+                  !list ||
+                  page * list.pageSize >= list.total
+                }
                 onClick={() => setPage((v) => v + 1)}
               >
                 Next

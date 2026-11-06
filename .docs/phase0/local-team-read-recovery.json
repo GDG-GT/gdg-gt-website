@@ -1,0 +1,122 @@
+{
+  "generatedAt": "2026-11-06T01:11:24.102Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and Chromium desktop/mobile team read recovery with controlled independent inventory/detail/activity/destination failures and denial. Only two fresh fictional teams/accounts; browser non-read API/external calls blocked and realtime paused. Team revision/memberships unchanged before owned teams archived/accounts disabled/sessions revoked. No existing record, provider send or production change. Captures ignored/private; no credentials or response bodies retained.",
+  "tests": [
+    {
+      "name": "anonymous team read denied for inventory",
+      "passed": true
+    },
+    {
+      "name": "authorized inventory is read privately without caching",
+      "passed": true
+    },
+    {
+      "name": "anonymous team read denied for selected team",
+      "passed": true
+    },
+    {
+      "name": "authorized selected team is read privately without caching",
+      "passed": true
+    },
+    {
+      "name": "unrelated member cannot discover selected team",
+      "passed": true
+    },
+    {
+      "name": "anonymous team read denied for team activity",
+      "passed": true
+    },
+    {
+      "name": "authorized team activity is read privately without caching",
+      "passed": true
+    },
+    {
+      "name": "unrelated member cannot discover team activity",
+      "passed": true
+    },
+    {
+      "name": "anonymous team read denied for transfer history",
+      "passed": true
+    },
+    {
+      "name": "authorized transfer history is read privately without caching",
+      "passed": true
+    },
+    {
+      "name": "unrelated member cannot discover transfer history",
+      "passed": true
+    },
+    {
+      "name": "selected actual team remains visible during an independent directory outage at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "team inventory retry reads independently and returns workspace focus at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "actual failed team-detail refresh retains timestamped members and unsaved fields while save pauses at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "team history retry and failed refresh distinguish unavailable from empty and retain actual rows at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "actual transfer destination outage retains selection without allowing a stale transfer at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated team transfer/editor state passes measured axe checks at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "denied current team read clears team/member/transfer input before explicit directory recheck at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "team read workflow has no page error, mutation, external request or horizontal page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "selected actual team remains visible during an independent directory outage at 375×812",
+      "passed": true
+    },
+    {
+      "name": "team inventory retry reads independently and returns workspace focus at 375×812",
+      "passed": true
+    },
+    {
+      "name": "actual failed team-detail refresh retains timestamped members and unsaved fields while save pauses at 375×812",
+      "passed": true
+    },
+    {
+      "name": "team history retry and failed refresh distinguish unavailable from empty and retain actual rows at 375×812",
+      "passed": true
+    },
+    {
+      "name": "actual transfer destination outage retains selection without allowing a stale transfer at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated team transfer/editor state passes measured axe checks at 375×812",
+      "passed": true
+    },
+    {
+      "name": "denied current team read clears team/member/transfer input before explicit directory recheck at 375×812",
+      "passed": true
+    },
+    {
+      "name": "team read workflow has no page error, mutation, external request or horizontal page overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "all team recovery reads leave owned team and memberships unchanged",
+      "passed": true
+    }
+  ]
+}

@@ -181,6 +181,7 @@ export const test = base.extend<{ fixture: PublicFixture }>({
                 "/admin/events",
                 "/admin/audit-log",
                 "/admin/users",
+                "/admin/teams",
               ],
             });
             return;
@@ -245,6 +246,10 @@ export const test = base.extend<{ fixture: PublicFixture }>({
                 : {}),
               actorId: fictionalUser.id,
             });
+            return;
+          }
+          if (path === "/admin/teams") {
+            await reply(200, { ...empty, canCreate: true });
             return;
           }
           if (

@@ -294,6 +294,14 @@ add(
   ],
 );
 prdTestCases.at(-1).normative = ["23", "28.3", "28.4", "31.2"];
+add(
+  "TEAM-TEST-006",
+  "TEAM-002 TEAM-006 TEAM-007",
+  "Independent team inventory/detail/history/destination reads, keyed cancellation and denial clearing, stale revision/write safeguards and preservation of paused child drafts",
+  ["tests/client/team-read-recovery.test.tsx", "tests/client/team-parent-pause.test.tsx", local("team-read-recovery"), "tests/browser/workspace-smoke.spec.ts"],
+  ["Team mutation replay/consequence hardening, complete invitation/announcement recovery and supported-browser/role/device/manual/visual/hosted acceptance remain separate work"],
+);
+prdTestCases.at(-1).normative = ["23", "24", "28.3", "31.2"];
 const teams = [
   [
     "TEAM-001",

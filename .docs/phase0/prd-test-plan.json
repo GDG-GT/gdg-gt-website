@@ -661,6 +661,32 @@
       ]
     },
     {
+      "id": "TEAM-TEST-006",
+      "requirements": [
+        "TEAM-002",
+        "TEAM-006",
+        "TEAM-007"
+      ],
+      "scope": "Independent team inventory/detail/history/destination reads, keyed cancellation and denial clearing, stale revision/write safeguards and preservation of paused child drafts",
+      "automated": [
+        "tests/client/team-read-recovery.test.tsx",
+        "tests/client/team-parent-pause.test.tsx",
+        "scripts/test-local-team-read-recovery.mjs",
+        "tests/browser/workspace-smoke.spec.ts"
+      ],
+      "remaining": [
+        "Team mutation replay/consequence hardening, complete invitation/announcement recovery and supported-browser/role/device/manual/visual/hosted acceptance remain separate work",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24",
+        "28.3",
+        "31.2"
+      ]
+    },
+    {
       "id": "TEAM-TEST-001",
       "requirements": [
         "TEAM-001"
