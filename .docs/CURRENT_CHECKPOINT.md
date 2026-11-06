@@ -4,6 +4,38 @@ Updated 2026-11-06. Continue the GDG GT PRD task from this verified local
 checkpoint; do not repeat completed mutations/probes or rebuild setup from scratch.
 This checkpoint does not declare the entire PRD complete.
 
+## Verified router declaration review after c06757a
+
+The installed router was already react-router-dom/react-router 6.30.6 and
+@remix-run/router 1.23.4, despite the package.json lower range of ^6.30.1.
+Only that declaration and the root lock dependency range are now pinned exactly
+to 6.30.6. Every resolved lock entry and all three installed package trees remain
+unchanged; a fresh production build has exactly the c06757a entry/manifest/crop/
+helper digests. No runtime upgrade or advisory fix is claimed.
+
+The controlled cache operation completed. Snapshot:
+`/Users/tejas/.cache/gdg-router-v6-pdgsv9_o`; logs
+`/tmp/gdg-router-v6-install.json`, `/tmp/gdg-router-security-audit.json`.
+The cache is `/Users/tejas/.cache/gdg-gt-deps.8xnflb18`, still the original
+node_modules symlink target. Same-version Playwright packages were normalized;
+pruned optional @img/sharp-wasm32 0.35.5 and @emnapi/runtime 1.11.3 were restored
+from tarballs after checking original lockfile SHA-512. Do not repeat installation
+or restoration; compare actual state first if interruption is suspected.
+
+Production audit remains zero high/critical, two moderate/four low package entries.
+Its raw exit is 1, not a clean audit. The two router advisories require 7.18+;
+one is a remaining redirect bypass, the other SSR error hydration. Current SSR
+error hydration is unused, but the package finding remains. See
+`DEPENDENCY_SECURITY_REVIEW.md` and `phase0/router-v6-declaration-review.json`.
+
+Next save this review checkpoint, then perform a controlled local 7.18.5 migration
+and verify it. Read-only npm metadata confirms React >=18 and Node >=20; current
+React 18.3/Node 26 satisfy that. Metadata: `/tmp/gdg-router-v7-metadata.json`.
+No v7 install or SSR implementation has started. A major migration is separate
+implementation work within the authorized local PRD scope, not permission to
+use an audit force sweep. Preserve all tests/assertions, user edits and cache
+rollback snapshots; deployment/production changes/provider sends remain excluded.
+
 ## Latest verified route-aware preload continuation after 49f49e6
 
 The navigation-review correction below is saved in local commit 49f49e6. The new

@@ -1,0 +1,121 @@
+{
+  "generatedAt": "2026-11-06T23:40:49.523748+00:00",
+  "scope": "Declaration/lock consistency review, not a runtime upgrade. All installed router versions and package contents were already identical to the c06757a baseline; rebuilt entry/manifest/crops/helper digests are unchanged.",
+  "installedVersions": {
+    "react-router-dom": "6.30.6",
+    "react-router": "6.30.6",
+    "@remix-run/router": "1.23.4"
+  },
+  "declaration": "react-router-dom exactly 6.30.6",
+  "runtimeChanged": false,
+  "packageContentsUnchanged": true,
+  "resolvedLockEntriesChanged": false,
+  "buildDigestsMatchPrevious": true,
+  "productionAudit": {
+    "info": 0,
+    "low": 4,
+    "moderate": 2,
+    "high": 0,
+    "critical": 0,
+    "total": 6
+  },
+  "auditExit": 1,
+  "auditNote": "The raw audit exits nonzero for moderate/low findings; the PRD high/critical condition passes. No vulnerability is suppressed or claimed fixed.",
+  "findings": [
+    {
+      "package": "@excalidraw/excalidraw",
+      "severity": "low",
+      "range": "0.5.0-a78d45417 || 0.17.1-08b13f9 - 0.17.1-6e5aeb1 || >=0.18.0-699826",
+      "via": [
+        "@excalidraw/mermaid-to-excalidraw"
+      ],
+      "fixAvailable": {
+        "name": "@excalidraw/excalidraw",
+        "version": "0.17.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "@excalidraw/mermaid-to-excalidraw",
+      "severity": "low",
+      "range": "0.3.0 - 2.3.0",
+      "via": [
+        "mermaid"
+      ],
+      "fixAvailable": {
+        "name": "@excalidraw/excalidraw",
+        "version": "0.17.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "katex",
+      "severity": "low",
+      "range": "0.11.0 - 0.18.1",
+      "via": [
+        {
+          "title": "KaTeX: Existing prototype pollution can bypass trust restrictions",
+          "url": "https://github.com/advisories/GHSA-238p-pmpm-9mq7",
+          "range": ">=0.11.0 <0.18.2"
+        }
+      ],
+      "fixAvailable": {
+        "name": "@excalidraw/excalidraw",
+        "version": "0.17.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "mermaid",
+      "severity": "low",
+      "range": "10.9.0-rc.1 - 12.1.0",
+      "via": [
+        "katex"
+      ],
+      "fixAvailable": {
+        "name": "@excalidraw/excalidraw",
+        "version": "0.17.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "react-router",
+      "severity": "moderate",
+      "range": "6.0.0 - 7.17.0",
+      "via": [
+        {
+          "title": "React Router: Open redirect via backslash in <Link> and useNavigate (CVE-2025-68470 bypass)",
+          "url": "https://github.com/advisories/GHSA-wrjc-x8rr-h8h6",
+          "range": ">=6.0.0 <7.18.0"
+        },
+        {
+          "title": "React Router: Arbitrary Constructor Injection via deserializeErrors() in React Router SSR Hydration",
+          "url": "https://github.com/advisories/GHSA-337j-9hxr-rhxg",
+          "range": ">=6.4.0 <7.18.0"
+        }
+      ],
+      "fixAvailable": {
+        "name": "react-router-dom",
+        "version": "7.18.5",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "react-router-dom",
+      "severity": "moderate",
+      "range": "6.0.0-alpha.0 - 7.17.0",
+      "via": [
+        "react-router"
+      ],
+      "fixAvailable": {
+        "name": "react-router-dom",
+        "version": "7.18.5",
+        "isSemVerMajor": true
+      }
+    }
+  ],
+  "optionalCacheFallbacksRestoredWithLockIntegrity": [
+    "@img/sharp-wasm32@0.35.5",
+    "@emnapi/runtime@1.11.3"
+  ]
+}
