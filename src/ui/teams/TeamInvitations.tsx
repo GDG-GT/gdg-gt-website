@@ -1,6 +1,17 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import { useDraftGuard } from "@/hooks/useDraftGuard";
-import { api } from "@/lib/api";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
+import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
+import { api, ApiFailure } from "@/lib/api";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import ScrollableTable from "@/ui/ScrollableTable";
+import TeamReadFeedback from "./TeamReadFeedback";
 import { Badge, Button, EmptyState, Field } from "../primitives";
 type Invitation = {
   id: string;
@@ -25,48 +36,107 @@ export default function TeamInvitations({
   teamId: string;
   disabled?: boolean;
 }) {
-  const [data, setData] = useState<Listing>(),
-    [page, setPage] = useState(1),
+  return (
+    <TeamInvitationsContent key={teamId} teamId={teamId} disabled={disabled} />
+  );
+}
+function TeamInvitationsContent({
+  teamId,
+  disabled,
+}: {
+  teamId: string;
+  disabled: boolean;
+}) {
+  const [page, setPage] = useState(1),
     [refresh, setRefresh] = useState(0),
-    [loading, setLoading] = useState(true),
+    [denied, setDenied] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [email, setEmail] = useState(""),
     [role, setRole] = useState("member"),
     [password, setPassword] = useState(""),
-    [busy, setBusy] = useState(false),
     [pending, setPending] = useState<{
       invite: Invitation;
       action: "resend" | "revoke";
     } | null>(null);
-  const heading = useRef<HTMLHeadingElement>(null);
+  const heading = useRef<HTMLHeadingElement>(null),
+    panel = useRef<HTMLElement>(null),
+    retrying = useRef(false);
+  const safety = useNavigationSafety(),
+    { isOnline } = useOnlineStatus(),
+    mutation = usePrivateMutation(teamId),
+    { busy } = mutation,
+    read = usePrivateRead<Listing>(
+      denied ? undefined : `/admin/teams/${teamId}/invitations?page=${page}`,
+      refresh,
+    ),
+    { data, loading } = read,
+    blocked = denied || read.denied,
+    ready =
+      !disabled && isOnline && !!data && !loading && !read.error && !blocked,
+    dirty = !!email || !!password || !!pending,
+    stale =
+      !!pending &&
+      !data?.items.some(
+        (row) =>
+          row.id === pending.invite.id &&
+          row.revision === pending.invite.revision &&
+          row.status === "pending",
+      ),
+    allowedRole = role === "member" || !!data?.canInviteOfficers,
+    allowedPending =
+      !pending ||
+      !!data?.canInviteOfficers ||
+      (pending.invite.invited_by === data?.actorId &&
+        pending.invite.role === "member");
+  const reload = () => {
+    retrying.current = true;
+    setRefresh((v) => v + 1);
+  };
+  useEffect(() => {
+    if (!loading && retrying.current) {
+      retrying.current = false;
+      panel.current?.focus();
+    }
+  }, [loading]);
   useDraftGuard(!!email || !!password || !!pending, {
     busy,
     label: "Team invitation or confirmation",
   });
+  const { cancel } = mutation,
+    { clear: clearRead } = read;
+  const clear = useCallback(() => {
+    cancel();
+    clearRead();
+    setEmail("");
+    setPassword("");
+    setRole("member");
+    setPending(null);
+    setError("");
+    setNotice("");
+    setDenied(true);
+  }, [cancel, clearRead]);
   useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
-    api<Listing>(`/admin/teams/${teamId}/invitations?page=${page}`, {
-      signal: controller.signal,
-    })
-      .then(setData)
-      .catch((e) => {
-        if (!controller.signal.aborted) setError(e.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
-      });
-    return () => controller.abort();
-  }, [teamId, page, refresh]);
+    if (read.denied) clear();
+  }, [read.denied, clear]);
+  useEffect(() => {
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, [clear]);
+  const discard = (action: () => void) => {
+    if (mutation.pending.current) return;
+    if (dirty && safety) safety.request(action);
+    else action();
+  };
   const pendingKey = pending ? pending.invite.id + ":" + pending.action : null;
   useEffect(() => {
     if (pendingKey) heading.current?.focus();
   }, [pendingKey]);
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (disabled || busy || !navigator.onLine) return;
-    setBusy(true);
+    if (!ready || stale || !allowedRole || !allowedPending) return;
+    const controller = mutation.begin();
+    if (!controller) return;
     setError("");
     setNotice("");
     const secret = password;
@@ -78,6 +148,7 @@ export default function TeamInvitations({
         {
           method: "POST",
           protected: true,
+          signal: controller.signal,
           body: pending
             ? {
                 currentPassword: secret,
@@ -87,6 +158,7 @@ export default function TeamInvitations({
             : { currentPassword: secret, email, role },
         },
       );
+      if (!mutation.current(controller)) return;
       setNotice(
         pending
           ? pending.action === "revoke"
@@ -99,16 +171,41 @@ export default function TeamInvitations({
       setRole("member");
       setRefresh((v) => v + 1);
     } catch (e) {
+      if (!mutation.current(controller)) return;
+      if (
+        e instanceof ApiFailure &&
+        [401, 403, 404].includes(e.status) &&
+        e.code !== "PASSWORD_CONFIRMATION_FAILED"
+      ) {
+        clear();
+        return;
+      }
       setError(
         e instanceof Error ? e.message : "The invitation could not be saved.",
       );
     } finally {
-      setBusy(false);
+      mutation.finish(controller);
     }
   }
+  if (blocked)
+    return (
+      <EmptyState title="Invitation access unavailable">
+        Private rows and unsent input have been cleared.
+        <Button
+          type="button"
+          disabled={!isOnline}
+          onClick={() => {
+            setDenied(false);
+            setRefresh((v) => v + 1);
+          }}
+        >
+          Recheck invitation access
+        </Button>
+      </EmptyState>
+    );
   return (
     <fieldset disabled={disabled} className="gt-team-fields">
-      <section>
+      <section ref={panel} tabIndex={-1} aria-label="Private team invitations">
         <header className="gt-admin-heading">
           <div>
             <h2>Private team invitations</h2>
@@ -118,106 +215,144 @@ export default function TeamInvitations({
             </p>
           </div>
         </header>
+        <TeamReadFeedback
+          name="invitations"
+          read={read}
+          offline={!isOnline}
+          busy={busy}
+          retry={reload}
+        />
         {error && (
           <p role="alert" className="gt-form-error">
-            {error}{" "}
-            <button type="button" onClick={() => setRefresh((v) => v + 1)}>
-              Reload invitations
-            </button>
+            {error}
           </p>
         )}
         {notice && <p role="status">{notice}</p>}
+        {(stale || !allowedPending) && (
+          <p role="alert">
+            This invitation changed. Review canceling this action, then choose a
+            current invitation.
+          </p>
+        )}
         <form
           className="gt-panel gt-event-editor gt-form gt-invite-editor"
           onSubmit={submit}
         >
-          <h3 ref={heading} tabIndex={-1}>
-            {pending
-              ? pending.action === "revoke"
-                ? "Revoke invitation"
-                : "Resend with a new link"
-              : "Invite a teammate"}
-          </h3>
-          {pending ? (
-            <>
-              <p>{pending.invite.email}</p>
-              <p>
-                {pending.action === "revoke"
-                  ? "Revocation takes effect immediately and preserves the invitation history."
-                  : "This rotates the private link and restarts its seven-day expiry. Resending is limited to once per minute."}
-              </p>
-            </>
-          ) : (
-            <div className="gt-form-grid">
-              <Field label="Recipient email" required>
-                <input
-                  required
-                  type="email"
-                  maxLength={255}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </Field>
-              <Field label="Team membership role">
-                <select value={role} onChange={(e) => setRole(e.target.value)}>
-                  {(data?.canInviteOfficers
-                    ? ["member", "co_lead", "lead"]
-                    : ["member"]
-                  ).map((r) => (
-                    <option key={r} value={r}>
-                      {r.replace(/_/g, " ")}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-            </div>
-          )}
-          <p className="gt-helper">
-            A new recipient chooses their own password and receives the fixed
-            Team Member chapter role. Existing account holders must sign in;
-            this link cannot reset a password or change a chapter role.
-          </p>
-          <Field label="Confirm your own password" required>
-            <input
-              type="password"
-              required
-              maxLength={128}
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Field>
-          <div className="gt-button-row">
-            <Button disabled={busy || loading} type="submit">
-              {busy
-                ? "Saving…"
-                : pending
-                  ? "Confirm invitation change"
-                  : "Queue private invitation"}
-            </Button>
-            {pending && (
-              <Button
-                variant="secondary"
-                type="button"
-                disabled={busy}
-                onClick={() => {
-                  setPending(null);
-                  setPassword("");
-                }}
-              >
-                Cancel
-              </Button>
+          <fieldset
+            className="gt-form gt-team-fields"
+            disabled={!ready || busy || stale || !allowedPending}
+          >
+            <h3 ref={heading} tabIndex={-1}>
+              {pending
+                ? pending.action === "revoke"
+                  ? "Revoke invitation"
+                  : "Resend with a new link"
+                : "Invite a teammate"}
+            </h3>
+            {pending ? (
+              <>
+                <p>{pending.invite.email}</p>
+                <p>
+                  {pending.action === "revoke"
+                    ? "Revocation takes effect immediately and preserves the invitation history."
+                    : "This rotates the private link and restarts its seven-day expiry. Resending is limited to once per minute."}
+                </p>
+              </>
+            ) : (
+              <div className="gt-form-grid">
+                <Field label="Recipient email" required>
+                  <input
+                    required
+                    type="email"
+                    maxLength={255}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Field>
+                <Field label="Team membership role">
+                  <select
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                  >
+                    {(data?.canInviteOfficers
+                      ? ["member", "co_lead", "lead"]
+                      : ["member"]
+                    ).map((r) => (
+                      <option key={r} value={r}>
+                        {r.replace(/_/g, " ")}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+              </div>
             )}
-          </div>
+            <p className="gt-helper">
+              A new recipient chooses their own password and receives the fixed
+              Team Member chapter role. Existing account holders must sign in;
+              this link cannot reset a password or change a chapter role.
+            </p>
+            <Field label="Confirm your own password" required>
+              <input
+                type="password"
+                required
+                maxLength={128}
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Field>
+            <div className="gt-button-row">
+              <Button
+                disabled={busy || !ready || stale || !allowedRole}
+                type="submit"
+              >
+                {busy
+                  ? "Saving…"
+                  : pending
+                    ? "Confirm invitation change"
+                    : "Queue private invitation"}
+              </Button>
+              {pending && (
+                <Button
+                  variant="secondary"
+                  type="button"
+                  disabled={busy}
+                  onClick={() =>
+                    discard(() => {
+                      setPending(null);
+                      setPassword("");
+                    })
+                  }
+                >
+                  Cancel
+                </Button>
+              )}
+            </div>
+          </fieldset>
         </form>
-        {loading ? (
+        {(stale || !allowedPending) && (
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={busy}
+            onClick={() =>
+              discard(() => {
+                setPending(null);
+                setPassword("");
+              })
+            }
+          >
+            Review closing stale invitation action
+          </Button>
+        )}
+        {loading && !data ? (
           <div
             className="gt-skeleton gt-detail-skeleton"
             role="status"
             aria-label="Loading invitations"
           />
         ) : data?.items.length ? (
-          <div className="gt-table-wrap">
+          <ScrollableTable label="Team invitation history">
             <table className="gt-data-table">
               <caption className="sr-only">
                 Team invitation delivery and acceptance status
@@ -254,7 +389,7 @@ export default function TeamInvitations({
                           <div className="gt-button-row">
                             <Button
                               variant="ghost"
-                              disabled={busy}
+                              disabled={busy || !ready || dirty}
                               onClick={() => {
                                 setPending({ invite, action: "resend" });
                                 setPassword("");
@@ -264,7 +399,7 @@ export default function TeamInvitations({
                             </Button>
                             <Button
                               variant="ghost"
-                              disabled={busy}
+                              disabled={busy || !ready || dirty}
                               onClick={() => {
                                 setPending({ invite, action: "revoke" });
                                 setPassword("");
@@ -279,9 +414,11 @@ export default function TeamInvitations({
                 ))}
               </tbody>
             </table>
-          </div>
+          </ScrollableTable>
         ) : (
-          !error && (
+          !read.error &&
+          !error &&
+          data && (
             <EmptyState title="No invitations recorded">
               Add a recipient above. Copyable public invitation links are not
               created.
@@ -291,18 +428,33 @@ export default function TeamInvitations({
         <nav className="gt-button-row" aria-label="Invitation pages">
           <Button
             variant="secondary"
-            disabled={page <= 1 || loading}
-            onClick={() => setPage((v) => v - 1)}
+            disabled={page <= 1 || !ready || busy}
+            onClick={() =>
+              discard(() => {
+                setEmail("");
+                setPassword("");
+                setPending(null);
+                setPage((v) => v - 1);
+              })
+            }
           >
             Previous
           </Button>
           <span>
-            Page {page} · {data?.total || 0} invitations
+            Page {page}
+            {data ? ` · ${data.total} invitations` : " · count unavailable"}
           </span>
           <Button
             variant="secondary"
-            disabled={loading || !data || page * 20 >= data.total}
-            onClick={() => setPage((v) => v + 1)}
+            disabled={!ready || busy || !data || page * 20 >= data.total}
+            onClick={() =>
+              discard(() => {
+                setEmail("");
+                setPassword("");
+                setPending(null);
+                setPage((v) => v + 1);
+              })
+            }
           >
             Next
           </Button>

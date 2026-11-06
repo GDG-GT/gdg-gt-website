@@ -715,6 +715,34 @@
       ]
     },
     {
+      "id": "TEAM-TEST-008",
+      "requirements": [
+        "TEAM-002",
+        "TEAM-003",
+        "TEAM-004",
+        "TEAM-005"
+      ],
+      "scope": "Independent invitation/announcement reads, retained timestamped drafts, denied-state clearing, scoped cancellation, fresh-capability/revision checks and reviewed local navigation",
+      "automated": [
+        "tests/client/team-child-read-recovery.test.tsx",
+        "tests/client/team-parent-pause.test.tsx",
+        "scripts/test-local-team-child-read-recovery.mjs",
+        "tests/browser/team-child-reads.spec.ts"
+      ],
+      "remaining": [
+        "Invitation/announcement atomic mutation replay and complete uncertain-write/consequence recovery remain separate work; full supported-role/device/manual/visual/hosted acceptance remains open",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ],
+      "acceptance": "unverified",
+      "normative": [
+        "23",
+        "24",
+        "28.3",
+        "28.4",
+        "31.2"
+      ]
+    },
+    {
       "id": "TEAM-TEST-001",
       "requirements": [
         "TEAM-001"

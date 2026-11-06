@@ -1,0 +1,130 @@
+{
+  "generatedAt": "2026-11-06T01:38:03.719Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and Chromium desktop/mobile child read recovery. Only fresh owned fictional accounts/team/invitation/private announcement; invitation seeded without usable capability or delivery job, post never published. Browser non-read/external calls blocked; realtime paused. Rows unchanged before owned recoverable archive/cancellation; accounts disabled/sessions revoked. No provider send, existing chapter record or production change. Captures ignored; no credentials/response bodies retained.",
+  "tests": [
+    {
+      "name": "anonymous cannot read private team invitations",
+      "passed": true
+    },
+    {
+      "name": "unrelated member cannot discover team invitations",
+      "passed": true
+    },
+    {
+      "name": "authorized invitations read is private and omits capability material",
+      "passed": true
+    },
+    {
+      "name": "anonymous cannot read private team announcements",
+      "passed": true
+    },
+    {
+      "name": "unrelated member cannot discover team announcements",
+      "passed": true
+    },
+    {
+      "name": "authorized announcements read is private and omits capability material",
+      "passed": true
+    },
+    {
+      "name": "initial failed child read never renders a false empty state for invitations at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "temporary child outage retains timestamped rows and pauses preserved input for invitations at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "independent read-only retry restores focus and retains the unsent child draft for invitations at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated recovered child panel passes measured axe for invitations at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "denied child read clears rows and input before explicit fresh recheck for invitations at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "initial failed child read never renders a false empty state for announcements at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "temporary child outage retains timestamped rows and pauses preserved input for announcements at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "independent read-only retry restores focus and retains the unsent child draft for announcements at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated recovered child panel passes measured axe for announcements at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "denied child read clears rows and input before explicit fresh recheck for announcements at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "both child workflows have no script error, browser mutation, external request or horizontal page overflow at 1440",
+      "passed": true
+    },
+    {
+      "name": "initial failed child read never renders a false empty state for invitations at 375×812",
+      "passed": true
+    },
+    {
+      "name": "temporary child outage retains timestamped rows and pauses preserved input for invitations at 375×812",
+      "passed": true
+    },
+    {
+      "name": "independent read-only retry restores focus and retains the unsent child draft for invitations at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated recovered child panel passes measured axe for invitations at 375×812",
+      "passed": true
+    },
+    {
+      "name": "denied child read clears rows and input before explicit fresh recheck for invitations at 375×812",
+      "passed": true
+    },
+    {
+      "name": "initial failed child read never renders a false empty state for announcements at 375×812",
+      "passed": true
+    },
+    {
+      "name": "temporary child outage retains timestamped rows and pauses preserved input for announcements at 375×812",
+      "passed": true
+    },
+    {
+      "name": "independent read-only retry restores focus and retains the unsent child draft for announcements at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated recovered child panel passes measured axe for announcements at 375×812",
+      "passed": true
+    },
+    {
+      "name": "denied child read clears rows and input before explicit fresh recheck for announcements at 375×812",
+      "passed": true
+    },
+    {
+      "name": "both child workflows have no script error, browser mutation, external request or horizontal page overflow at 375",
+      "passed": true
+    },
+    {
+      "name": "all child read checks leave owned invitations and announcements unchanged",
+      "passed": true
+    },
+    {
+      "name": "owned read fixtures create no delivery jobs",
+      "passed": true
+    }
+  ]
+}

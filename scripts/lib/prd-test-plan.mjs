@@ -310,6 +310,14 @@ add(
   ["Complete invitation/announcement recovery and populated supported-browser/role/device/manual/visual/hosted acceptance remain open; local mutation and fake browser receipts are separate evidence"],
 );
 prdTestCases.at(-1).normative = ["23", "24", "28.3", "28.4", "31.2"];
+add(
+  "TEAM-TEST-008",
+  "TEAM-002 TEAM-003 TEAM-004 TEAM-005",
+  "Independent invitation/announcement reads, retained timestamped drafts, denied-state clearing, scoped cancellation, fresh-capability/revision checks and reviewed local navigation",
+  ["tests/client/team-child-read-recovery.test.tsx", "tests/client/team-parent-pause.test.tsx", local("team-child-read-recovery"), "tests/browser/team-child-reads.spec.ts"],
+  ["Invitation/announcement atomic mutation replay and complete uncertain-write/consequence recovery remain separate work; full supported-role/device/manual/visual/hosted acceptance remains open"],
+);
+prdTestCases.at(-1).normative = ["23", "24", "28.3", "28.4", "31.2"];
 const teams = [
   [
     "TEAM-001",

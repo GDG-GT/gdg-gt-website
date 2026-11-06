@@ -5,8 +5,14 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import TeamInvitations from "../../src/ui/teams/TeamInvitations";
 import TeamAnnouncements from "../../src/ui/teams/TeamAnnouncements";
 const { apiMock } = vi.hoisted(() => ({ apiMock: vi.fn() }));
-vi.mock("@/lib/api", () => ({ api: apiMock }));
-vi.mock("@/hooks/useDraftGuard", () => ({ useDraftGuard: vi.fn() }));
+vi.mock("@/lib/api", async (original) => ({
+  ...(await original<typeof import("../../src/lib/api")>()),
+  api: apiMock,
+}));
+vi.mock("@/hooks/useDraftGuard", () => ({
+  useDraftGuard: vi.fn(),
+  useNavigationSafety: () => undefined,
+}));
 beforeEach(() => {
   apiMock.mockReset();
   apiMock.mockResolvedValue({

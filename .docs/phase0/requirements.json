@@ -509,6 +509,7 @@
       "testIds": [
         "TEAM-TEST-006",
         "TEAM-TEST-007",
+        "TEAM-TEST-008",
         "TEAM-TEST-002"
       ],
       "evidence": []
@@ -519,6 +520,7 @@
       "line": 397,
       "status": "unverified",
       "testIds": [
+        "TEAM-TEST-008",
         "TEAM-TEST-003"
       ],
       "evidence": []
@@ -529,6 +531,7 @@
       "line": 399,
       "status": "unverified",
       "testIds": [
+        "TEAM-TEST-008",
         "TEAM-TEST-003"
       ],
       "evidence": []
@@ -539,6 +542,7 @@
       "line": 401,
       "status": "unverified",
       "testIds": [
+        "TEAM-TEST-008",
         "TEAM-TEST-004"
       ],
       "evidence": []

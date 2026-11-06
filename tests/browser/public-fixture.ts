@@ -16,6 +16,34 @@ export type PublicFixture = {
   failTeamSave: boolean;
   teamWrites: { key: string; fingerprint: string }[];
   teamCommitted: number;
+  failedTeamPanel: "" | "invitations" | "announcements";
+  deniedTeamPanel: "" | "invitations" | "announcements";
+};
+export const fictionalTeamInvite = {
+  id: "fbbb0000-0000-4000-8000-000000000004",
+  email: "fictional-team-recipient@example.test",
+  role: "member",
+  status: "pending",
+  revision: 1,
+  invited_by: "fbbb0000-0000-4000-8000-000000000001",
+  expires_at: "2026-11-12T12:00:00Z",
+  last_sent_at: "2026-11-05T12:00:00Z",
+};
+export const fictionalTeamPost = {
+  id: "fbbb0000-0000-4000-8000-000000000005",
+  title: "Fictional private team announcement",
+  message: "Fictional private announcement body",
+  priority: "normal",
+  is_pinned: false,
+  is_published: false,
+  scheduled_for: null,
+  expires_at: null,
+  revision: 1,
+  deleted_at: null,
+  created_at: "2026-11-05T12:00:00Z",
+  authorName: "Fictional browser reviewer",
+  isRead: false,
+  readCount: 0,
 };
 export const fictionalTeam = {
   id: "fbbb0000-0000-4000-8000-000000000003",
@@ -68,6 +96,8 @@ export const test = base.extend<{ fixture: PublicFixture }>({
         failTeamSave: false,
         teamWrites: [],
         teamCommitted: 0,
+        failedTeamPanel: "",
+        deniedTeamPanel: "",
       };
       let team = { ...fictionalTeam };
       const teamWorkspace = () => ({
@@ -342,6 +372,33 @@ export const test = base.extend<{ fixture: PublicFixture }>({
           if (state.teamReview && path === "/admin/teams/" + fictionalTeam.id) {
             await reply(200, teamWorkspace());
             return;
+          }
+          for (const panel of ["invitations", "announcements"] as const) {
+            if (
+              state.teamReview &&
+              path === "/admin/teams/" + fictionalTeam.id + "/" + panel
+            ) {
+              if (
+                state.deniedTeamPanel === panel ||
+                state.failedTeamPanel === panel
+              ) {
+                await reply(state.deniedTeamPanel === panel ? 403 : 503, null);
+                return;
+              }
+              await reply(200, {
+                ...empty,
+                items: [
+                  panel === "invitations"
+                    ? fictionalTeamInvite
+                    : fictionalTeamPost,
+                ],
+                total: 1,
+                canManage: true,
+                actorId: fictionalUser.id,
+                canInviteOfficers: true,
+              });
+              return;
+            }
           }
           if (
             state.accountReview &&

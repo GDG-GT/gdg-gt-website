@@ -1,6 +1,16 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import { useDraftGuard } from "@/hooks/useDraftGuard";
-import { api } from "@/lib/api";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
+import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
+import { api, ApiFailure } from "@/lib/api";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { usePrivateMutation } from "@/hooks/usePrivateMutation";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import TeamReadFeedback from "./TeamReadFeedback";
 import { Badge, Button, EmptyState, Field } from "../primitives";
 type Post = {
   id: string;
@@ -53,12 +63,28 @@ export default function TeamAnnouncements({
   canManage: boolean;
   disabled?: boolean;
 }) {
-  const [data, setData] = useState<Listing>(),
-    [page, setPage] = useState(1),
+  return (
+    <TeamAnnouncementsContent
+      key={teamId}
+      teamId={teamId}
+      canManage={canManage}
+      disabled={disabled}
+    />
+  );
+}
+function TeamAnnouncementsContent({
+  teamId,
+  canManage,
+  disabled,
+}: {
+  teamId: string;
+  canManage: boolean;
+  disabled: boolean;
+}) {
+  const [page, setPage] = useState(1),
     [filter, setFilter] = useState("current"),
     [refresh, setRefresh] = useState(0),
-    [loading, setLoading] = useState(true),
-    [busy, setBusy] = useState(false),
+    [denied, setDenied] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
   const [editor, setEditor] = useState<{
@@ -73,29 +99,77 @@ export default function TeamAnnouncements({
     [pending, setPending] = useState<{ row: Post; action: Action } | null>(
       null,
     );
-  const heading = useRef<HTMLHeadingElement>(null),
+  const panel = useRef<HTMLElement>(null),
+    retrying = useRef(false),
+    heading = useRef<HTMLHeadingElement>(null),
     editorKey = editor
       ? editor.row?.id || "new"
       : pending
         ? pending.row.id + pending.action
         : null;
+  const safety = useNavigationSafety(),
+    { isOnline } = useOnlineStatus(),
+    mutation = usePrivateMutation(teamId),
+    { busy } = mutation,
+    read = usePrivateRead<Listing>(
+      denied
+        ? undefined
+        : `/admin/teams/${teamId}/announcements?${new URLSearchParams({ page: String(page), state: filter })}`,
+      refresh,
+    ),
+    { data, loading } = read,
+    blocked = denied || read.denied,
+    ready =
+      !disabled && isOnline && !!data && !loading && !read.error && !blocked,
+    manager = canManage && !!data?.canManage,
+    stale =
+      !!(editor?.row || pending?.row) &&
+      !data?.items.some(
+        (row) =>
+          row.id === (editor?.row || pending?.row)!.id &&
+          row.revision === (editor?.row || pending?.row)!.revision,
+      );
+  const reload = () => {
+    retrying.current = true;
+    setRefresh((v) => v + 1);
+  };
   useEffect(() => {
-    const controller = new AbortController();
-    setLoading(true);
+    if (!loading && retrying.current) {
+      retrying.current = false;
+      panel.current?.focus();
+    }
+  }, [loading]);
+  const { cancel } = mutation,
+    { clear: clearRead } = read,
+    readCanManage = data?.canManage;
+  const clear = useCallback(() => {
+    cancel();
+    clearRead();
+    setEditor(null);
+    setPending(null);
     setError("");
-    api<Listing>(
-      `/admin/teams/${teamId}/announcements?${new URLSearchParams({ page: String(page), state: filter })}`,
-      { signal: controller.signal },
-    )
-      .then(setData)
-      .catch((e) => {
-        if (!controller.signal.aborted) setError(e.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
-      });
-    return () => controller.abort();
-  }, [teamId, page, filter, refresh]);
+    setNotice("");
+    setDenied(true);
+  }, [cancel, clearRead]);
+  useEffect(() => {
+    if (read.denied) clear();
+  }, [read.denied, clear]);
+  useEffect(() => {
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, [clear]);
+  useEffect(() => {
+    if (!canManage || readCanManage === false) {
+      setEditor(null);
+      setPending(null);
+      cancel();
+    }
+  }, [canManage, readCanManage, cancel]);
+  const discard = (action: () => void) => {
+    if (mutation.pending.current) return;
+    if ((editor || pending) && safety) safety.request(action);
+    else action();
+  };
   useEffect(() => {
     if (editorKey) heading.current?.focus();
   }, [editorKey]);
@@ -114,6 +188,7 @@ export default function TeamAnnouncements({
     return () => window.removeEventListener("beforeunload", warn);
   }, [editing]);
   function open(row?: Post) {
+    if (!ready || !manager || mutation.pending.current) return;
     setPending(null);
     setEditor({
       row,
@@ -126,13 +201,15 @@ export default function TeamAnnouncements({
     });
   }
   async function mutate(row: Post, action: Action | "pin" | "read") {
-    if (disabled || busy || !navigator.onLine) return;
-    setBusy(true);
+    if (!ready || (action !== "read" && (!manager || stale))) return;
+    const controller = mutation.begin();
+    if (!controller) return;
     setError("");
     try {
       await api(`/admin/teams/${teamId}/announcements/${row.id}`, {
         method: "POST",
         protected: true,
+        signal: controller.signal,
         body:
           action === "read"
             ? { action }
@@ -142,6 +219,7 @@ export default function TeamAnnouncements({
                 ...(action === "pin" ? { pinned: !row.is_pinned } : {}),
               },
       });
+      if (!mutation.current(controller)) return;
       setNotice(
         action === "read"
           ? "Marked as read."
@@ -152,20 +230,26 @@ export default function TeamAnnouncements({
       setPending(null);
       setRefresh((v) => v + 1);
     } catch (e) {
+      if (!mutation.current(controller)) return;
+      if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
+        clear();
+        return;
+      }
       setError(
         e instanceof Error
           ? e.message
           : "The announcement could not be changed.",
       );
     } finally {
-      setBusy(false);
+      mutation.finish(controller);
     }
   }
   async function save(event: FormEvent) {
     event.preventDefault();
-    if (disabled || busy || !navigator.onLine) return;
+    if (!ready || !manager || stale) return;
     if (!editor) return;
-    setBusy(true);
+    const controller = mutation.begin();
+    if (!controller) return;
     setError("");
     try {
       await api(
@@ -174,6 +258,7 @@ export default function TeamAnnouncements({
         {
           method: editor.row ? "PATCH" : "POST",
           protected: true,
+          signal: controller.signal,
           body: {
             ...(editor.row ? { revision: editor.row.revision } : {}),
             record: {
@@ -191,22 +276,44 @@ export default function TeamAnnouncements({
           },
         },
       );
+      if (!mutation.current(controller)) return;
       setEditor(null);
       setNotice(
         "Announcement saved as a private draft. Publishing is a separate action.",
       );
       setRefresh((v) => v + 1);
     } catch (e) {
+      if (!mutation.current(controller)) return;
+      if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
+        clear();
+        return;
+      }
       setError(
         e instanceof Error ? e.message : "The draft could not be saved.",
       );
     } finally {
-      setBusy(false);
+      mutation.finish(controller);
     }
   }
+  if (blocked)
+    return (
+      <EmptyState title="Announcement access unavailable">
+        Private posts and unsaved input have been cleared.
+        <Button
+          type="button"
+          disabled={!isOnline}
+          onClick={() => {
+            setDenied(false);
+            setRefresh((v) => v + 1);
+          }}
+        >
+          Recheck announcement access
+        </Button>
+      </EmptyState>
+    );
   return (
     <fieldset disabled={disabled} className="gt-team-fields">
-      <section>
+      <section ref={panel} tabIndex={-1} aria-label="Team announcements">
         <header className="gt-admin-heading">
           <div>
             <h2>Team announcements</h2>
@@ -215,125 +322,155 @@ export default function TeamAnnouncements({
               window.
             </p>
           </div>
-          {canManage && (
+          {manager && (
             <Button
-              disabled={busy || !!editor || !!pending}
+              disabled={busy || !ready || !!editor || !!pending}
               onClick={() => open()}
             >
               Write announcement
             </Button>
           )}
         </header>
+        <TeamReadFeedback
+          name="announcements"
+          read={read}
+          offline={!isOnline}
+          busy={busy}
+          retry={reload}
+        />
         {error && (
           <p role="alert" className="gt-form-error">
-            {error}{" "}
-            <button type="button" onClick={() => setRefresh((v) => v + 1)}>
-              Reload announcements
-            </button>
+            {error}
           </p>
         )}
         {notice && <p role="status">{notice}</p>}
-        {editor && (
+        {stale && (
+          <p role="alert">
+            This announcement changed. Review closing the stale editor, then
+            choose a current post. Unsaved input is retained.
+          </p>
+        )}
+        {editor && manager && (
           <section className="gt-panel gt-event-editor gt-announcement-editor">
             <h3 ref={heading} tabIndex={-1}>
               {editor.row ? "Edit private draft" : "New private announcement"}
             </h3>
             <form className="gt-form" onSubmit={save}>
-              <Field label="Announcement title" required>
-                <input
-                  required
-                  minLength={2}
-                  maxLength={200}
-                  value={editor.title}
-                  onChange={(e) =>
-                    setEditor({ ...editor, title: e.target.value })
-                  }
-                />
-              </Field>
-              <Field
-                label="Message"
-                required
-                hint="Plain text only. Do not include passwords, private access links or unnecessary personal information."
+              <fieldset
+                className="gt-form gt-team-fields"
+                disabled={!ready || busy || stale}
               >
-                <textarea
+                <Field label="Announcement title" required>
+                  <input
+                    required
+                    minLength={2}
+                    maxLength={200}
+                    value={editor.title}
+                    onChange={(e) =>
+                      setEditor({ ...editor, title: e.target.value })
+                    }
+                  />
+                </Field>
+                <Field
+                  label="Message"
                   required
-                  rows={7}
-                  minLength={2}
-                  maxLength={10000}
-                  value={editor.message}
-                  onChange={(e) =>
-                    setEditor({ ...editor, message: e.target.value })
-                  }
-                />
-              </Field>
-              <div className="gt-form-grid">
-                <Field label="Priority">
-                  <select
-                    value={editor.priority}
+                  hint="Plain text only. Do not include passwords, private access links or unnecessary personal information."
+                >
+                  <textarea
+                    required
+                    rows={7}
+                    minLength={2}
+                    maxLength={10000}
+                    value={editor.message}
                     onChange={(e) =>
-                      setEditor({ ...editor, priority: e.target.value })
+                      setEditor({ ...editor, message: e.target.value })
                     }
+                  />
+                </Field>
+                <div className="gt-form-grid">
+                  <Field label="Priority">
+                    <select
+                      value={editor.priority}
+                      onChange={(e) =>
+                        setEditor({ ...editor, priority: e.target.value })
+                      }
+                    >
+                      {["low", "normal", "high", "urgent"].map((v) => (
+                        <option key={v}>{v}</option>
+                      ))}
+                    </select>
+                  </Field>
+                  <Field
+                    label="Publish no earlier than · your local time"
+                    hint="Leave blank to make the post visible when you publish it."
                   >
-                    {["low", "normal", "high", "urgent"].map((v) => (
-                      <option key={v}>{v}</option>
-                    ))}
-                  </select>
-                </Field>
-                <Field
-                  label="Publish no earlier than · your local time"
-                  hint="Leave blank to make the post visible when you publish it."
-                >
+                    <input
+                      type="datetime-local"
+                      value={editor.scheduledFor}
+                      onChange={(e) =>
+                        setEditor({ ...editor, scheduledFor: e.target.value })
+                      }
+                    />
+                  </Field>
+                  <Field
+                    label="Expiry · your local time"
+                    hint="Expired announcements are hidden from ordinary members."
+                  >
+                    <input
+                      type="datetime-local"
+                      value={editor.expiresAt}
+                      onChange={(e) =>
+                        setEditor({ ...editor, expiresAt: e.target.value })
+                      }
+                    />
+                  </Field>
+                </div>
+                <label className="gt-check">
                   <input
-                    type="datetime-local"
-                    value={editor.scheduledFor}
+                    type="checkbox"
+                    checked={editor.pinned}
                     onChange={(e) =>
-                      setEditor({ ...editor, scheduledFor: e.target.value })
+                      setEditor({ ...editor, pinned: e.target.checked })
                     }
-                  />
-                </Field>
-                <Field
-                  label="Expiry · your local time"
-                  hint="Expired announcements are hidden from ordinary members."
-                >
-                  <input
-                    type="datetime-local"
-                    value={editor.expiresAt}
-                    onChange={(e) =>
-                      setEditor({ ...editor, expiresAt: e.target.value })
-                    }
-                  />
-                </Field>
-              </div>
-              <label className="gt-check">
-                <input
-                  type="checkbox"
-                  checked={editor.pinned}
-                  onChange={(e) =>
-                    setEditor({ ...editor, pinned: e.target.checked })
-                  }
-                />{" "}
-                Pin above other posts
-              </label>
-              <p className="gt-helper">
-                Editing a published post returns it to draft. Existing
-                notifications never include the post body. Publish deliberately
-                when the revised message is ready.
-              </p>
-              <div className="gt-button-row">
-                <Button disabled={busy} type="submit">
-                  {busy ? "Saving…" : "Save private draft"}
-                </Button>
-                <Button
-                  disabled={busy}
-                  type="button"
-                  variant="secondary"
-                  onClick={() => setEditor(null)}
-                >
-                  Cancel
-                </Button>
-              </div>
+                  />{" "}
+                  Pin above other posts
+                </label>
+                <p className="gt-helper">
+                  Editing a published post returns it to draft. Existing
+                  notifications never include the post body. Publish
+                  deliberately when the revised message is ready.
+                </p>
+                <div className="gt-button-row">
+                  <Button disabled={busy || !ready || stale} type="submit">
+                    {busy ? "Saving…" : "Save private draft"}
+                  </Button>
+                  <Button
+                    disabled={busy}
+                    type="button"
+                    variant="secondary"
+                    onClick={() => discard(() => setEditor(null))}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </fieldset>
             </form>
           </section>
+        )}
+        {stale && (
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={busy}
+            onClick={() =>
+              discard(() => {
+                setEditor(null);
+                setPending(null);
+              })
+            }
+          >
+            Review closing stale announcement action
+          </Button>
         )}
         {pending && (
           <section className="gt-panel gt-operational-confirm">
@@ -350,7 +487,7 @@ export default function TeamAnnouncements({
             </p>
             <div className="gt-button-row">
               <Button
-                disabled={busy}
+                disabled={busy || !ready || stale || !manager}
                 onClick={() => mutate(pending.row, pending.action)}
               >
                 {busy ? "Saving…" : "Confirm"}
@@ -358,20 +495,26 @@ export default function TeamAnnouncements({
               <Button
                 variant="secondary"
                 disabled={busy}
-                onClick={() => setPending(null)}
+                onClick={() => discard(() => setPending(null))}
               >
                 Cancel
               </Button>
             </div>
           </section>
         )}
-        {canManage && (
+        {manager && (
           <Field label="Announcement view">
             <select
               value={filter}
+              disabled={!ready || busy}
               onChange={(e) => {
-                setFilter(e.target.value);
-                setPage(1);
+                const value = e.target.value;
+                discard(() => {
+                  setEditor(null);
+                  setPending(null);
+                  setFilter(value);
+                  setPage(1);
+                });
               }}
             >
               {["current", "drafts", "published", "archived"].map((v) => (
@@ -380,7 +523,7 @@ export default function TeamAnnouncements({
             </select>
           </Field>
         )}
-        {loading ? (
+        {loading && !data ? (
           <div
             className="gt-skeleton gt-detail-skeleton"
             role="status"
@@ -415,13 +558,13 @@ export default function TeamAnnouncements({
                   {!post.isRead && !post.deleted_at && (
                     <Button
                       variant="secondary"
-                      disabled={busy}
+                      disabled={busy || !ready}
                       onClick={() => mutate(post, "read")}
                     >
                       Mark as read
                     </Button>
                   )}
-                  {canManage && (
+                  {manager && (
                     <>
                       {post.readCount !== null && (
                         <span>{post.readCount} read acknowledgements</span>
@@ -430,14 +573,14 @@ export default function TeamAnnouncements({
                         <>
                           <Button
                             variant="ghost"
-                            disabled={busy || !!editor || !!pending}
+                            disabled={busy || !ready || !!editor || !!pending}
                             onClick={() => open(post)}
                           >
                             Edit
                           </Button>
                           <Button
                             variant="ghost"
-                            disabled={busy}
+                            disabled={busy || !ready || !!editor || !!pending}
                             onClick={() => mutate(post, "pin")}
                           >
                             {post.is_pinned ? "Unpin" : "Pin"}
@@ -451,7 +594,7 @@ export default function TeamAnnouncements({
                             <Button
                               key={action}
                               variant="ghost"
-                              disabled={busy || !!editor || !!pending}
+                              disabled={busy || !ready || !!editor || !!pending}
                               onClick={() => {
                                 setEditor(null);
                                 setPending({ row: post, action });
@@ -464,7 +607,7 @@ export default function TeamAnnouncements({
                       ) : (
                         <Button
                           variant="secondary"
-                          disabled={busy || !!editor || !!pending}
+                          disabled={busy || !ready || !!editor || !!pending}
                           onClick={() =>
                             setPending({ row: post, action: "restore" })
                           }
@@ -479,7 +622,9 @@ export default function TeamAnnouncements({
             ))}
           </div>
         ) : (
-          !error && (
+          !read.error &&
+          !error &&
+          data && (
             <EmptyState title="No announcements in this view">
               {canManage
                 ? "Write a private draft, then publish it when ready."
@@ -490,18 +635,31 @@ export default function TeamAnnouncements({
         <nav className="gt-button-row" aria-label="Announcement pages">
           <Button
             variant="secondary"
-            disabled={loading || page <= 1}
-            onClick={() => setPage((v) => v - 1)}
+            disabled={!ready || busy || page <= 1}
+            onClick={() =>
+              discard(() => {
+                setEditor(null);
+                setPending(null);
+                setPage((v) => v - 1);
+              })
+            }
           >
             Previous
           </Button>
           <span>
-            Page {page} · {data?.total || 0} announcements
+            Page {page}
+            {data ? ` · ${data.total} announcements` : " · count unavailable"}
           </span>
           <Button
             variant="secondary"
-            disabled={loading || !data || page * 20 >= data.total}
-            onClick={() => setPage((v) => v + 1)}
+            disabled={!ready || busy || !data || page * 20 >= data.total}
+            onClick={() =>
+              discard(() => {
+                setEditor(null);
+                setPending(null);
+                setPage((v) => v + 1);
+              })
+            }
           >
             Next
           </Button>

@@ -8,6 +8,25 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Independent invitation and announcement reads — 2026-11-05
+
+- Child reads now retain timestamped matching rows/drafts through temporary
+  failures and pause writes. Denial/session replacement clears private input;
+  team replacement cancels transport and fences late responses. Current capability
+  and row revisions gate writes; page/filter/cancel actions review unsaved input.
+  Read-only retry restores named panel focus; invitation history is keyboard-scrollable.
+- All 1,440 tests/161 files pass (64 focused, 24 new cases). Coverage still fails
+  70%: 63.58% lines/63.44% branches/61.94% statements/55.19% functions; all 17
+  critical branch gates pass. All 30 actual API/DB/desktop-mobile checks pass,
+  including populated axe, preserved drafts and denial clearing. Owned rows stayed
+  unchanged before cleanup; no delivery jobs/provider sends/existing chapter changes.
+- Catalog: 153 unverified cases. Child atomic mutation replay, uncertain-write/
+  consequence recovery and full supported-role/device/manual/visual/hosted
+  acceptance remain open. See `TEAM_CHILD_READ_RECOVERY.md`; full PRD remains open.
+- Types/lint (zero errors/25 warnings), build/final budgets/secrets/traceability
+  pass. All 72 targeted production-build child-read/team-review/shared-workspace
+  checks pass across six pinned profiles; captures remain unapproved candidates.
+
 ### Reviewed team writes and atomic membership replay — 2026-11-05
 
 - Migration 114 binds team mutation receipts to current session/password/action,
