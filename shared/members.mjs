@@ -65,6 +65,10 @@ export const communityMemberMutation = z.discriminatedUnion("action", [
     })
     .strict(),
 ]);
+export const communityMemberInspection = z.union([
+  communityMemberMutation.options[0],
+  communityMemberMutation.options[1].omit({ currentPassword: true }),
+]);
 export const memberMergePreview = z
   .object({
     sourceId: uuid,

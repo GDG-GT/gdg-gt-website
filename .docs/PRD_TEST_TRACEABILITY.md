@@ -155,3 +155,9 @@ retained scope/review, current-denial clearing, account/session cancellation,
 explicit offline recheck and guarded private navigation. SQL/server/client/browser/
 actual-local sources are linked in `PRIVACY_READ_RECOVERY.md`. The catalog now has
 160 unverified logical cases; no full requirement or release status is promoted.
+
+The directory case now also maps session-scoped ordinary member mutation receipts,
+current-authority metadata-only inspection, exact explicit retries with fresh
+lifecycle proof, unknown/offline cancellation and reviewed stopping. SQL/client/
+route/browser/native evidence is in `MEMBER_WRITE_RECOVERY.md`; merge preview/
+commit original-outcome and full manual/device/visual/hosted acceptance remain open.

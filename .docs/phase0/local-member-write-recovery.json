@@ -1,0 +1,252 @@
+{
+  "generatedAt": "2026-11-06T16:50:16.612Z",
+  "completed": true,
+  "cleanup": true,
+  "scope": "Dedicated loopback owned fictional records/account only. Native create/update/archive before/after loss, read-only original inspection and fresh-proof retry, ten simultaneous creates and stale/old replay. No provider/production/real chapter changes. Fixture records archived, account disabled/sessions revoked; private tombstones/audit remain, no physical-erasure claim. No raw contacts/proof/body/keys/credentials retained in report.",
+  "tests": [
+    {
+      "name": "create before lost reply freezes original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only create before inspection leaves saved rows unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original create before inspection uses exact document/key without password at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "explicit create retry preserves original fields/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "only one create transition commits after before loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "update before lost reply freezes original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only update before inspection leaves saved rows unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original update before inspection uses exact document/key without password at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "explicit update retry preserves original fields/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "only one update transition commits after before loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "archive before lost reply freezes original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only archive before inspection leaves saved rows unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original archive before inspection uses exact document/key without password at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "explicit archive retry preserves original fields/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "only one archive transition commits after before loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "create after lost reply freezes original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only create after inspection leaves saved rows unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original create after inspection uses exact document/key without password at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "only one create transition commits after after loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "update after lost reply freezes original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only update after inspection leaves saved rows unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original update after inspection uses exact document/key without password at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "only one update transition commits after after loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "confirmed real member recovery passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "archive after lost reply freezes original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "read-only archive after inspection leaves saved rows unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "original archive after inspection uses exact document/key without password at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "only one archive transition commits after after loss at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "member write recovery has no unexpected egress errors or overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "create before lost reply freezes original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only create before inspection leaves saved rows unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original create before inspection uses exact document/key without password at 375×812",
+      "passed": true
+    },
+    {
+      "name": "explicit create retry preserves original fields/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "only one create transition commits after before loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "update before lost reply freezes original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only update before inspection leaves saved rows unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original update before inspection uses exact document/key without password at 375×812",
+      "passed": true
+    },
+    {
+      "name": "explicit update retry preserves original fields/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "only one update transition commits after before loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "archive before lost reply freezes original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only archive before inspection leaves saved rows unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original archive before inspection uses exact document/key without password at 375×812",
+      "passed": true
+    },
+    {
+      "name": "explicit archive retry preserves original fields/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "only one archive transition commits after before loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "create after lost reply freezes original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only create after inspection leaves saved rows unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original create after inspection uses exact document/key without password at 375×812",
+      "passed": true
+    },
+    {
+      "name": "only one create transition commits after after loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "update after lost reply freezes original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only update after inspection leaves saved rows unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original update after inspection uses exact document/key without password at 375×812",
+      "passed": true
+    },
+    {
+      "name": "only one update transition commits after after loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "confirmed real member recovery passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "archive after lost reply freezes original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "read-only archive after inspection leaves saved rows unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "original archive after inspection uses exact document/key without password at 375×812",
+      "passed": true
+    },
+    {
+      "name": "only one archive transition commits after after loss at 375×812",
+      "passed": true
+    },
+    {
+      "name": "member write recovery has no unexpected egress errors or overflow at 375×812",
+      "passed": true
+    },
+    {
+      "name": "ten simultaneous identical member creates return one owned record",
+      "passed": true
+    },
+    {
+      "name": "accepted old member replay preserves a newer saved edit",
+      "passed": true
+    },
+    {
+      "name": "new stale member request conflicts instead of overwriting current record",
+      "passed": true
+    }
+  ]
+}

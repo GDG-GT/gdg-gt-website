@@ -372,7 +372,8 @@ const teams = [
     "Public profiles versus private directory/accounts",
     [unit("members"), sql("058_community_members"), unit("public-collections"),
       "tests/client/member-directory-read-recovery.test.tsx", "tests/browser/member-directory-reads.spec.ts", local("member-read-recovery"),
-      "tests/client/member-merge-read-recovery.test.tsx", "tests/browser/member-merge-reads.spec.ts", sql("132_member_selection_reads"), local("member-selection")],
+      "tests/client/member-merge-read-recovery.test.tsx", "tests/browser/member-merge-reads.spec.ts", sql("132_member_selection_reads"), local("member-selection"),
+      "tests/client/member-write-recovery.test.tsx", "tests/browser/member-write-recovery.spec.ts", sql("133_member_write_replay"), local("member-write-recovery")],
   ],
   [
     "TEAM-002",

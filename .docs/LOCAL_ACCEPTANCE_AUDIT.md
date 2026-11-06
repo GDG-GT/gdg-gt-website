@@ -2,7 +2,7 @@
 
 Source inspection after respondent recovery checkpoint 131. These are concrete
 remaining local findings, not an exhaustive acceptance certificate. All 146
-numbered requirements and 159 logical acceptance cases remain unverified against
+numbered requirements and 160 logical acceptance cases remain unverified against
 the complete PRD definition; hosted/device/manual/approved-visual gates cannot
 be inferred from local tests.
 
@@ -12,8 +12,10 @@ be inferred from local tests.
    implemented and verified locally (`MEMBER_READ_RECOVERY.md`). Complete eligible
    merge candidate paging, current source-bound independent selected-target reads
    and the destination-team ceiling are now addressed locally in
-   `MEMBER_SELECTION_RECOVERY.md`, applied migration 132. Ordinary member and
-   merge original-outcome mutation recovery remains. Preserve source/target/
+   `MEMBER_SELECTION_RECOVERY.md`. Ordinary create/update/archive/restore/profile-
+   sync/unmerge original-outcome recovery is now implemented locally in
+   `MEMBER_WRITE_RECOVERY.md`, applied migration 133. Merge review/commit unknown-
+   outcome recovery remains. Preserve source/target/
    revision/current proof/profile rules and CSV transfers while completing it.
 2. Contact inbox: selected refresh/retry, retained dated snapshots/proposals,
    denial/context/offline clearing, malformed-result refusal, reviewed stale reload,

@@ -146,7 +146,8 @@ beforeEach(() => {
   });
   transport.mockImplementation(
     async (path: string, options: { method?: string } = {}) => {
-      if (options.method === "POST") return { id };
+      if (options.method === "POST")
+        return { id, revision: 1, profileId: null };
       const kind = category(path);
       if (failures.has(kind)) throw failures.get(kind);
       if (kind === "permissions") return cap;

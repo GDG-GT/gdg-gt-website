@@ -8,6 +8,48 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Ordinary member original-outcome mutation recovery — 2026-11-06
+
+- Migration 133 adds current-session/action/scope/body/key-bound read-only receipt
+  inspection and atomic ordinary member writes. Existing revision/profile/proof
+  semantics remain in the underlying mutation. Current authority precedes hash/
+  receipt disclosure; only ID/revision/profile ID are retained. Identical creates
+  yield one record, accepted older updates preserve later edits, and new stale
+  requests conflict. Inspection needs no retained password; explicit lifecycle
+  retries require freshly entered proof. Receipts are bounded to the original
+  sign-in session and expire under existing idempotency policy.
+- The directory freezes unknown original fields/scope/revision/key in memory,
+  pauses polling/changes/navigation, inspects before explicit identical retry,
+  rechecks after second loss/offline, fences the 47-hour safe retry window and
+  clears private state on denial/session/account/context change. Reviewed stopping
+  cannot imply undo or a confirmed outcome. In-flight offline save cancellation
+  preserves intent and ignores late acknowledgement. Malformed/older revision
+  receipts are refused; current password rejection is separate from access loss.
+- Both 133-migration chains pass (240/241 checks), both 100-client races and six
+  restore checks pass; applied locally. Initial unapplied SQL missing parenthesis
+  fixed before successful chains/application. Added SQL tests cover restore as
+  inactive, one unpublished synchronized profile, unmerge semantics, accepted
+  replay without retained proof and receipt expiry. Applied SQL is immutable.
+- All 108 combined focused ordinary/read/picker/transfer/server cases pass,
+  including 19 new ordinary write cases. All 48 final production-browser cases
+  pass across six profiles, no skips; populated axe/overflow pass and mobile
+  unknown-create capture inspected, unapproved. All 61 actual owned API/DB/native
+  desktop-mobile checks pass: before/after create/update/archive losses, unchanged
+  rows during inspection, exact original password-free document/key, fresh-proof
+  retries, ten simultaneous identical creates, old accepted replay and new stale
+  conflict. No unexpected egress/page errors/overflow/providers. Owned records
+  archived, actor disabled/sessions revoked; private tombstones/audit retained.
+- Build/strict types/lint (zero errors/25 existing warnings), budgets/secrets/
+  traceability pass. All 2,558 tests/206 files and all 21 critical 90% branch gates
+  pass. Global lines/branches/statements pass at 73.53%/73.32%/71.87%; functions
+  remain below unchanged 70% at 65.04%. Catalog: 160 unverified logical cases.
+  See `MEMBER_WRITE_RECOVERY.md`.
+- Merge review/commit, contact status/hold and privacy review/commit original-
+  outcome recovery, global function coverage and full manual/device/visual/hosted
+  acceptance remain open. SSO/Google and Bevy/Engage stay deferred; no deployment,
+  real provider sends, production changes, purchases, new timer or AI trailer.
+
+
 ### Person-data privacy cleanup-read and retained review recovery — 2026-11-06
 
 - Cleanup metadata now has named loading/retry, dated retained snapshots and

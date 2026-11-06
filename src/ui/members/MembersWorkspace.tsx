@@ -17,6 +17,12 @@ import { useAdmin } from "@/contexts/AdminContext";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import MemberReadFeedback from "./MemberReadFeedback";
+import MemberWriteRecovery from "./MemberWriteRecovery";
+import {
+  memberIntent,
+  submitMemberWrite,
+  type MemberWriteIntent,
+} from "./member-write";
 import { validationMessage } from "@/lib/validationMessage";
 import {
   communityMemberCreate,
@@ -84,6 +90,7 @@ function MemberDirectory() {
     [confirmation, setConfirmation] = useState("");
   const [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
+    [uncertain, setUncertain] = useState<MemberWriteIntent>(),
     [accessDenied, setAccessDenied] = useState(false),
     [needsRecheck, setNeedsRecheck] = useState(!navigator.onLine),
     [capAttempt, setCapAttempt] = useState(0),
@@ -103,6 +110,10 @@ function MemberDirectory() {
     epoch = useRef(0),
     heading = useRef<HTMLHeadingElement>(null),
     editorHeading = useRef<HTMLHeadingElement>(null);
+  const activeWrite = useRef<{
+    intent: MemberWriteIntent;
+    controller: AbortController;
+  }>();
   const { isOnline } = useOnlineStatus();
   const query = new URLSearchParams({
     q,
@@ -188,6 +199,7 @@ function MemberDirectory() {
     member = detailRead.data?.member,
     activity = activityRead.data;
   const unavailable =
+    !!uncertain ||
     accessDenied ||
     !isOnline ||
     needsRecheck ||
@@ -204,6 +216,8 @@ function MemberDirectory() {
     clearActivity = activityRead.clear;
   const clearPrivate = useCallback(() => {
     epoch.current++;
+    activeWrite.current?.controller.abort();
+    activeWrite.current = undefined;
     clearList();
     clearDetail();
     clearCap();
@@ -221,6 +235,7 @@ function MemberDirectory() {
     baseline.current = undefined;
     snapshot.current = undefined;
     key.current = undefined;
+    setUncertain(undefined);
   }, [clearCap, clearList, clearDetail, clearActivity]);
   const dirty =
     mode === "create" || mode === "update"
@@ -228,7 +243,10 @@ function MemberDirectory() {
       : mode === "merge"
         ? mergeDirty
         : !!mode && !!(password || confirmation);
-  useDraftGuard(dirty, { busy, label: "Private community member changes" });
+  useDraftGuard(dirty || !!uncertain, {
+    busy: busy || !!uncertain,
+    label: "Private community member changes",
+  });
   useEffect(() => {
     if (
       !(
@@ -249,11 +267,21 @@ function MemberDirectory() {
     clearPrivate,
   ]);
   useEffect(() => {
-    if (!isOnline) setNeedsRecheck(true);
+    if (!isOnline) {
+      setNeedsRecheck(true);
+      if (activeWrite.current) {
+        activeWrite.current.controller.abort();
+        setUncertain(activeWrite.current.intent);
+        activeWrite.current = undefined;
+        setBusy(false);
+      }
+    }
   }, [isOnline]);
   useEffect(() => {
     const invalidate = () => {
       epoch.current++;
+      activeWrite.current?.controller.abort();
+      activeWrite.current = undefined;
     };
     return invalidate;
   }, []);
@@ -263,14 +291,16 @@ function MemberDirectory() {
         navigator.onLine &&
         !document.hidden &&
         !accessDenied &&
-        !needsRecheck
+        !needsRecheck &&
+        !uncertain &&
+        !busy
       )
         setTick((v) => v + 1);
     }, 30000);
     return () => {
       window.clearInterval(timer);
     };
-  }, [accessDenied, needsRecheck]);
+  }, [accessDenied, needsRecheck, uncertain, busy]);
   const recheck = () => {
     if (!navigator.onLine || busy) return;
     setAccessDenied(false);
@@ -289,6 +319,7 @@ function MemberDirectory() {
     setMergeDirty(false);
     baseline.current = undefined;
     key.current = undefined;
+    setUncertain(undefined);
   };
   const leave = (run: () => void) => {
     const next = () => {
@@ -371,6 +402,7 @@ function MemberDirectory() {
       !mode ||
       mode === "merge" ||
       busy ||
+      activeWrite.current ||
       unavailable ||
       stale ||
       denied ||
@@ -382,6 +414,7 @@ function MemberDirectory() {
     setPassword("");
     setBusy(true);
     setError("");
+    let original: MemberWriteIntent | undefined;
     try {
       const record =
         mode === "create" || mode === "update"
@@ -415,18 +448,19 @@ function MemberDirectory() {
         unknown
       >;
       void omitted;
-      const identity = mode + ":" + selected + JSON.stringify(fingerprint);
-      if (key.current?.identity !== identity)
-        key.current = { identity, value: crypto.randomUUID() };
-      const result = await api<{ id: string }>(
+      original = memberIntent(
         base + (mode === "create" ? "" : "/" + selected),
-        {
-          method: "POST",
-          body,
-          protected: true,
-          idempotencyKey: key.current.value,
-        },
+        mode,
+        fingerprint,
       );
+      const controller = new AbortController();
+      activeWrite.current = { intent: original, controller };
+      const result = await submitMemberWrite(
+        original,
+        controller.signal,
+        secret,
+      );
+      if (controller.signal.aborted) return;
       if (current === epoch.current)
         finished(
           result.id,
@@ -436,6 +470,13 @@ function MemberDirectory() {
         );
     } catch (e) {
       if (current === epoch.current) {
+        if (original && activeWrite.current?.controller.signal.aborted) return;
+        if (original && (!(e instanceof ApiFailure) || e.status >= 500)) {
+          setUncertain(original);
+          setError("");
+          return;
+        }
+
         if (
           e instanceof ApiFailure &&
           ["FORBIDDEN", "NOT_FOUND"].includes(e.code)
@@ -448,6 +489,8 @@ function MemberDirectory() {
         setError(validationMessage(e, "Check the community member fields."));
       }
     } finally {
+      if (activeWrite.current?.intent === original)
+        activeWrite.current = undefined;
       if (current === epoch.current) setBusy(false);
     }
   }
@@ -478,7 +521,7 @@ function MemberDirectory() {
           </Button>
           <Button
             variant="secondary"
-            disabled={busy || !isOnline}
+            disabled={busy || !!uncertain || !isOnline}
             onClick={recheck}
           >
             Recheck member access
@@ -498,6 +541,32 @@ function MemberDirectory() {
           ...(core ? { core: core === "true" } : {}),
         }}
       />
+      {uncertain && (
+        <MemberWriteRecovery
+          key={uncertain.key}
+          intent={uncertain}
+          onConfirmed={(receipt) =>
+            finished(
+              receipt.id,
+              uncertain.action === "sync_profile"
+                ? "Original draft public profile synchronization confirmed. Review it in Public team."
+                : "Original community member save confirmed.",
+            )
+          }
+          onDenied={() => {
+            clearPrivate();
+            setAccessDenied(true);
+          }}
+          onBusy={setBusy}
+          onStop={() => {
+            clearPrivate();
+            setTick((v) => v + 1);
+            setNotice(
+              "Member recovery stopped. The original outcome remains unconfirmed; inspect current records before another save.",
+            );
+          }}
+        />
+      )}
       {notice && <p role="status">{notice}</p>}
       {error && (
         <p className="gt-form-error" role="alert">
@@ -525,14 +594,14 @@ function MemberDirectory() {
             read={capRead}
             offline={!isOnline}
             retry={() => setCapAttempt((v) => v + 1)}
-            disabled={busy || !isOnline || needsRecheck}
+            disabled={busy || !!uncertain || !isOnline || needsRecheck}
           />
           <MemberReadFeedback
             name="member inventory"
             read={listRead}
             offline={!isOnline}
             retry={() => setListAttempt((v) => v + 1)}
-            disabled={busy || !isOnline || needsRecheck}
+            disabled={busy || !!uncertain || !isOnline || needsRecheck}
           />
           {selected && (
             <>
@@ -541,14 +610,14 @@ function MemberDirectory() {
                 read={detailRead}
                 offline={!isOnline}
                 retry={() => setDetailAttempt((v) => v + 1)}
-                disabled={busy || !isOnline || needsRecheck}
+                disabled={busy || !!uncertain || !isOnline || needsRecheck}
               />
               <MemberReadFeedback
                 name="member activity"
                 read={activityRead}
                 offline={!isOnline}
                 retry={() => setActivityAttempt((v) => v + 1)}
-                disabled={busy || !isOnline || needsRecheck}
+                disabled={busy || !!uncertain || !isOnline || needsRecheck}
               />
             </>
           )}
@@ -633,7 +702,7 @@ function MemberDirectory() {
             <Button
               type="button"
               variant="secondary"
-              disabled={busy}
+              disabled={busy || !!uncertain}
               onClick={() => leave(() => {})}
             >
               Close editor
@@ -669,7 +738,8 @@ function MemberDirectory() {
           }
         />
       )}
-      <section
+      <fieldset
+        disabled={busy || !!uncertain}
         aria-label="Community member filters"
         className="gt-toolbar gt-response-filters"
       >
@@ -744,7 +814,7 @@ function MemberDirectory() {
             <option value="false">Not marked core</option>
           </select>
         </Field>
-      </section>
+      </fieldset>
       {listing && (
         <>
           <p role="status">

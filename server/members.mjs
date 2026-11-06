@@ -13,6 +13,7 @@ import { tokenHash, riskHash, verifySecret } from "./lib/security.mjs";
 import {
   communityMemberCreate,
   communityMemberMutation,
+  communityMemberInspection,
   memberCategories,
   memberMergePreview,
   memberMergeCommit,
@@ -24,13 +25,16 @@ export async function memberRoutes(
 ) {
   const url = new URL(request.url, config.origin),
     match = url.pathname.match(
-      /^\/api\/v1\/admin\/members(?:\/([^/]+))?(?:\/(activity|merge-candidates|merge-target)(?:\/([^/]+))?)?$/,
+      /^\/api\/v1\/admin\/members(?:\/([^/]+))?(?:\/(activity|merge-candidates|merge-target|recovery)(?:\/([^/]+))?)?$/,
     );
   if (!match) return false;
-  const kind = ["capabilities", "merge-preview", "merge"].includes(match[1])
+  const kind = ["capabilities", "merge-preview", "merge", "recovery"].includes(
+      match[1],
+    )
       ? match[1]
       : null,
     id = match[1] && !kind ? parse(uuid, match[1]) : null,
+    recovering = kind === "recovery" || match[2] === "recovery",
     activity = match[2] === "activity",
     selection = ["merge-candidates", "merge-target"].includes(match[2]);
   if (
@@ -42,13 +46,15 @@ export async function memberRoutes(
   allowMethod(
     request,
     response,
-    kind === "capabilities" || activity || selection
-      ? ["GET"]
-      : kind
-        ? ["POST"]
-        : id
-          ? ["GET", "PATCH", "POST", "DELETE"]
-          : ["GET", "POST"],
+    recovering
+      ? ["POST"]
+      : kind === "capabilities" || activity || selection
+        ? ["GET"]
+        : kind
+          ? ["POST"]
+          : id
+            ? ["GET", "PATCH", "POST", "DELETE"]
+            : ["GET", "POST"],
   );
   const session = await requireSession(request, store, config),
     actor = session.user;
@@ -270,7 +276,7 @@ export async function memberRoutes(
   }
   await requireCsrf(request, session, store);
   queryValues(url.searchParams, z.object({}).strict());
-  await quota("members.mutation", 120, 60);
+  await quota(recovering ? "members.recovery" : "members.mutation", 120, 60);
   const key = idempotency(request);
   if (kind === "merge-preview") {
     if (!["admin", "super_admin"].includes(actor.role))
@@ -312,11 +318,28 @@ export async function memberRoutes(
       kind === "merge"
         ? memberMergeCommit
         : id
-          ? communityMemberMutation
+          ? recovering
+            ? communityMemberInspection
+            : communityMemberMutation
           : communityMemberCreate,
       32768,
     ),
     { currentPassword, ...document } = body;
+  if (recovering)
+    return reply(
+      checked(
+        await db.rpc("inspect_community_member_write", {
+          p_actor: actor.id,
+          p_session: session.sessionId,
+          p_id: id,
+          p_action: id ? document.action : "create",
+          p_revision: document.revision || null,
+          p_document: document,
+          p_key_hash: tokenHash(key),
+          p_request_hash: tokenHash(JSON.stringify(document)),
+        }),
+      ),
+    );
   let verified = null;
   if (kind === "merge" && !["admin", "super_admin"].includes(actor.role))
     throw new ApiError(
@@ -367,7 +390,7 @@ export async function memberRoutes(
   }
   return reply(
     checked(
-      await db.rpc("mutate_community_member", {
+      await db.rpc("mutate_community_member_write", {
         p_actor: actor.id,
         p_session: session.sessionId,
         p_verified_hash: verified,

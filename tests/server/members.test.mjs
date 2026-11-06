@@ -156,7 +156,7 @@ describe("community member HTTP boundaries", () => {
       (await f.call("", { record: record(), teamId: null })).statusCode,
     ).toBe(200);
     expect(f.db.rpc).toHaveBeenCalledExactlyOnceWith(
-      "mutate_community_member",
+      "mutate_community_member_write",
       expect.objectContaining({
         p_actor: actor,
         p_session: sessionId,
@@ -481,6 +481,77 @@ describe("source-bound merge reads and complete creation destinations", () => {
       expect(
         (await f.call("/" + source + suffix, undefined, {}, "GET")).statusCode,
       ).toBe(404);
+    expect(f.db.rpc).not.toHaveBeenCalled();
+  });
+});
+
+describe("ordinary member original-outcome recovery route", () => {
+  it("inspects the exact create document/key read-only under current session and CSRF", async () => {
+    const f = fixture();
+    f.db.rpc.mockResolvedValue({
+      data: {
+        committed: false,
+        canRetry: true,
+        currentRevision: 0,
+        receipt: null,
+      },
+    });
+    const r = await f.call("/recovery", { record: record(), teamId: null });
+    expect(r.statusCode).toBe(200);
+    expect(f.db.rpc).toHaveBeenCalledExactlyOnceWith(
+      "inspect_community_member_write",
+      expect.objectContaining({
+        p_actor: actor,
+        p_session: sessionId,
+        p_id: null,
+        p_action: "create",
+        p_document: { record: record(), teamId: null },
+      }),
+    );
+  });
+  it("inspection requires no retained password and never verifies or mutates the actor proof", async () => {
+    const f = fixture();
+    const body = { action: "archive", revision: 3, confirmation: "FICTIONAL" };
+    const r = await f.call("/" + source + "/recovery", body);
+    expect(r.statusCode).toBe(200);
+    expect(f.store.accountByEmail).not.toHaveBeenCalled();
+    expect(f.db.rpc).toHaveBeenCalledWith(
+      "inspect_community_member_write",
+      expect.objectContaining({
+        p_id: source,
+        p_action: "archive",
+        p_revision: 3,
+        p_document: body,
+      }),
+    );
+  });
+  it("refuses a supplied password in inspection and does not allow GET recovery", async () => {
+    const f = fixture();
+    expect(
+      (
+        await f.call("/" + source + "/recovery", {
+          action: "archive",
+          revision: 1,
+          confirmation: "FICTIONAL",
+          currentPassword: "must not retain",
+        })
+      ).statusCode,
+    ).toBe(400);
+    expect((await f.call("/recovery", undefined, {}, "GET")).statusCode).toBe(
+      405,
+    );
+    expect(f.db.rpc).not.toHaveBeenCalled();
+  });
+  it("rejects recovery with missing CSRF or changed origin before receipt lookup", async () => {
+    const f = fixture();
+    for (const headers of [
+      { "x-csrf-token": "" },
+      { origin: "https://other.example.test" },
+    ])
+      expect(
+        (await f.call("/recovery", { record: record(), teamId: null }, headers))
+          .statusCode,
+      ).toBe(403);
     expect(f.db.rpc).not.toHaveBeenCalled();
   });
 });

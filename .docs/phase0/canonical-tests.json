@@ -133,7 +133,8 @@
     "202611060129_form_integration_replay.sql",
     "202611060130_form_upload_intent_replay.sql",
     "202611060131_respondent_draft_replay.sql",
-    "202611060132_member_selection_reads.sql"
+    "202611060132_member_selection_reads.sql",
+    "202611060133_member_write_replay.sql"
   ],
   "tests": [
     {
@@ -669,6 +670,10 @@
       "passed": true
     },
     {
+      "name": "202611060133_member_write_replay.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -1078,6 +1083,10 @@
     },
     {
       "name": "132_member_selection_reads.sql",
+      "passed": true
+    },
+    {
+      "name": "133_member_write_replay.sql",
       "passed": true
     },
     {
