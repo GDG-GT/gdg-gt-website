@@ -542,6 +542,11 @@ add(
     "tests/client/contact-inbox-read-recovery.test.tsx",
     "tests/browser/contact-inbox-reads.spec.ts",
     local("contact-inbox-reads"),
+    sql("134_contact_write_replay"),
+    "tests/server/contact-write-recovery.test.mjs",
+    "tests/client/contact-write-recovery.test.tsx",
+    "tests/browser/contact-write-recovery.spec.ts",
+    local("contact-write-recovery"),
   ],
 );
 add(

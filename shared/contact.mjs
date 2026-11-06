@@ -85,3 +85,19 @@ export const contactMutation = z
         path: ["confirmation"],
       });
   });
+export const contactMutationInspection = z
+  .discriminatedUnion("action", [
+    contactMutation.options[0],
+    contactMutation.options[1].omit({ currentPassword: true }),
+  ])
+  .superRefine((v, ctx) => {
+    if (
+      v.action === "hold" &&
+      (v.confirmation !== (v.enabled ? "HOLD CONTACT" : "RELEASE HOLD") ||
+        (v.enabled && v.reason.length < 10))
+    )
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Review the retention hold and confirmation again.",
+      });
+  });

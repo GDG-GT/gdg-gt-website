@@ -379,6 +379,7 @@ try {
   data(
     await admin.call(path, {
       method: "POST",
+      key: randomUUID(),
       body: {
         action: "status",
         revision: inquiry.revision,
@@ -391,6 +392,7 @@ try {
     (
       await admin.call(path, {
         method: "POST",
+        key: randomUUID(),
         body: { action: "status", revision: 1, status: "new" },
       })
     ).status === 409,
@@ -400,6 +402,7 @@ try {
     (
       await admin.call(path, {
         method: "POST",
+        key: randomUUID(),
         body: {
           action: "hold",
           revision: inquiry.revision,
@@ -415,6 +418,7 @@ try {
   data(
     await admin.call(path, {
       method: "POST",
+      key: randomUUID(),
       body: {
         action: "hold",
         revision: inquiry.revision,
@@ -465,6 +469,7 @@ try {
   data(
     await admin.call(path, {
       method: "POST",
+      key: randomUUID(),
       body: {
         action: "hold",
         revision: inquiry.revision,

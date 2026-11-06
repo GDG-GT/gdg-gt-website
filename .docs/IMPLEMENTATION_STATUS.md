@@ -8,6 +8,35 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+
+### Contact status and retention-hold original-outcome recovery — 2026-11-06
+
+- Applied migration 134 binds atomic status/hold writes and password-free receipt
+  inspection to current actor/session/contact/body/key. Current permission and
+  non-redaction precede receipt/hash disclosure. Minimal ID/revision/action
+  receipts preserve newer edits on old accepted replay; new stale requests conflict.
+  New hold/release retries require fresh proof; accepted inspection retains none.
+- Unknown UI intent is frozen in memory with explicit inspection/identical retry,
+  offline/late-result fencing, 47-hour safety window, denial/session clearing and
+  reviewed stopping followed by a current-record load. Contradictory receipt/current
+  revisions and wrong record/action acknowledgements are refused.
+- Both SQL chains pass (242/243), both 100-client races and six restore checks pass.
+  All 62 combined focused cases pass. Initial combined production-browser read/write
+  run passes 60 cases; stricter run had one unexplained blank initial Chromium
+  startup (35/36), retained in evidence. Diagnostic full write rerun passes 36/36
+  across six profiles with unchanged gates/timeouts; cause not claimed resolved.
+  All 65 actual local API/DB/native desktop-mobile checks pass, including applying/
+  releasing holds, ten concurrent identical saves and current access loss. Owned
+  contacts redacted, actor disabled/sessions revoked, no provider/production effects.
+- All 2,591 tests/208 files and all 21 critical branch gates pass. Global coverage
+  lines/branches/statements: 73.78%/73.46%/72.10%; function gate still fails at 65.25%.
+  Build/types/lint (zero errors/25 existing warnings), budgets/secrets/traceability
+  pass. Catalog remains 160 unverified cases. See `CONTACT_WRITE_RECOVERY.md`.
+- Merge review/commit and person-data privacy review/commit recovery, function
+  coverage and complete role/manual/device/visual/hosted acceptance remain open.
+  SSO/Google and Bevy/Engage stay deferred; no deployment, provider sends,
+  production changes, purchases, new timer or AI commit trailer.
+
 ### Ordinary member original-outcome mutation recovery — 2026-11-06
 
 - Migration 133 adds current-session/action/scope/body/key-bound read-only receipt

@@ -140,7 +140,7 @@ beforeEach(() => {
           status: o.body?.status || record.status,
           revision: record.revision + 1,
         };
-        return { id, revision: record.revision };
+        return { id, revision: record.revision, action: "status" };
       }
       const op = kind(path);
       if (failures.has(op)) throw failures.get(op);

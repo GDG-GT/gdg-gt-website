@@ -161,3 +161,8 @@ current-authority metadata-only inspection, exact explicit retries with fresh
 lifecycle proof, unknown/offline cancellation and reviewed stopping. SQL/client/
 route/browser/native evidence is in `MEMBER_WRITE_RECOVERY.md`; merge preview/
 commit original-outcome and full manual/device/visual/hosted acceptance remain open.
+
+The contact inbox case now also maps current-session original status/hold mutation
+receipt inspection, atomic exact replay, fresh hold/release proof, current access/
+redaction fences and reviewed stopping. See `CONTACT_WRITE_RECOVERY.md`; local
+checks do not close manual/device/visual/hosted approval.

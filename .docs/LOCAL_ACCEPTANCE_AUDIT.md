@@ -21,8 +21,9 @@ be inferred from local tests.
    denial/context/offline clearing, malformed-result refusal, reviewed stale reload,
    immediate redaction clearing and scoped short-lived attachment links are now
    implemented locally (`CONTACT_INBOX_READ_RECOVERY.md`). Status/hold mutation
-   unknown-outcome recovery is still required; current backend revision checks
-   alone do not reconcile an accepted-but-lost reply. Do not introduce sends.
+   original-outcome recovery is now implemented locally (`CONTACT_WRITE_RECOVERY.md`,
+   applied migration 134). Minimal current-session receipts and exact fresh-proof
+   retries cover accepted-but-lost replies; full acceptance remains separate.
 3. Person-data privacy: retained timestamped cleanup metadata, explicit initial/
    background/stuck-read retry, current-denial private clearing, account/session
    isolation, offline approval fencing and guarded review navigation are now
@@ -30,8 +31,8 @@ be inferred from local tests.
    unknown-outcome reconciliation remains; preserve exact source/hold/expiry/
    password proof and the single-use export limitation. Never describe logical
    deletion or pending cleanup as physical erasure.
-4. Global coverage: at checkpoint 130, functions (62.40%) and statements (69.44%)
-   failed the unchanged 70% gate. Do not exclude active modules, lower gates or
+4. Global coverage: at checkpoint 134, functions (65.25%) still fail the
+   unchanged 70% gate; lines/branches/statements pass. Do not exclude active modules, lower gates or
    replace behavior verification with mirrored implementation assertions. Add
    meaningful recovery/role/keyboard workflow tests while addressing these gaps.
 

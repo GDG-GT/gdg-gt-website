@@ -1,0 +1,303 @@
+{
+  "generatedAt": "2026-11-06T17:09:22.649Z",
+  "completed": true,
+  "stats": {
+    "startTime": "2026-11-06T17:08:09.794Z",
+    "duration": 62743.964,
+    "expected": 36,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "note": "Final production-build fixtures with startup diagnostics and failure traces; 36 passed with unchanged gates/timeouts. Prior stricter run had one unexplained blank startup (35 passed/1 failed), retained separately, not erased or claimed resolved causally. Earlier combined reads/write 60 passed. Automated axe/overflow and browser emulation only; screenshots unapproved, manual/device/hosted acceptance open.",
+  "tests": [
+    {
+      "name": "inquiry status before acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status after acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold before acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold after acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry original outcome denial clears private proposal instead of creating another record",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry reviewed stopping clears uncertain fields and never sends a replacement",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status before acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status after acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold before acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold after acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry original outcome denial clears private proposal instead of creating another record",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry reviewed stopping clears uncertain fields and never sends a replacement",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status before acceptance loss preserves original fields scope revision key",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status after acceptance loss preserves original fields scope revision key",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold before acceptance loss preserves original fields scope revision key",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold after acceptance loss preserves original fields scope revision key",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry original outcome denial clears private proposal instead of creating another record",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry reviewed stopping clears uncertain fields and never sends a replacement",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status before acceptance loss preserves original fields scope revision key",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status after acceptance loss preserves original fields scope revision key",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold before acceptance loss preserves original fields scope revision key",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold after acceptance loss preserves original fields scope revision key",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry original outcome denial clears private proposal instead of creating another record",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry reviewed stopping clears uncertain fields and never sends a replacement",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status before acceptance loss preserves original fields scope revision key",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status after acceptance loss preserves original fields scope revision key",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold before acceptance loss preserves original fields scope revision key",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold after acceptance loss preserves original fields scope revision key",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry original outcome denial clears private proposal instead of creating another record",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry reviewed stopping clears uncertain fields and never sends a replacement",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status before acceptance loss preserves original fields scope revision key",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status after acceptance loss preserves original fields scope revision key",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold before acceptance loss preserves original fields scope revision key",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold after acceptance loss preserves original fields scope revision key",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry original outcome denial clears private proposal instead of creating another record",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry reviewed stopping clears uncertain fields and never sends a replacement",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    }
+  ]
+}

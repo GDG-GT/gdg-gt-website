@@ -1,0 +1,495 @@
+{
+  "generatedAt": "2026-11-06T17:06:37.918Z",
+  "completed": true,
+  "stats": {
+    "startTime": "2026-11-06T17:04:54.744Z",
+    "duration": 92025.824,
+    "expected": 60,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "note": "Production-build fixtures only; local automated evidence, unapproved screenshots, no manual Safari/device/hosted approval.",
+  "tests": [
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status before acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status after acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold before acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold after acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry original outcome denial clears private proposal instead of creating another record",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry reviewed stopping clears uncertain fields and never sends a replacement",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status before acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status after acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold before acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold after acceptance loss preserves original fields scope revision key",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry original outcome denial clears private proposal instead of creating another record",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry reviewed stopping clears uncertain fields and never sends a replacement",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status before acceptance loss preserves original fields scope revision key",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status after acceptance loss preserves original fields scope revision key",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold before acceptance loss preserves original fields scope revision key",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold after acceptance loss preserves original fields scope revision key",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry original outcome denial clears private proposal instead of creating another record",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry reviewed stopping clears uncertain fields and never sends a replacement",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status before acceptance loss preserves original fields scope revision key",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status after acceptance loss preserves original fields scope revision key",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold before acceptance loss preserves original fields scope revision key",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold after acceptance loss preserves original fields scope revision key",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry original outcome denial clears private proposal instead of creating another record",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry reviewed stopping clears uncertain fields and never sends a replacement",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status before acceptance loss preserves original fields scope revision key",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status after acceptance loss preserves original fields scope revision key",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold before acceptance loss preserves original fields scope revision key",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold after acceptance loss preserves original fields scope revision key",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry original outcome denial clears private proposal instead of creating another record",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry reviewed stopping clears uncertain fields and never sends a replacement",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status before acceptance loss preserves original fields scope revision key",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry status after acceptance loss preserves original fields scope revision key",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold before acceptance loss preserves original fields scope revision key",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry hold after acceptance loss preserves original fields scope revision key",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry original outcome denial clears private proposal instead of creating another record",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "inquiry reviewed stopping clears uncertain fields and never sends a replacement",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    }
+  ]
+}

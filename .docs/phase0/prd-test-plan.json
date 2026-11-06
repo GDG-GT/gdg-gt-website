@@ -1252,7 +1252,12 @@
         "scripts/test-local-contact-files.mjs",
         "tests/client/contact-inbox-read-recovery.test.tsx",
         "tests/browser/contact-inbox-reads.spec.ts",
-        "scripts/test-local-contact-inbox-reads.mjs"
+        "scripts/test-local-contact-inbox-reads.mjs",
+        "database/tests/134_contact_write_replay.sql",
+        "tests/server/contact-write-recovery.test.mjs",
+        "tests/client/contact-write-recovery.test.tsx",
+        "tests/browser/contact-write-recovery.spec.ts",
+        "scripts/test-local-contact-write-recovery.mjs"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"

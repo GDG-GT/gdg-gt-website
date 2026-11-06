@@ -3,6 +3,12 @@ import { useAdmin } from "@/contexts/AdminContext";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import ScrollableTable from "../ScrollableTable";
+import InquiryWriteRecovery from "./InquiryWriteRecovery";
+import {
+  inquiryIntent,
+  submitInquiryWrite,
+  type InquiryWriteIntent,
+} from "./inquiry-write";
 import { authorizedPrivateDownload } from "../forms/private-download";
 import { api, ApiFailure } from "@/lib/api";
 import { usePrivateOperation } from "@/hooks/usePrivateOperation";
@@ -103,19 +109,89 @@ function InquiryReview({
       filename: string;
       expiresAt: number;
     }>();
-  const { busy, error, work } = usePrivateOperation(),
-    safety = useNavigationSafety();
+  const { busy: fileBusy, error: fileError, work } = usePrivateOperation(),
+    safety = useNavigationSafety(),
+    [writeBusy, setWriteBusy] = useState(false),
+    [recoveryBusy, setRecoveryBusy] = useState(false),
+    [writeError, setWriteError] = useState(""),
+    [uncertain, setUncertain] = useState<InquiryWriteIntent>(),
+    [writeConflict, setWriteConflict] = useState(false),
+    activeWrite = useRef<{
+      intent: InquiryWriteIntent;
+      controller: AbortController;
+    }>(),
+    mounted = useRef(true),
+    busy = fileBusy || writeBusy || recoveryBusy,
+    error = writeError || fileError,
+    locked = busy || paused || stale || !!uncertain || writeConflict;
   useEffect(() => {
-    onBusy(busy);
-  }, [busy, onBusy]);
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      activeWrite.current?.controller.abort();
+    };
+  }, []);
+  useEffect(() => {
+    const offline = () => {
+      if (activeWrite.current) {
+        activeWrite.current.controller.abort();
+        setUncertain(activeWrite.current.intent);
+        activeWrite.current = undefined;
+        setWriteBusy(false);
+      }
+    };
+    window.addEventListener("offline", offline);
+    return () => window.removeEventListener("offline", offline);
+  }, []);
+  async function saveOriginal(
+    document: Record<string, unknown>,
+    proof?: string,
+  ) {
+    if (locked || activeWrite.current || !navigator.onLine) return;
+    const intent = inquiryIntent(path, String(document.action), document),
+      controller = new AbortController();
+    activeWrite.current = { intent, controller };
+    setWriteBusy(true);
+    setWriteError("");
+    setPassword("");
+    setCapability(undefined);
+    try {
+      await submitInquiryWrite(intent, controller.signal, proof);
+      if (mounted.current && !controller.signal.aborted) onSaved();
+    } catch (e) {
+      if (!mounted.current || controller.signal.aborted) return;
+      if (
+        e instanceof ApiFailure &&
+        (e.status === 401 ||
+          e.status === 404 ||
+          (e.status === 403 && e.code !== "PASSWORD_REQUIRED"))
+      ) {
+        onDenied();
+        return;
+      }
+      if (!(e instanceof ApiFailure) || e.status >= 500) {
+        setUncertain(intent);
+        return;
+      }
+      if (e.status === 409) setWriteConflict(true);
+      setWriteError(e.message);
+    } finally {
+      if (activeWrite.current?.intent === intent)
+        activeWrite.current = undefined;
+      if (mounted.current && !controller.signal.aborted) setWriteBusy(false);
+    }
+  }
+  useEffect(() => {
+    onBusy(busy || !!uncertain);
+  }, [busy, uncertain, onBusy]);
   useEffect(() => {
     if (paused || stale) {
       attachmentEpoch.current++;
       setCapability(undefined);
     }
   }, [paused, stale]);
-  useDraftGuard(hold || status !== record.status, {
-    busy,
+  useDraftGuard(hold || status !== record.status || !!uncertain, {
+    busy: busy || !!uncertain,
     label: "Contact inquiry review",
   });
   const navigate = (run: () => void) => {
@@ -134,27 +210,17 @@ function InquiryReview({
   }, [capability]);
   const path = "/admin/contact-submissions/" + record.id,
     expected = record.hold ? "RELEASE HOLD" : "HOLD CONTACT";
-  const saveHold = () => {
-    const currentPassword = password;
-    setPassword("");
-    if (paused || stale) return;
-    return work(
-      (signal) =>
-        api(path, {
-          method: "POST",
-          signal,
-          body: {
-            action: "hold",
-            revision: record.revision,
-            enabled: !record.hold,
-            reason,
-            currentPassword,
-            confirmation,
-          },
-        }),
-      onSaved,
+  const saveHold = () =>
+    saveOriginal(
+      {
+        action: "hold",
+        revision: record.revision,
+        enabled: !record.hold,
+        reason,
+        confirmation,
+      },
+      password,
     );
-  };
   return (
     <section
       className="gt-panel gt-contact-inbox-review"
@@ -170,7 +236,7 @@ function InquiryReview({
         </div>
         <Button
           variant="secondary"
-          disabled={busy}
+          disabled={busy || !!uncertain}
           onClick={() => navigate(onClose)}
         >
           Back to inbox
@@ -187,12 +253,49 @@ function InquiryReview({
             <Button
               type="button"
               variant="secondary"
-              disabled={busy || paused}
+              disabled={busy || paused || !!uncertain}
               onClick={() => navigate(onReload)}
             >
               Review loading current inquiry
             </Button>
           )}
+        </div>
+      )}
+      {uncertain && (
+        <InquiryWriteRecovery
+          key={uncertain.key}
+          intent={uncertain}
+          onConfirmed={() => onSaved()}
+          onDenied={onDenied}
+          onBusy={setRecoveryBusy}
+          onStop={() => {
+            setUncertain(undefined);
+            setPassword("");
+            setConfirmation("");
+            setReason("");
+            setHold(false);
+            setStatus(record.status);
+            setWriteConflict(true);
+            setWriteError(
+              "Inquiry recovery stopped. The original outcome is unconfirmed. Refresh the inquiry before reviewing another change.",
+            );
+          }}
+        />
+      )}
+      {writeConflict && !stale && (
+        <div role="status">
+          <p>
+            Inspect the current saved inquiry before making another change.
+            Loading it clears proposed fields.
+          </p>
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={busy || paused || !!uncertain}
+            onClick={() => navigate(onReload)}
+          >
+            Review loading current inquiry
+          </Button>
         </div>
       )}
       {error && (
@@ -231,9 +334,9 @@ function InquiryReview({
           {record.attachment.canDownload && (
             <Button
               variant="secondary"
-              disabled={busy || paused || stale}
+              disabled={locked}
               onClick={() => {
-                if (paused || stale) return;
+                if (locked) return;
                 const expectedEpoch = attachmentEpoch.current;
                 const startedAt = Date.now();
                 void work(
@@ -274,7 +377,7 @@ function InquiryReview({
               Prepare private download
             </Button>
           )}
-          {capability && !paused && !stale && (
+          {capability && !locked && (
             <p>
               <a
                 href={capability.url}
@@ -299,26 +402,18 @@ function InquiryReview({
             className="gt-form"
             onSubmit={(e) => {
               e.preventDefault();
-              if (paused || stale) return;
-              void work(
-                (signal) =>
-                  api(path, {
-                    method: "POST",
-                    signal,
-                    body: {
-                      action: "status",
-                      revision: record.revision,
-                      status,
-                    },
-                  }),
-                onSaved,
-              );
+              if (locked) return;
+              void saveOriginal({
+                action: "status",
+                revision: record.revision,
+                status,
+              });
             }}
           >
             <Field label="Inquiry status">
               <select
                 value={status}
-                disabled={busy || paused || stale || hold}
+                disabled={locked || hold}
                 onChange={(e) => setStatus(e.target.value)}
               >
                 <option value="new">New</option>
@@ -331,18 +426,14 @@ function InquiryReview({
               days unless an operational/legal hold applies. Reopening removes
               the resolution deadline; it does not remove a hold.
             </p>
-            <Button
-              disabled={
-                busy || paused || stale || status === record.status || hold
-              }
-            >
+            <Button disabled={locked || status === record.status || hold}>
               {busy ? "Working…" : "Save inquiry status"}
             </Button>
           </form>
           {!hold ? (
             <Button
               variant="secondary"
-              disabled={busy || paused || stale || status !== record.status}
+              disabled={locked || status !== record.status}
               onClick={() => setHold(true)}
             >
               {record.hold
@@ -371,7 +462,7 @@ function InquiryReview({
                     maxLength={1000}
                     rows={3}
                     value={reason}
-                    disabled={busy || paused || stale}
+                    disabled={locked}
                     onChange={(e) => setReason(e.target.value)}
                   />
                 </Field>
@@ -382,7 +473,7 @@ function InquiryReview({
                   autoComplete="current-password"
                   value={password}
                   maxLength={1024}
-                  disabled={busy || paused || stale}
+                  disabled={locked}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </Field>
@@ -391,16 +482,14 @@ function InquiryReview({
                   value={confirmation}
                   maxLength={30}
                   autoComplete="off"
-                  disabled={busy || paused || stale}
+                  disabled={locked}
                   onChange={(e) => setConfirmation(e.target.value)}
                 />
               </Field>
               <div className="gt-inline-actions">
                 <Button
                   disabled={
-                    busy ||
-                    paused ||
-                    stale ||
+                    locked ||
                     !password ||
                     confirmation !== expected ||
                     (!record.hold && reason.trim().length < 10)
@@ -411,7 +500,7 @@ function InquiryReview({
                 </Button>
                 <Button
                   variant="ghost"
-                  disabled={busy || paused || stale}
+                  disabled={locked}
                   onClick={() =>
                     navigate(() => {
                       setHold(false);
@@ -648,7 +737,11 @@ function Inbox() {
             setDenied(true);
             setDetailBusy(false);
           }}
-          onReload={() => setReviewEpoch((n) => n + 1)}
+          onReload={() => {
+            clear();
+            setReviewEpoch((n) => n + 1);
+            setTick((n) => n + 1);
+          }}
           onClose={() => navigate()}
           onSaved={() => {
             setDetailBusy(false);
