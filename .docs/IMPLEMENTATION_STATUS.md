@@ -8,6 +8,43 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Versioned collaborator grant outcome recovery — 2026-11-06
+
+- Migration 125 adds immutable grant generation IDs/monotonic revisions, complete
+  session-bound candidate/collaborator inventories and atomic version/body/key-bound
+  saves/removals. Read-only outcome inspection rechecks current authority/expiry;
+  minimal accepted receipts never reapply an old deletion to a recreated grant.
+  Current team/owner/action rules and removal of inactive recipients are preserved.
+  The legacy HTTP mutation path was removed. Frozen original requests, duplicate
+  latches, explicit inspected retries, second-loss rechecks, expiry/offline/session/
+  denial fences, parent permission refresh and reviewed stopping protect the UI.
+- Inspector tab/mobile dismissal guards now preserve pending/uncertain access work.
+  Ordinary unsent access proposals use a discard review. Mobile has one active
+  access workspace; uncertainty precedes an expandable original request review.
+- Both complete 125-migration SQL suites pass (225/226 checks), both 100-client
+  races and six isolated restore checks pass; migration applied locally. All
+  2,141 tests/189 files pass. New collaborator API branches are 100% covered; all
+  18 critical 90% branch gates pass. Global coverage remains below 70%: 69.11%
+  lines, 68.77% branches, 67.27% statements and 60.19% functions. No threshold or
+  timeout was changed. The focused builder/access/helper/route group passes 111
+  cases (before one additional route projection case in the full run).
+- Forty actual API/DB/desktop-mobile checks pass, including one audit per action,
+  ten simultaneous identical creations/removals and delete/recreate protection.
+  Existing 105-account inventory and view-only definition probes pass. Fresh owned
+  fictional private drafts/accounts only; zero publications/responses/jobs/workers/
+  provider sends/existing chapter or production changes. Fixtures archived/disabled/
+  sessions revoked. Initial locator probe failures and later auth-IP quota refusal
+  are preserved separately; no quota reset/bypass. Successful report provenance
+  records restoration from exact retained successful command output.
+- All 90 collaborator/builder/shared-workspace production-browser cases and 36
+  final collaborator cases pass across six profiles, including protected mobile
+  close/Escape/tab changes and measured axe. Captures remain unapproved. Build,
+  types, lint (zero errors/25 existing warnings), budgets, secrets and traceability
+  pass; catalog remains 159 unverified cases. See `FORM_COLLABORATOR_RECOVERY.md`.
+- Private invitation/link lifecycle, permanent-deletion/integration/runtime recovery,
+  global coverage and full storage/device/manual/visual/hosted acceptance remain
+  open. SSO/Google and Bevy/Engage remain deferred.
+
 ### Delivery intent and complete recipient inventory recovery — 2026-11-06
 
 - Migration 124 adds current-session/expiry guards and metadata-only original

@@ -125,7 +125,8 @@
     "202611060121_form_response_replay.sql",
     "202611060122_form_saved_view_replay.sql",
     "202611060123_form_privacy_replay.sql",
-    "202611060124_form_delivery_replay.sql"
+    "202611060124_form_delivery_replay.sql",
+    "202611060125_form_collaborator_replay.sql"
   ],
   "tests": [
     {
@@ -629,6 +630,10 @@
       "passed": true
     },
     {
+      "name": "202611060125_form_collaborator_replay.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -1010,6 +1015,10 @@
     },
     {
       "name": "124_form_delivery_replay.sql",
+      "passed": true
+    },
+    {
+      "name": "125_form_collaborator_replay.sql",
       "passed": true
     },
     {

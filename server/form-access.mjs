@@ -146,7 +146,8 @@ export async function formAccessRoutes(
       response,
       200,
       checked(
-        await db.rpc("list_form_access_accounts", {
+        await db.rpc("read_form_collaborator_accounts", {
+          p_session: session.sessionId,
           p_actor: session.user.id,
           p_form: id,
           p_kind: "candidates",

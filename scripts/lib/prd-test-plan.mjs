@@ -1449,12 +1449,17 @@ prdTestCases.at(-1).normative = ["23", "28.3", "31.2"];
 add(
   "FORM-TEST-038",
   "FORM-008 FORM-010 FORM-026",
-  "Scoped candidate/collaborator search and pagination beyond 100 and 1000, independent private read recovery, access consequence reviews, cancellation and current authorization",
+  "Scoped candidate/collaborator search and pagination beyond 100 and 1000, current-session versioned grant writes with original outcome receipts, explicit identical retries, independent private read recovery, access consequence reviews and cancellation",
   [
     "tests/client/form-access-recovery.test.tsx",
     unit("form-access-routes"),
     unit("form-admin-routes"),
     sql("111_form_access_account_inventory"),
+    sql("125_form_collaborator_replay"),
+    unit("form-collaborator-routes"),
+    "tests/client/form-collaborator-api.test.ts",
+    "tests/browser/form-collaborator-recovery.spec.ts",
+    local("form-collaborator-recovery"),
     local("form-access-inventory"),
   ],
   [

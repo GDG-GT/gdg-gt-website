@@ -1,0 +1,40 @@
+PASS grant inventory conceals owned form from unrelated/anonymous readers at 1440×900
+PASS grant save after retains original target and reviewed versions at 1440×900
+PASS uncertain populated grant review passes measured axe at 1440×900
+PASS grant save after reconciles read-only or retries identical request at 1440×900
+PASS grant save after commits one mutation and audit at 1440×900
+PASS grant remove after retains original target and reviewed versions at 1440×900
+PASS grant remove after reconciles read-only or retries identical request at 1440×900
+PASS grant remove after commits one mutation and audit at 1440×900
+PASS grant save before retains original target and reviewed versions at 1440×900
+PASS grant save before reconciles read-only or retries identical request at 1440×900
+PASS grant save before commits one mutation and audit at 1440×900
+PASS grant remove before retains original target and reviewed versions at 1440×900
+PASS grant remove before reconciles read-only or retries identical request at 1440×900
+PASS grant remove before commits one mutation and audit at 1440×900
+PASS ten concurrent identical grant creations commit one generation/revision at 1440×900
+PASS ten concurrent identical removals return the original receipt at 1440×900
+PASS accepted old deletion preserves a recreated grant and stale new deletion conflicts at 1440×900
+PASS unrelated actor cannot inspect original grant receipt at 1440×900
+PASS grant recovery preserves unpublished draft and queues no responses/mail at 1440×900
+PASS grant recovery has no unexpected writes/egress/errors/page overflow at 1440×900
+PASS grant inventory conceals owned form from unrelated/anonymous readers at 375×812
+PASS grant save after retains original target and reviewed versions at 375×812
+PASS uncertain populated grant review passes measured axe at 375×812
+PASS grant save after reconciles read-only or retries identical request at 375×812
+PASS grant save after commits one mutation and audit at 375×812
+PASS grant remove after retains original target and reviewed versions at 375×812
+PASS grant remove after reconciles read-only or retries identical request at 375×812
+PASS grant remove after commits one mutation and audit at 375×812
+PASS grant save before retains original target and reviewed versions at 375×812
+PASS grant save before reconciles read-only or retries identical request at 375×812
+PASS grant save before commits one mutation and audit at 375×812
+PASS grant remove before retains original target and reviewed versions at 375×812
+PASS grant remove before reconciles read-only or retries identical request at 375×812
+PASS grant remove before commits one mutation and audit at 375×812
+PASS ten concurrent identical grant creations commit one generation/revision at 375×812
+PASS ten concurrent identical removals return the original receipt at 375×812
+PASS accepted old deletion preserves a recreated grant and stale new deletion conflicts at 375×812
+PASS unrelated actor cannot inspect original grant receipt at 375×812
+PASS grant recovery preserves unpublished draft and queues no responses/mail at 375×812
+PASS grant recovery has no unexpected writes/egress/errors/page overflow at 375×812

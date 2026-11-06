@@ -1,0 +1,169 @@
+{
+  "generatedAt": "2026-11-06T10:05:19.475Z",
+  "completed": true,
+  "cleanup": true,
+  "scope": "Dedicated loopback only; fresh fictional actors/private drafts. No publications, responses, delivery jobs/workers, provider sends, existing chapter or production changes. Owned forms archived/accounts disabled/sessions revoked.",
+  "tests": [
+    {
+      "name": "grant inventory conceals owned form from unrelated/anonymous readers at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant save after retains original target and reviewed versions at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "uncertain populated grant review passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant save after reconciles read-only or retries identical request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant save after commits one mutation and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant remove after retains original target and reviewed versions at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant remove after reconciles read-only or retries identical request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant remove after commits one mutation and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant save before retains original target and reviewed versions at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant save before reconciles read-only or retries identical request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant save before commits one mutation and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant remove before retains original target and reviewed versions at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant remove before reconciles read-only or retries identical request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant remove before commits one mutation and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "ten concurrent identical grant creations commit one generation/revision at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "ten concurrent identical removals return the original receipt at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "accepted old deletion preserves a recreated grant and stale new deletion conflicts at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "unrelated actor cannot inspect original grant receipt at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant recovery preserves unpublished draft and queues no responses/mail at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant recovery has no unexpected writes/egress/errors/page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "grant inventory conceals owned form from unrelated/anonymous readers at 375×812",
+      "passed": true
+    },
+    {
+      "name": "grant save after retains original target and reviewed versions at 375×812",
+      "passed": true
+    },
+    {
+      "name": "uncertain populated grant review passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "grant save after reconciles read-only or retries identical request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "grant save after commits one mutation and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "grant remove after retains original target and reviewed versions at 375×812",
+      "passed": true
+    },
+    {
+      "name": "grant remove after reconciles read-only or retries identical request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "grant remove after commits one mutation and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "grant save before retains original target and reviewed versions at 375×812",
+      "passed": true
+    },
+    {
+      "name": "grant save before reconciles read-only or retries identical request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "grant save before commits one mutation and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "grant remove before retains original target and reviewed versions at 375×812",
+      "passed": true
+    },
+    {
+      "name": "grant remove before reconciles read-only or retries identical request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "grant remove before commits one mutation and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "ten concurrent identical grant creations commit one generation/revision at 375×812",
+      "passed": true
+    },
+    {
+      "name": "ten concurrent identical removals return the original receipt at 375×812",
+      "passed": true
+    },
+    {
+      "name": "accepted old deletion preserves a recreated grant and stale new deletion conflicts at 375×812",
+      "passed": true
+    },
+    {
+      "name": "unrelated actor cannot inspect original grant receipt at 375×812",
+      "passed": true
+    },
+    {
+      "name": "grant recovery preserves unpublished draft and queues no responses/mail at 375×812",
+      "passed": true
+    },
+    {
+      "name": "grant recovery has no unexpected writes/egress/errors/page overflow at 375×812",
+      "passed": true
+    }
+  ],
+  "provenance": "Successful guarded desktop/mobile execution, exit code 0. Report restored from exact retained command output after a later quota-limited rerun replaced it; see local-form-collaborator-recovery-execution.txt. Latest disabled-close presentation is separately verified in production-browser cases."
+}

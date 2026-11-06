@@ -2977,12 +2977,17 @@
         "FORM-010",
         "FORM-026"
       ],
-      "scope": "Scoped candidate/collaborator search and pagination beyond 100 and 1000, independent private read recovery, access consequence reviews, cancellation and current authorization",
+      "scope": "Scoped candidate/collaborator search and pagination beyond 100 and 1000, current-session versioned grant writes with original outcome receipts, explicit identical retries, independent private read recovery, access consequence reviews and cancellation",
       "automated": [
         "tests/client/form-access-recovery.test.tsx",
         "tests/server/form-access-routes.test.mjs",
         "tests/server/form-admin-routes.test.mjs",
         "database/tests/111_form_access_account_inventory.sql",
+        "database/tests/125_form_collaborator_replay.sql",
+        "tests/server/form-collaborator-routes.test.mjs",
+        "tests/client/form-collaborator-api.test.ts",
+        "tests/browser/form-collaborator-recovery.spec.ts",
+        "scripts/test-local-form-collaborator-recovery.mjs",
         "scripts/test-local-form-access-inventory.mjs"
       ],
       "remaining": [

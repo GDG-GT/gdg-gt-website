@@ -1,0 +1,8 @@
+{
+  "generatedAt": "2026-11-06T10:06:33.478Z",
+  "completed": false,
+  "cleanup": true,
+  "scope": "Dedicated loopback only; fresh fictional actors/private drafts. No publications, responses, delivery jobs/workers, provider sends, existing chapter or production changes. Owned forms archived/accounts disabled/sessions revoked.",
+  "tests": [],
+  "note": "A later verification-only rerun was stopped by unchanged auth.login.ip quota before any form write. No quota was reset or bypassed."
+}

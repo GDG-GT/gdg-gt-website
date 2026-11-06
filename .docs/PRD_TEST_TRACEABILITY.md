@@ -83,3 +83,9 @@ review and fresh-proof retry, independently recovered policy/recipient reads,
 search/paging beyond 200 and explicit unavailable-recipient removal. See
 `FORM_DELIVERY_RECOVERY.md`; provider/manual/device/hosted acceptance remains open
 along with the remaining Forms child workflows.
+
+The Forms access case now also maps current-session, generation/revision-bound
+collaborator grant mutation receipts, read-only accepted reconciliation, exact
+explicit retries, concurrent creation/removal and delete/recreate protection.
+Inspector exits protect uncertain work. See `FORM_COLLABORATOR_RECOVERY.md`.
+Private-link lifecycle and full manual/device/visual/hosted acceptance remain open.

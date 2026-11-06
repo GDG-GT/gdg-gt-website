@@ -257,7 +257,7 @@ describe("Forms library, authoring and response route contracts", () => {
       "can_operate_form",
       ({ p_action }) => p_action !== "manage_access",
     );
-    expect((await f.call(base + "/collaborators")).statusCode).toBe(403);
+    expect((await f.call(base + "/collaborators")).statusCode).toBe(404);
     f.results.set("can_operate_form", true);
     const inventory = {
       items: [
@@ -266,24 +266,30 @@ describe("Forms library, authoring and response route contracts", () => {
           display_name: "Fictional Peer",
           actions: ["view"],
           created_at: "now",
+          grantId: ids.access,
+          grantRevision: 1,
         },
       ],
       total: 150,
       page: 1,
       pageSize: 30,
     };
-    f.results.set("list_form_access_accounts", inventory);
+    f.results.set("read_form_collaborator_accounts", inventory);
     expect((await f.call(base + "/collaborators")).body.data.items).toEqual(
       inventory.items,
     );
-    expect(f.db.rpc).toHaveBeenLastCalledWith("list_form_access_accounts", {
-      p_actor: ids.actor,
-      p_form: ids.form,
-      p_kind: "collaborators",
-      p_page: 1,
-      p_size: 30,
-      p_query: null,
-    });
+    expect(f.db.rpc).toHaveBeenLastCalledWith(
+      "read_form_collaborator_accounts",
+      {
+        p_actor: ids.actor,
+        p_form: ids.form,
+        p_session: ids.session,
+        p_kind: "collaborators",
+        p_page: 1,
+        p_size: 30,
+        p_query: null,
+      },
+    );
     expect((await f.call(base + "/collaborators?page=0")).statusCode).toBe(400);
     expect(
       (await f.call(base + "/collaborators", "PATCH", { userId: ids.peer }))
@@ -293,32 +299,58 @@ describe("Forms library, authoring and response route contracts", () => {
       (
         await f.call(base + "/collaborators", "PATCH", {
           userId: ids.peer,
+          formRevision: 3,
+          grantId: null,
+          grantRevision: 0,
           actions: ["view", "edit"],
         })
       ).statusCode,
     ).toBe(200);
     expect(f.db.rpc).toHaveBeenCalledWith(
-      "mutate_form_collaborator",
+      "mutate_form_collaborator_write",
       expect.objectContaining({
         p_actor: ids.actor,
         p_form: ids.form,
         p_user: ids.peer,
-        p_actions: ["view", "edit"],
-        p_delete: false,
+        p_session: ids.session,
+        p_action: "save",
+        p_document: {
+          formRevision: 3,
+          grantId: null,
+          grantRevision: 0,
+          actions: ["view", "edit"],
+        },
       }),
     );
     expect(
-      (await f.call(base + "/collaborators", "DELETE", { userId: ids.peer }))
-        .statusCode,
+      (
+        await f.call(base + "/collaborators", "DELETE", {
+          userId: ids.peer,
+          formRevision: 3,
+          grantId: ids.access,
+          grantRevision: 1,
+        })
+      ).statusCode,
     ).toBe(200);
     expect(f.db.rpc).toHaveBeenCalledWith(
-      "mutate_form_collaborator",
-      expect.objectContaining({ p_actions: [], p_delete: true }),
+      "mutate_form_collaborator_write",
+      expect.objectContaining({
+        p_action: "remove",
+        p_document: { formRevision: 3, grantId: ids.access, grantRevision: 1 },
+      }),
     );
-    f.results.set("mutate_form_collaborator", { error: { code: "42501" } });
+    f.results.set("mutate_form_collaborator_write", {
+      error: { code: "42501" },
+    });
     expect(
-      (await f.call(base + "/collaborators", "DELETE", { userId: ids.peer }))
-        .statusCode,
+      (
+        await f.call(base + "/collaborators", "DELETE", {
+          userId: ids.peer,
+          formRevision: 3,
+          grantId: ids.access,
+          grantRevision: 1,
+        })
+      ).statusCode,
     ).toBe(403);
   });
   it("maps draft/state/archive/restore to revision-bound transactions without accepting injected server fields", async () => {

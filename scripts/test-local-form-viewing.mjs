@@ -99,7 +99,13 @@ try {
   data(
     await owner.call(base + "/collaborators", {
       method: "PATCH",
-      body: { userId: member, actions: ["view"] },
+      body: {
+        userId: member,
+        formRevision: form.revision,
+        grantId: null,
+        grantRevision: 0,
+        actions: ["view"],
+      },
     }),
   );
   const definition = data(await viewer.call(base)).form;

@@ -108,7 +108,21 @@ export function fixture() {
     ],
     ["mutate_form_authoring", row],
     ["inspect_form_authoring_write", { committed: false, form: row }],
-    ["mutate_form_collaborator", {}],
+    [
+      "mutate_form_collaborator_write",
+      ({ p_user, p_action }) => ({
+        committed: true,
+        canRetry: false,
+        formId: ids.form,
+        userId: p_user,
+        formRevision: 3,
+        canSave: true,
+        canRemove: false,
+        allowedActions: ["view", "edit"],
+        grant: null,
+        receipt: { formId: ids.form, userId: p_user, action: p_action },
+      }),
+    ],
     ["form_receipt_ready", true],
     ["save_identified_form_draft", {}],
     [

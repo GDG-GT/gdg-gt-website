@@ -1,0 +1,12 @@
+{
+  "generatedAt": "2026-11-06T10:04:41.252Z",
+  "completed": false,
+  "cleanup": true,
+  "scope": "Dedicated loopback only; fresh fictional actors/private drafts. No publications, responses, delivery jobs/workers, provider sends, existing chapter or production changes. Owned forms archived/accounts disabled/sessions revoked.",
+  "tests": [
+    {
+      "name": "grant inventory conceals owned form from unrelated/anonymous readers at 1440×900",
+      "passed": true
+    }
+  ]
+}

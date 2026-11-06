@@ -84,14 +84,12 @@ try {
   );
   teamCreated = true;
   checked(
-    await db
-      .from("team_memberships")
-      .insert(
-        [...members, inactive, editor].map((id) => ({
-          team_id: team,
-          admin_user_id: id,
-        })),
-      ),
+    await db.from("team_memberships").insert(
+      [...members, inactive, editor].map((id) => ({
+        team_id: team,
+        admin_user_id: id,
+      })),
+    ),
   );
   await login(h, actor);
   const draft = createTemplate(prefix, "blank"),
@@ -170,7 +168,13 @@ try {
   data(
     await call(root + "/collaborators", {
       method: "PATCH",
-      body: { userId: members[104], actions: ["view"] },
+      body: {
+        userId: members[104],
+        formRevision: form.revision,
+        grantId: null,
+        grantRevision: 0,
+        actions: ["view"],
+      },
     }),
   );
   const collabs = data(await call(root + "/collaborators?page=1&pageSize=1"));
@@ -208,7 +212,13 @@ try {
     (
       await call(root + "/collaborators", {
         method: "PATCH",
-        body: { userId: members[104], actions: ["view"] },
+        body: {
+          userId: members[104],
+          formRevision: form.revision,
+          grantId: collabs.items[0].grantId,
+          grantRevision: collabs.items[0].grantRevision,
+          actions: ["view"],
+        },
       })
     ).status === 409,
     "inactive out-of-team account cannot receive a new grant",
@@ -216,7 +226,12 @@ try {
   data(
     await call(root + "/collaborators", {
       method: "DELETE",
-      body: { userId: members[104] },
+      body: {
+        userId: members[104],
+        formRevision: form.revision,
+        grantId: collabs.items[0].grantId,
+        grantRevision: collabs.items[0].grantRevision,
+      },
     }),
   );
   check(

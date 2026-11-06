@@ -49,7 +49,7 @@ import FieldValidationSettings from "./FieldValidationSettings";
 import { canShuffleQuestions } from "../../../shared/form-presentation";
 import { formsApi, useServerForm, draftDefinition } from "./api";
 import FormWriteRecovery, { type FormWriteIntent } from "./FormWriteRecovery";
-import AccessPanel from "./AccessPanel";
+import AccessPanel, { type AccessWorkState } from "./AccessPanel";
 import SectionLogic from "./SectionLogic";
 import VersionHistory from "./VersionHistory";
 import DeliveryPanel from "./DeliveryPanel";
@@ -100,6 +100,11 @@ function FormBuilderContent() {
     [historyOpen, setHistoryOpen] = useState(false),
     [deliveryOpen, setDeliveryOpen] = useState(false),
     [deliveryState, setDeliveryState] = useState({ dirty: false, busy: false }),
+    [accessState, setAccessState] = useState<AccessWorkState>({
+      dirty: false,
+      busy: false,
+      uncertain: false,
+    }),
     [publishOpen, setPublishOpen] = useState(false),
     [saveError, setSaveError] = useState(""),
     [publishing, setPublishing] = useState(false),
@@ -474,12 +479,27 @@ function FormBuilderContent() {
       ))}
     </>
   );
+  const leaveAccess = (run: () => void) => {
+    if (accessState.busy || accessState.uncertain) return;
+    const leave = () => {
+      setAccessState({ dirty: false, busy: false, uncertain: false });
+      run();
+    };
+    if (tab === "Access" && accessState.dirty) navigationSafety.request(leave);
+    else leave();
+  };
   const inspector = (prefix: string) => (
     <>
       <div className="gt-builder-panel-title">
         <h2>Inspector</h2>
         <Settings2 size={17} />
       </div>
+      {tab === "Access" && accessState.uncertain && (
+        <p role="status">
+          Check the original access outcome or review stopping recovery before
+          leaving this panel.
+        </p>
+      )}
       <div className="gt-tabs" role="tablist" aria-label="Builder inspector">
         {["Field", "Logic", "Settings", "Access"].map((value, index, tabs) => (
           <button
@@ -489,7 +509,12 @@ function FormBuilderContent() {
             tabIndex={tab === value ? 0 : -1}
             aria-selected={tab === value}
             key={value}
-            onClick={() => setTab(value)}
+            disabled={
+              value !== tab && (accessState.busy || accessState.uncertain)
+            }
+            onClick={() => {
+              if (value !== tab) leaveAccess(() => setTab(value));
+            }}
             onKeyDown={(event) => {
               const target =
                 event.key === "ArrowRight"
@@ -503,7 +528,8 @@ function FormBuilderContent() {
                         : -1;
               if (target < 0) return;
               event.preventDefault();
-              setTab(tabs[target]);
+              if (accessState.busy || accessState.uncertain) return;
+              leaveAccess(() => setTab(tabs[target]));
               const buttons =
                 event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>(
                   '[role="tab"]',
@@ -527,7 +553,15 @@ function FormBuilderContent() {
           aria-label={`Form ${tab.toLowerCase()} controls`}
         >
           {tab === "Access" ? (
-            <AccessPanel form={form} />
+            prefix === "dialog" || !inspectorOpen ? (
+              <AccessPanel
+                form={form}
+                onStateChange={setAccessState}
+                onAccessChanged={() => {
+                  void server.reload();
+                }}
+              />
+            ) : null
           ) : tab === "Field" ? (
             field ? (
               <div className="gt-form">
@@ -1418,8 +1452,10 @@ function FormBuilderContent() {
         <Button
           variant="secondary"
           onClick={() => {
-            setTab("Settings");
-            setInspectorOpen(true);
+            leaveAccess(() => {
+              setTab("Settings");
+              setInspectorOpen(true);
+            });
           }}
         >
           <Settings2 size={16} />
@@ -1529,9 +1565,11 @@ function FormBuilderContent() {
                       <div className="gt-field-toolbar">
                         <button
                           onClick={() => {
-                            setSelected(item.id);
-                            setInspectorOpen(true);
-                            setTab("Field");
+                            leaveAccess(() => {
+                              setSelected(item.id);
+                              setInspectorOpen(true);
+                              setTab("Field");
+                            });
                           }}
                           aria-label={`${editable ? "Edit" : "Inspect"} ${item.label}`}
                         >
@@ -1653,8 +1691,25 @@ function FormBuilderContent() {
           {palette}
         </DialogContent>
       </Dialog>
-      <Dialog open={inspectorOpen} onOpenChange={setInspectorOpen}>
-        <DialogContent className="gt-builder-tool-dialog">
+      <Dialog
+        open={inspectorOpen}
+        onOpenChange={(open) => {
+          if (open) setInspectorOpen(true);
+          else leaveAccess(() => setInspectorOpen(false));
+        }}
+      >
+        <DialogContent
+          className="gt-builder-tool-dialog"
+          closeDisabled={accessState.busy || accessState.uncertain}
+          onEscapeKeyDown={(event) => {
+            if (accessState.busy || accessState.uncertain)
+              event.preventDefault();
+          }}
+          onPointerDownOutside={(event) => {
+            if (accessState.busy || accessState.uncertain)
+              event.preventDefault();
+          }}
+        >
           <DialogTitle>
             {tab === "Settings"
               ? "Form settings"

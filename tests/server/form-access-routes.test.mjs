@@ -79,7 +79,7 @@ function fixture() {
     results = new Map([
       ["can_operate_form", true],
       [
-        "list_form_access_accounts",
+        "read_form_collaborator_accounts",
         {
           items: [
             {
@@ -260,23 +260,31 @@ describe("FORM-008/030 private invitation and verification route boundary", () =
       path = `/admin/forms/${form}/collaborator-candidates`,
       r = await f.call(path);
     expect(r.body.data.total).toBe(130);
-    expect(f.db.rpc).toHaveBeenLastCalledWith("list_form_access_accounts", {
-      p_actor: actor,
-      p_form: form,
-      p_kind: "candidates",
-      p_page: 1,
-      p_size: 30,
-      p_query: null,
-    });
+    expect(f.db.rpc).toHaveBeenLastCalledWith(
+      "read_form_collaborator_accounts",
+      {
+        p_actor: actor,
+        p_form: form,
+        p_session: sid,
+        p_kind: "candidates",
+        p_page: 1,
+        p_size: 30,
+        p_query: null,
+      },
+    );
     await f.call(path + "?page=4&pageSize=25&q=%20Fictional%20%25%20");
-    expect(f.db.rpc).toHaveBeenLastCalledWith("list_form_access_accounts", {
-      p_actor: actor,
-      p_form: form,
-      p_kind: "candidates",
-      p_page: 4,
-      p_size: 25,
-      p_query: "Fictional %",
-    });
+    expect(f.db.rpc).toHaveBeenLastCalledWith(
+      "read_form_collaborator_accounts",
+      {
+        p_actor: actor,
+        p_form: form,
+        p_session: sid,
+        p_kind: "candidates",
+        p_page: 4,
+        p_size: 25,
+        p_query: "Fictional %",
+      },
+    );
     expect(f.queries).toHaveLength(0);
     for (const query of [
       "page=0",
@@ -287,7 +295,7 @@ describe("FORM-008/030 private invitation and verification route boundary", () =
       "page=1&page=2",
     ])
       expect((await f.call(path + "?" + query)).statusCode).toBe(400);
-    f.results.set("list_form_access_accounts", {
+    f.results.set("read_form_collaborator_accounts", {
       error: { code: "P0001", message: "NOT_FOUND" },
     });
     expect((await f.call(path)).statusCode).toBe(404);

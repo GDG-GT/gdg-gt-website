@@ -32,11 +32,15 @@ const candidate = {
     display_name: "Fictional eligible account",
     role: "team_member",
     actions: ["view"],
+    grantId: "fictional-grant",
+    grantRevision: 2,
   },
   collaborator = {
     admin_user_id: "fictional-peer",
     display_name: "Fictional collaborator",
     actions: ["view"],
+    grantId: "fictional-grant",
+    grantRevision: 2,
     updated_at: "2026-11-04T12:00:00Z",
   },
   invite = {
@@ -89,6 +93,24 @@ function defaults(path: string) {
   if (path.includes("/collaborators")) return inventory([collaborator]);
   if (path.includes("/invitations")) return inventory([invite]);
   return { form: current };
+}
+function ack(options: { body: { userId: string }; method: string }) {
+  return {
+    committed: true,
+    canRetry: false,
+    formId: current.id,
+    userId: options.body.userId,
+    formRevision: 1,
+    canSave: true,
+    canRemove: true,
+    allowedActions: current.actions,
+    grant: null,
+    receipt: {
+      formId: current.id,
+      userId: options.body.userId,
+      action: options.method === "DELETE" ? "remove" : "save",
+    },
+  };
 }
 function mount(form = current) {
   return render(
@@ -158,7 +180,7 @@ beforeEach(() => {
   read = defaults;
   transport.mockImplementation((path, options) =>
     options?.method
-      ? Promise.resolve({ updated: true })
+      ? Promise.resolve(ack(options))
       : Promise.resolve().then(() => read(path)),
   );
 });
@@ -274,11 +296,19 @@ describe("Forms access inventory, review and interruption recovery", () => {
       expect(options.signal).toBeInstanceOf(AbortSignal);
       if (action === "remove") {
         expect(options.method).toBe("DELETE");
-        expect(options.body).toEqual({ userId: collaborator.admin_user_id });
+        expect(options.body).toEqual({
+          userId: collaborator.admin_user_id,
+          formRevision: 1,
+          grantId: collaborator.grantId,
+          grantRevision: 2,
+        });
       } else if (action === "save") {
         expect(options.method).toBe("PATCH");
         expect(options.body).toEqual({
           userId: candidate.id,
+          formRevision: 1,
+          grantId: candidate.grantId,
+          grantRevision: 2,
           actions: ["view", "edit"],
         });
       } else {
@@ -325,7 +355,7 @@ describe("Forms access inventory, review and interruption recovery", () => {
         ) as HTMLTextAreaElement
       ).matches(":disabled"),
     ).toBe(true);
-    await act(async () => write.resolve({ updated: true }));
+    await act(async () => write.resolve(ack(writes()[0][1])));
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
   });
   it("blocks a changed record and changed form revision after the review's fresh recheck", async () => {
@@ -408,7 +438,7 @@ describe("Forms access inventory, review and interruption recovery", () => {
         .disabled,
     ).toBe(true);
   });
-  it("keeps a failed write in review and requires a read-only recheck after an uncertain result", async () => {
+  it("keeps an unknown collaborator result blocked even after inventory refresh", async () => {
     transport.mockImplementation((path, options) =>
       options?.method
         ? Promise.reject(Error("Fictional dropped connection"))
@@ -416,29 +446,30 @@ describe("Forms access inventory, review and interruption recovery", () => {
     );
     mount();
     await loaded();
-    const { dialog, confirm } = await review("remove");
+    const { confirm } = await review("remove");
     fireEvent.click(confirm);
-    await within(dialog).findByText("Fictional dropped connection");
+    const recovery = await screen.findByRole("region", {
+      name: "Unconfirmed collaborator change",
+    });
+    expect(screen.queryByRole("dialog")).toBeNull();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Refresh delivery status" }),
+    );
+    expect(
+      screen.getByRole("region", { name: "Unconfirmed collaborator change" }),
+    ).toBeTruthy();
     expect(
       (
-        within(dialog).getByRole("button", {
+        screen.getByRole("button", {
           name: "Remove collaborator",
         }) as HTMLButtonElement
       ).disabled,
     ).toBe(true);
-    expect(writes()).toHaveLength(1);
-    fireEvent.click(
-      within(dialog).getByRole("button", { name: "Recheck review" }),
-    );
-    await waitFor(() =>
-      expect(
-        (
-          within(dialog).getByRole("button", {
-            name: "Remove collaborator",
-          }) as HTMLButtonElement
-        ).disabled,
-      ).toBe(false),
-    );
+    expect(
+      within(recovery)
+        .getByRole("button", { name: "Retry identical collaborator change" })
+        .hasAttribute("disabled"),
+    ).toBe(true);
     expect(writes()).toHaveLength(1);
   });
   it("isolates account, form and cleared-session changes, aborting old writes and ignoring their late success", async () => {
@@ -453,7 +484,7 @@ describe("Forms access inventory, review and interruption recovery", () => {
     const signal = writes()[0][1].signal;
     act(() => window.dispatchEvent(new Event("gdg:session-cleared")));
     expect(signal.aborted).toBe(true);
-    await act(async () => write.resolve({ updated: true }));
+    await act(async () => write.resolve(ack(writes()[0][1])));
     expect(screen.queryByText("Collaborator access removed.")).toBeNull();
     await loaded();
     fireEvent.change(
@@ -647,5 +678,256 @@ describe("Forms access inventory, review and interruption recovery", () => {
         })
       ).violations.map((v) => v.id),
     ).toEqual([]);
+  });
+});
+
+describe("Collaborator original-request reconciliation", () => {
+  let loss: "before" | "after" | "none",
+    commitCount: number,
+    receipts: Map<
+      string,
+      { formId: string; userId: string; action: "save" | "remove" }
+    >,
+    grant: { id: string; revision: number; actions: string[] } | null,
+    inspectFailure: Error | undefined;
+  const inspection = (key: string) => ({
+    committed: receipts.has(key),
+    canRetry: !receipts.has(key),
+    formId: current.id,
+    userId: candidate.id,
+    formRevision: current.revision,
+    canSave: true,
+    canRemove: !!grant,
+    allowedActions: current.actions,
+    grant,
+    receipt: receipts.get(key) || null,
+  });
+  beforeEach(() => {
+    loss = "none";
+    commitCount = 0;
+    receipts = new Map();
+    grant = { id: candidate.grantId, revision: 2, actions: ["view"] };
+    inspectFailure = undefined;
+    transport.mockImplementation(async (path, options = {}) => {
+      if (path.includes("/collaborators/recovery")) {
+        if (inspectFailure) throw inspectFailure;
+        return inspection(options.idempotencyKey);
+      }
+      if (options.method && path.endsWith("/collaborators")) {
+        if (loss === "before") {
+          loss = "none";
+          throw Error("Fictional before-dispatch loss");
+        }
+        if (!receipts.has(options.idempotencyKey)) {
+          commitCount++;
+          grant =
+            options.method === "DELETE"
+              ? null
+              : {
+                  id: candidate.grantId,
+                  revision: 3,
+                  actions: options.body.actions,
+                };
+          receipts.set(options.idempotencyKey, {
+            formId: current.id,
+            userId: candidate.id,
+            action: options.method === "DELETE" ? "remove" : "save",
+          });
+        }
+        if (loss === "after") {
+          loss = "none";
+          throw Error("Fictional acknowledgement loss");
+        }
+        return inspection(options.idempotencyKey);
+      }
+      return read(path);
+    });
+  });
+  async function start(
+    action: "remove" | "save",
+    kind: "before" | "after" = "before",
+  ) {
+    loss = kind;
+    mount();
+    await loaded();
+    const { confirm } = await review(action);
+    fireEvent.click(confirm);
+    return screen.findByRole("region", {
+      name: "Unconfirmed collaborator change",
+    });
+  }
+  const press = (name: string) =>
+    fireEvent.click(screen.getByRole("button", { name, exact: true }));
+  it.each(["remove", "save"] as const)(
+    "reconciles accepted %s by read only without replaying",
+    async (action) => {
+      await start(action, "after");
+      expect(commitCount).toBe(1);
+      press("Check original collaborator outcome");
+      await waitFor(() =>
+        expect(
+          screen.queryByRole("region", {
+            name: "Unconfirmed collaborator change",
+          }),
+        ).toBeNull(),
+      );
+      expect(writes()).toHaveLength(1);
+      expect(commitCount).toBe(1);
+    },
+  );
+  it.each(["remove", "save"] as const)(
+    "retries unaccepted %s with the identical original key and versioned body",
+    async (action) => {
+      await start(action);
+      const original = writes()[0][1];
+      press("Check original collaborator outcome");
+      const retry = await screen.findByRole("button", {
+        name: "Retry identical collaborator change",
+      });
+      await waitFor(() =>
+        expect((retry as HTMLButtonElement).disabled).toBe(false),
+      );
+      fireEvent.click(retry);
+      fireEvent.click(retry);
+      await waitFor(() =>
+        expect(
+          screen.queryByRole("region", {
+            name: "Unconfirmed collaborator change",
+          }),
+        ).toBeNull(),
+      );
+      expect(writes()).toHaveLength(2);
+      expect(writes()[1][1].body).toEqual(original.body);
+      expect(writes()[1][1].idempotencyKey).toBe(original.idempotencyKey);
+      expect(commitCount).toBe(1);
+    },
+  );
+  it.each(["revision", "generation", "form", "actions"] as const)(
+    "blocks a stale %s after original-outcome inspection",
+    async (change) => {
+      await start("save");
+      if (change === "revision") grant = { ...grant!, revision: 3 };
+      if (change === "generation")
+        grant = { ...grant!, id: "fictional-recreated-grant" };
+      if (change === "form") current = { ...current, revision: 2 };
+      if (change === "actions")
+        current = { ...current, actions: ["view", "manage_access"] };
+      press("Check original collaborator outcome");
+      await screen.findByText(/target is no longer ready/);
+      expect(
+        (
+          screen.getByRole("button", {
+            name: "Retry identical collaborator change",
+          }) as HTMLButtonElement
+        ).disabled,
+      ).toBe(true);
+      expect(writes()).toHaveLength(1);
+    },
+  );
+  it("requires another inspection after a second acknowledgement loss", async () => {
+    await start("save");
+    press("Check original collaborator outcome");
+    const retry = screen.getByRole("button", {
+      name: "Retry identical collaborator change",
+    });
+    await waitFor(() =>
+      expect((retry as HTMLButtonElement).disabled).toBe(false),
+    );
+    loss = "after";
+    fireEvent.click(retry);
+    await screen.findByText("Fictional acknowledgement loss");
+    expect((retry as HTMLButtonElement).disabled).toBe(true);
+    expect(commitCount).toBe(1);
+    press("Check original collaborator outcome");
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("region", {
+          name: "Unconfirmed collaborator change",
+        }),
+      ).toBeNull(),
+    );
+    expect(writes()).toHaveLength(2);
+  });
+  it.each([401, 403, 404])(
+    "clears private inventories and the frozen proposal on recovery denial %s",
+    async (status) => {
+      await start("save");
+      inspectFailure = new ApiFailure(status, "NOT_FOUND", "Fictional denial");
+      press("Check original collaborator outcome");
+      await screen.findByText("Access management is restricted");
+      expect(screen.queryByText(candidate.display_name)).toBeNull();
+      expect(
+        screen.queryByRole("region", {
+          name: "Unconfirmed collaborator change",
+        }),
+      ).toBeNull();
+      expect(writes()).toHaveLength(1);
+    },
+  );
+  it("keeps recovery after a temporary check failure and sends nothing automatically", async () => {
+    await start("remove");
+    inspectFailure = Error("Fictional inspection outage");
+    press("Check original collaborator outcome");
+    await screen.findByText("Fictional inspection outage");
+    expect(
+      screen.getByRole("region", { name: "Unconfirmed collaborator change" }),
+    ).toBeTruthy();
+    expect(writes()).toHaveLength(1);
+    expect(commitCount).toBe(0);
+  });
+  it("requires a reviewed stop before releasing the original request and refreshing inventories", async () => {
+    await start("save");
+    press("Stop tracking this collaborator change");
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("region", {
+          name: "Unconfirmed collaborator change",
+        }),
+      ).toBeNull(),
+    );
+    await loaded();
+    expect(commitCount).toBe(0);
+    expect(writes()).toHaveLength(1);
+  });
+  it("aborts a pending write when offline, exposes recovery and does not replay on reconnect", async () => {
+    const deferred = pending<unknown>();
+    transport.mockImplementation((path, options) =>
+      options?.method ? deferred.promise : Promise.resolve(read(path)),
+    );
+    mount();
+    await loaded();
+    const { confirm } = await review("save");
+    fireEvent.click(confirm);
+    const signal = writes()[0][1].signal;
+    Object.defineProperty(navigator, "onLine", {
+      configurable: true,
+      value: false,
+    });
+    act(() => window.dispatchEvent(new Event("offline")));
+    await screen.findByRole("region", {
+      name: "Unconfirmed collaborator change",
+    });
+    expect(signal.aborted).toBe(true);
+    expect(screen.queryByRole("dialog")).toBeNull();
+    Object.defineProperty(navigator, "onLine", {
+      configurable: true,
+      value: true,
+    });
+    act(() => window.dispatchEvent(new Event("online")));
+    await act(async () => deferred.resolve(ack(writes()[0][1])));
+    expect(writes()).toHaveLength(1);
+    expect(
+      screen.getByRole("region", { name: "Unconfirmed collaborator change" }),
+    ).toBeTruthy();
+  });
+  it("keeps the retry window bounded and never inspects or writes after expiry", async () => {
+    await start("save");
+    vi.spyOn(Date, "now").mockReturnValue(Date.now() + 48 * 60 * 60 * 1000);
+    press("Check original collaborator outcome");
+    await screen.findByText(/safe retry window ended/);
+    expect(
+      transport.mock.calls.filter(([p]) => p.includes("/recovery")),
+    ).toHaveLength(0);
+    expect(writes()).toHaveLength(1);
   });
 });

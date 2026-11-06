@@ -12,7 +12,20 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button, Field, EmptyState } from "../primitives";
+import {
+  prepareCollaboratorWrite,
+  submitCollaboratorWrite,
+  validGrantVersion,
+  type CollaboratorIntent,
+  type GrantVersion,
+} from "./form-collaborator-api";
+import FormCollaboratorWriteRecovery from "./FormCollaboratorWriteRecovery";
 import type { PreviewForm } from "./store";
+export type AccessWorkState = {
+  dirty: boolean;
+  busy: boolean;
+  uncertain: boolean;
+};
 type Invitation = {
   id: string;
   recipientHint: string;
@@ -21,13 +34,13 @@ type Invitation = {
   revoked_at: string | null;
   expires_at: string;
 };
-type Collaborator = {
+type Collaborator = GrantVersion & {
   admin_user_id: string;
   display_name: string;
   actions: string[];
   updated_at: string;
 };
-type Candidate = {
+type Candidate = GrantVersion & {
   id: string;
   display_name: string;
   role: string;
@@ -110,7 +123,15 @@ const names: Record<string, string> = {
   export_responses: "Export responses",
   delete: "Archive and privacy actions",
 };
-export default function AccessPanel({ form }: { form: PreviewForm }) {
+export default function AccessPanel({
+  form,
+  onAccessChanged,
+  onStateChange,
+}: {
+  form: PreviewForm;
+  onAccessChanged?: () => void;
+  onStateChange?: (state: AccessWorkState) => void;
+}) {
   const { currentAdmin } = useAdmin();
   const [epoch, setEpoch] = useState(0);
   useEffect(() => {
@@ -122,10 +143,20 @@ export default function AccessPanel({ form }: { form: PreviewForm }) {
     <AccessWorkspace
       key={`${currentAdmin?.id}:${currentAdmin?.role}:${form.id}:${epoch}`}
       form={form}
+      onAccessChanged={onAccessChanged}
+      onStateChange={onStateChange}
     />
   );
 }
-function AccessWorkspace({ form }: { form: PreviewForm }) {
+function AccessWorkspace({
+  form,
+  onAccessChanged,
+  onStateChange,
+}: {
+  form: PreviewForm;
+  onAccessChanged?: () => void;
+  onStateChange?: (state: AccessWorkState) => void;
+}) {
   const [refresh, setRefresh] = useState({
       context: 0,
       invitations: 0,
@@ -145,7 +176,14 @@ function AccessWorkspace({ form }: { form: PreviewForm }) {
     [notice, setNotice] = useState(""),
     [review, setReview] = useState<Review>(),
     [uncertain, setUncertain] = useState(false),
-    [blocked, setBlocked] = useState(false);
+    [blocked, setBlocked] = useState(false),
+    [grantIntent, setGrantIntent] = useState<CollaboratorIntent>(),
+    [grantUncertain, setGrantUncertain] = useState(false),
+    [recoveryBusy, setRecoveryBusy] = useState(false);
+  const stateChange = useRef(onStateChange);
+  stateChange.current = onStateChange;
+  const accessChanged = useRef(onAccessChanged);
+  accessChanged.current = onAccessChanged;
   const submission = useRef<{ body: string; key: string }>();
   const allowed = form.actions?.includes("manage_access");
   const root = `/admin/forms/${form.id}`,
@@ -175,7 +213,7 @@ function AccessWorkspace({ form }: { form: PreviewForm }) {
     published = currentForm?.versions[currentForm.versions.length - 1],
     { isOnline } = useOnlineStatus(),
     mutation = usePrivateMutation(root),
-    busy = mutation.busy,
+    busy = mutation.busy || recoveryBusy,
     denied =
       blocked ||
       !allowed ||
@@ -188,6 +226,7 @@ function AccessWorkspace({ form }: { form: PreviewForm }) {
       isOnline &&
       !busy &&
       !uncertain &&
+      !grantIntent &&
       !denied &&
       ready(context) &&
       !!currentForm &&
@@ -199,7 +238,8 @@ function AccessWorkspace({ form }: { form: PreviewForm }) {
     clearInvitations = inviteRead.clear,
     clearCollaborators = collaboratorRead.clear,
     clearCandidates = candidateRead.clear,
-    cancelMutation = mutation.cancel;
+    cancelMutation = mutation.cancel,
+    pendingMutation = mutation.pending;
   const load = useCallback(() => {
     setRefresh((value) => ({
       context: value.context + 1,
@@ -231,6 +271,10 @@ function AccessWorkspace({ form }: { form: PreviewForm }) {
       setError("");
       setNotice("");
       submission.current = undefined;
+      setGrantIntent(undefined);
+      setGrantUncertain(false);
+      setRecoveryBusy(false);
+      accessChanged.current?.();
     }
   }, [
     denied,
@@ -249,7 +293,18 @@ function AccessWorkspace({ form }: { form: PreviewForm }) {
   useEffect(() => {
     if (error || notice) feedback.current?.focus();
   }, [error, notice]);
-  useDraftGuard(!!recipients || !!user || !!review, {
+  useEffect(() => {
+    if (!isOnline && pendingMutation.current && grantIntent) {
+      cancelMutation();
+      setGrantUncertain(true);
+      setReview(undefined);
+    }
+  }, [isOnline, grantIntent, cancelMutation, pendingMutation]);
+  const dirty = !!recipients || !!user || !!review || !!grantIntent;
+  useEffect(() => {
+    stateChange.current?.({ dirty, busy, uncertain: grantUncertain });
+  }, [dirty, busy, grantUncertain]);
+  useDraftGuard(dirty, {
     busy,
     label: "Form access changes",
   });
@@ -288,6 +343,71 @@ function AccessWorkspace({ form }: { form: PreviewForm }) {
         setBlocked(true);
       } else if (!(e instanceof ApiFailure) || e.status >= 500)
         setUncertain(true);
+    } finally {
+      mutation.finish(controller);
+    }
+  };
+  const completeGrant = () => {
+    setGrantIntent(undefined);
+    setGrantUncertain(false);
+    setRecoveryBusy(false);
+    setReview(undefined);
+    setUser("");
+    setActions(["view"]);
+    setError("");
+    clearContext();
+    clearCollaborators();
+    clearCandidates();
+    load();
+    setNotice(
+      "Collaborator change confirmed. Current access is being refreshed.",
+    );
+    accessChanged.current?.();
+  };
+  const writeGrant = async (
+    selected: Review & ({ kind: "save" } | { kind: "remove" }),
+  ) => {
+    if (!writable || mutation.pending.current) return;
+    let intent: CollaboratorIntent;
+    try {
+      intent = prepareCollaboratorWrite(
+        form.id,
+        selected.kind === "save" ? selected.row.id : selected.row.admin_user_id,
+        selected.row.display_name,
+        selected.kind,
+        selected.formRevision,
+        selected.row,
+        selected.kind === "save" ? selected.actions : [],
+      );
+    } catch (e) {
+      setError((e as Error).message);
+      return;
+    }
+    const controller = mutation.begin();
+    if (!controller) return;
+    setGrantIntent(intent);
+    setGrantUncertain(false);
+    setError("");
+    setNotice("");
+    try {
+      await submitCollaboratorWrite(intent, controller.signal);
+      if (mutation.current(controller)) completeGrant();
+    } catch (e) {
+      if (!mutation.current(controller)) return;
+      setReview(undefined);
+      if (e instanceof ApiFailure && [401, 403, 404].includes(e.status))
+        setBlocked(true);
+      else if (!(e instanceof ApiFailure) || e.status >= 500) {
+        setGrantUncertain(true);
+        setError("");
+      } else {
+        setGrantIntent(undefined);
+        load();
+        setError(
+          (e as Error).message +
+            " Reload and review the current grant before making another request.",
+        );
+      }
     } finally {
       mutation.finish(controller);
     }
@@ -350,6 +470,9 @@ function AccessWorkspace({ form }: { form: PreviewForm }) {
       ready(reviewRead) &&
       !reviewChanged &&
       !!reviewRow &&
+      ((review?.kind !== "save" && review?.kind !== "remove") ||
+        (validGrantVersion(review.row) &&
+          (review.kind !== "remove" || review.row.grantId !== null))) &&
       (review?.kind !== "save" ||
         review.actions.every((action) =>
           currentForm?.actions?.includes(action),
@@ -417,6 +540,30 @@ function AccessWorkspace({ form }: { form: PreviewForm }) {
           </Button>
         </div>
       )}
+      {grantIntent && grantUncertain && (
+        <FormCollaboratorWriteRecovery
+          key={grantIntent.key}
+          intent={grantIntent}
+          onRecovered={completeGrant}
+          onDenied={() => setBlocked(true)}
+          onBusy={setRecoveryBusy}
+          onAbandon={() => {
+            setGrantIntent(undefined);
+            setGrantUncertain(false);
+            setRecoveryBusy(false);
+            setUser("");
+            setActions(["view"]);
+            clearContext();
+            clearCollaborators();
+            clearCandidates();
+            load();
+            setNotice(
+              "Recovery stopped. Reload and review current collaborator access before making another change.",
+            );
+            accessChanged.current?.();
+          }}
+        />
+      )}
       <h3>Collaborators</h3>
       <p>
         Only explicitly checked actions are granted. Team membership rules still
@@ -433,7 +580,12 @@ function AccessWorkspace({ form }: { form: PreviewForm }) {
           <strong>{row.display_name || "Chapter account"}</strong>
           <p>{row.actions.map((a) => names[a]).join(" · ")}</p>
           <Button
-            disabled={!writable || !ready(collaboratorRead) || !!review}
+            disabled={
+              !writable ||
+              !ready(collaboratorRead) ||
+              !!review ||
+              !validGrantVersion(row)
+            }
             variant="secondary"
             onClick={() => beginReview({ kind: "remove", row })}
           >
@@ -477,7 +629,7 @@ function AccessWorkspace({ form }: { form: PreviewForm }) {
         </Button>
       </div>
       <fieldset
-        disabled={busy || !!review}
+        disabled={busy || !!review || !!grantIntent}
         className="gt-form gt-access-fields"
       >
         <Field
@@ -651,7 +803,7 @@ function AccessWorkspace({ form }: { form: PreviewForm }) {
           }}
         >
           <fieldset
-            disabled={busy || !!review}
+            disabled={busy || !!review || !!grantIntent}
             className="gt-form gt-access-fields"
           >
             <Field
@@ -861,6 +1013,12 @@ function AccessWorkspace({ form }: { form: PreviewForm }) {
               ? review.row.display_name
               : review?.row.recipientHint}
           </p>
+          {(review?.kind === "save" || review?.kind === "remove") && (
+            <p>
+              Reviewed form revision {review.formRevision}; grant revision{" "}
+              {review.row.grantRevision}.
+            </p>
+          )}
           {review?.kind === "save" && (
             <p>{review.actions.map((action) => names[action]).join(" · ")}</p>
           )}
@@ -895,37 +1053,21 @@ function AccessWorkspace({ form }: { form: PreviewForm }) {
               onClick={() => {
                 if (!review || !reviewReady) return;
                 const selected = review;
+                if (selected.kind === "save" || selected.kind === "remove") {
+                  void writeGrant(selected);
+                  return;
+                }
                 void work(
                   (signal) =>
-                    selected.kind === "remove" || selected.kind === "save"
-                      ? api(`${root}/collaborators`, {
-                          method:
-                            selected.kind === "remove" ? "DELETE" : "PATCH",
-                          protected: true,
-                          signal,
-                          body: {
-                            userId:
-                              selected.kind === "remove"
-                                ? selected.row.admin_user_id
-                                : selected.row.id,
-                            ...(selected.kind === "save"
-                              ? { actions: selected.actions }
-                              : {}),
-                          },
-                        })
-                      : api(`${root}/invitations/${selected.row.id}`, {
-                          method: "PATCH",
-                          protected: true,
-                          signal,
-                          body: { action: selected.kind },
-                        }),
-                  selected.kind === "remove"
-                    ? "Collaborator access removed."
-                    : selected.kind === "save"
-                      ? "Collaborator actions saved."
-                      : selected.kind === "revoke"
-                        ? "Access link revoked."
-                        : "Replacement private link queued; the old link is invalid.",
+                    api(`${root}/invitations/${selected.row.id}`, {
+                      method: "PATCH",
+                      protected: true,
+                      signal,
+                      body: { action: selected.kind },
+                    }),
+                  selected.kind === "revoke"
+                    ? "Access link revoked."
+                    : "Replacement private link queued; the old link is invalid.",
                 );
               }}
             >

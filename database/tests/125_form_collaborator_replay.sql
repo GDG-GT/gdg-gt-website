@@ -1,0 +1,60 @@
+BEGIN;
+INSERT INTO public.admin_users(id,email,password_hash,role,is_active,display_name) VALUES
+ ('b1250000-0000-4000-8000-000000000001','fictional-grant-operator@example.test','fictional-proof','admin',true,'Fictional grant operator'),
+ ('b1250000-0000-4000-8000-000000000002','fictional-grant-peer@example.test','fictional-proof','team_member',true,'Fictional grant peer'),
+ ('b1250000-0000-4000-8000-000000000003','fictional-grant-outsider@example.test','fictional-proof','blog_editor',true,'Fictional grant outsider');
+INSERT INTO public.forms(id,slug,title,owner_id,state,draft_definition,settings) VALUES
+ ('b1250000-0000-4000-8000-000000000004','fictional-grant-replay','Fictional grant replay','b1250000-0000-4000-8000-000000000001','Draft','{"title":"Fictional grant replay","fields":[],"settings":{"access":"internal"}}','{}');
+DO $$ DECLARE a uuid:='b1250000-0000-4000-8000-000000000001';u uuid:='b1250000-0000-4000-8000-000000000002';outsider uuid:='b1250000-0000-4000-8000-000000000003';f uuid:='b1250000-0000-4000-8000-000000000004';s uuid;os uuid;v jsonb;doc jsonb;original_grant uuid;replacement uuid;BEGIN
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(a,repeat('a',64)) RETURNING id INTO s;
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(outsider,repeat('b',64)) RETURNING id INTO os;
+ v:=public.read_form_collaborator_accounts(a,s,f,'candidates',1,30,'Fictional grant peer');
+ IF(v->>'total')::integer<>1 OR v->'items'->0->'grantId'<>'null'::jsonb OR(v->'items'->0->>'grantRevision')::integer<>0 OR v::text LIKE '%@example.test%' THEN RAISE EXCEPTION 'Versioned candidates omitted missing-grant metadata or exposed email';END IF;
+ v:=public.inspect_form_collaborator_write(a,s,f,u,'save',repeat('c',64));
+ IF(v->>'committed')::boolean OR NOT(v->>'canRetry')::boolean OR v->'grant'<>'null'::jsonb OR NOT(v->'allowedActions' ? 'manage_access') THEN RAISE EXCEPTION 'Fresh collaborator inspection invalid';END IF;
+ doc:='{"formRevision":1,"grantId":null,"grantRevision":0,"actions":["view","edit"]}';
+ v:=public.mutate_form_collaborator_write(a,s,f,u,'save',doc,repeat('c',64),repeat('d',64),gen_random_uuid());
+ original_grant:=(v->'grant'->>'id')::uuid;
+ PERFORM public.mutate_form_collaborator_write(a,s,f,u,'save',doc,repeat('c',64),repeat('d',64),gen_random_uuid());
+ IF(SELECT count(*) FROM public.admin_actions WHERE target_id=f AND action='forms.collaborator_updated')<>1 OR(SELECT revision FROM public.form_collaborators WHERE record_id=original_grant)<>1 THEN RAISE EXCEPTION 'Replay repeated collaborator write or audit';END IF;
+ BEGIN PERFORM public.mutate_form_collaborator_write(a,s,f,u,'save',doc,repeat('e',64),repeat('f',64),gen_random_uuid());RAISE EXCEPTION 'Missing-grant review overwrote concurrent creation';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ BEGIN PERFORM public.mutate_form_collaborator_write(a,s,f,u,'save',doc,repeat('c',64),repeat('e',64),gen_random_uuid());RAISE EXCEPTION 'Same key accepted changed request';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ BEGIN PERFORM public.inspect_form_collaborator_write(a,s,f,u,'remove',repeat('c',64));RAISE EXCEPTION 'Receipt crossed action';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ doc:=jsonb_build_object('formRevision',1,'grantId',original_grant,'grantRevision',1,'actions',jsonb_build_array('view'));
+ UPDATE public.form_collaborators SET actions=ARRAY['view','publish'] WHERE record_id=original_grant;
+ BEGIN PERFORM public.mutate_form_collaborator_write(a,s,f,u,'save',doc,repeat('e',64),repeat('f',64),gen_random_uuid());RAISE EXCEPTION 'Stale grant revision overwritten';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ UPDATE public.forms SET draft_revision=2 WHERE id=f;
+ doc:=jsonb_set(doc,'{grantRevision}','2');
+ BEGIN PERFORM public.mutate_form_collaborator_write(a,s,f,u,'save',doc,repeat('e',64),repeat('f',64),gen_random_uuid());RAISE EXCEPTION 'Stale form revision overwritten';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ UPDATE public.admin_users SET is_active=false WHERE id=u;
+ v:=public.inspect_form_collaborator_write(a,s,f,u,'remove',repeat('1',64));
+ IF NOT(v->>'canRemove')::boolean OR(v->>'canSave')::boolean THEN RAISE EXCEPTION 'Inactive grant removal denied or new grant allowed';END IF;
+ doc:=jsonb_build_object('formRevision',2,'grantId',original_grant,'grantRevision',2);
+ PERFORM public.mutate_form_collaborator_write(a,s,f,u,'remove',doc,repeat('1',64),repeat('2',64),gen_random_uuid());
+ UPDATE public.admin_users SET is_active=true WHERE id=u;
+ PERFORM public.mutate_form_collaborator(a,f,u,ARRAY['view'],false,gen_random_uuid());
+ SELECT record_id INTO replacement FROM public.form_collaborators WHERE form_id=f AND admin_user_id=u;
+ IF replacement=original_grant THEN RAISE EXCEPTION 'Grant recreation reused generation';END IF;
+ v:=public.mutate_form_collaborator_write(a,s,f,u,'remove',doc,repeat('1',64),repeat('2',64),gen_random_uuid());
+ IF NOT(v->>'committed')::boolean OR(v->'grant'->>'id')::uuid<>replacement OR(SELECT count(*) FROM public.admin_actions WHERE target_id=f AND action='forms.collaborator_removed')<>1 THEN RAISE EXCEPTION 'Accepted old deletion removed new grant';END IF;
+ doc:=jsonb_set(doc,'{grantRevision}','1');
+ BEGIN PERFORM public.mutate_form_collaborator_write(a,s,f,u,'remove',doc,repeat('3',64),repeat('4',64),gen_random_uuid());RAISE EXCEPTION 'Delete/recreate ABA accepted';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ BEGIN PERFORM public.inspect_form_collaborator_write(outsider,os,f,u,'save',repeat('c',64));RAISE EXCEPTION 'Unrelated actor read grant recovery';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ v:=public.inspect_form_collaborator_write(a,s,f,u,'save',repeat('c',64));
+ IF NOT(v->>'committed')::boolean OR v->'receipt'<>jsonb_build_object('formId',f,'userId',u,'action','save') OR v::text LIKE '%Fictional%' OR v::text LIKE '%@example.test%' THEN RAISE EXCEPTION 'Minimal original receipt not preserved';END IF;
+ UPDATE public.idempotency_keys SET expires_at=now()-interval '1 second' WHERE scope='form-collaborator-write:'||a||':'||s AND key_hash=repeat('c',64);
+ BEGIN PERFORM public.inspect_form_collaborator_write(a,s,f,u,'save',repeat('c',64));RAISE EXCEPTION 'Expired receipt read';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'INVALID_STATE' THEN RAISE;END IF;END;
+ UPDATE public.admin_sessions SET revoked_at=now() WHERE id=s;
+ BEGIN PERFORM public.read_form_collaborator_accounts(a,s,f,'collaborators',1,30,'');RAISE EXCEPTION 'Revoked session read inventory';
+ EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ IF has_function_privilege('anon','public.mutate_form_collaborator_write(uuid,uuid,uuid,uuid,text,jsonb,text,text,uuid)','EXECUTE') OR has_function_privilege('authenticated','public.inspect_form_collaborator_write(uuid,uuid,uuid,uuid,text,text,text)','EXECUTE') OR has_function_privilege('gdg_realtime','public.read_form_collaborator_accounts(uuid,uuid,uuid,text,integer,integer,text)','EXECUTE') OR NOT has_function_privilege('service_role','public.inspect_form_collaborator_write(uuid,uuid,uuid,uuid,text,text,text)','EXECUTE') THEN RAISE EXCEPTION 'Collaborator RPC grants exposed';END IF;
+END $$;
+ROLLBACK;

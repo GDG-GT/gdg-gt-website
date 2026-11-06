@@ -83,7 +83,7 @@ export async function formRoutes(
   // Responses/analytics/views belong to formResponseRoutes, dispatched before
   // this handler. Keep one scoped reader rather than a shadowed legacy path.
   const admin = path.match(
-    /^\/api\/v1\/admin\/forms(?:\/([^/]+)(?:\/(draft|validate|versions|publish|state|duplicate|restore|collaborators))?)?$/,
+    /^\/api\/v1\/admin\/forms(?:\/([^/]+)(?:\/(draft|validate|versions|publish|state|duplicate|restore))?)?$/,
   );
   const publicRoute = path.match(
     /^\/api\/v1\/forms\/([^/]+)(?:\/(submissions|preview|drafts|edits)(?:\/(load))?)?$/,
@@ -810,21 +810,19 @@ export async function formRoutes(
   allowMethod(
     request,
     response,
-    operation === "collaborators"
-      ? ["GET", "PATCH", "DELETE"]
-      : operation === "draft"
-        ? ["GET", "PATCH"]
-        : operation === "validate" ||
-            operation === "publish" ||
-            operation === "state" ||
-            operation === "duplicate" ||
-            operation === "restore"
-          ? ["POST"]
-          : operation === "versions"
-            ? ["GET"]
-            : id
-              ? ["GET", "PATCH", "DELETE"]
-              : ["GET", "POST"],
+    operation === "draft"
+      ? ["GET", "PATCH"]
+      : operation === "validate" ||
+          operation === "publish" ||
+          operation === "state" ||
+          operation === "duplicate" ||
+          operation === "restore"
+        ? ["POST"]
+        : operation === "versions"
+          ? ["GET"]
+          : id
+            ? ["GET", "PATCH", "DELETE"]
+            : ["GET", "POST"],
   );
   const session = await requireSession(request, store, config);
   if (request.method !== "GET") await requireCsrf(request, session, store);
@@ -911,40 +909,6 @@ export async function formRoutes(
       sendJson(response, 200, { items: await versions(id) }, requestId);
       return true;
     }
-    if (operation === "collaborators") {
-      if (!(await can(session.user.id, id, "manage_access")))
-        throw new ApiError(
-          403,
-          "FORBIDDEN",
-          "You do not have permission to manage access.",
-        );
-      const p = queryValues(
-        url.searchParams,
-        z
-          .object({
-            page: z.coerce.number().int().min(1).max(10000).default(1),
-            pageSize: z.coerce.number().int().min(1).max(100).default(30),
-            q: z.string().trim().max(100).default(""),
-          })
-          .strict(),
-      );
-      sendJson(
-        response,
-        200,
-        checked(
-          await db.rpc("list_form_access_accounts", {
-            p_actor: session.user.id,
-            p_form: id,
-            p_kind: "collaborators",
-            p_page: p.page,
-            p_size: p.pageSize,
-            p_query: p.q || null,
-          }),
-        ),
-        requestId,
-      );
-      return true;
-    }
     sendJson(
       response,
       200,
@@ -997,36 +961,6 @@ export async function formRoutes(
       { form: await project(copy, session.user.id) },
       requestId,
     );
-    return true;
-  }
-  if (operation === "collaborators") {
-    const body = await jsonBody(
-      request,
-      z
-        .object({
-          userId: uuid,
-          actions: z.array(z.enum(allActions)).min(1).max(8).optional(),
-        })
-        .strict(),
-      4096,
-    );
-    if (request.method === "PATCH" && !body.actions)
-      throw new ApiError(
-        400,
-        "VALIDATION_ERROR",
-        "Select explicit collaborator actions.",
-      );
-    checked(
-      await db.rpc("mutate_form_collaborator", {
-        p_actor: session.user.id,
-        p_form: id,
-        p_user: body.userId,
-        p_actions: body.actions || [],
-        p_delete: request.method === "DELETE",
-        p_request_id: requestId,
-      }),
-    );
-    sendJson(response, 200, { updated: true }, requestId);
     return true;
   }
   const body = await jsonBody(
