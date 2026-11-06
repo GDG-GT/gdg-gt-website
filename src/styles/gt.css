@@ -4902,6 +4902,7 @@ fieldset.gt-event-fields {
   display: none;
 }
 .gt-builder-tool-dialog {
+  --coral: #ad4033;
   max-width: 460px;
   overflow-y: auto;
   max-height: 85dvh;

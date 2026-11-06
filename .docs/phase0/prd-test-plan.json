@@ -1560,7 +1560,9 @@
       "automated": [
         "tests/server/forms.test.mjs",
         "tests/form-runtime-fields.test.ts",
-        "tests/form-images.test.ts"
+        "tests/form-images.test.ts",
+        "tests/client/form-image-picker-recovery.test.tsx",
+        "tests/browser/form-image-picker-recovery.spec.ts"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"

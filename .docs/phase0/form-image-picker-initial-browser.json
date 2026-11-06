@@ -1,0 +1,114 @@
+{
+  "generatedAt": "2026-11-06T11:54:05.779Z",
+  "completed": false,
+  "playwrightVersion": "1.64.1",
+  "platform": "darwin",
+  "arch": "arm64",
+  "stats": {
+    "startTime": "2026-11-06T11:53:18.608Z",
+    "duration": 30826.091999999997,
+    "expected": 10,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "note": "Production-build browser checks with explicit local API fixtures, no database/credentials/provider sends. Screenshots are unapproved review candidates, not initial golden baselines or approved pixel comparisons. WebKit/mobile emulation does not certify Safari or real devices. Local execution does not certify the new CI job has run.",
+  "tests": [
+    {
+      "name": "published form image list retains a stale snapshot, pauses selection and retries independently",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "published form image paging recovers after a later-page outage and shrinking inventory",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "published form image list retains a stale snapshot, pauses selection and retries independently",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "published form image paging recovers after a later-page outage and shrinking inventory",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "published form image list retains a stale snapshot, pauses selection and retries independently",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "published form image paging recovers after a later-page outage and shrinking inventory",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "failed"
+      ]
+    },
+    {
+      "name": "published form image list retains a stale snapshot, pauses selection and retries independently",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "published form image paging recovers after a later-page outage and shrinking inventory",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "published form image list retains a stale snapshot, pauses selection and retries independently",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "published form image paging recovers after a later-page outage and shrinking inventory",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "published form image list retains a stale snapshot, pauses selection and retries independently",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "failed"
+      ]
+    },
+    {
+      "name": "published form image paging recovers after a later-page outage and shrinking inventory",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    }
+  ]
+}

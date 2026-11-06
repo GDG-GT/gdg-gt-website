@@ -111,3 +111,8 @@ reconciliation, explicit identical retries and selected-target concealment after
 an empty current read. SQL, client, route, actual local API and production-browser
 sources are mapped in `FORM_INTEGRATION_RECOVERY.md`. This does not approve the
 remaining respondent/runtime or full manual/device/visual/hosted acceptance.
+
+The supported-field/image case also maps independent approved-image picker
+loading, retained snapshots, paging/shrink/failure recovery, explicit reconnect
+recheck and form/field/account/session cancellation. Local evidence is in
+`FORM_IMAGE_PICKER_RECOVERY.md`; full storage/device/visual acceptance stays open.

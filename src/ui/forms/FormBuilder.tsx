@@ -585,6 +585,7 @@ function FormBuilderContent() {
                 </Field>
                 {field.type === "image" && (
                   <FormImagePicker
+                    scope={form.id + ":field:" + field.id}
                     label="Published image"
                     selected={field.imageMediaId}
                     onChange={(photo) =>
@@ -1011,6 +1012,7 @@ function FormBuilderContent() {
                 </select>
               </Field>
               <FormImagePicker
+                scope={form.id + ":header"}
                 label="Header image"
                 selected={formImageId(form.settings.headerMedia)}
                 onChange={(photo) =>

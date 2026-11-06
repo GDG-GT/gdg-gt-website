@@ -719,6 +719,8 @@ const forms = [
       unit("forms"),
       "tests/form-runtime-fields.test.ts",
       "tests/form-images.test.ts",
+      "tests/client/form-image-picker-recovery.test.tsx",
+      "tests/browser/form-image-picker-recovery.spec.ts",
     ],
   ],
   [

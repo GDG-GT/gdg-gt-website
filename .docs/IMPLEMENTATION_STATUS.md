@@ -8,6 +8,29 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Published form image picker recovery — 2026-11-06
+
+- Header/field image pickers now preserve same-page successful snapshots and local
+  selection during transient read failure, while pausing selection until a current
+  verified read. Named loading/retry/timestamps, malformed-result refusal, later-
+  page failure recovery, shrinking-inventory Previous and explicit reconnect
+  rechecks are implemented. Form/field/account/role/session changes cancel old
+  reads. Generic absent-page selection labels do not fabricate public metadata;
+  local selection removal works without a network write. Existing publication
+  validation and public-media authorization remain authoritative.
+- All 20 image-specific client/schema/render checks pass (17 new recovery cases).
+  Builder read/scope regressions also pass. All 18 final image-picker/builder
+  production-browser cases pass across six profiles. Initial matrix (10 passes,
+  two real hovered mobile-button contrast failures) is retained; mobile builder
+  tool dialogs now use the existing darker admin coral token. Populated axe passes,
+  mobile capture inspected; no approved golden or real-device claim.
+- Build/types/lint (zero errors/25 existing warnings), byte budgets, secrets and
+  traceability pass. No DB/worker/provider/chapter mutation. The latest complete
+  test/coverage run remains the preceding 2,317-case checkpoint; it was not rerun
+  for this scoped read/UI change. Global statement/function coverage and complete
+  acceptance remain open. See `FORM_IMAGE_PICKER_RECOVERY.md`.
+- Respondent/runtime/file recovery is next; SSO/Google and Bevy/Engage stay deferred.
+
 ### First-party linked-form recovery — 2026-11-06
 
 - Migration 129 adds complete session-bound authorized published-form candidates,
