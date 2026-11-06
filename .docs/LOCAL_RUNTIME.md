@@ -68,19 +68,31 @@ npm run jobs:uploads -- --watch
 npm run jobs:scheduler -- --watch
 ```
 
-ClamAV was installed from official Homebrew. Its private runtime/config/signature
-directory is `~/Library/Caches/gdg-gt-scanner`; clamd accepts local streams only
-on `127.0.0.1:13310`. This is not a whole-disk scanner or a system-wide service.
-Refresh signatures with `npm run scanner:update`. Scanning fails closed if
-signatures are stale or the scanner is unavailable. Production requires a
+The local scanner defaults to the official pinned ClamAV 1.5.4 container in the
+project's `colima-gdg-gt` Docker context. It owns the purpose-labelled
+`gdg-gt-scanner-local` container and `gdg-gt-scanner-signatures` volume, uses
+resource limits and exposes only `127.0.0.1:13310`. The upstream image is amd64,
+so this Mac runs it through the VM's emulation. Startup performs signature update
+and load testing, then waits for current scanner health. Repeated starts reuse
+only the verified project-owned container; no database reset is involved.
+
+This isolates the scanner from the current Homebrew ClamAV/OpenSSL 4 signature
+verification regression ([upstream report](https://github.com/Cisco-Talos/clamav/issues/1887)).
+A verified compatible native install remains available explicitly through
+`GDG_SCANNER_RUNTIME=native npm run scanner:local`, using the isolated
+`~/Library/Caches/gdg-gt-scanner` directory. Signature/digital-certificate checks
+and `TestDatabases yes` stay enabled in both modes. Refresh a running container
+with `npm run scanner:update`; it requests an engine reload. No periodic update
+schedule was created. This scanner accepts local streams, not whole-disk scans.
+Scanning fails closed if signatures are stale or unavailable. Production needs a
 separately provisioned, isolated worker and ongoing signature updates.
 
 `npm run setup:local-storage` verifies scanner availability and idempotently
 creates the required private buckets. Server-only local S3 transport credentials
 are in the ignored `.env.server.local`, not in browser configuration. Enabling
 uploads is an explicit operator configuration after verification, not a fallback
-to public buckets. All five configured buckets are private; only form uploads
-are connected end-to-end at this checkpoint.
+to public buckets. The six configured buckets are private: form uploads/exports, contact, finance,
+blog and media. Their current local evidence is tracked separately by module.
 
 ## Private live updates
 

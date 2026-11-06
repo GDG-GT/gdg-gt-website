@@ -824,7 +824,7 @@ const forms = [
   [
     "FORM-016",
     "Private scanned direct upload, physical cleanup and scoped expiring response attachment authorization",
-    [unit("upload-routes"), unit("scanner"), local("uploads"), "tests/client/form-response-file-recovery.test.tsx", "tests/browser/form-response-files.spec.ts"],
+    [unit("upload-routes"), unit("scanner"), local("uploads"), "tests/client/form-response-file-recovery.test.tsx", "tests/browser/form-response-files.spec.ts", "tests/client/respondent-file-recovery.test.tsx", "tests/browser/respondent-file-recovery.spec.ts", sql("130_form_upload_intent_replay"), local("respondent-upload-recovery")],
   ],
   [
     "FORM-017",

@@ -730,6 +730,81 @@ describe("Form recovery and semantic focus", () => {
     await waitFor(() => expect(document.activeElement).toBe(status));
     expect(status.getAttribute("role")).toBe("status");
   });
+  it("clears respondent identity, answers and pending callbacks when the account session is cleared", async () => {
+    const form = fixture();
+    let finish!: (value: { responseId: string }) => void;
+    apiMock.mockImplementation((path: string) =>
+      path.endsWith("/submissions")
+        ? new Promise((resolve) => {
+            finish = resolve;
+          })
+        : Promise.resolve({ form }),
+    );
+    mount();
+    await fill();
+    submit();
+    const request = apiMock.mock.calls.find(([path]) =>
+      path.endsWith("/submissions"),
+    )![1];
+    act(() => window.dispatchEvent(new Event("gdg:session-cleared")));
+    await screen.findByRole("heading", { name: form.title });
+    expect(request.signal.aborted).toBe(true);
+    expect(
+      (screen.getByLabelText("Your name *") as HTMLInputElement).value,
+    ).toBe("");
+    expect(
+      (screen.getByLabelText(/Fictional answer/) as HTMLInputElement).value,
+    ).toBe("");
+    await act(async () => finish({ responseId: "obsolete-session-response" }));
+    expect(
+      screen.queryByRole("heading", { name: "Response submitted." }),
+    ).toBeNull();
+  });
+  it("clears the parent form and private resumed answers when attachment authorization is denied", async () => {
+    const form = fixture(),
+      file = newField("file", form.sections[0].id);
+    file.id = "f1300000-0000-4000-8000-000000000071";
+    form.fields = [file];
+    apiMock.mockImplementation(async (path: string) => {
+      if (path.endsWith("/drafts/load"))
+        return {
+          answers: { [file.id]: ["f1300000-0000-4000-8000-000000000072"] },
+          respondent: {
+            name: "Private resumed person",
+            email: "private-person@example.test",
+          },
+          copyRequested: false,
+        };
+      if (path.endsWith("/status"))
+        throw new ApiFailure(
+          403,
+          "ACCESS_REQUIRED",
+          "Fictional attachment access revoked",
+        );
+      return {
+        form: {
+          ...form,
+          respondentContext: {
+            source: "account",
+            email: "private-person@example.test",
+          },
+        },
+      };
+    });
+    window.history.replaceState(
+      {},
+      "",
+      "/forms/fictional#resume=" + "r".repeat(43),
+    );
+    mount("#resume=" + "r".repeat(43));
+    await screen.findByText(/Reopen the form using current chapter access/);
+    expect(screen.queryByRole("heading", { name: form.title })).toBeNull();
+    expect(screen.queryByText("Private resumed person")).toBeNull();
+    expect(screen.queryByRole("textbox")).toBeNull();
+    expect(
+      apiMock.mock.calls.some(([path]) => path.endsWith("/submissions")),
+    ).toBe(false);
+  });
   it("aborts an unfinished submission when the form unmounts and ignores its late result", async () => {
     let resolve!: (value: { responseId: string }) => void;
     apiMock.mockImplementation((path: string) =>

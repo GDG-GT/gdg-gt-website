@@ -1,0 +1,168 @@
+{
+  "generatedAt": "2026-11-06T12:20:23.274Z",
+  "completed": true,
+  "cleanup": true,
+  "scope": "Dedicated loopback; two fresh owned fictional private publications/accounts, generated harmless text, exact one-object storage and local scanner only. No final responses/mail/provider sends/existing chapter or production changes. Owned upload references removed and exact owned objects deleted; forms archived/accounts disabled/sessions revoked. No raw proof, key, signed URL, body or capability retained.",
+  "tests": [
+    {
+      "name": "prepare-before freezes exact selected-file bytes and original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "prepare-before recovers with identical intent and one persisted upload at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "prepare-before creates one completed local scanner job and a clean attachment at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "prepare-after freezes exact selected-file bytes and original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "prepare-after recovers with identical intent and one persisted upload at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "prepare-after creates one completed local scanner job and a clean attachment at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "put freezes exact selected-file bytes and original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "put recovers with identical intent and one persisted upload at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "put creates one completed local scanner job and a clean attachment at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "complete-before freezes exact selected-file bytes and original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "complete-before recovers with identical intent and one persisted upload at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "complete-before creates one completed local scanner job and a clean attachment at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "complete-after freezes exact selected-file bytes and original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated unconfirmed respondent file passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "complete-after recovers with identical intent and one persisted upload at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "complete-after creates one completed local scanner job and a clean attachment at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "ten simultaneous identical preparations create one upload and preserve the one-file quota at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "actual original-preparation inspection is minimal and read-only at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "recovery creates no responses or mail/provider jobs at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "respondent recovery has no unexpected egress/errors/page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "prepare-before freezes exact selected-file bytes and original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "prepare-before recovers with identical intent and one persisted upload at 375×812",
+      "passed": true
+    },
+    {
+      "name": "prepare-before creates one completed local scanner job and a clean attachment at 375×812",
+      "passed": true
+    },
+    {
+      "name": "prepare-after freezes exact selected-file bytes and original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "prepare-after recovers with identical intent and one persisted upload at 375×812",
+      "passed": true
+    },
+    {
+      "name": "prepare-after creates one completed local scanner job and a clean attachment at 375×812",
+      "passed": true
+    },
+    {
+      "name": "put freezes exact selected-file bytes and original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "put recovers with identical intent and one persisted upload at 375×812",
+      "passed": true
+    },
+    {
+      "name": "put creates one completed local scanner job and a clean attachment at 375×812",
+      "passed": true
+    },
+    {
+      "name": "complete-before freezes exact selected-file bytes and original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "complete-before recovers with identical intent and one persisted upload at 375×812",
+      "passed": true
+    },
+    {
+      "name": "complete-before creates one completed local scanner job and a clean attachment at 375×812",
+      "passed": true
+    },
+    {
+      "name": "complete-after freezes exact selected-file bytes and original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated unconfirmed respondent file passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "complete-after recovers with identical intent and one persisted upload at 375×812",
+      "passed": true
+    },
+    {
+      "name": "complete-after creates one completed local scanner job and a clean attachment at 375×812",
+      "passed": true
+    },
+    {
+      "name": "ten simultaneous identical preparations create one upload and preserve the one-file quota at 375×812",
+      "passed": true
+    },
+    {
+      "name": "actual original-preparation inspection is minimal and read-only at 375×812",
+      "passed": true
+    },
+    {
+      "name": "recovery creates no responses or mail/provider jobs at 375×812",
+      "passed": true
+    },
+    {
+      "name": "respondent recovery has no unexpected egress/errors/page overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

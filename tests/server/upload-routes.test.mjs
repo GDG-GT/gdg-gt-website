@@ -594,3 +594,214 @@ describe("FORM-016 private intent, scanner state and exact response-file dispatc
     );
   });
 });
+
+function preparationFixture() {
+  const f = fixture();
+  f.rpcResults.set("prepare_form_upload", uploadId);
+  f.rpcResults.set("inspect_form_upload_preparation", {
+    committed: true,
+    canRetry: false,
+    uploadId,
+    state: "pending",
+    url: "must-not-project",
+    proof: "must-not-project",
+  });
+  return f;
+}
+const originalPreparation = {
+  "idempotency-key": "fictional-original-upload-key",
+};
+describe("Original respondent upload preparation and read-only outcome", () => {
+  it("freezes normalized metadata/proof/key and signs the original persisted object on replay", async () => {
+    const f = preparationFixture(),
+      r = await f.call(
+        "/forms/fictional/uploads/prepare",
+        f.body,
+        "POST",
+        originalPreparation,
+      );
+    expect(r.statusCode).toBe(200);
+    expect(r.body.data).toMatchObject({
+      uploadId,
+      state: "pending",
+      expiresIn: 120,
+    });
+    const args = f.db.rpc.mock.calls.find(
+      ([n]) => n === "prepare_form_upload",
+    )[1];
+    expect(args).toMatchObject({
+      p_form: formId,
+      p_version: versionId,
+      p_field: fieldId,
+      p_proof: tokenHash(f.proof),
+      p_key_hash: tokenHash(originalPreparation["idempotency-key"]),
+      p_request_hash: tokenHash(JSON.stringify(f.body)),
+      p_actor: null,
+      p_session: null,
+      p_access_hash: null,
+    });
+    expect(args.p_document.key).not.toBe(f.intent.quarantine_key);
+    expect(r.body.data.url).toContain("quarantine/fictional-one-object");
+  });
+  it("inspects a minimal original outcome without signing, creating or scanning anything", async () => {
+    const f = preparationFixture(),
+      r = await f.call(
+        "/forms/fictional/uploads/recovery",
+        f.body,
+        "POST",
+        originalPreparation,
+      );
+    expect(r.statusCode).toBe(200);
+    expect(r.body.data).toEqual({
+      committed: true,
+      canRetry: false,
+      uploadId,
+      state: "pending",
+    });
+    expect(f.db.rpc.mock.calls.map(([n]) => n)).toEqual([
+      "inspect_form_upload_preparation",
+    ]);
+    expect(f.send).not.toHaveBeenCalled();
+    expect(f.store.rateLimit.mock.calls[0].slice(0, 1)).toEqual([
+      "uploads.status.ip",
+    ]);
+  });
+  it.each(["prepare", "recovery"])(
+    "requires an explicit original key and rejects invalid %s paths",
+    async (operation) => {
+      const f = preparationFixture();
+      expect(
+        (await f.call("/forms/fictional/uploads/" + operation, f.body))
+          .statusCode,
+      ).toBe(400);
+      expect(
+        (
+          await f.call(
+            "/forms/fictional/uploads/" + operation + "/status",
+            f.body,
+            "POST",
+            originalPreparation,
+          )
+        ).statusCode,
+      ).toBe(404);
+      expect(
+        (
+          await f.call(
+            "/forms/fictional/uploads/" + uploadId,
+            f.body,
+            "POST",
+            originalPreparation,
+          )
+        ).statusCode,
+      ).toBe(404);
+      expect(f.db.rpc).not.toHaveBeenCalled();
+    },
+  );
+  it.each(["queued", "clean"])(
+    "does not issue a new upload URL for an already %s intent",
+    async (state) => {
+      const f = preparationFixture();
+      f.intent.state = state;
+      const r = await f.call(
+        "/forms/fictional/uploads/prepare",
+        f.body,
+        "POST",
+        originalPreparation,
+      );
+      expect(r.statusCode).toBe(200);
+      expect(r.body.data).toEqual({ uploadId, state });
+      expect(f.send).not.toHaveBeenCalled();
+    },
+  );
+  it.each(["missing", "deleted", "expired", "rejected", "pending-expired"])(
+    "refuses unavailable %s original preparation instead of allocating again",
+    async (condition) => {
+      const f = preparationFixture();
+      if (condition === "missing") f.rows.delete("upload_intents");
+      else if (condition === "deleted")
+        f.intent.deleted_at = new Date().toISOString();
+      else if (condition === "pending-expired")
+        f.intent.expires_at = new Date(Date.now() - 1000).toISOString();
+      else f.intent.state = condition;
+      const r = await f.call(
+        "/forms/fictional/uploads/prepare",
+        f.body,
+        "POST",
+        originalPreparation,
+      );
+      expect(r.statusCode).toBe(400);
+      expect(r.body.error.code).toBe("INVALID_UPLOAD");
+      expect(
+        f.db.rpc.mock.calls.filter(([n]) => n === "prepare_form_upload"),
+      ).toHaveLength(1);
+    },
+  );
+  it.each(["prepare", "recovery"])(
+    "checks current internal session/CSRF/team before %s and binds trusted identity",
+    async (operation) => {
+      const f = preparationFixture();
+      f.form.access_mode = "internal";
+      const r = await f.call(
+        "/forms/fictional/uploads/" + operation,
+        f.body,
+        "POST",
+        originalPreparation,
+      );
+      expect(r.statusCode).toBe(200);
+      expect(f.db.rpc.mock.calls[0][1]).toMatchObject({
+        p_actor: actor,
+        p_session: sid,
+        p_access_hash: null,
+      });
+      f.form.team_id = teamId;
+      f.store.memberships.mockResolvedValue([]);
+      const denied = await f.call(
+        "/forms/fictional/uploads/" + operation,
+        f.body,
+        "POST",
+        originalPreparation,
+      );
+      expect(denied.statusCode).toBe(403);
+    },
+  );
+  it.each(["prepare", "recovery"])(
+    "checks current private access before %s and binds its hash only",
+    async (operation) => {
+      const f = preparationFixture();
+      f.form.access_mode = "invited";
+      expect(
+        (
+          await f.call(
+            "/forms/fictional/uploads/" + operation,
+            f.body,
+            "POST",
+            originalPreparation,
+          )
+        ).statusCode,
+      ).toBe(403);
+      const body = { ...f.body, accessToken: f.access };
+      const r = await f.call(
+        "/forms/fictional/uploads/" + operation,
+        body,
+        "POST",
+        originalPreparation,
+      );
+      expect(r.statusCode).toBe(200);
+      expect(f.db.rpc.mock.calls[0][1]).toMatchObject({
+        p_access_hash: tokenHash(f.access),
+        p_request_hash: tokenHash(
+          JSON.stringify({
+            ...f.base,
+            accessToken: f.access,
+            fieldId,
+            filename: "fictional.pdf",
+            mime: "application/pdf",
+            bytes: 123,
+            sha256: "a".repeat(64),
+          }),
+        ),
+      });
+      expect(JSON.stringify(f.db.rpc.mock.calls[0])).not.toContain(f.access);
+    },
+  );
+});

@@ -3,6 +3,16 @@ import { mkdir, writeFile, stat } from "node:fs/promises";
 import { homedir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+// The official image isolates ClamAV from host OpenSSL ABI regressions. Native
+// remains available explicitly for hosts with a verified compatible installation.
+if (process.env.GDG_SCANNER_RUNTIME !== "native") {
+  const action = process.argv[2] || "start";
+  if (!["start", "update"].includes(action))
+    throw new Error("Use start or update.");
+  const { containerScanner } = await import("./lib/container-scanner.mjs");
+  await containerScanner(action);
+  process.exit(0);
+}
 const root = fileURLToPath(new URL("../", import.meta.url)),
   directory = path.join(homedir(), "Library", "Caches", "gdg-gt-scanner");
 const action = process.argv[2] || "start";
@@ -73,6 +83,7 @@ for (const name of ["daily.cvd", "daily.cld"])
 if (action === "update" || !fresh)
   await run(path.join(binary, "freshclam"), [
     "--config-file=" + configs.freshclam,
+    "--cvdcertsdir=" + certs,
     "--datadir=" + directory,
     "--stdout",
   ]);

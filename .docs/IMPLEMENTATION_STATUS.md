@@ -8,6 +8,56 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Respondent file recovery and local scanner restoration — 2026-11-06
+
+- Migration 130 adds current-access/version/field/proof/body/key-bound atomic
+  preparation and minimal read-only receipt inspection. Identical concurrent
+  requests preserve one upload/quarantine object under existing file quotas.
+  The native respondent uses explicit prepare/recovery routes; original transport,
+  completion, status and removal remain authorized and private. No raw proof,
+  signed URL, body or bytes enter receipt records or browser storage.
+- File children now protect original intent across lost preparation/PUT/completion
+  replies, require inspection before explicit continuation, recheck after second
+  loss/reconnect and attach only after current clean scan. Independent restored
+  status reads, missing-reference/current-form denial distinction, expired/rejected
+  answer exclusion, removal-loss recovery, reviewed stopping, multi-file batches
+  and field/form/version/proof/session cancellation are covered. Parent form
+  identity/answers/capabilities clear on session change/current upload denial;
+  preview/live scope and private navigation are fenced.
+- Both 130-migration SQL chains pass (234/235 checks), both 100-client capacity
+  races and six isolated restore checks pass; migration applied locally. All 84
+  focused file/route/respondent cases and nine scanner ownership/resource/update
+  guards pass. All 54 final upload/image-picker production-browser cases pass
+  across six profiles, no skips. Initial interrupted progress-label contrast
+  failure and later four WebKit disabled-save contrast failures are retained;
+  narrow text/disabled colors fix them. Populated axe passes, mobile/live captures
+  inspected and unapproved. Lost-connection status now says work is paused.
+- Actual probe found this local stack had no buckets and the native scanner was
+  stopped. Native ClamAV links OpenSSL 4, matching upstream signature-verification
+  failure; no verification bypass used. The official pinned ClamAV 1.5.4 container
+  now runs in dedicated Colima with owned persistent signatures, resource limits,
+  explicit amd64 emulation and loopback-only 13310. Signature update/load test and
+  health pass (28175), all six buckets initialized privately; clean text and
+  in-memory EICAR rejection pass. Native remains an explicit compatible-host option.
+  No periodic task, provider send or production change was introduced.
+- All 40 actual API/DB/desktop-mobile checks pass with generated harmless text:
+  five loss positions, exact bytes/body/key, one upload/completed scan job each,
+  ten simultaneous identical preparations and minimal read-only outcome checks.
+  Zero final responses/mail/provider jobs/egress/errors/page overflow. Owned objects
+  deleted/references removed/forms archived/accounts disabled/sessions revoked.
+  Initial probe's unhandled fixture-route exception and verified follow-up cleanup
+  are retained; fixture now captures route errors so normal cleanup runs.
+- Build/types/lint (zero errors/25 existing warnings), byte budgets, secrets and
+  traceability pass. All 2,389 tests/198 files pass; all 21 critical 90% branch gates
+  pass. Global coverage still fails the unchanged 70% gate: 70.98% lines, 70.90%
+  branches, 69.44% statements, 62.40% functions. Catalog stays 159 unverified cases.
+  See `RESPONDENT_UPLOAD_RECOVERY.md` and updated `LOCAL_RUNTIME.md`.
+- Remaining local Forms recovery: respondent final submissions, response edits
+  and save/resume must preserve original unknown requests rather than change keys
+  or generate a new draft token after loss. Global coverage and complete manual/
+  device/visual/hosted/launch acceptance remain open. SSO/Google and Bevy/Engage
+  remain deferred.
+
 ### Published form image picker recovery — 2026-11-06
 
 - Header/field image pickers now preserve same-page successful snapshots and local

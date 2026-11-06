@@ -4988,7 +4988,7 @@ fieldset.gt-event-fields {
   margin-top: 25px;
   margin-bottom: 12px;
   font-size: 0.68rem;
-  color: #977355;
+  color: #7b604b;
 }
 .gt-form-progress {
   height: 5px;
@@ -5197,6 +5197,12 @@ fieldset.gt-event-fields {
   color: #9b603a;
   font-size: 0.7rem;
   padding: 10px;
+}
+.gt-save-resume:disabled {
+  color: #7b604b;
+  -webkit-text-fill-color: #7b604b;
+  opacity: 1;
+  cursor: not-allowed;
 }
 .gt-public-form-privacy {
   display: flex;

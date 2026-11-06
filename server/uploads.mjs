@@ -7,6 +7,7 @@ import {
   parse,
   uuid,
   slug,
+  idempotency,
 } from "./lib/validation.mjs";
 import { tokenHash, validToken, riskHash } from "./lib/security.mjs";
 import { objectStorage } from "./lib/object-storage.mjs";
@@ -20,7 +21,7 @@ export async function uploadRoutes(
 ) {
   const url = new URL(request.url, config.origin),
     publicMatch = url.pathname.match(
-      /^\/api\/v1\/forms\/([^/]+)\/uploads(?:\/([^/]+)\/(complete|status|remove))?$/,
+      /^\/api\/v1\/forms\/([^/]+)\/uploads(?:\/(prepare|recovery|[^/]+)(?:\/(complete|status|remove))?)?$/,
     ),
     protectedMatch = url.pathname.match(
       /^\/api\/v1\/admin\/forms\/([^/]+)\/responses\/([^/]+)\/files\/([^/]+)$/,
@@ -110,7 +111,18 @@ export async function uploadRoutes(
     return true;
   }
   allowMethod(request, response, ["POST"]);
-  const statusRead = publicMatch[3] === "status";
+  const preparation = ["prepare", "recovery"].includes(publicMatch[2]),
+    recovering = publicMatch[2] === "recovery",
+    statusRead = publicMatch[3] === "status" || recovering;
+  if (
+    (publicMatch[2] && !preparation && !publicMatch[3]) ||
+    (preparation && publicMatch[3])
+  )
+    throw new ApiError(
+      404,
+      "NOT_FOUND",
+      "This upload operation is not available.",
+    );
   const quota = await store.rateLimit(
     statusRead ? "uploads.status.ip" : "uploads.intent.ip",
     riskHash(request.socket?.remoteAddress || "unknown", config.riskSecret),
@@ -127,7 +139,7 @@ export async function uploadRoutes(
   }
   const formSlug = parse(slug, publicMatch[1]),
     operation = publicMatch[3],
-    id = publicMatch[2] ? parse(uuid, publicMatch[2]) : null;
+    id = publicMatch[2] && !preparation ? parse(uuid, publicMatch[2]) : null;
   const body = await jsonBody(
     request,
     operation
@@ -159,8 +171,9 @@ export async function uploadRoutes(
     ["Draft", "Archived"].includes(form.state)
   )
     throw new ApiError(404, "NOT_FOUND", "This form is not available.");
+  let session;
   if (form.access_mode === "internal") {
-    const session = await requireSession(request, store, config);
+    session = await requireSession(request, store, config);
     await requireCsrf(request, session, store);
     if (
       form.team_id &&
@@ -202,7 +215,37 @@ export async function uploadRoutes(
       "This form changed. Reload before uploading.",
     );
   const group = tokenHash(body.uploadToken),
-    storage = objectStorage();
+    preparationArgs = preparation
+      ? {
+          p_form: form.id,
+          p_version: body.versionId,
+          p_field: body.fieldId,
+          p_proof: group,
+          p_actor: session?.user.id || null,
+          p_session: session?.sessionId || null,
+          p_access_hash: body.accessToken ? tokenHash(body.accessToken) : null,
+          p_key_hash: tokenHash(idempotency(request)),
+          p_request_hash: tokenHash(JSON.stringify(body)),
+        }
+      : undefined;
+  if (recovering) {
+    const value = checked(
+      await db.rpc("inspect_form_upload_preparation", preparationArgs),
+    );
+    sendJson(
+      response,
+      200,
+      {
+        committed: value.committed,
+        canRetry: value.canRetry,
+        uploadId: value.uploadId,
+        state: value.state,
+      },
+      requestId,
+    );
+    return true;
+  }
+  const storage = objectStorage();
   try {
     if (operation) {
       const record = checked(
@@ -217,7 +260,11 @@ export async function uploadRoutes(
           .maybeSingle(),
       );
       if (!record)
-        throw new ApiError(404, "NOT_FOUND", "This upload is not available.");
+        throw new ApiError(
+          404,
+          "UPLOAD_NOT_FOUND",
+          "This upload is not available.",
+        );
       if (operation === "remove") {
         checked(
           await db.rpc("remove_form_upload", {
@@ -276,13 +323,21 @@ export async function uploadRoutes(
           .maybeSingle(),
       );
       if (!file)
-        throw new ApiError(404, "NOT_FOUND", "This upload is not available.");
+        throw new ApiError(
+          404,
+          "UPLOAD_NOT_FOUND",
+          "This upload is not available.",
+        );
       sendJson(
         response,
         200,
         {
           uploadId: id,
-          state: record.state,
+          state:
+            record.state === "pending" &&
+            new Date(record.expires_at) <= new Date()
+              ? "expired"
+              : record.state,
           scanState: file.scan_state,
           filename: file.original_filename,
           bytes: file.byte_size,
@@ -329,23 +384,66 @@ export async function uploadRoutes(
     );
     const objectKey = "quarantine/" + randomUUID() + "/" + randomUUID(),
       uploadId = checked(
-        await db.rpc("create_form_upload", {
-          p_form: form.id,
-          p_version: body.versionId,
-          p_field: body.fieldId,
-          p_proof: group,
-          p_document: {
-            key: objectKey,
-            filename: body.filename,
-            mime: body.mime,
-            bytes: body.bytes,
-            sha256: body.sha256,
+        await db.rpc(
+          preparation ? "prepare_form_upload" : "create_form_upload",
+          {
+            p_form: form.id,
+            p_version: body.versionId,
+            p_field: body.fieldId,
+            p_proof: group,
+            ...(preparation
+              ? {
+                  p_actor: preparationArgs.p_actor,
+                  p_session: preparationArgs.p_session,
+                  p_access_hash: preparationArgs.p_access_hash,
+                  p_key_hash: preparationArgs.p_key_hash,
+                  p_request_hash: preparationArgs.p_request_hash,
+                }
+              : {}),
+            p_document: {
+              key: objectKey,
+              filename: body.filename,
+              mime: body.mime,
+              bytes: body.bytes,
+              sha256: body.sha256,
+            },
           },
-        }),
+        ),
       );
+    const prepared = preparation
+      ? checked(
+          await db
+            .from("upload_intents")
+            .select("id,state,expires_at,quarantine_key,deleted_at")
+            .eq("id", uploadId)
+            .eq("form_id", form.id)
+            .eq("version_id", body.versionId)
+            .eq("field_id", body.fieldId)
+            .eq("proof_hash", group)
+            .maybeSingle(),
+        )
+      : null;
+    if (
+      preparation &&
+      (!prepared ||
+        prepared.deleted_at ||
+        prepared.state === "expired" ||
+        prepared.state === "rejected" ||
+        (prepared.state === "pending" &&
+          new Date(prepared.expires_at) <= new Date()))
+    )
+      throw new ApiError(
+        400,
+        "INVALID_UPLOAD",
+        "This upload is no longer available. Choose the file again.",
+      );
+    if (prepared && prepared.state !== "pending") {
+      sendJson(response, 200, { uploadId, state: prepared.state }, requestId);
+      return true;
+    }
     const signed = await storage.putUrl(
       "form-uploads",
-      objectKey,
+      prepared ? prepared.quarantine_key : objectKey,
       body.mime,
       body.bytes,
       body.sha256,
@@ -355,6 +453,7 @@ export async function uploadRoutes(
       200,
       {
         uploadId,
+        state: "pending",
         url: signed,
         expiresIn: 120,
         headers: {

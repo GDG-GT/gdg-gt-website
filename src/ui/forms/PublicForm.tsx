@@ -50,10 +50,21 @@ type RespondentForm = FormDefinition & {
 };
 
 export default function PublicForm() {
-  const { slug } = useParams();
+  const { slug } = useParams(),
+    [params] = useSearchParams(),
+    [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((value) => value + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
   // A different form must never inherit another form's answers, identity or
   // private resume/edit/upload capabilities after an approved navigation.
-  return <RespondentFormRuntime key={slug} />;
+  return (
+    <RespondentFormRuntime
+      key={JSON.stringify([slug, params.get("preview") === "1", epoch])}
+    />
+  );
 }
 
 function RespondentFormRuntime() {
@@ -159,7 +170,7 @@ function RespondentFormRuntime() {
     {
       busy: pending || uploading.length > 0,
       label: "Form answers or files not yet saved",
-      privateDraft: form?.settings.access === "internal",
+      privateDraft: true,
     },
   );
   useEffect(() => {
@@ -934,9 +945,27 @@ function RespondentFormRuntime() {
                               versionId: form.versionId,
                               uploadToken,
                               accessToken: tokens.access,
+                              protected:
+                                form.respondentContext?.source === "account",
                             }}
                             readOnly={!!editToken.current}
                             error={fieldErrors[field.id]}
+                            onAccessDenied={() => {
+                              mutation.current?.abort();
+                              setForm(undefined);
+                              setAnswers({});
+                              setRespondent({ name: "", email: "" });
+                              setFileNames({});
+                              setSavedLink("");
+                              setCopyRequested(false);
+                              editToken.current = undefined;
+                              resumeToken.current = undefined;
+                              submission.current = undefined;
+                              setLoadStatus(403);
+                              setLoadError(
+                                "Form access could not be verified. Reopen the form using current chapter access or your original private link.",
+                              );
+                            }}
                             onBusy={(busy) =>
                               setUploading((previous) =>
                                 busy

@@ -130,7 +130,8 @@
     "202611060126_form_deletion_replay.sql",
     "202611060127_form_deletion_request_guards.sql",
     "202611060128_form_access_link_replay.sql",
-    "202611060129_form_integration_replay.sql"
+    "202611060129_form_integration_replay.sql",
+    "202611060130_form_upload_intent_replay.sql"
   ],
   "tests": [
     {
@@ -658,6 +659,10 @@
       "passed": true
     },
     {
+      "name": "202611060130_form_upload_intent_replay.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -1055,6 +1060,10 @@
     },
     {
       "name": "129_form_integration_replay.sql",
+      "passed": true
+    },
+    {
+      "name": "130_form_upload_intent_replay.sql",
       "passed": true
     },
     {

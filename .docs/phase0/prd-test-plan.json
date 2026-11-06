@@ -1777,7 +1777,11 @@
         "tests/server/scanner.test.mjs",
         "scripts/test-local-uploads.mjs",
         "tests/client/form-response-file-recovery.test.tsx",
-        "tests/browser/form-response-files.spec.ts"
+        "tests/browser/form-response-files.spec.ts",
+        "tests/client/respondent-file-recovery.test.tsx",
+        "tests/browser/respondent-file-recovery.spec.ts",
+        "database/tests/130_form_upload_intent_replay.sql",
+        "scripts/test-local-respondent-upload-recovery.mjs"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"

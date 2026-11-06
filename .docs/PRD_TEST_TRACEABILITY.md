@@ -116,3 +116,10 @@ The supported-field/image case also maps independent approved-image picker
 loading, retained snapshots, paging/shrink/failure recovery, explicit reconnect
 recheck and form/field/account/session cancellation. Local evidence is in
 `FORM_IMAGE_PICKER_RECOVERY.md`; full storage/device/visual acceptance stays open.
+
+The private-file case now also maps respondent upload preparation receipts,
+current-access read-only inspection, exact original transfer/completion recovery,
+attachment status/removal/context fences, real local storage/scanner checks and
+scanner isolation/ownership guards. See `RESPONDENT_UPLOAD_RECOVERY.md`. Final
+respondent submission/draft recovery and full device/storage/hosted acceptance
+remain open.
