@@ -6746,6 +6746,21 @@ fieldset.gt-event-fields {
   padding-block: 1rem;
   border-top: 1px solid #d5d3d2;
 }
+.gt-response-read-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+}
+.gt-response-read-feedback {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-block: 0.5rem;
+}
+.gt-response-read-feedback > p {
+  flex-basis: 100%;
+  margin: 0;
+}
 .gt-response-history h3,
 .gt-form-version-history h3,
 .gt-form-version-history h4 {

@@ -6,7 +6,7 @@ documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
 Current local verification update (2026-11-06): the latest module checkpoint is
-`FORM_RESPONSE_FILE_RECOVERY.md`; completed recovery checkpoints include tasks,
+`FORM_RESPONSE_READ_RECOVERY.md`; completed recovery checkpoints include tasks,
 announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
 and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
 below. All numbered requirements remain unverified against complete acceptance;
@@ -83,7 +83,10 @@ exact original-request recovery and reviewed abandonment. Archived builder views
 now enforce read-only draft/publication presentation while preserving saved preview
 and immutable published history (`FORM_ARCHIVED_VIEW.md`). This also guards an
 archive discovered during a retained local proposal. Remaining Forms child/access/settings/deletion,
-response inventory/summary/views/exports/mutations, runtime/integration recovery and full acceptance remain open.
+response availability/destructive/saved-view mutation replay, export recovery,
+proposal/navigation workflows, runtime/integration recovery and full acceptance
+remain open. Independent response inventory/summary/saved-view/hold reads are
+implemented locally (`FORM_RESPONSE_READ_RECOVERY.md`).
 Private response history now has independent inventory/snapshot recovery, denial
 clearing and account/role/sensitive-context cancellation locally
 (`FORM_RESPONSE_HISTORY_RECOVERY.md`). Private response attachment authorization
@@ -209,8 +212,8 @@ Their manual/hosted/visual acceptance remains open.
   conditional-hook violations in active code were fixed. An existing untracked
   user file still has its separate hook warning and is preserved.
 - All 17 individual critical-file 90%-branch gates now pass. Overall unit
-  coverage is 66.19% lines/65.93% branches at the attachment checkpoint,
-  below the global 70% gate; 1,744 tests pass, not a
+  coverage is 66.36% lines/66.21% branches at the response-read checkpoint,
+  below the global 70% gate; 1,761 tests pass, not a
   percentage of completed PRD features.
   See `CRITICAL_TRANSPORT_TESTING.md` for the scoped measurements.
   All 146 numbered requirements now map into 159 reviewed logical test cases with

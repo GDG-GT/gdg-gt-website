@@ -8,6 +8,33 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Independent response-workspace reads — 2026-11-06
+
+- Responses, summary, saved views and holds have independent explicit retries,
+  timestamped matching snapshots and paused actions. First failure differs from
+  empty results; failed hold reads cannot authorize destructive actions. Selection
+  resolves from the matching inventory. Definition/child denial or lost response
+  capability clears private data, proposals and URL filters until explicit recheck.
+  Reconnect requires active-view reload. Horizontal table scrolling is named and
+  keyboard focusable; per-read feedback uses restrained existing tokens.
+- All 99 focused tests pass (17 new). All 24 actual loopback API/DB/desktop-mobile
+  checks pass, including populated axe, independent failures, retained proposals,
+  hold safeguards and unchanged counts. Two fictional internal forms each have
+  one intended response/edit/view; metadata jobs disabled/secrets cleared, forms
+  archived/accounts disabled/sessions revoked. No worker/provider send, existing
+  chapter or production change.
+- Build/types/lint (zero errors/25 warnings), byte budgets, secrets/traceability
+  pass. All 72 response-read/history/attachment/shared-workspace browser checks
+  pass across six profiles, plus six final definition-denial/capability checks.
+  Captures inspected/unapproved; no real-device/manual/hosted acceptance.
+- All 1,761 tests/176 files pass. Global 70% coverage remains red: 66.36% lines,
+  66.21% branches, 64.59% statements and 57.74% functions. All 17 critical branch
+  gates pass. No timeout/threshold changed; catalog stays 159 unverified cases.
+- Response availability/destructive/saved-view atomic mutation and uncertain-
+  outcome recovery, exports/proposal/navigation, Forms access/settings/deletion/
+  integrations/runtime and full quality/device/manual/visual/storage/hosted
+  acceptance remain open. See `FORM_RESPONSE_READ_RECOVERY.md`.
+
 ### Scoped private response attachment authorization — 2026-11-06
 
 - Explicit authorization exposes a bounded download link; delayed reads never

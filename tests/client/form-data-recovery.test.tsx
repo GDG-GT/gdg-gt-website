@@ -49,7 +49,7 @@ function form(title = "Fictional form") {
     ...createTemplate(title, "blank"),
     id: title,
     revision: 1,
-    actions: ["view", "edit"],
+    actions: ["view", "edit", "view_responses"],
   };
 }
 function listing(title = "Fictional library") {

@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useAdmin } from "@/contexts/AdminContext";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { api } from "@/lib/api";
@@ -66,24 +68,18 @@ function ResponseWorkspaceContent() {
     form = server.form,
     [params, setParams] = useSearchParams();
   const [tab, setTab] = useState("Responses"),
-    [data, setData] = useState<Result>(),
-    [summary, setSummary] = useState<Summary>(),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
-    [loading, setLoading] = useState(true),
     [refresh, setRefresh] = useState(0);
-  const [selected, setSelected] = useState<FormResponse>(),
+  const [selectedId, setSelectedId] = useState<string>(),
     [checked, setChecked] = useState<string[]>([]),
     [columns, setColumns] = useState<string[]>([]),
-    [views, setViews] = useState<View[]>([]),
     [viewName, setViewName] = useState(""),
     [action, setAction] = useState<"delete" | "redact">(),
     [confirm, setConfirm] = useState(""),
     [busy, setBusy] = useState(false);
   const [privacyTarget, setPrivacyTarget] = useState<{ responseId?: string }>(),
-    [privacyState, setPrivacyState] = useState({ dirty: false, busy: false }),
-    [formHeld, setFormHeld] = useState<boolean>(),
-    [holdError, setHoldError] = useState(false);
+    [privacyState, setPrivacyState] = useState({ dirty: false, busy: false });
   const [dateError, setDateError] = useState<"from" | "to" | "">(""),
     [dateMessage, setDateMessage] = useState("");
   const query = params.toString();
@@ -91,71 +87,112 @@ function ResponseWorkspaceContent() {
     setDateError("");
     setDateMessage("");
   }, [query]);
-  const mayReviewPrivacy = !!form?.actions?.includes("delete");
+  const [blocked, setBlocked] = useState(""),
+    [needsRecheck, setNeedsRecheck] = useState(false),
+    [readRetry, setReadRetry] = useState({
+      responses: 0,
+      summary: 0,
+      views: 0,
+      holds: 0,
+    });
+  const hadResponseAccess = useRef(false);
+  const { isOnline } = useOnlineStatus(),
+    mayReviewResponses = !!form?.actions?.includes("view_responses"),
+    mayReviewPrivacy = !!form?.actions?.includes("delete"),
+    root = `/admin/forms/${formId}`,
+    readable = !!formId && !!form && mayReviewResponses && !blocked,
+    responsesRead = usePrivateRead<Result>(
+      readable && tab === "Responses"
+        ? `${root}/responses?${query}`
+        : undefined,
+      refresh + readRetry.responses,
+    ),
+    summaryRead = usePrivateRead<Summary>(
+      readable && tab === "Summary" ? `${root}/analytics?${query}` : undefined,
+      refresh + readRetry.summary,
+    ),
+    viewsRead = usePrivateRead<{ items: View[] }>(
+      readable ? `${root}/views` : undefined,
+      refresh + readRetry.views,
+    ),
+    holdsRead = usePrivateRead<{ held: boolean }>(
+      readable && mayReviewPrivacy ? `${root}/privacy` : undefined,
+      refresh + readRetry.holds,
+    ),
+    activeRead = tab === "Summary" ? summaryRead : responsesRead,
+    denied =
+      server.denied ||
+      (!!form && !mayReviewResponses && hadResponseAccess.current) ||
+      responsesRead.denied ||
+      summaryRead.denied ||
+      viewsRead.denied ||
+      holdsRead.denied,
+    data = readable && !denied ? responsesRead.data : undefined,
+    summary = readable && !denied ? summaryRead.data : undefined,
+    views = readable && !denied ? viewsRead.data?.items || [] : [],
+    loading = activeRead.loading,
+    ready =
+      readable &&
+      !denied &&
+      !!activeRead.data &&
+      !loading &&
+      !activeRead.error &&
+      isOnline &&
+      !needsRecheck &&
+      !server.loading &&
+      !server.error,
+    viewsReady =
+      ready && !!viewsRead.data && !viewsRead.loading && !viewsRead.error,
+    holdsReady =
+      ready && !!holdsRead.data && !holdsRead.loading && !holdsRead.error,
+    formHeld = holdsReady ? holdsRead.data?.held : undefined,
+    holdError = mayReviewPrivacy && !holdsReady,
+    selected = data?.items.find((row) => row.id === selectedId),
+    setSelected = (row?: FormResponse) => setSelectedId(row?.id);
   useEffect(() => {
-    if (!formId || !mayReviewPrivacy) {
-      setFormHeld(undefined);
-      return;
-    }
-    const controller = new AbortController();
-    setFormHeld(undefined);
-    setHoldError(false);
-    api<{ held: boolean }>(`/admin/forms/${formId}/privacy`, {
-      signal: controller.signal,
-    })
-      .then((p) => {
-        if (!controller.signal.aborted) setFormHeld(p.held);
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setHoldError(true);
-      });
-    return () => controller.abort();
-  }, [formId, mayReviewPrivacy, refresh]);
+    if (mayReviewResponses) hadResponseAccess.current = true;
+  }, [mayReviewResponses]);
+  const { clear: clearResponses } = responsesRead,
+    { clear: clearSummary } = summaryRead,
+    { clear: clearViews } = viewsRead,
+    { clear: clearHolds } = holdsRead;
   useEffect(() => {
-    if (!formId) return;
-    const controller = new AbortController();
-    setLoading(true);
-    setError("");
-    setData(undefined);
-    setSummary(undefined);
-    setSelected(undefined);
+    setSelectedId(undefined);
     setChecked([]);
-    const work =
-      tab === "Summary"
-        ? api<Summary>(`/admin/forms/${formId}/analytics?${query}`, {
-            signal: controller.signal,
-          }).then((value) => {
-            if (!controller.signal.aborted) setSummary(value);
-          })
-        : api<Result>(`/admin/forms/${formId}/responses?${query}`, {
-            signal: controller.signal,
-          }).then((value) => {
-            if (!controller.signal.aborted) setData(value);
-          });
-    work
-      .catch((e) => {
-        if (!controller.signal.aborted) setError(e.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
-      });
-    return () => controller.abort();
-  }, [formId, query, refresh, tab]);
+    setAction(undefined);
+    setConfirm("");
+  }, [query, tab]);
   useEffect(() => {
-    const controller = new AbortController();
-    setViews([]);
-    if (formId)
-      api<{ items: View[] }>(`/admin/forms/${formId}/views`, {
-        signal: controller.signal,
-      })
-        .then((r) => {
-          if (!controller.signal.aborted) setViews(r.items);
-        })
-        .catch(() => {
-          if (!controller.signal.aborted) setViews([]);
-        });
-    return () => controller.abort();
-  }, [formId, refresh]);
+    if (!denied) return;
+    setBlocked(
+      "Private response access changed. Recheck current access before reopening this workspace.",
+    );
+    clearResponses();
+    clearSummary();
+    clearViews();
+    clearHolds();
+    setSelectedId(undefined);
+    setChecked([]);
+    setColumns([]);
+    setViewName("");
+    setAction(undefined);
+    setConfirm("");
+    setPrivacyTarget(undefined);
+    setPrivacyState({ dirty: false, busy: false });
+    setError("");
+    setNotice("");
+    setParams({}, { replace: true });
+  }, [denied, clearResponses, clearSummary, clearViews, clearHolds, setParams]);
+  useEffect(() => {
+    const offline = () => setNeedsRecheck(true);
+    window.addEventListener("offline", offline);
+    return () => window.removeEventListener("offline", offline);
+  }, []);
+  const retry = (name: keyof typeof readRetry) => {
+    if (name === (tab === "Summary" ? "summary" : "responses"))
+      setNeedsRecheck(false);
+    setReadRetry((value) => ({ ...value, [name]: value[name] + 1 }));
+  };
   const change = (key: string, value: string) => {
     const next = new URLSearchParams(params);
     if (value) next.set(key, value);
@@ -165,6 +202,7 @@ function ResponseWorkspaceContent() {
     if (key === "page") document.getElementById("workspace-content")?.focus();
   };
   const work = async (run: () => Promise<unknown>, message: string) => {
+    if (!ready || busy) return;
     setBusy(true);
     setError("");
     try {
@@ -179,6 +217,34 @@ function ResponseWorkspaceContent() {
       setBusy(false);
     }
   };
+  if (blocked || denied)
+    return (
+      <div className="gt-admin-page">
+        <EmptyState
+          title="Response access needs to be rechecked"
+          action={
+            <Button
+              disabled={!isOnline || busy}
+              onClick={() => {
+                clearResponses();
+                clearSummary();
+                clearViews();
+                clearHolds();
+                setBlocked("");
+                setRefresh((value) => value + 1);
+                void server.reload();
+                document.getElementById("workspace-content")?.focus();
+              }}
+            >
+              Recheck response workspace access
+            </Button>
+          }
+        >
+          {blocked || "Private response information has been cleared."}
+        </EmptyState>
+        <Link to="/admin/forms">Back to forms</Link>
+      </div>
+    );
   if (!form)
     return (
       <div className="gt-admin-page">
@@ -210,6 +276,23 @@ function ResponseWorkspaceContent() {
         )}
       </div>
     );
+  if (!mayReviewResponses)
+    return (
+      <div className="gt-admin-page">
+        <EmptyState
+          title="Response review permission required"
+          action={
+            <Button onClick={() => void server.reload()}>
+              Recheck saved form access
+            </Button>
+          }
+        >
+          This saved definition does not grant response review. No response
+          inventory, summary or saved view is loaded.
+        </EmptyState>
+        <Link to="/admin/forms">Back to forms</Link>
+      </div>
+    );
   const fieldMap = new Map(
       form.versions.flatMap((v) => v.fields.map((f) => [f.id, f] as const)),
     ),
@@ -237,7 +320,12 @@ function ResponseWorkspaceContent() {
           {form.actions?.includes("publish") && (
             <Button
               variant="secondary"
-              disabled={busy}
+              disabled={
+                busy ||
+                !ready ||
+                form.status === "Archived" ||
+                !form.versions.length
+              }
               onClick={() =>
                 work(
                   () =>
@@ -252,11 +340,23 @@ function ResponseWorkspaceContent() {
               {form.status === "Open" ? "Close form" : "Reopen form"}
             </Button>
           )}
-          <Button variant="secondary" onClick={() => setRefresh((v) => v + 1)}>
+          <Button
+            variant="secondary"
+            disabled={busy || !isOnline}
+            onClick={() => {
+              setRefresh((v) => v + 1);
+              setNeedsRecheck(false);
+              void server.reload();
+            }}
+          >
             Refresh
           </Button>
           {mayReviewPrivacy && (
-            <Button variant="secondary" onClick={() => setPrivacyTarget({})}>
+            <Button
+              variant="secondary"
+              disabled={!holdsReady || busy}
+              onClick={() => setPrivacyTarget({})}
+            >
               Retention &amp; holds
             </Button>
           )}
@@ -268,6 +368,30 @@ function ResponseWorkspaceContent() {
         </p>
       )}
       {notice && <p role="status">{notice}</p>}
+      {needsRecheck && isOnline && (
+        <p role="status">
+          Connection restored. Reload the current response view before further
+          actions.
+        </p>
+      )}
+      <div className="gt-response-read-controls">
+        <ResponseReadFeedback
+          name="saved form"
+          read={server}
+          offline={!isOnline}
+          busy={busy}
+          retry={() => void server.reload()}
+        />
+        {mayReviewPrivacy && (
+          <ResponseReadFeedback
+            name="hold status"
+            read={holdsRead}
+            offline={!isOnline}
+            busy={busy}
+            retry={() => retry("holds")}
+          />
+        )}
+      </div>
       <div className="gt-tabs" role="tablist" aria-label="Response view">
         {["Summary", "Responses"].map((value, index, tabs) => (
           <button
@@ -304,6 +428,7 @@ function ResponseWorkspaceContent() {
         className="gt-panel gt-form"
         onSubmit={(e) => {
           e.preventDefault();
+          if (!isOnline || busy) return;
           const body = new FormData(e.currentTarget),
             next = new URLSearchParams();
           setDateError("");
@@ -414,7 +539,7 @@ function ResponseWorkspaceContent() {
           </Field>
         </div>
         <div className="gt-actions">
-          <Button disabled={loading}>Apply filters</Button>
+          <Button disabled={loading || busy || !isOnline}>Apply filters</Button>
           <Button
             type="button"
             variant="ghost"
@@ -438,7 +563,11 @@ function ResponseWorkspaceContent() {
             <input
               type="checkbox"
               checked={params.get("sensitive") === "true"}
-              disabled={!form.actions?.includes("view_sensitive_responses")}
+              disabled={
+                busy ||
+                (!ready && params.get("sensitive") !== "true") ||
+                !form.actions?.includes("view_sensitive_responses")
+              }
               onChange={(e) =>
                 change("sensitive", e.target.checked ? "true" : "false")
               }
@@ -446,6 +575,13 @@ function ResponseWorkspaceContent() {
             Reveal sensitive answers (audited)
           </label>
         </div>
+        <ResponseReadFeedback
+          name="saved views"
+          read={viewsRead}
+          offline={!isOnline}
+          busy={busy}
+          retry={() => retry("views")}
+        />
         <details>
           <summary>Choose answer columns</summary>
           <div className="gt-form-grid">
@@ -479,6 +615,7 @@ function ResponseWorkspaceContent() {
           <Field label="Saved view">
             <select
               defaultValue=""
+              disabled={!viewsReady || busy}
               onChange={(e) => {
                 const view = views.find((v) => v.id === e.target.value);
                 if (view) {
@@ -515,7 +652,7 @@ function ResponseWorkspaceContent() {
           </Field>
           <Button
             variant="secondary"
-            disabled={busy || !viewName.trim()}
+            disabled={busy || !viewsReady || !viewName.trim()}
             onClick={() =>
               work(
                 () =>
@@ -546,7 +683,13 @@ function ResponseWorkspaceContent() {
         id="response-results-panel"
         aria-labelledby={`response-tab-${tab}`}
       >
-        {loading && <p role="status">Loading {tab.toLowerCase()}…</p>}
+        <ResponseReadFeedback
+          name={tab === "Summary" ? "summary" : "responses"}
+          read={activeRead}
+          offline={!isOnline}
+          busy={busy}
+          retry={() => retry(tab === "Summary" ? "summary" : "responses")}
+        />
         {summary && (
           <section className="gt-panel gt-event-editor">
             <h2>{summary.responseCount} matching responses</h2>
@@ -619,23 +762,44 @@ function ResponseWorkspaceContent() {
                 : "All filtered responses selected for export."}
             </p>
             {form.actions?.includes("export_responses") && (
-              <ResponseExports
-                key={form.id}
-                formId={form.id}
-                filters={Object.fromEntries(
-                  [...params].filter(([key]) =>
-                    ["q", "version", "from", "to", "status"].includes(key),
-                  ),
+              <fieldset
+                disabled={!ready || busy}
+                aria-label="Response export controls"
+                onClickCapture={(event) => {
+                  if (!ready || busy) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                  }
+                }}
+              >
+                {!ready && (
+                  <p role="status">
+                    Exports are paused until the response read is checked again.
+                  </p>
                 )}
-                selected={checked}
-                columns={columns}
-                canSensitive={
-                  !!form.actions?.includes("view_sensitive_responses")
-                }
-              />
+                <ResponseExports
+                  key={form.id}
+                  formId={form.id}
+                  filters={Object.fromEntries(
+                    [...params].filter(([key]) =>
+                      ["q", "version", "from", "to", "status"].includes(key),
+                    ),
+                  )}
+                  selected={checked}
+                  columns={columns}
+                  canSensitive={
+                    !!form.actions?.includes("view_sensitive_responses")
+                  }
+                />
+              </fieldset>
             )}
             {data.items.length ? (
-              <div className="gt-table-wrap">
+              <div
+                className="gt-table-wrap"
+                role="region"
+                aria-label="Response inventory table"
+                tabIndex={0}
+              >
                 <table className="gt-data-table">
                   <thead>
                     <tr>
@@ -658,6 +822,7 @@ function ResponseWorkspaceContent() {
                             type="checkbox"
                             aria-label={`Select response ${row.id}`}
                             checked={checked.includes(row.id)}
+                            disabled={!ready || busy}
                             onChange={(e) =>
                               setChecked(
                                 e.target.checked
@@ -688,6 +853,8 @@ function ResponseWorkspaceContent() {
                         <td>
                           <Button
                             variant="ghost"
+                            disabled={!ready || busy}
+                            aria-label={`Open response ${row.id}`}
                             onClick={() => setSelected(row)}
                           >
                             Open
@@ -708,7 +875,7 @@ function ResponseWorkspaceContent() {
             <nav className="gt-actions" aria-label="Response pages">
               <Button
                 variant="secondary"
-                disabled={data.page === 1 || loading}
+                disabled={data.page === 1 || !ready || busy}
                 onClick={() => change("page", String(data.page - 1))}
               >
                 Previous
@@ -719,7 +886,9 @@ function ResponseWorkspaceContent() {
               </span>
               <Button
                 variant="secondary"
-                disabled={data.page * data.pageSize >= data.total || loading}
+                disabled={
+                  data.page * data.pageSize >= data.total || !ready || busy
+                }
                 onClick={() => change("page", String(data.page + 1))}
               >
                 Next
@@ -792,8 +961,11 @@ function ResponseWorkspaceContent() {
                           responseId={selected.id}
                           ids={selected.answers[field.id] as string[]}
                           canDownload={
-                            !field.sensitive ||
-                            !!form.actions?.includes("view_sensitive_responses")
+                            ready &&
+                            (!field.sensitive ||
+                              !!form.actions?.includes(
+                                "view_sensitive_responses",
+                              ))
                           }
                         />
                       ) : (
@@ -823,6 +995,7 @@ function ResponseWorkspaceContent() {
               {mayReviewPrivacy && (
                 <Button
                   variant="secondary"
+                  disabled={!holdsReady || busy}
                   onClick={() => setPrivacyTarget({ responseId: selected.id })}
                 >
                   Review response retention &amp; hold
@@ -834,6 +1007,21 @@ function ResponseWorkspaceContent() {
                   action.
                 </p>
               )}
+              {!ready && (
+                <ResponseReadFeedback
+                  name="selected response source"
+                  read={responsesRead}
+                  offline={!isOnline}
+                  busy={busy}
+                  retry={() => retry("responses")}
+                />
+              )}
+              {!ready && (
+                <p role="status">
+                  Response review is paused. Recheck the current response read
+                  before further actions.
+                </p>
+              )}
               <ResponseHistory
                 key={selected.id}
                 formId={form.id}
@@ -843,6 +1031,7 @@ function ResponseWorkspaceContent() {
                 }
               />
               {form.actions?.includes("delete") &&
+                ready &&
                 formHeld === false &&
                 selected.status !== "held" && (
                   <div className="gt-actions">
@@ -881,7 +1070,12 @@ function ResponseWorkspaceContent() {
                   />
                   <Button
                     variant="danger"
-                    disabled={busy || confirm !== action.toUpperCase()}
+                    disabled={
+                      busy ||
+                      !ready ||
+                      !holdsReady ||
+                      confirm !== action.toUpperCase()
+                    }
                     onClick={() =>
                       work(
                         () =>
@@ -943,5 +1137,54 @@ function ResponseWorkspaceContent() {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+function ResponseReadFeedback({
+  name,
+  read,
+  offline,
+  busy,
+  retry,
+}: {
+  name: string;
+  read: { loading: boolean; error: string; at?: string };
+  offline: boolean;
+  busy: boolean;
+  retry: () => void;
+}) {
+  const region = useRef<HTMLElement>(null);
+  return (
+    <section
+      ref={region}
+      tabIndex={-1}
+      aria-label={`${name} read status`}
+      className="gt-response-read-feedback"
+    >
+      {read.loading && <p role="status">Loading {name}…</p>}
+      {(read.error || offline) && (
+        <p role={read.error ? "alert" : "status"}>
+          {read.error || "You are offline. New response actions are paused."}
+        </p>
+      )}
+      {(read.loading || read.error || offline) && read.at && (
+        <p className="gt-helper">
+          Last successful {name} read:{" "}
+          <time dateTime={read.at}>{new Date(read.at).toLocaleString()}</time>.
+          Showing the matching saved snapshot; recheck before further actions.
+        </p>
+      )}
+      <Button
+        type="button"
+        variant={read.error ? "secondary" : "ghost"}
+        disabled={read.loading || offline || busy}
+        onClick={() => {
+          retry();
+          region.current?.focus();
+        }}
+      >
+        Reload {name}
+      </Button>
+    </section>
   );
 }

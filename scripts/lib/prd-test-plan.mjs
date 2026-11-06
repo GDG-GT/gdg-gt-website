@@ -844,11 +844,15 @@ const forms = [
   ],
   [
     "FORM-019",
-    "Response summary/table/detail/version views",
+    "Response summary/table/detail/version views and independent private inventory/summary/preferences/hold read recovery",
     [
       unit("form-admin-routes"),
       sql("064_form_response_history"),
       local("form-history"),
+      "tests/client/form-response-workspace-read.test.tsx",
+      "tests/client/form-data-recovery.test.tsx",
+      local("form-response-read"),
+      "tests/browser/form-response-reads.spec.ts",
     ],
   ],
   [

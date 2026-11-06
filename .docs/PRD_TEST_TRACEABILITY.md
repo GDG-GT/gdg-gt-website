@@ -45,3 +45,8 @@ manual/hosted acceptance stay open.
 The private file case now maps scoped expiring response attachment authorization
 and its browser/client recovery checks. Storage/device/manual/hosted acceptance
 remains open; see `FORM_RESPONSE_FILE_RECOVERY.md`.
+
+The response-workspace case now maps independent private inventory, summary,
+saved-view and hold-status reads, including explicit denial/filter recovery.
+Response mutation/export/navigation and full device/manual/hosted acceptance
+remain open; see `FORM_RESPONSE_READ_RECOVERY.md`.

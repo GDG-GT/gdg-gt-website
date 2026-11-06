@@ -1,0 +1,106 @@
+{
+  "generatedAt": "2026-11-06T06:25:12.396Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and Chromium desktop/mobile independent response inventory, summary, saved-view and hold-status reads. Two fresh fictional internal forms; one intended response/edit and one saved preference per form. Read-only browser operations retain timestamped matching data/proposals on transient errors, pause relevant actions and clear private state/filters on denial. All browser mutations/external requests blocked, realtime paused. No extra responses, versions, saved preferences or jobs from inspection. Metadata notification jobs disabled/secret payloads cleared, forms archived/accounts disabled/sessions revoked. No worker/provider send, existing chapter or production change; captures unapproved.",
+  "tests": [
+    {
+      "name": "response inventory conceals owned form from anonymous and unrelated readers at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "initial response outage differs from empty inventory while saved views load independently at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "response retry reads only its own current inventory at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "saved-view failure retains timestamped options and proposed name with writes paused at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "temporary inventory failure retains matching rows and pauses new response actions at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated paused response workspace passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "failed hold read independently prevents destructive actions on the selected response at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "summary failure retains its own matching timestamped aggregate at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "denial clears response data, proposed preferences and private URL filters at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "explicit access recheck restores authorized reads without restoring private proposals at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "browser read recovery leaves response count, versions, preferences and delivery jobs unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "response recovery has no unexpected mutation, script error, external request or overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "response inventory conceals owned form from anonymous and unrelated readers at 375×812",
+      "passed": true
+    },
+    {
+      "name": "initial response outage differs from empty inventory while saved views load independently at 375×812",
+      "passed": true
+    },
+    {
+      "name": "response retry reads only its own current inventory at 375×812",
+      "passed": true
+    },
+    {
+      "name": "saved-view failure retains timestamped options and proposed name with writes paused at 375×812",
+      "passed": true
+    },
+    {
+      "name": "temporary inventory failure retains matching rows and pauses new response actions at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated paused response workspace passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "failed hold read independently prevents destructive actions on the selected response at 375×812",
+      "passed": true
+    },
+    {
+      "name": "summary failure retains its own matching timestamped aggregate at 375×812",
+      "passed": true
+    },
+    {
+      "name": "denial clears response data, proposed preferences and private URL filters at 375×812",
+      "passed": true
+    },
+    {
+      "name": "explicit access recheck restores authorized reads without restoring private proposals at 375×812",
+      "passed": true
+    },
+    {
+      "name": "browser read recovery leaves response count, versions, preferences and delivery jobs unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "response recovery has no unexpected mutation, script error, external request or overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

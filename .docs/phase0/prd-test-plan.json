@@ -1819,11 +1819,15 @@
       "requirements": [
         "FORM-019"
       ],
-      "scope": "Response summary/table/detail/version views",
+      "scope": "Response summary/table/detail/version views and independent private inventory/summary/preferences/hold read recovery",
       "automated": [
         "tests/server/form-admin-routes.test.mjs",
         "database/tests/064_form_response_history.sql",
-        "scripts/test-local-form-history.mjs"
+        "scripts/test-local-form-history.mjs",
+        "tests/client/form-response-workspace-read.test.tsx",
+        "tests/client/form-data-recovery.test.tsx",
+        "scripts/test-local-form-response-read.mjs",
+        "tests/browser/form-response-reads.spec.ts"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"
