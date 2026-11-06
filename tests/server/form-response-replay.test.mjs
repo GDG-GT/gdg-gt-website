@@ -239,7 +239,7 @@ describe("Revision-bound private response mutation receipts", () => {
           `/admin/forms/${ids.form}/views/${ids.response}/recovery?action=delete`,
         )
       ).statusCode,
-    ).toBe(404);
+    ).toBe(400);
   });
   for (const code of [
     "CONFLICT",

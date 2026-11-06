@@ -66,3 +66,8 @@ The response-workspace case also maps reviewed close/reopen with original
 revision/state intent, read-only library receipt recovery and explicit exact
 retry. See `FORM_RESPONSE_AVAILABILITY_RECOVERY.md`; saved-view and remaining
 Forms/device/manual/hosted acceptance remain open.
+
+The response-workspace case now also maps owned saved-view create/replace/remove
+revisions, atomic minimal receipts, read-only original-outcome recovery and
+server-paged inventory search. See `FORM_SAVED_VIEW_RECOVERY.md`; remaining Forms
+children and full manual/device/visual/hosted acceptance stay open.

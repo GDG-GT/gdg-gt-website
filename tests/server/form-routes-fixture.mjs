@@ -145,6 +145,7 @@ export function fixture() {
         "in",
         "order",
         "range",
+        "ilike",
         "limit",
         "single",
         "maybeSingle",

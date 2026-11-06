@@ -10,6 +10,7 @@ import {
   idempotency,
 } from "./lib/validation.mjs";
 import { tokenHash } from "./lib/security.mjs";
+import { formViewOperation } from "./form-views.mjs";
 import { responseCsv, responseXlsx, safeCell } from "../shared/form-export.ts";
 export const formResponseFilterShape = {
   q: text(100).optional(),
@@ -167,16 +168,22 @@ export async function formResponseRoutes(
     child = match[3],
     exported = operation === "responses" && child === "export",
     recovering = match[4] === "recovery";
-  if (recovering && (operation !== "responses" || !child || exported))
+  if (
+    recovering &&
+    ((operation !== "responses" && operation !== "views") ||
+      !child ||
+      exported ||
+      child === "recovery")
+  )
     throw new ApiError(404, "NOT_FOUND", "This record was not found.");
   allowMethod(
     request,
     response,
-    recovering
+    recovering || (operation === "views" && child === "recovery")
       ? ["GET"]
       : operation === "views"
         ? child
-          ? ["DELETE"]
+          ? ["PATCH", "DELETE"]
           : ["GET", "POST"]
         : operation === "responses" && child && !exported
           ? ["GET", "PATCH", "DELETE"]
@@ -194,6 +201,16 @@ export async function formResponseRoutes(
     );
   if (!(await can("view")) || !(await can("view_responses")))
     throw new ApiError(404, "NOT_FOUND", "This form is not available.");
+  if (operation === "views")
+    return formViewOperation(request, response, {
+      db,
+      session,
+      id,
+      child,
+      recovering,
+      url,
+      requestId,
+    });
   if (recovering) {
     const p = queryValues(
       url.searchParams,
@@ -218,56 +235,6 @@ export async function formResponseRoutes(
   const form = checked(
     await db.from("forms").select("slug,settings,state").eq("id", id).single(),
   );
-  if (operation === "views") {
-    if (request.method === "GET") {
-      sendJson(
-        response,
-        200,
-        {
-          items: checked(
-            await db
-              .from("form_saved_views")
-              .select("id,name,filters,columns,updated_at")
-              .eq("form_id", id)
-              .eq("owner_id", session.user.id)
-              .order("name")
-              .limit(100),
-          ),
-        },
-        requestId,
-      );
-      return true;
-    }
-    const body =
-      request.method === "POST"
-        ? await jsonBody(
-            request,
-            z
-              .object({
-                name: text(100, 1),
-                filters,
-                columns: z.array(uuid).max(200),
-              })
-              .strict(),
-            8192,
-          )
-        : null;
-    if (body) assertDateRange(body.filters);
-    const result = checked(
-      await db.rpc("mutate_form_view", {
-        p_actor: session.user.id,
-        p_form: id,
-        p_id: child ? parse(uuid, child) : null,
-        p_name: body?.name || null,
-        p_filters: body?.filters || {},
-        p_columns: body?.columns || [],
-        p_delete: request.method === "DELETE",
-        p_request_id: requestId,
-      }),
-    );
-    sendJson(response, 200, { viewId: result }, requestId);
-    return true;
-  }
   if (child && !exported && request.method !== "GET") {
     const responseId = parse(uuid, child);
     if (!(await can("delete")))

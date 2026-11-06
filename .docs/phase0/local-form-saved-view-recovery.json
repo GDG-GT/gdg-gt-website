@@ -1,0 +1,210 @@
+{
+  "generatedAt": "2026-11-06T08:09:37.414Z",
+  "completed": true,
+  "cleanup": {
+    "completed": true
+  },
+  "note": "Actual loopback API/DB and desktop/mobile Chromium saved view create/replace/remove recovery. Two fresh fictional private drafts, no publication/responses. Both response-loss positions, original selected revision/key/body, read-only accepted reconciliation, identical explicit retry, one view result/audit per action, measured axe, and 125 owned preferences per viewport for real paging beyond 100. No workers/provider sends/existing chapter or production changes. Forms archived/accounts disabled/sessions revoked; captures unapproved.",
+  "tests": [
+    {
+      "name": "saved view inventory conceals owned preferences from unrelated/anonymous accounts at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "create after freezes the reviewed saved view revision/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "uncertain saved view create passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "create after recovery never replaces the original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "create after leaves one intended view result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "replace after freezes the reviewed saved view revision/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "uncertain saved view replace passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "replace after recovery never replaces the original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "replace after leaves one intended view result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "remove after freezes the reviewed saved view revision/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "uncertain saved view remove passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "remove after recovery never replaces the original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "remove after leaves one intended view result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "create before freezes the reviewed saved view revision/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "create before recovery never replaces the original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "create before leaves one intended view result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "replace before freezes the reviewed saved view revision/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "replace before recovery never replaces the original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "replace before leaves one intended view result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "remove before freezes the reviewed saved view revision/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "remove before recovery never replaces the original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "remove before leaves one intended view result and audit at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "saved view search/paging exposes owned row 125 without a 100-row ceiling at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "saved preferences leave draft/publication/response/delivery state unchanged at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "saved view recovery has no unexpected writes, external requests, script errors or page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "saved view inventory conceals owned preferences from unrelated/anonymous accounts at 375×812",
+      "passed": true
+    },
+    {
+      "name": "create after freezes the reviewed saved view revision/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "uncertain saved view create passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "create after recovery never replaces the original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "create after leaves one intended view result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "replace after freezes the reviewed saved view revision/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "uncertain saved view replace passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "replace after recovery never replaces the original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "replace after leaves one intended view result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "remove after freezes the reviewed saved view revision/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "uncertain saved view remove passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "remove after recovery never replaces the original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "remove after leaves one intended view result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "create before freezes the reviewed saved view revision/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "create before recovery never replaces the original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "create before leaves one intended view result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "replace before freezes the reviewed saved view revision/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "replace before recovery never replaces the original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "replace before leaves one intended view result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "remove before freezes the reviewed saved view revision/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "remove before recovery never replaces the original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "remove before leaves one intended view result and audit at 375×812",
+      "passed": true
+    },
+    {
+      "name": "saved view search/paging exposes owned row 125 without a 100-row ceiling at 375×812",
+      "passed": true
+    },
+    {
+      "name": "saved preferences leave draft/publication/response/delivery state unchanged at 375×812",
+      "passed": true
+    },
+    {
+      "name": "saved view recovery has no unexpected writes, external requests, script errors or page overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

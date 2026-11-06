@@ -7,6 +7,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
@@ -32,7 +33,10 @@ vi.mock("@/contexts/AdminContext", () => ({
 }));
 vi.mock("@/hooks/useDraftGuard", () => ({
   useDraftGuard: () => {},
-  useNavigationSafety: () => ({ request: (run: () => void) => run() }),
+  useNavigationSafety: () => ({
+    request: (run: () => void) => run(),
+    allow: (run: () => void) => run(),
+  }),
 }));
 const root = "/admin/forms/fictional-form";
 const template = createTemplate("Fictional response-read form", "interest");
@@ -473,3 +477,92 @@ describe("Independent private response workspace reads", () => {
     expect(reads.slice(before)).toEqual(["responses"]);
   });
 });
+
+for (const action of [
+  "saved view",
+  "availability",
+  "response privacy",
+] as const)
+  it(
+    "clears private URL filters/proposals on denied " + action + " writes",
+    async () => {
+      const original = apiMock.getMockImplementation()!;
+      apiMock.mockImplementation(
+        async (path: string, options?: { method?: string }) => {
+          if (options?.method)
+            throw new ApiFailure(
+              403,
+              "FORBIDDEN",
+              "Fictional action access changed",
+            );
+          const result = await original(path, options);
+          if (kind(path) === "responses")
+            return {
+              ...result,
+              items: result.items.map((item: unknown) => ({
+                ...(item as object),
+                revision: 2,
+                redacted: false,
+              })),
+            };
+          return result;
+        },
+      );
+      mount(root + "/responses?q=FictionalPrivateQuery");
+      await loaded();
+      fireEvent.change(screen.getByLabelText("New view name"), {
+        target: { value: "Fictional private proposal" },
+      });
+      if (action === "saved view") {
+        fireEvent.click(
+          screen.getByRole("button", { name: "Save view", exact: true }),
+        );
+        fireEvent.click(
+          screen.getByRole("button", { name: "Confirm new view", exact: true }),
+        );
+      } else if (action === "availability") {
+        fireEvent.click(
+          screen.getByRole("button", { name: "Close form", exact: true }),
+        );
+        fireEvent.click(
+          within(screen.getByRole("dialog")).getByRole("button", {
+            name: "Close form",
+            exact: true,
+          }),
+        );
+      } else {
+        fireEvent.click(
+          screen.getByRole("button", {
+            name: "Open response " + row.id,
+            exact: true,
+          }),
+        );
+        fireEvent.click(
+          screen.getByRole("button", { name: "Delete response", exact: true }),
+        );
+        fireEvent.change(screen.getByLabelText(/Confirm response action/), {
+          target: { value: "DELETE" },
+        });
+        fireEvent.click(
+          screen.getByRole("button", { name: "Confirm delete", exact: true }),
+        );
+      }
+      await screen.findByRole("heading", {
+        name: "Response access needs to be rechecked",
+      });
+      expect(screen.getByLabelText("Current route").textContent).toBe("");
+      expect(
+        screen.queryByDisplayValue("Fictional private proposal"),
+      ).toBeNull();
+      expect(
+        screen.queryByText(row.respondent.email, { exact: false }),
+      ).toBeNull();
+      expect(
+        (
+          screen.getByRole("button", {
+            name: "Recheck response workspace access",
+          }) as HTMLButtonElement
+        ).disabled,
+      ).toBe(false);
+    },
+  );

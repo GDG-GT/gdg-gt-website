@@ -1830,7 +1830,13 @@
         "tests/browser/form-response-reads.spec.ts",
         "tests/client/form-response-availability.test.tsx",
         "scripts/test-local-form-response-availability.mjs",
-        "tests/browser/form-response-availability.spec.ts"
+        "tests/browser/form-response-availability.spec.ts",
+        "tests/server/form-view-replay.test.mjs",
+        "database/tests/122_form_saved_view_replay.sql",
+        "scripts/test-local-form-saved-view-recovery.mjs",
+        "tests/client/form-saved-view-recovery.test.tsx",
+        "tests/browser/form-saved-views.spec.ts",
+        "tests/browser/form-action-denials.spec.ts"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"

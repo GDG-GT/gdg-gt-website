@@ -856,6 +856,12 @@ const forms = [
       "tests/client/form-response-availability.test.tsx",
       local("form-response-availability"),
       "tests/browser/form-response-availability.spec.ts",
+      unit("form-view-replay"),
+      sql("122_form_saved_view_replay"),
+      local("form-saved-view-recovery"),
+      "tests/client/form-saved-view-recovery.test.tsx",
+      "tests/browser/form-saved-views.spec.ts",
+      "tests/browser/form-action-denials.spec.ts",
     ],
   ],
   [

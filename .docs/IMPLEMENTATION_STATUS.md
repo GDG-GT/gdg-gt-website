@@ -8,6 +8,34 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Private saved-view mutation and inventory recovery — 2026-11-06
+
+- Migration 122 adds selected revisions, current-owner/session atomic creation/
+  replacement/removal receipts and read-only outcome checks. New names never
+  silently overwrite a view. The browser freezes original filters/columns/key,
+  reviews actual filter/question labels and consequences, latches dispatch and
+  requires fresh exact explicit retry after uncertainty. Denial clears private
+  preferences, proposals, responses and URL filters. Inventory search/counts/
+  paging stay owner/form scoped and reach beyond the old 100-row ceiling.
+- Both complete 122-migration SQL suites pass (219/220 checks), both 100-client
+  races and six isolated restore checks pass; migration applied locally. All
+  162 focused cases pass (32 new route/31 saved-view client plus three parent
+  denial regressions). All 50 actual API/DB/desktop-mobile checks pass: twelve
+  intended view mutations/two private drafts, 250 owned fictional paging rows,
+  original retries, single audits and measured axe. No publication/responses/
+  delivery jobs/workers/provider sends/existing chapter or production changes.
+  Forms archived/accounts disabled/sessions revoked.
+- All 192 response/shared-workspace production-browser checks pass, followed by
+  18 action-denial and 60 final review/pagination/denial checks across six
+  profiles. Mobile recovery inspected; captures unapproved. Build/types/lint
+  (zero errors/25 existing warnings), budgets, secrets and traceability pass.
+- All 1,966 tests/183 files pass. Global coverage remains below 70%: 68.04% lines,
+  67.68% branches, 66.25% statements and 59.22% functions. All 17 critical branch
+  gates pass; no threshold/timeout changed. Catalog stays 159 unverified cases.
+- Forms collaborator/private-link lifecycle, delivery/privacy/deletion/
+  integrations/runtime recovery and complete quality/storage/device/manual/
+  visual/hosted acceptance remain open. See `FORM_SAVED_VIEW_RECOVERY.md`.
+
 ### Response-workspace close/reopen recovery — 2026-11-06
 
 - Close/reopen now has saved-revision/state consequence review and uses existing

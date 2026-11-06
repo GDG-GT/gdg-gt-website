@@ -3,7 +3,6 @@ import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useAdmin } from "@/contexts/AdminContext";
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { api } from "@/lib/api";
 import {
   Dialog,
   DialogContent,
@@ -16,6 +15,8 @@ import type { FormResponse } from "./store";
 import ResponseFileLinks from "./ResponseFileLinks";
 import ResponseExports from "./ResponseExports";
 import ResponseAvailability from "./ResponseAvailability";
+import ResponseSavedViews from "./ResponseSavedViews";
+import type { SavedResponseView } from "./form-view-api";
 import ResponseHistory from "./ResponseHistory";
 import ResponseActionReview, {
   type ResponseActionState,
@@ -42,12 +43,6 @@ type Summary = {
     ranking: Record<string, number | null>;
     numeric?: { mean: number; min: number; max: number; count: number };
   }[];
-};
-type View = {
-  id: string;
-  name: string;
-  filters: Record<string, string | number>;
-  columns: string[];
 };
 export default function ResponseWorkspace() {
   const { currentAdmin } = useAdmin(),
@@ -79,7 +74,10 @@ function ResponseWorkspaceContent() {
     [checked, setChecked] = useState<string[]>([]),
     [columns, setColumns] = useState<string[]>([]),
     [viewName, setViewName] = useState(""),
-    [busy, setBusy] = useState(false);
+    [viewSearch, setViewSearch] = useState(""),
+    [viewPage, setViewPage] = useState(1),
+    [viewState, setViewState] = useState({ busy: false, dirty: false });
+  const busy = viewState.busy;
   const [responseActionState, setResponseActionState] =
     useState<ResponseActionState>({
       dirty: false,
@@ -120,10 +118,13 @@ function ResponseWorkspaceContent() {
       readable && tab === "Summary" ? `${root}/analytics?${query}` : undefined,
       refresh + readRetry.summary,
     ),
-    viewsRead = usePrivateRead<{ items: View[] }>(
-      readable ? `${root}/views` : undefined,
-      refresh + readRetry.views,
-    ),
+    viewScope = `${root}/views${viewSearch || viewPage > 1 ? "?" + new URLSearchParams({ q: viewSearch, page: String(viewPage) }) : ""}`,
+    viewsRead = usePrivateRead<{
+      items: SavedResponseView[];
+      total?: number;
+      page?: number;
+      pageSize?: number;
+    }>(readable ? viewScope : undefined, refresh + readRetry.views),
     holdsRead = usePrivateRead<{ held: boolean }>(
       readable && mayReviewPrivacy ? `${root}/privacy` : undefined,
       refresh + readRetry.holds,
@@ -204,6 +205,9 @@ function ResponseWorkspaceContent() {
     setChecked([]);
     setColumns([]);
     setViewName("");
+    setViewSearch("");
+    setViewPage(1);
+    setViewState({ busy: false, dirty: false });
     selectedMetadata.current = undefined;
     setResponseActionState({ dirty: false, busy: false, hideDetails: false });
     setPrivacyTarget(undefined);
@@ -230,21 +234,24 @@ function ResponseWorkspaceContent() {
     setParams(next);
     if (key === "page") document.getElementById("workspace-content")?.focus();
   };
-  const work = async (run: () => Promise<unknown>, message: string) => {
-    if (!ready || busy) return;
-    setBusy(true);
+  const blockPrivateWorkspace = (message: string) => {
+    clearResponses();
+    clearSummary();
+    clearViews();
+    clearHolds();
+    setSelected(undefined);
+    setChecked([]);
+    setColumns([]);
+    setViewName("");
+    setViewSearch("");
+    setViewPage(1);
+    setViewState({ busy: false, dirty: false });
+    setPrivacyTarget(undefined);
+    setPrivacyState({ dirty: false, busy: false });
     setError("");
-    try {
-      await run();
-      setRefresh((v) => v + 1);
-      setNotice(message);
-      setSelected(undefined);
-      await server.reload();
-    } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
+    setNotice("");
+    setBlocked(message);
+    navigationSafety.allow(() => setParams({}, { replace: true }));
   };
   if (blocked || denied)
     return (
@@ -356,16 +363,11 @@ function ResponseWorkspaceContent() {
               setRefresh((value) => value + 1);
               void server.reload();
             }}
-            onDenied={() => {
-              clearResponses();
-              clearSummary();
-              clearViews();
-              clearHolds();
-              setSelected(undefined);
-              setBlocked(
-                "Availability access changed. Private response details and the proposed change have been cleared.",
-              );
-            }}
+            onDenied={() =>
+              blockPrivateWorkspace(
+                "Availability access changed. Private response details, URL filters and the proposed change have been cleared.",
+              )
+            }
             onReload={() => {
               setNotice(
                 "Reloading the current saved form. The original availability change may already have completed; review the current state before another change.",
@@ -646,72 +648,63 @@ function ResponseWorkspaceContent() {
               ))}
           </div>
         </details>
-        <div className="gt-actions">
-          <Field label="Saved view">
-            <select
-              defaultValue=""
-              disabled={!viewsReady || busy}
-              onChange={(e) => {
-                const view = views.find((v) => v.id === e.target.value);
-                if (view) {
-                  setColumns(view.columns);
-                  setParams(
-                    Object.fromEntries(
-                      Object.entries(view.filters).map(([key, value]) => [
-                        key,
-                        String(value),
-                      ]),
-                    ),
-                  );
-                  setDateError("");
-                  setDateMessage("");
-                  setError("");
-                  document.getElementById("workspace-content")?.focus();
-                }
-              }}
-            >
-              <option value="">Choose a view</option>
-              {views.map((view) => (
-                <option key={view.id} value={view.id}>
-                  {view.name}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field label="New view name">
-            <input
-              maxLength={100}
-              value={viewName}
-              onChange={(e) => setViewName(e.target.value)}
-            />
-          </Field>
-          <Button
-            variant="secondary"
-            disabled={busy || !viewsReady || !viewName.trim()}
-            onClick={() =>
-              work(
-                () =>
-                  api(`/admin/forms/${formId}/views`, {
-                    method: "POST",
-                    protected: true,
-                    body: {
-                      name: viewName.trim(),
-                      filters: Object.fromEntries(
-                        [...params].filter(
-                          ([key]) =>
-                            !["page", "pageSize", "sensitive"].includes(key),
-                        ),
-                      ),
-                      columns,
-                    },
-                  }),
-                "Review preferences saved.",
-              )
-            }
-          >
-            Save view
-          </Button>
-        </div>
+        <ResponseSavedViews
+          formId={form.id}
+          items={views}
+          total={viewsRead.data?.total ?? views.length}
+          page={viewsRead.data?.page ?? viewPage}
+          pageSize={viewsRead.data?.pageSize ?? 30}
+          query={viewSearch}
+          scope={viewScope}
+          name={viewName}
+          filters={Object.fromEntries(
+            [...params].filter(([key]) =>
+              ["q", "version", "from", "to", "status"].includes(key),
+            ),
+          )}
+          columns={columns}
+          columnLabels={Object.fromEntries(
+            [...fieldMap.values()].map((field) => [field.id, field.label]),
+          )}
+          disabled={!viewsReady}
+          onNameChange={setViewName}
+          onSearch={(value) => {
+            setViewSearch(value);
+            setViewPage(1);
+          }}
+          onPage={setViewPage}
+          onStateChange={setViewState}
+          onApply={(view) => {
+            setColumns(view.columns);
+            setParams(
+              Object.fromEntries(
+                Object.entries(view.filters)
+                  .filter(([key]) =>
+                    ["q", "version", "from", "to", "status"].includes(key),
+                  )
+                  .map(([key, value]) => [key, String(value)]),
+              ),
+            );
+            setDateError("");
+            setDateMessage("");
+            setError("");
+            document.getElementById("workspace-content")?.focus();
+          }}
+          onComplete={(result) => {
+            setNotice(
+              `Original saved view ${result.receipt?.action || "change"} confirmed.`,
+            );
+            setReadRetry((value) => ({ ...value, views: value.views + 1 }));
+          }}
+          onDenied={() =>
+            blockPrivateWorkspace(
+              "Saved view access changed. Private responses, URL filters, saved preferences and proposed changes have been cleared.",
+            )
+          }
+          onReload={() => {
+            setReadRetry((value) => ({ ...value, views: value.views + 1 }));
+          }}
+        />
       </section>
       <div
         role="tabpanel"
@@ -1090,16 +1083,11 @@ function ResponseWorkspaceContent() {
                       clearSummary();
                     }
                   }}
-                  onDenied={() => {
-                    clearResponses();
-                    clearSummary();
-                    clearViews();
-                    clearHolds();
-                    setBlocked(
-                      "Response privacy access changed. Private details and proposed actions have been cleared.",
-                    );
-                    setSelected(undefined);
-                  }}
+                  onDenied={() =>
+                    blockPrivateWorkspace(
+                      "Response privacy access changed. Private details, URL filters and proposed actions have been cleared.",
+                    )
+                  }
                   onComplete={(result) => {
                     clearResponses();
                     clearSummary();
