@@ -1,5 +1,39 @@
 # Complete workspace navigation and focus
 
+## Deferred navigation review
+
+The unsaved-work registry and router blocker remain synchronous, while the Radix
+review dialog now loads only when navigation actually needs review. A small native
+modal contains focus during loading or chunk failure and offers cancellation.
+It never approves navigation automatically. The loaded review preserves the same
+busy-operation protection, Stay and explicit Discard behavior. Cancellation
+restores the invoking control; accepted navigation retains destination focus.
+
+The final rebuilt-artifact invocation passes all 162 cases across the six
+profiles: ordinary browsing does not request the dialog chunk, delayed/failed
+loading retains draft values and blocks background focus, Escape/Stay returns
+keyboard focus, accepted Discard reaches the destination, and existing contact,
+member, merge, privacy and respondent recovery paths remain intact. No actual
+database writes or provider sends occur. `phase0/navigation-review-browser.json`
+records the exact build and case outcomes.
+
+The initial run passed 158 cases and failed four new WebKit anchor-focus
+assertions after pointer invocation. Keyboard activation is now explicit for the
+keyboard-return test; the corrected six-case WebKit scope and final 162-case scope
+pass. These failures remain recorded in
+`phase0/navigation-review-initial-browser.json`. No timeout or retry was changed.
+The native pending modal was inspected at a mobile viewport and its action spacing
+was corrected before the final run. The existing nine-check real two-tab PWA
+update probe also passes with this deferred review.
+
+Initial JavaScript is now 114,581 gzip bytes, down from 126,485 immediately before
+this change. The byte gate requires the dialog to remain outside the public
+startup graph. New loading/error/focus lifecycle unit coverage supplements the
+existing guard tests. The isolated mobile LCP threshold still fails; byte savings
+do not close performance or manual/device acceptance.
+
+## Previous shared-shell baseline
+
 The primary populated review fixtures intentionally expose a limited permitted
 route inventory. A separate production-browser check now supplies all 26
 Super Admin destinations to inspect the long desktop sidebar and mobile drawer.

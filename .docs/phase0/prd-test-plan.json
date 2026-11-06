@@ -2234,7 +2234,8 @@
       "automated": [
         "tests/client/workspace-ui.test.tsx",
         "tests/browser/workspace-compositions.spec.ts",
-        "tests/browser/operations-compositions.spec.ts"
+        "tests/browser/operations-compositions.spec.ts",
+        "tests/browser/secondary-compositions.spec.ts"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"
@@ -2974,7 +2975,9 @@
       "automated": [
         "tests/client/site-availability-loading.test.tsx",
         "tests/client/route-focus.test.tsx",
-        "tests/browser/lazy-shell-focus.spec.ts"
+        "tests/browser/lazy-shell-focus.spec.ts",
+        "tests/client/navigation-review-loading.test.tsx",
+        "tests/browser/navigation-review-loading.spec.ts"
       ],
       "remaining": [
         "Manual assistive technology, actual supported devices and complete public/private navigation acceptance",

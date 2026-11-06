@@ -8,6 +8,23 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Deferred guarded navigation and measured startup delivery — 2026-11-06
+
+- Initial JavaScript is 114,581 gzip bytes after deferring only the navigation
+  review library. Synchronous dirty/busy/router protection remains; native pending
+  and failure dialogs preserve focus and permit safe cancellation.
+- All 162 final six-profile navigation/recovery browser checks pass, as do nine
+  real two-tab PWA update checks. The initial four WebKit keyboard-focus test
+  assumptions are recorded separately; no timeout/retry/assertion was weakened.
+- Full coverage passes 2,673 tests/215 files and every unchanged global 70% and
+  21 critical 90%-branch gate: lines 78.11%, statements 76.12%, branches 75.60%,
+  functions 70.80%. Types/build/byte gates pass; lint remains zero errors/10 warnings.
+- New isolated Home/Events/Contact mobile LCP is 2,858/3,161/3,305 ms: still failing
+  2.5 seconds. Desktop performance is 100, accessibility 100 and CLS zero. Current
+  build hashes bind browser/performance evidence. Byte savings do not certify
+  field metrics. Route-inappropriate hero preloads and font priority are the next
+  measured delivery targets (`PUBLIC_ENTRY_PERFORMANCE.md`).
+
 ### Secondary state review and readable response charts — 2026-11-06
 
 - Nine secondary UI states pass 54 production-browser cases across all six

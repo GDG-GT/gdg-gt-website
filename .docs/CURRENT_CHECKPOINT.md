@@ -4,6 +4,47 @@ Updated 2026-11-06. Continue the GDG GT PRD task from this verified local
 checkpoint; do not repeat completed mutations/probes or rebuild setup from scratch.
 This checkpoint does not declare the entire PRD complete.
 
+## Latest verified performance continuation after 2a92521
+
+The secondary chart/review correction below is saved in local commit 2a92521.
+Current uncommitted work extracts only the Radix navigation-review dialog into
+a deferred chunk. The registry/router blockers remain synchronous. While its
+chunk is pending or failed, a small native modal contains focus, refuses
+background focus and offers cancellation only. Focus restores to the original
+control on cancellation, while accepted navigation owns its destination focus.
+No app mutation or SQL change is involved. Startup JavaScript dropped from
+126,485 to 114,581 gzip bytes; the build gate now requires this boundary.
+
+Full coverage passes 2,673 tests/215 files and all unchanged global 70% and 21
+critical 90%-branch gates: lines 78.11%, statements 76.12%, branches 75.60%,
+functions 70.80%. Types/build/byte gates pass; lint remains zero errors/10 warnings.
+An initial 162-case browser invocation passed 158 and failed four new WebKit
+focus assertions because pointer activation blurs anchors there. Correct explicit
+keyboard activation passes all six WebKit new cases. Diagnostics are retained,
+and no timeout/retry was changed. The final rebuilt six-profile navigation and
+recovery invocation passes all 162 cases. The nine real two-tab PWA update checks
+also pass. There are 1,314 browser cases in the current list-only inventory, 438
+per shard; no single fresh complete 1,314-case run is claimed.
+
+Isolated six-route Lighthouse measurement completed with expected exit 1: mobile
+scores 96/93/92, accessibility 100, CLS zero, LCP 2,858/3,161/3,305 ms; desktop
+scores 100. All mobile LCP gates remain open. Evidence matches the current browser
+build hashes. `phase0/production-performance.json` retains the failing results;
+the previous report is `phase0/production-performance-before-navigation-review.json`.
+All measured jobs and source/history scanning are complete. The scan covers
+145 commits and 1,823 current files with zero unreviewed findings.
+
+Next save this verified local correction without trailers, then investigate
+resource hints: the global HTML preloads home hero artwork on Events/Contact
+(37,624 raw bytes on mobile despite no displayed hero), and every route starts
+the 48,432-byte font at high priority. These are measured waterfall findings,
+not assumed improvements. Measure font/preload changes in isolation, preserve
+both successful and failing evidence and keep private/cache/availability rules.
+No SSR, dependency upgrade or deployment has started. If later evaluating SSR,
+review [the upstream hydration advisory](https://github.com/remix-run/react-router/security/advisories/GHSA-337j-9hxr-rhxg)
+first; manual Data Router SSR hydration has a version-specific advisory absent
+from the current client-only render path. Keep that architecture work separate and verified.
+
 ## Latest continuation after checkpoint 422970e
 
 The baseline described below was saved in local commit 422970e, without AI

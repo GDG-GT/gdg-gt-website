@@ -1,17 +1,17 @@
 {
-  "generatedAt": "2026-11-06T22:53:43.507027+00:00",
-  "buildIndexSha256": "20cb0611f84f98c7e0eb316c98397589aabe32560615873d3bf074193068f079",
+  "generatedAt": "2026-11-06T23:10:52.301722+00:00",
+  "buildIndexSha256": "c7947a32b7ed07896b0780cba85fc266e05c3f68aa581890c1dbec83d3095c1b",
   "quality": {
     "tests": {
-      "files": 214,
-      "passed": 2672,
+      "files": 215,
+      "passed": 2673,
       "failed": 0
     },
     "coverage": {
-      "lines": 78.09,
-      "branches": 75.59,
-      "statements": 76.1,
-      "functions": 70.75
+      "lines": 78.11,
+      "statements": 76.12,
+      "branches": 75.6,
+      "functions": 70.8
     },
     "globalAndCriticalGatesPassed": true,
     "criticalModules": 21
@@ -33,11 +33,19 @@
       "unexpected": 0,
       "flaky": 0
     },
-    "note": "Historical complete broad baseline and 90-case shell scope remain separate; latest 54-case secondary composition invocation and earlier 60-case secondary/response-read scope use the chart-layout correction. No single complete 1,296-case run is claimed.",
+    "note": "Separate invocations: historical broad baseline and shell scope, secondary review, and final 162-case navigation/recovery scope. No single full current-inventory invocation is claimed.",
     "secondaryScope": {
       "startTime": "2026-11-06T22:50:56.362Z",
       "duration": 31871.398,
       "expected": 54,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "navigationReviewScope": {
+      "startTime": "2026-11-06T23:04:11.752Z",
+      "duration": 115545.614,
+      "expected": 162,
       "skipped": 0,
       "unexpected": 0,
       "flaky": 0
@@ -68,19 +76,19 @@
     "scope": "Read-only all-local-ref history plus current tracked/nonignored untracked file snapshot. Default rules, decoded text depth 5, no baseline/rule/path exclusions or inline suppression. Ignored local credentials/dependencies/caches, archive contents and image OCR are outside the source scan. Findings are redacted; only exact reviewed source-line hashes may pass as non-secrets. Not proof that no secret could exist."
   },
   "shards": {
-    "total": 1296,
+    "total": 1314,
     "shards": [
       {
         "shard": 1,
-        "cases": 432
+        "cases": 438
       },
       {
         "shard": 2,
-        "cases": 432
+        "cases": 438
       },
       {
         "shard": 3,
-        "cases": 432
+        "cases": 438
       }
     ],
     "duplicates": 0
@@ -91,27 +99,27 @@
       {
         "route": "/",
         "preset": "mobile",
-        "score": 94,
+        "score": 96,
         "accessibility": 100,
-        "lcpMs": 3020.8062,
+        "lcpMs": 2857.9660000000003,
         "cls": 0,
         "passed": false
       },
       {
         "route": "/events",
         "preset": "mobile",
-        "score": 94,
+        "score": 93,
         "accessibility": 100,
-        "lcpMs": 3147.0562500000005,
+        "lcpMs": 3160.5968,
         "cls": 0,
         "passed": false
       },
       {
         "route": "/contact",
         "preset": "mobile",
-        "score": 95,
+        "score": 92,
         "accessibility": 100,
-        "lcpMs": 2899.3086000000003,
+        "lcpMs": 3304.5454,
         "cls": 0,
         "passed": false
       },
@@ -120,7 +128,7 @@
         "preset": "desktop",
         "score": 100,
         "accessibility": 100,
-        "lcpMs": 673.1590499999999,
+        "lcpMs": 667.2792,
         "cls": 0,
         "passed": true
       },
@@ -129,7 +137,7 @@
         "preset": "desktop",
         "score": 100,
         "accessibility": 100,
-        "lcpMs": 681.9648,
+        "lcpMs": 683.8386,
         "cls": 0,
         "passed": true
       },
@@ -138,15 +146,15 @@
         "preset": "desktop",
         "score": 100,
         "accessibility": 100,
-        "lcpMs": 683.8674000000002,
+        "lcpMs": 683.8517999999998,
         "cls": 0,
         "passed": true
       }
     ],
     "mobileLcpPassed": false,
     "fieldP75Verified": false,
-    "matchesCurrentBuild": false,
-    "note": "Preserved measurements predate the scoped response chart markup/CSS correction. The known mobile LCP failure remains open; no improved result is inferred."
+    "matchesCurrentBuild": true,
+    "note": "All three mobile LCP gates remain failing. Desktop scores 100, accessibility 100 and CLS zero; lab byte savings do not prove field p75 or causal timing improvement."
   },
   "services": [
     {
@@ -174,5 +182,5 @@
     "Bevy/Engage"
   ],
   "scope": "Local only; no deployment, push, purchase, real provider send, production change, another timer or AI commit trailer.",
-  "verificationScopeNote": "Full coverage, broad browser, navigation, PWA and header figures are the 422970e baseline. Current chart correction adds 24 passing targeted unit cases, 60 passing browser checks and a separate 54-case capture invocation. Current types/build/byte gates pass; lint remains zero errors/10 warnings."
+  "verificationScopeNote": "Current full coverage passes 2,673 tests/215 files and all unchanged global/critical gates. Final same-build 162-case navigation/recovery scope and nine PWA update checks pass. Earlier broad browser, primary/secondary visual and PWA boundary/header results remain dated baseline evidence. Types/build/byte gates pass; lint remains zero errors/10 inherited warnings."
 }

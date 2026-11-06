@@ -311,6 +311,13 @@ The dated audit/checkpoint entries above are historical. Current evidence is in
 
 ## Next implementation checkpoint
 
+The guarded-navigation continuation now passes full coverage (2,673 tests/215
+files with unchanged gates), all 162 focused six-profile browser cases and nine
+real PWA update checks. Startup JavaScript is 114,581 gzip bytes. Mobile LCP still
+fails; investigate route-inappropriate hero preloads and high-priority font
+contention next. Current browser inventory is 1,314 cases, 438 per shard. The
+following paragraph describes the preceding secondary review checkpoint.
+
 Checkpoint 422970e saved the verified public-entry/navigation baseline. The next
 continuation corrected response chart layout and added nine secondary states:
 54 passing six-profile cases and 72 unapproved captures. Twenty-four targeted

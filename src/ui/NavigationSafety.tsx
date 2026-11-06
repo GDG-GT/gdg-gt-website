@@ -7,14 +7,13 @@ import {
   type ReactNode,
 } from "react";
 import { useBlocker } from "react-router-dom";
-import * as Alert from "@radix-ui/react-alert-dialog";
 import { createDraftRegistry } from "@/lib/draft-registry.mjs";
 import {
   NavigationSafetyContext,
   type NavigationSafetyValue,
   type DraftState,
 } from "@/contexts/NavigationSafetyContext";
-import { Button } from "./primitives";
+import NavigationReview from "./NavigationReview";
 import { navigationChangesContext } from "../../shared/capability-navigation";
 export default function NavigationSafety({
   children,
@@ -24,10 +23,7 @@ export default function NavigationSafety({
   const registry = useRef(createDraftRegistry()).current;
   const [version, setVersion] = useState(0),
     [pending, setPending] = useState<(() => void) | null>(null);
-  const pendingRef = useRef<(() => void) | null>(null),
-    previousFocus = useRef<HTMLElement | null>(null),
-    restorePreviousFocus = useRef(true),
-    stay = useRef<HTMLButtonElement>(null);
+  const pendingRef = useRef<(() => void) | null>(null);
   const changed = useCallback(() => setVersion((v) => v + 1), []);
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
@@ -93,78 +89,20 @@ export default function NavigationSafety({
   return (
     <NavigationSafetyContext.Provider value={context}>
       {children}
-      <Alert.Root
-        open={open}
-        onOpenChange={(value) => {
-          if (!value) cancel();
-        }}
-      >
-        <Alert.Portal>
-          <Alert.Overlay className="gt-navigation-backdrop" />
-          <Alert.Content
-            className="gt-navigation-dialog"
-            onOpenAutoFocus={(event) => {
-              event.preventDefault();
-              restorePreviousFocus.current = true;
-              previousFocus.current = document.activeElement as HTMLElement;
-              stay.current?.focus();
-            }}
-            onCloseAutoFocus={(event) => {
-              event.preventDefault();
-              if (
-                restorePreviousFocus.current &&
-                previousFocus.current?.isConnected
-              )
-                previousFocus.current.focus();
-            }}
-          >
-            <Alert.Title asChild>
-              <h2>
-                {busy ? "An operation is still running" : "Leave unsaved work?"}
-              </h2>
-            </Alert.Title>
-            <Alert.Description asChild>
-              <p>
-                {busy
-                  ? "Stay here until the current operation finishes so you can see whether it succeeded."
-                  : "Leaving may discard edits or unsent text. Stay to save or finish your work first."}
-              </p>
-            </Alert.Description>
-            {states.length > 0 && (
-              <ul>
-                {[...new Set(states.map((s) => s.label))].map((label) => (
-                  <li key={label}>{label}</li>
-                ))}
-              </ul>
-            )}
-            <div className="gt-button-row">
-              <Alert.Cancel
-                ref={stay}
-                className="gt-button gt-button-secondary"
-              >
-                Stay here
-              </Alert.Cancel>
-              {!busy && (
-                <Button
-                  variant="danger"
-                  onClick={() => {
-                    // An approved change owns its next focus target. Only
-                    // cancellation should return to the previous control.
-                    restorePreviousFocus.current = false;
-                    const action = pendingRef.current;
-                    pendingRef.current = null;
-                    setPending(null);
-                    if (blocker.state === "blocked") blocker.proceed();
-                    else if (action) registry.allow(action);
-                  }}
-                >
-                  Discard and leave
-                </Button>
-              )}
-            </div>
-          </Alert.Content>
-        </Alert.Portal>
-      </Alert.Root>
+      {open && (
+        <NavigationReview
+          busy={busy}
+          labels={[...new Set(states.map((state) => state.label))]}
+          cancel={cancel}
+          discard={() => {
+            const action = pendingRef.current;
+            pendingRef.current = null;
+            setPending(null);
+            if (blocker.state === "blocked") blocker.proceed();
+            else if (action) registry.allow(action);
+          }}
+        />
+      )}
     </NavigationSafetyContext.Provider>
   );
 }

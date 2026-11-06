@@ -88,6 +88,15 @@
   margin-top: 24px;
   flex-wrap: wrap;
 }
+.gt-navigation-pending {
+  margin: 0;
+}
+.gt-navigation-pending::backdrop {
+  background: rgb(24 28 32 / 40%);
+}
+.gt-navigation-pending > .gt-button {
+  margin-top: 20px;
+}
 .gt-linktree-workspace table td {
   vertical-align: top;
 }

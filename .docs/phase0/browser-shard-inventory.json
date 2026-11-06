@@ -1,21 +1,21 @@
 {
-  "generatedAt": "2026-11-06T22:53:43.507027+00:00",
+  "generatedAt": "2026-11-06T23:10:52.301722+00:00",
   "shards": [
     {
       "shard": 1,
-      "cases": 432
+      "cases": 438
     },
     {
       "shard": 2,
-      "cases": 432
+      "cases": 438
     },
     {
       "shard": 3,
-      "cases": 432
+      "cases": 438
     }
   ],
-  "total": 1296,
+  "total": 1314,
   "duplicates": 0,
-  "caseKeysSha256": "7b1aa9dddd0a54fff2e266d612900757334c69ea5e134858ad5310d57f5b5e42",
-  "note": "Local pinned Playwright --list inventory only, not execution or CI success. Includes nine secondary visual states across six profiles. Three configured shards preserve all cases and existing assertions/timeouts/retries."
+  "caseKeysSha256": "aebceae9ac929af3b509410f274f261d4b5f2928e93ecf2d81476f41c059c57d",
+  "note": "Pinned local Playwright list-only inventory, not execution or CI success. Includes secondary review and navigation chunk-loading cases. Three shards preserve every case and all original timeout/retry/assertion settings."
 }

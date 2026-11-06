@@ -71,7 +71,7 @@ for (const [index, title] of [
 add(
   "A11Y-TEST-011", "",
   "Progressive public homepage availability with native inert controls, live/maintenance redirects, route-lazy landmark focus and footer sign-in entry",
-  ["tests/client/site-availability-loading.test.tsx", "tests/client/route-focus.test.tsx", "tests/browser/lazy-shell-focus.spec.ts"],
+  ["tests/client/site-availability-loading.test.tsx", "tests/client/route-focus.test.tsx", "tests/browser/lazy-shell-focus.spec.ts", "tests/client/navigation-review-loading.test.tsx", "tests/browser/navigation-review-loading.spec.ts"],
   ["Manual assistive technology, actual supported devices and complete public/private navigation acceptance"],
 );
 prdTestCases.at(-1).normative = ["22.1", "22.2", "23", "28.3", "31.2"];

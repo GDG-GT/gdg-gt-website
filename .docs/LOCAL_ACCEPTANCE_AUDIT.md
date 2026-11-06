@@ -7,6 +7,14 @@ numbered requirements and 307 logical acceptance cases remain unverified against
 the complete PRD definition; hosted/device/manual/approved-visual gates cannot
 be inferred from local tests.
 
+The latest guarded-navigation continuation passes full coverage (2,673 tests/
+215 files, unchanged global/21 critical gates), all 162 six-profile recovery
+browser checks and the nine real two-tab PWA update checks. Initial JavaScript
+is 114,581 gzip bytes. Mobile LCP remains failing at 2,858/3,161/3,305 ms; the
+current performance report records matching build hashes and the failure.
+Current inventory is 1,314 cases, 438 per shard. These latest results supersede
+older current-count statements below without erasing their historical evidence.
+
 The latest continuation adds nine secondary visual states (54 passing cases,
 72 unapproved captures) and corrects response-summary layout, meter labels and
 cross-browser chart color. The preceding same-build 60-case secondary/response-

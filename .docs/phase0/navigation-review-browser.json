@@ -1,0 +1,1153 @@
+{
+  "generatedAt": "2026-11-06T23:07:58.482793+00:00",
+  "completed": true,
+  "stats": {
+    "startTime": "2026-11-06T23:04:11.752Z",
+    "duration": 115545.614,
+    "expected": 162,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "build": {
+    "index.html": "c7947a32b7ed07896b0780cba85fc266e05c3f68aa581890c1dbec83d3095c1b",
+    ".vite/manifest.json": "77d6221e0bef2ab371ee96daa8c7ef273ef0333d14a681d0bc3bc160f6e3332d"
+  },
+  "scope": "Six-profile production-build navigation review load-delay/failure, no-library ordinary browsing, and existing contact/member/privacy/merge/respondent private-read/write recovery. All requests are browser fixtures; no actual application writes/provider sends. Native pending modal refusal of background focus, Escape cancellation, draft retention, loaded review cancellation, accepted destination focus and failed-chunk safe cancellation verified.",
+  "tests": [
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "selected inquiry has an initial read-only retry and retained proposal across a later refresh failure",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "stale inquiry proposal reload requires review and current redaction removes prior private fields",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "authorized inquiry file link is cleared on unverified context and private denial clears the parent",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "failed later inbox page has a previous escape and a filtered error can reset its filters",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member permission retry remains independent from a successful populated inventory",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member detail outage preserves the typed proposal and stale revisions block saving",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member denial clears private fields and requires an explicit current access recheck",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member activity retries independently and a failed later page retains a previous-page escape",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member permission retry remains independent from a successful populated inventory",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member detail outage preserves the typed proposal and stale revisions block saving",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member denial clears private fields and requires an explicit current access recheck",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member activity retries independently and a failed later page retains a previous-page escape",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member permission retry remains independent from a successful populated inventory",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member detail outage preserves the typed proposal and stale revisions block saving",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member denial clears private fields and requires an explicit current access recheck",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member activity retries independently and a failed later page retains a previous-page escape",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member permission retry remains independent from a successful populated inventory",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member detail outage preserves the typed proposal and stale revisions block saving",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member denial clears private fields and requires an explicit current access recheck",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member activity retries independently and a failed later page retains a previous-page escape",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member permission retry remains independent from a successful populated inventory",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member detail outage preserves the typed proposal and stale revisions block saving",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member denial clears private fields and requires an explicit current access recheck",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member activity retries independently and a failed later page retains a previous-page escape",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member permission retry remains independent from a successful populated inventory",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member detail outage preserves the typed proposal and stale revisions block saving",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member denial clears private fields and requires an explicit current access recheck",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "member activity retries independently and a failed later page retains a previous-page escape",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge candidate paging reaches eligible target 65 and preserves independent off-page selection",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge reviewed target read failure preserves comparison and pauses approval until independent retry",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge selected target denial conceals private comparison and requires explicit selection recheck",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge candidate paging reaches eligible target 65 and preserves independent off-page selection",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge reviewed target read failure preserves comparison and pauses approval until independent retry",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge selected target denial conceals private comparison and requires explicit selection recheck",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge candidate paging reaches eligible target 65 and preserves independent off-page selection",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge reviewed target read failure preserves comparison and pauses approval until independent retry",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge selected target denial conceals private comparison and requires explicit selection recheck",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge candidate paging reaches eligible target 65 and preserves independent off-page selection",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge reviewed target read failure preserves comparison and pauses approval until independent retry",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge selected target denial conceals private comparison and requires explicit selection recheck",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge candidate paging reaches eligible target 65 and preserves independent off-page selection",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge reviewed target read failure preserves comparison and pauses approval until independent retry",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge selected target denial conceals private comparison and requires explicit selection recheck",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge candidate paging reaches eligible target 65 and preserves independent off-page selection",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge reviewed target read failure preserves comparison and pauses approval until independent retry",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "merge selected target denial conceals private comparison and requires explicit selection recheck",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ordinary public browsing does not request the navigation review library",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review delayed loading preserves unsaved work and keyboard cancellation focus",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review load failure preserves unsaved work and keyboard cancellation focus",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ordinary public browsing does not request the navigation review library",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review delayed loading preserves unsaved work and keyboard cancellation focus",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review load failure preserves unsaved work and keyboard cancellation focus",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ordinary public browsing does not request the navigation review library",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review delayed loading preserves unsaved work and keyboard cancellation focus",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review load failure preserves unsaved work and keyboard cancellation focus",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ordinary public browsing does not request the navigation review library",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review delayed loading preserves unsaved work and keyboard cancellation focus",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review load failure preserves unsaved work and keyboard cancellation focus",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ordinary public browsing does not request the navigation review library",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review delayed loading preserves unsaved work and keyboard cancellation focus",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review load failure preserves unsaved work and keyboard cancellation focus",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ordinary public browsing does not request the navigation review library",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review delayed loading preserves unsaved work and keyboard cancellation focus",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review load failure preserves unsaved work and keyboard cancellation focus",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy initial metadata retry is read-only and retains dated scope through a later outage",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy prepared review survives private metadata outage and protects navigation and comparison",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy current denial clears scope review proof and cleanup counters until explicit recheck",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy initial metadata retry is read-only and retains dated scope through a later outage",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy prepared review survives private metadata outage and protects navigation and comparison",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy current denial clears scope review proof and cleanup counters until explicit recheck",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy initial metadata retry is read-only and retains dated scope through a later outage",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy prepared review survives private metadata outage and protects navigation and comparison",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy current denial clears scope review proof and cleanup counters until explicit recheck",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy initial metadata retry is read-only and retains dated scope through a later outage",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy prepared review survives private metadata outage and protects navigation and comparison",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy current denial clears scope review proof and cleanup counters until explicit recheck",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy initial metadata retry is read-only and retains dated scope through a later outage",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy prepared review survives private metadata outage and protects navigation and comparison",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy current denial clears scope review proof and cleanup counters until explicit recheck",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy initial metadata retry is read-only and retains dated scope through a later outage",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy prepared review survives private metadata outage and protects navigation and comparison",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "privacy current denial clears scope review proof and cleanup counters until explicit recheck",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original stale draft blocks retry and reviewed stopping clears private fields without a replacement save",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original response inspection denial conceals all respondent fields and original intent",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "reopening the same edit fragment after confirmation loads the current response again",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "native same-form fragment navigation cannot discard an unconfirmed respondent request",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original stale draft blocks retry and reviewed stopping clears private fields without a replacement save",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original response inspection denial conceals all respondent fields and original intent",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "reopening the same edit fragment after confirmation loads the current response again",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "native same-form fragment navigation cannot discard an unconfirmed respondent request",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original stale draft blocks retry and reviewed stopping clears private fields without a replacement save",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original response inspection denial conceals all respondent fields and original intent",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "reopening the same edit fragment after confirmation loads the current response again",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "native same-form fragment navigation cannot discard an unconfirmed respondent request",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original stale draft blocks retry and reviewed stopping clears private fields without a replacement save",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original response inspection denial conceals all respondent fields and original intent",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "reopening the same edit fragment after confirmation loads the current response again",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "native same-form fragment navigation cannot discard an unconfirmed respondent request",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original stale draft blocks retry and reviewed stopping clears private fields without a replacement save",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original response inspection denial conceals all respondent fields and original intent",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "reopening the same edit fragment after confirmation loads the current response again",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "native same-form fragment navigation cannot discard an unconfirmed respondent request",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original stale draft blocks retry and reviewed stopping clears private fields without a replacement save",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original response inspection denial conceals all respondent fields and original intent",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "reopening the same edit fragment after confirmation loads the current response again",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "native same-form fragment navigation cannot discard an unconfirmed respondent request",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    }
+  ]
+}

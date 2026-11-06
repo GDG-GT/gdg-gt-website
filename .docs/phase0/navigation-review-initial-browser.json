@@ -1,0 +1,43 @@
+{
+  "generatedAt": "2026-11-06T23:07:58.482793+00:00",
+  "completed": true,
+  "stats": {
+    "startTime": "2026-11-06T22:58:44.899Z",
+    "duration": 129538.454,
+    "expected": 158,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  },
+  "diagnostic": "First scoped run: 158 passed, four new WebKit anchor focus assertions failed after pointer invocation. Tests now use explicit keyboard activation for keyboard restoration; the corrected six-case WebKit scope and final 162-case scope pass. No product guard bypass, timeout or retry weakening.",
+  "failures": [
+    {
+      "name": "navigation review delayed loading preserves unsaved work and cancellation focus",
+      "project": "webkit-1440",
+      "results": [
+        "failed"
+      ]
+    },
+    {
+      "name": "navigation review load failure preserves unsaved work and cancellation focus",
+      "project": "webkit-1440",
+      "results": [
+        "failed"
+      ]
+    },
+    {
+      "name": "navigation review delayed loading preserves unsaved work and cancellation focus",
+      "project": "webkit-mobile",
+      "results": [
+        "failed"
+      ]
+    },
+    {
+      "name": "navigation review load failure preserves unsaved work and cancellation focus",
+      "project": "webkit-mobile",
+      "results": [
+        "failed"
+      ]
+    }
+  ]
+}

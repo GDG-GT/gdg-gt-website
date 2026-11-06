@@ -1,5 +1,35 @@
 # Public entry delivery and availability — 2026-11-06
 
+## Deferred navigation-review continuation
+
+The guarded navigation registry and router blocker stay synchronous. Only the
+Radix review dialog is deferred; an accessible native modal keeps navigation
+paused and offers Stay during loading or failure. Cancellation and accepted
+destination focus, including delayed and failed chunks, pass the final 162-case
+six-profile browser scope. Full coverage passes 2,673 tests/215 files with all
+unchanged gates. See `WORKSPACE_NAVIGATION_CHECKS.md`.
+
+Current initial JavaScript is 114,581 gzip bytes versus 126,485 immediately before
+this extraction. CSS is 29,899 gzip bytes and the font remains 48,432 bytes. The
+build gate requires the new dialog boundary. No dependency was upgraded.
+
+The new isolated six-route measurements match the current build hashes:
+Home/Events/Contact mobile scores 96/93/92, accessibility 100, CLS zero and LCP
+2,858/3,161/3,305 ms. All mobile LCP gates still fail; all desktop scores are 100.
+The earlier report is retained as
+`phase0/production-performance-before-navigation-review.json`. Single runs and
+timing variation do not justify claiming a causal LCP improvement from the byte
+change. No score, threshold, browser flag or network preset was weakened.
+
+The current waterfall identifies another concrete delivery inefficiency: Events
+and Contact each request the 37,624-byte mobile home atmosphere despite never
+rendering it. The global index preload triggers that request. All three routes
+also preload the 48,432-byte font at high priority. Next work should measure
+route-appropriate resource hints and font contention before a larger rendering
+change. Public/private availability and cache boundaries must remain intact.
+
+## Previous public-entry baseline
+
 The initial production JavaScript graph is now approximately 126 kB gzip, CSS
 30 kB gzip and the self-hosted font 48 kB. Admin shell, sign-in, other public-page
 implementations, 3D objects, Forms builder and responses stay outside the home

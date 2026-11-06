@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-11-06T22:36:06.306Z",
+  "generatedAt": "2026-11-06T23:03:10.093Z",
   "completed": true,
   "lighthouseVersion": "13.6.0",
   "build": {
     "index.html": {
       "bytes": 1985,
-      "sha256": "0499d42dcae0f1f2e82704e83f91a1fbc7232cb4c88297fcfbdedee175d47bed"
+      "sha256": "c7947a32b7ed07896b0780cba85fc266e05c3f68aa581890c1dbec83d3095c1b"
     },
     ".vite/manifest.json": {
-      "bytes": 112259,
-      "sha256": "f888bf7b4de466db34f5b007dd998337b562718a2da057db229772b76ea9ee96"
+      "bytes": 115931,
+      "sha256": "77d6221e0bef2ab371ee96daa8c7ef273ef0333d14a681d0bc3bc160f6e3332d"
     },
     "assets/hero-atmosphere-mobile.webp": {
       "bytes": 37624,
@@ -34,25 +34,25 @@
     {
       "route": "/",
       "preset": "mobile",
-      "performance": 94,
+      "performance": 96,
       "accessibility": 100,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 3020.8062,
+      "lcpMs": 2857.9660000000003,
       "cls": 0,
-      "tbtMs": 59.5,
+      "tbtMs": 40.5,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
-          "score": 0.77,
-          "display": "3.0 s"
+          "score": 0.82,
+          "display": "2.9 s"
         },
         {
           "id": "max-potential-fid",
           "title": "Max Potential First Input Delay",
-          "score": 0.9,
-          "display": "130 ms"
+          "score": 0.95,
+          "display": "110 ms"
         },
         {
           "id": "errors-in-console",
@@ -62,8 +62,8 @@
         {
           "id": "interactive",
           "title": "Time to Interactive",
-          "score": 0.95,
-          "display": "3.0 s"
+          "score": 0.96,
+          "display": "2.9 s"
         },
         {
           "id": "label-content-name-mismatch",
@@ -80,7 +80,7 @@
           "id": "unused-javascript",
           "title": "Reduce unused JavaScript",
           "score": 0,
-          "display": "Est savings of 60 KiB"
+          "display": "Est savings of 52 KiB"
         },
         {
           "id": "bf-cache",
@@ -91,7 +91,7 @@
         {
           "id": "image-delivery-insight",
           "title": "Improve image delivery",
-          "score": 0.5,
+          "score": 0,
           "display": "Est savings of 115 KiB"
         },
         {
@@ -103,7 +103,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 250 ms"
+          "display": "Est savings of 260 ms"
         }
       ],
       "runtimeError": null,
@@ -112,19 +112,19 @@
     {
       "route": "/events",
       "preset": "mobile",
-      "performance": 94,
+      "performance": 93,
       "accessibility": 100,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 3147.0562500000005,
+      "lcpMs": 3160.5968,
       "cls": 0,
-      "tbtMs": 8,
+      "tbtMs": 5,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
-          "score": 0.74,
-          "display": "3.1 s"
+          "score": 0.73,
+          "display": "3.2 s"
         },
         {
           "id": "errors-in-console",
@@ -152,7 +152,7 @@
           "id": "unused-javascript",
           "title": "Reduce unused JavaScript",
           "score": 0,
-          "display": "Est savings of 60 KiB"
+          "display": "Est savings of 51 KiB"
         },
         {
           "id": "bf-cache",
@@ -184,19 +184,19 @@
     {
       "route": "/contact",
       "preset": "mobile",
-      "performance": 95,
+      "performance": 92,
       "accessibility": 100,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 2899.3086000000003,
+      "lcpMs": 3304.5454,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
-          "score": 0.8,
-          "display": "2.9 s"
+          "score": 0.69,
+          "display": "3.3 s"
         },
         {
           "id": "errors-in-console",
@@ -206,8 +206,8 @@
         {
           "id": "interactive",
           "title": "Time to Interactive",
-          "score": 0.96,
-          "display": "2.9 s"
+          "score": 0.94,
+          "display": "3.3 s"
         },
         {
           "id": "label-content-name-mismatch",
@@ -217,14 +217,14 @@
         {
           "id": "unused-css-rules",
           "title": "Reduce unused CSS",
-          "score": 0.5,
-          "display": "Est savings of 24 KiB"
+          "score": 0,
+          "display": "Est savings of 25 KiB"
         },
         {
           "id": "unused-javascript",
           "title": "Reduce unused JavaScript",
           "score": 0,
-          "display": "Est savings of 60 KiB"
+          "display": "Est savings of 51 KiB"
         },
         {
           "id": "bf-cache",
@@ -235,7 +235,7 @@
         {
           "id": "image-delivery-insight",
           "title": "Improve image delivery",
-          "score": 0.5,
+          "score": 0,
           "display": "Est savings of 12 KiB"
         },
         {
@@ -247,7 +247,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 300 ms"
+          "display": "Est savings of 280 ms"
         }
       ],
       "runtimeError": null,
@@ -260,7 +260,7 @@
       "accessibility": 100,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 673.1590499999999,
+      "lcpMs": 667.2792,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -283,14 +283,14 @@
         {
           "id": "unused-css-rules",
           "title": "Reduce unused CSS",
-          "score": 0,
-          "display": "Est savings of 24 KiB"
+          "score": 0.5,
+          "display": "Est savings of 25 KiB"
         },
         {
           "id": "unused-javascript",
           "title": "Reduce unused JavaScript",
           "score": 0,
-          "display": "Est savings of 60 KiB"
+          "display": "Est savings of 52 KiB"
         },
         {
           "id": "bf-cache",
@@ -326,7 +326,7 @@
       "accessibility": 100,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 681.9648,
+      "lcpMs": 683.8386,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -349,14 +349,14 @@
         {
           "id": "unused-css-rules",
           "title": "Reduce unused CSS",
-          "score": 0,
+          "score": 0.5,
           "display": "Est savings of 25 KiB"
         },
         {
           "id": "unused-javascript",
           "title": "Reduce unused JavaScript",
-          "score": 0,
-          "display": "Est savings of 60 KiB"
+          "score": 0.5,
+          "display": "Est savings of 51 KiB"
         },
         {
           "id": "bf-cache",
@@ -392,7 +392,7 @@
       "accessibility": 100,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 683.8674000000002,
+      "lcpMs": 683.8517999999998,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -422,7 +422,7 @@
           "id": "unused-javascript",
           "title": "Reduce unused JavaScript",
           "score": 0,
-          "display": "Est savings of 60 KiB"
+          "display": "Est savings of 51 KiB"
         },
         {
           "id": "bf-cache",

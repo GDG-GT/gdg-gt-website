@@ -703,6 +703,7 @@ group(
         c("workspace-ui"),
         "tests/browser/workspace-compositions.spec.ts",
         "tests/browser/operations-compositions.spec.ts",
+        "tests/browser/secondary-compositions.spec.ts",
       ],
     ],
     [

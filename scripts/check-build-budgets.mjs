@@ -42,6 +42,7 @@ for (const name of ['hero-atmosphere-mobile.webp', 'hero-campus-mobile.webp'])
 const publicInitial = entryAssets(manifest, 'index.html');
 const deferred = [
   'src/ui/AdminShell.tsx',
+  'src/ui/NavigationReviewDialog.tsx',
   'src/components/AdminLoginModal.tsx',
   'src/ui/PublicPages.tsx',
   'src/ui/HeroObjects.tsx',
