@@ -15,14 +15,16 @@ let refresh: Promise<void> | undefined;
 let binding: string | undefined;
 let epoch = 0;
 let sessionRequests = new AbortController();
-export const clearApiSession = () => {
+export const clearApiSession = ({
+  announce = true,
+}: { announce?: boolean } = {}) => {
   epoch++;
   sessionRequests.abort();
   sessionRequests = new AbortController();
   csrf = undefined;
   binding = undefined;
   refresh = undefined;
-  if (typeof window !== "undefined")
+  if (announce && typeof window !== "undefined")
     window.dispatchEvent(new Event("gdg:session-cleared"));
 };
 function acceptCsrf(value: unknown) {
@@ -144,7 +146,12 @@ async function execute<T>(
     return execute<T>(path, options, false, expectedEpoch);
   }
   if (!response.ok) {
-    if (response.status === 401 && scoped) clearApiSession();
+    if (response.status === 401 && scoped) {
+      // An initial anonymous session probe still cancels protected requests, but
+      // is not a sign-out of independent public resume/edit capabilities.
+      // Known-session loss and explicit sign-in/sign-out keep their notifications.
+      clearApiSession({ announce: !!binding });
+    }
     throw new ApiFailure(
       response.status,
       result?.error?.code || "TEMPORARILY_UNAVAILABLE",

@@ -1,0 +1,77 @@
+{
+  "generatedAt": "2026-11-06T12:58:33.238Z",
+  "completed": false,
+  "cleanup": true,
+  "scope": "Dedicated loopback; fresh owned fictional private forms/accounts/answers only. Exact before/after-loss draft/submission/edit and simultaneous draft saves. No providers/mail workers or real chapter/production changes. Owned forms archived/edit capabilities revoked/drafts expired/accounts disabled/sessions revoked; fictional response/audit rows retained privately, no physical-erasure claim. No raw token/key/body/answer/email/capability retained in report.",
+  "tests": [
+    {
+      "name": "drafts before freezes original identity/answers/choice/key at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "drafts before inspection changes no draft/response record and preserves exact original request at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "drafts before reconciles or explicitly retries identical bytes/key only at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "drafts after freezes original identity/answers/choice/key at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "populated drafts original-outcome recovery passes measured axe at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "drafts after inspection changes no draft/response record and preserves exact original request at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "drafts after reconciles or explicitly retries identical bytes/key only at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "submissions before freezes original identity/answers/choice/key at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "submissions before inspection changes no draft/response record and preserves exact original request at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "submissions before reconciles or explicitly retries identical bytes/key only at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "submissions after freezes original identity/answers/choice/key at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "populated submissions original-outcome recovery passes measured axe at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "submissions after inspection changes no draft/response record and preserves exact original request at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "submissions after reconciles or explicitly retries identical bytes/key only at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "edits before freezes original identity/answers/choice/key at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "edits before inspection changes no draft/response record and preserves exact original request at 1440\u00d7900",
+      "passed": true
+    },
+    {
+      "name": "edits before reconciles or explicitly retries identical bytes/key only at 1440\u00d7900",
+      "passed": true
+    }
+  ],
+  "failureNote": "First live probe passed 17 checks through five desktop loss cases, then reopening the same edit fragment did not remount the completed runtime. Existing success UI remained. Fixture cleanup completed; forms archived/capabilities revoked/drafts expired/accounts disabled. Approved same-form capability navigation requires a runtime reset."
+}

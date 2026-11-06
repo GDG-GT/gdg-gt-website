@@ -21,7 +21,6 @@ import RouteErrorBoundary from "@/ui/RouteErrorBoundary";
 import NavigationSafety from "@/ui/NavigationSafety";
 import CapabilityBoundary from "@/ui/CapabilityBoundary";
 import RouteFocus from "@/ui/RouteFocus";
-import { formCapabilityNames } from "../shared/capability-navigation";
 import { PwaUpdateNotice } from "@/pwa/PwaControls";
 import { QueueRuntime } from "@/pwa/SubmissionQueue";
 import { MaintenancePage } from "@/ui/status/SiteAvailability";
@@ -177,17 +176,7 @@ function RoutedApplication() {
               <Route path="/sponsors" element={<SponsorsPage />} />
               <Route path="/gallery" element={<GalleryPage />} />
               <Route path="/contact" element={<ContactPage />} />
-              <Route
-                path="/forms/:slug"
-                element={
-                  <CapabilityBoundary
-                    names={formCapabilityNames}
-                    previewSensitive
-                  >
-                    <PublicForm />
-                  </CapabilityBoundary>
-                }
-              />
+              <Route path="/forms/:slug" element={<PublicForm />} />
               <Route
                 path="/account/setup"
                 element={

@@ -4524,6 +4524,17 @@ fieldset.gt-event-fields {
 .gt-form-library-read-status > p {
   margin: 0;
 }
+.gt-respondent-write-recovery {
+  padding: clamp(20px, 4vw, 32px);
+  background: var(--surface-raised);
+  border-bottom: 1px solid #e4d5c7;
+  overflow-wrap: anywhere;
+}
+.gt-respondent-write-recovery > h2 { margin: 0 0 12px; font-size: 1.25rem; line-height: 1.4; }
+.gt-respondent-write-recovery p { margin-block: 12px; line-height: 1.65; }
+.gt-respondent-write-recovery .gt-button-row { margin-block: 18px; }
+.gt-respondent-write-recovery details { margin-top: 18px; }
+.gt-respondent-write-recovery summary { cursor: pointer; font-weight: 600; }
 .gt-form-library-recovery {
   margin-block: 20px;
   padding-block: 16px;

@@ -86,7 +86,7 @@ export async function formRoutes(
     /^\/api\/v1\/admin\/forms(?:\/([^/]+)(?:\/(draft|validate|versions|publish|state|duplicate|restore))?)?$/,
   );
   const publicRoute = path.match(
-    /^\/api\/v1\/forms\/([^/]+)(?:\/(submissions|preview|drafts|edits)(?:\/(load))?)?$/,
+    /^\/api\/v1\/forms\/([^/]+)(?:\/(submissions|preview|drafts|edits)(?:\/(load|recovery))?)?$/,
   );
   if (!admin && !publicRoute) return false;
   const can = async (actor, id, action, team = null) =>
@@ -204,16 +204,27 @@ export async function formRoutes(
   if (publicRoute) {
     const formSlug = parse(slug, publicRoute[1]),
       operation = publicRoute[2],
-      loading = publicRoute[3] === "load";
+      loading = publicRoute[3] === "load",
+      recovering = publicRoute[3] === "recovery";
+    if (
+      (loading && !["drafts", "edits"].includes(operation)) ||
+      (recovering && !["drafts", "edits", "submissions"].includes(operation))
+    )
+      throw new ApiError(
+        404,
+        "NOT_FOUND",
+        "This form operation is not available.",
+      );
     allowMethod(
       request,
       response,
       operation && operation !== "preview" ? ["POST"] : ["GET"],
     );
     await rate(
-      "forms." + (operation === "submissions" ? "submit" : "read"),
+      "forms." +
+        (operation === "submissions" && !recovering ? "submit" : "read"),
       request.socket?.remoteAddress || "unknown",
-      operation === "submissions" ? 30 : 120,
+      operation === "submissions" && !recovering ? 30 : 120,
     );
     const form = checked(
       await db.from("forms").select("*").eq("slug", formSlug).maybeSingle(),
@@ -251,49 +262,103 @@ export async function formRoutes(
           "VALIDATION_ERROR",
           "This submission could not be accepted.",
         );
-      await rate(
-        "forms.submit.form",
-        form.id + ":" + (request.socket?.remoteAddress || "unknown"),
-        20,
-      );
+      if (!recovering)
+        await rate(
+          "forms.submit.form",
+          form.id + ":" + (request.socket?.remoteAddress || "unknown"),
+          20,
+        );
       const existing = checked(
         await db
           .from("form_responses")
-          .select("id,request_hash,submitted_at,edit_secret_encrypted")
+          .select(
+            "id,request_hash,submitted_at,edit_secret_encrypted,access_token_id",
+          )
           .eq("form_id", form.id)
           .eq("idempotency_key_hash", tokenHash(key))
           .maybeSingle(),
       );
       if (existing) {
+        // A receipt is not a substitute for current chapter/private access.
+        // A consumed invitation can reconcile its own accepted response, without
+        // becoming eligible to submit another one.
+        if (
+          !form.published_version_id ||
+          ["Draft", "Archived"].includes(form.state) ||
+          form.permanently_deleted_at
+        )
+          throw new ApiError(404, "NOT_FOUND", "This form is not available.");
+        if (form.access_mode === "internal") {
+          const current = await requireSession(request, store, config);
+          await requireCsrf(request, current, store);
+          if (
+            form.team_id &&
+            !["admin", "super_admin"].includes(current.user.role) &&
+            !(await store.memberships(current.user.id)).some(
+              (m) => m.team_id === form.team_id && m.team?.is_active,
+            )
+          )
+            throw new ApiError(
+              403,
+              "ACCESS_REQUIRED",
+              "This form requires chapter access.",
+            );
+        } else if (form.access_mode !== "public") {
+          if (!validToken(body.accessToken))
+            throw new ApiError(
+              403,
+              "ACCESS_REQUIRED",
+              "This form requires a valid access link.",
+            );
+          const current = checked(
+            await db
+              .from("form_access_tokens")
+              .select("id")
+              .eq("id", existing.access_token_id)
+              .eq("form_id", form.id)
+              .eq("token_type", form.access_mode)
+              .eq("token_hash", tokenHash(body.accessToken))
+              .is("revoked_at", null)
+              .gt("expires_at", new Date().toISOString())
+              .maybeSingle(),
+          );
+          if (!current)
+            throw new ApiError(
+              403,
+              "ACCESS_REQUIRED",
+              "This form requires a valid access link.",
+            );
+        }
         if (existing.request_hash !== hash)
           throw new ApiError(
             409,
             "INVALID_STATE",
             "Use a new submission key after changing your answers.",
           );
+        const receipt = {
+          responseId: existing.id,
+          submittedAt: existing.submitted_at,
+          copyQueued: !!checked(
+            await db
+              .from("form_respondent_copies")
+              .select("id")
+              .eq("response_id", existing.id)
+              .eq("revision", 0)
+              .maybeSingle(),
+          ),
+          ...(existing.edit_secret_encrypted
+            ? {
+                editToken: decryptPayload(
+                  existing.edit_secret_encrypted,
+                  config.encryptionSecret,
+                ).token,
+              }
+            : {}),
+        };
         sendJson(
           response,
           200,
-          {
-            responseId: existing.id,
-            submittedAt: existing.submitted_at,
-            copyQueued: !!checked(
-              await db
-                .from("form_respondent_copies")
-                .select("id")
-                .eq("response_id", existing.id)
-                .eq("revision", 0)
-                .maybeSingle(),
-            ),
-            ...(existing.edit_secret_encrypted
-              ? {
-                  editToken: decryptPayload(
-                    existing.edit_secret_encrypted,
-                    config.encryptionSecret,
-                  ).token,
-                }
-              : {}),
-          },
+          recovering ? { committed: true, canRetry: false, receipt } : receipt,
           requestId,
         );
         return true;
@@ -318,9 +383,26 @@ export async function formRoutes(
                 resumeToken: tokenSchema.optional(),
                 accessToken: tokenSchema.optional(),
                 uploadToken: tokenSchema.optional(),
+                draftRevision: z
+                  .number()
+                  .int()
+                  .min(0)
+                  .max(2147483647)
+                  .optional(),
               })
               .strict(),
         512 * 1024,
+      );
+    if (
+      operation === "drafts" &&
+      !loading &&
+      (recovering || body.draftRevision !== undefined) &&
+      (!body.resumeToken || body.draftRevision === undefined)
+    )
+      throw new ApiError(
+        400,
+        "VALIDATION_ERROR",
+        "Preserve the original draft token and revision before saving or recovering.",
       );
     if (operation === "edits") {
       body = await jsonBody(
@@ -490,6 +572,73 @@ export async function formRoutes(
           copyRequested: body.copyRequested && copyAvailable,
         }
       : {};
+    if (recovering && operation === "submissions") {
+      const current =
+        form.published_version_id === body.versionId &&
+        ["Open", "Scheduled"].includes(form.state) &&
+        (!form.opens_at || new Date(form.opens_at) <= new Date()) &&
+        (!form.closes_at || new Date(form.closes_at) > new Date());
+      sendJson(
+        response,
+        200,
+        { committed: false, canRetry: !!current, receipt: null },
+        requestId,
+      );
+      return true;
+    }
+    if (recovering && operation === "edits") {
+      const original = checked(
+        await db
+          .from("idempotency_keys")
+          .select("request_hash,result,expires_at")
+          .eq("scope", "forms.edit:" + editResponse.id)
+          .eq("key_hash", tokenHash(idempotency(request)))
+          .maybeSingle(),
+      );
+      if (original && original.request_hash !== tokenHash(JSON.stringify(body)))
+        throw new ApiError(
+          409,
+          "CONFLICT",
+          "The original response edit does not match this request.",
+        );
+      if (original && new Date(original.expires_at) <= new Date())
+        throw new ApiError(
+          409,
+          "INVALID_STATE",
+          "The original edit recovery window has ended.",
+        );
+      const revision = original?.result?.revision;
+      const receipt = original
+        ? {
+            responseId: editResponse.id,
+            revision,
+            copyQueued: !!checked(
+              await db
+                .from("form_respondent_copies")
+                .select("id")
+                .eq("response_id", editResponse.id)
+                .eq("revision", revision)
+                .maybeSingle(),
+            ),
+          }
+        : null;
+      sendJson(
+        response,
+        200,
+        {
+          committed: !!original,
+          canRetry:
+            !original &&
+            body.versionId === published.id &&
+            body.revision === editResponse.revision &&
+            (!form.closes_at || new Date(form.closes_at) > new Date()),
+          currentRevision: editResponse.revision,
+          receipt,
+        },
+        requestId,
+      );
+      return true;
+    }
     if (!operation) {
       // No owner, collaborator, token, private rule, or response-count projection.
       const settings = { ...definition.settings, access: "public" };
@@ -528,7 +677,7 @@ export async function formRoutes(
           await db
             .from("form_response_drafts")
             .select(
-              "answers,version_id,respondent_name,respondent_email,copy_requested",
+              "answers,version_id,respondent_name,respondent_email,copy_requested,revision",
             )
             .eq("form_id", form.id)
             .eq("resume_token_hash", tokenHash(body.resumeToken))
@@ -559,6 +708,82 @@ export async function formRoutes(
               email: draft.respondent_email || email || "",
             },
             copyRequested: draft.copy_requested,
+            revision: draft.revision || 1,
+          },
+          requestId,
+        );
+        return true;
+      }
+      if (body.draftRevision !== undefined) {
+        const resume = body.resumeToken;
+        const args = {
+          p_document: {
+            ...identityDocument,
+            form: form.id,
+            version: body.versionId,
+            hash: tokenHash(resume),
+            revision: body.draftRevision,
+            answers: body.answers,
+            access: access?.id || null,
+            actor: session?.user.id || null,
+            uploadHash: body.uploadToken ? tokenHash(body.uploadToken) : null,
+          },
+          p_session: session?.sessionId || null,
+          p_key_hash: tokenHash(idempotency(request)),
+          p_request_hash: tokenHash(JSON.stringify(body)),
+        };
+        if (recovering) {
+          const value = checked(
+            await db.rpc("inspect_identified_form_draft", args),
+          );
+          const receipt = value.receipt
+            ? {
+                revision: value.receipt.revision,
+                expiresAt: value.receipt.expiresAt,
+                createdAt: value.receipt.createdAt,
+              }
+            : null;
+          sendJson(
+            response,
+            200,
+            {
+              committed: value.committed,
+              canRetry: value.canRetry,
+              currentRevision: value.currentRevision,
+              receipt,
+            },
+            requestId,
+          );
+          return true;
+        }
+        if (body.versionId !== published.id)
+          throw new ApiError(
+            409,
+            "CONFLICT",
+            "This form changed. Reload before saving a draft.",
+          );
+        const errors = validateSubmission(definition, body.answers, true);
+        if (Object.keys(errors).length)
+          throw new ApiError(
+            400,
+            "VALIDATION_ERROR",
+            "Check the draft answers.",
+            errors,
+          );
+        const result = checked(
+          await db.rpc("save_versioned_identified_form_draft", args),
+        );
+        sendJson(
+          response,
+          200,
+          {
+            resumeToken: resume,
+            revision: result.revision,
+            expiresAt: result.expiresAt,
+            expiresInDays: draftDaysRemaining(
+              result.createdAt,
+              result.expiresAt,
+            ),
           },
           requestId,
         );

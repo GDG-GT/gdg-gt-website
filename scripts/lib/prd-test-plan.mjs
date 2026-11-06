@@ -783,7 +783,17 @@ const forms = [
   [
     "FORM-011",
     "Runtime labels/progress/errors/review and shared logic parity",
-    ["tests/form-runtime-fields.test.ts", unit("forms"), local("form-runtime")],
+    [
+      "tests/form-runtime-fields.test.ts",
+      unit("forms"),
+      unit("form-respondent-recovery"),
+      "tests/client/respondent-write-recovery.test.tsx",
+      "tests/client/api-session-generation.test.mjs",
+      "tests/browser/respondent-write-recovery.spec.ts",
+      sql("131_respondent_draft_replay"),
+      local("form-runtime"),
+      local("respondent-write-recovery"),
+    ],
   ],
   [
     "FORM-012",

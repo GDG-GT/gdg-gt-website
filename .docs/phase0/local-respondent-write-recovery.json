@@ -1,0 +1,224 @@
+{
+  "generatedAt": "2026-11-06T13:21:19.759Z",
+  "completed": true,
+  "cleanup": true,
+  "scope": "Dedicated loopback; fresh owned fictional private forms/accounts/answers only. Exact before/after-loss draft/submission/edit and simultaneous draft saves. No providers/mail workers or real chapter/production changes. Owned forms archived/edit capabilities revoked/drafts expired/accounts disabled/sessions revoked; fictional response/audit rows retained privately, no physical-erasure claim. No raw token/key/body/answer/email/capability retained in report.",
+  "tests": [
+    {
+      "name": "drafts before freezes original identity/answers/choice/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "drafts before inspection changes no draft/response record and preserves exact original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "drafts before reconciles or explicitly retries identical bytes/key only at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "drafts after freezes original identity/answers/choice/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated drafts original-outcome recovery passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "drafts after inspection changes no draft/response record and preserves exact original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "drafts after reconciles or explicitly retries identical bytes/key only at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "submissions before freezes original identity/answers/choice/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "submissions before inspection changes no draft/response record and preserves exact original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "submissions before reconciles or explicitly retries identical bytes/key only at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "submissions after freezes original identity/answers/choice/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated submissions original-outcome recovery passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "submissions after inspection changes no draft/response record and preserves exact original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "submissions after reconciles or explicitly retries identical bytes/key only at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "edits before freezes original identity/answers/choice/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "edits before inspection changes no draft/response record and preserves exact original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "edits before reconciles or explicitly retries identical bytes/key only at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "edits after freezes original identity/answers/choice/key at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "populated edits original-outcome recovery passes measured axe at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "edits after inspection changes no draft/response record and preserves exact original request at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "edits after reconciles or explicitly retries identical bytes/key only at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "ten simultaneous identical draft saves create one token/record revision at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "accepted old draft retry preserves a newer save and a new stale request conflicts at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "actual draft receipt inspection is minimal and reports current revision at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "native known conflict preserves proposal until reviewed current-draft reload then saves current revision at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "recovery creates exactly the intended responses and no unrequested respondent-copy jobs at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "respondent writes have no unexpected egress/errors/page overflow at 1440×900",
+      "passed": true
+    },
+    {
+      "name": "drafts before freezes original identity/answers/choice/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "drafts before inspection changes no draft/response record and preserves exact original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "drafts before reconciles or explicitly retries identical bytes/key only at 375×812",
+      "passed": true
+    },
+    {
+      "name": "drafts after freezes original identity/answers/choice/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated drafts original-outcome recovery passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "drafts after inspection changes no draft/response record and preserves exact original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "drafts after reconciles or explicitly retries identical bytes/key only at 375×812",
+      "passed": true
+    },
+    {
+      "name": "submissions before freezes original identity/answers/choice/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "submissions before inspection changes no draft/response record and preserves exact original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "submissions before reconciles or explicitly retries identical bytes/key only at 375×812",
+      "passed": true
+    },
+    {
+      "name": "submissions after freezes original identity/answers/choice/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated submissions original-outcome recovery passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "submissions after inspection changes no draft/response record and preserves exact original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "submissions after reconciles or explicitly retries identical bytes/key only at 375×812",
+      "passed": true
+    },
+    {
+      "name": "edits before freezes original identity/answers/choice/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "edits before inspection changes no draft/response record and preserves exact original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "edits before reconciles or explicitly retries identical bytes/key only at 375×812",
+      "passed": true
+    },
+    {
+      "name": "edits after freezes original identity/answers/choice/key at 375×812",
+      "passed": true
+    },
+    {
+      "name": "populated edits original-outcome recovery passes measured axe at 375×812",
+      "passed": true
+    },
+    {
+      "name": "edits after inspection changes no draft/response record and preserves exact original request at 375×812",
+      "passed": true
+    },
+    {
+      "name": "edits after reconciles or explicitly retries identical bytes/key only at 375×812",
+      "passed": true
+    },
+    {
+      "name": "ten simultaneous identical draft saves create one token/record revision at 375×812",
+      "passed": true
+    },
+    {
+      "name": "accepted old draft retry preserves a newer save and a new stale request conflicts at 375×812",
+      "passed": true
+    },
+    {
+      "name": "actual draft receipt inspection is minimal and reports current revision at 375×812",
+      "passed": true
+    },
+    {
+      "name": "native known conflict preserves proposal until reviewed current-draft reload then saves current revision at 375×812",
+      "passed": true
+    },
+    {
+      "name": "recovery creates exactly the intended responses and no unrequested respondent-copy jobs at 375×812",
+      "passed": true
+    },
+    {
+      "name": "respondent writes have no unexpected egress/errors/page overflow at 375×812",
+      "passed": true
+    }
+  ]
+}

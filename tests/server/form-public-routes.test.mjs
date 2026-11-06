@@ -475,6 +475,7 @@ describe("Forms public, draft, submission and own-response editing route contrac
       versionId: ids.version,
       respondent: f.submission.respondent,
       copyRequested: true,
+      revision: 1,
     });
     expect(
       f.queries.findLast((q) => q.table === "form_response_drafts").steps,

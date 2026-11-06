@@ -123,3 +123,10 @@ attachment status/removal/context fences, real local storage/scanner checks and
 scanner isolation/ownership guards. See `RESPONDENT_UPLOAD_RECOVERY.md`. Final
 respondent submission/draft recovery and full device/storage/hosted acceptance
 remain open.
+
+The runtime case now also maps original submission/edit/versioned-draft receipts,
+current-authority read-only inspection, exact explicit retries, known-conflict
+reviewed reload, anonymous-bootstrap/session distinction and guarded same-form
+private-fragment replacement. See `RESPONDENT_WRITE_RECOVERY.md`; local evidence
+does not approve remaining directory/inbox/privacy recovery or full manual/
+device/visual/hosted acceptance.

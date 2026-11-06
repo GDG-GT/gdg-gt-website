@@ -72,6 +72,7 @@
     "setup:local-realtime": "node scripts/setup-local-realtime.mjs",
     "test:local-uploads": "node scripts/test-local-uploads.mjs",
     "test:local-respondent-upload-recovery": "node scripts/test-local-respondent-upload-recovery.mjs",
+    "test:local-respondent-write-recovery": "node scripts/test-local-respondent-write-recovery.mjs",
     "test:local-jobs": "node scripts/test-local-jobs.mjs",
     "test:local-content": "node scripts/test-local-content.mjs",
     "test:local-public-collections": "node scripts/test-local-public-collections.mjs",

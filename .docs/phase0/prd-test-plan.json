@@ -1691,7 +1691,13 @@
       "automated": [
         "tests/form-runtime-fields.test.ts",
         "tests/server/forms.test.mjs",
-        "scripts/test-local-form-runtime.mjs"
+        "tests/server/form-respondent-recovery.test.mjs",
+        "tests/client/respondent-write-recovery.test.tsx",
+        "tests/client/api-session-generation.test.mjs",
+        "tests/browser/respondent-write-recovery.spec.ts",
+        "database/tests/131_respondent_draft_replay.sql",
+        "scripts/test-local-form-runtime.mjs",
+        "scripts/test-local-respondent-write-recovery.mjs"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"

@@ -185,6 +185,8 @@ describe("FORM-TEST-031: respondent identity, submission, privacy and recovery U
     const form = fixture();
     let writes = 0;
     apiMock.mockImplementation(async (path: string) => {
+      if (path.endsWith("/submissions/recovery"))
+        return { committed: false, canRetry: true, receipt: null };
       if (!path.endsWith("/submissions")) return { form };
       if (++writes === 1) throw Error("Fictional connection failure");
       return { responseId: "fictional-retry", copyQueued: false };
@@ -193,12 +195,30 @@ describe("FORM-TEST-031: respondent identity, submission, privacy and recovery U
     await fill();
     submit();
     expect((await screen.findByRole("alert")).textContent).toContain(
-      "Fictional connection failure",
+      "Check its original outcome",
     );
     expect(
       (screen.getByLabelText(/Fictional answer/) as HTMLInputElement).value,
     ).toBe("A fictional answer");
     submit();
+    expect(
+      apiMock.mock.calls.filter(([path]) => path.endsWith("/submissions")),
+    ).toHaveLength(1);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Check original submission outcome" }),
+    );
+    await waitFor(() =>
+      expect(
+        (
+          screen.getByRole("button", {
+            name: "Retry original submission",
+          }) as HTMLButtonElement
+        ).disabled,
+      ).toBe(false),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Retry original submission" }),
+    );
     await screen.findByRole("heading", { name: "Response submitted." });
     const calls = apiMock.mock.calls.filter(([path]) =>
       path.endsWith("/submissions"),
@@ -304,16 +324,20 @@ describe("FORM-TEST-031: respondent identity, submission, privacy and recovery U
   });
   it("saves declared identity with a draft and copies only a fragment-based private resume link", async () => {
     const form = fixture(),
-      resumeToken = "r".repeat(43),
       writeText = vi.fn(async () => {});
     vi.stubGlobal("navigator", {
       ...navigator,
       onLine: true,
       clipboard: { writeText },
     });
-    apiMock.mockImplementation(async (path: string) =>
+    apiMock.mockImplementation(async (path: string, options) =>
       path.endsWith("/drafts")
-        ? { resumeToken, expiresAt: "2026-11-01T12:00:00Z", expiresInDays: 7 }
+        ? {
+            resumeToken: options.body.resumeToken,
+            revision: 2,
+            expiresAt: "2026-11-15T12:00:00Z",
+            expiresInDays: 7,
+          }
         : { form },
     );
     mount();
@@ -332,7 +356,7 @@ describe("FORM-TEST-031: respondent identity, submission, privacy and recovery U
     expect(copied.pathname).toBe("/forms/fictional");
     expect(copied.search).toBe("");
     expect(new URLSearchParams(copied.hash.slice(1)).get("resume")).toBe(
-      resumeToken,
+      write[1].body.resumeToken,
     );
     expect(
       new URLSearchParams(copied.hash.slice(1)).get("upload"),
@@ -394,7 +418,11 @@ describe("FORM-TEST-031: respondent identity, submission, privacy and recovery U
             },
           }
         : path.endsWith("/edits")
-          ? { responseId: "fictional-edited-response", revision: 4 }
+          ? {
+              responseId: "fictional-edited-response",
+              revision: 4,
+              copyQueued: false,
+            }
           : { form },
     );
     mount("#edit=" + editToken);
@@ -487,7 +515,7 @@ describe("Form recovery and semantic focus", () => {
     apiMock.mockImplementation((path: string) =>
       Promise.resolve(
         path.endsWith("/submissions")
-          ? { responseId: "fictional-online-response" }
+          ? { responseId: "fictional-online-response", copyQueued: false }
           : { form: fixture() },
       ),
     );
@@ -633,7 +661,7 @@ describe("Form recovery and semantic focus", () => {
           name: "Submit response",
         }) as HTMLButtonElement
       ).disabled,
-    ).toBe(false);
+    ).toBe(true);
   });
   it("shows a real loading status and recovers a read failure with retained landmark focus", async () => {
     let calls = 0;
@@ -715,6 +743,7 @@ describe("Form recovery and semantic focus", () => {
               responseId: "fictional-response",
               editToken: "e".repeat(43),
               revision: 1,
+              copyQueued: false,
             }
           : { form: fixture() },
       ),

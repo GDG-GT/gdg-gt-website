@@ -1,0 +1,402 @@
+{
+  "generatedAt": "2026-11-06T12:58:22.571Z",
+  "completed": true,
+  "playwrightVersion": "1.64.1",
+  "platform": "darwin",
+  "arch": "arm64",
+  "stats": {
+    "startTime": "2026-11-06T12:54:06.433Z",
+    "duration": 82557.475,
+    "expected": 48,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "note": "Production-build browser checks with explicit local API fixtures, no database/credentials/provider sends. Screenshots are unapproved review candidates, not initial golden baselines or approved pixel comparisons. WebKit/mobile emulation does not certify Safari or real devices. Local execution does not certify the new CI job has run.",
+  "tests": [
+    {
+      "name": "original respondent submissions before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original stale draft blocks retry and reviewed stopping clears private fields without a replacement save",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original response inspection denial conceals all respondent fields and original intent",
+      "project": "chromium-1920",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original stale draft blocks retry and reviewed stopping clears private fields without a replacement save",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original response inspection denial conceals all respondent fields and original intent",
+      "project": "chromium-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original stale draft blocks retry and reviewed stopping clears private fields without a replacement save",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original response inspection denial conceals all respondent fields and original intent",
+      "project": "chromium-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original stale draft blocks retry and reviewed stopping clears private fields without a replacement save",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original response inspection denial conceals all respondent fields and original intent",
+      "project": "firefox-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original stale draft blocks retry and reviewed stopping clears private fields without a replacement save",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original response inspection denial conceals all respondent fields and original intent",
+      "project": "webkit-1440",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent submissions after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent edits after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts before acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original respondent drafts after acceptance loss preserves exact answers/identity/choice/key",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original stale draft blocks retry and reviewed stopping clears private fields without a replacement save",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "original response inspection denial conceals all respondent fields and original intent",
+      "project": "webkit-mobile",
+      "expected": "passed",
+      "results": [
+        "passed"
+      ]
+    }
+  ]
+}

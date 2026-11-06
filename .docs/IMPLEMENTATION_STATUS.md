@@ -8,6 +8,51 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Respondent submission/edit/draft original-outcome recovery — 2026-11-06
+
+- Migration 131 adds monotonic draft revisions, fixed client resume-token intent,
+  current-authority metadata-only inspection and atomic body/key replay. Ten
+  simultaneous identical saves preserve one draft/revision; accepted old replay
+  preserves a later legitimate save, while a new stale request conflicts. Both
+  SQL chains pass (236/237 checks), both 100-client races and six isolated restore
+  checks pass; migration applied locally. Applied historical SQL stays immutable.
+- Public submit/edit recovery checks current source access before receipt/hash/
+  edit-capability disclosure. Consumed invitations can reconcile only their own
+  accepted response. Original edit-copy revision is preserved; draft inspections
+  disclose neither answers nor identity/capabilities. No extra write/copy job is
+  created by an inspection. The runtime freezes original version/revision/body/
+  tokens/key, inspects before explicit identical retry, requires recheck after
+  reconnect/second loss, and fences expiry, current denial, session/context change
+  and reviewed stopping. Known conflicts preserve proposed answers until an
+  explicit reviewed current-answer reload.
+- Actual local probe initially exposed same-form fragment re-entry leaving an old
+  success screen mounted. Intermediate browser checks also exposed the old outer
+  capability wrapper remounting before the live guard, and Firefox's initial
+  anonymous session probe clearing public edit state. Forms now owns a guarded,
+  generation-fenced context boundary; initial unbound 401 still invalidates private
+  API requests without announcing a public-capability sign-out. Known-session
+  loss/explicit sign-out still clear private state. Initial failed/interrupted
+  reports and complete fixture cleanup are retained.
+- All 54 actual API/DB/native desktop-mobile checks pass, including before/after
+  acceptance losses, read-only inspection, simultaneous saves, stale conflicts
+  and reviewed reload. Only intended responses are created; no unrequested copies,
+  provider jobs/egress, page errors or overflow. Owned forms archived, edit tokens
+  revoked, drafts expired, actors disabled/sessions revoked; fixture audit/response
+  records remain private. No physical-erasure claim.
+- All 102 final production-browser write/upload-regression checks pass across six
+  profiles, no skips. Populated axe passes. Screenshot review improved the notice's
+  heading/spacing/actions; mobile capture inspected, no approved golden claimed.
+  Build/types/lint (zero errors/25 existing warnings), budgets, secrets and
+  traceability pass. All 2,438 tests/200 files pass; all 21 critical 90% branch
+  gates pass. Global coverage still fails unchanged 70%: 71.19% lines, 71.13%
+  branches, 69.62% statements and 62.51% functions. Catalog: 159 unverified cases.
+- The renewed source audit confirms further community-directory, contact-inbox and
+  person-data privacy recovery work (`LOCAL_ACCEPTANCE_AUDIT.md`), followed by
+  remaining quality/manual/device/visual/hosted acceptance. See
+  `RESPONDENT_WRITE_RECOVERY.md`. SSO/Google and Bevy/Engage stay deferred; no
+  deployment, provider sends, production changes or new timer.
+
+
 ### Respondent file recovery and local scanner restoration — 2026-11-06
 
 - Migration 130 adds current-access/version/field/proof/body/key-bound atomic

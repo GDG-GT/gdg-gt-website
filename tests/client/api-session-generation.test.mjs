@@ -205,6 +205,36 @@ describe("session-bound same-origin API transport", () => {
     caller.abort();
     expect(signal.aborted).toBe(true);
   });
+  it("initial anonymous probes cancel protected results without announcing a logout of public capabilities", async () => {
+    const announce = vi.fn();
+    vi.stubGlobal("window", { dispatchEvent: announce });
+    const pending = deferred();
+    fetcher
+      .mockReturnValueOnce(pending.promise)
+      .mockResolvedValueOnce(error(401, "UNAUTHENTICATED"));
+    const old = api("/admin/example"),
+      checked = expect(old).rejects.toMatchObject({ code: "SESSION_CHANGED" });
+    await expect(api("/auth/session")).rejects.toMatchObject({ status: 401 });
+    expect(fetcher.mock.calls[0][1].signal.aborted).toBe(true);
+    pending.resolve(ok({ private: "obsolete" }));
+    await checked;
+    expect(announce).not.toHaveBeenCalled();
+  });
+  it("known-session 401 still clears and announces all private context", async () => {
+    const announce = vi.fn();
+    vi.stubGlobal("window", { dispatchEvent: announce });
+    await bind();
+    fetcher.mockResolvedValueOnce(error(401, "UNAUTHENTICATED"));
+    await expect(api("/admin/example")).rejects.toMatchObject({ status: 401 });
+    expect(announce).toHaveBeenCalledTimes(1);
+    expect(announce.mock.calls[0][0].type).toBe("gdg:session-cleared");
+  });
+  it("explicit clearing still announces privacy reset without a prior account binding", () => {
+    const announce = vi.fn();
+    vi.stubGlobal("window", { dispatchEvent: announce });
+    clearApiSession();
+    expect(announce).toHaveBeenCalledTimes(1);
+  });
   it("rejects a missing binding from the private session bootstrap", async () => {
     fetcher.mockResolvedValueOnce(ok({ csrfToken: "fictional" }));
     await expect(
