@@ -8,6 +8,28 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Scoped private response attachment authorization — 2026-11-06
+
+- Explicit authorization exposes a bounded download link; delayed reads never
+  open files automatically. Account/role/form/response/file-list/permission,
+  session and offline changes cancel/clear private links. URL/TTL validation,
+  request-start expiry, click-time checks and no-referrer new-tab activation
+  protect downloads. Background expiry/connection notices preserve keyboard focus.
+- All 95 focused client/server checks pass (36 new attachment regressions).
+  All 66 attachment/history/shared-workspace production-browser cases pass across
+  six profiles, with measured axe and late-close/expiry/denial coverage. Mobile
+  authorized state inspected. No real file opened/downloaded, worker/provider,
+  publication/response, existing chapter or production change. Actual storage/
+  scanner/CORS/device/hosted acceptance remains separate.
+- Build/types/lint (zero errors/25 warnings), byte budgets, secrets/traceability
+  pass. All 1,744 tests/175 files pass. Coverage remains below 70%: 66.19% lines,
+  65.93% branches, 64.42% statements and 57.42% functions. All 17 critical branch
+  gates pass; no timeout or threshold changed.
+- Catalog stays 159 unverified cases. Remaining response inventory/summary/views/
+  exports/mutations, Forms access/settings/deletion/integrations/runtime and full
+  quality/device/manual/visual/storage/hosted acceptance remain open. See
+  `FORM_RESPONSE_FILE_RECOVERY.md`.
+
 ### Private response-history recovery — 2026-11-06
 
 - Revision inventory and selected answers now recover independently, retaining

@@ -1769,11 +1769,13 @@
       "requirements": [
         "FORM-016"
       ],
-      "scope": "Private scanned direct upload and physical cleanup",
+      "scope": "Private scanned direct upload, physical cleanup and scoped expiring response attachment authorization",
       "automated": [
         "tests/server/upload-routes.test.mjs",
         "tests/server/scanner.test.mjs",
-        "scripts/test-local-uploads.mjs"
+        "scripts/test-local-uploads.mjs",
+        "tests/client/form-response-file-recovery.test.tsx",
+        "tests/browser/form-response-files.spec.ts"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"

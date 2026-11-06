@@ -791,6 +791,10 @@ function ResponseWorkspaceContent() {
                           formId={form.id}
                           responseId={selected.id}
                           ids={selected.answers[field.id] as string[]}
+                          canDownload={
+                            !field.sensitive ||
+                            !!form.actions?.includes("view_sensitive_responses")
+                          }
                         />
                       ) : (
                         <p>

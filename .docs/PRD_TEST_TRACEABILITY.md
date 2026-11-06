@@ -41,3 +41,7 @@ and selected-snapshot recovery, denial clearing and sensitive/context fences.
 Actual local and production-browser evidence is recorded in
 `FORM_RESPONSE_HISTORY_RECOVERY.md`; remaining response workflows and complete
 manual/hosted acceptance stay open.
+
+The private file case now maps scoped expiring response attachment authorization
+and its browser/client recovery checks. Storage/device/manual/hosted acceptance
+remains open; see `FORM_RESPONSE_FILE_RECOVERY.md`.
