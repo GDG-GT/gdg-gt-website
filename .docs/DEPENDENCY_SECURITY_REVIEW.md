@@ -1,5 +1,46 @@
 # Dependency review — 2026-11-06
 
+## Current scoped KaTeX patch under final verification
+
+Installed KaTeX is now0.18.2 through a scoped Mermaid override, the version named
+in the [upstream fix](https://github.com/KaTeX/KaTeX/security/advisories/GHSA-238p-pmpm-9mq7).
+Only the KaTeX resolved lock entry changed; Mermaid11.17.2, converter2.2.2,
+Excalidraw0.18.1 and all other resolutions remain unchanged. This deliberately
+crosses Mermaid's declared0.16 range, so compatibility was evaluated explicitly
+instead of inferred from a clean audit.
+
+The exact archive SHA512 matches the generated lock. Lock-only generation used
+no lifecycle scripts; only the validated KaTeX archive was installed. Root/cache
+manifests and hidden install metadata align, and original SharpWASM/Emnapi
+fallbacks are preserved. Backup `/Users/tejas/.cache/gdg-katex-patch-mys214iv`
+retains complete original package/manifests/locks. `npm ls katex` exits0 and the
+production audit exits0 with **zero findings at every severity**. No package
+downgrade, force sweep or audit suppression was used. Evidence:
+`phase0/katex-patch-audit.json`.
+
+Six installed-package regression checks pass. The exact inherited-trust inputs
+produce resource attributes in the retained vulnerable package and are refused
+by the patched package; normal MathML and explicit owned trust options remain
+supported. These tests do not mutate the global prototype or make requests.
+The prior66Mermaid/converter and6actualBoardCanvas browser comparisons are
+separate compatibility evidence, preserved below.
+
+The rebuilt chapter editor also exposed two existing accessibility gaps in its
+native menu/zoom controls. A wrapper-scoped, disconnectable name adapter supplies
+an unnamed menu label and includes the visible percentage in the zoom-reset
+name; it does not change drawing state or patch vendor files. Eight focused
+security/adapter units and two real desktop editor/zoom/collaborator checks pass.
+All twelve actual editor/collaborator cases and six full-navigation cases pass
+across six profiles. The enclosing102-case scope has92passes/eight expected skips/
+two software-WebGL failures, retained in `phase0/katex-focused-browser.json`.
+Original desktop motion isolation also fails with unchanged limits, both before
+and after a same-geometry sprinkle instancing optimization; the latter evidence
+is `phase0/hero-instancing-motion.json`. This is not a passing whole invocation.
+Build/types/byte gates pass; lint0errors/10inherited warnings. Complete one-worker
+coverage passes2696tests/220files and unchanged gates; currentPWA15/update9/HTTPS46
+pass. IsolatedLighthouse confirms visiblelabels/a11y100/desktop100/CLS0 but
+mobileLCP2841/3161/3156ms still fails2500ms. No fullPRD acceptance is inferred.
+
 ## Current v7 migration verification
 
 The installed application now uses react-router-dom/react-router **7.18.5**.

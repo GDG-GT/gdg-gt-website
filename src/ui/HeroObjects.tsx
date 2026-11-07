@@ -1,6 +1,7 @@
 import {
   Component,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -9,6 +10,7 @@ import {
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
+import { donutSprinkleCount, populateDonutSprinkles } from "./hero-sprinkles";
 
 const random = (seed: number) => {
   const value = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
@@ -22,6 +24,18 @@ const colors = [
   "#fff8ec",
   "#f05f8c",
 ];
+function DonutSprinkles() {
+  const mesh = useRef<THREE.InstancedMesh>(null);
+  useLayoutEffect(() => {
+    if (mesh.current) populateDonutSprinkles(mesh.current, colors);
+  }, []);
+  return (
+    <instancedMesh ref={mesh} args={[undefined, undefined, donutSprinkleCount]}>
+      <capsuleGeometry args={[0.025, 0.105, 3, 5]} />
+      <meshStandardMaterial roughness={0.3} />
+    </instancedMesh>
+  );
+}
 function StaticObjects() {
   return (
     <img
@@ -107,32 +121,7 @@ function FrostedDonut() {
           side={THREE.DoubleSide}
         />
       </mesh>
-      {Array.from({ length: 84 }, (_, index) => {
-        const theta = random(index + 1) * Math.PI * 2,
-          phi = 0.22 + random(index + 200) * 2.7,
-          r = 1 + 0.406 * Math.cos(phi);
-        return (
-          <mesh
-            key={index}
-            position={[
-              r * Math.cos(theta),
-              r * Math.sin(theta),
-              0.406 * Math.sin(phi) + 0.055,
-            ]}
-            rotation={[
-              random(index + 300) * 0.6,
-              random(index + 400) * 0.6,
-              random(index + 500) * Math.PI,
-            ]}
-          >
-            <capsuleGeometry args={[0.025, 0.105, 3, 5]} />
-            <meshStandardMaterial
-              color={colors[index % colors.length]}
-              roughness={0.3}
-            />
-          </mesh>
-        );
-      })}
+      <DonutSprinkles />
     </group>
   );
 }

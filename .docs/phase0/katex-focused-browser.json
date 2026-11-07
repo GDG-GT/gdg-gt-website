@@ -1,0 +1,837 @@
+{
+  "generatedAt": "2026-11-07T04:48:21.769971+00:00",
+  "completed": true,
+  "allPassed": false,
+  "stats": {
+    "startTime": "2026-11-07T04:42:14.785Z",
+    "duration": 280733.88200000004,
+    "expected": 92,
+    "skipped": 8,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "build": {
+    "index.html": "090c07259a0e8a18749b7dce3166c4c3a41bcb51fbed013fa00e773eea090fe4",
+    ".vite/manifest.json": "9c2c0bf140a16a4a9d6550c60a271438ed0dffb40570921c995cd37db9cf0223",
+    "assets/public-entry.js": "5ff218d7049b9a8dd39cb7ee8b488f7cfbc6a857a0459ebcffb3e2d0e2dbd3b8"
+  },
+  "tests": [
+    {
+      "file": "full-workspace-navigation.spec.ts",
+      "name": "complete super-admin navigation stays keyboard reachable without losing the sign-out controls",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "full-workspace-navigation.spec.ts",
+      "name": "complete super-admin navigation stays keyboard reachable without losing the sign-out controls",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "full-workspace-navigation.spec.ts",
+      "name": "complete super-admin navigation stays keyboard reachable without losing the sign-out controls",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "full-workspace-navigation.spec.ts",
+      "name": "complete super-admin navigation stays keyboard reachable without losing the sign-out controls",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "full-workspace-navigation.spec.ts",
+      "name": "complete super-admin navigation stays keyboard reachable without losing the sign-out controls",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "full-workspace-navigation.spec.ts",
+      "name": "complete super-admin navigation stays keyboard reachable without losing the sign-out controls",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "chromium-1920",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "chromium-1920",
+      "results": [
+        "failed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "chromium-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "chromium-1440",
+      "results": [
+        "failed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "chromium-mobile",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "firefox-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "firefox-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "webkit-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "webkit-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "webkit-mobile",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    }
+  ],
+  "scope": "Final patched build, six-profile public smoke/full navigation/real whiteboard scope:92passes/eight expected skips/two failures. Chromium1920 software-WebGL screenshot10s timeout and Chromium1440 canvas20s wait timeout. All12new whiteboardcases and6fullnavigation cases pass. Keep original assertions/timeouts/retries; isolated exact two motion cases run afterward. No actual application/provider writes."
+}

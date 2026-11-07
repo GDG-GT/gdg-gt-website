@@ -7,6 +7,7 @@ import type {
 } from "@excalidraw/excalidraw/types";
 import type { BoardDocument } from "./types";
 import "@excalidraw/excalidraw/index.css";
+import { observeDrawingControlNames } from "./drawing-control-names";
 
 export default function BoardCanvas({
   document,
@@ -22,7 +23,11 @@ export default function BoardCanvas({
   readOnly: boolean;
 }) {
   const interacted = useRef(false);
+  const drawingRoot = useRef<HTMLDivElement>(null);
   const editor = useRef<ExcalidrawImperativeAPI>();
+  useEffect(() => {
+    if (drawingRoot.current) return observeDrawingControlNames(drawingRoot.current);
+  }, []);
   useEffect(() => {
     if (!fitRequest) return;
     editor.current?.scrollToContent(undefined, {
@@ -44,6 +49,7 @@ export default function BoardCanvas({
   );
   return (
     <div
+      ref={drawingRoot}
       className="gt-board-canvas"
       onPointerDownCapture={() => {
         interacted.current = true;

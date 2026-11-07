@@ -5,13 +5,16 @@ Reviewed against the complete v1.5 PRD on 2026-10-21, including normative sectio
 documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
-Current local verification update (2026-11-06): public-entry, populated-browser,
-PWA, header/cache and mandatory-ID verification now extend the latest functional
-module checkpoint, `PERSON_PRIVACY_WRITE_RECOVERY.md`. Completed recovery checkpoints include tasks,
-announcements, whiteboards, finance, media, projects, editorial, newsletter and availability. Their dedicated recovery documents
-and newest `IMPLEMENTATION_STATUS.md` entries supersede older test/coverage counts
-below. All numbered requirements remain unverified against complete acceptance;
-passing local interactions is not a PRD-completion percentage.
+Current local verification update (2026-11-07): complete one-worker source
+coverage passes2696tests/220files and unchanged global/critical gates. Scoped
+KaTeX0.18.2 patch gives a zero-finding production dependency audit; installed
+regression/compatibility and all12actual-editor browser cases pass. Current
+software-WebGL screenshot checks still fail with unchanged limits; current-build
+secondary162/PWA15/update9/HTTPS46 pass. MobileLCP2841/3161/3156ms remains failing.
+Saved full-browser pass belongs to4ed0b55, not the current artifact. Latest
+functional recovery remains `PERSON_PRIVACY_WRITE_RECOVERY.md`, migrations136/137.
+All146requirements/307mandatory IDs are source-mapped, acceptance unverified.
+See `CURRENT_CHECKPOINT.md` and `LOCAL_ACCEPTANCE_AUDIT.md` for current evidence.
 
 ## Deferred by Tejas
 

@@ -1,0 +1,1319 @@
+{
+  "generatedAt": "2026-11-07T05:18:58.434666+00:00",
+  "completed": true,
+  "allPassed": true,
+  "stats": {
+    "startTime": "2026-11-07T05:14:16.332Z",
+    "duration": 250371.915,
+    "expected": 162,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "build": {
+    "index.html": "b7a5dbfba5762037bd393ae42fd4cb4046470f9ea382a2b87d808ce23f0e6a03",
+    ".vite/manifest.json": "554aabaca5c459737d4ed22bef5aae6c55f65396a7ce497d628b7647fae3cc6e",
+    "assets/public-entry.js": "5ff218d7049b9a8dd39cb7ee8b488f7cfbc6a857a0459ebcffb3e2d0e2dbd3b8"
+  },
+  "tests": [
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event editor composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event attendees composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary attendee correction composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary attendee removal review composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event email draft composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event email history composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event archive review composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event cancellation review composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event unpublish review composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event duplication review composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event editor composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event attendees composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary attendee correction composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary attendee removal review composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event email draft composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event email history composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event archive review composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event cancellation review composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event unpublish review composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event duplication review composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event editor composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event attendees composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary attendee correction composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary attendee removal review composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event email draft composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event email history composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event archive review composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event cancellation review composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event unpublish review composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event duplication review composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event editor composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event attendees composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary attendee correction composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary attendee removal review composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event email draft composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event email history composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event archive review composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event cancellation review composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event unpublish review composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event duplication review composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event editor composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event attendees composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary attendee correction composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary attendee removal review composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event email draft composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event email history composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event archive review composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event cancellation review composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event unpublish review composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event duplication review composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event editor composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event attendees composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary attendee correction composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary attendee removal review composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event email draft composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event email history composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event archive review composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event cancellation review composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event unpublish review composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "event-compositions.spec.ts",
+      "name": "secondary event duplication review composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary response analytics composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary individual response composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary media inspector composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary builder logic composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary builder settings composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary team announcements composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary team conversation composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary channel conversation composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary campaign preview composition remains readable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary response analytics composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary individual response composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary media inspector composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary builder logic composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary builder settings composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary team announcements composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary team conversation composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary channel conversation composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary campaign preview composition remains readable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary response analytics composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary individual response composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary media inspector composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary builder logic composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary builder settings composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary team announcements composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary team conversation composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary channel conversation composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary campaign preview composition remains readable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary response analytics composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary individual response composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary media inspector composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary builder logic composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary builder settings composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary team announcements composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary team conversation composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary channel conversation composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary campaign preview composition remains readable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary response analytics composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary individual response composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary media inspector composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary builder logic composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary builder settings composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary team announcements composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary team conversation composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary channel conversation composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary campaign preview composition remains readable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary response analytics composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary individual response composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary media inspector composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary builder logic composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary builder settings composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary team announcements composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary team conversation composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary channel conversation composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "secondary-compositions.spec.ts",
+      "name": "secondary campaign preview composition remains readable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task inventory keeps context and actions readable",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task discussion keeps context and actions readable",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task editor keeps context and actions readable",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private conversation keeps context and actions readable",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private message compose keeps context and actions readable",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private review request keeps context and actions readable",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task inventory keeps context and actions readable",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task discussion keeps context and actions readable",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task editor keeps context and actions readable",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private conversation keeps context and actions readable",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private message compose keeps context and actions readable",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private review request keeps context and actions readable",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task inventory keeps context and actions readable",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task discussion keeps context and actions readable",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task editor keeps context and actions readable",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private conversation keeps context and actions readable",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private message compose keeps context and actions readable",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private review request keeps context and actions readable",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task inventory keeps context and actions readable",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task discussion keeps context and actions readable",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task editor keeps context and actions readable",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private conversation keeps context and actions readable",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private message compose keeps context and actions readable",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private review request keeps context and actions readable",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task inventory keeps context and actions readable",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task discussion keeps context and actions readable",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task editor keeps context and actions readable",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private conversation keeps context and actions readable",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private message compose keeps context and actions readable",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private review request keeps context and actions readable",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task inventory keeps context and actions readable",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task discussion keeps context and actions readable",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary task editor keeps context and actions readable",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private conversation keeps context and actions readable",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private message compose keeps context and actions readable",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "task-message-compositions.spec.ts",
+      "name": "secondary private review request keeps context and actions readable",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    }
+  ],
+  "states": 27,
+  "captures": 210,
+  "scope": "Read-only fictional loopback production-build composition review;162checks across6profiles. Shared axe/WCAG2.1A+AA, name, width/scroll, heading, fixture/page-error and no-write assertions. Actual drawing editor included. No realAPI/provider writes, retries, skipped states, approved chapter content, human approval, 1% goldens or physical devices inferred. Earlier failed desktop label diagnostic retained separately."
+}

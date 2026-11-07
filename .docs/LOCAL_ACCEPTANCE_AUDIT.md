@@ -1,45 +1,39 @@
-# Local implementation and acceptance audit — 2026-11-06
+# Local implementation and acceptance audit — 2026-11-07
 
-Updated through privacy recovery checkpoint 137 and the populated-browser/PWA
-acceptance pass. These are concrete
-remaining local findings, not an exhaustive acceptance certificate. All 146
-numbered requirements and 307 logical acceptance cases remain unverified against
-the complete PRD definition; hosted/device/manual/approved-visual gates cannot
-be inferred from local tests.
+Current local source includes canonical recovery migrations through137, React
+Router7.18.5, the scoped KaTeX0.18.2 security patch, visible-label corrections and
+native drawing-control names. Production dependency audit exits0 with no current
+findings. That is not a full security or launch certificate.
 
-Newest local checkpoint uses React Router 7.18.5, with zero moderate/high/critical
-and four low audit package entries remaining. Final coverage passes 2,684 tests/
-216 files with all unchanged gates. The complete browser run found one drawer
-failure (1,311 passed/eight skipped); the final rebuilt 108-case scope verifies
-its correction across six profiles. All 15 PWA boundary/nine update/46 header
-checks pass. Current mobile LCP remains failing at 3,122/3,168/3,164 ms; current
-build hashes bind the evidence. These scopes supersede older current-count
-statements below while preserving their historical results. See
-`DEPENDENCY_SECURITY_REVIEW.md` and `phase0/current-local-status.json`.
+Complete source coverage passes **2696tests/220files**, unchanged global70 and
+21critical90 branch gates: lines78.16/statements76.16/functions70.80/branches75.62.
+It ran with one worker and no competing verification. Earlier failed coverage
+invocations remain recorded separately. Build/types/byte/traceability gates pass;
+lint has0errors/10inherited warnings. See `phase0/katex-instancing-quality.json`.
 
-The route-aware preload continuation is the newest local checkpoint: final
-public smoke passes 76 cases/eight expected skips, 46 HTTPS/header checks and
-13 focused helper/traceability cases pass. Startup is 114,943 gzip JS bytes,
-including the separately accounted copied helper. Mobile LCP remains failing
-at 3,003/3,012/3,007 ms (performance 95 each, accessibility 100, CLS zero).
-Current browser inventory is 1,320 cases, 440 per shard. Full application-source
-coverage remains the separately dated 2,673-test/215-file invocation below.
+Saved4ed0b55 complete browser invocation passes1372cases/eight expected skips.
+Current KaTeX/editor/public/navigation scope passes92/eight expected skips/two
+software-WebGL failures, while all12actual editor and6navigation cases pass.
+Original two desktop motion cases still time out during screenshot readback
+after same-geometry sprinkle instancing; thresholds/assertions/retries unchanged.
+These are separate builds and scopes, not a passing full current inventory.
 
-The latest guarded-navigation continuation passes full coverage (2,673 tests/
-215 files, unchanged global/21 critical gates), all 162 six-profile recovery
-browser checks and the nine real two-tab PWA update checks. Initial JavaScript
-is 114,581 gzip bytes. Mobile LCP remains failing at 2,858/3,161/3,305 ms; the
-current performance report records matching build hashes and the failure.
-Current inventory is 1,314 cases, 438 per shard. These latest results supersede
-older current-count statements below without erasing their historical evidence.
+The expanded secondary review passes27states/162checks, with210unapproved
+captures and no skips/failures/retries. Six new task/message states passed their corrected desktop diagnostic.
+The first diagnostic's four bare-label locator errors are retained. List-only
+inventory verifies1428unique cases in three disjoint476-case shards. No remote
+CI, approved goldens, human fidelity approval or physical-device claim follows.
 
-The latest continuation adds nine secondary visual states (54 passing cases,
-72 unapproved captures) and corrects response-summary layout, meter labels and
-cross-browser chart color. The preceding same-build 60-case secondary/response-
-read scope and 24 targeted unit cases pass. Current inventory is 1,296 cases,
-432 per shard; older figures below describe the 422970e baseline. Complete
-secondary/confirmation review, mobile LCP and manual/device/hosted acceptance
-remain open. See `POPULATED_VISUAL_REVIEW.md` for the exact limits.
+Current isolated mobile labLCP2841/3161/3156ms still fails2500ms; desktop100,
+accessibility100, explicit visible-label names pass andCLS0. Current-artifact
+15PWA/nine update/46HTTPS checks pass. Full
+PRD remains incomplete: all146requirements/307logical cases are source-mapped,
+with full acceptance unverified. The manual/device/hosted gates below remain.
+
+## Historical implementation evidence
+
+The dated scopes below record earlier local checkpoints; the current summary
+above and `phase0/current-local-status.json` supersede their current-count wording.
 
 ## Confirmed local work
 

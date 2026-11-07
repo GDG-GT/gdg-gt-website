@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-07T00:23:12.798Z",
+  "generatedAt": "2026-11-07T05:19:34.549Z",
   "completed": true,
   "isolatedReports": 4,
   "scope": "Isolated HTTPS loopback production build with the exact common CSP/security header values from vercel.json, including upgrade-insecure-requests. Ephemeral one-day self-signed loopback certificate is trusted only by this isolated context and removed afterward. Actual hosted TLS/certificate/header precedence, third-party frames, authenticated editors, WebGL, service workers and deployed caching remain separate acceptance. Anonymous allowlisted reads plus browser CSP reports terminated without inspecting/storing their bodies in this owned server; reports never reach the application API. All external requests and other non-read methods are refused. No credentials/application writes/provider sends.",
@@ -169,7 +169,7 @@
       "passed": true
     },
     {
-      "name": "hashed bundles and stable public artwork/fonts receive separate cache lifetimes: assets/main-dnlKTzjK.js",
+      "name": "hashed bundles and stable public artwork/fonts receive separate cache lifetimes: assets/main-D9c94Waw.js",
       "passed": true
     },
     {

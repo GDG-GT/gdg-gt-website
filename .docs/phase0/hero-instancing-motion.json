@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-11-07T04:59:29.811753+00:00",
+  "completed": true,
+  "allPassed": false,
+  "stats": {
+    "startTime": "2026-11-07T04:56:41.017Z",
+    "duration": 107534.644,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "build": {
+    "index.html": "b7a5dbfba5762037bd393ae42fd4cb4046470f9ea382a2b87d808ce23f0e6a03",
+    ".vite/manifest.json": "554aabaca5c459737d4ed22bef5aae6c55f65396a7ce497d628b7647fae3cc6e",
+    "assets/public-entry.js": "5ff218d7049b9a8dd39cb7ee8b488f7cfbc6a857a0459ebcffb3e2d0e2dbd3b8"
+  },
+  "tests": [
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "chromium-1920",
+      "results": [
+        "failed"
+      ],
+      "errors": [
+        "TimeoutError: page.screenshot: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\n\n  226 |   // Require observed motion before sampling the three subsequent frames; the\n  227 |   // original consecutive-frame assertions and all timeout limits remain intact.\n> 228 |   let warmup = await page.screenshot({ clip, timeout: 10000 });\n      |                           ^\n  229 |   await expect\n  230 |     .poll(async () => {\n  231 |       await page.waitForTimeout(250);\n    at /Users/tejas/Desktop/gdg-gt-website/tests/browser/public-smoke.spec.ts:228:27"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "chromium-1440",
+      "results": [
+        "failed"
+      ],
+      "errors": [
+        "TimeoutError: page.screenshot: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\n\n  226 |   // Require observed motion before sampling the three subsequent frames; the\n  227 |   // original consecutive-frame assertions and all timeout limits remain intact.\n> 228 |   let warmup = await page.screenshot({ clip, timeout: 10000 });\n      |                           ^\n  229 |   await expect\n  230 |     .poll(async () => {\n  231 |       await page.waitForTimeout(250);\n    at /Users/tejas/Desktop/gdg-gt-website/tests/browser/public-smoke.spec.ts:228:27"
+      ]
+    }
+  ],
+  "change": "84 original sprinkle capsules replaced by one instanced draw, preserving all transforms/colors/geometry/material roughness. Independent real Three matrix/color unit passes. No DPR, lighting, artwork, animation, policy or test limit changes.",
+  "scope": "Original two capable-desktop motion cases, one worker, no concurrent build/types/coverage/performance. Both fail at screenshot readback timeout. Prior GPU ReadPixels stalls were observed; this is not a verified motion/performance fix. Raw /tmp/gdg-hero-instancing-motion.json and artifacts/browser/hero-instancing-motion retained. Full current browser inventory is not passing."
+}

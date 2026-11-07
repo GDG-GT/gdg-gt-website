@@ -1,7 +1,10 @@
 import { readFile, writeFile, access, mkdir } from "node:fs/promises";
 import path from "node:path";
 const args = process.argv.slice(2);
-if (args.length && (args.length !== 1 || !["--secondary", "--current-primary"].includes(args[0])))
+if (
+  args.length &&
+  (args.length !== 1 || !["--secondary", "--current-primary"].includes(args[0]))
+)
   throw Error("Optional review scope: --secondary or --current-primary");
 const secondary = args[0] === "--secondary",
   currentPrimary = args[0] === "--current-primary";
@@ -10,10 +13,16 @@ const root = path.resolve("."),
     currentPrimary
       ? "artifacts/browser/current-primary-review"
       : secondary
-      ? "artifacts/browser/secondary-review"
-      : "artifacts/browser/visual-review",
+        ? "artifacts/browser/secondary-review"
+        : "artifacts/browser/visual-review",
   ),
-  captureRoot = currentPrimary ? path.resolve("artifacts/browser/secondary-review") : output,
+  // The last full primary invocation is preserved before the secondary-only
+  // expansion; never infer primary captures from a secondary-only run.
+  captureRoot = currentPrimary
+    ? path.resolve(
+        "artifacts/browser/secondary-review-before-collaboration-20261107",
+      )
+    : output,
   report = JSON.parse(
     await readFile(path.join(captureRoot, "results.json"), "utf8"),
   );
@@ -47,21 +56,47 @@ const prompts = secondary
         "VIS-TEST-014",
         "Events and attendance",
         [
-          "event editor", "event attendees", "attendee correction",
-          "attendee removal review", "attendee removal review lower controls",
-          "event email draft", "event email history",
-          "event archive review", "event archive review lower controls",
-          "event cancellation review", "event cancellation review lower controls",
-          "event unpublish review", "event unpublish review lower controls",
-          "event duplication review", "event duplication review lower controls",
+          "event editor",
+          "event attendees",
+          "attendee correction",
+          "attendee removal review",
+          "attendee removal review lower controls",
+          "event email draft",
+          "event email history",
+          "event archive review",
+          "event archive review lower controls",
+          "event cancellation review",
+          "event cancellation review lower controls",
+          "event unpublish review",
+          "event unpublish review lower controls",
+          "event duplication review",
+          "event duplication review lower controls",
         ],
       ],
       [
         "VIS-TEST-015",
         "Teams and collaboration",
-        ["team announcements", "team conversation", "channel conversation"],
+        [
+          "team announcements",
+          "team conversation",
+          "channel conversation",
+          "whiteboard canvas",
+          "whiteboard collaborators",
+        ],
       ],
-      ["VIS-TEST-017", "Communications and newsletter", ["campaign preview"]],
+      [
+        "VIS-TEST-017",
+        "Communications and newsletter",
+        [
+          "campaign preview",
+          "task inventory",
+          "task discussion",
+          "task editor",
+          "private conversation",
+          "private message compose",
+          "private review request",
+        ],
+      ],
       ["VIS-TEST-018", "Content and media", ["media inspector"]],
       [
         "VIS-TEST-020",
@@ -96,7 +131,7 @@ async function visit(suites) {
       if (
         !(
           secondary
-            ? /^(?:secondary|event)-compositions\.spec\.ts$/
+            ? /^(?:(?:secondary|event|task-message)-compositions|whiteboard-composition)\.spec\.ts$/
             : /^(?:operations|public|workspace)-compositions\.spec\.ts$/
         ).test(path.basename(spec.file || suite.file || ""))
       )
@@ -109,7 +144,18 @@ async function visit(suites) {
         compositionChecks++;
         for (const a of test.results[0].attachments || []) {
           if (a.contentType !== "image/png") continue;
-          const file = path.resolve(a.path);
+          const recordedFile = path.resolve(a.path),
+            originalCaptureRoot = path.resolve(
+              "artifacts/browser/secondary-review",
+            ),
+            file =
+              currentPrimary &&
+              recordedFile.startsWith(originalCaptureRoot + path.sep)
+                ? path.resolve(
+                    captureRoot,
+                    path.relative(originalCaptureRoot, recordedFile),
+                  )
+                : recordedFile;
           if (
             !file.startsWith(captureRoot + path.sep) ||
             path.extname(file) !== ".png"
@@ -171,20 +217,26 @@ const supplementalCaptures = captures.filter(
 );
 if (secondary && supplementalCaptures.length)
   throw Error("Unexpected secondary review capture names.");
-if (secondary && (compositionChecks !== 114 || captures.length !== 162))
+if (secondary && (compositionChecks !== 162 || captures.length !== 210))
   throw Error(
-    "The secondary review requires all nineteen named states across all six profiles.",
+    "The secondary review requires all twenty-seven named states across all six profiles.",
   );
 const note =
   "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. " +
   (secondary
-    ? "These nineteen secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review."
+    ? "These twenty-seven secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review."
     : "Primary compositions are captured; every secondary drawer, editor inspector, chart, collaboration surface and confirmation state still requires its own applicable acceptance review.");
 const summary = {
   generatedAt: new Date().toISOString(),
   completed: true,
   scope: secondary ? "secondary" : "primary",
   sourceCaptureDirectory: path.relative(root, captureRoot),
+  ...(currentPrimary
+    ? {
+        captureRelocation:
+          "Original attachment paths resolved relative to the preserved invocation directory; image bytes and original report retained unchanged.",
+      }
+    : {}),
   note,
   stats: report.stats,
   projects: required,

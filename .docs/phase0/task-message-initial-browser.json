@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-11-07T05:13:10.849738+00:00",
+  "completed": true,
+  "allPassed": false,
+  "stats": {
+    "startTime": "2026-11-07T05:10:31.955Z",
+    "duration": 137119.519,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  },
+  "scope": "First six-state desktop diagnostic: task inventory/audited review request pass; four new fixture assertions incorrectly used exact bare labels while native required labels include asterisk/help. DOM snapshots show controls present. Only these new locators corrected to semantic textbox names with anchored label prefix. No product/test timeout/assertion count/coverage gate changes. Original raw/tmp/gdg-task-message-initial.json and artifacts/browser/task-message-initial retained. Not a passing scope."
+}

@@ -1,0 +1,118 @@
+{
+  "generatedAt": "2026-11-07T04:48:21.782181+00:00",
+  "caseResultsPassed": true,
+  "sourceInvocationAllPassed": false,
+  "sourceStats": {
+    "startTime": "2026-11-07T04:42:14.785Z",
+    "duration": 280733.88200000004,
+    "expected": 92,
+    "skipped": 8,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "sourceEvidence": "katex-focused-browser.json",
+  "build": {
+    "index.html": "090c07259a0e8a18749b7dce3166c4c3a41bcb51fbed013fa00e773eea090fe4",
+    ".vite/manifest.json": "9c2c0bf140a16a4a9d6550c60a271438ed0dffb40570921c995cd37db9cf0223",
+    "assets/public-entry.js": "5ff218d7049b9a8dd39cb7ee8b488f7cfbc6a857a0459ebcffb3e2d0e2dbd3b8"
+  },
+  "tests": [
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard canvas remains readable with the actual drawing editor",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "whiteboard-composition.spec.ts",
+      "name": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    }
+  ],
+  "scope": "Twelve actual-editor canvas/collaborator composition cases, all six profiles, full selectedaxe rules/overflow/scroll/screenshot/no writes. Desktop visible zoom name/reset gesture checked; phone native toolbar has no zoom bar. Extracted passing cases from the separately disclosed92/eight/two invocation; no clean whole-invocation or human/device/visual-baseline approval inferred."
+}

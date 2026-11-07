@@ -61,6 +61,8 @@ for (const [index, title] of [
       ...([14, 16, 17, 19, 21].includes(index)
         ? ["tests/browser/secondary-compositions.spec.ts"] : []),
       ...(index === 13 ? ["tests/browser/event-compositions.spec.ts"] : []),
+      ...(index === 14 ? ["tests/browser/whiteboard-composition.spec.ts"] : []),
+      ...(index === 16 ? ["tests/browser/task-message-compositions.spec.ts"] : []),
       "scripts/summarize-visual-review.mjs",
     ],
     [
@@ -476,6 +478,7 @@ add(
     sql("034_whiteboards"),
     local("tasks"),
     local("direct-messages"),
+    "tests/browser/task-message-compositions.spec.ts",
   ],
 );
 add(
@@ -487,6 +490,9 @@ add(
     sql("036_whiteboard_realtime"),
     sql("048_managed_team_chat"),
     unit("whiteboards"),
+    unit("drawing-renderer-dependency"),
+    "tests/client/drawing-control-names.test.ts",
+    "tests/browser/whiteboard-composition.spec.ts",
     local("whiteboards"),
   ],
   ["Hosted reconnect/device/concurrent collaboration"],

@@ -1,0 +1,52 @@
+{
+  "generatedAt": "2026-11-07T04:31:49.165764+00:00",
+  "uiBaseline": "4ed0b55",
+  "runtimeChanged": true,
+  "override": {
+    "mermaid": {
+      "katex": "0.18.2"
+    }
+  },
+  "oldVersion": "0.16.47",
+  "installedVersion": "0.18.2",
+  "changedResolvedLockEntries": [
+    "node_modules/katex"
+  ],
+  "archiveIntegrityMatchesResolvedLock": true,
+  "rootCacheAndHiddenLockAligned": true,
+  "preservedOptionalPackages": {
+    "@img/sharp-wasm32": "0.35.5",
+    "@emnapi/runtime": "1.11.3"
+  },
+  "productionAudit": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "rawAuditExit": 0,
+  "method": "npm lock-only generation, exact integrity-verified archive installation only; no lifecycle scripts, npm pruning or unrelated dependency changes",
+  "regressionProof": {
+    "old": "0.16.47",
+    "patched": "0.18.2",
+    "checks": [
+      {
+        "oldProducesResourceAttribute": true,
+        "patchedProducesResourceAttribute": false
+      },
+      {
+        "oldProducesResourceAttribute": true,
+        "patchedProducesResourceAttribute": false
+      }
+    ]
+  },
+  "unitCases": 6,
+  "compatibility": {
+    "isolatedMermaidConverterChecks": 66,
+    "actualBoardCanvasEngineVersionChecks": 6,
+    "passed": true
+  },
+  "acceptance": "Current productionbuild/types/lint0errors10warnings/byte/catalog pass; fullsourcecoverage2696/220 and unchanged gates, actualeditor12cases, expandedsecondary162, PWA15/update9/HTTPS46 pass. Explicitlabel/a11y/desktopLighthouse pass; mobileLCP and softwareWebGL screenshot gates fail, retained separately. No fullPRD/hosted/manual claim."
+}

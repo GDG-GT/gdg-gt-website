@@ -1,5 +1,24 @@
 # Public entry delivery and availability — 2026-11-06
 
+## Current artifact verification — 2026-11-07
+
+The current KaTeX/editor/instancing artifact has initialJS107951gzip bytes,
+CSS29899,font48432 andoffline493073 raw bytes. All byte/dynamic-boundary gates
+pass. The isolated six-route Lighthouse run records mobileHome/Events/Contact
+LCP2841/3161/3156ms, performance96/93/94, accessibility100, matching visible labels
+andCLS0. All three mobileLCP thresholds still fail2500ms. Desktopperformance/
+accessibility100, labels/CLS pass. No competing verification or threshold changes.
+`phase0/production-performance.json` binds current hashes; priorreader baseline is
+preserved in `phase0/production-performance-before-katex-instancing.json`.
+
+Fullsourcecoverage2696/220, expandedsecondary162 andPWA15/update9/HTTPS46 checks
+pass on this artifact. Original software-WebGL screenshot checks fail with the
+same limits after same-geometry sprinkle instancing; no motion/performance fix
+is claimed from that draw-call reduction. See `phase0/hero-instancing-motion.json`.
+Further public-route delivery optimization should be evaluated in isolation;
+these laboratory results cannot certify fieldp75/INP, actualdevices or3Dhardware.
+
+
 ## Rejected isolated font-axis trial
 
 The original Inter file covers weights100–900, while the existing CSS face

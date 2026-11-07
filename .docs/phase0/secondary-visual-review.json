@@ -1,13 +1,14 @@
 {
-  "generatedAt": "2026-11-07T02:14:20.972Z",
+  "generatedAt": "2026-11-07T05:18:31.270Z",
   "completed": true,
   "scope": "secondary",
-  "note": "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. These nineteen secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review.",
+  "sourceCaptureDirectory": "artifacts/browser/secondary-review",
+  "note": "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. These twenty-seven secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review.",
   "stats": {
-    "startTime": "2026-11-07T01:55:17.542Z",
-    "duration": 1135905.2079999999,
-    "expected": 1372,
-    "skipped": 8,
+    "startTime": "2026-11-07T05:14:16.332Z",
+    "duration": 250371.915,
+    "expected": 162,
+    "skipped": 0,
     "unexpected": 0,
     "flaky": 0
   },
@@ -19,8 +20,8 @@
     "webkit-1440",
     "webkit-mobile"
   ],
-  "compositionChecks": 114,
-  "captureCount": 162,
+  "compositionChecks": 162,
+  "captureCount": 210,
   "prompts": [
     {
       "id": "VIS-TEST-014",
@@ -681,6 +682,78 @@
           "project": "webkit-mobile",
           "test": "secondary channel conversation composition remains readable and accessible",
           "file": "artifacts/browser/secondary-review/secondary-compositions-sec-6e5e8-ins-readable-and-accessible-webkit-mobile/attachments/channel-conversation-6875f6b1ed6a59cfcfba46cb72bea9468cf7d526.png"
+        },
+        {
+          "name": "whiteboard canvas",
+          "project": "chromium-1920",
+          "test": "secondary whiteboard canvas remains readable with the actual drawing editor",
+          "file": "artifacts/browser/secondary-review/whiteboard-composition-sec-db5bd-h-the-actual-drawing-editor-chromium-1920/attachments/whiteboard-canvas-de0cf21a628f9fc37ef88dcef8ac9f56f740c407.png"
+        },
+        {
+          "name": "whiteboard collaborators",
+          "project": "chromium-1920",
+          "test": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+          "file": "artifacts/browser/secondary-review/whiteboard-composition-sec-8e0e8-h-the-actual-drawing-editor-chromium-1920/attachments/whiteboard-collaborators-3fdfb8ff3b3e61052deb0ec3c96173a7c7e492b9.png"
+        },
+        {
+          "name": "whiteboard canvas",
+          "project": "chromium-1440",
+          "test": "secondary whiteboard canvas remains readable with the actual drawing editor",
+          "file": "artifacts/browser/secondary-review/whiteboard-composition-sec-db5bd-h-the-actual-drawing-editor-chromium-1440/attachments/whiteboard-canvas-82aa0a807b8a4164e7a9c7d3fd1df1b72abe9051.png"
+        },
+        {
+          "name": "whiteboard collaborators",
+          "project": "chromium-1440",
+          "test": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+          "file": "artifacts/browser/secondary-review/whiteboard-composition-sec-8e0e8-h-the-actual-drawing-editor-chromium-1440/attachments/whiteboard-collaborators-3fa3bd4b5086c0e435a7469eecec3100a2b68d75.png"
+        },
+        {
+          "name": "whiteboard canvas",
+          "project": "chromium-mobile",
+          "test": "secondary whiteboard canvas remains readable with the actual drawing editor",
+          "file": "artifacts/browser/secondary-review/whiteboard-composition-sec-db5bd-h-the-actual-drawing-editor-chromium-mobile/attachments/whiteboard-canvas-5b4031a3102e055eac38b391ba5d4b125474345a.png"
+        },
+        {
+          "name": "whiteboard collaborators",
+          "project": "chromium-mobile",
+          "test": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+          "file": "artifacts/browser/secondary-review/whiteboard-composition-sec-8e0e8-h-the-actual-drawing-editor-chromium-mobile/attachments/whiteboard-collaborators-c42839fe16a3a9cf5f223d0348a3efa39b3f3dfd.png"
+        },
+        {
+          "name": "whiteboard canvas",
+          "project": "firefox-1440",
+          "test": "secondary whiteboard canvas remains readable with the actual drawing editor",
+          "file": "artifacts/browser/secondary-review/whiteboard-composition-sec-db5bd-h-the-actual-drawing-editor-firefox-1440/attachments/whiteboard-canvas-651264660f44feed7e9eca6ab1013038f8feb0e5.png"
+        },
+        {
+          "name": "whiteboard collaborators",
+          "project": "firefox-1440",
+          "test": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+          "file": "artifacts/browser/secondary-review/whiteboard-composition-sec-8e0e8-h-the-actual-drawing-editor-firefox-1440/attachments/whiteboard-collaborators-f56948dd0c329bda515747f2667f9e513434ad41.png"
+        },
+        {
+          "name": "whiteboard canvas",
+          "project": "webkit-1440",
+          "test": "secondary whiteboard canvas remains readable with the actual drawing editor",
+          "file": "artifacts/browser/secondary-review/whiteboard-composition-sec-db5bd-h-the-actual-drawing-editor-webkit-1440/attachments/whiteboard-canvas-3fb32687fbc76708df82d63d366c52ce25afcea2.png"
+        },
+        {
+          "name": "whiteboard collaborators",
+          "project": "webkit-1440",
+          "test": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+          "file": "artifacts/browser/secondary-review/whiteboard-composition-sec-8e0e8-h-the-actual-drawing-editor-webkit-1440/attachments/whiteboard-collaborators-55c1811061d688f0e9ceb36a2b5dfc4220824fbe.png"
+        },
+        {
+          "name": "whiteboard canvas",
+          "project": "webkit-mobile",
+          "test": "secondary whiteboard canvas remains readable with the actual drawing editor",
+          "file": "artifacts/browser/secondary-review/whiteboard-composition-sec-db5bd-h-the-actual-drawing-editor-webkit-mobile/attachments/whiteboard-canvas-1d6d958d72f13fa3f19349ab4d61949c6ce49ed4.png"
+        },
+        {
+          "name": "whiteboard collaborators",
+          "project": "webkit-mobile",
+          "test": "secondary whiteboard collaborators remains readable with the actual drawing editor",
+          "file": "artifacts/browser/secondary-review/whiteboard-composition-sec-8e0e8-h-the-actual-drawing-editor-webkit-mobile/attachments/whiteboard-collaborators-512c68fe373b8825b104850be15dfa7678815647.png"
         }
       ]
     },
@@ -724,6 +797,222 @@
           "project": "webkit-mobile",
           "test": "secondary campaign preview composition remains readable and accessible",
           "file": "artifacts/browser/secondary-review/secondary-compositions-sec-e5ef1-ins-readable-and-accessible-webkit-mobile/attachments/campaign-preview-6662e145146485a31cecc79dc256a0eb8e41a894.png"
+        },
+        {
+          "name": "task inventory",
+          "project": "chromium-1920",
+          "test": "secondary task inventory keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--8b464-ontext-and-actions-readable-chromium-1920/attachments/task-inventory-5e58793f3ce4f181a9a1dfd7e6d62efddb0795f5.png"
+        },
+        {
+          "name": "task discussion",
+          "project": "chromium-1920",
+          "test": "secondary task discussion keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--bce44-ontext-and-actions-readable-chromium-1920/attachments/task-discussion-097e9d85ef054cfc30ad3cc1d3ffe7262105ae56.png"
+        },
+        {
+          "name": "task editor",
+          "project": "chromium-1920",
+          "test": "secondary task editor keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--a18a1-ontext-and-actions-readable-chromium-1920/attachments/task-editor-a3c1fcb5c461d75b7915d5607d0f02f1efabcac0.png"
+        },
+        {
+          "name": "private conversation",
+          "project": "chromium-1920",
+          "test": "secondary private conversation keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--3be0b-ontext-and-actions-readable-chromium-1920/attachments/private-conversation-d2f10851eb9202de84538854afd4eafc62717037.png"
+        },
+        {
+          "name": "private message compose",
+          "project": "chromium-1920",
+          "test": "secondary private message compose keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--90957-ontext-and-actions-readable-chromium-1920/attachments/private-message-compose-83d024ccc53a77e5f1bcd13ee2bd96376e77d9e6.png"
+        },
+        {
+          "name": "private review request",
+          "project": "chromium-1920",
+          "test": "secondary private review request keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--2ffb9-ontext-and-actions-readable-chromium-1920/attachments/private-review-request-a556122518560cc6a3f81fc762ad720dcd0b74a2.png"
+        },
+        {
+          "name": "task inventory",
+          "project": "chromium-1440",
+          "test": "secondary task inventory keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--8b464-ontext-and-actions-readable-chromium-1440/attachments/task-inventory-31101bfa8d51bf80b5615254f065dea0ebdbc71b.png"
+        },
+        {
+          "name": "task discussion",
+          "project": "chromium-1440",
+          "test": "secondary task discussion keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--bce44-ontext-and-actions-readable-chromium-1440/attachments/task-discussion-05324b94f400776a3d1f18b52a46abf4d5b7fa6c.png"
+        },
+        {
+          "name": "task editor",
+          "project": "chromium-1440",
+          "test": "secondary task editor keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--a18a1-ontext-and-actions-readable-chromium-1440/attachments/task-editor-b8b6c99f91176d9b60e4d2fb9884d949482fdaca.png"
+        },
+        {
+          "name": "private conversation",
+          "project": "chromium-1440",
+          "test": "secondary private conversation keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--3be0b-ontext-and-actions-readable-chromium-1440/attachments/private-conversation-7b484c86058dd78f5301b79707da6f20eb45416f.png"
+        },
+        {
+          "name": "private message compose",
+          "project": "chromium-1440",
+          "test": "secondary private message compose keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--90957-ontext-and-actions-readable-chromium-1440/attachments/private-message-compose-be7be404b3655f3b0781adbe22d428ae941f6f4b.png"
+        },
+        {
+          "name": "private review request",
+          "project": "chromium-1440",
+          "test": "secondary private review request keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--2ffb9-ontext-and-actions-readable-chromium-1440/attachments/private-review-request-26c711c16ff99f5d6bb0ac2dd706fadcfc397d6f.png"
+        },
+        {
+          "name": "task inventory",
+          "project": "chromium-mobile",
+          "test": "secondary task inventory keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--8b464-ontext-and-actions-readable-chromium-mobile/attachments/task-inventory-7de947eafdd41d1549f39bf12285e4648b400901.png"
+        },
+        {
+          "name": "task discussion",
+          "project": "chromium-mobile",
+          "test": "secondary task discussion keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--bce44-ontext-and-actions-readable-chromium-mobile/attachments/task-discussion-0be98e85dba4595dbd8383200b34f5adebc01ee6.png"
+        },
+        {
+          "name": "task editor",
+          "project": "chromium-mobile",
+          "test": "secondary task editor keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--a18a1-ontext-and-actions-readable-chromium-mobile/attachments/task-editor-aaa0db5581e4c9bc8097fcfb1c32ac94057ea62d.png"
+        },
+        {
+          "name": "private conversation",
+          "project": "chromium-mobile",
+          "test": "secondary private conversation keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--3be0b-ontext-and-actions-readable-chromium-mobile/attachments/private-conversation-d25ef0bc3a5427076ceccdbf8922916d0f7ee017.png"
+        },
+        {
+          "name": "private message compose",
+          "project": "chromium-mobile",
+          "test": "secondary private message compose keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--90957-ontext-and-actions-readable-chromium-mobile/attachments/private-message-compose-b17abf2de5eaee22b3383656b2d2e9a1f58cb9fa.png"
+        },
+        {
+          "name": "private review request",
+          "project": "chromium-mobile",
+          "test": "secondary private review request keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--2ffb9-ontext-and-actions-readable-chromium-mobile/attachments/private-review-request-14ded061bcf93baec41410e5b8036d7a4f98a68d.png"
+        },
+        {
+          "name": "task inventory",
+          "project": "firefox-1440",
+          "test": "secondary task inventory keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--8b464-ontext-and-actions-readable-firefox-1440/attachments/task-inventory-2167f495d5e4d714d9c5e38ef1b7aa7499fc818b.png"
+        },
+        {
+          "name": "task discussion",
+          "project": "firefox-1440",
+          "test": "secondary task discussion keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--bce44-ontext-and-actions-readable-firefox-1440/attachments/task-discussion-806eef3a9af7c4fe3249f23c08ca8d0298bd294a.png"
+        },
+        {
+          "name": "task editor",
+          "project": "firefox-1440",
+          "test": "secondary task editor keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--a18a1-ontext-and-actions-readable-firefox-1440/attachments/task-editor-7971d95fb5d17683af5240b5c89dd825942a36b6.png"
+        },
+        {
+          "name": "private conversation",
+          "project": "firefox-1440",
+          "test": "secondary private conversation keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--3be0b-ontext-and-actions-readable-firefox-1440/attachments/private-conversation-b282f59db763c3ddc584317dbaf2da160f6ca461.png"
+        },
+        {
+          "name": "private message compose",
+          "project": "firefox-1440",
+          "test": "secondary private message compose keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--90957-ontext-and-actions-readable-firefox-1440/attachments/private-message-compose-2126e839e4d86f0a8c68b82c7d50eeae7e2ed61c.png"
+        },
+        {
+          "name": "private review request",
+          "project": "firefox-1440",
+          "test": "secondary private review request keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--2ffb9-ontext-and-actions-readable-firefox-1440/attachments/private-review-request-83d0934d9a964ac5e397e2b7006aa088eeadeda0.png"
+        },
+        {
+          "name": "task inventory",
+          "project": "webkit-1440",
+          "test": "secondary task inventory keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--8b464-ontext-and-actions-readable-webkit-1440/attachments/task-inventory-43476902f828f3fe5e4d92a926fa817742ada0ba.png"
+        },
+        {
+          "name": "task discussion",
+          "project": "webkit-1440",
+          "test": "secondary task discussion keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--bce44-ontext-and-actions-readable-webkit-1440/attachments/task-discussion-15e8b8d5fcf5f29795df6a0c39347548d6cc840c.png"
+        },
+        {
+          "name": "task editor",
+          "project": "webkit-1440",
+          "test": "secondary task editor keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--a18a1-ontext-and-actions-readable-webkit-1440/attachments/task-editor-1613c2c087accff45d75260e2b6845be2f0ec7c4.png"
+        },
+        {
+          "name": "private conversation",
+          "project": "webkit-1440",
+          "test": "secondary private conversation keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--3be0b-ontext-and-actions-readable-webkit-1440/attachments/private-conversation-e090fd39bd1fa81a42acad76aa208307a05209ce.png"
+        },
+        {
+          "name": "private message compose",
+          "project": "webkit-1440",
+          "test": "secondary private message compose keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--90957-ontext-and-actions-readable-webkit-1440/attachments/private-message-compose-0fe1069ee76df668f4a2af33529884a412253856.png"
+        },
+        {
+          "name": "private review request",
+          "project": "webkit-1440",
+          "test": "secondary private review request keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--2ffb9-ontext-and-actions-readable-webkit-1440/attachments/private-review-request-052292036f98d01a4034eb4d80a26b62ddf55822.png"
+        },
+        {
+          "name": "task inventory",
+          "project": "webkit-mobile",
+          "test": "secondary task inventory keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--8b464-ontext-and-actions-readable-webkit-mobile/attachments/task-inventory-ab77cbcac34b44b6266d2e8860d57c25469d7a06.png"
+        },
+        {
+          "name": "task discussion",
+          "project": "webkit-mobile",
+          "test": "secondary task discussion keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--bce44-ontext-and-actions-readable-webkit-mobile/attachments/task-discussion-12972f40e758618b468a735e841affb052290e98.png"
+        },
+        {
+          "name": "task editor",
+          "project": "webkit-mobile",
+          "test": "secondary task editor keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--a18a1-ontext-and-actions-readable-webkit-mobile/attachments/task-editor-f7b8b8391acdbac4738db92040255780e3b132ab.png"
+        },
+        {
+          "name": "private conversation",
+          "project": "webkit-mobile",
+          "test": "secondary private conversation keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--3be0b-ontext-and-actions-readable-webkit-mobile/attachments/private-conversation-f913a67c2eb05e93025c03e89ac0d02de638e739.png"
+        },
+        {
+          "name": "private message compose",
+          "project": "webkit-mobile",
+          "test": "secondary private message compose keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--90957-ontext-and-actions-readable-webkit-mobile/attachments/private-message-compose-81ba93216082326cd66b0dc47d0fdc8b888eafaf.png"
+        },
+        {
+          "name": "private review request",
+          "project": "webkit-mobile",
+          "test": "secondary private review request keeps context and actions readable",
+          "file": "artifacts/browser/secondary-review/task-message-compositions--2ffb9-ontext-and-actions-readable-webkit-mobile/attachments/private-review-request-396f862bca774e835df150b7702bdd2f2479378b.png"
         }
       ]
     },

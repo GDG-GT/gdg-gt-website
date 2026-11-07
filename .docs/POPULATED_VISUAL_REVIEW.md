@@ -1,5 +1,36 @@
 # Populated production-build review — 2026-11-06
 
+## Actual drawing-editor continuation
+
+Two additional read-only states use the actual chapter drawing editor and
+collaborator panel. All twelve cases pass across six profiles, including menu
+names, desktop zoom/reset naming, canvas visibility, unchanged Save state, axe,
+overflow, scroll and no writes/page exceptions/unexpected reads. Mobile editor
+source has no desktop zoom bar; the real mobile tools remain audited. The
+enclosing public/editor/navigation invocation has two separate WebGL failures,
+so `phase0/whiteboard-composition-browser.json` explicitly records its failed
+source invocation. Desktop canvas and mobile collaborator captures were inspected;
+they are review candidates, not approved content/goldens or actual-device approval.
+
+The expanded27-state invocation now passes all162checks across six profiles,
+without skips/failures/retries; its strict index requires exactly210captures.
+`artifacts/browser/secondary-review/index.html` is current; the previous19-state
+source is preserved at `artifacts/browser/secondary-review-before-collaboration-20261107`.
+Primary review regenerates from that original successful full invocation, with
+attachment paths resolved to its preserved directory; image bytes/report are
+unchanged. This avoids attributing primary review to a secondary-only invocation.
+
+New task inventory/discussion/editor and private conversation/compose/review
+request states use read-only fictional records. All36new task/message cases pass.
+The first desktop diagnostic failed four newly written bare-label assertions:
+native labels include required asterisks/help. Semantic textbox+anchored-prefix
+locators correct that harness error, preserving limits and all visibility/value
+assertions. Both the initial failed2pass/4fail scope and corrected6pass desktop
+scope are retained. The final162pass invocation includes the corrected cases.
+Mobile task-editor and selected-conversation captures were inspected: fields,
+actions and saved context remain within the viewport and vertical flow. No
+human/device approval is inferred. Evidence: `phase0/collaboration-secondary-browser.json`.
+
 ## Event and visible-label continuation
 
 Ten additional read-only event states now have captures across all six profiles:

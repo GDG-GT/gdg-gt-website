@@ -2819,6 +2819,7 @@
       "automated": [
         "tests/browser/workspace-compositions.spec.ts",
         "tests/browser/secondary-compositions.spec.ts",
+        "tests/browser/whiteboard-composition.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2858,6 +2859,7 @@
       "automated": [
         "tests/browser/operations-compositions.spec.ts",
         "tests/browser/secondary-compositions.spec.ts",
+        "tests/browser/task-message-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -4016,7 +4018,8 @@
         "database/tests/029_channels.sql",
         "database/tests/034_whiteboards.sql",
         "scripts/test-local-tasks.mjs",
-        "scripts/test-local-direct-messages.mjs"
+        "scripts/test-local-direct-messages.mjs",
+        "tests/browser/task-message-compositions.spec.ts"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"
@@ -4036,6 +4039,9 @@
         "database/tests/036_whiteboard_realtime.sql",
         "database/tests/048_managed_team_chat.sql",
         "tests/server/whiteboards.test.mjs",
+        "tests/server/drawing-renderer-dependency.test.mjs",
+        "tests/client/drawing-control-names.test.ts",
+        "tests/browser/whiteboard-composition.spec.ts",
         "scripts/test-local-whiteboards.mjs"
       ],
       "remaining": [

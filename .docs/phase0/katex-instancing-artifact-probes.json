@@ -1,0 +1,32 @@
+{
+  "generatedAt": "2026-11-07T05:20:06.394875+00:00",
+  "build": {
+    "index.html": "b7a5dbfba5762037bd393ae42fd4cb4046470f9ea382a2b87d808ce23f0e6a03",
+    ".vite/manifest.json": "554aabaca5c459737d4ed22bef5aae6c55f65396a7ce497d628b7647fae3cc6e",
+    "assets/public-entry.js": "5ff218d7049b9a8dd39cb7ee8b488f7cfbc6a857a0459ebcffb3e2d0e2dbd3b8"
+  },
+  "probes": {
+    "pwaBoundaries": {
+      "evidence": "production-pwa-boundaries.json",
+      "completed": true,
+      "passed": 15,
+      "allPassed": true,
+      "generatedAt": "2026-11-07T05:18:33.160Z"
+    },
+    "pwaUpdates": {
+      "evidence": "production-pwa-update.json",
+      "completed": true,
+      "passed": 9,
+      "allPassed": true,
+      "generatedAt": "2026-11-07T05:19:06.533Z"
+    },
+    "httpsHeaders": {
+      "evidence": "production-security-headers.json",
+      "completed": true,
+      "passed": 46,
+      "allPassed": true,
+      "generatedAt": "2026-11-07T05:19:34.549Z"
+    }
+  },
+  "scope": "Final unchanged build served by sequential owned probes; no build between invocations. Isolated real worker/storage/two-tab/HTTPS contexts and owned listeners cleaned up. No actualAPI/provider mutations, hosted/device/manual acceptance or fullPRD completion inferred."
+}
