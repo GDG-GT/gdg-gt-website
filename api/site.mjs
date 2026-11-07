@@ -1,9 +1,19 @@
 import { readPublicBootstrap } from "../server/public-bootstrap.mjs";
 import { readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { serverConfig } from "../server/config.mjs";
 import { serverDatabase } from "../server/db/client.mjs";
 import { siteDocument } from "../server/site-document.mjs";
 import { renderSiteDocument } from "../shared/site-document.mjs";
+function documentFailure(error, phase) {
+  console.error(JSON.stringify({
+    event: "public_document_unavailable",
+    phase,
+    errorType: error?.name || "Error",
+    dependencyCode: ["ERR_MODULE_NOT_FOUND", "ENOENT", "ERR_UNKNOWN_FILE_EXTENSION"].includes(error?.code) ? error.code : "UNAVAILABLE",
+    fingerprint: createHash("sha256").update(String(error?.message || "")).digest("hex"),
+  }));
+}
 export function createSiteDocumentHandler({
   configFactory = serverConfig,
   databaseFactory = serverDatabase,
@@ -24,6 +34,7 @@ export function createSiteDocumentHandler({
       response.end();
       return;
     }
+    let phase = "configuration";
     try {
       const config = configFactory(),
         url = new URL(request.url, config.origin),
@@ -36,6 +47,7 @@ export function createSiteDocumentHandler({
       const pathname =
         url.pathname === "/api/site" ? paths[0] || "/" : url.pathname;
       const db = databaseFactory();
+      phase = "metadata";
       const doc = await siteDocument({
         db,
         config,
@@ -54,16 +66,35 @@ export function createSiteDocumentHandler({
       if (publicQuery.get("route") === pathname.replace(/^\//, ""))
         publicQuery.delete("route");
       if (["/", "/events", "/contact"].includes(pathname) && !publicQuery.size) {
-        rendererReady ||= loadRenderer();
-        const renderer = await rendererReady;
-        if (renderer) {
+        let renderer, unavailable = false;
+        phase = "renderer-load";
+        try {
+          rendererReady ||= loadRenderer();
+          renderer = await rendererReady;
+        } catch (error) {
+          documentFailure(error, phase);
+          rendererReady = undefined;
+          unavailable = true;
+        }
+        if (renderer || unavailable) {
+          phase = "availability";
           const bootstrap = await loadBootstrap(db);
           if (!bootstrap.status.is_live) {
             response.statusCode = 302;
             response.setHeader("Location", bootstrap.status.auto_redirect ? bootstrap.status.redirect_url : "/maintenance");
             response.end(); return;
           }
-          if (request.method !== "HEAD") rendered = { ...await renderer.renderPublicPage(pathname, bootstrap), path: pathname };
+          if (renderer && request.method !== "HEAD") {
+            phase = "public-render";
+            try {
+              rendered = { ...await renderer.renderPublicPage(pathname, bootstrap), path: pathname };
+            } catch (error) {
+              // Fresh availability remains authoritative. A rendering failure
+              // can use the existing client boundary without exposing partial
+              // server markup or turning a live site into an empty error page.
+              documentFailure(error, phase);
+            }
+          }
         }
       }
       response.setHeader("Content-Type", "text/html; charset=utf-8");
@@ -71,18 +102,16 @@ export function createSiteDocumentHandler({
         "X-Robots-Tag",
         doc.index ? "index, follow" : "noindex, nofollow, noarchive",
       );
+      phase = "template";
       template ||= await loadTemplate();
+      phase = "document";
       response.end(
         request.method === "HEAD"
           ? undefined
           : renderSiteDocument(template, doc, rendered),
       );
     } catch (error) {
-      console.error(JSON.stringify({
-        event: "public_document_unavailable",
-        errorType: error?.name || "Error",
-        dependencyCode: ["ERR_MODULE_NOT_FOUND", "ENOENT", "ERR_UNKNOWN_FILE_EXTENSION"].includes(error?.code) ? error.code : "UNAVAILABLE",
-      }));
+      documentFailure(error, phase);
       response.statusCode = 503;
       response.setHeader("Retry-After", "30");
       response.setHeader("Content-Type", "text/plain; charset=utf-8");

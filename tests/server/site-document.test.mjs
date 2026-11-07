@@ -203,6 +203,33 @@ describe("SEO-TEST public document projections", () => {
   });
 });
 describe("SEO-TEST production HTML handler", () => {
+  it.each(["load", "render"])("keeps a verified live public client boundary after renderer %s failure without logging raw details", async (failure) => {
+    const f = fixture(), hidden = "fictional private dependency detail";
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
+    const loadBootstrap = vi.fn(async () => ({ status: { is_live: true }, home: {} }));
+    const call = createSiteDocumentHandler({
+      configFactory: () => f.config, databaseFactory: () => f.db,
+      loadTemplate: async () => template, loadBootstrap,
+      loadRenderer: async () => {
+        if (failure === "load") throw Error(hidden);
+        return { renderPublicPage: async () => { throw Error(hidden); } };
+      },
+    });
+    const r = { statusCode: 200, headers: new Map(), setHeader(k, v) { this.headers.set(k.toLowerCase(), v); }, end(v) { this.body = v; } };
+    try {
+      await call({ url: "/", method: "GET", headers: {} }, r);
+      expect(loadBootstrap).toHaveBeenCalledOnce();
+      expect(r.statusCode).toBe(200);
+      expect(r.body).toContain('src="/assets/app.js"');
+      expect(r.body).not.toContain('data-gdg-ssr');
+      expect(r.headers.get("cache-control")).toBe("no-store");
+      expect(log).toHaveBeenCalledOnce();
+      const event = JSON.parse(log.mock.calls[0][0]);
+      expect(event.phase).toBe(failure === "load" ? "renderer-load" : "public-render");
+      expect(event.fingerprint).toMatch(/^[a-f0-9]{64}$/);
+      expect(JSON.stringify(log.mock.calls)).not.toContain(hidden);
+    } finally { log.mockRestore(); }
+  });
   function handler(f = fixture()) {
     const loadTemplate = vi.fn(async () => template),
       call = createSiteDocumentHandler({

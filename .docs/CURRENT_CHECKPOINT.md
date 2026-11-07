@@ -1,3 +1,101 @@
+# IMMEDIATE checkpoint — 2026-11-07 23:03 UTC
+
+Latestdeployed4fea79a(dpl_2oB4...)READYactualAPIWORKS:health/site-status/publichome200,
+auth/session401AUTH_REQUIRED,unknownAPI404JSON,privatepaths404.Packagingstaticroot
+precedenceFIXED; rootnowroutestofunction,no staticindexbypass. ButfullpublicSSR
+root/events/contact503. Querybearing/privateclientboundary200works. Neverclaimready.
+HostedSQLbootstrapandlocalcompiledrendereragainstREALhosteddataread/renderSUCCESS.
+Runtimegenericpublic_document_unavailable Error/UNAVAILABLE noNodecode. Needstage/
+messagefingerprinttosolve remainingSSRfailure; rawmessageNOTlogged orprinted.
+
+CurrentUNCOMMITTEDsource api/site.mjs nowlogsphase+SHA256(error.message)only. Italso
+fallsbacktoexistingclientboundaryafterrendererload/renderfailureONLYwhenfreshpublic
+availabilityverifiedlive;config/DB/statusfailuresstillfailclosed,maintenance redirects
+stillhonored. Thiswillrestorea usableclientwebsitewhileSSRdiagnosed. Added2privacy/
+recoverytests,26targetedtests/2files+SSR26probe+scopedlintPASS session90125reaped0.
+Readinessscript2wrongexpectationscorrectedAUTHORITATIVEcontracts:sessionAUTH_REQUIRED,
+publichomerevalidatingCacheControl(no sharedstaleTTL). Notanappsecuritygateweakening.
+Needcommit/pushcurrentpublic-recoverycode,newdeploy,actualHTTPchecks+runtimefingerprint.
+CurrentprivateNode79985ACTIVEenv/credentialssecretsmemory; neverprint. Module
+/tmp/gdg-redeploy-current-commit.mjs avoidsduplicatecurrentSHA andcreatespinnedGitdeploy.
+Modulesgdg-production-deployment-status,gdg-ssr-runtime-diagnostics(25sstream),
+gdg-production-runtime-logs(12sstream) inspect. TriggercanonicalGETwhilewatching;
+newlogphase/fingerprintonly becomesavailableAFTERnewdeployment. Computehashesofknown
+ownErrorstringsinapi/site/shared/site-document/src/ssr-entrytomatchfingerprintwithout
+loggingprivatedetails. Rendererload usesliteralimport, includedssrchunks/sharedTS.
+
+No frontendchangesafter60/60recoverybrowser+6perf/PWA15/update9/HTTPS52pass.
+LatestFULLsource33402reaped0:2770/229, coverage78.25/76.20/71.03/75.68,gatesunchanged,
+artifacts/quality/hosted-packaging-final-source-tests.json,coverage/hosted-packaging-final-20261107,
+/tmp/gdg-hosted-packaging-final-coverage.log. Current2newtestsexpected2772nextfullbut
+norepeatuselesslybeforeSSRbugfixed. CI42422786748from4feaactive,sourcescoverage/deps/
+secretpassed,3browserjobs+codeDBstillactive.Lastprior2CIrunssuperseded,cancelled.
+NeverfullgreenCIclaim. SourceFixesbefore4feamenu/Contacthaveknownactualbrowserproof.
+
+S3creation/configurationSUCCESS,userapprovedonce,allCUAcleanupdone/completion_summary
+submitted. PlaintextonlyCUAprivatememorythenVercelUIsecrets,cleared; Node79985doesNOT
+knowS3valuesbutactualproductiondeploystageshavesensitiveenvS3keys.No newkeysneeded.
+CFDNSalreadycreatedfromactualsigned-inaccountemailgdg@gatech.edu; no newDNSaction.
+140hostedmigrations121RLStablesalreadycomplete,NEVERreplay/reset.0owneraccounts.
+Resenddedicatedsender/webhook,keyJWK,25serverenvs+S3metadataalreadyconfiguredVercel.
+EMAIL/PUSH/UPLOADfalse.No realsends.Firstowneremail/name,persistentworker/scannerhost,
+SupabaseFREE50MBvs64MBexports250MBmediacapacitydecisionstillpending. Nopurchases.
+
+UntrackedPRODUCTION_LAUNCH_STATUS.md honestcurrentstatus; production-third-deployment-
+diagnostic.json newlyretainsremaining503. Needsource/historysecretscanandsaveowned
+changesexcluding3userfiles (cli-latest,PageAccessGuard2,useLinktreeRead2),noAItrailers.
+NewmainpushcancelsolderCI; avoidpointlesspushesbutcurrentSSRavailabilityfixnecessary.
+OptionalremainingruntimeworkcanuseSupabaseCron+pg_net+Vaultstandard (officialdocs
+researched)for11HTTPjobs AFTERhostworks; noactualcronconfiguredyet. Privateworkersfor
+scanner/uploads/media/exportsstillneedhost. Don'tenableuploadswithoutscanner.
+No new assistanttasktimers. SSO/Google/Bevy/Engagedeferred.
+
+Earlierstate(historyonly):
+
+# Immediate latest status — 2026-11-07 22:55 UTC
+
+S3workflowCOMPLETEDsuccessfully,CUAcompletion_summarysubmitted. ApprovaluserYes.
+Keynamegdg-gt-production-storage createdonce, heldonlyCUAprivatevars, bothvalues
+storedVercelProductiontype:sensitive S3_ACCESS_KEY_ID/S3_SECRET_ACCESS_KEY.
+APIverifiedmetadata. OnetimeSupabaseviewDone, all3ownedtabsclosedandoriginaldomain
+Tabrestored. NoCUAcleanup/approvalremaining, privatevarsdiscarded. Node79985doesNOT
+haveS3plaintextbutVercelruntimehassecretvalues. Don'tcreateanotherS3key.
+
+Commit4fea79a pushedmain includesallhostingrefinements+readinessscript+S3metadata.
+CurrentproductiondeployACTIVEbuilding dpl_2oB4vtwKZxB6LSH3XMMA7WRCBj5v, source4fea79a.
+PrivateNode79985state.deploymentisthisid; modulegdg-production-deployment-status
+checksit. NewCI42422786748pending. Don'tcreatemoredeploymentsuntilactualresult.
+ProjectoutputsettingsALSOupdated.build/public andpostbuildprepare-vercel-static.
+Allactual4fea changes areserver/packaging, nofrontendchangesafter60browserpasses.
+
+ACTIVEsourcecoverage33402 /tmp/gdg-hosted-packaging-final-coverage.log expected2770/229
+(finaloneAPIcapturetestadded). Priorfull2769/229passed,13targetedfinaladapterpasses,
+scopedlint0errors,SSR26checks/staticpackhelperpass. ExistinglocalUI/APIstillrunning.
+Needfinalexactcoverageexit/newCI/canonicalhostreadiness. Oldfirst2deploymentsREADY
+butactualtestsfailed, originalreportsretained; don'tclaimprodreadyfromstatusonly.
+
+AfternewREADYrun node scripts/test-hosted-readiness.mjs theninspectactualJSON.
+Ifinvaliddispatch persists, genericboolean-onlystructuredlogs nowinadapter; use
+privateNode modulegdg-production-runtime-logs (12s stream), triggerread /api/v1/health.
+NewSSRliteralimporttracesReactdependencies; if503stillpublic-documentstructured
+codehelpsidentify. Staticoutput.build/publicexcludesindex, private dist/index preserved.
+No browsercache workaround; verifyactualfreshcontent/headersoverTLS.
+
+NewuntrackedPRODUCTION_LAUNCH_STATUS.md documentsactualstateandremaininginfra inputs.
+No new timers, nopaidpurchases, noAItrailers. Pendingfirstowneremail/name, persistent
+scannerworkerhost, Supabase50MBcapacityvs64MBexports250MBmedia decision. Cloudflare
+emailresolvedandDNSconfigured; S3approvalresolved/configured. EMAIL/PUSH/UPLOADfalse,
+no realprovider sends/ownerbootstrapyet. Supabase140migrationsneverreplay/reset.
+Allcredentialvaluesstaymemory/encryptedserverconfig; sourcehistoryscannerzero
+unreviewedlatest162commits2034filesbefore4fea; needfinalscanafterlatestdocs.
+
+PrivateNode79985stillACTIVEhascredentials/env(CFprivatestate, othersecrets)butnever
+printthem. Modules/tmp/gdg-* .mjs filenameslistedearlier. Readinessscriptreadonly
+canonicalhostonly,nocredentials/writes/sends. CurrentremoteCI maytake20minutes;
+persistuntilknownresults oractualrequireduserinputblocksdependentsteps.
+
+Earlierdetails:
+
 # Immediate latest state — 2026-11-07 22:54 UTC
 
 UserAPPROVEDS3creation; successfullycreatedONCE. Supabase keynamegdg-gt-production-storage.

@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-07T22:43:10.651Z",
+  "generatedAt": "2026-11-07T22:58:00.584Z",
   "origin": "https://gdggt.dev",
   "completed": false,
   "checks": [
     {
       "name": "/ serves successful HTML over verified HTTPS",
-      "passed": true
+      "passed": false
     },
     {
       "name": "/ serves actual public content before JavaScript",
@@ -17,7 +17,7 @@
     },
     {
       "name": "/ prevents shared caching of current public availability",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/ retains the executable-content and MIME policy",
@@ -29,7 +29,7 @@
     },
     {
       "name": "/events serves successful HTML over verified HTTPS",
-      "passed": true
+      "passed": false
     },
     {
       "name": "/events serves actual public content before JavaScript",
@@ -49,11 +49,11 @@
     },
     {
       "name": "/events advertises the owner's canonical domain",
-      "passed": true
+      "passed": false
     },
     {
       "name": "/contact serves successful HTML over verified HTTPS",
-      "passed": true
+      "passed": false
     },
     {
       "name": "/contact serves actual public content before JavaScript",
@@ -73,7 +73,7 @@
     },
     {
       "name": "/contact advertises the owner's canonical domain",
-      "passed": true
+      "passed": false
     },
     {
       "name": "/admin/ preserves the ordinary private/query client boundary",
@@ -89,7 +89,7 @@
     },
     {
       "name": "/api/v1/health reaches the deployed versioned API",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/api/v1/health has no shared API caching",
@@ -97,7 +97,7 @@
     },
     {
       "name": "/api/v1/site-status reaches the deployed versioned API",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/api/v1/site-status has no shared API caching",
@@ -105,11 +105,11 @@
     },
     {
       "name": "/api/v1/public/home reaches the deployed versioned API",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/api/v1/public/home has no shared API caching",
-      "passed": true
+      "passed": false
     },
     {
       "name": "nested session route rejects anonymous access through the deployed adapter",
@@ -117,7 +117,7 @@
     },
     {
       "name": "unknown versioned route returns a structured API 404",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/.env.server.local cannot expose server-only files",

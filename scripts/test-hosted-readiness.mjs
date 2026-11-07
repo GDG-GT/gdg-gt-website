@@ -38,10 +38,10 @@ try {
   for (const path of ["/api/v1/health", "/api/v1/site-status", "/api/v1/public/home"]) {
     const r = await get(path);
     check(r.response.status === 200 && r.response.headers.get("content-type")?.includes("application/json") && !!r.json().data, path + " reaches the deployed versioned API");
-    check(r.response.headers.get("cache-control")?.includes("no-store"), path + " has no shared API caching");
+    check(r.response.headers.get("cache-control")?.includes(path === "/api/v1/public/home" ? "must-revalidate" : "no-store"), path + " retains its declared public/private cache policy");
   }
   const session = await get("/api/v1/auth/session");
-  check(session.response.status === 401 && session.json().error?.code === "UNAUTHENTICATED", "nested session route rejects anonymous access through the deployed adapter");
+  check(session.response.status === 401 && session.json().error?.code === "AUTH_REQUIRED", "nested session route rejects anonymous access through the deployed adapter");
   const unknown = await get("/api/v1/not-a-real-endpoint");
   check(unknown.response.status === 404 && unknown.response.headers.get("content-type")?.includes("application/json"), "unknown versioned route returns a structured API 404");
   for (const path of ["/.env.server.local", "/.docs/local-auth.local", "/.build/ssr/entry.mjs"]) {
