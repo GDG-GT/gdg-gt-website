@@ -44,15 +44,15 @@ try {
   });
   await page.goto(origin, { waitUntil: "networkidle" });
   const canvas = page.locator(".gt-home-hero canvas");
-  check(
-    (await canvas.count()) === 0,
-    "initial public route uses the poster before enhancement intent",
-  );
-  await page.mouse.move(400, 300);
+
   await canvas.waitFor({ state: "visible", timeout: 20000 });
   check(
     await canvas.isVisible(),
-    "capable desktop loads real WebGL after pointer intent",
+    "capable desktop loads real WebGL without interaction",
+  );
+  check(
+    (await page.locator(".gt-hero-static-objects:visible").count()) === 0,
+    "capable desktop never substitutes a different poster before the scene",
   );
   const frames = [];
   for (let i = 0; i < 3; i++) {

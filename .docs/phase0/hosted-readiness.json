@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-07T22:58:00.584Z",
+  "generatedAt": "2026-11-07T23:06:25.304Z",
   "origin": "https://gdggt.dev",
   "completed": false,
   "checks": [
     {
       "name": "/ serves successful HTML over verified HTTPS",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/ serves actual public content before JavaScript",
@@ -25,11 +25,11 @@
     },
     {
       "name": "/ advertises the owner's canonical domain",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/events serves successful HTML over verified HTTPS",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/events serves actual public content before JavaScript",
@@ -49,11 +49,11 @@
     },
     {
       "name": "/events advertises the owner's canonical domain",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/contact serves successful HTML over verified HTTPS",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/contact serves actual public content before JavaScript",
@@ -73,7 +73,7 @@
     },
     {
       "name": "/contact advertises the owner's canonical domain",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/admin/ preserves the ordinary private/query client boundary",
@@ -92,7 +92,7 @@
       "passed": true
     },
     {
-      "name": "/api/v1/health has no shared API caching",
+      "name": "/api/v1/health retains its declared public/private cache policy",
       "passed": true
     },
     {
@@ -100,7 +100,7 @@
       "passed": true
     },
     {
-      "name": "/api/v1/site-status has no shared API caching",
+      "name": "/api/v1/site-status retains its declared public/private cache policy",
       "passed": true
     },
     {
@@ -108,12 +108,12 @@
       "passed": true
     },
     {
-      "name": "/api/v1/public/home has no shared API caching",
-      "passed": false
+      "name": "/api/v1/public/home retains its declared public/private cache policy",
+      "passed": true
     },
     {
       "name": "nested session route rejects anonymous access through the deployed adapter",
-      "passed": false
+      "passed": true
     },
     {
       "name": "unknown versioned route returns a structured API 404",

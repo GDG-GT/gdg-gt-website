@@ -188,7 +188,7 @@ test("reduced motion keeps an accessible static hero without WebGL downloads", a
   expect(enhancements).toEqual([]);
 });
 
-test("capable desktop hero renders moving WebGL frames and restores reduced-motion fallback", async ({
+test("capable desktop hero starts WebGL directly without a poster flash and restores reduced-motion fallback", async ({
   page,
   browserName,
 }, info) => {
@@ -210,11 +210,30 @@ test("capable desktop hero renders moving WebGL frames and restores reduced-moti
     });
   });
   await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.addInitScript(() => {
+    const observe = () => {
+      const poster = document.querySelector(".gt-hero-static-objects");
+      if (poster && getComputedStyle(poster).visibility !== "hidden" && poster.getBoundingClientRect().width > 0)
+        document.documentElement.dataset.heroPosterFlashed = "true";
+      requestAnimationFrame(observe);
+    };
+    requestAnimationFrame(observe);
+  });
   await page.goto("/");
-  await expect(page.locator(".gt-hero-static-objects")).toBeVisible();
-  await page.mouse.move(400, 300);
   const canvas = page.locator(".gt-home-hero canvas");
   await expect(canvas).toBeVisible({ timeout: 20000 });
+  // No pointer, keyboard or scroll interaction is needed to load the scene.
+  await expect(page.locator(".gt-hero-static-objects:visible")).toHaveCount(0);
+  await expect(page.locator("html")).not.toHaveAttribute("data-hero-poster-flashed", "true");
+  // Immediate startup can precede the public stylesheet/font settling. Sample
+  // the final canvas region rather than a stale pre-layout page coordinate.
+  await expect(page.locator(".gt-hero-objects")).toHaveCSS("position", "absolute");
+  await page.evaluate(() => document.fonts.ready);
+  await expect.poll(async () => {
+    const measured = await canvas.boundingBox();
+    const container = await page.locator(".gt-hero-objects").boundingBox();
+    return !!measured && !!container && Math.abs(measured.width - container.width) < 1 && Math.abs(measured.height - container.height) < 1;
+  }).toBe(true);
   const bounds = (await canvas.boundingBox())!;
   const clip = {
     x: bounds.x + bounds.width * 0.65,

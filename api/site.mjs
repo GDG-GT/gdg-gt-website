@@ -10,7 +10,10 @@ function documentFailure(error, phase) {
     event: "public_document_unavailable",
     phase,
     errorType: error?.name || "Error",
-    dependencyCode: ["ERR_MODULE_NOT_FOUND", "ENOENT", "ERR_UNKNOWN_FILE_EXTENSION"].includes(error?.code) ? error.code : "UNAVAILABLE",
+    dependencyCode: ["ERR_MODULE_NOT_FOUND", "MODULE_NOT_FOUND", "ENOENT", "ERR_UNKNOWN_FILE_EXTENSION", "ERR_PACKAGE_PATH_NOT_EXPORTED", "ERR_REQUIRE_ESM", "ERR_REQUIRE_ASYNC_MODULE", "ERR_UNSUPPORTED_DIR_IMPORT"].includes(error?.code) ? error.code : "UNAVAILABLE",
+    // Report only known dependency names, never arbitrary exception text/paths.
+    dependency: ["react-dom", "react-router", "lucide-react", "react", "entry.mjs"].find(name =>
+      new RegExp(`(?:[\\/\\"']|^)${name.replaceAll(".", "\\.")}(?:[\\/\\"']|$)`).test(String(error?.message || ""))) || "UNAVAILABLE",
     fingerprint: createHash("sha256").update(String(error?.message || "")).digest("hex"),
   }));
 }

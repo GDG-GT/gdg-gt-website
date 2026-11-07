@@ -313,31 +313,14 @@ function Confetti({
   );
 }
 export default function HeroObjects() {
-  const [enabled, setEnabled] = useState(false),
-    [visible, setVisible] = useState(true),
+  const [visible, setVisible] = useState(true),
     [tabVisible, setTabVisible] = useState(true);
   const scroll = useRef(0),
     root = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const check = () => {
-      const device = navigator as Navigator & {
-        deviceMemory?: number;
-        connection?: { saveData?: boolean };
-      };
-      setEnabled(
-        !media.matches &&
-          window.innerWidth >= 768 &&
-          !device.connection?.saveData &&
-          (device.deviceMemory ?? 8) > 2,
-      );
-    };
-    check();
     const onVisibility = () => setTabVisible(!document.hidden);
     onVisibility();
     document.addEventListener("visibilitychange", onVisibility);
-    media.addEventListener("change", check);
-    window.addEventListener("resize", check);
     const onScroll = () => {
       scroll.current = Math.min(
         1.5,
@@ -350,84 +333,79 @@ export default function HeroObjects() {
     );
     if (root.current) observer.observe(root.current);
     return () => {
-      media.removeEventListener("change", check);
       document.removeEventListener("visibilitychange", onVisibility);
-      window.removeEventListener("resize", check);
       window.removeEventListener("scroll", onScroll);
       observer.disconnect();
     };
   }, []);
   return (
     <div className="gt-hero-objects" ref={root} aria-hidden="true">
-      {enabled ? (
-        <MotionFallback>
-          <Canvas
-            eventSource={root.current?.parentElement || undefined}
-            eventPrefix="client"
-            dpr={[1, 1.5]}
-            camera={{ position: [0, 0, 8], fov: 40 }}
-            gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
-            frameloop={visible && tabVisible ? "always" : "never"}
-          >
-            <ambientLight intensity={0.6} />
-            <directionalLight
-              position={[3, 7, 5]}
-              intensity={2.8}
-              color="#fff2e1"
+      <MotionFallback>
+        <Canvas
+          fallback={<StaticObjects />}
+          eventSource={root.current?.parentElement || undefined}
+          eventPrefix="client"
+          dpr={[1, 1.5]}
+          camera={{ position: [0, 0, 8], fov: 40 }}
+          gl={{ alpha: true, antialias: true, powerPreference: "low-power" }}
+          frameloop={visible && tabVisible ? "always" : "never"}
+        >
+          <ambientLight intensity={0.6} />
+          <directionalLight
+            position={[3, 7, 5]}
+            intensity={2.8}
+            color="#fff2e1"
+          />
+          <Environment resolution={128}>
+            <Lightformer
+              intensity={4}
+              position={[0, 5, 3]}
+              scale={[10, 8, 1]}
             />
-            <Environment resolution={128}>
-              <Lightformer
-                intensity={4}
-                position={[0, 5, 3]}
-                scale={[10, 8, 1]}
-              />
-              <Lightformer
-                intensity={2}
-                position={[-5, 0, 1]}
-                scale={[4, 8, 1]}
-                color="#ffe0e3"
-              />
-              <Lightformer
-                intensity={1.8}
-                position={[5, -3, 2]}
-                scale={[6, 6, 1]}
-                color="#ffd19e"
-              />
-            </Environment>
-            <MovingObject
-              kind="donut"
-              base={[0.77, 0.67]}
-              size={0.62}
-              phase={1}
-              scrollRef={scroll}
+            <Lightformer
+              intensity={2}
+              position={[-5, 0, 1]}
+              scale={[4, 8, 1]}
+              color="#ffe0e3"
             />
-            <MovingObject
-              kind="star"
-              base={[-0.87, 0.55]}
-              size={0.43}
-              phase={2}
-              scrollRef={scroll}
+            <Lightformer
+              intensity={1.8}
+              position={[5, -3, 2]}
+              scale={[6, 6, 1]}
+              color="#ffd19e"
             />
-            <MovingObject
-              kind="jelly"
-              base={[-0.84, -0.58]}
-              size={0.7}
-              phase={3}
-              scrollRef={scroll}
-            />
-            <MovingObject
-              kind="gem"
-              base={[0.24, 0.05]}
-              size={0.34}
-              phase={4}
-              scrollRef={scroll}
-            />
-            <Confetti scrollRef={scroll} />
-          </Canvas>
-        </MotionFallback>
-      ) : (
-        <StaticObjects />
-      )}
+          </Environment>
+          <MovingObject
+            kind="donut"
+            base={[0.77, 0.67]}
+            size={0.62}
+            phase={1}
+            scrollRef={scroll}
+          />
+          <MovingObject
+            kind="star"
+            base={[-0.87, 0.55]}
+            size={0.43}
+            phase={2}
+            scrollRef={scroll}
+          />
+          <MovingObject
+            kind="jelly"
+            base={[-0.84, -0.58]}
+            size={0.7}
+            phase={3}
+            scrollRef={scroll}
+          />
+          <MovingObject
+            kind="gem"
+            base={[0.24, 0.05]}
+            size={0.34}
+            phase={4}
+            scrollRef={scroll}
+          />
+          <Confetti scrollRef={scroll} />
+        </Canvas>
+      </MotionFallback>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 # Production launch status
 
 The owner authorized GDG-GT GitHub push and production deployment on November 7,
-2026. The source is private at https://github.com/GDG-GT/gdg-gt-website. The
+2026. The source is now public at https://github.com/GDG-GT/gdg-gt-website. The
 canonical domain is https://gdggt.dev. A deployment marked Ready by Vercel is not
 an application acceptance result; actual failed hosted checks are retained.
 
@@ -50,10 +50,25 @@ Superseded runs remain recorded; a fully passing remote browser run is still nee
   actual-device install/push, hosted backup/restore/rollback and observation.
   Human assistive-technology acceptance remains unproved by the native tool.
 
-Vercel Hobby rejected automatic Git linking for this private organization-owned
-repository (`repo_owned_by_org`). Pinned Git-source deployments work. The repository
-has not been made public and no Vercel plan was purchased.
+The owner subsequently made the repository public and connected GDG-GT/main to
+Vercel. The live Git link is verified; future main pushes deploy automatically.
+The earlier private-organization Hobby rejection is historical. No plan was purchased.
 
 SSO/Google and Bevy/Engage remain deferred. The temporary provider-management
 credentials are not runtime dependencies. Keep the newly created runtime sender,
 S3 and signing credentials when revoking temporary setup access.
+
+## November 7 live recovery and hero startup
+
+The canonical site serves usable public pages again: actual anonymous browser
+checks passed on nine routes at desktop/mobile sizes (18 checks, no page errors).
+Server-rendered HTML acceptance still fails at renderer-load; it is not marked
+complete. The live fallback requires a fresh verified live availability snapshot.
+
+The desktop hero now starts the real 3D scene immediately after capability detection,
+without waiting for input or the old 1.2-second timer. Its pending desktop poster
+is hidden before hydration, and its module-loading fallback is empty, so a different
+object design never flashes first. Reduced-motion, mobile and constrained devices
+retain the static scene; unsupported WebGL has a fallback. Eight browser cases pass
+with four existing non-applicable software-WebGL skips, and the actual loopback
+moving-frame/fallback check passes. Final hosted verification follows deployment.

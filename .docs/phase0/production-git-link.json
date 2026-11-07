@@ -2,9 +2,14 @@
   "projectId": "prj_p6dWtmkiB6rk0C4fsKX4upEKxQNQ",
   "teamId": "team_JgYBymEvh6iYyZXJGEhFchkM",
   "plan": "hobby",
-  "gitConnectionConfirmed": false,
-  "connectionErrorCode": "repo_owned_by_org",
-  "pinnedRepositoryDeploymentSucceeded": true,
-  "scope": "Automatic Git connection refused by Vercel for the organization-owned repository. Manual pinned Git-source deployment succeeded. No plan purchase or repository visibility change authorized/performed.",
-  "generatedAt": "2026-11-07T22:34:45.062Z"
+  "gitConnectionConfirmed": true,
+  "link": {
+    "type": "github",
+    "org": "GDG-GT",
+    "repo": "gdg-gt-website",
+    "repoId": 1449782739,
+    "productionBranch": "main"
+  },
+  "scope": "Actual refreshed provider state. This supersedes the earlier rejected link attempt; do not reset user changes or duplicate auto-deployments.",
+  "generatedAt": "2026-11-07T23:05:50.637Z"
 }

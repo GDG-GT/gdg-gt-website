@@ -1,0 +1,80 @@
+{
+  "generatedAt": "2026-11-07T23:07:19.150Z",
+  "completed": true,
+  "checks": [
+    {
+      "name": "1440: / hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "1440: /events hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "1440: /team hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "1440: /gallery hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "1440: /resources hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "1440: /sponsors hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "1440: /contact hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "1440: /privacy hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "1440: /accessibility hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "375: / hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "375: /events hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "375: /team hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "375: /gallery hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "375: /resources hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "375: /sponsors hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "375: /contact hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "375: /privacy hydrates into the actual interactive public page",
+      "passed": true
+    },
+    {
+      "name": "375: /accessibility hydrates into the actual interactive public page",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "scope": "Actual canonical HTTPS public pages in desktop/mobile-width Chromium, hydrated controls/read-only navigation/geometry/captures. No credentials, form submits, provider sends or private record access. Captures unapproved; reduced motion is used; no full SSR or physical-device claim."
+}

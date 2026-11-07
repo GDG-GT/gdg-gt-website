@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-11-05T04:08:20.135Z",
+  "generatedAt": "2026-11-07T23:13:06.704Z",
   "completed": true,
   "note": "Actual anonymous loopback browser rendering using pinned Playwright Chromium and software WebGL. Non-read APIs and external origins blocked. Functional moving-frame/fallback proof only, not hardware FPS, Web Vitals, visual approval or hosted acceptance. No data/provider/production changes.",
   "tests": [
     {
-      "name": "initial public route uses the poster before enhancement intent",
+      "name": "capable desktop loads real WebGL without interaction",
       "passed": true
     },
     {
-      "name": "capable desktop loads real WebGL after pointer intent",
+      "name": "capable desktop never substitutes a different poster before the scene",
       "passed": true
     },
     {

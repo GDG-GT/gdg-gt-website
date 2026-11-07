@@ -2251,6 +2251,13 @@ img {
   z-index: 1;
   pointer-events: none;
 }
+/* SSR cannot read device capabilities. Hide only the undecided desktop
+   poster before hydration so a different object design never flashes first. */
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .gt-hero-objects[data-motion-pending] {
+    visibility: hidden;
+  }
+}
 .gt-hero-objects canvas {
   pointer-events: none;
 }

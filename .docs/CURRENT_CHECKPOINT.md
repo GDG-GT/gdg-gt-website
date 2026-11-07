@@ -1,3 +1,30 @@
+# Immediate checkpoint — 2026-11-07 23:25 UTC
+
+Latest user requests hero no poster-to-3D swap. Implemented immediate eligible scene
+startup, no interaction/timer, hidden undecided SSR desktop poster, null Suspense
+fallback, mobile/reduced/limited devices preserved, Canvas fallback added. Local
+live hero 6 checks PASS. Production-build browser 8 PASS/4 existing non-applicable
+skips, raw /tmp/gdg-direct-hero-browser-measured.log. Motion capture now waits for
+actual canvas measured dimensions (initial canvas defaults300x150); no assertion
+limits weakened. Initial failures retained logs. Types/lint/build/28 targeted tests,
+SSR26 checks/budgets pass. Isolated performance now running; prior concurrent probe
+was intentionally interrupted, not a valid measurement. Full coverage after SSR fix.
+
+Live current df848e2 dpl_GSVzPeVUEFhph2SN7rX1WikTUTk8 READY, CSR recovery works;
+actual hosted browser18 checks PASS, no page errors. Actual SSR still fails during
+renderer-load, Error/UNAVAILABLE fingerprint
+6dbe1d2b4d6cc4f21bd68b3b96558904d33b15ceb51ddbcb58be6d765f295b44.
+New safe diagnostics allow common Node dependency codes and only known names; no
+raw exception messages. Need push batched hero/diagnostic commit, auto deploy then
+watch runtime and fix real SSR failure. Git repo USER changed PUBLIC, Vercel Git
+link now CONNECTED GDG-GT/main. Do not recreate project/DNS/keys/migrations. Node
+private provider session79985 ACTIVE, all CUA clean/completed, no pending keyapproval.
+Supabase owner0; owner identity/worker host/storage Free50MB vs64/250MB still need
+user choices. Keep flags email/push/uploads false pending actual acceptance.
+Preserve3 unrelated user files. No AI trailers/purchases/newtimers. Continue work.
+
+Earlier checkpoint history (may describe superseded state):
+
 # IMMEDIATE checkpoint — 2026-11-07 23:03 UTC
 
 Latestdeployed4fea79a(dpl_2oB4...)READYactualAPIWORKS:health/site-status/publichome200,
