@@ -101,7 +101,7 @@ group(
     [
       23,
       "CSP violation ingestion uses bounded categories and operational counters",
-      [s("telemetry"), d("097_operational_monitoring")],
+      [s("telemetry"), d("097_operational_monitoring"), c("account-security"), "tests/browser/security-release.spec.ts"],
     ],
     [
       24,
@@ -736,7 +736,7 @@ group(
     [
       3,
       "Scheduled work requires server-only credentials, correct occurrence and current lease",
-      [s("jobs"), "scripts/test-local-jobs.mjs"],
+      [s("jobs"), s("runtime-plan"), "scripts/test-local-jobs.mjs"],
     ],
     [
       4,
@@ -752,7 +752,7 @@ group(
     [
       6,
       "Media publication/purge jobs preserve private originals, current scope and held data",
-      [s("media"), s("media-content"), "scripts/test-local-media-files.mjs"],
+      [s("media"), s("media-content"), d("139_media_cursor"), "tests/browser/security-release.spec.ts", "scripts/test-local-media-files.mjs"],
     ],
     [
       7,

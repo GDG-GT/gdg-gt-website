@@ -149,7 +149,7 @@ add(
   "SEC-TEST-007",
   "AUTH-016",
   "Super Admin manual gate rotation and old capability invalidation",
-  [unit("entry"), sql("001_security_foundation")],
+  [unit("entry"), unit("account-security"), sql("001_security_foundation"), sql("138_account_security"), "tests/client/account-security.test.tsx", "tests/browser/security-release.spec.ts"],
   ["Hosted multi-instance gate invalidation"],
 );
 add(

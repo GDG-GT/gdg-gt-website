@@ -1,5 +1,16 @@
 # GDG GT continuation checkpoint — 2026-11-07
 
+Latest continuation — account security / media / runtime (2026-11-07):
+read ACCOUNT_SECURITY_AND_MEDIA_CURSOR.md and
+phase0/release-security-media-20261107.json first. Migrations now through140;
+2,743 source tests/225files pass, 18 new six-profile browser checks pass and the
+140-migration isolated restore passes. Account-security UI/gate rotation,
+Operations denial clearing, media cursors and production runtime packaging are
+implemented. Mobile LCP and complete current browser execution remain open.
+Deployment is on the owner's chosen host/domain with Resend; GT institutional
+hosting is not required. Live keys arrive at launch and do not block local work.
+Older counts below are historical. Full PRD acceptance remains open.
+
 The full PRD remains incomplete. Continue feasible local work, preserve edits
 and verify uncertain partial operations before repeating commands. No owned
 verification or experimental server process is currently running. Historical

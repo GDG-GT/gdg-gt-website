@@ -1,17 +1,13 @@
-import { createAuthHandler, requireSession, requireCsrf } from "./auth.mjs";
+import { accountSecurityRoutes } from "./account-security.mjs";
+import { createAuthHandler } from "./auth.mjs";
 import { serverConfig } from "./config.mjs";
 import { serverDatabase } from "./db/client.mjs";
 import { SecurityStore } from "./db/security-store.mjs";
 import {
   ApiError,
   apiBoundary,
-  allowMethod,
   checkOrigin,
-  jsonBody,
-  sendJson,
 } from "./lib/http.mjs";
-import { hashSecret } from "./lib/security.mjs";
-import { z } from "zod";
 import { eventRoutes } from "./events.mjs";
 import { publicContentRoutes } from "./public-content.mjs";
 import { accessRoutes } from "./access.mjs";
@@ -499,24 +495,7 @@ export function applicationHandler({
           await formRoutes(request, response, { db, store, config, requestId })
         )
           return;
-        if (pathname === "/api/v1/admin/security/gate") {
-          allowMethod(request, response, ["POST"]);
-          const session = await requireSession(request, store, config);
-          await requireCsrf(request, session, store);
-          if (session.user.role !== "super_admin")
-            throw new ApiError(403, "FORBIDDEN", "This action is not allowed.");
-          const { code } = await jsonBody(
-            request,
-            z.object({ code: z.string().min(24).max(128) }).strict(),
-            4096,
-          );
-          await store.rotateGate(
-            session.user.id,
-            await hashSecret(code),
-            requestId,
-          );
-          return sendJson(response, 200, { rotated: true }, requestId);
-        }
+        if (await accountSecurityRoutes(request, response, { db, store, config, requestId })) return;
         throw new ApiError(404, "NOT_FOUND", "This endpoint was not found.");
       },
       { log },

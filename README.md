@@ -56,9 +56,11 @@ runtime guide; routine startup does not require a database reset.
   registrations/newsletter signups. Private workspace data and native Forms are
   not cached for offline completion. A server commit is required for acceptance.
 
-SSO/Google verification and Bevy/Engage integration are deferred. Hosted domains,
-providers and approved institutional settings require their own configuration
-and acceptance; real provider delivery is not enabled by a local test result.
+SSO/Google verification and Bevy/Engage integration are deferred. Deployment uses
+the owner's chosen hosting and own domain, with Resend for email. Live keys and
+final production settings will be supplied at launch; they do not block local
+implementation. Browser push uses separate Web Push/VAPID settings. Local tests
+do not enable real provider delivery.
 
 ## Verification
 
@@ -101,3 +103,5 @@ cleanup rules before running them. They are not production maintenance commands.
 Use [the saved checkpoint](.docs/CURRENT_CHECKPOINT.md) to resume unfinished work
 without replaying completed mutations. Deployment, production changes, purchases
 and real provider sends require separate authorization from the current local task.
+
+Production worker and initial-owner instructions: [.docs/PRODUCTION_RUNTIME.md](.docs/PRODUCTION_RUNTIME.md). The plan commands make no network calls and need no keys.

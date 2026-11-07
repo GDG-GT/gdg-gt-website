@@ -282,7 +282,9 @@
       "scope": "CSP violation ingestion uses bounded categories and operational counters",
       "automated": [
         "tests/server/telemetry.test.mjs",
-        "database/tests/097_operational_monitoring.sql"
+        "database/tests/097_operational_monitoring.sql",
+        "tests/client/account-security.test.tsx",
+        "tests/browser/security-release.spec.ts"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"
@@ -2317,6 +2319,7 @@
       "scope": "Scheduled work requires server-only credentials, correct occurrence and current lease",
       "automated": [
         "tests/server/jobs.test.mjs",
+        "tests/server/runtime-plan.test.mjs",
         "scripts/test-local-jobs.mjs"
       ],
       "remaining": [
@@ -2389,6 +2392,8 @@
       "automated": [
         "tests/server/media.test.mjs",
         "tests/server/media-content.test.mjs",
+        "database/tests/139_media_cursor.sql",
+        "tests/browser/security-release.spec.ts",
         "scripts/test-local-media-files.mjs"
       ],
       "remaining": [
@@ -3188,7 +3193,11 @@
       "scope": "Super Admin manual gate rotation and old capability invalidation",
       "automated": [
         "tests/server/entry.test.mjs",
-        "database/tests/001_security_foundation.sql"
+        "tests/server/account-security.test.mjs",
+        "database/tests/001_security_foundation.sql",
+        "database/tests/138_account_security.sql",
+        "tests/client/account-security.test.tsx",
+        "tests/browser/security-release.spec.ts"
       ],
       "remaining": [
         "Hosted multi-instance gate invalidation",

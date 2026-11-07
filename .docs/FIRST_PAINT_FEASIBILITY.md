@@ -117,3 +117,15 @@ server remains running. Main source/dist remains the verified aeb6fca artifact.
 See phase0/hydration-async-decode-browser.json and
 phase0/hydration-home-mobile-async-decode-trial.json, with raw reports under
 ignored artifacts/performance/hydration-async-decode.
+
+## Shared modulepreload diagnostic
+
+An HTML-only diagnostic retained the immutable native-hint hydration build and
+removed its shared modulepreload link, without changing the React module, full
+CSS, font, artwork, default mobile preset or 2,500ms threshold. It measures
+LCP2,769ms, accessibility100, matching labels andCLS0. It still fails and does
+not demonstrate an improvement. No application source or immutable trial build
+was changed. The distinct probe and raw report remain under the existing trial
+root / `artifacts/performance/hydration-no-shared-preload`; summary:
+`phase0/hydration-home-mobile-no-shared-preload-trial.json`. This result is
+rejected and is not production performance evidence.

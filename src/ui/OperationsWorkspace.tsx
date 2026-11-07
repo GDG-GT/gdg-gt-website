@@ -1,6 +1,8 @@
 import ScrollableTable from "@/ui/ScrollableTable";
 import { useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { useAdmin } from "@/contexts/AdminContext";
 import { Badge, Button, EmptyState } from "./primitives";
 type Alert = {
   id: string;
@@ -73,41 +75,25 @@ const retention = [
   ],
 ];
 export default function OperationsWorkspace() {
-  const [status, setStatus] = useState<Status>(),
-    [busy, setBusy] = useState(true),
-    [error, setError] = useState(""),
-    [refresh, setRefresh] = useState(0),
+  const { currentAdmin } = useAdmin();
+  const [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    const clear = () => setEpoch((value) => value + 1);
+    window.addEventListener("gdg:session-cleared", clear);
+    return () => window.removeEventListener("gdg:session-cleared", clear);
+  }, []);
+  if (!currentAdmin) return null;
+  return <OperationsStatus key={`${currentAdmin.id}:${currentAdmin.role}:${epoch}`} />;
+}
+function OperationsStatus() {
+  const [refresh, setRefresh] = useState(0),
     [now, setNow] = useState(Date.now());
+  const { isOnline } = useOnlineStatus();
+  const { data: status, loading: busy, error, at } = usePrivateRead<Status>("/admin/operations", refresh);
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 60000);
     return () => window.clearInterval(timer);
   }, []);
-  useEffect(() => {
-    const controller = new AbortController();
-    setBusy(true);
-    setError("");
-    api<Status>("/admin/operations", {
-      signal: AbortSignal.any([controller.signal, AbortSignal.timeout(20000)]),
-    })
-      .then((data) => {
-        if (!controller.signal.aborted) setStatus(data);
-      })
-      .catch((e) => {
-        if (!controller.signal.aborted) setError(e.message);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setBusy(false);
-      });
-    const clear = () => {
-      controller.abort();
-      setStatus(undefined);
-    };
-    window.addEventListener("gdg:session-cleared", clear);
-    return () => {
-      controller.abort();
-      window.removeEventListener("gdg:session-cleared", clear);
-    };
-  }, [refresh]);
   const stale =
       !status?.lastEvaluatedAt ||
       now - new Date(status.lastEvaluatedAt).getTime() > 900000,
@@ -124,7 +110,7 @@ export default function OperationsWorkspace() {
         </div>
         <Button
           variant="secondary"
-          disabled={busy}
+          disabled={!isOnline}
           onClick={() => setRefresh((value) => value + 1)}
         >
           Refresh status
@@ -134,9 +120,11 @@ export default function OperationsWorkspace() {
         Super Admin only. Counters contain no participant identities. This page
         never runs cleanup, releases holds, sends mail or deletes records.
       </p>
+      {!isOnline && <p role="status">You are offline. Reconnect and refresh to check current operational status.{at && ` Snapshot from ${new Date(at).toLocaleString()}.`}</p>}
+      {busy && status && <p role="status">Refreshing status… Refresh again to restart a stuck request.</p>}
       {error && (
         <p role="alert" className="gt-form-error">
-          {error} Previously loaded status may be stale.
+          {error}{status ? " Previously loaded status may be stale." : " Previous protected status is unavailable."}
         </p>
       )}
       {!status && busy ? (

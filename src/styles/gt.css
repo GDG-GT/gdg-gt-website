@@ -6926,3 +6926,14 @@ fieldset.gt-event-fields {
 @media (max-width: 600px) {
   .gt-events-toolbar { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Scoped account-security controls share the compact workspace hierarchy. */
+.gt-account-security > summary { cursor: pointer; font-weight: 650; }
+.gt-account-security[open] > summary { margin-bottom: 24px; }
+.gt-account-security .gt-admin-page-heading { margin-bottom: 0; }
+.gt-account-security h2 { margin: 0 0 8px; font-size: 1.125rem; font-weight: 650; line-height: 1.4; }
+.gt-account-security h3 { margin: 0; font-size: 1rem; font-weight: 650; line-height: 1.4; }
+.gt-account-security form { max-width: 42rem; }
+.gt-security-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 20px 24px; }
+.gt-security-metrics dt { color: var(--text-secondary); font-size: 0.75rem; line-height: 1.5; }
+.gt-security-metrics dd { margin: 6px 0 0; font-weight: 600; overflow-wrap: anywhere; }

@@ -83,7 +83,7 @@ export async function mediaRoutes(
   }
   if (request.method === "GET") {
     const {
-        page,
+        cursor,
         pageSize,
         team,
         folder: folderFilter,
@@ -100,19 +100,19 @@ export async function mediaRoutes(
           : {}),
         ...(starred ? { starred: starred === "true" } : {}),
       };
-    sendJson(
-      response,
-      200,
-      checked(
-        await db.rpc("read_media_workspace", {
-          ...args,
-          p_filters: filters,
-          p_page: page,
-          p_size: pageSize,
-        }),
-      ),
-      requestId,
-    );
+    let after = null;
+    if (cursor) {
+      try {
+        after = parse(z.object({ at: z.string().datetime({ offset: true }), id: uuid }).strict(), JSON.parse(Buffer.from(cursor, "base64url").toString("utf8")));
+      } catch { throw new ApiError(400, "VALIDATION_ERROR", "The media cursor is invalid. Restart the library from the first page."); }
+    }
+    const { hasMore, ...listing } = checked(await db.rpc("read_media_cursor", {
+      ...args, p_filters: filters, p_after_created: after?.at ?? null,
+      p_after_id: after?.id ?? null, p_size: pageSize,
+    }));
+    const last = listing.items.at(-1);
+    sendJson(response, 200, { ...listing, nextCursor: hasMore && last
+      ? Buffer.from(JSON.stringify({ at: last.createdAt, id: last.id })).toString("base64url") : null }, requestId);
     return true;
   }
   await requireCsrf(request, session, store);

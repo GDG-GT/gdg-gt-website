@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-11-07T17:48:04.832420+00:00",
+  "scope": "Local implementation; no deployment, production mutation or provider sends",
+  "migrationsAppliedThrough": 140,
+  "sourceTests": {
+    "passed": 2743,
+    "failed": 0,
+    "files": 225,
+    "report": "artifacts/quality/release-security-tests.json",
+    "coverageDirectory": "coverage/release-security-final-20261107",
+    "newSecurityBranchCoverage": 100
+  },
+  "browser": {
+    "passed": 18,
+    "profiles": 6,
+    "source": "tests/browser/security-release.spec.ts",
+    "fullCurrentSuiteExecuted": false
+  },
+  "completed": [
+    "Super Admin account-security overview and reviewed password-confirmed atomic gate rotation with current-session receipts",
+    "Operations current-denial clearing and explicit refresh recovery",
+    "Media cursor pagination with stable immutable ordering",
+    "Production worker plan/execution entry points and atomic first-owner bootstrap"
+  ],
+  "open": [
+    "Mobile LCP budget",
+    "Complete current browser regression",
+    "Applicable manual, physical-device, visual and production acceptance"
+  ],
+  "deferred": [
+    "SSO/Google",
+    "Bevy/Engage"
+  ],
+  "liveKeys": "Launch inputs supplied by owner; do not block local work"
+}

@@ -1,0 +1,110 @@
+{
+  "generatedAt": "2026-11-07T17:44:45.272Z",
+  "completed": true,
+  "lighthouseVersion": "13.6.0",
+  "build": {
+    "index.html": {
+      "bytes": 13783,
+      "sha256": "56bb1dfc22dc6abd10bb58461ca272eee39c3ad8798ffb27a197c45b4ba7925a"
+    },
+    ".vite/manifest.json": {
+      "bytes": 113757,
+      "sha256": "0bf492a8778ffdc935d964f726f2ef3962a846a43f4427a5852b47b322d56276"
+    },
+    "assets/hero-atmosphere-mobile.webp": {
+      "bytes": 37624,
+      "sha256": "d46fa6b9bfe5d234b9f6a2e2e20b0f4ca0cf16ae484f4f1e4865fca003dde738"
+    },
+    "assets/hero-campus-mobile.webp": {
+      "bytes": 21932,
+      "sha256": "39aed7e7d2a6a02da4734fd07c6500a35257caf618a460b7a9516d3481744db6"
+    },
+    "assets/public-entry.js": {
+      "bytes": 1099,
+      "sha256": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+    }
+  },
+  "presets": [
+    "mobile"
+  ],
+  "routes": [
+    "/"
+  ],
+  "scope": "Isolated detached-worktree Home hydration feasibility trial, not adopted production. Cloned build with real matching server React tree and explicit SSR marker; Home-only native media image hints retained; shared modulepreload removed from the HTML only; original full CSS/font/other documents unchanged, gzip-negotiated HTML/JS/CSS/JSON/SVG, anonymous allowlisted reads to local API only; HTTPS requests blocked, no account or writes/provider sends. Lighthouse default simulated mobile and desktop presets; measurements must run without competing browser/build/coverage load. Compression models a required hosting delivery setting, not evidence that it is deployed. Lab LCP/CLS/TBT and accessibility only; TBT is not INP and these runs do not certify field p75 INP/LCP, representative 3D hardware or hosted latency. Raw reports in ignored artifacts/performance.",
+  "tests": [
+    {
+      "route": "/",
+      "preset": "mobile",
+      "performance": 96,
+      "accessibility": 100,
+      "visibleLabelsMatchNames": true,
+      "bestPractices": 96,
+      "seo": 100,
+      "lcpMs": 2769.3084,
+      "cls": 0,
+      "tbtMs": 54,
+      "failedAudits": [
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "score": 0.84,
+          "display": "2.8 s"
+        },
+        {
+          "id": "max-potential-fid",
+          "title": "Max Potential First Input Delay",
+          "score": 0.96,
+          "display": "100 ms"
+        },
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "score": 0.96,
+          "display": "2.9 s"
+        },
+        {
+          "id": "unused-css-rules",
+          "title": "Reduce unused CSS",
+          "score": 0,
+          "display": "Est savings of 24 KiB"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "display": "Est savings of 38 KiB"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "display": "2 failure reasons"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0,
+          "display": "Est savings of 115 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "display": "Est savings of 180 ms"
+        }
+      ],
+      "runtimeError": null,
+      "passed": false
+    }
+  ]
+}

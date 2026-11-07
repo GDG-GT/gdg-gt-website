@@ -167,7 +167,7 @@ export const mediaFileMutation = z.discriminatedUnion("action", [
 export const mediaListQuery = z
   .object({
     view: z.enum(["library", "gallery"]).default("library"),
-    page: z.coerce.number().int().min(1).max(10000).default(1),
+    cursor: z.string().regex(/^[A-Za-z0-9_-]+$/).max(512).optional(),
     pageSize: z.coerce.number().int().min(1).max(100).default(30),
     q: z.string().trim().max(100).optional(),
     team: z.union([uuid, z.literal("chapter")]).optional(),

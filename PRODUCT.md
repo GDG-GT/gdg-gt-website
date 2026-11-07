@@ -20,6 +20,14 @@ Public pages use the brand register. Authenticated admin pages use the product r
 
 ## Product Purpose
 
+Deployment decision (Tejas, 2026-11-07): use the owner's chosen hosting and own
+domain. Do not require Georgia Tech institutional hosting. Resend is the email
+provider; live service keys and final production settings will be supplied at
+launch. Missing live keys are launch inputs, not unfinished local features or a
+reason to stop local implementation. Browser push uses Web Push/VAPID separately.
+All current work remains local; this decision does not authorize deployment or
+real provider sends. SSO/Google and Bevy/Engage remain deferred.
+
 Create the public identity and operating system for Google Developer Group on Campus at Georgia Institute of Technology. The site must make the chapter feel credible, energetic, technical, and specific to Georgia Tech while giving the chapter a secure way to run its work without direct database administration.
 
 Success means visitors can understand and engage with the chapter immediately, respondents can complete chapter forms entirely on the site, and authorized officers can complete every operational workflow safely and efficiently.

@@ -250,6 +250,7 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
     [tag, setTag] = useState(""),
     [tagDraft, setTagDraft] = useState(""),
     [page, setPage] = useState(1),
+    [cursors, setCursors] = useState<(string | undefined)[]>([undefined]),
     [tick, setTick] = useState(0),
     [selected, setSelected] = useState<MediaFile[]>([]),
     [editor, setEditor] = useState<MediaFile>(),
@@ -309,6 +310,7 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
     leave(() => {
       setSelected([]);
       setPage(1);
+      setCursors([undefined]);
       action();
     });
   const refresh = () => setTick((v) => v + 1);
@@ -336,7 +338,7 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
     setListError("");
     const params = new URLSearchParams({
       view: gallery ? "gallery" : "library",
-      page: String(page),
+      ...(cursors[page - 1] ? { cursor: cursors[page - 1] } : {}),
       state,
       ...(team ? { team } : {}),
       ...(folder ? { folder } : team ? { folder: "root" } : {}),
@@ -373,7 +375,7 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
           setLoading(false);
       });
     return () => controller.abort();
-  }, [team, folder, page, state, q, tag, type, starred, tick, gallery]);
+  }, [team, folder, page, cursors, state, q, tag, type, starred, tick, gallery]);
   const pending = list?.items.some(
     (f) =>
       ["pending", "queued"].includes(f.scanState) ||
@@ -1079,10 +1081,11 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
             </span>
             <Button
               variant="secondary"
-              disabled={page * list.pageSize >= list.total || loading || busy}
+              disabled={!list.nextCursor || loading || busy}
               onClick={() =>
                 leave(() => {
                   setSelected([]);
+                  setCursors((v) => [...v.slice(0, page), list.nextCursor!]);
                   setPage((v) => v + 1);
                 })
               }

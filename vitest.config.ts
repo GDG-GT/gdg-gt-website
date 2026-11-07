@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 // route by averaging their coverage together.
 const criticalModules = [
   "server/auth.mjs",
+  "server/account-security.mjs",
   "server/access.mjs",
   "server/users.mjs",
   "server/forms.mjs",

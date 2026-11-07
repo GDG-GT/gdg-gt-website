@@ -1,3 +1,4 @@
+import AccountSecurity from "./AccountSecurity";
 import {
   useCallback,
   useEffect,
@@ -611,6 +612,7 @@ function AccountDirectory() {
           Create account
         </Button>
       </header>
+      <AccountSecurity />
       {!isOnline && (
         <p role="status">
           You are offline. Account changes and refresh wait for connectivity.

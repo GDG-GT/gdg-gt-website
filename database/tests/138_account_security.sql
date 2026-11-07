@@ -1,0 +1,22 @@
+BEGIN;
+DO $$ DECLARE actor uuid;sid uuid;other uuid;v bigint;r jsonb;first jsonb;BEGIN
+ INSERT INTO public.admin_users(email,password_hash,role,is_active) VALUES('fictional-security-review@example.test','fictional-proof','super_admin',true) RETURNING id INTO actor;
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(actor,repeat('a',64)) RETURNING id INTO sid;
+ INSERT INTO public.admin_users(email,password_hash,role,is_active) VALUES('fictional-security-other@example.test','fictional-proof','admin',true) RETURNING id INTO other;
+ INSERT INTO public.security_configuration(id,gate_hash) VALUES(true,'scrypt$fictional-initial') ON CONFLICT(id) DO NOTHING;
+ SELECT gate_version INTO v FROM public.security_configuration WHERE id;
+ r:=public.read_account_security(actor,sid);
+ IF (r->>'version')::bigint<>v OR r::text LIKE '%hash%' OR r::text LIKE '%fictional-proof%' THEN RAISE EXCEPTION 'Unsafe security summary';END IF;
+ first:=public.rotate_gate_reviewed(actor,sid,'fictional-proof',v,'scrypt$fictional-new',repeat('b',64),repeat('c',64),NULL);
+ r:=public.rotate_gate_reviewed(actor,sid,'fictional-proof',v,'scrypt$fictional-different-salt',repeat('b',64),repeat('c',64),NULL);
+ IF r<>first OR (SELECT gate_version FROM public.security_configuration WHERE id)<>v+1 OR(SELECT count(*) FROM public.admin_actions WHERE actor_id=actor AND action='security.gate_rotated')<>1 THEN RAISE EXCEPTION 'Rotation replay duplicated';END IF;
+ IF EXISTS(SELECT 1 FROM public.gate_sessions WHERE revoked_at IS NULL) THEN RAISE EXCEPTION 'Old gate passes still active';END IF;
+ IF NOT gdg_security.member_transfer_session(actor,sid) THEN RAISE EXCEPTION 'Rotation unexpectedly revoked signed-in session';END IF;
+ BEGIN PERFORM public.rotate_gate_reviewed(actor,sid,'fictional-proof',v,'scrypt$fictional-new',repeat('d',64),repeat('e',64),NULL);RAISE EXCEPTION 'Stale review accepted';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ BEGIN PERFORM public.rotate_gate_reviewed(actor,sid,'fictional-proof',v,'scrypt$fictional-new',repeat('b',64),repeat('f',64),NULL);RAISE EXCEPTION 'Changed intent accepted';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ BEGIN PERFORM public.rotate_gate_reviewed(actor,sid,'wrong-proof',v+1,'scrypt$fictional-new',repeat('d',64),repeat('e',64),NULL);RAISE EXCEPTION 'Password proof skipped';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ UPDATE public.admin_users SET role='admin' WHERE id=actor;
+ BEGIN PERFORM public.read_account_security(actor,sid);RAISE EXCEPTION 'Role revocation ignored';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ IF has_function_privilege('service_role','public.rotate_gate_atomic(uuid,text,uuid)','EXECUTE') OR has_function_privilege('anon','public.read_account_security(uuid,uuid)','EXECUTE') OR has_function_privilege('authenticated','public.rotate_gate_reviewed(uuid,uuid,text,bigint,text,text,text,uuid)','EXECUTE') THEN RAISE EXCEPTION 'Security grants unsafe';END IF;
+END $$;
+ROLLBACK;

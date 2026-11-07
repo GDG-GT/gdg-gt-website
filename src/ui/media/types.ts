@@ -43,7 +43,7 @@ export type MediaFolder = {
 export type MediaListing = {
   items: MediaFile[];
   total: number;
-  page: number;
+  nextCursor?: string | null;
   pageSize: number;
   folders: MediaFolder[];
   folderId: string | null;

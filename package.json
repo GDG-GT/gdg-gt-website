@@ -112,7 +112,9 @@
     "test:local-forms-suite": "node scripts/test-local-forms-suite.mjs",
     "test:local-submissions": "node scripts/test-local-submissions.mjs",
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit && tsc -p tsconfig.browser.json --noEmit",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "runtime:plan": "node scripts/runtime-workers.mjs --plan",
+    "bootstrap:plan": "node scripts/bootstrap-owner.mjs --plan"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.1153.0",

@@ -135,7 +135,7 @@
   "functions": {
     "api/site.mjs": { "maxDuration": 30, "includeFiles": "dist/index.html" },
     "api/v1/[...path].mjs": {
-      "maxDuration": 30
+      "maxDuration": 60
     }
   }
 }
