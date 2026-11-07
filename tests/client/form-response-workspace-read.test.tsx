@@ -353,7 +353,12 @@ describe("Independent private response workspace reads", () => {
         screen.queryByText(row.respondent.name, { exact: false }),
       ).toBeNull();
       expect(screen.queryByDisplayValue("Fictional proposed view")).toBeNull();
-      expect(screen.getByLabelText("Current route").textContent).toBe("");
+      // Denial withholds private rows immediately; the MemoryRouter location
+      // display follows its own transition. Assert the exact cleared query
+      // after that navigation completes, not after an unrelated heading paint.
+      await waitFor(() =>
+        expect(screen.getByLabelText("Current route").textContent).toBe(""),
+      );
       const before = reads.length;
       await act(async () => {});
       expect(reads.length).toBe(before);
@@ -550,7 +555,9 @@ for (const action of [
       await screen.findByRole("heading", {
         name: "Response access needs to be rechecked",
       });
-      expect(screen.getByLabelText("Current route").textContent).toBe("");
+      await waitFor(() =>
+        expect(screen.getByLabelText("Current route").textContent).toBe(""),
+      );
       expect(
         screen.queryByDisplayValue("Fictional private proposal"),
       ).toBeNull();

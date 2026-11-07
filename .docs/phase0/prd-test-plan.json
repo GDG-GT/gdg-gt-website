@@ -2798,6 +2798,7 @@
       "scope": "Admin events populated composition review candidates",
       "automated": [
         "tests/browser/workspace-compositions.spec.ts",
+        "tests/browser/event-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [

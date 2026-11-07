@@ -312,7 +312,7 @@ try {
               const r = await window.axe.run(document, {
                 runOnly: {
                   type: "tag",
-                  values: ["wcag2a", "wcag2aa", "wcag21aa"],
+                  values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"],
                 },
               });
               return r.violations.map((v) => v.id);

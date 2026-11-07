@@ -1,12 +1,13 @@
 {
-  "generatedAt": "2026-11-06T22:52:15.771Z",
+  "generatedAt": "2026-11-07T02:15:33.913Z",
   "completed": true,
   "scope": "primary",
+  "sourceCaptureDirectory": "artifacts/browser/secondary-review",
   "note": "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. Primary compositions are captured; every secondary drawer, editor inspector, chart, collaboration surface and confirmation state still requires its own applicable acceptance review.",
   "stats": {
-    "startTime": "2026-11-06T22:06:05.614Z",
-    "duration": 800052.445,
-    "expected": 1228,
+    "startTime": "2026-11-07T01:55:17.542Z",
+    "duration": 1135905.2079999999,
+    "expected": 1372,
     "skipped": 8,
     "unexpected": 0,
     "flaky": 0
@@ -31,37 +32,37 @@
           "name": "public /",
           "project": "chromium-1920",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1920/attachments/public--8dec6999826f6a83379237b73024760a501afdf7.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1920/attachments/public--184380381b9ea868c9db4a6f74cc800cd54b3d32.png"
         },
         {
           "name": "public /",
           "project": "chromium-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1440/attachments/public--406183df3aac7df7181968c3277d4c357b2c78cd.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1440/attachments/public--b697989761712c9d5d08c41aeaa4559421a0c852.png"
         },
         {
           "name": "public /",
           "project": "chromium-mobile",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-mobile/attachments/public--a95c3daa8306e4788a9884d29c90c0a455997634.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-mobile/attachments/public--9a1054daafb3c65db59818423bfa20dabc371347.png"
         },
         {
           "name": "public /",
           "project": "firefox-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-firefox-1440/attachments/public--e0ed534b563777639484d2b02a9533296c1d5bd2.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-firefox-1440/attachments/public--6bdff55a67200234cc883312506927b5d6334a9c.png"
         },
         {
           "name": "public /",
           "project": "webkit-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-1440/attachments/public--9042f4670c29f8cbae68ecbae6595a5f398ceac9.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-1440/attachments/public--8809c1a7c4445446a4282da9323ea426675da6d8.png"
         },
         {
           "name": "public /",
           "project": "webkit-mobile",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-mobile/attachments/public--8ac322bf333165cdc1e2f5d88fed4ebfff3f7882.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-mobile/attachments/public--d00f6c077ca12d328b344ffc7d1cddf6ef190d97.png"
         }
       ]
     },
@@ -74,37 +75,37 @@
           "name": "hero",
           "project": "chromium-1920",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1920/attachments/hero-964dc8949821a2c6ba2924bdc37992d7c14675ad.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1920/attachments/hero-09b862bd09ccdd0fe9ab1fc586d889d98266c878.png"
         },
         {
           "name": "hero",
           "project": "chromium-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1440/attachments/hero-e1566ea520c47cce928305aeedd0d6278b493e25.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1440/attachments/hero-a7f7404f2236e532898f48a58bd5598ccbfd2dbe.png"
         },
         {
           "name": "hero",
           "project": "chromium-mobile",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-mobile/attachments/hero-57be69a50de0577d55c44dc7398991938f23f164.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-mobile/attachments/hero-cd53118f4dbd4f6dd921f15d3a4e91d7236c4093.png"
         },
         {
           "name": "hero",
           "project": "firefox-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-firefox-1440/attachments/hero-c387668d3fcef073595f4d0e0a01d44f28420a80.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-firefox-1440/attachments/hero-e2b33dbadecf1bc137db637ecce04d5a22852eb1.png"
         },
         {
           "name": "hero",
           "project": "webkit-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-1440/attachments/hero-02a755e7aea03d976891bd1346ea41b40050cd2e.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-1440/attachments/hero-8027ddf1b252ef3b2a35621a60ad26ee5aed022e.png"
         },
         {
           "name": "hero",
           "project": "webkit-mobile",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-mobile/attachments/hero-6d10094149f1c8508ed39ac0f2334abcc1b4f646.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-mobile/attachments/hero-574c0c28198988cdaf91a12ffe60d49901babbc8.png"
         }
       ]
     },
@@ -117,37 +118,37 @@
           "name": "statistics",
           "project": "chromium-1920",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1920/attachments/statistics-7ea2d780b54bf8245c1be89dc4bc27a17c185422.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1920/attachments/statistics-3f2e0629c7b3cd45996a8e8709aeea9521a6ff07.png"
         },
         {
           "name": "statistics",
           "project": "chromium-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1440/attachments/statistics-6859450e80b01b52d9456b20ddfaa12676053da3.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1440/attachments/statistics-ba05c79db5b18cfcd3099ff33ee0389e6dd41398.png"
         },
         {
           "name": "statistics",
           "project": "chromium-mobile",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-mobile/attachments/statistics-caf0fe4939f9e521dbffbca4e0aca201d1955e4d.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-mobile/attachments/statistics-55f350a5c455e96b8c5ddeb61d73db44cf21ec05.png"
         },
         {
           "name": "statistics",
           "project": "firefox-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-firefox-1440/attachments/statistics-936f82580fbee12ffbf546c23780de91fddb5c06.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-firefox-1440/attachments/statistics-d977f8f94e49897af12c57c38f96375bc26048f3.png"
         },
         {
           "name": "statistics",
           "project": "webkit-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-1440/attachments/statistics-fe27e2c502509652e666ed055c4451c6a0f0c75d.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-1440/attachments/statistics-b97d22359866834ffeee2f4c30fb534d2c902553.png"
         },
         {
           "name": "statistics",
           "project": "webkit-mobile",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-mobile/attachments/statistics-a1da76d69d6dc4136498afcb533795712cf891ba.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-mobile/attachments/statistics-8989ad760b05dd9c7a8b4e4e01a2d8d82605a936.png"
         }
       ]
     },
@@ -160,37 +161,37 @@
           "name": "upcoming-events",
           "project": "chromium-1920",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1920/attachments/upcoming-events-dd4b14f1e59bc9083a3f9dc2e9487b3f93a77c7f.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1920/attachments/upcoming-events-4f87370ded27914d2f99eb883243c82008eaf721.png"
         },
         {
           "name": "upcoming-events",
           "project": "chromium-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1440/attachments/upcoming-events-7f13ef47d40ff9ab5da20db68b0408b83489b15e.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1440/attachments/upcoming-events-f3527b3b0ff15f07a8a24411802046c7e209bf8b.png"
         },
         {
           "name": "upcoming-events",
           "project": "chromium-mobile",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-mobile/attachments/upcoming-events-376fce0405a67fe0cd5c81c3c2ed61de4ac6e3f8.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-mobile/attachments/upcoming-events-4225fc73895467e04d88690b4881131a97da4289.png"
         },
         {
           "name": "upcoming-events",
           "project": "firefox-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-firefox-1440/attachments/upcoming-events-0c1f80cb8f09a83141ac85a0b90cc15f59172746.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-firefox-1440/attachments/upcoming-events-a02096397a031f007f7251c58a35322f5df10768.png"
         },
         {
           "name": "upcoming-events",
           "project": "webkit-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-1440/attachments/upcoming-events-4e8200f47ec49187de14b1b729ba1f95ffa3f91c.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-1440/attachments/upcoming-events-32ddfc685a600143ee86ee224d0d17f0ab22dd2a.png"
         },
         {
           "name": "upcoming-events",
           "project": "webkit-mobile",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-mobile/attachments/upcoming-events-251cbda114416d94b17b1f142c15eadb2b038ec0.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-mobile/attachments/upcoming-events-35d16550f0bcd5b3ddd5ae29ef88a8c73677a3d8.png"
         }
       ]
     },
@@ -203,37 +204,37 @@
           "name": "footer",
           "project": "chromium-1920",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1920/attachments/footer-7d5565cdaa706fed440a6dac0e3783d344fecc60.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1920/attachments/footer-7328a3991f0d32845cfffef091b6d6a71dfbfc97.png"
         },
         {
           "name": "footer",
           "project": "chromium-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1440/attachments/footer-8313af4ba75c4b5a717be0381de2207f30f963cf.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-1440/attachments/footer-0999bdec01d12153f99db2900d86906c34f1d6e8.png"
         },
         {
           "name": "footer",
           "project": "chromium-mobile",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-mobile/attachments/footer-6ef4b51fbb1287c8ae60ec26e61f6d93cefbe5d5.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-chromium-mobile/attachments/footer-8d76dea14e8e5eb659f0fb2c893e62ab95f96dbc.png"
         },
         {
           "name": "footer",
           "project": "firefox-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-firefox-1440/attachments/footer-e2e0308970c0f89380a3dc8d9f8e46b3d36032bf.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-firefox-1440/attachments/footer-e9e614a0c16819273ef024e74f7e0297f9d5d1cd.png"
         },
         {
           "name": "footer",
           "project": "webkit-1440",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-1440/attachments/footer-b253a0323e22ad0ea0939fc297340abc41285e56.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-1440/attachments/footer-109992cb5d4a15ddfd5266cc02651d997d80a6fa.png"
         },
         {
           "name": "footer",
           "project": "webkit-mobile",
           "test": "populated public composition / keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-mobile/attachments/footer-a00a0ee28f163254c941c817d79a067736a9b5e6.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-ccaf1--layout-scroll-and-controls-webkit-mobile/attachments/footer-1edc607c9126dd7e5f81381098c8c5255050e65d.png"
         }
       ]
     },
@@ -246,37 +247,37 @@
           "name": "public /events",
           "project": "chromium-1920",
           "test": "populated public composition /events keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-42e26--layout-scroll-and-controls-chromium-1920/attachments/public-events-71ee938411805eda125f26d574bcba38974232b9.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-42e26--layout-scroll-and-controls-chromium-1920/attachments/public-events-80e8a8454fa6aa59d8dc2ba5afc11458f4698410.png"
         },
         {
           "name": "public /events",
           "project": "chromium-1440",
           "test": "populated public composition /events keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-42e26--layout-scroll-and-controls-chromium-1440/attachments/public-events-8f43f2f2c2c2de046257076d37d58c6c65610e9a.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-42e26--layout-scroll-and-controls-chromium-1440/attachments/public-events-08a30c68254a357c69cecb461209d9e0b54c3eb4.png"
         },
         {
           "name": "public /events",
           "project": "chromium-mobile",
           "test": "populated public composition /events keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-42e26--layout-scroll-and-controls-chromium-mobile/attachments/public-events-06cd508047d1054f2712bbfcc4f08b6a7b0b9bed.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-42e26--layout-scroll-and-controls-chromium-mobile/attachments/public-events-7fe14eabd817aadd85fc9f638ccce622ca1f51dc.png"
         },
         {
           "name": "public /events",
           "project": "firefox-1440",
           "test": "populated public composition /events keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-42e26--layout-scroll-and-controls-firefox-1440/attachments/public-events-818c627e7112ab0513eae4122eaf2f8027ecd727.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-42e26--layout-scroll-and-controls-firefox-1440/attachments/public-events-721dd293edfe6c19fd862a5f02a4d47a26ecc1cb.png"
         },
         {
           "name": "public /events",
           "project": "webkit-1440",
           "test": "populated public composition /events keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-42e26--layout-scroll-and-controls-webkit-1440/attachments/public-events-c32fcc8ea974a72132ffab7508353b7b804faedc.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-42e26--layout-scroll-and-controls-webkit-1440/attachments/public-events-15b688cb3653fdb40336cc60338a46012a7ef9f4.png"
         },
         {
           "name": "public /events",
           "project": "webkit-mobile",
           "test": "populated public composition /events keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-42e26--layout-scroll-and-controls-webkit-mobile/attachments/public-events-54eab7a770ea2168513c0ef18faacae7a272fb6d.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-42e26--layout-scroll-and-controls-webkit-mobile/attachments/public-events-0b3841c84a8b1b82fa0265afbef14921025c947c.png"
         }
       ]
     },
@@ -289,37 +290,37 @@
           "name": "public /events/fictional-event-1",
           "project": "chromium-1920",
           "test": "populated public composition /events/fictional-event-1 keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-23979--layout-scroll-and-controls-chromium-1920/attachments/public-events-fictional-event-1-877c78c6de75afc1da64898dca63e3cb2b1120ee.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-23979--layout-scroll-and-controls-chromium-1920/attachments/public-events-fictional-event-1-14ec386c1f77acddd1377ae33eccc895e3b53cd3.png"
         },
         {
           "name": "public /events/fictional-event-1",
           "project": "chromium-1440",
           "test": "populated public composition /events/fictional-event-1 keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-23979--layout-scroll-and-controls-chromium-1440/attachments/public-events-fictional-event-1-d552914c1ccbb57c38d194fcf9150e898c407658.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-23979--layout-scroll-and-controls-chromium-1440/attachments/public-events-fictional-event-1-c7f2758c998f2c5529a37ee8e64e46585be6ecff.png"
         },
         {
           "name": "public /events/fictional-event-1",
           "project": "chromium-mobile",
           "test": "populated public composition /events/fictional-event-1 keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-23979--layout-scroll-and-controls-chromium-mobile/attachments/public-events-fictional-event-1-8994aa87aa3f14df46f91aedfd885251536e68e1.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-23979--layout-scroll-and-controls-chromium-mobile/attachments/public-events-fictional-event-1-a78f7ca1bda55f6c03c4a49d992f5361bb5d941b.png"
         },
         {
           "name": "public /events/fictional-event-1",
           "project": "firefox-1440",
           "test": "populated public composition /events/fictional-event-1 keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-23979--layout-scroll-and-controls-firefox-1440/attachments/public-events-fictional-event-1-a21c8e304822ef84313664e58e9efe82e7c0d1c9.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-23979--layout-scroll-and-controls-firefox-1440/attachments/public-events-fictional-event-1-45cd8e5788fb9d3dd82301b3249755cbccdfa47c.png"
         },
         {
           "name": "public /events/fictional-event-1",
           "project": "webkit-1440",
           "test": "populated public composition /events/fictional-event-1 keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-23979--layout-scroll-and-controls-webkit-1440/attachments/public-events-fictional-event-1-f49c33e2a142e43f09623667cac6a30f24d10a1b.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-23979--layout-scroll-and-controls-webkit-1440/attachments/public-events-fictional-event-1-56b74b3c894119d65d246f00712253000fb441ad.png"
         },
         {
           "name": "public /events/fictional-event-1",
           "project": "webkit-mobile",
           "test": "populated public composition /events/fictional-event-1 keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-23979--layout-scroll-and-controls-webkit-mobile/attachments/public-events-fictional-event-1-96930dda99bd063f02f3024d36056f14e3881b72.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-23979--layout-scroll-and-controls-webkit-mobile/attachments/public-events-fictional-event-1-e05e73067b0ba2da07dd92f9a7ddc673dfc8b3f2.png"
         }
       ]
     },
@@ -332,37 +333,37 @@
           "name": "public /team",
           "project": "chromium-1920",
           "test": "populated public composition /team keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-8ec9e--layout-scroll-and-controls-chromium-1920/attachments/public-team-9d29d2c2a8cf87fd8baa3ac2c8f8431d6e577357.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-8ec9e--layout-scroll-and-controls-chromium-1920/attachments/public-team-5bd19cd6790cef9f9e5171647a3b604e85802be3.png"
         },
         {
           "name": "public /team",
           "project": "chromium-1440",
           "test": "populated public composition /team keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-8ec9e--layout-scroll-and-controls-chromium-1440/attachments/public-team-43d6259b637208e7bfccc315f69fdf15cf7adb75.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-8ec9e--layout-scroll-and-controls-chromium-1440/attachments/public-team-55c20cf8edcb825652ac8ffb916a4c394f59f711.png"
         },
         {
           "name": "public /team",
           "project": "chromium-mobile",
           "test": "populated public composition /team keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-8ec9e--layout-scroll-and-controls-chromium-mobile/attachments/public-team-d8b56474759388b782d30f698d683305d5c2c890.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-8ec9e--layout-scroll-and-controls-chromium-mobile/attachments/public-team-fbbd1e785c592e2f745323b5a09ed8d2e69e447f.png"
         },
         {
           "name": "public /team",
           "project": "firefox-1440",
           "test": "populated public composition /team keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-8ec9e--layout-scroll-and-controls-firefox-1440/attachments/public-team-87efc379e4a105d2fae58e657e15478df0c0482d.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-8ec9e--layout-scroll-and-controls-firefox-1440/attachments/public-team-561523ab06fdaac34975c97dd8b2e3554349e2f4.png"
         },
         {
           "name": "public /team",
           "project": "webkit-1440",
           "test": "populated public composition /team keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-8ec9e--layout-scroll-and-controls-webkit-1440/attachments/public-team-7f02d0a04a2367c379aec2b79c68d319348bbbc1.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-8ec9e--layout-scroll-and-controls-webkit-1440/attachments/public-team-76ce8ded4389b832a2b7acafaf0453b8cfe1c1a4.png"
         },
         {
           "name": "public /team",
           "project": "webkit-mobile",
           "test": "populated public composition /team keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-8ec9e--layout-scroll-and-controls-webkit-mobile/attachments/public-team-320d918f766a6c0c6d447230cac5a90e01f43140.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-8ec9e--layout-scroll-and-controls-webkit-mobile/attachments/public-team-ada356c537e8f256e88efe0db27b742ee4ad2da3.png"
         }
       ]
     },
@@ -375,37 +376,37 @@
           "name": "public /resources",
           "project": "chromium-1920",
           "test": "populated public composition /resources keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-22811--layout-scroll-and-controls-chromium-1920/attachments/public-resources-accd802c9cf0f227d12d999e14794b0d6a03446d.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-22811--layout-scroll-and-controls-chromium-1920/attachments/public-resources-811319c96d5b64945f7756f3e117ec135174a93c.png"
         },
         {
           "name": "public /resources",
           "project": "chromium-1440",
           "test": "populated public composition /resources keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-22811--layout-scroll-and-controls-chromium-1440/attachments/public-resources-491d7ef7af71849e4bb2d76440342e2aa4e965c7.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-22811--layout-scroll-and-controls-chromium-1440/attachments/public-resources-82a0eab99e34560f5f6a4a3f0d6c48919438abf8.png"
         },
         {
           "name": "public /resources",
           "project": "chromium-mobile",
           "test": "populated public composition /resources keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-22811--layout-scroll-and-controls-chromium-mobile/attachments/public-resources-e2c139feb1a721c5b0a2749ad9edc09c1b56cf1d.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-22811--layout-scroll-and-controls-chromium-mobile/attachments/public-resources-ccc5cacb5d54f3b48ffbde2dcdb4c133817e0e42.png"
         },
         {
           "name": "public /resources",
           "project": "firefox-1440",
           "test": "populated public composition /resources keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-22811--layout-scroll-and-controls-firefox-1440/attachments/public-resources-10bcfca2c1a1bf493eb5d359134df62c5b24dfb2.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-22811--layout-scroll-and-controls-firefox-1440/attachments/public-resources-61d8e6931759f9b576536c9ad364b9ce9bb233de.png"
         },
         {
           "name": "public /resources",
           "project": "webkit-1440",
           "test": "populated public composition /resources keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-22811--layout-scroll-and-controls-webkit-1440/attachments/public-resources-8d907a7f7f98f379377df7a4c2fd2fed3ee64df1.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-22811--layout-scroll-and-controls-webkit-1440/attachments/public-resources-b6fa822a75e690bc79c360739334d5a2bae61d84.png"
         },
         {
           "name": "public /resources",
           "project": "webkit-mobile",
           "test": "populated public composition /resources keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-22811--layout-scroll-and-controls-webkit-mobile/attachments/public-resources-eb5f76cc3c5dd55bf1144fd635527515f6d69caf.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-22811--layout-scroll-and-controls-webkit-mobile/attachments/public-resources-5e62423967dfce2ef476d5e9ff8ebff74622c968.png"
         }
       ]
     },
@@ -418,37 +419,37 @@
           "name": "public /sponsors",
           "project": "chromium-1920",
           "test": "populated public composition /sponsors keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-1a7ad--layout-scroll-and-controls-chromium-1920/attachments/public-sponsors-f36ba8e804c9208d611b6febb437e27e503d0b5d.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-1a7ad--layout-scroll-and-controls-chromium-1920/attachments/public-sponsors-1c918ee2099a0b79ba673d42e787bec39a7b35df.png"
         },
         {
           "name": "public /sponsors",
           "project": "chromium-1440",
           "test": "populated public composition /sponsors keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-1a7ad--layout-scroll-and-controls-chromium-1440/attachments/public-sponsors-899477aee0c9ce48bcf6538e36dd602f581d7e25.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-1a7ad--layout-scroll-and-controls-chromium-1440/attachments/public-sponsors-7af2eb24cb495cfba538b922dd85423a016130ae.png"
         },
         {
           "name": "public /sponsors",
           "project": "chromium-mobile",
           "test": "populated public composition /sponsors keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-1a7ad--layout-scroll-and-controls-chromium-mobile/attachments/public-sponsors-99265fee792e14ca0df631bd9f3a457d3ca28ac8.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-1a7ad--layout-scroll-and-controls-chromium-mobile/attachments/public-sponsors-6dab941b5f23266962e49eee8bdc4e6fd3183954.png"
         },
         {
           "name": "public /sponsors",
           "project": "firefox-1440",
           "test": "populated public composition /sponsors keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-1a7ad--layout-scroll-and-controls-firefox-1440/attachments/public-sponsors-0ab3399944ea947661ce465592e83bb15463cb5d.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-1a7ad--layout-scroll-and-controls-firefox-1440/attachments/public-sponsors-4b00f6ef94007e56117caa736305dcc631576283.png"
         },
         {
           "name": "public /sponsors",
           "project": "webkit-1440",
           "test": "populated public composition /sponsors keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-1a7ad--layout-scroll-and-controls-webkit-1440/attachments/public-sponsors-0f699015be0df761aefb641f39ce9548fb001cc7.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-1a7ad--layout-scroll-and-controls-webkit-1440/attachments/public-sponsors-7a8286f84ebe0bff51701ed375f83d66e4cb449d.png"
         },
         {
           "name": "public /sponsors",
           "project": "webkit-mobile",
           "test": "populated public composition /sponsors keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-1a7ad--layout-scroll-and-controls-webkit-mobile/attachments/public-sponsors-2fb2ce1dcc98d788a96312a40256d531e2d23faa.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-1a7ad--layout-scroll-and-controls-webkit-mobile/attachments/public-sponsors-08628415ea9c4e167e2996f83e754c4cf39126cc.png"
         }
       ]
     },
@@ -461,37 +462,37 @@
           "name": "public /gallery",
           "project": "chromium-1920",
           "test": "populated public composition /gallery keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-b412a--layout-scroll-and-controls-chromium-1920/attachments/public-gallery-7d07abde21f866d8c9a97794c9993da644d2670d.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-b412a--layout-scroll-and-controls-chromium-1920/attachments/public-gallery-130eb37fd3d18423032c1ec9ff148d11f8dbacc9.png"
         },
         {
           "name": "public /gallery",
           "project": "chromium-1440",
           "test": "populated public composition /gallery keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-b412a--layout-scroll-and-controls-chromium-1440/attachments/public-gallery-a0f23e84ffad490b6cdf27294bfc91bba9a1d91c.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-b412a--layout-scroll-and-controls-chromium-1440/attachments/public-gallery-f5eaa200557aae6d7b4b2e3a14316a4960f30ec5.png"
         },
         {
           "name": "public /gallery",
           "project": "chromium-mobile",
           "test": "populated public composition /gallery keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-b412a--layout-scroll-and-controls-chromium-mobile/attachments/public-gallery-5ee2d065ab3f035100dd064db82112f4c2360f6c.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-b412a--layout-scroll-and-controls-chromium-mobile/attachments/public-gallery-8bdc8ab0ab20305aa23919d5d891935d5e8a4c5b.png"
         },
         {
           "name": "public /gallery",
           "project": "firefox-1440",
           "test": "populated public composition /gallery keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-b412a--layout-scroll-and-controls-firefox-1440/attachments/public-gallery-4f241aae37b4f3b22760d0bc0e73384532f7d222.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-b412a--layout-scroll-and-controls-firefox-1440/attachments/public-gallery-7272eb763dbd61cc2ff72af53b5d682dc64473cf.png"
         },
         {
           "name": "public /gallery",
           "project": "webkit-1440",
           "test": "populated public composition /gallery keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-b412a--layout-scroll-and-controls-webkit-1440/attachments/public-gallery-dde1d8d00c1e28ef0b1620f9a5dde8788cd77b94.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-b412a--layout-scroll-and-controls-webkit-1440/attachments/public-gallery-3e224303c60ba350afe654fc45f5678c2a6b4572.png"
         },
         {
           "name": "public /gallery",
           "project": "webkit-mobile",
           "test": "populated public composition /gallery keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-b412a--layout-scroll-and-controls-webkit-mobile/attachments/public-gallery-8c423b37a873599b95a6c9c99eff376c092b2143.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-b412a--layout-scroll-and-controls-webkit-mobile/attachments/public-gallery-d0efeb31ea087a66c47264979b5faf46bb501107.png"
         }
       ]
     },
@@ -504,37 +505,37 @@
           "name": "public /contact",
           "project": "chromium-1920",
           "test": "populated public composition /contact keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-b6ad1--layout-scroll-and-controls-chromium-1920/attachments/public-contact-57eda4ff3fa395729bb70c5236f8dfdeaa14d85f.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-b6ad1--layout-scroll-and-controls-chromium-1920/attachments/public-contact-0181ad798038f7407339e9fca1871897a220ebc3.png"
         },
         {
           "name": "public /contact",
           "project": "chromium-1440",
           "test": "populated public composition /contact keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-b6ad1--layout-scroll-and-controls-chromium-1440/attachments/public-contact-e5d61eee5cdf7a99f3d4a663ad62622521b2e21d.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-b6ad1--layout-scroll-and-controls-chromium-1440/attachments/public-contact-8086afd0866c4bf9173d2f1b302da37a3ec958dc.png"
         },
         {
           "name": "public /contact",
           "project": "chromium-mobile",
           "test": "populated public composition /contact keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-b6ad1--layout-scroll-and-controls-chromium-mobile/attachments/public-contact-d37ecccfb7e22a38ddaa1c53b3fea00a18b2549d.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-b6ad1--layout-scroll-and-controls-chromium-mobile/attachments/public-contact-de36d83bebff74823b13f890228e52b1b832a409.png"
         },
         {
           "name": "public /contact",
           "project": "firefox-1440",
           "test": "populated public composition /contact keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-b6ad1--layout-scroll-and-controls-firefox-1440/attachments/public-contact-3307890bb88b1ab82b6936acd7317c43b62ab862.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-b6ad1--layout-scroll-and-controls-firefox-1440/attachments/public-contact-d4b792e72842b3be63ff6a88adcb8bcd0ce09b64.png"
         },
         {
           "name": "public /contact",
           "project": "webkit-1440",
           "test": "populated public composition /contact keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-b6ad1--layout-scroll-and-controls-webkit-1440/attachments/public-contact-ab325d17838e9a424128354a4d1f6dd005018f70.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-b6ad1--layout-scroll-and-controls-webkit-1440/attachments/public-contact-1e6f616e3809f17e7d033909282e07b12eacbdf5.png"
         },
         {
           "name": "public /contact",
           "project": "webkit-mobile",
           "test": "populated public composition /contact keeps approved layout scroll and controls",
-          "file": "artifacts/browser/visual-review/public-compositions-popula-b6ad1--layout-scroll-and-controls-webkit-mobile/attachments/public-contact-5755ac7cd73d711cb8d102b10513a9b9278021c8.png"
+          "file": "artifacts/browser/secondary-review/public-compositions-popula-b6ad1--layout-scroll-and-controls-webkit-mobile/attachments/public-contact-b70b5e949345407db638971cbd015da8d86b5413.png"
         }
       ]
     },
@@ -547,37 +548,37 @@
           "name": "overview",
           "project": "chromium-1920",
           "test": "populated overview composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-21965-s-accessible-and-scrollable-chromium-1920/attachments/overview-8fa0dfa05b427e1156be233f7292bbaff559e157.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-21965-s-accessible-and-scrollable-chromium-1920/attachments/overview-7451611a27a1dc7e0aaffe54ca9a983c4ba36700.png"
         },
         {
           "name": "overview",
           "project": "chromium-1440",
           "test": "populated overview composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-21965-s-accessible-and-scrollable-chromium-1440/attachments/overview-0ef1f0e13e14aa9a07ae117943cffbe535cf38dd.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-21965-s-accessible-and-scrollable-chromium-1440/attachments/overview-345f8c5d37394ad6b7c2a555e6d02b456b0def37.png"
         },
         {
           "name": "overview",
           "project": "chromium-mobile",
           "test": "populated overview composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-21965-s-accessible-and-scrollable-chromium-mobile/attachments/overview-498e1969d18365dda089735e3e3a093925a62fd3.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-21965-s-accessible-and-scrollable-chromium-mobile/attachments/overview-b4368b3ce9d7b37bcdea027fbef35f7778bedb9c.png"
         },
         {
           "name": "overview",
           "project": "firefox-1440",
           "test": "populated overview composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-21965-s-accessible-and-scrollable-firefox-1440/attachments/overview-2b0cd0d9a258f41aabc50d623474c6d63c729459.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-21965-s-accessible-and-scrollable-firefox-1440/attachments/overview-03be038840ec5ab0ab037c87ea4718c97160e69f.png"
         },
         {
           "name": "overview",
           "project": "webkit-1440",
           "test": "populated overview composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-21965-s-accessible-and-scrollable-webkit-1440/attachments/overview-9fe37c2d84d8b84980a6bf02204dc79b916cf339.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-21965-s-accessible-and-scrollable-webkit-1440/attachments/overview-2e01558a04383c81a1fe47003d7b1afb2362a813.png"
         },
         {
           "name": "overview",
           "project": "webkit-mobile",
           "test": "populated overview composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-21965-s-accessible-and-scrollable-webkit-mobile/attachments/overview-c19df23037bab5e4e33ab82bf8fd74500ed35deb.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-21965-s-accessible-and-scrollable-webkit-mobile/attachments/overview-9b84cd8b9688d432e29a23980b89d69bae1052de.png"
         }
       ]
     },
@@ -590,37 +591,37 @@
           "name": "events",
           "project": "chromium-1920",
           "test": "populated events composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-d98db-s-accessible-and-scrollable-chromium-1920/attachments/events-d3271ef8143e66d5b1dddfc35f2aa96ad5b9c2b9.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-d98db-s-accessible-and-scrollable-chromium-1920/attachments/events-37266523811d49f6b5285ddaa226d7bddc4c4cd2.png"
         },
         {
           "name": "events",
           "project": "chromium-1440",
           "test": "populated events composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-d98db-s-accessible-and-scrollable-chromium-1440/attachments/events-00b048abc4aa0c0a2fe191df3349b8703e1d8845.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-d98db-s-accessible-and-scrollable-chromium-1440/attachments/events-2d2c50e348c5c6a2fd4614529cec724b12ca9d4e.png"
         },
         {
           "name": "events",
           "project": "chromium-mobile",
           "test": "populated events composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-d98db-s-accessible-and-scrollable-chromium-mobile/attachments/events-b7dd9d30c0766fdd53c8054d66b70afbba05545c.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-d98db-s-accessible-and-scrollable-chromium-mobile/attachments/events-2623d7cd69f1344bec98ee3545b910d05988375c.png"
         },
         {
           "name": "events",
           "project": "firefox-1440",
           "test": "populated events composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-d98db-s-accessible-and-scrollable-firefox-1440/attachments/events-1f625b2e86075f6b78ea4c58dcc5566df52873a1.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-d98db-s-accessible-and-scrollable-firefox-1440/attachments/events-2e1088c866949b5cdcf381bc4d35bce7de0c8dc5.png"
         },
         {
           "name": "events",
           "project": "webkit-1440",
           "test": "populated events composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-d98db-s-accessible-and-scrollable-webkit-1440/attachments/events-bc9537a0c94697789a2c4d0018971910d62082f7.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-d98db-s-accessible-and-scrollable-webkit-1440/attachments/events-467c399766b555e9f5184d2797ce98678c8b4e6e.png"
         },
         {
           "name": "events",
           "project": "webkit-mobile",
           "test": "populated events composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-d98db-s-accessible-and-scrollable-webkit-mobile/attachments/events-58ff62e39baef3ced9a8b19d57172a7c6b68ef45.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-d98db-s-accessible-and-scrollable-webkit-mobile/attachments/events-331e9b27532a5142d8620abc19bb529e1641e4d4.png"
         }
       ]
     },
@@ -633,73 +634,73 @@
           "name": "teams",
           "project": "chromium-1920",
           "test": "populated teams composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-5c540-s-accessible-and-scrollable-chromium-1920/attachments/teams-45a5f561f1a8022d30ba2d5b7fcb972b7d9f46d8.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-5c540-s-accessible-and-scrollable-chromium-1920/attachments/teams-159c659b228edba65fd813437db5e04701199948.png"
         },
         {
           "name": "team workspace",
           "project": "chromium-1920",
           "test": "populated team workspace composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-5ddb7-s-accessible-and-scrollable-chromium-1920/attachments/team-workspace-ad056f8c24154416848c5405cddea1b6b53745fb.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-5ddb7-s-accessible-and-scrollable-chromium-1920/attachments/team-workspace-ceafe2dfc4873563f9c254eb9cf9530264b67aa2.png"
         },
         {
           "name": "teams",
           "project": "chromium-1440",
           "test": "populated teams composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-5c540-s-accessible-and-scrollable-chromium-1440/attachments/teams-6648d3c5eb594fdc0493c5baeb04bc5855a25da8.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-5c540-s-accessible-and-scrollable-chromium-1440/attachments/teams-09e8dcb24b49a662d0d0de793ec9afbefe16f17f.png"
         },
         {
           "name": "team workspace",
           "project": "chromium-1440",
           "test": "populated team workspace composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-5ddb7-s-accessible-and-scrollable-chromium-1440/attachments/team-workspace-2ab60c8dd0558986ae9fe4e66e39e5f440850008.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-5ddb7-s-accessible-and-scrollable-chromium-1440/attachments/team-workspace-c4a086f6dc3ad6099b36f971edbd5b97e48b9bca.png"
         },
         {
           "name": "teams",
           "project": "chromium-mobile",
           "test": "populated teams composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-5c540-s-accessible-and-scrollable-chromium-mobile/attachments/teams-7c347b416ae5e64f8c1f26fe78f66b7a97d96e6e.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-5c540-s-accessible-and-scrollable-chromium-mobile/attachments/teams-fcca1d36c33a6e0df2139dc80531e22fd51b131e.png"
         },
         {
           "name": "team workspace",
           "project": "chromium-mobile",
           "test": "populated team workspace composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-5ddb7-s-accessible-and-scrollable-chromium-mobile/attachments/team-workspace-b7c09e1f243b00ff7e50791356d7c21a943f1d97.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-5ddb7-s-accessible-and-scrollable-chromium-mobile/attachments/team-workspace-85c2caaba975c70bcc8ca8466f175c537142fbfd.png"
         },
         {
           "name": "teams",
           "project": "firefox-1440",
           "test": "populated teams composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-5c540-s-accessible-and-scrollable-firefox-1440/attachments/teams-f196ab22975d317c814a4d5827f69e05f1e34bb9.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-5c540-s-accessible-and-scrollable-firefox-1440/attachments/teams-76327dae1f314421867138464db7df2fef81a712.png"
         },
         {
           "name": "team workspace",
           "project": "firefox-1440",
           "test": "populated team workspace composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-5ddb7-s-accessible-and-scrollable-firefox-1440/attachments/team-workspace-082633d41899725aa3e087006c3e0b89535745de.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-5ddb7-s-accessible-and-scrollable-firefox-1440/attachments/team-workspace-7d02ee3c52d057d4fe81fe14965406153a67bf06.png"
         },
         {
           "name": "teams",
           "project": "webkit-1440",
           "test": "populated teams composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-5c540-s-accessible-and-scrollable-webkit-1440/attachments/teams-c1e26b393bccb7e3a82a18da99b681ed0d23f4f3.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-5c540-s-accessible-and-scrollable-webkit-1440/attachments/teams-938be67942c3083e3284e9c63ff2ccef38ac8f21.png"
         },
         {
           "name": "team workspace",
           "project": "webkit-1440",
           "test": "populated team workspace composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-5ddb7-s-accessible-and-scrollable-webkit-1440/attachments/team-workspace-9b66f94d5fac255e99167ab022f07996c7582d1c.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-5ddb7-s-accessible-and-scrollable-webkit-1440/attachments/team-workspace-1707ccec22949531ada641d23d491f3e5e4211d5.png"
         },
         {
           "name": "teams",
           "project": "webkit-mobile",
           "test": "populated teams composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-5c540-s-accessible-and-scrollable-webkit-mobile/attachments/teams-55c042a568bab5cef0ad244ae7f3c4730dd02564.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-5c540-s-accessible-and-scrollable-webkit-mobile/attachments/teams-8c89d4c7799dc1fcea512480adcd2532a6e5cab2.png"
         },
         {
           "name": "team workspace",
           "project": "webkit-mobile",
           "test": "populated team workspace composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-5ddb7-s-accessible-and-scrollable-webkit-mobile/attachments/team-workspace-8d47899657f9b159ce62a0a811f35b1fbb2cf52a.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-5ddb7-s-accessible-and-scrollable-webkit-mobile/attachments/team-workspace-3d3030bcc899ed31c87d1ff1c12361de4994df45.png"
         }
       ]
     },
@@ -712,109 +713,109 @@
           "name": "finance requests",
           "project": "chromium-1920",
           "test": "populated finance requests supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-82725-ing-and-accessible-controls-chromium-1920/attachments/finance-requests-7359bab2cec92b393daa3df5ee0098fc0bea25ac.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-82725-ing-and-accessible-controls-chromium-1920/attachments/finance-requests-a3b66fa675659a2ba552e9e599bb35332344a5bb.png"
         },
         {
           "name": "finance detail",
           "project": "chromium-1920",
           "test": "populated finance detail supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-aada6-ing-and-accessible-controls-chromium-1920/attachments/finance-detail-81ee08c5fd6ff3e7e13a8102ef0b8f19f99fb50d.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-aada6-ing-and-accessible-controls-chromium-1920/attachments/finance-detail-4ac3a7d3dc23d3c24037cc54a8d865fc905a9c28.png"
         },
         {
           "name": "finance budgets",
           "project": "chromium-1920",
           "test": "populated finance budgets supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-16ded-ing-and-accessible-controls-chromium-1920/attachments/finance-budgets-8cf4689841de63605eec8ef60b35c303b9dd7166.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-16ded-ing-and-accessible-controls-chromium-1920/attachments/finance-budgets-2b42e4a85256caa9665e55007a6b83a104061c0c.png"
         },
         {
           "name": "finance requests",
           "project": "chromium-1440",
           "test": "populated finance requests supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-82725-ing-and-accessible-controls-chromium-1440/attachments/finance-requests-96d910a953e47423e32de00b77142ab7eb0df0c8.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-82725-ing-and-accessible-controls-chromium-1440/attachments/finance-requests-fd08b7e0e67d7d552688650d438348a5297b692e.png"
         },
         {
           "name": "finance detail",
           "project": "chromium-1440",
           "test": "populated finance detail supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-aada6-ing-and-accessible-controls-chromium-1440/attachments/finance-detail-c72f39b10f451ec20d0daa6f532bcff171c473bc.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-aada6-ing-and-accessible-controls-chromium-1440/attachments/finance-detail-5efa0849ac90223dd80943f55cc6fc3c86db5778.png"
         },
         {
           "name": "finance budgets",
           "project": "chromium-1440",
           "test": "populated finance budgets supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-16ded-ing-and-accessible-controls-chromium-1440/attachments/finance-budgets-131bb1caffc049b4c94490acacabffea7e116a00.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-16ded-ing-and-accessible-controls-chromium-1440/attachments/finance-budgets-acb03615a01dfe5e1c28dba35e2a64367db52d59.png"
         },
         {
           "name": "finance requests",
           "project": "chromium-mobile",
           "test": "populated finance requests supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-82725-ing-and-accessible-controls-chromium-mobile/attachments/finance-requests-d46a57b2fb5f2d83a46560a33291ebc0d1df2265.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-82725-ing-and-accessible-controls-chromium-mobile/attachments/finance-requests-9ed44c29926a581c9fb4e80d6a3fd0f916af7e09.png"
         },
         {
           "name": "finance detail",
           "project": "chromium-mobile",
           "test": "populated finance detail supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-aada6-ing-and-accessible-controls-chromium-mobile/attachments/finance-detail-c84f7cb5630ff1d2a2fe7d6543b2f8f5f0b22890.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-aada6-ing-and-accessible-controls-chromium-mobile/attachments/finance-detail-fada76a583b854dd1c4c93a268262baa1b458464.png"
         },
         {
           "name": "finance budgets",
           "project": "chromium-mobile",
           "test": "populated finance budgets supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-16ded-ing-and-accessible-controls-chromium-mobile/attachments/finance-budgets-edb5e259eb7204b48069a21c159a7e2576522a09.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-16ded-ing-and-accessible-controls-chromium-mobile/attachments/finance-budgets-94be8a6bbc749a9cf614a1503e9a914928f11344.png"
         },
         {
           "name": "finance requests",
           "project": "firefox-1440",
           "test": "populated finance requests supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-82725-ing-and-accessible-controls-firefox-1440/attachments/finance-requests-521d0aeb371289c315d1e8cbd6dcc95ea06b153b.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-82725-ing-and-accessible-controls-firefox-1440/attachments/finance-requests-b86506f77911c97a1ce3d683d784ebfc54158bd5.png"
         },
         {
           "name": "finance detail",
           "project": "firefox-1440",
           "test": "populated finance detail supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-aada6-ing-and-accessible-controls-firefox-1440/attachments/finance-detail-920fdba5d8311be27214fa333eb57d0140320fb1.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-aada6-ing-and-accessible-controls-firefox-1440/attachments/finance-detail-58fe245adaacf27ae01f81cfc2b74793edb1994d.png"
         },
         {
           "name": "finance budgets",
           "project": "firefox-1440",
           "test": "populated finance budgets supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-16ded-ing-and-accessible-controls-firefox-1440/attachments/finance-budgets-dd184acd2b1a0d10755fb5a9056a3ecf8360e66c.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-16ded-ing-and-accessible-controls-firefox-1440/attachments/finance-budgets-a053539e7d60757553a684380d9775689d1a61a7.png"
         },
         {
           "name": "finance requests",
           "project": "webkit-1440",
           "test": "populated finance requests supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-82725-ing-and-accessible-controls-webkit-1440/attachments/finance-requests-2fb5989c4e1fbd6d381420a40fbc9dcecca19166.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-82725-ing-and-accessible-controls-webkit-1440/attachments/finance-requests-6326fe4429abad12465f4ddc9b9d40f490033ff5.png"
         },
         {
           "name": "finance detail",
           "project": "webkit-1440",
           "test": "populated finance detail supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-aada6-ing-and-accessible-controls-webkit-1440/attachments/finance-detail-da0a38b6db694c49188110417fb96a4b79a2ec86.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-aada6-ing-and-accessible-controls-webkit-1440/attachments/finance-detail-744fb399a61fb83855200d5b63908df417014297.png"
         },
         {
           "name": "finance budgets",
           "project": "webkit-1440",
           "test": "populated finance budgets supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-16ded-ing-and-accessible-controls-webkit-1440/attachments/finance-budgets-488e912b08530882bcfb58a71193c8d0077f0f6a.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-16ded-ing-and-accessible-controls-webkit-1440/attachments/finance-budgets-cd7c17a01a6bb20ea82aa92c2b91c3aea958189f.png"
         },
         {
           "name": "finance requests",
           "project": "webkit-mobile",
           "test": "populated finance requests supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-82725-ing-and-accessible-controls-webkit-mobile/attachments/finance-requests-4c6087fb81e5614ba889bf9300ec1da97bf98390.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-82725-ing-and-accessible-controls-webkit-mobile/attachments/finance-requests-54fb66603990e47052caa4c3e46e4d42f0f7950d.png"
         },
         {
           "name": "finance detail",
           "project": "webkit-mobile",
           "test": "populated finance detail supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-aada6-ing-and-accessible-controls-webkit-mobile/attachments/finance-detail-204c5a4a23b4d6f1b01686a80cfad6205a867e85.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-aada6-ing-and-accessible-controls-webkit-mobile/attachments/finance-detail-688abe31592a3f899fd98b52e56404ea24fe5a3b.png"
         },
         {
           "name": "finance budgets",
           "project": "webkit-mobile",
           "test": "populated finance budgets supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-16ded-ing-and-accessible-controls-webkit-mobile/attachments/finance-budgets-8f5c8d0a07a2d2f37260b903d98d109769bf959e.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-16ded-ing-and-accessible-controls-webkit-mobile/attachments/finance-budgets-b372eee717af040ff234003ccc252fd7ef27069d.png"
         }
       ]
     },
@@ -827,37 +828,37 @@
           "name": "newsletter campaigns",
           "project": "chromium-1920",
           "test": "populated newsletter campaigns supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-83538-ing-and-accessible-controls-chromium-1920/attachments/newsletter-campaigns-b15cf7efc2d9b958c88d59c2e04af0a3b35ab043.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-83538-ing-and-accessible-controls-chromium-1920/attachments/newsletter-campaigns-e547fc3e35b0ac1c1b32693b553998cc3cbec934.png"
         },
         {
           "name": "newsletter campaigns",
           "project": "chromium-1440",
           "test": "populated newsletter campaigns supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-83538-ing-and-accessible-controls-chromium-1440/attachments/newsletter-campaigns-c11b9bc179012b554767fd9aa87301b221f71218.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-83538-ing-and-accessible-controls-chromium-1440/attachments/newsletter-campaigns-a259491b6365e0cb545628c32fdd757e3911e09e.png"
         },
         {
           "name": "newsletter campaigns",
           "project": "chromium-mobile",
           "test": "populated newsletter campaigns supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-83538-ing-and-accessible-controls-chromium-mobile/attachments/newsletter-campaigns-13437f1c4847b3560335d911a5adf4e29a3ab1c0.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-83538-ing-and-accessible-controls-chromium-mobile/attachments/newsletter-campaigns-f62c01939c2a52f81a7d2a73ef87c97308c3c706.png"
         },
         {
           "name": "newsletter campaigns",
           "project": "firefox-1440",
           "test": "populated newsletter campaigns supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-83538-ing-and-accessible-controls-firefox-1440/attachments/newsletter-campaigns-efd05250671abfeef38eabe8f5be6ae96ee8a312.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-83538-ing-and-accessible-controls-firefox-1440/attachments/newsletter-campaigns-4020adc49675b223c4549691182ad20c09d4e86b.png"
         },
         {
           "name": "newsletter campaigns",
           "project": "webkit-1440",
           "test": "populated newsletter campaigns supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-83538-ing-and-accessible-controls-webkit-1440/attachments/newsletter-campaigns-27111b0c9282529a63f650c24e765bf2c7b73dc0.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-83538-ing-and-accessible-controls-webkit-1440/attachments/newsletter-campaigns-81a24812b23784d005f5ec880b95562bd8657c25.png"
         },
         {
           "name": "newsletter campaigns",
           "project": "webkit-mobile",
           "test": "populated newsletter campaigns supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-83538-ing-and-accessible-controls-webkit-mobile/attachments/newsletter-campaigns-ecd0dd6300d02ee2c685433d987a65917ec379c5.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-83538-ing-and-accessible-controls-webkit-mobile/attachments/newsletter-campaigns-cad7a040df8b7bfcfd26eaadfab364f930810efb.png"
         }
       ]
     },
@@ -870,37 +871,37 @@
           "name": "media library",
           "project": "chromium-1920",
           "test": "populated media library supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-66486-ing-and-accessible-controls-chromium-1920/attachments/media-library-f28b445d4aac0fbb9075532579961a17f42edbbb.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-66486-ing-and-accessible-controls-chromium-1920/attachments/media-library-61ae17b2b823d361e53ef1a069bcde298299c861.png"
         },
         {
           "name": "media library",
           "project": "chromium-1440",
           "test": "populated media library supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-66486-ing-and-accessible-controls-chromium-1440/attachments/media-library-09150e7a6dd3e4641672844d59eb069f63ffa10c.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-66486-ing-and-accessible-controls-chromium-1440/attachments/media-library-11e92186f8602bff2ed0c05daab4047fc3779fdf.png"
         },
         {
           "name": "media library",
           "project": "chromium-mobile",
           "test": "populated media library supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-66486-ing-and-accessible-controls-chromium-mobile/attachments/media-library-ba33b1d6b1deebf89fb4760a580981e7b28378b0.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-66486-ing-and-accessible-controls-chromium-mobile/attachments/media-library-7d7a3029a90795b6da217720c845ad5fa9b27992.png"
         },
         {
           "name": "media library",
           "project": "firefox-1440",
           "test": "populated media library supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-66486-ing-and-accessible-controls-firefox-1440/attachments/media-library-d3e77d437108f3a4772842e712eff659ca242027.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-66486-ing-and-accessible-controls-firefox-1440/attachments/media-library-c680d4d09f76900c283a5b1d238b9585bb9a7611.png"
         },
         {
           "name": "media library",
           "project": "webkit-1440",
           "test": "populated media library supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-66486-ing-and-accessible-controls-webkit-1440/attachments/media-library-66a1dfc24b8d33bc3e75d7f8e82bad465a8769d1.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-66486-ing-and-accessible-controls-webkit-1440/attachments/media-library-1e62bc36ecfd7f32b03e2b2053908c20e47f7f74.png"
         },
         {
           "name": "media library",
           "project": "webkit-mobile",
           "test": "populated media library supports reading scrolling and accessible controls",
-          "file": "artifacts/browser/visual-review/operations-compositions-po-66486-ing-and-accessible-controls-webkit-mobile/attachments/media-library-804c680ddcdad8fde9b598442d6d089e6eebcf06.png"
+          "file": "artifacts/browser/secondary-review/operations-compositions-po-66486-ing-and-accessible-controls-webkit-mobile/attachments/media-library-8c2d22573101402f06d55735d322f3a1c40d4184.png"
         }
       ]
     },
@@ -913,37 +914,37 @@
           "name": "forms library",
           "project": "chromium-1920",
           "test": "populated forms library composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-33b98-s-accessible-and-scrollable-chromium-1920/attachments/forms-library-41c717e498e311ad0c1693f1f87fab8a3f7eca55.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-33b98-s-accessible-and-scrollable-chromium-1920/attachments/forms-library-0e141382e4bc549900606d4b1d6536a07ae5332e.png"
         },
         {
           "name": "forms library",
           "project": "chromium-1440",
           "test": "populated forms library composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-33b98-s-accessible-and-scrollable-chromium-1440/attachments/forms-library-98cef6768b5e988db73fa78c2f0d2447ecf84a6a.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-33b98-s-accessible-and-scrollable-chromium-1440/attachments/forms-library-dbe882d9568f439e497757b32de66c32cc50ff23.png"
         },
         {
           "name": "forms library",
           "project": "chromium-mobile",
           "test": "populated forms library composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-33b98-s-accessible-and-scrollable-chromium-mobile/attachments/forms-library-6f63a3d1a7d28f9de1e24967f6de24c585e0e4cd.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-33b98-s-accessible-and-scrollable-chromium-mobile/attachments/forms-library-1b87f9d2750dd881e8d4a54edb75a37a8fd2aaa9.png"
         },
         {
           "name": "forms library",
           "project": "firefox-1440",
           "test": "populated forms library composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-33b98-s-accessible-and-scrollable-firefox-1440/attachments/forms-library-adacff38e539ee312a61843916a339bb3d93afbd.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-33b98-s-accessible-and-scrollable-firefox-1440/attachments/forms-library-befd8164997b91ac79f99a07d7beda386e4f6c3c.png"
         },
         {
           "name": "forms library",
           "project": "webkit-1440",
           "test": "populated forms library composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-33b98-s-accessible-and-scrollable-webkit-1440/attachments/forms-library-7c35041d373a384fc08cf9ecb53589d61cd98aa9.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-33b98-s-accessible-and-scrollable-webkit-1440/attachments/forms-library-c2ed997b65057e7d24e443bc14e29440995512c3.png"
         },
         {
           "name": "forms library",
           "project": "webkit-mobile",
           "test": "populated forms library composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-33b98-s-accessible-and-scrollable-webkit-mobile/attachments/forms-library-603bcf070f51052aadc27f771d28c5efa993122c.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-33b98-s-accessible-and-scrollable-webkit-mobile/attachments/forms-library-c15df3f027f8686a757f047a7f5746437f0fb7b6.png"
         }
       ]
     },
@@ -956,37 +957,37 @@
           "name": "forms builder",
           "project": "chromium-1920",
           "test": "populated forms builder composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-b216d-s-accessible-and-scrollable-chromium-1920/attachments/forms-builder-76f30fb843248f89e6141c691c4037024469a285.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-b216d-s-accessible-and-scrollable-chromium-1920/attachments/forms-builder-328d33d0c64907fe21d60273460eef7744d525b4.png"
         },
         {
           "name": "forms builder",
           "project": "chromium-1440",
           "test": "populated forms builder composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-b216d-s-accessible-and-scrollable-chromium-1440/attachments/forms-builder-9c6d91bde97308f88d3404a0a5f79e58389b1658.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-b216d-s-accessible-and-scrollable-chromium-1440/attachments/forms-builder-f767244d5636f22c4539a8d3e51dc5ebc2d479c9.png"
         },
         {
           "name": "forms builder",
           "project": "chromium-mobile",
           "test": "populated forms builder composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-b216d-s-accessible-and-scrollable-chromium-mobile/attachments/forms-builder-64e09bb325a1234fe09589d937adacdbf92d9e83.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-b216d-s-accessible-and-scrollable-chromium-mobile/attachments/forms-builder-7bf87981bb399cdd682b80728a18572b8d1ea693.png"
         },
         {
           "name": "forms builder",
           "project": "firefox-1440",
           "test": "populated forms builder composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-b216d-s-accessible-and-scrollable-firefox-1440/attachments/forms-builder-89150a2b93dae7a8ac370e9cc17face9181d9e82.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-b216d-s-accessible-and-scrollable-firefox-1440/attachments/forms-builder-f155b4cdd3a3897dc51e9e36841fb1eca6109766.png"
         },
         {
           "name": "forms builder",
           "project": "webkit-1440",
           "test": "populated forms builder composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-b216d-s-accessible-and-scrollable-webkit-1440/attachments/forms-builder-8ba4fc3a0017320e4870412ed6b0aa6c5bb4d9a8.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-b216d-s-accessible-and-scrollable-webkit-1440/attachments/forms-builder-771f696684b2c0658fa3f42d8b2ec4ffc6b343fb.png"
         },
         {
           "name": "forms builder",
           "project": "webkit-mobile",
           "test": "populated forms builder composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-b216d-s-accessible-and-scrollable-webkit-mobile/attachments/forms-builder-1c8201c72006ff0f5a67eb6838abf746b04ae093.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-b216d-s-accessible-and-scrollable-webkit-mobile/attachments/forms-builder-d1a27db87a5c60d4cdc5613fd8d3db411ec699ed.png"
         }
       ]
     },
@@ -999,37 +1000,37 @@
           "name": "public form",
           "project": "chromium-1920",
           "test": "populated public form composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-22ec5-s-accessible-and-scrollable-chromium-1920/attachments/public-form-75fbe25602186be3dca570ca3c8b897e601c9020.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-22ec5-s-accessible-and-scrollable-chromium-1920/attachments/public-form-39ff70c96ec992cdae0e7f296c0a8cb1c078c5b9.png"
         },
         {
           "name": "public form",
           "project": "chromium-1440",
           "test": "populated public form composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-22ec5-s-accessible-and-scrollable-chromium-1440/attachments/public-form-f14f6297a58d107bf05b4db243ecf737cf5d7d3b.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-22ec5-s-accessible-and-scrollable-chromium-1440/attachments/public-form-700e647aaafa41f8f75799c35e23a22d7cff74f3.png"
         },
         {
           "name": "public form",
           "project": "chromium-mobile",
           "test": "populated public form composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-22ec5-s-accessible-and-scrollable-chromium-mobile/attachments/public-form-4bf6d617baadb833a9ef7c3df24ee727d007eec9.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-22ec5-s-accessible-and-scrollable-chromium-mobile/attachments/public-form-5c243c99d952589833d107655edd901c2dcfaa55.png"
         },
         {
           "name": "public form",
           "project": "firefox-1440",
           "test": "populated public form composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-22ec5-s-accessible-and-scrollable-firefox-1440/attachments/public-form-5bb526dae5d065a9cba493a2cd99c6dd7a455df9.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-22ec5-s-accessible-and-scrollable-firefox-1440/attachments/public-form-4c161dc175e3519c8ff53dad394c30f0c0eb3e37.png"
         },
         {
           "name": "public form",
           "project": "webkit-1440",
           "test": "populated public form composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-22ec5-s-accessible-and-scrollable-webkit-1440/attachments/public-form-96547bb81040ec6604986440e662c58b5859d55c.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-22ec5-s-accessible-and-scrollable-webkit-1440/attachments/public-form-2374cf97c004845b804b597442bfa4432ec56fcc.png"
         },
         {
           "name": "public form",
           "project": "webkit-mobile",
           "test": "populated public form composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-22ec5-s-accessible-and-scrollable-webkit-mobile/attachments/public-form-9c85b7cc143fd536c0bebeb047570e51e2435726.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-22ec5-s-accessible-and-scrollable-webkit-mobile/attachments/public-form-5590e5ff9e12f6449d4c98db5cb234c7a23f87f3.png"
         }
       ]
     },
@@ -1042,37 +1043,37 @@
           "name": "forms responses",
           "project": "chromium-1920",
           "test": "populated forms responses composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-2c8a2-s-accessible-and-scrollable-chromium-1920/attachments/forms-responses-201613ed75fa39a13529b23d99ccf6204056ada7.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-2c8a2-s-accessible-and-scrollable-chromium-1920/attachments/forms-responses-32214f34c488a5aa0d5e166878058f090e32213b.png"
         },
         {
           "name": "forms responses",
           "project": "chromium-1440",
           "test": "populated forms responses composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-2c8a2-s-accessible-and-scrollable-chromium-1440/attachments/forms-responses-52e39a878664cebfb5277826d0bf581d1cb91af3.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-2c8a2-s-accessible-and-scrollable-chromium-1440/attachments/forms-responses-b9c388f5ed908103b9a44a1ab180a830df00d046.png"
         },
         {
           "name": "forms responses",
           "project": "chromium-mobile",
           "test": "populated forms responses composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-2c8a2-s-accessible-and-scrollable-chromium-mobile/attachments/forms-responses-56e530eafb3d3532cb4b79fab7bee422fdae3980.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-2c8a2-s-accessible-and-scrollable-chromium-mobile/attachments/forms-responses-6b5b15b02043589e5eef7cb75294ff3c6635f600.png"
         },
         {
           "name": "forms responses",
           "project": "firefox-1440",
           "test": "populated forms responses composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-2c8a2-s-accessible-and-scrollable-firefox-1440/attachments/forms-responses-0071e5ed5145b5cbc2560f65d71a425bed812ffa.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-2c8a2-s-accessible-and-scrollable-firefox-1440/attachments/forms-responses-1fa5053ff398beb4937d781133419e671c5a7466.png"
         },
         {
           "name": "forms responses",
           "project": "webkit-1440",
           "test": "populated forms responses composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-2c8a2-s-accessible-and-scrollable-webkit-1440/attachments/forms-responses-e8a21c7418fc2895bc6160b2f560df9dbd701ed2.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-2c8a2-s-accessible-and-scrollable-webkit-1440/attachments/forms-responses-c5bfab52651cb35293191eefa725ecb462f71e49.png"
         },
         {
           "name": "forms responses",
           "project": "webkit-mobile",
           "test": "populated forms responses composition is accessible and scrollable",
-          "file": "artifacts/browser/visual-review/workspace-compositions-pop-2c8a2-s-accessible-and-scrollable-webkit-mobile/attachments/forms-responses-b2d86a3571e7393576f0f43f7c4304ac4ee319a1.png"
+          "file": "artifacts/browser/secondary-review/workspace-compositions-pop-2c8a2-s-accessible-and-scrollable-webkit-mobile/attachments/forms-responses-1d08007d9abe6c197b1af3f5a01be25a6e8d87ff.png"
         }
       ]
     }
@@ -1082,73 +1083,73 @@
       "name": "private projects",
       "project": "chromium-1920",
       "test": "populated private projects supports reading scrolling and accessible controls",
-      "file": "artifacts/browser/visual-review/operations-compositions-po-98884-ing-and-accessible-controls-chromium-1920/attachments/private-projects-80bb6445dc0c7cab0fd150487bbb4225ec7bb469.png"
+      "file": "artifacts/browser/secondary-review/operations-compositions-po-98884-ing-and-accessible-controls-chromium-1920/attachments/private-projects-1b2df5e0b6f6f22f900f7012696514d4b8080ff5.png"
     },
     {
       "name": "linktree management",
       "project": "chromium-1920",
       "test": "populated linktree management supports reading scrolling and accessible controls",
-      "file": "artifacts/browser/visual-review/operations-compositions-po-56745-ing-and-accessible-controls-chromium-1920/attachments/linktree-management-97eb909e5aee474c8fa0903f7dc5dfd83260df22.png"
+      "file": "artifacts/browser/secondary-review/operations-compositions-po-56745-ing-and-accessible-controls-chromium-1920/attachments/linktree-management-10dd6476022edeed105f3ac7ef31b04355178254.png"
     },
     {
       "name": "private projects",
       "project": "chromium-1440",
       "test": "populated private projects supports reading scrolling and accessible controls",
-      "file": "artifacts/browser/visual-review/operations-compositions-po-98884-ing-and-accessible-controls-chromium-1440/attachments/private-projects-ef447aa590c729cba8a5725083ff5bf6d05c7df7.png"
+      "file": "artifacts/browser/secondary-review/operations-compositions-po-98884-ing-and-accessible-controls-chromium-1440/attachments/private-projects-c4921b32307b73e9c58aacdae62602213bce5d9a.png"
     },
     {
       "name": "linktree management",
       "project": "chromium-1440",
       "test": "populated linktree management supports reading scrolling and accessible controls",
-      "file": "artifacts/browser/visual-review/operations-compositions-po-56745-ing-and-accessible-controls-chromium-1440/attachments/linktree-management-3fa52994385830a849daa1c9a9258717ad91613f.png"
+      "file": "artifacts/browser/secondary-review/operations-compositions-po-56745-ing-and-accessible-controls-chromium-1440/attachments/linktree-management-e8666bc0cde6646f18c45040092438c445f9ff76.png"
     },
     {
       "name": "private projects",
       "project": "chromium-mobile",
       "test": "populated private projects supports reading scrolling and accessible controls",
-      "file": "artifacts/browser/visual-review/operations-compositions-po-98884-ing-and-accessible-controls-chromium-mobile/attachments/private-projects-a1998f385db603f0329c54b97f2b6233d26d61b1.png"
+      "file": "artifacts/browser/secondary-review/operations-compositions-po-98884-ing-and-accessible-controls-chromium-mobile/attachments/private-projects-649060f4093d605817f371927e347a3c85d76b56.png"
     },
     {
       "name": "linktree management",
       "project": "chromium-mobile",
       "test": "populated linktree management supports reading scrolling and accessible controls",
-      "file": "artifacts/browser/visual-review/operations-compositions-po-56745-ing-and-accessible-controls-chromium-mobile/attachments/linktree-management-bed795e07a5b4f48ca7654ac12d874b8365cc2c7.png"
+      "file": "artifacts/browser/secondary-review/operations-compositions-po-56745-ing-and-accessible-controls-chromium-mobile/attachments/linktree-management-84bcf6fc44d220c5f034590f06f665d1ddedb937.png"
     },
     {
       "name": "private projects",
       "project": "firefox-1440",
       "test": "populated private projects supports reading scrolling and accessible controls",
-      "file": "artifacts/browser/visual-review/operations-compositions-po-98884-ing-and-accessible-controls-firefox-1440/attachments/private-projects-f95a2e1478ae6d3247bd3e5a71974afa8008a899.png"
+      "file": "artifacts/browser/secondary-review/operations-compositions-po-98884-ing-and-accessible-controls-firefox-1440/attachments/private-projects-c7aee51f8e885a30e3eea0cffc3b2bcd18a236d2.png"
     },
     {
       "name": "linktree management",
       "project": "firefox-1440",
       "test": "populated linktree management supports reading scrolling and accessible controls",
-      "file": "artifacts/browser/visual-review/operations-compositions-po-56745-ing-and-accessible-controls-firefox-1440/attachments/linktree-management-67f5986a2e0a1d6563747b2428e5e28506a9d41f.png"
+      "file": "artifacts/browser/secondary-review/operations-compositions-po-56745-ing-and-accessible-controls-firefox-1440/attachments/linktree-management-60c6233f0e5a92849ebf57bc914c91ade3a1342a.png"
     },
     {
       "name": "private projects",
       "project": "webkit-1440",
       "test": "populated private projects supports reading scrolling and accessible controls",
-      "file": "artifacts/browser/visual-review/operations-compositions-po-98884-ing-and-accessible-controls-webkit-1440/attachments/private-projects-5217165a38398ccd98ba710aeb25d3ca9f0cf09c.png"
+      "file": "artifacts/browser/secondary-review/operations-compositions-po-98884-ing-and-accessible-controls-webkit-1440/attachments/private-projects-e85208fbfb2fae48abcf5d80adee2f5dbfa79b1c.png"
     },
     {
       "name": "linktree management",
       "project": "webkit-1440",
       "test": "populated linktree management supports reading scrolling and accessible controls",
-      "file": "artifacts/browser/visual-review/operations-compositions-po-56745-ing-and-accessible-controls-webkit-1440/attachments/linktree-management-7820afb0d0af8e9b9db1ebf5ed8bc2e39ead8d79.png"
+      "file": "artifacts/browser/secondary-review/operations-compositions-po-56745-ing-and-accessible-controls-webkit-1440/attachments/linktree-management-25802d65c51717f6cdb829eb5148939d1987502a.png"
     },
     {
       "name": "private projects",
       "project": "webkit-mobile",
       "test": "populated private projects supports reading scrolling and accessible controls",
-      "file": "artifacts/browser/visual-review/operations-compositions-po-98884-ing-and-accessible-controls-webkit-mobile/attachments/private-projects-f102a9b496b9ac12ccb09946f265c8737362a377.png"
+      "file": "artifacts/browser/secondary-review/operations-compositions-po-98884-ing-and-accessible-controls-webkit-mobile/attachments/private-projects-46cdd7dfb8fdc87e3b0700579cd4b4b65e0562fc.png"
     },
     {
       "name": "linktree management",
       "project": "webkit-mobile",
       "test": "populated linktree management supports reading scrolling and accessible controls",
-      "file": "artifacts/browser/visual-review/operations-compositions-po-56745-ing-and-accessible-controls-webkit-mobile/attachments/linktree-management-350b36e985721af10ae10c501c0bb5124e375293.png"
+      "file": "artifacts/browser/secondary-review/operations-compositions-po-56745-ing-and-accessible-controls-webkit-mobile/attachments/linktree-management-4e43d50dd4872c3da17727ceaa5c8ef23627d7e0.png"
     }
   ]
 }

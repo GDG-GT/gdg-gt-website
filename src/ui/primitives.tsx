@@ -17,7 +17,11 @@ export function Brand({
     <Link
       to="/"
       className={`gt-brand ${inverse ? "gt-brand-inverse" : ""}`}
-      aria-label="GDG at Georgia Tech home"
+      aria-label={
+        compact
+          ? "GDG@GT · Georgia Tech home"
+          : "GDG@GT on campus · Georgia Tech home"
+      }
     >
       <img src="/logo.png" alt="" width="38" height="24" />
       <span>

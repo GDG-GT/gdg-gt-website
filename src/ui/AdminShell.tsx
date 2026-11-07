@@ -325,13 +325,14 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           </div>
           <button
             className="gt-command-trigger"
-            aria-label="Search the workspace"
+            aria-label="Search the workspace · ⌘ K"
+            aria-keyshortcuts="Meta+K Control+K"
             ref={searchOpener}
             onClick={(event) => openSearch(event.currentTarget)}
           >
             <Search size={16} />
-            <span>Search the workspace…</span>
-            <kbd>⌘ K</kbd>
+            <span>Search the workspace</span>
+            <kbd aria-hidden="true">⌘ K</kbd>
           </button>
           <div className="gt-workspace-account">
             <NotificationBell />

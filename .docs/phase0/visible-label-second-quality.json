@@ -1,0 +1,43 @@
+{
+  "generatedAt": "2026-11-07T04:22:47.363921+00:00",
+  "completed": true,
+  "allPassed": false,
+  "files": 217,
+  "passed": 2683,
+  "failed": 4,
+  "failures": [
+    {
+      "file": "tests/client/collection-retries.test.tsx",
+      "name": "reuses an unchanged resource create intent after an uncertain response",
+      "duration": 5420.986333000001,
+      "messages": [
+        "AssertionError: expected true to be false // Object.is equality"
+      ]
+    },
+    {
+      "file": "tests/client/form-builder-read-scope.test.tsx",
+      "name": "Form builder scoped state and autosave preserves a proposed draft when a refresh finds an archive and requires explicit saved loading without resuming autosave",
+      "duration": 1245.011125,
+      "messages": [
+        "Error: Unable to find a label with the text of: Form title"
+      ]
+    },
+    {
+      "file": "tests/client/form-settings-ui.test.tsx",
+      "name": "FORM-TEST-032: editable validation settings stores fractional MiB as exact bytes and keeps one required file format selected",
+      "duration": 9237.719417,
+      "messages": [
+        "Error: STACK_TRACE_ERROR"
+      ]
+    },
+    {
+      "file": "tests/server/finance-routes.test.mjs",
+      "name": "FIN scoped finance reads, decisions, budgets and CSV dispatch never mutates a decision after failed password/quota and propagates database self-approval/immutable conflicts",
+      "duration": 5577.102042,
+      "messages": [
+        "Error: STACK_TRACE_ERROR"
+      ]
+    }
+  ],
+  "scope": "Second full coverage invocation after exact name and MemoryRouter wait corrections. Those original failures pass; four different cases fail including slow/timeout cases. Original raw artifacts/quality/visible-label-final-coverage.json and log/tmp/gdg-visible-label-final-coverage.log retained. Investigate unchanged cases in isolation, then reduce verification worker contention without changing tests/timeouts/retries/gates. Not a passing invocation."
+}

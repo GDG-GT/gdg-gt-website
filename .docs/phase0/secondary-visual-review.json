@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-11-06T22:52:15.570Z",
+  "generatedAt": "2026-11-07T02:14:20.972Z",
   "completed": true,
   "scope": "secondary",
-  "note": "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. These nine secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review.",
+  "note": "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. These nineteen secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review.",
   "stats": {
-    "startTime": "2026-11-06T22:50:56.362Z",
-    "duration": 31871.398,
-    "expected": 54,
-    "skipped": 0,
+    "startTime": "2026-11-07T01:55:17.542Z",
+    "duration": 1135905.2079999999,
+    "expected": 1372,
+    "skipped": 8,
     "unexpected": 0,
     "flaky": 0
   },
@@ -19,9 +19,556 @@
     "webkit-1440",
     "webkit-mobile"
   ],
-  "compositionChecks": 54,
-  "captureCount": 72,
+  "compositionChecks": 114,
+  "captureCount": 162,
   "prompts": [
+    {
+      "id": "VIS-TEST-014",
+      "title": "Events and attendance",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "event editor",
+          "project": "chromium-1920",
+          "test": "secondary event editor composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a1e2e-ins-readable-and-accessible-chromium-1920/attachments/event-editor-6d5d565f73f122aeb056258f14122c4ca146e8bf.png"
+        },
+        {
+          "name": "event attendees",
+          "project": "chromium-1920",
+          "test": "secondary event attendees composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-27604-ins-readable-and-accessible-chromium-1920/attachments/event-attendees-867171163039a093b3ae0c5cd5e767bb87614da1.png"
+        },
+        {
+          "name": "attendee correction",
+          "project": "chromium-1920",
+          "test": "secondary attendee correction composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-33705-ins-readable-and-accessible-chromium-1920/attachments/attendee-correction-1e644be942b4c934007879f8d36b3c12d070bd82.png"
+        },
+        {
+          "name": "attendee removal review lower controls",
+          "project": "chromium-1920",
+          "test": "secondary attendee removal review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a06f0-ins-readable-and-accessible-chromium-1920/attachments/attendee-removal-review-lower-controls-fffcc5702543d3b5313f7c0abd43fa4437668f35.png"
+        },
+        {
+          "name": "attendee removal review",
+          "project": "chromium-1920",
+          "test": "secondary attendee removal review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a06f0-ins-readable-and-accessible-chromium-1920/attachments/attendee-removal-review-8bc1dee178fab05d7cb50419ce66f3a36bf0b7a6.png"
+        },
+        {
+          "name": "event email draft",
+          "project": "chromium-1920",
+          "test": "secondary event email draft composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-2d1f4-ins-readable-and-accessible-chromium-1920/attachments/event-email-draft-2140038126de7fd3ff7bbabf2041717c77cec7cb.png"
+        },
+        {
+          "name": "event email history",
+          "project": "chromium-1920",
+          "test": "secondary event email history composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-f33c2-ins-readable-and-accessible-chromium-1920/attachments/event-email-history-e3519b88cf33e7d39678af28f666e508415ee40e.png"
+        },
+        {
+          "name": "event archive review lower controls",
+          "project": "chromium-1920",
+          "test": "secondary event archive review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-22855-ins-readable-and-accessible-chromium-1920/attachments/event-archive-review-lower-controls-b2988803a8f99db8876d227be75e3694556b58b3.png"
+        },
+        {
+          "name": "event archive review",
+          "project": "chromium-1920",
+          "test": "secondary event archive review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-22855-ins-readable-and-accessible-chromium-1920/attachments/event-archive-review-bfad2b645c19cf35e1aaccbd9e1346181b5ceabb.png"
+        },
+        {
+          "name": "event cancellation review lower controls",
+          "project": "chromium-1920",
+          "test": "secondary event cancellation review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-555bb-ins-readable-and-accessible-chromium-1920/attachments/event-cancellation-review-lower-controls-c2c86919545969688d37be52c4de238c6b2b561e.png"
+        },
+        {
+          "name": "event cancellation review",
+          "project": "chromium-1920",
+          "test": "secondary event cancellation review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-555bb-ins-readable-and-accessible-chromium-1920/attachments/event-cancellation-review-33ef50e9d6926e529d82ff2f0d83df7c4cff0aa0.png"
+        },
+        {
+          "name": "event unpublish review lower controls",
+          "project": "chromium-1920",
+          "test": "secondary event unpublish review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-d8cbb-ins-readable-and-accessible-chromium-1920/attachments/event-unpublish-review-lower-controls-d57080beda691364270eba8b4a1f3e8ade934839.png"
+        },
+        {
+          "name": "event unpublish review",
+          "project": "chromium-1920",
+          "test": "secondary event unpublish review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-d8cbb-ins-readable-and-accessible-chromium-1920/attachments/event-unpublish-review-4b9701d1cbcc83ea41b081cee549c3ced6d9e81b.png"
+        },
+        {
+          "name": "event duplication review lower controls",
+          "project": "chromium-1920",
+          "test": "secondary event duplication review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-9d956-ins-readable-and-accessible-chromium-1920/attachments/event-duplication-review-lower-controls-447f89035bcaea53bdf6975595c5221f6688a3da.png"
+        },
+        {
+          "name": "event duplication review",
+          "project": "chromium-1920",
+          "test": "secondary event duplication review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-9d956-ins-readable-and-accessible-chromium-1920/attachments/event-duplication-review-a857547a274c2231e9cffd7f463b142eeb1f9a1d.png"
+        },
+        {
+          "name": "event editor",
+          "project": "chromium-1440",
+          "test": "secondary event editor composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a1e2e-ins-readable-and-accessible-chromium-1440/attachments/event-editor-5e24903c53261cc021d5677066ca13cd61822f43.png"
+        },
+        {
+          "name": "event attendees",
+          "project": "chromium-1440",
+          "test": "secondary event attendees composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-27604-ins-readable-and-accessible-chromium-1440/attachments/event-attendees-1848f24e7c9e5de948b1b2a51919d95bc3bba7b8.png"
+        },
+        {
+          "name": "attendee correction",
+          "project": "chromium-1440",
+          "test": "secondary attendee correction composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-33705-ins-readable-and-accessible-chromium-1440/attachments/attendee-correction-51be9f1998fa8cb316b6eb635e3b52288200e8c0.png"
+        },
+        {
+          "name": "attendee removal review lower controls",
+          "project": "chromium-1440",
+          "test": "secondary attendee removal review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a06f0-ins-readable-and-accessible-chromium-1440/attachments/attendee-removal-review-lower-controls-b5a8cc46d1896c932d4c713b935d7f4a5fceee5a.png"
+        },
+        {
+          "name": "attendee removal review",
+          "project": "chromium-1440",
+          "test": "secondary attendee removal review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a06f0-ins-readable-and-accessible-chromium-1440/attachments/attendee-removal-review-f0d5b7a3938c0d87438a5e9e626d5fd767c82ad8.png"
+        },
+        {
+          "name": "event email draft",
+          "project": "chromium-1440",
+          "test": "secondary event email draft composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-2d1f4-ins-readable-and-accessible-chromium-1440/attachments/event-email-draft-4c6e354985d69391e2dcca1313bf31465872e978.png"
+        },
+        {
+          "name": "event email history",
+          "project": "chromium-1440",
+          "test": "secondary event email history composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-f33c2-ins-readable-and-accessible-chromium-1440/attachments/event-email-history-274325c6d1490d1a05952e19f20754a29adf0752.png"
+        },
+        {
+          "name": "event archive review lower controls",
+          "project": "chromium-1440",
+          "test": "secondary event archive review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-22855-ins-readable-and-accessible-chromium-1440/attachments/event-archive-review-lower-controls-239a207961d581001b97b69ad44e8cd67dbcc44f.png"
+        },
+        {
+          "name": "event archive review",
+          "project": "chromium-1440",
+          "test": "secondary event archive review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-22855-ins-readable-and-accessible-chromium-1440/attachments/event-archive-review-336d2f89df5866602cc979a21c57d9c14024ba3e.png"
+        },
+        {
+          "name": "event cancellation review lower controls",
+          "project": "chromium-1440",
+          "test": "secondary event cancellation review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-555bb-ins-readable-and-accessible-chromium-1440/attachments/event-cancellation-review-lower-controls-6e7ec3f4589bf6d87cc51e9caaabf30cbe92c65d.png"
+        },
+        {
+          "name": "event cancellation review",
+          "project": "chromium-1440",
+          "test": "secondary event cancellation review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-555bb-ins-readable-and-accessible-chromium-1440/attachments/event-cancellation-review-2c73ede4bcb0d01c63c02ea308ccf38471253d55.png"
+        },
+        {
+          "name": "event unpublish review lower controls",
+          "project": "chromium-1440",
+          "test": "secondary event unpublish review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-d8cbb-ins-readable-and-accessible-chromium-1440/attachments/event-unpublish-review-lower-controls-d0aa333e84a7245d66c74018a98762ba926cc804.png"
+        },
+        {
+          "name": "event unpublish review",
+          "project": "chromium-1440",
+          "test": "secondary event unpublish review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-d8cbb-ins-readable-and-accessible-chromium-1440/attachments/event-unpublish-review-0d585e0cce72d0eaf6d28ed21683b77e4f9669a5.png"
+        },
+        {
+          "name": "event duplication review lower controls",
+          "project": "chromium-1440",
+          "test": "secondary event duplication review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-9d956-ins-readable-and-accessible-chromium-1440/attachments/event-duplication-review-lower-controls-2731a9d44a5f546851b217b7b955b8e0f05bd15e.png"
+        },
+        {
+          "name": "event duplication review",
+          "project": "chromium-1440",
+          "test": "secondary event duplication review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-9d956-ins-readable-and-accessible-chromium-1440/attachments/event-duplication-review-d755d17bd94832f1d86338038785bf7360f0bb7f.png"
+        },
+        {
+          "name": "event editor",
+          "project": "chromium-mobile",
+          "test": "secondary event editor composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a1e2e-ins-readable-and-accessible-chromium-mobile/attachments/event-editor-589359529798c7ac63b53a448c87398a60b4ddc0.png"
+        },
+        {
+          "name": "event attendees",
+          "project": "chromium-mobile",
+          "test": "secondary event attendees composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-27604-ins-readable-and-accessible-chromium-mobile/attachments/event-attendees-02d90eb62e5ad3dcb32c2483724190cf724718da.png"
+        },
+        {
+          "name": "attendee correction",
+          "project": "chromium-mobile",
+          "test": "secondary attendee correction composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-33705-ins-readable-and-accessible-chromium-mobile/attachments/attendee-correction-4634ae95d13720899c30e7c8bb0c194e929be696.png"
+        },
+        {
+          "name": "attendee removal review lower controls",
+          "project": "chromium-mobile",
+          "test": "secondary attendee removal review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a06f0-ins-readable-and-accessible-chromium-mobile/attachments/attendee-removal-review-lower-controls-3376265f20a05affc6e89fe9da357f181c6684ea.png"
+        },
+        {
+          "name": "attendee removal review",
+          "project": "chromium-mobile",
+          "test": "secondary attendee removal review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a06f0-ins-readable-and-accessible-chromium-mobile/attachments/attendee-removal-review-662cda061043b57094429648435c32afba9e0ca9.png"
+        },
+        {
+          "name": "event email draft",
+          "project": "chromium-mobile",
+          "test": "secondary event email draft composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-2d1f4-ins-readable-and-accessible-chromium-mobile/attachments/event-email-draft-839e0951a1c4835d8903214990c1f7cb2fd20961.png"
+        },
+        {
+          "name": "event email history",
+          "project": "chromium-mobile",
+          "test": "secondary event email history composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-f33c2-ins-readable-and-accessible-chromium-mobile/attachments/event-email-history-23dc3ba158107431ffa204c694f86f7af94aee6d.png"
+        },
+        {
+          "name": "event archive review lower controls",
+          "project": "chromium-mobile",
+          "test": "secondary event archive review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-22855-ins-readable-and-accessible-chromium-mobile/attachments/event-archive-review-lower-controls-6d82d75383fdeb1a311d024410e714d43642e210.png"
+        },
+        {
+          "name": "event archive review",
+          "project": "chromium-mobile",
+          "test": "secondary event archive review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-22855-ins-readable-and-accessible-chromium-mobile/attachments/event-archive-review-6ef8ead9344cd97f02bf06aab33b587a5a9328c3.png"
+        },
+        {
+          "name": "event cancellation review lower controls",
+          "project": "chromium-mobile",
+          "test": "secondary event cancellation review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-555bb-ins-readable-and-accessible-chromium-mobile/attachments/event-cancellation-review-lower-controls-88cd0976ef0dfb96b8e03a3e87b2364e0229597c.png"
+        },
+        {
+          "name": "event cancellation review",
+          "project": "chromium-mobile",
+          "test": "secondary event cancellation review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-555bb-ins-readable-and-accessible-chromium-mobile/attachments/event-cancellation-review-2839cad3c60065c726eacb39cbf30a7506b9c3a2.png"
+        },
+        {
+          "name": "event unpublish review lower controls",
+          "project": "chromium-mobile",
+          "test": "secondary event unpublish review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-d8cbb-ins-readable-and-accessible-chromium-mobile/attachments/event-unpublish-review-lower-controls-13da0704cd9ad424732e69033e53595f5cdd67ba.png"
+        },
+        {
+          "name": "event unpublish review",
+          "project": "chromium-mobile",
+          "test": "secondary event unpublish review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-d8cbb-ins-readable-and-accessible-chromium-mobile/attachments/event-unpublish-review-960b3140e7835fada4483c72deec290977bebd8e.png"
+        },
+        {
+          "name": "event duplication review lower controls",
+          "project": "chromium-mobile",
+          "test": "secondary event duplication review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-9d956-ins-readable-and-accessible-chromium-mobile/attachments/event-duplication-review-lower-controls-787e27cf6d145cf655cf2dee5801f3d8f2b7cac5.png"
+        },
+        {
+          "name": "event duplication review",
+          "project": "chromium-mobile",
+          "test": "secondary event duplication review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-9d956-ins-readable-and-accessible-chromium-mobile/attachments/event-duplication-review-3731168825f54d1d6dc729fc20bba41827048941.png"
+        },
+        {
+          "name": "event editor",
+          "project": "firefox-1440",
+          "test": "secondary event editor composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a1e2e-ins-readable-and-accessible-firefox-1440/attachments/event-editor-738d501ad002b1eb6eb4159d8f19ff562e44c293.png"
+        },
+        {
+          "name": "event attendees",
+          "project": "firefox-1440",
+          "test": "secondary event attendees composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-27604-ins-readable-and-accessible-firefox-1440/attachments/event-attendees-6384616691a0add06ae513560bb864b2f03526eb.png"
+        },
+        {
+          "name": "attendee correction",
+          "project": "firefox-1440",
+          "test": "secondary attendee correction composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-33705-ins-readable-and-accessible-firefox-1440/attachments/attendee-correction-ffc6d3b9eaee9d273802c8fb061e38805cd726b0.png"
+        },
+        {
+          "name": "attendee removal review lower controls",
+          "project": "firefox-1440",
+          "test": "secondary attendee removal review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a06f0-ins-readable-and-accessible-firefox-1440/attachments/attendee-removal-review-lower-controls-f7e6bf470572dbf41d65d392f96a4f94af655735.png"
+        },
+        {
+          "name": "attendee removal review",
+          "project": "firefox-1440",
+          "test": "secondary attendee removal review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a06f0-ins-readable-and-accessible-firefox-1440/attachments/attendee-removal-review-16b46732fa523a415d2e12e83e09ac15c47c8617.png"
+        },
+        {
+          "name": "event email draft",
+          "project": "firefox-1440",
+          "test": "secondary event email draft composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-2d1f4-ins-readable-and-accessible-firefox-1440/attachments/event-email-draft-382679627831d3176710321bc637e950f2130599.png"
+        },
+        {
+          "name": "event email history",
+          "project": "firefox-1440",
+          "test": "secondary event email history composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-f33c2-ins-readable-and-accessible-firefox-1440/attachments/event-email-history-d79aaafe6de4f98f50030ebf23bdfb1c40c1f417.png"
+        },
+        {
+          "name": "event archive review lower controls",
+          "project": "firefox-1440",
+          "test": "secondary event archive review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-22855-ins-readable-and-accessible-firefox-1440/attachments/event-archive-review-lower-controls-de9738980e40dc8182eed25acc7f6b07246f47f4.png"
+        },
+        {
+          "name": "event archive review",
+          "project": "firefox-1440",
+          "test": "secondary event archive review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-22855-ins-readable-and-accessible-firefox-1440/attachments/event-archive-review-bb31cb838d73ba685167463ab9701df949d2d4e6.png"
+        },
+        {
+          "name": "event cancellation review lower controls",
+          "project": "firefox-1440",
+          "test": "secondary event cancellation review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-555bb-ins-readable-and-accessible-firefox-1440/attachments/event-cancellation-review-lower-controls-81d0011b59f31a6c21a086eb9404072f68ae9e25.png"
+        },
+        {
+          "name": "event cancellation review",
+          "project": "firefox-1440",
+          "test": "secondary event cancellation review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-555bb-ins-readable-and-accessible-firefox-1440/attachments/event-cancellation-review-01e9586d20597e67d4fed2dd17858ab49264eee5.png"
+        },
+        {
+          "name": "event unpublish review lower controls",
+          "project": "firefox-1440",
+          "test": "secondary event unpublish review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-d8cbb-ins-readable-and-accessible-firefox-1440/attachments/event-unpublish-review-lower-controls-015f3bf5510074398f96612eaf0c91d3dcaa0204.png"
+        },
+        {
+          "name": "event unpublish review",
+          "project": "firefox-1440",
+          "test": "secondary event unpublish review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-d8cbb-ins-readable-and-accessible-firefox-1440/attachments/event-unpublish-review-a76fbe47ed5c09ae57e92840a77fc006881a9a53.png"
+        },
+        {
+          "name": "event duplication review lower controls",
+          "project": "firefox-1440",
+          "test": "secondary event duplication review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-9d956-ins-readable-and-accessible-firefox-1440/attachments/event-duplication-review-lower-controls-5a403d24b67162ada653447dd930be5f752a57d9.png"
+        },
+        {
+          "name": "event duplication review",
+          "project": "firefox-1440",
+          "test": "secondary event duplication review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-9d956-ins-readable-and-accessible-firefox-1440/attachments/event-duplication-review-a3a9c1244e50cb820cc1b61d4ce2ff7185d1dd4e.png"
+        },
+        {
+          "name": "event editor",
+          "project": "webkit-1440",
+          "test": "secondary event editor composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a1e2e-ins-readable-and-accessible-webkit-1440/attachments/event-editor-017bd2402b614e92f86d175ff3e3ecbb2e238fb8.png"
+        },
+        {
+          "name": "event attendees",
+          "project": "webkit-1440",
+          "test": "secondary event attendees composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-27604-ins-readable-and-accessible-webkit-1440/attachments/event-attendees-98f0a891fd9d6ee6b34bb0c0c7a1a613d0890997.png"
+        },
+        {
+          "name": "attendee correction",
+          "project": "webkit-1440",
+          "test": "secondary attendee correction composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-33705-ins-readable-and-accessible-webkit-1440/attachments/attendee-correction-5342d769f734dbb839996084d9bc4a9d7f916d11.png"
+        },
+        {
+          "name": "attendee removal review lower controls",
+          "project": "webkit-1440",
+          "test": "secondary attendee removal review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a06f0-ins-readable-and-accessible-webkit-1440/attachments/attendee-removal-review-lower-controls-c498feeeaae65ed4c79157c76c65da73f2b3fa82.png"
+        },
+        {
+          "name": "attendee removal review",
+          "project": "webkit-1440",
+          "test": "secondary attendee removal review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a06f0-ins-readable-and-accessible-webkit-1440/attachments/attendee-removal-review-6c67febf0995d907b0bde60872d87d21e3348f84.png"
+        },
+        {
+          "name": "event email draft",
+          "project": "webkit-1440",
+          "test": "secondary event email draft composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-2d1f4-ins-readable-and-accessible-webkit-1440/attachments/event-email-draft-c76e857aba144838980c23cca32dc79437b51c71.png"
+        },
+        {
+          "name": "event email history",
+          "project": "webkit-1440",
+          "test": "secondary event email history composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-f33c2-ins-readable-and-accessible-webkit-1440/attachments/event-email-history-6e644dea7b764c2d75607c5e6b965d19848c1d2a.png"
+        },
+        {
+          "name": "event archive review lower controls",
+          "project": "webkit-1440",
+          "test": "secondary event archive review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-22855-ins-readable-and-accessible-webkit-1440/attachments/event-archive-review-lower-controls-e45e9f8480d639ee2968e217dd725a965aac0eb0.png"
+        },
+        {
+          "name": "event archive review",
+          "project": "webkit-1440",
+          "test": "secondary event archive review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-22855-ins-readable-and-accessible-webkit-1440/attachments/event-archive-review-08fd6ce07617a1c271d09bf93fc597093d042917.png"
+        },
+        {
+          "name": "event cancellation review lower controls",
+          "project": "webkit-1440",
+          "test": "secondary event cancellation review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-555bb-ins-readable-and-accessible-webkit-1440/attachments/event-cancellation-review-lower-controls-a1c4ef074662562a8ba31cbfe08238f9e2640f2a.png"
+        },
+        {
+          "name": "event cancellation review",
+          "project": "webkit-1440",
+          "test": "secondary event cancellation review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-555bb-ins-readable-and-accessible-webkit-1440/attachments/event-cancellation-review-c0f9f041e1b926b2108298d2ac070b8f53eaca42.png"
+        },
+        {
+          "name": "event unpublish review lower controls",
+          "project": "webkit-1440",
+          "test": "secondary event unpublish review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-d8cbb-ins-readable-and-accessible-webkit-1440/attachments/event-unpublish-review-lower-controls-cfb13f5f84056390e66aa9c2b3116942d122ef09.png"
+        },
+        {
+          "name": "event unpublish review",
+          "project": "webkit-1440",
+          "test": "secondary event unpublish review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-d8cbb-ins-readable-and-accessible-webkit-1440/attachments/event-unpublish-review-d8282c9b963cb8f0554d2ce70be3d6d08b7176af.png"
+        },
+        {
+          "name": "event duplication review lower controls",
+          "project": "webkit-1440",
+          "test": "secondary event duplication review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-9d956-ins-readable-and-accessible-webkit-1440/attachments/event-duplication-review-lower-controls-782a914db5fd4cc2ac5f5afe75cac88a58ae6da2.png"
+        },
+        {
+          "name": "event duplication review",
+          "project": "webkit-1440",
+          "test": "secondary event duplication review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-9d956-ins-readable-and-accessible-webkit-1440/attachments/event-duplication-review-be57a9d0ea1bc90658de57f16223a8f6ef67bf07.png"
+        },
+        {
+          "name": "event editor",
+          "project": "webkit-mobile",
+          "test": "secondary event editor composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a1e2e-ins-readable-and-accessible-webkit-mobile/attachments/event-editor-4435e0582465b881ae257e1b675cba39ab5d99c0.png"
+        },
+        {
+          "name": "event attendees",
+          "project": "webkit-mobile",
+          "test": "secondary event attendees composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-27604-ins-readable-and-accessible-webkit-mobile/attachments/event-attendees-4f9e5c76ba38f25960aa8771c997e7d595659afb.png"
+        },
+        {
+          "name": "attendee correction",
+          "project": "webkit-mobile",
+          "test": "secondary attendee correction composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-33705-ins-readable-and-accessible-webkit-mobile/attachments/attendee-correction-c7a4e629237ffcb9275dbb98a84743fee6a3742d.png"
+        },
+        {
+          "name": "attendee removal review lower controls",
+          "project": "webkit-mobile",
+          "test": "secondary attendee removal review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a06f0-ins-readable-and-accessible-webkit-mobile/attachments/attendee-removal-review-lower-controls-e7dab986080251f8833c8ac6e6a52ea10b0394b2.png"
+        },
+        {
+          "name": "attendee removal review",
+          "project": "webkit-mobile",
+          "test": "secondary attendee removal review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-a06f0-ins-readable-and-accessible-webkit-mobile/attachments/attendee-removal-review-7079bfabe2d3c51dc383920bd966060e700d86b2.png"
+        },
+        {
+          "name": "event email draft",
+          "project": "webkit-mobile",
+          "test": "secondary event email draft composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-2d1f4-ins-readable-and-accessible-webkit-mobile/attachments/event-email-draft-d1fe09282c11b28ed880bbba64836dec98e23896.png"
+        },
+        {
+          "name": "event email history",
+          "project": "webkit-mobile",
+          "test": "secondary event email history composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-f33c2-ins-readable-and-accessible-webkit-mobile/attachments/event-email-history-0ece6c148650b2d73535233c8f99834bf8b3e37a.png"
+        },
+        {
+          "name": "event archive review lower controls",
+          "project": "webkit-mobile",
+          "test": "secondary event archive review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-22855-ins-readable-and-accessible-webkit-mobile/attachments/event-archive-review-lower-controls-d10cb018e0200ef6946b2056acd8939b2d571cf8.png"
+        },
+        {
+          "name": "event archive review",
+          "project": "webkit-mobile",
+          "test": "secondary event archive review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-22855-ins-readable-and-accessible-webkit-mobile/attachments/event-archive-review-1e10a683160358809947477c014850411096a8b0.png"
+        },
+        {
+          "name": "event cancellation review lower controls",
+          "project": "webkit-mobile",
+          "test": "secondary event cancellation review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-555bb-ins-readable-and-accessible-webkit-mobile/attachments/event-cancellation-review-lower-controls-1998aebae5ae93cedeba6d5c60241c0a5438ce70.png"
+        },
+        {
+          "name": "event cancellation review",
+          "project": "webkit-mobile",
+          "test": "secondary event cancellation review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-555bb-ins-readable-and-accessible-webkit-mobile/attachments/event-cancellation-review-99b5244d4834c1b9eabd4be2f4406e5f33423f92.png"
+        },
+        {
+          "name": "event unpublish review lower controls",
+          "project": "webkit-mobile",
+          "test": "secondary event unpublish review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-d8cbb-ins-readable-and-accessible-webkit-mobile/attachments/event-unpublish-review-lower-controls-25e078385be1a4ad81786279fe728dd8a1a2a2e7.png"
+        },
+        {
+          "name": "event unpublish review",
+          "project": "webkit-mobile",
+          "test": "secondary event unpublish review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-d8cbb-ins-readable-and-accessible-webkit-mobile/attachments/event-unpublish-review-fc3d3810251886fe7b2cefde6998866a356f31a6.png"
+        },
+        {
+          "name": "event duplication review lower controls",
+          "project": "webkit-mobile",
+          "test": "secondary event duplication review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-9d956-ins-readable-and-accessible-webkit-mobile/attachments/event-duplication-review-lower-controls-1980216ae20ce8c7fafc44d66cb2e30b474fdead.png"
+        },
+        {
+          "name": "event duplication review",
+          "project": "webkit-mobile",
+          "test": "secondary event duplication review composition remains readable and accessible",
+          "file": "artifacts/browser/secondary-review/event-compositions-seconda-9d956-ins-readable-and-accessible-webkit-mobile/attachments/event-duplication-review-46905c6e25a7e405977f6cc72979eb054609e1ef.png"
+        }
+      ]
+    },
     {
       "id": "VIS-TEST-015",
       "title": "Teams and collaboration",

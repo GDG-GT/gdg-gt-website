@@ -104,7 +104,7 @@ test("complete super-admin navigation stays keyboard reachable without losing th
     await expect(opener).not.toBeFocused();
   }
   const search = page.getByRole("button", {
-    name: "Search the workspace",
+    name: "Search the workspace · ⌘ K",
     exact: true,
   });
   await search.focus();

@@ -185,6 +185,9 @@ try {
         preset,
         performance: score("performance"),
         accessibility: score("accessibility"),
+        visibleLabelsMatchNames:
+          audits["label-content-name-mismatch"]?.score === 1 ||
+          audits["label-content-name-mismatch"]?.scoreDisplayMode === "notApplicable",
         bestPractices: score("best-practices"),
         seo: score("seo"),
         lcpMs: audits["largest-contentful-paint"]?.numericValue,
@@ -210,6 +213,7 @@ try {
         !row.runtimeError &&
         row.performance >= 90 &&
         row.accessibility === 100 &&
+        row.visibleLabelsMatchNames &&
         row.lcpMs <= 2500 &&
         row.cls <= 0.1;
       tests.push(row);
@@ -219,6 +223,7 @@ try {
           preset,
           performance: row.performance,
           accessibility: row.accessibility,
+          visibleLabelsMatchNames: row.visibleLabelsMatchNames,
           lcpMs: row.lcpMs,
           cls: row.cls,
           passed: row.passed,

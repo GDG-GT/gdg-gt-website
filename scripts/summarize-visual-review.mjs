@@ -1,17 +1,21 @@
-import { readFile, writeFile, access } from "node:fs/promises";
+import { readFile, writeFile, access, mkdir } from "node:fs/promises";
 import path from "node:path";
 const args = process.argv.slice(2);
-if (args.length && (args.length !== 1 || args[0] !== "--secondary"))
-  throw Error("Optional review scope: --secondary");
-const secondary = args.length === 1;
+if (args.length && (args.length !== 1 || !["--secondary", "--current-primary"].includes(args[0])))
+  throw Error("Optional review scope: --secondary or --current-primary");
+const secondary = args[0] === "--secondary",
+  currentPrimary = args[0] === "--current-primary";
 const root = path.resolve("."),
   output = path.resolve(
-    secondary
+    currentPrimary
+      ? "artifacts/browser/current-primary-review"
+      : secondary
       ? "artifacts/browser/secondary-review"
       : "artifacts/browser/visual-review",
   ),
+  captureRoot = currentPrimary ? path.resolve("artifacts/browser/secondary-review") : output,
   report = JSON.parse(
-    await readFile(path.join(output, "results.json"), "utf8"),
+    await readFile(path.join(captureRoot, "results.json"), "utf8"),
   );
 const primaryPrompts = [
   ["Homepage", ["public /"]],
@@ -39,6 +43,19 @@ const primaryPrompts = [
 ];
 const prompts = secondary
   ? [
+      [
+        "VIS-TEST-014",
+        "Events and attendance",
+        [
+          "event editor", "event attendees", "attendee correction",
+          "attendee removal review", "attendee removal review lower controls",
+          "event email draft", "event email history",
+          "event archive review", "event archive review lower controls",
+          "event cancellation review", "event cancellation review lower controls",
+          "event unpublish review", "event unpublish review lower controls",
+          "event duplication review", "event duplication review lower controls",
+        ],
+      ],
       [
         "VIS-TEST-015",
         "Teams and collaboration",
@@ -79,7 +96,7 @@ async function visit(suites) {
       if (
         !(
           secondary
-            ? /^secondary-compositions\.spec\.ts$/
+            ? /^(?:secondary|event)-compositions\.spec\.ts$/
             : /^(?:operations|public|workspace)-compositions\.spec\.ts$/
         ).test(path.basename(spec.file || suite.file || ""))
       )
@@ -94,7 +111,7 @@ async function visit(suites) {
           if (a.contentType !== "image/png") continue;
           const file = path.resolve(a.path);
           if (
-            !file.startsWith(output + path.sep) ||
+            !file.startsWith(captureRoot + path.sep) ||
             path.extname(file) !== ".png"
           )
             throw Error(
@@ -154,19 +171,20 @@ const supplementalCaptures = captures.filter(
 );
 if (secondary && supplementalCaptures.length)
   throw Error("Unexpected secondary review capture names.");
-if (secondary && (compositionChecks !== 54 || captures.length !== 72))
+if (secondary && (compositionChecks !== 114 || captures.length !== 162))
   throw Error(
-    "The secondary review requires all nine named states across all six profiles.",
+    "The secondary review requires all nineteen named states across all six profiles.",
   );
 const note =
   "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. " +
   (secondary
-    ? "These nine secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review."
+    ? "These nineteen secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review."
     : "Primary compositions are captured; every secondary drawer, editor inspector, chart, collaboration surface and confirmation state still requires its own applicable acceptance review.");
 const summary = {
   generatedAt: new Date().toISOString(),
   completed: true,
   scope: secondary ? "secondary" : "primary",
+  sourceCaptureDirectory: path.relative(root, captureRoot),
   note,
   stats: report.stats,
   projects: required,
@@ -205,6 +223,7 @@ const reviewRows = supplementalCaptures.length
       },
     ]
   : rows;
+await mkdir(output, { recursive: true });
 await writeFile(
   path.join(output, "index.html"),
   `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GDG GT visual review candidates</title><style>body{font:16px/1.5 system-ui;color:#2d2d2d;background:#f2f3f4;margin:0;padding:32px;max-width:1500px}h1{font-size:32px}p{max-width:85ch}section{border-top:1px solid #c3c8ca;padding:24px 0}ul{display:flex;flex-wrap:wrap;gap:16px;list-style:none;padding:0}li{width:min(100%,340px)}a{color:#a93527}img{width:100%;height:220px;object-fit:contain;object-position:top;background:#e4e6e7}small{display:block}</style><h1>GDG GT: ${secondary ? "secondary state" : "22 prompt"} review candidates</h1><p>${esc(note)}</p><p>${compositionChecks} composition checks passed (${report.stats.expected} passing checks in the source invocation). No approval has been recorded.</p>${reviewRows.map((r) => `<section><h2>${esc(r.id)} · ${esc(r.title)}</h2><ul>${r.captures.map((c) => `<li><a href="${esc(link(c.file))}"><img loading="lazy" alt="${esc(c.name + " in " + c.project)}" src="${esc(link(c.file))}">${esc(c.name)}<small>${esc(c.project)} · open full capture</small></a></li>`).join("")}</ul></section>`).join("")}</html>`,

@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-11-07T02:16:34.039985+00:00",
+  "completed": true,
+  "passed": 2683,
+  "failed": 4,
+  "files": 217,
+  "allPassed": false,
+  "failures": [
+    {
+      "file": "tests/client/form-editor-permissions.test.tsx",
+      "name": "Action-aware form definition inspection makes view-only title, description, section, fields and add/reorder controls truly read-only",
+      "message": "TestingLibraryElementError: Unable to find an accessible element with the role \"button\" and name \"Inspect Your question\""
+    },
+    {
+      "file": "tests/client/form-editor-permissions.test.tsx",
+      "name": "Builder ordering and undo across sections moves questions within their visible section even when the underlying fields are interleaved",
+      "message": "AssertionError: expected [ 'Short text: Edit First C', \u2026(1) ] to deeply equal [ 'Edit First C', 'Edit First A' ]"
+    },
+    {
+      "file": "tests/client/form-response-workspace-read.test.tsx",
+      "name": "Independent private response workspace reads clears private rows, preferences and query on views denial without an automatic retry loop",
+      "message": "AssertionError: expected '?q=FictionalPrivate&sensitive=true' to be '' // Object.is equality"
+    },
+    {
+      "file": "tests/client/form-response-workspace-read.test.tsx",
+      "name": "clears private URL filters/proposals on denied availability writes",
+      "message": "AssertionError: expected '?q=FictionalPrivateQuery' to be '' // Object.is equality"
+    }
+  ],
+  "scope": "First full coverage after visible-label fixes. Two expected-name updates were missed in form-editor-permissions, and two response-workspace URL assertions ran before router transition completed. Preserve original raw artifacts/quality/visible-label-coverage.json and log/tmp/gdg-visible-label-coverage.log. Investigation/correction required; not a passing invocation."
+}

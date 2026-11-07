@@ -1,0 +1,318 @@
+{
+  "generatedAt": "2026-11-07T01:55:40.014573+00:00",
+  "completed": true,
+  "stage": "Isolated actual Mermaid11.17.2/converter2.2.2, three browser engines, installed KaTeX0.16.47 vs integrity-verified candidate0.18.2 alias only; no installed dependency/lock changes. Not actual Excalidraw whiteboard integration or approved override.",
+  "rawChecks": 66,
+  "renderFailures": 0,
+  "converterFailures": 0,
+  "browserSafetyFailures": 0,
+  "comparisons": [
+    {
+      "engine": "chromium",
+      "name": "plain",
+      "legacy": false,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 0,
+      "widthDelta": 0.0,
+      "heightDelta": 0
+    },
+    {
+      "engine": "chromium",
+      "name": "basic math",
+      "legacy": false,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 2,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "chromium",
+      "name": "matrix math",
+      "legacy": false,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 2,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "chromium",
+      "name": "untrusted URL",
+      "legacy": false,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 1,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "chromium",
+      "name": "plain",
+      "legacy": true,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 0,
+      "widthDelta": 0.0,
+      "heightDelta": 0
+    },
+    {
+      "engine": "chromium",
+      "name": "basic math",
+      "legacy": true,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 2,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "chromium",
+      "name": "matrix math",
+      "legacy": true,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 2,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "chromium",
+      "name": "untrusted URL",
+      "legacy": true,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 1,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "chromium",
+      "name": "flowchart",
+      "converter": true,
+      "sameElements": true,
+      "files": 0
+    },
+    {
+      "engine": "chromium",
+      "name": "sequence",
+      "converter": true,
+      "sameElements": true,
+      "files": 0
+    },
+    {
+      "engine": "firefox",
+      "name": "plain",
+      "legacy": false,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 0,
+      "widthDelta": 0.0,
+      "heightDelta": 0
+    },
+    {
+      "engine": "firefox",
+      "name": "basic math",
+      "legacy": false,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 2,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "firefox",
+      "name": "matrix math",
+      "legacy": false,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 2,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "firefox",
+      "name": "untrusted URL",
+      "legacy": false,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 1,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "firefox",
+      "name": "plain",
+      "legacy": true,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 0,
+      "widthDelta": 0.0,
+      "heightDelta": 0
+    },
+    {
+      "engine": "firefox",
+      "name": "basic math",
+      "legacy": true,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 2,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "firefox",
+      "name": "matrix math",
+      "legacy": true,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 2,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "firefox",
+      "name": "untrusted URL",
+      "legacy": true,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 1,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "firefox",
+      "name": "flowchart",
+      "converter": true,
+      "sameElements": true,
+      "files": 0
+    },
+    {
+      "engine": "firefox",
+      "name": "sequence",
+      "converter": true,
+      "sameElements": true,
+      "files": 0
+    },
+    {
+      "engine": "webkit",
+      "name": "plain",
+      "legacy": false,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 0,
+      "widthDelta": 0.0,
+      "heightDelta": 0
+    },
+    {
+      "engine": "webkit",
+      "name": "basic math",
+      "legacy": false,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 2,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "webkit",
+      "name": "matrix math",
+      "legacy": false,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 2,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "webkit",
+      "name": "untrusted URL",
+      "legacy": false,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 1,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "webkit",
+      "name": "plain",
+      "legacy": true,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 0,
+      "widthDelta": 0.0,
+      "heightDelta": 0
+    },
+    {
+      "engine": "webkit",
+      "name": "basic math",
+      "legacy": true,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 2,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "webkit",
+      "name": "matrix math",
+      "legacy": true,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 2,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "webkit",
+      "name": "untrusted URL",
+      "legacy": true,
+      "bothRendered": true,
+      "bothSafe": true,
+      "sameNodes": true,
+      "mathCount": 1,
+      "widthDelta": 0.0,
+      "heightDelta": 0.0
+    },
+    {
+      "engine": "webkit",
+      "name": "flowchart",
+      "converter": true,
+      "sameElements": true,
+      "files": 0
+    },
+    {
+      "engine": "webkit",
+      "name": "sequence",
+      "converter": true,
+      "sameElements": true,
+      "files": 0
+    }
+  ],
+  "firstDiagnostic": "Both versions rejected the same malformed matrix row escape; original raw retained in owned scratch browser-review-first-matrix-fixture.json. Corrected one-row matrix produces the current66-check result."
+}

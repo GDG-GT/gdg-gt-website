@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-07T00:23:33.570565+00:00",
-  "buildIndexSha256": "e2c6312484c93fc7d0e97438072cbad240ff5bd11c6ff5bb7c45b685f88f0088",
+  "generatedAt": "2026-11-07T04:25:55.294542+00:00",
+  "buildIndexSha256": "ba61feb128b3799bae29bccb076e3e4d4ae0a7da490fe473bdf78c0b97bd3459",
   "quality": {
     "tests": {
       "files": 217,
@@ -14,7 +14,16 @@
       "branches": 75.63
     },
     "globalAndCriticalGatesPassed": true,
-    "criticalModules": 21
+    "criticalModules": 21,
+    "latestAttempt": {
+      "passed": 2683,
+      "failed": 4,
+      "files": 217,
+      "completed": true,
+      "allPassed": false,
+      "note": "Second full coverage has four different slow/timeout failures after original name/URL corrections. Isolation43cases with2workers gives40pass/3builder failures; unchanged builder28cases pass with1worker. No timeout/retry/gate changes. Final whole-source one-worker coverage remains required. Existing successful quality totals above describe saved01f8859 baseline only."
+    },
+    "currentBuildFullCoveragePassed": false
   },
   "browser": {
     "initialCompleteV7": {
@@ -33,8 +42,8 @@
       "unexpected": 0,
       "flaky": 0
     },
-    "fullCurrentInventoryPassingInvocation": false,
-    "note": "Complete initial 1,320-case v7 invocation found one drawer Escape failure (1,311 passes/eight skips). Final rebuilt correction passes separate 108-case all-profile shell scope. This is not a single passing full invocation; all original assertions/timeouts/retries remain. Public-reader initial scope:111 passes/eight skips/one WebKit automation fill-while-inert failure. Delayed diagnostic confirms missing input events/empty DOM; final tests explicitly wait for native unlock and add focus/value assertions. Final all-profile120-case scope:112 passes/eight skips/zero failures/retries. Separate invocations; no full current-inventory passing run claimed.",
+    "fullCurrentInventoryPassingInvocation": true,
+    "note": "Complete current1380-case invocation1372passes/eight expected skips/zero failures/retries on brand/search/builder/gallery label corrections, including WCAG2.1 A. Earlier failed/interrupted scopes retained. Fictional read-only loopback scope; not physical-device/hosted/manual acceptance.",
     "initialPublicReader": {
       "startTime": "2026-11-07T00:15:21.145Z",
       "duration": 89800.388,
@@ -50,6 +59,14 @@
       "skipped": 8,
       "unexpected": 0,
       "flaky": 0
+    },
+    "visibleLabelComplete": {
+      "startTime": "2026-11-07T01:55:17.542Z",
+      "duration": 1135905.2079999999,
+      "expected": 1372,
+      "skipped": 8,
+      "unexpected": 0,
+      "flaky": 0
     }
   },
   "visual": {
@@ -57,9 +74,11 @@
     "reviewCaptures": 162,
     "compositionChecks": 138,
     "approved": false,
-    "secondaryStates": 9,
-    "secondaryCompositionChecks": 54,
-    "secondaryCaptures": 72
+    "secondaryStates": 19,
+    "secondaryCompositionChecks": 114,
+    "secondaryCaptures": 162,
+    "primaryIndex": "artifacts/browser/current-primary-review/index.html",
+    "secondaryIndex": "artifacts/browser/secondary-review/index.html"
   },
   "pwa": {
     "boundaries": 15,
@@ -77,19 +96,19 @@
     "scope": "Read-only all-local-ref history plus current tracked/nonignored untracked file snapshot. Default rules, decoded text depth 5, no baseline/rule/path exclusions or inline suppression. Ignored local credentials/dependencies/caches, archive contents and image OCR are outside the source scan. Findings are redacted; only exact reviewed source-line hashes may pass as non-secrets. Not proof that no secret could exist."
   },
   "shards": {
-    "total": 1320,
+    "total": 1380,
     "shards": [
       {
         "shard": 1,
-        "cases": 440
+        "cases": 460
       },
       {
         "shard": 2,
-        "cases": 440
+        "cases": 460
       },
       {
         "shard": 3,
-        "cases": 440
+        "cases": 460
       }
     ],
     "duplicates": 0
@@ -154,7 +173,7 @@
     ],
     "mobileLcpPassed": false,
     "fieldP75Verified": false,
-    "matchesCurrentBuild": true,
+    "matchesCurrentBuild": false,
     "note": "All three mobile LCP gates still fail (2,977/3,157/3,154ms); desktop performance/accessibility100 and CLS0. Lighthouse also records a brand-link visible-label/accessible-name mismatch, despite its aggregate accessibility100. That concrete WCAG2.5.3 finding remains open until corrected. Expected anonymous401 is retained in best-practices console evidence."
   },
   "services": [
@@ -171,7 +190,7 @@
   ],
   "prdComplete": false,
   "remaining": [
-    "Correct the observed brand-link visible-label/accessible-name mismatch (WCAG2.5.3), then verify the enabled rule across compositions",
+    "Final complete one-worker source coverage after resolving verification contention; explicit current-build visible-label Lighthouse gate",
     "Mobile LCP and representative hardware/load/field p75 LCP-INP-CLS",
     "Complete secondary visual prompt surfaces, approved chapter assets/content, blocking human fidelity approval and approved 1% screenshot baselines",
     "Complete keyboard/assistive-technology/actual 200% zoom/forced-colors and physical Safari/device/install/push acceptance",
@@ -184,15 +203,15 @@
     "Bevy/Engage"
   ],
   "scope": "Local only; no deployment, push, purchase, real provider send, production change, another timer or AI commit trailer.",
-  "verificationScopeNote": "Full source coverage2,687 tests/217 files passes unchanged global/21 critical gates. Final six-profile public/availability scope112 passes/eight expected skips; original failed scopes retained. Current15 PWA boundary/nine update/46 HTTPS checks pass. Build digests bind quality/public-browser/performance. Types/build/byte gates pass, lint0errors/10inherited warnings. Complete PRD/manual/device/hosted/approved-visual acceptance remains open.",
+  "verificationScopeNote": "Current full browser1372passes/eight expected skips, zero failures/retries;138primary/114secondary composition checks and162captures in each review set. Current complete unit coverage has four failures; no passing current full coverage claim. Prior successful2687/217 quality evidence belongs to saved01f8859. Types/build/lint0errors10warnings/byte/traceability gates pass. Performance and15PWA/nine update/46HTTPS evidence belong to saved baseline until refreshed. Full PRD/manual/device/hosted/approved visual acceptance remains open.",
   "delivery": {
-    "initialJsGzipBytes": 107948,
+    "initialJsGzipBytes": 107950,
     "copiedHelperGzipBytes": 362,
     "routeAwareHeroHints": true,
     "fontPreload": "retained",
     "cssGzipBytes": 29899,
     "fontBytes": 48432,
-    "offlineInstallRawBytes": 493028
+    "offlineInstallRawBytes": 493073
   },
   "dependencies": {
     "router": "7.18.5",
@@ -206,5 +225,10 @@
     },
     "rawAuditExit": 1,
     "remaining": "Four low package entries through Excalidraw/Mermaid/KaTeX; no compatible live patch accepted yet"
+  },
+  "activeVerification": {
+    "savedBaseline": "01f8859",
+    "changes": "Brand/search/builder/gallery labels and WCAG2.1 A selection; ten event secondary states",
+    "status": "Current full browser invocation passes. Full one-worker coverage and explicit-label lab performance still required; current performance report is saved public-reader baseline, not current artifact."
   }
 }

@@ -1,5 +1,18 @@
 # Public entry delivery and availability — 2026-11-06
 
+## Rejected isolated font-axis trial
+
+The original Inter file covers weights100–900, while the existing CSS face
+declares400–800. An isolated FontTools4.57.0/Brotli1.1.0 trial restricted only
+that axis, retaining all230Unicode mappings and518glyphs. It reduces48,432bytes
+to37,116bytes, but changes fractional advance widths and up to0.983font units in
+outline coordinates. The153native canvas comparisons across Chromium/Firefox/
+WebKit and17weights/three sizes find up to0.45px sample-width difference and
+12.6%strong alpha differences among ink pixels. This is rejected as a fidelity
+tradeoff. The production font bytes, face range, existing preload and license
+remain unchanged. Evidence: `phase0/font-axis-trial-rejected.json`; tooling and
+candidate exist only in the owned scratch cache. No application package changed.
+
 ## Lightweight public availability reader
 
 The browser now reads the exact six-field public JSON projection without loading

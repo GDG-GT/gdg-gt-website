@@ -60,6 +60,7 @@ for (const [index, title] of [
           : "tests/browser/workspace-compositions.spec.ts",
       ...([14, 16, 17, 19, 21].includes(index)
         ? ["tests/browser/secondary-compositions.spec.ts"] : []),
+      ...(index === 13 ? ["tests/browser/event-compositions.spec.ts"] : []),
       "scripts/summarize-visual-review.mjs",
     ],
     [

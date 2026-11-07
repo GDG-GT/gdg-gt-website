@@ -151,7 +151,7 @@ describe("workspace drawer focus return and accepted route focus", () => {
   });
   it("returns to the explicit search opener after Escape", async () => {
     mount();
-    const opener = screen.getByRole("button", { name: "Search the workspace" });
+    const opener = screen.getByRole("button", { name: "Search the workspace · ⌘ K" });
     fireEvent.click(opener);
     const dialog = await screen.findByRole("dialog", {
       name: "Go to a workspace",
@@ -173,7 +173,7 @@ describe("workspace drawer focus return and accepted route focus", () => {
   it("does not dismiss search when Escape belongs to an active text composition", async () => {
     mount();
     fireEvent.click(
-      screen.getByRole("button", { name: "Search the workspace" }),
+      screen.getByRole("button", { name: "Search the workspace · ⌘ K" }),
     );
     const dialog = await screen.findByRole("dialog", {
       name: "Go to a workspace",
@@ -195,7 +195,7 @@ describe("workspace drawer focus return and accepted route focus", () => {
     it(`keeps workspace content focus after selecting ${label} in search`, async () => {
       const router = mount();
       fireEvent.click(
-        screen.getByRole("button", { name: "Search the workspace" }),
+        screen.getByRole("button", { name: "Search the workspace · ⌘ K" }),
       );
       const dialog = await screen.findByRole("dialog", {
         name: "Go to a workspace",

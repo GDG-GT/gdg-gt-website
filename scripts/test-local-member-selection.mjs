@@ -292,7 +292,7 @@ try {
       await page.addScriptTag({ path: require.resolve("axe-core/axe.min.js") });
       const violations = await page.evaluate(async () => {
         const r = await window.axe.run(document, {
-          runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21aa"] },
+          runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"] },
         });
         return r.violations.map((v) => ({ id: v.id, impact: v.impact }));
       });

@@ -1573,7 +1573,7 @@ function FormBuilderContent() {
                               setTab("Field");
                             });
                           }}
-                          aria-label={`${editable ? "Edit" : "Inspect"} ${item.label}`}
+                          aria-label={`${fieldTypes.find((type) => type[0] === item.type)?.[1] || "Question"}: ${editable ? "Edit" : "Inspect"} ${item.label}`}
                         >
                           <GripVertical size={15} />
                           {

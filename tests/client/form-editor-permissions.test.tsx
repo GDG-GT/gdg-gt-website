@@ -155,7 +155,7 @@ describe("Action-aware form definition inspection", () => {
           .disabled,
       ).toBe(true);
     expect(
-      screen.getByRole("button", { name: "Inspect Your question" }),
+      screen.getByRole("button", { name: "Short text: Inspect Your question" }),
     ).toBeTruthy();
     fireEvent.click(screen.getByRole("tab", { name: "Settings" }));
     expect(screen.getByLabelText("Access mode").matches(":disabled")).toBe(
@@ -279,7 +279,7 @@ describe("Builder ordering and undo across sections", () => {
         ".gt-builder-section:first-of-type .gt-field-toolbar > button",
       ),
     ].map((node) => node.getAttribute("aria-label"));
-    expect(labels).toEqual(["Edit First C", "Edit First A"]);
+    expect(labels).toEqual(["Short text: Edit First C", "Short text: Edit First A"]);
   });
   it("restores the original section and order when undoing a cross-section drag", async () => {
     const form = fixture(["view", "edit"]),

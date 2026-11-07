@@ -139,7 +139,6 @@ export default function PublicGallery() {
                     opener.current = e.currentTarget;
                     setSelected(p.id);
                   }}
-                  aria-label={`View photo: ${p.alt_text}`}
                 >
                   <PublicImage
                     src={p.url}
@@ -151,11 +150,11 @@ export default function PublicGallery() {
                     loading="lazy"
                     decoding="async"
                     fallback="Photo unavailable. Open its caption and event details."
-                  />
+                  />{" "}
                   <span>
-                    <span>{p.event_title || "Chapter community"}</span>
-                    <strong>{p.description || p.alt_text}</strong>
-                    <span>View photo ↗</span>
+                    <span>{p.event_title || "Chapter community"}</span>{" "}
+                    <strong>{p.description || p.alt_text}</strong>{" "}
+                    <span>View photo <span aria-hidden="true">↗</span></span>
                   </span>
                 </button>
               ))}

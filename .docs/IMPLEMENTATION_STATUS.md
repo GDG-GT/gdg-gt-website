@@ -8,6 +8,27 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Visible labels and expanded event review — 2026-11-06
+
+- Brand, search, builder field-type and gallery card names now include visible
+  labels. WCAG2.1 A is enabled in browser checks and40existing local probe scripts;
+  their completed API mutations were not replayed. No timeout/retry/gate weakened.
+- Complete current1380-case browser invocation:1372passes/eight expected skips,
+  zero failures/retries across sixprofiles. All22primary groups refresh from the
+  same invocation (138checks/162captures), alongside19secondary states including
+  ten new event/attendance/email/lifecycle surfaces (114checks/162captures).
+  These remain unapproved review candidates. See `VISIBLE_LABEL_ACCESSIBILITY.md`.
+- Current types/build/byte/traceability gates pass; lint0errors/10inheritedwarnings.
+  Final full coverage remains open: first2683/4fail fixed stale name/transition
+  assumptions; second2683/4different slow/timeout failures;43-case2worker isolation
+  passes40, then unchanged builder28/28passes with1worker. Complete1worker coverage
+  is required. Prior2687-test passing quality is a savedbaseline, not current.
+- Isolated KaTeX0.18.2 compatibility passes66Mermaid/converter and6actualBoardCanvas
+  browser cases; installed packages still unchanged pending controlled patch.
+  Font-axis reduction rejected after native raster/metric differences; original
+  font/preload retained. Current performance still needs rebuilt explicit-label
+  measurement; savedbaseline mobileLCP~3s remains a known failing gate.
+
 ### React Router security migration and drawer correction — 2026-11-06
 
 - Runtime and lockfile now use React Router 7.18.5. The production audit has

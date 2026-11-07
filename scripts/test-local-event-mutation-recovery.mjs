@@ -48,7 +48,7 @@ async function accessibility(page, name) {
       await window.axe.run(document, {
         runOnly: {
           type: "tag",
-          values: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"],
+          values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"],
         },
       })
     ).violations.map((violation) => violation.id),

@@ -1198,7 +1198,7 @@ export async function accessibility(page: Page) {
     const result = await engine.run(document, {
       runOnly: {
         type: "tag",
-        values: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"],
+        values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22a", "wcag22aa"],
       },
     });
     return result.violations.map((item) => ({

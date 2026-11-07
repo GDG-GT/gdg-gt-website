@@ -1,5 +1,46 @@
 # Populated production-build review — 2026-11-06
 
+## Event and visible-label continuation
+
+Ten additional read-only event states now have captures across all six profiles:
+editor, attendance, attendee correction and removal review, email draft/history,
+and archive/cancel/unpublish/duplicate reviews. Their fixtures refuse every data
+mutation and mail approval. They reuse the existing modal overflow/scroll,
+single-heading, axe, document-width and capture helper rather than a separate
+weaker review. The expanded nineteen-state inventory requires114composition
+checks and162captures, including top/lower controls for eight dialogs. The old
+nine-state review is preserved in
+`artifacts/browser/secondary-review-before-events-20261107`.
+
+The complete intermediate browser run passes all these states and fails six
+unrelated populated-gallery checks under the newly enabled WCAG2.1 A rule. Its
+1,366passes/eight expected skips/six failures are retained separately. After the
+gallery name correction,27focused units and all six affected browser profiles
+pass. The final complete1380-case run passes1372cases/eight expected skips, zero
+failures or retries. The strict secondary index regenerates with114composition
+checks/162captures; `artifacts/browser/secondary-review/index.html` is current.
+All22primary groups also refresh from the same actual invocation, without
+rerunning or duplicating captures:138checks/162captures at
+`artifacts/browser/current-primary-review/index.html`. The generator uses the
+fixed owned source directory and refuses failed/retried/duplicate/missing captures.
+Old primary and nine-state indexes remain historical review candidates; none
+are approved baselines.
+
+The full mobile event editor and attendee correction captures were inspected.
+Editor fields and actions fit the phone layout. Attendance keeps an explicitly
+named keyboard-scrollable table region so its wider data/editor columns do not
+expand the document. The captured correction state scrolls horizontally to its
+controls; this is a contained table viewport, not a claim that every column is
+visible simultaneously. Human fidelity approval, actual-device/assistive-
+technology checks and approved chapter content remain open.
+
+Remaining review includes team tasks/direct messages/whiteboard, campaign
+recipient/delivery review, media upload/publication, builder access/version/
+publish, response history/privacy/export/reveal and applicable content/account/
+operations dialogs. Event audience approval/provider sends are not exercised by
+the read-only composition suite. See `VISIBLE_LABEL_ACCESSIBILITY.md` for the
+stronger rule selection and preserved failure history.
+
 ## Secondary-state continuation
 
 Nine additional read-only states now pass across all six profiles: populated

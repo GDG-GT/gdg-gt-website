@@ -1,21 +1,21 @@
 {
-  "generatedAt": "2026-11-06T23:29:07.111822+00:00",
+  "generatedAt": "2026-11-07T01:57:07.414868+00:00",
   "shards": [
     {
       "shard": 1,
-      "cases": 440
+      "cases": 460
     },
     {
       "shard": 2,
-      "cases": 440
+      "cases": 460
     },
     {
       "shard": 3,
-      "cases": 440
+      "cases": 460
     }
   ],
-  "total": 1320,
+  "total": 1380,
   "duplicates": 0,
-  "caseKeysSha256": "842851a7815121a8541b0530cf046a07097e073c50d74ab84a0246147dda9cbc",
-  "note": "Pinned local list-only inventory, not a complete invocation or CI success. Includes failed-preload fallback across all six profiles. No assertion, timeout or retry limit was weakened."
+  "caseKeysSha256": "41bde37f8897c74a31a84e88946e161ea7cd694bd3d97a39901a168e040ebeb0",
+  "note": "Pinned local list-only inventory.19secondary states including10new event/attendance/email/lifecycle states. Every case once;460per shard. This is not full execution or remote CI success; no assertions/timeouts/retries weakened."
 }

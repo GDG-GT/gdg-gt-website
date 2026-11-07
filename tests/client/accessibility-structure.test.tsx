@@ -358,7 +358,7 @@ describe("A11Y structural axe checks (JSDOM; no contrast/visual certification)",
     mountPublic(<PublicGallery />, "/gallery");
     fireEvent.click(
       await screen.findByRole("button", {
-        name: "View photo: Fictional workshop photo",
+        name: "Fictional workshop photo Fictional workshop Fictional caption View photo",
       }),
     );
     await screen.findByRole("dialog");

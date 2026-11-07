@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-11-07T00:30:59.311137+00:00",
+  "completed": false,
+  "interrupted": true,
+  "stats": {
+    "startTime": "2026-11-07T00:26:40.757Z",
+    "duration": 154649.483,
+    "expected": 26,
+    "skipped": 1237,
+    "unexpected": 57,
+    "flaky": 0
+  },
+  "note": "Diagnostic complete-inventory invocation intentionally interrupted after57 failures identified the shared search trigger and builder field-type visible-label mismatches. Only26 passed;1237 marked skipped largely represent unexecuted cases after interruption, not expected skips. Saved raw /tmp/gdg-wcag21a-complete-browser.json. Original timeouts/retries/assertions preserved; no claim of complete execution or acceptance."
+}

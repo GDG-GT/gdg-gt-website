@@ -1,0 +1,136 @@
+{
+  "generatedAt": "2026-11-07T02:10:01.597266+00:00",
+  "accepted": false,
+  "productionFontChanged": false,
+  "reason": "Axis restriction saves11316bytes but changes fractional metrics and rasterization; reject rather than infer pixel fidelity from smaller transfer size. Original full-axis font and preload remain unchanged.",
+  "tooling": "Existing fontTools4.57.0; isolated scratch Python3.9 environment with fontTools4.57.0/Brotli1.1.0 only, no project/installed application dependency changes.",
+  "axis": {
+    "stage": "Isolated all-glyph axis-range trial; production font unchanged; no glyph removal or visual acceptance inferred",
+    "originalBytes": 48432,
+    "candidateBytes": 37116,
+    "unicodeEntries": 230,
+    "glyphs": 518,
+    "unitsPerEm": 2048,
+    "axes": [
+      {
+        "tag": "wght",
+        "min": 400.0,
+        "default": 400.0,
+        "max": 800.0
+      }
+    ],
+    "checks": [
+      {
+        "weight": 400,
+        "maxCoordinateDeltaUnits": 0,
+        "changedAdvanceWidths": 0,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 425,
+        "maxCoordinateDeltaUnits": 0.058049954137004534,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 450,
+        "maxCoordinateDeltaUnits": 0.11609990827400907,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 475,
+        "maxCoordinateDeltaUnits": 0.1741498624110136,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 500,
+        "maxCoordinateDeltaUnits": 0.23219981654801813,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 525,
+        "maxCoordinateDeltaUnits": 0.29131188966584887,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 550,
+        "maxCoordinateDeltaUnits": 0.35042396278413435,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 575,
+        "maxCoordinateDeltaUnits": 0.4095360359019651,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 600,
+        "maxCoordinateDeltaUnits": 0.4686481090200232,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 625,
+        "maxCoordinateDeltaUnits": 0.52586216070722,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 650,
+        "maxCoordinateDeltaUnits": 0.5830736991686081,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 675,
+        "maxCoordinateDeltaUnits": 0.6402852376302235,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 700,
+        "maxCoordinateDeltaUnits": 0.6979750725492977,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 725,
+        "maxCoordinateDeltaUnits": 0.7690495690958414,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 750,
+        "maxCoordinateDeltaUnits": 0.8401240656423852,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 775,
+        "maxCoordinateDeltaUnits": 0.9111985621889289,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      },
+      {
+        "weight": 800,
+        "maxCoordinateDeltaUnits": 0.9823924321026425,
+        "changedAdvanceWidths": 443,
+        "structureDifferences": 0
+      }
+    ]
+  },
+  "browser": {
+    "completed": true,
+    "scope": "Isolated original full weight axis vs400\u2013800 range; same230Unicode entries/518glyphs.51weight-size pairs in each engine, same text/canvas position.Production font unchanged. Not human-approved visual baselines.",
+    "engines": 3,
+    "pairs": 153,
+    "maxWidthDeltaPx": 0.449951171875,
+    "maxStrongAlphaInkFraction": 0.12606366214938544
+  },
+  "sourceAndRaw": "/Users/tejas/.cache/gdg-font-review-6fhwqvcx"
+}

@@ -39,6 +39,33 @@ CI uses Node 24. Cache metadata is aligned without any extra dependency install.
 
 ## Isolated KaTeX review, no dependency override yet
 
+The later isolated browser continuation compares actual Mermaid11.17.2 and
+converter2.2.2 with installed KaTeX0.16.47 versus the integrity-verified0.18.2
+candidate, using an esbuild alias only in the owned scratch harness. Across
+Chromium/Firefox/WebKit, all66checks finish without render/converter/safety
+failures. The30paired comparisons cover plain/basic-math/matrix/untrusted-URL
+labels in normal/legacy modes and flowchart/sequence conversion. Reviewed
+geometry, node counts and converter element projections match; no unsafe links,
+external requests or page errors occur. This is recorded in
+`phase0/katex-isolated-browser-review.json`.
+
+The first browser diagnostic used an incorrectly escaped matrix row; both
+versions refused it identically. That raw result is retained in the scratch
+directory, and the corrected one-row matrix passes. No installed dependency,
+lockfile, override or source package has changed. A separate actual BoardCanvas
+draw/export integration harness is still being evaluated; the initial harness
+build lacked the package's production CSS export condition and was corrected
+only in scratch. The subsequent actual BoardCanvas comparison now passes all
+six engine/version cases: real pointer drawing grows the restored scene from
+four to five elements, SVG export is valid and contains no executable links,
+and flowchart conversion succeeds without external requests or page errors.
+Evidence: `phase0/katex-isolated-whiteboard-review.json`. The associated label
+and clear canvas area are used for the gesture; earlier hidden-input/sidebar
+fixture diagnostics remain preserved. No assertion was weakened. A reviewed
+local screenshot confirms the extra rectangle and existing text/ellipse render.
+These results prepare a controlled dependency patch; they do not themselves
+change the installed package or close the current low audit finding.
+
 The upstream [KaTeX advisory](https://github.com/KaTeX/KaTeX/security/advisories/GHSA-238p-pmpm-9mq7)
 requires existing prototype pollution or attacker influence over the renderer
 options prototype, attacker-controlled expressions and unsanitized output.

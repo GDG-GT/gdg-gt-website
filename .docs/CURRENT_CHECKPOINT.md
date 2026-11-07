@@ -21,8 +21,8 @@ recovery probes and cleanup are already complete; do not repeat their writes.
 
 ## Saved local work
 
-Branch `feat/ui-local`. Last committed baseline: `1439a91` (verified router v7
-security migration and guarded workspace navigation). Earlier saved corrections:
+Branch `feat/ui-local`. Last committed baseline: `01f8859` (smaller public
+availability reader and verified native unlock). Earlier saved corrections:
 
 - `422970e`: public startup, complete PRD catalog, full navigation focus, primary
   visual review, HTTPS/cache/security and PWA acceptance probes.
@@ -39,7 +39,80 @@ security migration and guarded workspace navigation). Earlier saved corrections:
 
 All are local commits without AI trailers. User edits remain preserved.
 
-## Active lightweight public availability reader
+## Active UI checkpoint and controlled KaTeX update
+
+UI source is ready to save locally. Brand/search/builder/gallery names now match
+visible content; WCAG2.1 A added to browser helper and40local probe scripts, whose
+syntax passes but original API mutations were NOT replayed. NoSQLchanged.
+All1380currentbrowsercases finished/reaped0(session36403):1372passes/eight expected
+skips/zero failures/retries. Evidencephase0/visible-label-complete-browser.json,
+raw/tmp/gdg-accessible-final-complete-browser.json. Currentdist built with final
+label fixes; no code/build/dependency changed after this invocation. New10event
+secondary states bring19states/114checks/162captures. Currentprimary138checks/
+162captures also regenerate from the SAMEactualinvocation (not rerun/copiedfake
+results) using summarize-visual-review --current-primary. Indexes:
+artifacts/browser/{current-primary-review,secondary-review}/index.html.
+Old indexes remain historical, no human approval/goldens inferred.
+
+Final types/lint0errors10warnings/budgets/traceability pass, logs
+/tmp/gdg-gallery-final-{types,lint,budgets,traceability}.log. InitialJS107950gz,
+CSS29899,font48432,offline493073. Shardinventory1380/460each/no duplicates.
+Performance probe now explicitly gates visibleLabelsMatchNames; not yet run on
+this artifact. Baselinepublic-readerlab stillfailsmobileLCP~3s. Currentstatus
+marks performance mismatch. All15PWA/nine update/46HTTPS baselines need refresh
+on eventual finalbuild; do not claim they bind currentartifact yet.
+
+Coverage firstattempt2683pass/4fail:two overlooked buildernames and two URL
+assertions beforeMemoryRoutertransition. Exactnames updated; unchangedURLchecks
+pass in33-case isolation, then waitFor exactblankquery added without timeout or
+privatewithholding/no-loop assertion weakening. Secondattempt2683pass/4different
+failures (collectionretry,builderread,settings,finance; includes slowtimeouts).
+Allrawresults retained under artifacts/quality/visible-label-{,final-}coverage.json;
+phase0/visible-label-{initial,second}-quality.json summarize failures. Four-file
+2workerisolation43cases:40pass/3builderfailures. Unchanged builderfile then passes
+all28cases with--maxWorkers=1 (session7040exit0), log
+/tmp/gdg-form-builder-scope-sequential.log. No production data recovery code or
+unit timeout/retry/thresholds changed. Final full coverage should use1worker AFTER
+KaTeX patch/build, never alongside browser/build/performance. Currentfullcoverage
+notpassing; reporthonestly. No jobs remain active at this checkpoint.
+
+SeparateKaTeXcompatibility work complete:66actualMermaid11.17.2/converter2.2.2
+browserchecks and6actualBoardCanvas drawing/SVGexport/converter checks pass across
+Chromium/Firefox/WebKit for old0.16.47 and integrityverified0.18.2 candidatealias.
+Geometry/node counts/converter projections match in reviewed cases; no external
+requests/pageerrors/unsafeSVGlinks. Source/raw in
+/Users/tejas/.cache/gdg-katex-review-k2y16kkv, evidence
+phase0/katex-isolated-{browser,whiteboard}-review.json. Initial harness CSScondition,
+hiddenradio and sidebar-drag diagnostic failures preserved, then corrected only
+in scratch while keeping assertions. Allownedport4188contexts/listenerclosed.
+Installedpackages are STILL0.16.47; no override/install performed yet. Official
+KaTeX advisory confirms patched0.18.2 and affected<0.18.2. Next controlledstep:
+scoped Mermaid=>KaTeX0.18.2 override after saving thisUIcheckpoint. Read-only
+rollbackbackup /Users/tejas/.cache/gdg-katex-patch-mys214iv contains root/cache
+manifests+locks, hiddenlock and completeoldKaTeXpackage. Pointer
+/tmp/gdg-katex-patch-backup-path. Candidatearchivealreadyintegrityverified at
+/Users/tejas/.cache/gdg-router-v6-pdgsv9_o/optional/katex-0.18.2.tgz.
+Prefer lock-only generation and exact archive/package replacement with matching
+hiddenlock to avoid repeating npmoptional-packagepruning; compare ALLresolved
+lockentries and preserve restoredSharpWASM/Emnapi. Do not blind auditfixforce,
+majorupgradeMermaid/converter or downgradeExcalidraw. Root/cache manifests must
+stay synchronized. After patch, add actual inherited-trust regression, audit,
+build, focused editor verification and full1workercoverage, then isolated
+performance (never concurrentload). Savebackups/exactchange evidence.
+
+Fontaxis trialREJECTED:48,432=>37,116bytes, all230Unicode/518glyphs retained but
+153native3engine comparisons show0.45pxwidth/12.6%stronginkdifference. Production
+font/preloadUNCHANGED. Evidencephase0/font-axis-trial-rejected.json. Scratch
+/Users/tejas/.cache/gdg-font-review-6fhwqvcx and isolatedtoolenv
+/Users/tejas/.cache/gdg-font-review-env (FontTools4.57.0/Brotli1.1.0) only.
+
+FullPRD/manual/device/hosted/approvedvisual acceptance remains open. Further
+secondary review still includes teamtasks/directmessages/whiteboard,campaign
+recipient/send,mediaupload/publish,builderaccess/version/publish,responseprivacy/
+history/export/reveal,andcontent/account/operationsdialogs. User files preserved
+and excluded fromstaging; no external writes/deployment/providers/SSO/timers.
+
+## Saved lightweight public availability reader
 
 The v7 migration below is saved in `1439a91`; do not repeat installs or its
 completed verification. New uncommitted code: `shared/public-site-status-read.mjs`,

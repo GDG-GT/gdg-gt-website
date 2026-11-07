@@ -85,7 +85,7 @@ describe("Public gallery controls and lightbox", () => {
   it("restores shared filters and page, and resets pagination when the event changes", async () => {
     const router = mount(`/gallery?event=${eventId}&page=2`);
     await screen.findByRole("button", {
-      name: "View photo: Fictional photo one",
+      name: "Fictional photo one Fictional workshop Fictional caption one View photo",
     });
     expect(apiMock).toHaveBeenCalledWith(
       `/gallery?page=2&event=${eventId}`,
@@ -106,7 +106,7 @@ describe("Public gallery controls and lightbox", () => {
   it("focuses captions during arrow browsing and returns to the original photo on close", async () => {
     mount();
     const opener = await screen.findByRole("button", {
-      name: "View photo: Fictional photo one",
+      name: "Fictional photo one Fictional workshop Fictional caption one View photo",
     });
     opener.focus();
     fireEvent.click(opener);
@@ -145,7 +145,7 @@ describe("Public gallery controls and lightbox", () => {
     mount();
     fireEvent.click(
       await screen.findByRole("button", {
-        name: "View photo: Fictional photo one",
+        name: "Fictional photo one Fictional workshop Fictional caption one View photo",
       }),
     );
     const dialog = await screen.findByRole("dialog");
@@ -165,7 +165,7 @@ describe("Public gallery controls and lightbox", () => {
     mount();
     fireEvent.click(
       await screen.findByRole("button", {
-        name: "View photo: Fictional photo one",
+        name: "Fictional photo one Fictional workshop Fictional caption one View photo",
       }),
     );
     const dialog = await screen.findByRole("dialog");
@@ -187,7 +187,7 @@ describe("Public gallery controls and lightbox", () => {
   it("preserves captions and controls when thumbnail and lightbox images fail", async () => {
     mount();
     const opener = await screen.findByRole("button", {
-      name: "View photo: Fictional photo one",
+      name: "Fictional photo one Fictional workshop Fictional caption one View photo",
     });
     fireEvent.error(within(opener).getByRole("img"));
     expect(within(opener).getByText(/Photo unavailable/)).toBeTruthy();
@@ -214,7 +214,7 @@ describe("Public gallery controls and lightbox", () => {
     expect(screen.queryByText("More moments are on the way")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Try again" }));
     await screen.findByRole("button", {
-      name: "View photo: Fictional photo one",
+      name: "Fictional photo one Fictional workshop Fictional caption one View photo",
     });
     expect(document.activeElement?.id).toBe("main-content");
   });
@@ -251,12 +251,12 @@ describe("Public gallery controls and lightbox", () => {
       await router.navigate("/gallery?page=1");
     });
     await screen.findByRole("button", {
-      name: "View photo: Fictional photo current",
+      name: "Fictional photo current Fictional workshop Fictional caption current View photo",
     });
     await act(async () => resolve(listing([photo("outdated")], { page: 2 })));
     expect(
       screen.queryByRole("button", {
-        name: "View photo: Fictional photo outdated",
+        name: "Fictional photo outdated Fictional workshop Fictional caption outdated View photo",
       }),
     ).toBeNull();
   });
