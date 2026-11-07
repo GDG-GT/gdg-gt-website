@@ -1,0 +1,1555 @@
+{
+  "projectRef": "gyzrciokgqwxjrlqrklz",
+  "lints": [
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`gdg_security.announcement_previews\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "gdg_security",
+        "name": "announcement_previews",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`gdg_security.auth_rate_daily\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "gdg_security",
+        "name": "auth_rate_daily",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`gdg_security.blog_versions\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "gdg_security",
+        "name": "blog_versions",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`gdg_security.direct_review_sessions\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "gdg_security",
+        "name": "direct_review_sessions",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`gdg_security.member_merge_reviews\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "gdg_security",
+        "name": "member_merge_reviews",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`gdg_security.operational_alerts\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "gdg_security",
+        "name": "operational_alerts",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`gdg_security.operational_metrics\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "gdg_security",
+        "name": "operational_metrics",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`gdg_security.operational_monitor_state\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "gdg_security",
+        "name": "operational_monitor_state",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`gdg_security.realtime_grants\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "gdg_security",
+        "name": "realtime_grants",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.account_access_tokens\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "account_access_tokens",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.admin_actions\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "admin_actions",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.admin_sessions\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "admin_sessions",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.admin_teams\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "admin_teams",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.admin_users\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "admin_users",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.announcement_reads\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "announcement_reads",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.announcement_recipients\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "announcement_recipients",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.announcements\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "announcements",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.blog_categories\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "blog_categories",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.blog_comments\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "blog_comments",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.blog_likes\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "blog_likes",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.blog_posts\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "blog_posts",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.blog_submission_comments\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "blog_submission_comments",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.blog_submissions\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "blog_submissions",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.budget_allocations\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "budget_allocations",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.channel_memberships\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "channel_memberships",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.channel_messages\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "channel_messages",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.channels\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "channels",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.communication_tasks\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "communication_tasks",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.contact_submissions\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "contact_submissions",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.csrf_tokens\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "csrf_tokens",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.delivery_jobs\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "delivery_jobs",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.direct_message_threads\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "direct_message_threads",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.direct_thread_states\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "direct_thread_states",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.event_attendance\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "event_attendance",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.event_mail_reviews\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "event_mail_reviews",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.event_message_recipients\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "event_message_recipients",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.event_messages\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "event_messages",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.event_push_verifications\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "event_push_verifications",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.event_slug_redirects\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "event_slug_redirects",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.events\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "events",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.finance_attachments\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "finance_attachments",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.finance_decisions\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "finance_decisions",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.finance_notes\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "finance_notes",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.finance_report_cache\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "finance_report_cache",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.finances\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "finances",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.footer_content\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "footer_content",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_access_tokens\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_access_tokens",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_answers\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_answers",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_collaborators\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_collaborators",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_deletion_reviews\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_deletion_reviews",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_delivery_policies\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_delivery_policies",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_export_artifacts\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_export_artifacts",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_export_items\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_export_items",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_export_jobs\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_export_jobs",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_integrations\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_integrations",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_privacy_policies\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_privacy_policies",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_purge_certificates\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_purge_certificates",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_respondent_copies\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_respondent_copies",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_response_deliveries\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_response_deliveries",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_response_drafts\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_response_drafts",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_response_holds\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_response_holds",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_response_revisions\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_response_revisions",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_responses\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_responses",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_saved_views\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_saved_views",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_uploads\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_uploads",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.form_versions\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "form_versions",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.forms\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "forms",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.gate_sessions\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "gate_sessions",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.idempotency_keys\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "idempotency_keys",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.internal_messages\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "internal_messages",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.linktree_analytics\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "linktree_analytics",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.linktree_links\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "linktree_links",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.linktree_profiles\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "linktree_profiles",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.linktree_username_reservations\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "linktree_username_reservations",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.media_derivatives\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "media_derivatives",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.media_files\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "media_files",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.media_folders\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "media_folders",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.media_publications\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "media_publications",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.media_scan_objects\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "media_scan_objects",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.media_usage\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "media_usage",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.member_import_reviews\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "member_import_reviews",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.members\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "members",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.navigation_items\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "navigation_items",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.newsletter_campaign_recipients\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "newsletter_campaign_recipients",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.newsletter_campaigns\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "newsletter_campaigns",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.newsletter_provider_events\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "newsletter_provider_events",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.newsletter_send_reviews\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "newsletter_send_reviews",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.newsletter_subscribers\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "newsletter_subscribers",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.newsletter_subscription_attempts\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "newsletter_subscription_attempts",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.newsletter_templates\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "newsletter_templates",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.newsletter_test_sends\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "newsletter_test_sends",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.newsletter_tokens\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "newsletter_tokens",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.notifications\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "notifications",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.page_content\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "page_content",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.person_privacy_cleanup\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "person_privacy_cleanup",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.person_privacy_reviews\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "person_privacy_reviews",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.project_members\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "project_members",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.project_stars\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "project_stars",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.projects\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "projects",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.push_delivery_log\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "push_delivery_log",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.push_subscriptions\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "push_subscriptions",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.rate_limit_windows\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "rate_limit_windows",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.resources\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "resources",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.scheduled_job_runs\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "scheduled_job_runs",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.security_alerts\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "security_alerts",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.security_configuration\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "security_configuration",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.security_events\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "security_events",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.site_content\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "site_content",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.site_settings\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "site_settings",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.site_status\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "site_status",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.social_links\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "social_links",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.sponsor_impact_stats\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "sponsor_impact_stats",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.sponsors\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "sponsors",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.sponsorship_tiers\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "sponsorship_tiers",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.task_comments\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "task_comments",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.team_activity_log\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "team_activity_log",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.team_announcement_reads\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "team_announcement_reads",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.team_announcements\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "team_announcements",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.team_invites\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "team_invites",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.team_member_transfers\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "team_member_transfers",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.team_members\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "team_members",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.team_memberships\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "team_memberships",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.team_messages\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "team_messages",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.team_page_access\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "team_page_access",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.team_permissions\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "team_permissions",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.team_statistics\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "team_statistics",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.upload_intents\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "upload_intents",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.whiteboard_collaborators\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "whiteboard_collaborators",
+        "type": "table"
+      }
+    },
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "title": "RLS Enabled No Policy",
+      "detail": "Table \\`public.whiteboards\\` has RLS enabled, but no policies exist",
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+      "metadata": {
+        "schema": "public",
+        "name": "whiteboards",
+        "type": "table"
+      }
+    }
+  ],
+  "scope": "Read-only Supabase hosted security advisor after initial schema setup. Provider advisories are recorded, not suppressed; application and hosted acceptance remain separate.",
+  "generatedAt": "2026-11-07T22:36:52.475Z"
+}

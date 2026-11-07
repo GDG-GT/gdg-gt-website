@@ -16,6 +16,10 @@ verify the compiled renderer without network access. Deploy the
 versioned API and public-document handler, not a static-only SPA rewrite; retain
 the routing, CSP, no-store private responses, immutable hashed assets, gzip/Brotli,
 HTTPS and service-worker headers defined in `vercel.json` on any chosen host.
+The Vercel adapter packages shared TypeScript imports explicitly. A single
+`api/v1.mjs` function handles nested API routes through the reviewed versioned
+rewrite; the root homepage also has an explicit SSR rewrite so the static index
+cannot take precedence. Its adapter retains the original webhook byte stream.
 The existing Vercel adapter is optional; workers require a persistent supervised
 runtime or a host that supports their full invocation duration. Keep the scanner
 private. Do not run scans/exports in a 30-second browser request.

@@ -1,0 +1,43 @@
+{
+  "projectRef": "gyzrciokgqwxjrlqrklz",
+  "buckets": [
+    {
+      "id": "form-uploads",
+      "public": false,
+      "fileSizeLimit": 26214400
+    },
+    {
+      "id": "contact-attachments",
+      "public": false,
+      "fileSizeLimit": 10485760
+    },
+    {
+      "id": "finance-attachments",
+      "public": false,
+      "fileSizeLimit": 10485760
+    },
+    {
+      "id": "blog-submissions",
+      "public": false,
+      "fileSizeLimit": 20971520
+    }
+  ],
+  "pendingBuckets": [
+    {
+      "id": "form-exports",
+      "requiredLimit": 67108864
+    },
+    {
+      "id": "media",
+      "requiredLimit": 262144000
+    }
+  ],
+  "providerGlobalFileSizeLimit": 52428800,
+  "webhookId": "ecba37c5-f633-41d9-8844-35af63530547",
+  "webhookEndpoint": "https://gdggt.dev/api/v1/webhooks/resend",
+  "webhookSigningSecretStoredEncrypted": true,
+  "uploadsEnabled": false,
+  "storageS3CredentialsConfigured": false,
+  "scope": "Authorized private hosted buckets and signed Resend webhook setup. No source/sample data or provider email send. The current provider rejected the required export bucket size; exports/media limits remain unresolved. S3 credentials and persistent scanner runtime remain required before enabling uploads.",
+  "generatedAt": "2026-11-07T22:26:57.547Z"
+}

@@ -87,6 +87,7 @@ function InquiryReview({
   onDenied,
   onSaved,
   onClose,
+  focusOnLoad,
 }: {
   record: Inquiry;
   paused: boolean;
@@ -95,10 +96,20 @@ function InquiryReview({
   onDenied: () => void;
   onSaved: () => void;
   onClose: () => void;
+  focusOnLoad: boolean;
 }) {
   const record = useRef(currentRecord).current,
     stale = currentRecord.revision !== record.revision,
     attachmentEpoch = useRef(0);
+  const panel = useRef<HTMLElement>(null),
+    heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (!focusOnLoad) return;
+    // Recovery replaces the focused status panel. Return focus to the verified
+    // record and align its entire panel below the persistent workspace toolbar.
+    panel.current?.scrollIntoView?.({ block: "start" });
+    heading.current?.focus({ preventScroll: true });
+  }, [focusOnLoad]);
   const [status, setStatus] = useState(record.status),
     [hold, setHold] = useState(false),
     [reason, setReason] = useState(""),
@@ -223,12 +234,13 @@ function InquiryReview({
     );
   return (
     <section
+      ref={panel}
       className="gt-panel gt-contact-inbox-review"
       aria-label="Contact inquiry review"
     >
       <header className="gt-inline-actions">
         <div>
-          <h2>{record.name}</h2>
+          <h2 ref={heading} tabIndex={-1}>{record.name}</h2>
           <p className="gt-helper">
             {record.type} · received {date(record.createdAt)} · revision{" "}
             {record.revision}
@@ -730,6 +742,7 @@ function Inbox() {
         <InquiryReview
           key={JSON.stringify([id, reviewEpoch, list.items[0].redactedAt])}
           record={list.items[0]}
+          focusOnLoad={reviewEpoch > 0}
           paused={paused}
           onBusy={setDetailBusy}
           onDenied={() => {

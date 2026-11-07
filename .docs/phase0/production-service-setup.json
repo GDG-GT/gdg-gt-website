@@ -1,0 +1,12 @@
+{
+  "projectRef": "gyzrciokgqwxjrlqrklz",
+  "projectId": "prj_p6dWtmkiB6rk0C4fsKX4upEKxQNQ",
+  "emailSendEnabled": false,
+  "realtimeImported": true,
+  "scope": "Authorized hosted application-service setup; no email/push send or data import.",
+  "resendKeyId": "fb2ab532-2d3b-4f48-bff5-123018e4fcd6",
+  "dedicatedDomainScopedSender": true,
+  "realtimeKeyId": "d4a6426f-9d3d-4bcf-8741-90306434ee7d",
+  "realtimeStandbyImported": true,
+  "generatedAt": "2026-11-07T22:23:03.408Z"
+}

@@ -1,0 +1,16 @@
+{
+  "zoneId": "11c3448d3b3181c4e25069a67f11d605",
+  "domain": "gdggt.dev",
+  "zoneStatus": "active",
+  "record": {
+    "id": "adb754e392d2aeb8713e1fe09b7ae4d9",
+    "type": "CNAME",
+    "name": "gdggt.dev",
+    "content": "f7f426679df0b3fc.vercel-dns-017.com",
+    "proxied": false,
+    "ttl": 300
+  },
+  "existingMailAndVerificationRecordsPreserved": true,
+  "scope": "Authorized canonical website DNS creation through the existing active Cloudflare zone. No nameserver, mail, DKIM, TXT, unrelated records or account security changes. DNS-only CNAME with Cloudflare apex flattening; Vercel manages HTTPS.",
+  "generatedAt": "2026-11-07T22:39:02.498Z"
+}

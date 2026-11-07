@@ -205,6 +205,11 @@ describe("Original inquiry save reconciliation and explicit identical retry", ()
           ).toBeNull(),
         );
         expect(commits).toBe(1);
+        await waitFor(() =>
+          expect(document.activeElement).toBe(
+            screen.getByRole("heading", { name: "Fictional inquiry sender", exact: true }),
+          ),
+        );
         expect(attempts()).toHaveLength(position === "before" ? 2 : 1);
         if (position === "before") {
           const first = { ...original[1].body },

@@ -1406,6 +1406,9 @@ fieldset.gt-announcement-choices {
 .gt-admin-page > nav.gt-team-tabs {
   margin-bottom: 24px;
 }
+.gt-contact-inbox-review {
+  scroll-margin-top: 84px;
+}
 .gt-task-detail > .gt-button-row {
   margin-block: 20px;
 }

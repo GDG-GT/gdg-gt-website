@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-11-07T22:17:33.894Z",
+  "generatedAt": "2026-11-07T22:36:37.630Z",
   "completedEvidenceInventory": true,
   "scope": "Non-visual PRD evidence inventory. Confirms referenced native scripts have passing recorded reports, unit references belong to the current complete passing source execution, and SQL references belong to the recorded passing canonical database execution. Source mapping/report existence alone is not exhaustive functional proof or full PRD acceptance. Historical runs are not relabeled as freshly executed.",
   "prdLogicalCases": 307,
   "nonVisualLogicalCases": 285,
   "currentSource": {
     "report": "artifacts/quality/native-verified-source-tests.json",
-    "passed": 2757,
+    "passed": 2768,
     "failed": 0,
-    "files": 228,
-    "reportSha256": "8f9e3543ed885847a725655c2a39958e5b6c544a63d50efa39d32bb2bcdd788a",
+    "files": 229,
+    "reportSha256": "fd97ae84ffbe6cd88ab048d13996539183e722b13207098a892074288fb1fb7e",
     "coverage": {
-      "lines": 78.23,
-      "statements": 76.18,
-      "functions": 71,
-      "branches": 75.66
+      "lines": 78.25,
+      "statements": 76.19,
+      "functions": 71.01,
+      "branches": 75.67
     }
   },
   "databases": {

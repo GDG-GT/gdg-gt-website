@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-11-07T22:13:40.049Z",
+  "generatedAt": "2026-11-07T22:37:31.000Z",
   "completed": true,
   "lighthouseVersion": "13.6.0",
   "build": {
     "index.html": {
       "bytes": 2215,
-      "sha256": "b2bc12ed39c97e7c78a5dbf1c8ea0646dbde77dd8d9744293f7901c905d2805b"
+      "sha256": "6711368fcf416cde571fec628c991c9134113ddaa2671a2aeecdbb92f201767e"
     },
     ".vite/manifest.json": {
       "bytes": 117372,
-      "sha256": "17ebbbc5f410ddb0ac4558b293de03cdabc3db0b0a62e020405333dd0a043ff7"
+      "sha256": "e9ceb31080c490a54cbf524c8e9d0d226ea8f0d477963311b7ebd28fed79319a"
     },
     "assets/hero-atmosphere-mobile.webp": {
       "bytes": 37624,
@@ -29,7 +29,7 @@
     },
     ".build/ssr/entry.mjs": {
       "bytes": 139481,
-      "sha256": "4e48b49b67a77807991aaebae9b5dd136dc1d68c274598f1e62ca9c7afb44b4f"
+      "sha256": "4e5dac71cfe31e447645a4f2641fc07e666fa2070a2ebe644b4b6cfd35294c0b"
     },
     "api/site.mjs": {
       "bytes": 3225,
@@ -59,7 +59,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 1953.2472000000002,
+      "lcpMs": 1953.6333,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -107,7 +107,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 200 ms"
+          "display": "Est savings of 230 ms"
         }
       ],
       "runtimeError": null,
@@ -121,9 +121,9 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 903.6786,
+      "lcpMs": 904.1335999999999,
       "cls": 0,
-      "tbtMs": 2,
+      "tbtMs": 0,
       "failedAudits": [
         {
           "id": "errors-in-console",
@@ -171,7 +171,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 901.9929,
+      "lcpMs": 901.5108,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -221,7 +221,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 643.82475,
+      "lcpMs": 643.09775,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -277,7 +277,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 252.73919999999998,
+      "lcpMs": 251.4549,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -327,7 +327,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 251.49099999999999,
+      "lcpMs": 250.25080000000003,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [

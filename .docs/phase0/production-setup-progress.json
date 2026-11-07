@@ -1,0 +1,91 @@
+{
+  "generatedAt": "2026-11-07T22:35:24.243280+00:00",
+  "scope": "User-authorized first hosted setup. Not a completed production acceptance report. No credential values included.",
+  "github": {
+    "repository": "https://github.com/GDG-GT/gdg-gt-website",
+    "private": true,
+    "pushedCommit": "376f9a27ef09f6a13c8b5b7cbb6f5e1d7028f30c",
+    "firstCiRun": 42420145658,
+    "firstCi": {
+      "sourceAndDatabase": "passed",
+      "coverage": "passed",
+      "dependencies": "passed",
+      "secrets": "passed",
+      "browser": "failed: Firefox container home ownership and two mobile inquiry focus/target-size checks; fixes under verification"
+    }
+  },
+  "supabase": {
+    "projectRef": "gyzrciokgqwxjrlqrklz",
+    "canonicalMigrations": 140,
+    "publicTables": 121,
+    "withoutRls": 0,
+    "owners": 0,
+    "authUsers": 0,
+    "sourceDataImported": false,
+    "localDatabaseReset": false,
+    "privateBuckets": [
+      "form-uploads",
+      "contact-attachments",
+      "finance-attachments",
+      "blog-submissions"
+    ],
+    "globalFileLimitBytes": 52428800,
+    "pendingBucketLimits": {
+      "form-exports": 67108864,
+      "media": 262144000
+    },
+    "s3CredentialsConfigured": false,
+    "s3KeyCreationAwaitingComputerUseConfirmation": true
+  },
+  "vercel": {
+    "projectId": "prj_p6dWtmkiB6rk0C4fsKX4upEKxQNQ",
+    "teamId": "team_JgYBymEvh6iYyZXJGEhFchkM",
+    "plan": "hobby",
+    "node": "24.x",
+    "firstDeployment": "dpl_63xU2Rkjwab46W3SJq6LBT64C4fM",
+    "firstDeploymentReady": true,
+    "firstDeploymentUsable": false,
+    "initialErrors": [
+      "Shared TypeScript files excluded from function packages",
+      "Standalone nested catch-all routing unavailable",
+      "Homepage static-file precedence"
+    ],
+    "fixesPrepared": true,
+    "automaticOrgGitConnection": false,
+    "gitConnectionError": "repo_owned_by_org",
+    "pinnedGitDeploymentsAvailable": true,
+    "localFixesVerified": true
+  },
+  "secrets": {
+    "managementTokensInGit": false,
+    "managementTokensUsedAsRuntimeSecrets": false,
+    "serverValuesEncryptedInVercel": true,
+    "independentRiskEncryptionCronSecrets": true,
+    "gateStoredAsScryptHash": true,
+    "realtimeImportedEs256": true,
+    "dedicatedDomainScopedResendSendingKey": true,
+    "webhookSecretEncrypted": true
+  },
+  "providerSends": 0,
+  "emailSendEnabled": false,
+  "pushSendEnabled": false,
+  "uploadsEnabled": false,
+  "domain": {
+    "name": "gdggt.dev",
+    "vercelBound": true,
+    "cloudflareDnsConfigured": true,
+    "globalApiKeyRequiresAccountEmail": true,
+    "accountEmailResolvedFromSignedInUi": true
+  },
+  "pendingOwnerInputs": [
+    "First admin email and display name",
+    "Existing worker/scanner host or hosting decision",
+    "Storage plan/limit decision and Supabase S3 credentials"
+  ],
+  "fullProductionReady": false,
+  "deferred": [
+    "SSO/Google",
+    "Bevy/Engage"
+  ],
+  "latestLocalEvidence": "phase0/hosted-runtime-fixes.json"
+}

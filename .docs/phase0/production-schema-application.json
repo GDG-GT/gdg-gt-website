@@ -1,0 +1,998 @@
+{
+  "projectRef": "gyzrciokgqwxjrlqrklz",
+  "origin": "https://gdggt.dev",
+  "startedAt": "2026-11-07T22:14:26.402399+00:00",
+  "completed": true,
+  "scope": "Authorized initial canonical production schema installation. Only database/migrations, no historical source seeds, no local credentials or resets. API-created migration versions are recorded separately from canonical filenames. Existing hosted history is inspected before any apply; an unconfirmed mutation stops without replay.",
+  "migrations": [
+    {
+      "file": "202610190001_canonical_structure.sql",
+      "sha256": "dd28ae66ea2d5c2210d328cec3ac94e189d612020ee2ed8cd19e22e7be8f714e",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221427",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610190002_security_foundation.sql",
+      "sha256": "20c279ab54cc3261820ae12484490bbd58ec9da84dbce6ee64214ba8a55487cd",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221431",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610190003_events_and_public_workflows.sql",
+      "sha256": "eafa7e5a452f10871959d70e411e81513b1d4d865bd7c1bb6c5d629e7d1b1ed4",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221433",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610190004_password_and_lockout.sql",
+      "sha256": "99cf057257fe533d5153063cebfe17b7f2b24a7bb604aa0b9c3b69a040455b66",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221436",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610190005_event_operations.sql",
+      "sha256": "cae95afb9398b9091e0deed1f51e77faea56bb7c3c4c5b29a49addd8038d7765",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221438",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610190006_profile_operations.sql",
+      "sha256": "4bfe3e606d9615d862f25891788496b79a3bd2f54cb1716c1adc106131fce940",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221441",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610190007_public_submissions_and_delivery.sql",
+      "sha256": "aa422a31c0902538766a00205af0e7512954e9447eefc40f06be15afacd42a0c",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221443",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610190008_event_audience.sql",
+      "sha256": "128fcf90450512cc773d80162e2758dbcffde0f1375a40cb8e5d3c408c7ff613",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221446",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610190009_notifications_and_job_recovery.sql",
+      "sha256": "734156a073ced799e1408d71146364090ec674b5f84fe5501dd02a9c61a70c9e",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221448",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610190010_forms_core.sql",
+      "sha256": "1e9c6a516d1af97b4f67e14f2dee157b94ce0aefa90dcb5afc996f038ce05b59",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221451",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610190011_forms_drafts_edits_and_access.sql",
+      "sha256": "4b04b61dc10eac5b691e8babd06c712c88c11066c53ef781bae3fcfb43638846",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221453",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610190012_form_response_workspace.sql",
+      "sha256": "4403e1d36b3d7b1764cc8f14a16e5850fec60dfa144296b10490d7626cf69242",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221456",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610190013_failed_gate_limits.sql",
+      "sha256": "3875c0699ca25812a2ed2ac945b49328d600a0c826d0a21cea807577c4c56610",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221458",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200014_form_access_delivery.sql",
+      "sha256": "93799f7fd0edd15a9f8ad550acd17167ebef603c4351110bd95d387ee098a59f",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221500",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200015_private_upload_workers.sql",
+      "sha256": "4d6409bbfe4b8bd2c0366aa6139d687eb8915aa4fc20f3eaf2b6e999d5df998b",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221503",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200016_upload_removal_fencing.sql",
+      "sha256": "f9e74ebf85f0dc5817aa97356da6d93bfda0efc732356ab94732f9f175816fae",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221505",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200017_form_upload_drafts_cleanup.sql",
+      "sha256": "73d43b29bbed95cfa5db9deec1be348d220f94103a225aaacd590b372b3c4b5d",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221508",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200018_draft_upload_binding_fix.sql",
+      "sha256": "23d60120035b4d01d8a41fd50f0d3db6bb146100fcfda3440a492e15b070d169",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221510",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200019_scheduled_forms_jobs.sql",
+      "sha256": "93585e3427721ee2096463f3cacaad69afb7073daf33c7ed9f1bd5d6bc7dae87",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221513",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200020_content_operations.sql",
+      "sha256": "35f6f11ee08090c9acc7b858363a8944e4254567e58d9300394894304a7ee0f7",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221515",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200021_content_revision_publication_guard.sql",
+      "sha256": "35ef4f5222cab68f82109a165f3176c4f57ad2ad75ce128b1bd5775f95191264",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221518",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200022_site_content_editor.sql",
+      "sha256": "284ba94a8a9ec688cf99ef91ab73e50e941353530bfdd1f58df1c444e4966ef8",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221520",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200023_account_management.sql",
+      "sha256": "1da2942a0d53acb58f8edca39defdae1fbe11f1e63236ee49b5ba028ba588904",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221523",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200024_account_revision_guard.sql",
+      "sha256": "310b7dc5264ceb50b935137190334c60b05ad12588eccb04487a1b9392938a56",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221525",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200025_team_administration.sql",
+      "sha256": "eb98c12749d82ed0e0a02c2dfd0cd9f97dc1964c2da6021444e4e1b8451c5ef3",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221527",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200026_team_explicit_action_grants.sql",
+      "sha256": "e85eb1a3af3e4eb05303de9dc1a937e257b64280d605dff226bb8e98691da3bb",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221530",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200027_team_invitations.sql",
+      "sha256": "c58a48c327ce6666de48e2d07b32d6ef0107ca3c72d594fdddc93daff042dbc1",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221532",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200028_team_announcements.sql",
+      "sha256": "8175350f04d3fb6f64f3b6b4716b5b88eb65dae47d3153667be4c16b4001661f",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221535",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200029_channels_core.sql",
+      "sha256": "90b6a452217f7c04363ef14d2526e37eae629199b941623b8a93974c2a0db240",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221537",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200030_scoped_realtime.sql",
+      "sha256": "def82e5a5727ba23dd446923810906f8705ffd1e9b53ac3b839e436b84329f15",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221540",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200031_realtime_restrictive_scope.sql",
+      "sha256": "b403c0dada84b7ff2e9fca7a3bdaef7e456831b8f471f6ec55854b1ec2b54aef",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221542",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200032_realtime_reauthorization.sql",
+      "sha256": "c301b59cf46861723c0aa13696d3fc6d16e01695883d00aeebed427acd441c15",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221545",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200033_realtime_membership_change_filter.sql",
+      "sha256": "e5bc55bd45441dfa662fe217d5b1713f92bd9e175117066d5905fe4aba58935c",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221547",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200034_whiteboards_core.sql",
+      "sha256": "8c9bd4241b033ef551e4fb4675992621d40281a591f92fd205ed44bb73ffc1ad",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221550",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200035_whiteboard_idempotency_scope.sql",
+      "sha256": "9cdabe80cc5049c6851ac8d8e53a1d445f923a0ad754346302a456c96509b472",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221553",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200036_whiteboard_scoped_realtime.sql",
+      "sha256": "4e90881a973bd63d0bee56a8d1e8849450d818df46d127f94fc802fc6e54c688",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221555",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200037_whiteboard_policy_topic.sql",
+      "sha256": "88cd41860ecbae9a68d58a75472739a96a9409cd43dab26ebb63bf706fc20da2",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221557",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200038_tasks_core.sql",
+      "sha256": "70b3625f5877331234c1bff072eb5a9578f9a714cf42cd2bc53ce1dcd4b6b1d3",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221601",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200039_task_overdue_notifications.sql",
+      "sha256": "4e022bee533bc9a8a6fd34a110bcbee684fc7394bede53ff8ada08581fef728b",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221603",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200040_task_job_cadence.sql",
+      "sha256": "d7c6b45bb909fc5aa78f1363185d1657cfbbd1345b0fab51fbba44d65b85b990",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221605",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200041_task_activity_projection.sql",
+      "sha256": "7bee4e02a9060b7782a80b1f7fb9495164b4212716da63d8eb8173cb748c395b",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221608",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200042_task_private_assignment_guard.sql",
+      "sha256": "ee9cea1ebeba8d6ab6a896adb12492690ad6ef36cc0cb633fee7b409a74b533e",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221610",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200043_direct_messages.sql",
+      "sha256": "3d464a9612e4b3523fe9ea5c8489845bdba5752e3190ebf943db29c8b6818a50",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221613",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200044_direct_messages_realtime.sql",
+      "sha256": "adf96ca9f32ec01791d38331eb843a8eabd6c5b722c97c0f319823ed70abd5f9",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221615",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200045_chapter_announcements.sql",
+      "sha256": "264f16a1cf05125665bcba20b566df290da2ec9ed57ede753f43983e96e0fea6",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221618",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200046_announcement_jobs_live.sql",
+      "sha256": "76cd85593d2af9f2489ff97d1b53a51049759a90244ee6cc5b1da8ea80993461",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221620",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200047_announcement_draft_invalidation_guard.sql",
+      "sha256": "bfec5de7d9e705eabec671e9db3e5107ef42ea4ef2d7d3b5d82c680fc6f93d96",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221623",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200048_managed_team_chat.sql",
+      "sha256": "3fb417f7abaeeae2efdd784037508369540942f975e30680f7b4206e0f1ae5c0",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221625",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200049_channel_reconnect_cursor.sql",
+      "sha256": "227798516049433f18a01ebcd164effec89aea78db919a69cc79586090d3c1ad",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221628",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200050_finance_ledger.sql",
+      "sha256": "2183263a39c7e21000b5ce40be31c2d9895bc2038bfc69a40c3d321516f76574",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221630",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200051_finance_attachments.sql",
+      "sha256": "b64eca92888fd42dbe0c8ba23a7063b965f854681772fb87b80a3ec25291b053",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221633",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200052_finance_inactive_budget_access.sql",
+      "sha256": "716b817e0ca66bbc4eca5e44714b4f5be067eb92157ae2233b85aeea492c6da8",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221635",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200053_linktree_workflows.sql",
+      "sha256": "71b35e43e1ed5357428f72c48b0a9f29e4b472caf5dbe2e8a27808aa5de7033b",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221638",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200054_linktree_team_publication_guard.sql",
+      "sha256": "0b5688089273ae3ab8df9db2be262244bda266eac64e36e9738bc7d470fb015a",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221640",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200055_private_projects.sql",
+      "sha256": "0a85bee4390847ebc79654cd6c9c0448e1f8ab3154bfbc16af43115b78d6cb16",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221643",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200056_project_star_projection.sql",
+      "sha256": "eb1c7b83d08d227a8a8901d92927392d501c095417225d07bff567cdbe76db27",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221645",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200057_site_status_control.sql",
+      "sha256": "b31c6dffe8cce8f5c3d4ee13651a193f0b879013047af99fd1267852fcd89fff",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221648",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200058_community_members.sql",
+      "sha256": "68720cfe732918f4cbe472ba3b2d615cf4beebd95af50ad5284dd4300923a846",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221650",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200059_member_list_minimization.sql",
+      "sha256": "0600e44fac8d6ac3a5110835b012d3748154aa364957389b2f7050633e8a02ec",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221653",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610200060_member_review_session_cleanup.sql",
+      "sha256": "e57611efc18e052a98e05b1f297f5082ca0cd64d6c1daf99963c17fd6b803e77",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221655",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210061_private_blog.sql",
+      "sha256": "ba96921b6c0eb71f38889ba3d6740f1e939c29ed9b01d115d9a2cb33a2e4658c",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221658",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210062_private_blog_uploads.sql",
+      "sha256": "8660b3d778cd7769d7e758442556008a43b0827720b56841675c8403ba1b8bba",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221700",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210063_form_background_exports.sql",
+      "sha256": "0065cab8f2ebc7bfdc17d2fd057687a9e725f1b11c69c1912454bd4610d2169a",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221703",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210064_form_response_history.sql",
+      "sha256": "278a08b1bb9260fdaca2bfb99633035b49e4bb23b3e83cd2e159e11971a1b9c2",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221706",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210065_form_reviewed_delivery.sql",
+      "sha256": "f9b239476d60cfcf41e31b5d384f93322fdd8504d4926265a4c9d7699d1c8803",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221708",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210066_form_retention_holds.sql",
+      "sha256": "f07f9dc342327cfd779f9112da77f8768e255294d7ee7e3da9322b37488ba3e1",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221711",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210067_notification_dismiss_all.sql",
+      "sha256": "5c56cb167d9d4df8fe6218ce7781e2417865cc99e302076c0f41c4cae5824a9a",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221713",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210068_community_member_transfer.sql",
+      "sha256": "4316fac22626f576fe31f055f223ed065164dd6856e80b6be495f33646e1bf1e",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221716",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210069_notification_read_state.sql",
+      "sha256": "57ca70889799b24161e019e10848312f16d5100b053a4d9ff084fe800eb010ec",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221718",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210070_form_identity_derivatives.sql",
+      "sha256": "139c119e616455ee7a89330ff2f850e3487584bfd779bd945d9c444161bac97a",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221721",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210071_form_integrations.sql",
+      "sha256": "291a7174539da7c105431dae81b92f0defbe64505efce93896fe664868795d6d",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221723",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210072_form_permanent_deletion.sql",
+      "sha256": "52314529bbe900d6a8711e6ffc8a49c5fce36e9430f3a2bc1e9929cac4c88830",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221726",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210073_private_media_core.sql",
+      "sha256": "f77e956d9fe1a980878580e54b2a3685cf03c7ef02f482c572226007129b3ab1",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221728",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210074_private_media_mutations.sql",
+      "sha256": "9cf6b52c9bf5fa615f63e8a41dcbcf3348b29d1c301522cec8a05953d46771df",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221730",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210075_private_media_uploads.sql",
+      "sha256": "c830ae2b38bea055ec93715e66dbc516d09e26b6e93b8ce2399ccbc41639f1c1",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221733",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210076_media_metadata_scope_fix.sql",
+      "sha256": "e0ae636c1aa952a7453449363d8ebb9e39ddd4035931acd64c2438c35c8f9920",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221736",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210077_media_publication.sql",
+      "sha256": "49d71b2c478925fc48b2447bdb3ad55c5a9161bae3de58cda3507e6a35c28855",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221738",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210078_media_event_options.sql",
+      "sha256": "506b92863006eac7cbe56cd18a8d498138c22fea7b107b752e8f08128d96f720",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221741",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210079_media_retention.sql",
+      "sha256": "1bec35ac416bf76c3278e4fa5c15d4db8227473aa47350052f2a13e6af655212",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221743",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210080_media_catalog_metadata.sql",
+      "sha256": "9153e09e1904e959d39c47217c705f6b67bc0f34f8ed66d51ee0c9b2a5315817",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221745",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210081_gallery_image_grants.sql",
+      "sha256": "28c9e31d199b83c1b17cfdbd6e0b1fc14d2c51aad5c9f5793f00cefc3e48bead",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221748",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210082_newsletter_workspace.sql",
+      "sha256": "4fc6c3e2b461405f4138296ba93d1462a9122ad53f9d50d8f02b2558cc00ad13",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221750",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210083_newsletter_send_review.sql",
+      "sha256": "05fcd7a4fe3f7d6d53e60afd7ff54e1d7c7c6039e6355e310e321dedd71f20f4",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221753",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210084_newsletter_delivery.sql",
+      "sha256": "14d67443135ac0a117f71229c7444d16e049c8fca8ef76f36a64bf3b46fde7bb",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221755",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210085_newsletter_results_cleanup.sql",
+      "sha256": "5af9017b1789b9c7d8147e2536bed3e1e40b717ffdeaa64be2c80d39e5c4c958",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221758",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210086_newsletter_job_cadence.sql",
+      "sha256": "a96f27a5ec09b40ac4184af7d76e085d31f94680f1a15b725752c9a075584fdb",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221800",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210087_newsletter_token_bulk_cleanup.sql",
+      "sha256": "bb2c6b8ed2cbd5eb01c9b0826f8ea06c79c34dfbe1efdf5c14b18d29b415afc7",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221803",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210088_contact_attachment_workflows.sql",
+      "sha256": "4e0c14a256f375860c22b9e295a57c169f93038291eccc205c7c7c01523316df",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221805",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210089_event_mail_review.sql",
+      "sha256": "aecc171ce95f10dd3d4cc617b6470f6fe66005997f6e85bd5c36fd98c2278184",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221808",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210090_verified_event_push.sql",
+      "sha256": "7078c348bd27911f6747276cb3e3d4b8ce073906b440abde4be7e5c950f8fe86",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221811",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210091_push_quota_and_retry_fences.sql",
+      "sha256": "eff4ae1889e4a09be5930f3c8295cdec30fead78fc6ba99bda71ecca5d9a7376",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221813",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210092_identified_form_responses.sql",
+      "sha256": "6e6ac74cc17eb537fd58e94808695da18eddb42d0cad5048d7e57b0f27e7c382",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221816",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210093_person_privacy_review.sql",
+      "sha256": "f9b06d3951781b6a1a7e0f98cfd141006a202c8b091576d55197e91a86ab7da9",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221818",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210094_person_privacy_erasure.sql",
+      "sha256": "dac396b269e2716b2ad6fdd3a1482f902d943511baf011474063d42435dc4153",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221821",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610210095_privacy_certificate_grants.sql",
+      "sha256": "9be993e678670796bd1c82e38502f7862d512e1ad3db3cc5a4ce13a096e09542",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221823",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610220096_operational_retention.sql",
+      "sha256": "54cbf7ecf45c634308bb8625467d032ffb3c02eabdb3b1422c08e4e5cbda605a",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221825",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610220097_operational_monitoring.sql",
+      "sha256": "5e0e7efa5ec2445dd4a94c35c662612accdf4d4f72796d537b40b33619e3d39c",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221828",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610220098_form_published_images.sql",
+      "sha256": "715967112275119c15531143c877baa17597576ade637637351cba9d544165fd",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221830",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610220099_form_library_filters.sql",
+      "sha256": "a8ce701a1b2c4344301764d18cf54424b8bf9b6d5bf1349d6e0b37d341a89ff6",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221833",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610240100_public_sponsor_ordering.sql",
+      "sha256": "61af7722b7c609f2ae930a72feb2e183573d176ca9585e341c6aaf1e0c2b4ddd",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221835",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610240101_workspace_overview.sql",
+      "sha256": "ed7caf30f60257e3673443452c1fc0393efc5bd17a3dd0ea3fc05ceace9365ed",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221838",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610240102_team_invitation_decline.sql",
+      "sha256": "a54dab4469db0a103fae06be8b8bbe52f7a3c0789d4271644fede1e8a1e8c5fd",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221840",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610240103_unregistered_invitation_decline.sql",
+      "sha256": "a809da948cb9ca536ddb51622430b025ddf6341f9d4d399ce19185f1a0512d84",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221843",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610240104_editorial_overview.sql",
+      "sha256": "736bbc1b1422b225891decbe25749b3ee1fadb7495dcf6d7cc15d2ac6afd786d",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221845",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610240105_audit_statistics.sql",
+      "sha256": "76aece1a6390299827fee02db0cb2a49a8831614c0d2fb739e4b91d1566f5cf8",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221848",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610260106_public_event_inventory.sql",
+      "sha256": "ec3ca5aca6706302ed5d79a66ae7a20dad24e34f300ff0ac5fb271c1f217d898",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221851",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610260107_event_rescheduling.sql",
+      "sha256": "fcf04e93c31ea4a9fe71f8fa15dad97e5cefc968f34ad0afc692a2094e1619dd",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221853",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610260108_newsletter_token_review.sql",
+      "sha256": "a2fa8958b1fda160f5780a942f91762053b0f8f520c6409608c0109e6561542f",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221856",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610260109_form_library_creation_capabilities.sql",
+      "sha256": "08ce1de2f06e71a643597839ea5e0215292e44196c236ed6840d3a5c6ea39589",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221858",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202610270110_curated_content_retries.sql",
+      "sha256": "2fd991babc3ecb57176270423a6de484f6dcbe07a2df072068d0980669fa072d",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221901",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611040111_form_access_account_inventory.sql",
+      "sha256": "8da32013bc18f5b455e69f83bebe1d31b79a56aec17aefa07490aaddfa111c46",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221903",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611050112_event_mutation_replay.sql",
+      "sha256": "8a5152b0ca2c884577c3ffb456209d7cd9365d1be971ad1f1d51ca76f6e898b3",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221905",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611050113_account_mutation_replay.sql",
+      "sha256": "0400eb8fffac4d0ad961fdef41b96297b13b9152c969799bdaf6c5a3149cd7f2",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221908",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611050114_team_mutation_replay.sql",
+      "sha256": "ca782e8f00705ec3429b0763ed13e598b8c539e8f9be07596ff1fd06d6e0ea4d",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221910",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611050115_invitation_mutation_replay.sql",
+      "sha256": "3189930f43fa0342a5059888027b3a5a86ee3ab96f16de33a3103343f49b5322",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221913",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611050116_team_announcement_replay.sql",
+      "sha256": "0ff783e1a4db12fa1e33ec13b6da27fd747192699a43beab334e35bd15f930ea",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221915",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611050117_event_mail_recovery_read.sql",
+      "sha256": "2d4e46fb227e9978315691d8b15adda69157925a7ada152aa1e5a35e54e2cf43",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221918",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611050118_form_authoring_replay.sql",
+      "sha256": "e1c9ca6fd0397aa2de98df46a57fa8b2feb3d4190380a1cd7fe8f979e72e0fdf",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221920",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611050119_form_library_replay.sql",
+      "sha256": "3a889dbf5708b46f5f5104736ede8b88995cdc66749f086d24a2d45416d6d48f",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221923",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060120_form_export_replay.sql",
+      "sha256": "769d360fd08ad870847560c7cee020a3d63d3929d5433c507efbb6339bc8a311",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221925",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060121_form_response_replay.sql",
+      "sha256": "7f9e126f1843fb6eddccf1eef6198718602da8b31d6e2b323e6d9ec65df844b2",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221928",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060122_form_saved_view_replay.sql",
+      "sha256": "727e5a124f841204f7debaf46b636fe07839d3d00a58d5aaf3a3ff3b319e5b5d",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221930",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060123_form_privacy_replay.sql",
+      "sha256": "376f4f392fd84e3055908d206200486fb16d93fa6cf64fad59c106e278577724",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221933",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060124_form_delivery_replay.sql",
+      "sha256": "6de0f62f89d58e54ee99ce16d2eeaf8dd3514e554fc9ae067bca1b14fffdc334",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221935",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060125_form_collaborator_replay.sql",
+      "sha256": "48951e9cd620c14b98b24b4a2897368c3334601d1fe1a669065a10f9ef75fcfd",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221938",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060126_form_deletion_replay.sql",
+      "sha256": "85aa6fc468324e964e4b77d3cafc066d406a5e0456b429524a3e1f3e73d58841",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221940",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060127_form_deletion_request_guards.sql",
+      "sha256": "652155c439e38ea703eb5ae186d0f15d64aa6cadffa2814268f593e6cbda3d4b",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221943",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060128_form_access_link_replay.sql",
+      "sha256": "66d1978249d3963ec0c084bc5a86af1b3ab1a8093797775a86c56039a650185c",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221945",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060129_form_integration_replay.sql",
+      "sha256": "338f608d30139dc85db617383ffb1965bead89d160b44793baf468941cd40fd8",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221948",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060130_form_upload_intent_replay.sql",
+      "sha256": "774c2d242b1ca634c8a76b5d0c6576766c06d68d3751505a47bd25f00c8314da",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221950",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060131_respondent_draft_replay.sql",
+      "sha256": "a8edb79291c2fc3d892de9bc1597706f6b1f007e863b1120340549834d3dcfa9",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221953",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060132_member_selection_reads.sql",
+      "sha256": "90392cf18eef9a38c507018d60c7807d9c7448b82c6707b91b38750e611b2dd1",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221955",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060133_member_write_replay.sql",
+      "sha256": "22f13298ca4407dbd6a824c5543e63caabdc20f44b663684d2d5a47448212d8d",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107221957",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060134_contact_write_replay.sql",
+      "sha256": "cb60ca1896b301380a2ff775ec67a44ace758841091fdb5b6e82d0593fa7968f",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107222000",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060135_member_merge_recovery.sql",
+      "sha256": "e867aaaeb46d659c65b6e356274df0d3713661aed100123901054fb442893c7a",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107222002",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060136_person_privacy_write_recovery.sql",
+      "sha256": "c551ae0c0bdd02094a6ebf63eb1fdf669ff28e5fd3e859c64793e9c848c80f0e",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107222004",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611060137_privacy_retry_fingerprint.sql",
+      "sha256": "6d9c0209a5ccacdccfa71503fdbb8a588261fc082b8ad00238354e3a88c8f4bb",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107222007",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611070138_account_security.sql",
+      "sha256": "2dfe07fddbca1bea44a3268c4325c16b7ab1fde7819c92e9f46d9e4e7afa7471",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107222009",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611070139_media_cursor.sql",
+      "sha256": "161fced8fd8454d9bcdd501961c891315ac8986931891b7c80816e5ea010604d",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107222012",
+      "confirmedFromHistory": true
+    },
+    {
+      "file": "202611070140_initial_owner_bootstrap.sql",
+      "sha256": "f3489c468bdbfb6356024d0c34f1c69d55c29c42275c41a88b21aeacf34b6631",
+      "apiApplyConfirmed": true,
+      "hostedVersion": "20261107222014",
+      "confirmedFromHistory": true
+    }
+  ],
+  "completedAt": "2026-11-07T22:20:16.435179+00:00",
+  "hostedMigrationCount": 140,
+  "metadata": [
+    {
+      "owner_accounts": 0,
+      "public_tables": 121,
+      "tables_without_rls": 0
+    }
+  ]
+}

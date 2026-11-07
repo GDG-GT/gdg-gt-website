@@ -190,6 +190,14 @@ for (const action of ["status", "hold"])
       await expect(
         page.getByRole("heading", { name: seed.name, exact: true }),
       ).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: seed.name, exact: true }),
+      ).toBeFocused();
+      const geometry = await page.evaluate(() => ({
+        headingTop: document.querySelector('.gt-contact-inbox-review h2')!.getBoundingClientRect().top,
+        toolbarBottom: document.querySelector('.gt-workspace-topbar')!.getBoundingClientRect().bottom,
+      }));
+      expect(geometry.headingTop).toBeGreaterThanOrEqual(geometry.toolbarBottom);
       expect(state.commits).toBe(1);
       expect(state.reads).toBe(1);
       expect(state.attempts).toHaveLength(loss === "before" ? 2 : 1);

@@ -1,64 +1,174 @@
-# Current continuation — production setup in progress
+# Latest saved progress — 2026-11-07 22:40 UTC
 
-User explicitly authorized deploying and pushing to GDG-GT on 2026-11-07.
-No AI trailers, no paid-plan purchases, no new timers. SSO/Google/Bevy/Engage deferred.
-Three unrelated files must remain unstaged: supabase/.temp/cli-latest,
-src/components/admin/PageAccessGuard 2.tsx, src/ui/linktree/useLinktreeRead 2.ts.
+Privateproduction session79985 ACTIVE; memoryenv+credentials neverprint/regenerate.
+Cloudflareaccount email FOUND fromactualsignedinUIgdg@gatech.edu. Suppliedglobalkey
+workswithX-Auth-Key/X-Auth-Email. DNSapexgdggt.devCNAMEcreated/verifiedtoVercel
+f7f426679df0b3fc.vercel-dns-017.com (DNSonlyttl300); noexistingmail/TXT/NSchanges.
+Zone11c3448d3b3181c4e25069a67f11d605recordadb754e392d2aeb8713e1fe09b7ae4d9.
+No need askCFemailagain. Cloudflareconfig retainedprivateState.cloudflare.
 
-ACTIVE hosted schema process session68255, script /tmp/gdg-apply-hosted-schema.py.
-Reap/inspect before repeating. As of22:19Z100/140 canonical migrations confirmed.
-Report .docs/phase0/production-schema-application.json is incrementally updated;
-never replay unconfirmed mutations without checking hosted migration history.
-It verified hosted public schema and migration history empty before starting.
-This is authorized production setup, not the existing localDB; never reset local.
+NativeCUA isACTIVE pendinguserapproval (doNOTcompletion-summarybeforeoutcome).
+Vivaldi setupBrowser binding inCUA; browserhostunavailablebutnativeAXworks.
+Observedlogged-inCloudflareaccountemail(no secretsrevealed), SupabaseS3dashboard.
+OpenedoneownednewtabSupabasestorages3. CurrentmodalCreate new access key,
+Namegdg-gt-production-storage filled, NOT CREATED. LatestAX325name326Create327Close.
+MustgetfreshAXbeforeusingindices. Userasyncrequestpendingexplicitconfirmation to
+clickCreate becausecomputer-usepolicy requiresaction-time confirmationforpersistent
+security-sensitiveS3allbucketaccess. It willbypassRLS(serveronly). Do NOTclickuntil
+answer. Otherworkcontinues. Onceapprovedandobservedcreated needsecuretransfer
+withoutloggingcredentialvalues; CUAAXmaydisplayone-timekeys, avoidrawoutputifpossible.
+DoNOTuseclipboardread/toolnotdocumented. Usercanhandoffcopyiftransferunavailable.
+The dashboardexplicitlyconfirmsFreePlan50MBcapcannotincreasewithoutpurchase.
 
-Vercel project CREATED and runtime24.x verified:
-prj_p6dWtmkiB6rk0C4fsKX4upEKxQNQ, gdg-gt-website, team_JgYBymEvh6iYyZXJGEhFchkM,
-team slug gdggt. No deployment/env/domain binding yet. Existing verified domain
-gdggt.dev uses Cloudflare elle/tony nameservers and is misconfigured for Vercel.
-Supabase project Website ref gyzrciokgqwxjrlqrklz, GDG@GTorgpbxuoyhfpywfqgtpvcbm.
-Resend gdggt.dev verified domain id05b40ef3-cad2-4883-a3da-0802da77873a.
-Credentials supplied in user message; NEVER echo/write to source/logs/commandargs.
-Temporary Python helpers accept hidden stdin and memory-only credentials; prior
-sessions have exited. Cloudflare cfk_ key is GLOBAL API KEY; needs account email
-with X-Auth-Key/X-Auth-Email. Bearer rejection does not prove invalid key.
-Pending async questions: Cloudflare login email; first admin email/displayname;
-existing persistent VPS/container worker+scanner host. Continue independent work.
-No production real provider sends yet. No remote Git configured, no repo created.
-GitHub CLI keyring blackspider-ops activeGDG-GTorgadmin; orgempty. Use private repo.
+Localfinal2768tests/229pass,currentcoverage78.25/76.19/71.01/75.67 unchangedgates;
+Contactaffected60/60all6pass,35targetedunits/types/lint/build/bytes/SSR25pass.
+Perf69325finished0all6mobile1953.633/904.134/901.511; desktop643.098/251.455/250.251.
+ArtifactPWA/update/HTTPS currentlysession13323active (logs/tmp/gdg-hosted-final-*).
+Secrets5586active /tmp/gdg-hosted-before-push-secrets.log; previous8539passed161commits
+2025files0unreviewed. Needsavecurrentfixes+metadata thenpushmain,newdeployment.
+Reportphase0/hosted-runtime-fixes.json; doNOTrewriteolder2757reportashostedgreen.
+CurrentruntimefixesAPIadapter/sharedpackaging/rootrewrite,Contactfocus,CIhostbrowser
+install mustbesaved. PrivateGitHub/VercelorglinkrequiresPro(409repo_owned_by_org);
+Hobbycannotautoconnectprivaterepo, but manualpinnedGitsourcedeploy works. No planbuy.
 
-LOCAL FINAL CHECKS DONE, do not rerun needlessly:
-- source2757/228pass final aftermenuactualfix, unchanged coverage gates;
-  artifacts/quality/native-verified-source-tests.json; coverage/native-verified-20261107;
-  /tmp/gdg-native-menu-source-coverage.log session49687 reaped0.
-- build62027/types27450 reaped0, scopedlint0errors. bytes/SSR25/trace59173reaped0.
-- final perf15563reaped0: all6pass, mobile1953.247/903.679/901.993ms,
-  desktop643.825/252.739/251.491ms. /tmp/gdg-native-menu-performance.log.
-- final PWA15/update9/HTTPS52 and auditor session39968 reaped0.
-- broad1812 initial1802pass/8skip/2fail. Exact catalog identities no repeats/retries.
-  menu diagnostics proved data-stateopen/focused, no animation afterEscape.
-  actualcontrolledstate+Escape fallback fix in FormsLibrary;18repeats all6pass.
-  originalhero2passisolated; finalaffected178pass/8skip session39406reaped0.
-  Never relabel broad failed invocation singlefullgreen. Raw artifacts/browser/native-final-20261107/reports.
-- all6realbackend144checks/36scenariospass, fixturescleanup0active;
-  actualzoom164pass; nativepublic21/workspace93/Audit23/scanner3pass.
-- nativeVoiceOverattempt toolblocked speech; allprefsrestored, no pendingCUA.
-- source/historysecrets scan4155reaped0:160commits2014files0unreviewed;
-  report .docs/phase0/secret-scan.json. Rerun afternewproductiondocs/secretswork.
-- evidenceinventory106scripts3081recordedchecks; historicalruns stayhistorical.
-- full normal/legacy140DB/concurrency/isolatedrestore alreadydone; no localreplay.
+Allresourcesearlierremaincreated. Hostedmigrations140complete, neverrepeat.
+Firstdeploydpl_63x...READYbutbrokenuntilnewdeployment. Norealsends/ownersyet.
+RuntimeKEYS25+Resenddedicated+webhooks storedencrypted. APIuserkeyssetupnotinruntime.
+Pendingowneremail/displayname,worker/scannerhost,S3creationapproval,storage64MB/250MB
+capacitydecision. No purchases/useraccountsbootstrapwithoutidentity. NoAItrailers.
+Protect3unrelatedfiles. New fullGitHubrunwillautostartonpush. Initialrun42420145658
+source/database/coverage/deps/secretspassed; browser2failurepreserved, remaining
+browserjobsrunningwillcancelonsupersedingmainpush. NeednewCIresultsnotoldones.
 
-Current report LOCAL_FUNCTIONAL_VERIFICATION.md and phase0/local-functional-release-20261107.json,
-current-local-status, IMPLEMENTATION_STATUS/PRD_EXECUTION_BACKLOG/LOCAL_ACCEPTANCE_AUDIT
-updated. Application uncommitted; need save ownedchanges withoutAItrailers after
-secretcheck, then authorizedorgpush. Do not stage3unrelatedfiles. Laterproduction
-setup separate fromlocalcompletion. Remaining human/physical/field/hosted48hchecks
-not magicallypassed. LocalUI8080/API8081health200. Preserve existingservices.
+Earlierdetails(recordeddiagnostics;mostcompletedjobsnotactive):
 
-Helpers /tmp/gdg-create-vercel-project.py createdexistingproject, don'trepeat;
-/tmp/gdg-private-provider-session.py generic hiddenstdin providerread/write helper;
-/tmp/gdg-apply-hosted-schema.py activecanonicalmigrationprocess. No helper contains
-credentials. Need productionenv/bootstrap/realtime/storage/webhook/worker setup,
-GitHubprivatepush/deploy/DNS and hostedverification. No commercialSitesplugin used;
-userchoseVercel, noSite registration. LighthouseCLI13.6 at
-/Users/tejas/.npm/_npx/ba16b138af87a83e/node_modules/lighthouse/cli/index.js.
+# Latest checkpoint — 2026-11-07 22:36 UTC
+
+Private credential/productionenv session79985 ACTIVE, /tmp/gdg-production-session.mjs.
+Keepmemoryprivate; runtimekeys alreadyencryptedinVercel. Do NOT regenerate.
+Hosted schema140complete, 121RLS tables0owners; doNOTreplay. Repo376f9a2pushedprivate
+GDG-GT/gdg-gt-website main. NewfixesUNCOMMITTED needsecretcheck/save/push/deploy.
+All priorproviderresources below remain authoritative; userinputs stillpending.
+
+Current fixesverified: 2768source/229filespass unchangedgates session12692reaped0,
+coverage78.25lines76.19statements71.01functions75.67branches. Rawcurrentnativeverified
+sourcejson/coverage; /tmp/gdg-hosted-final-source-coverage.log. Contactrelatedbrowser
+60/60all6profilespass (/tmp/gdg-hosted-contact-recovery.json, session54349reaped0).
+35targetedunits/types+scopedlintpass, build15715pass, bytes/trace/SSR2510807pass.
+Verceladapter11newtests preservesroute/query/rawwebhookstream; rootexplicitSSR,
+shared/**packageinclude; Contactfocusafterrecoveryfixedincludingtoolbaralignment.
+CIbrowserjob nowhostubuntu24+exactPlaywrightinstall, avoidingHOMEownershipcontainer
+error withoutsettingHOME. .githubworkflownewsourcependingpush.
+
+ACTIVE performancefinal session155? see mostrecenttoolreturnedid and
+/tmp/gdg-hosted-final-performance.log; all6freshgatesneededafterContactCSSbuild.
+ACTIVEsecretscan /tmp/gdg-hosted-final-secrets.log sessionfrommostrecenttoolresult.
+Noappsourceedits/rebuildwhileperformanceactive. NeedfinalPWA15/update9/HTTPS52after.
+Cancommit/pushcurrentfixesoncegatecheckscomplete; VercelautoconnectionBLOCKED409
+repo_owned_by_org onHobby, noGitlink! ManualpinnedGitsourcedeploy works. Do NOT
+purchaseplan ormakeprivateorgrepo public. production-git-link.json exactevidence.
+Usemodulegdg-redeploy-current-commit afterpush; it checks20recentcommitsfordedup,
+updatesprivateState.deployment. Existingfirstdeploy dpl_63x... isREADY butBROKEN;
+initialruntimeerrors capturedmissingTypeScriptfiles, rootCSR/nestedAPI404. Don't
+claimusableuntilnewactualhostsmoke. Futuremodulegdg-production-deployment-status
+usesprivateStatedeployment; runtimelogs module12secondstreamfortriggers.
+
+Pendinginputs: CFaccountemail(globalkeyneedsX-Auth-Email), firstadminemail/name,
+persistentworker/scannerhost, S3credentials/storagecapacitydecision. Supabase50MB
+providerlimit isconfirmed; formexports64MB/media250MBunavailable, others4privatebuckets
+created. NoaliasesDNSchangeyet, noownerbootstrap, noEMAIL/PUSH/UPLOAD enable/no sends.
+Resenddedicatedsender/webhookprivatekeys encrypted afterfirstdeployment created;
+nextdeploywillincludewebhooksecret. CanonicalAPPoriginhttps://gdggt.dev currently
+notDNSrouted; VerceldefaultURLreadscanbefunctionallycheckedbutcanonicalwriteswaitDNS.
+
+Earlier details below recorddiagnostics, do not repeat completedjobs.
+
+# LIVE production continuation — 2026-11-07 22:34 UTC
+
+User explicitly authorized production/GDG-GT push. Preserve three unrelatedfiles,
+noAItrailers, no paidplans/timers, SSO/Google/Bevy/Engage deferred.
+
+Private provider Node session79985 is ACTIVE. Script/tmp/gdg-production-session.mjs
+accepts JSONcommands hiddenstdin. It retains credentials and productionenv in
+memory only; ALL runtime secrets are already encryptedinVercel, no tokenfiles.
+Do NOT terminate before independent config/verification done. It supports action
+module,name: filename in/tmp without.mjs, input optional. Modules dynamicallyload
+percommand. Never print privateState/env/credentials. Values supplied latestuser.
+
+Production resources already created/applied (DO NOT repeat):
+- privateGitHub GDG-GT/gdg-gt-website, originHTTPS, commit376f9a2pushedmain;
+  currentlocalbranchfeat/ui-localtracksorigin/main.
+- all140canonicalhostedmigrations confirmed reportproduction-schema-application.json;
+  121publictables0withoutRLS0owners. Migrationjob68255finished0. No localDBreset.
+- Vercel projectprj_p6dWtmkiB6rk0C4fsKX4upEKxQNQ teamteam_JgYBymEvh6iYyZXJGEhFchkM
+  slug gdggt, runtimeNode24. 25initialencryptedprodvars plus dedicatedResendkey+
+  webhooksecret configured. ManagementPAT/Vercelsetup tokens notstoredinruntime.
+- Supabase Website gyzrciokgqwxjrlqrklz APIkeys defaultsecret/publishableusedprivately.
+  importedECrealtimesigning keyd4a6426f-9d3d-4bcf-8741-90306434ee7d nowin_use.
+  0Authusers verifiedbeforeimport/rotation. PrivateJWK encryptedinVercel.
+- domain gdggt.dev bound/verifiedVercel but CloudflareDNSmissing. CFkey cfk_ is
+  GLOBALkey needsX-Auth-Email notBearer. Pendinguseraccountemail; don'tguess.
+  recommendedA216.198.79.1/64.29.17.1; alternative76.76.21.21, CNAME
+  f7f426679df0b3fc.vercel-dns-017.com. ExistingDNSnoA/CNAME. NoDNSchangesyet.
+- dedicatedResenddomain-scoped sendingkeyGDG GT Website Productioncreated,
+  runtimekeyencryptedVercel. Verifieddomain gdggt.dev. FROM noreply@gdggt.dev;
+  reply/contactidentitypendingowner. EMAIL_SEND_ENABLED=false. No realsendsyet.
+- Resendwebhookecba37c5-f633-41d9-8844-35af63530547 createdforcanonical
+  https://gdggt.dev/api/v1/webhooks/resend, signingsecretencryptedVercel.
+- private hostedbucketsforms25MB/contact10MB/finance10MB/blog-submissions20MBcreated.
+  Supabaseglobalfilelimit50MB rejectsrequiredform-exports64MB/media250MB.
+  Those2notcreated; no silentlimitreduction. UPLOADS_ENABLED=false. NeedS3keypair
+  dashboard-minted(APIunsupported) andpersistentworker/scannerhost.
+
+FIRSTdeployment dpl_63xU2Rkjwab46W3SJq6LBT64C4fM READY/PROMOTED but NOTWORKING:
+https://gdg-gt-website.vercel.app and uniqued9sgjynby alias. Source376f9a2.
+Hostedreadsshowrootstatic2215byteCSR, SSR/API500, nestedauth404. Runtime stream
+proved ERR_MODULE_NOT_FOUND shared/public-metadata.ts andshared/forms.ts. Report
+production-initial-deployment-diagnostic.json retainsfailures. Do NOT claimlivegood.
+PrivateState.deployment isthatid untilnewdeploy. Modulegdg-production-deployment-status
+andgdg-production-runtime-logs inspect; runtimelogstream12s thenabort preservingchunks.
+Requestfunctionroutewhilewatching toobservenewlogs. No privatevaluesprinted.
+
+ACTUAL current fixes UNCOMMITTED:
+- newapi/v1.mjs +server/lib/vercel-api-adapter.mjs replacesapi/v1/[...path].mjs.
+  Explicit/api/v1/:path+rewrite toapi/v1?__gdg_api_route=:path+, validatesoriginal
+  vsrewrittendestination, refusesduplicates/traversal/conflict, preservesrawbody.
+  ExplicitrootSSRrewrite. includeFiles shared/** forsite/API fixes .ts packaging.
+  11newtests pass; full2768/229coveragepasses beforeContactfocusfix.
+- GitHubCIrun42420145658: code/database,coverage,dependency,secretpassed;
+  browser2failed302FirefoxlaunchesbecausecontainerHOMEownership (doNOTsetHOME),
+  plus2actualContactmobiletarget-sizeobscurednav. Originaljoblog
+  /tmp/gdg-ci-browser-2.log, originalartifact artifacts/browser/ci-initial-shard-2.
+  .github/workflows/ci.yml nowusesubuntu24host +exactnpxplaywrightinstallwithdeps,
+  no container, noHOMEoverride/retries/thresholdchanges.
+- ContactInbox aftersuccess/reload restoresheadingfocus and scrollsalignedpanel
+  84pxbelowtoolbar; avoidsretainingdestroyedrecoverystatusfocus andpartlyclippednav.
+  CSSscrollmargin84; meaningfulunitfocusassertions andbrowserfocus/geometryassertions.
+  35targetedunitsincludingadapterpass,fulltypes+scopedlintpass; build15715finished0.
+
+ACTIVElocalbrowser session54349: Contactwrite+readrecoveryall6profiles, raw
+/tmp/gdg-hosted-contact-recovery.json/.err, artifacts/browser/hosted-runtime-recovery.
+Noobservedfailuresyet. Don'trebuild/changeappwhileit runs. Afterdone needfreshfull
+coverage (prioradapter2768passedbeforeContactTSchange), artifactprobes/performance
+asappropriate, save/pushcurrentfixes thennewdeployment. VercelcurrentlyGitunlinked;
+modulegdg-connect-vercel-repository justinvoked via79985, inspectoutputbefore any
+repeat. UsesactualCLI-supportedPOST/v9/projects/id/link (earlierPATCHwrong400).
+Ifconnectedpushmayautodeploy; inspectbeforeexplicitredeploy. Module
+/tmp/gdg-redeploy-current-commit.mjs checksprior20deploymentsmatchingcommitbefore
+creatingpinnedGitproductiondeploy andupdatesprivateState.deployment. Avoidduplicates.
+
+Pendingasyncuserquestions: Cloudflareloginemail; firstowneremail/displayname;
+existingpersistentworker/scannerhost. Noanswersyet. Needowner/S3/limits decisions
+forfullproduction, notunfinishedlocalfeaturepretence. Continueindependentwork.
+
+LOCAL priorfullreport .docs/LOCAL_FUNCTIONAL_VERIFICATION.md andphase0/local-functional-release-
+20261107.json stays2757prehostingfixevidence. Actualpreprod1812run1802pass8skip2fail;
+menu18repeatedpass, finalaffected178pass8skip, hero2isolatedpass; nofalsefullgreen.
+Native6profiles144checks/36scenariospass,zoom164pass,public21/workspace93/Audit23pass,
+allfixturescleaned0active, VoiceOverprefsrestored/manualspeechblocked. DBnorm/legacy
+140/concurrency/restorealreadyverified. These arehistoricalsourcecheckpointsnow.
+Mostrecentfulladaptercoverage30619reaped0:2768/229; rawnative-verified-source-tests,
+coverage/native-verified-20261107; /tmp/gdg-vercel-adapter-coverage.log, unchangedgates.
+Source/historicalsecretscanlast160commits2014files0unreviewed beforehostingdocs;
+runagainbeforepushnewsecretsmetadata. No credentials in Git. ExistingUI8080API8081.
+Lighthouse13.6 path /Users/tejas/.npm/_npx/ba16b138af87a83e/node_modules/lighthouse/cli/index.js.

@@ -1,0 +1,42 @@
+{
+  "generatedAt": "2026-11-07T22:39:56.265266+00:00",
+  "sourceTests": {
+    "passed": 2768,
+    "failed": 0,
+    "files": 229,
+    "report": "artifacts/quality/native-verified-source-tests.json",
+    "sha256": "fd97ae84ffbe6cd88ab048d13996539183e722b13207098a892074288fb1fb7e",
+    "coverage": {
+      "lines": 78.25,
+      "statements": 76.19,
+      "functions": 71.01,
+      "branches": 75.67
+    },
+    "unchangedGatesPassed": true
+  },
+  "targetedUnits": 35,
+  "affectedBrowser": {
+    "passed": 60,
+    "failed": 0,
+    "profiles": 6,
+    "rawReport": "/tmp/gdg-hosted-contact-recovery.json"
+  },
+  "hostedFixes": [
+    "Explicit packaging of server-imported shared TypeScript files",
+    "Single versioned API entry with explicit nested rewrite and body-preserving adapter",
+    "Explicit root homepage SSR rewrite",
+    "Contact inquiry loaded-state focus and aligned scrolling after recovery",
+    "CI browsers installed for the pinned Playwright package directly on Ubuntu runner, avoiding mounted home ownership mismatch"
+  ],
+  "typesPassed": true,
+  "scopedLintErrors": 0,
+  "buildPassed": true,
+  "byteBudgetsPassed": true,
+  "publicSsrChecks": 25,
+  "performance": {
+    "allSixGatesPassed": true,
+    "report": ".docs/phase0/production-performance.json"
+  },
+  "hostedAcceptance": false,
+  "scope": "Local verification of corrections found during the first actual Vercel deployment and GitHub execution. Existing first hosted failures remain recorded separately. New deployment and CI verification follow; no fabricated green first release."
+}

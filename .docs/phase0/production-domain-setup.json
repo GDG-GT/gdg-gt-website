@@ -1,0 +1,40 @@
+{
+  "projectId": "prj_p6dWtmkiB6rk0C4fsKX4upEKxQNQ",
+  "domain": "gdggt.dev",
+  "verified": true,
+  "configuredBy": null,
+  "nameservers": [
+    "elle.ns.cloudflare.com",
+    "tony.ns.cloudflare.com"
+  ],
+  "misconfigured": true,
+  "recommendedIPv4": [
+    {
+      "rank": 1,
+      "value": [
+        "216.198.79.1",
+        "64.29.17.1"
+      ]
+    },
+    {
+      "rank": 2,
+      "value": [
+        "76.76.21.21"
+      ]
+    }
+  ],
+  "recommendedCNAME": [
+    {
+      "rank": 1,
+      "value": "f7f426679df0b3fc.vercel-dns-017.com."
+    },
+    {
+      "rank": 2,
+      "value": "cname.vercel-dns.com."
+    }
+  ],
+  "existingA": [],
+  "existingCNAME": [],
+  "scope": "Authorized project-domain binding; DNS records have not been changed. Cloudflare account email is required for the supplied Global API Key.",
+  "generatedAt": "2026-11-07T22:23:35.049Z"
+}
