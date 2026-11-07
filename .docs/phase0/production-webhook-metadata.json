@@ -1,0 +1,16 @@
+{
+  "id": "ecba37c5-f633-41d9-8844-35af63530547",
+  "endpoint": "https://gdggt.dev/api/v1/webhooks/resend",
+  "status": "enabled",
+  "events": [
+    "email.sent",
+    "email.delivered",
+    "email.delivery_delayed",
+    "email.complained",
+    "email.bounced",
+    "email.failed"
+  ],
+  "created_at": "2026-11-07 22:26:57.208043+00",
+  "scope": "Read-only existing Resend webhook metadata; signing secret omitted.",
+  "generatedAt": "2026-11-07T23:28:48.365Z"
+}

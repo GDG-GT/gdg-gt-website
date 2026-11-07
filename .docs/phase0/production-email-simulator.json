@@ -1,0 +1,9 @@
+{
+  "sent": true,
+  "providerMessageId": "01a1b856-e1a4-7d08-a72a-6043cf538aef",
+  "recipient": "delivered+gdg-gt-launch@resend.dev",
+  "idempotencyKey": "gdg-gt-production-simulator-20261107",
+  "productionEmailFlagUnchanged": true,
+  "scope": "One idempotent message through the real server mail transport to the Resend simulator only. No human recipient/list, no participant data, no global send enablement. Actual signed webhook verification still separate.",
+  "generatedAt": "2026-11-07T23:27:44.106Z"
+}

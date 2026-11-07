@@ -1,0 +1,21 @@
+{
+  "extensions": [
+    {
+      "name": "pg_cron",
+      "installed_version": null,
+      "default_version": "1.6.4"
+    },
+    {
+      "name": "pg_net",
+      "installed_version": null,
+      "default_version": "0.20.4"
+    },
+    {
+      "name": "supabase_vault",
+      "installed_version": "0.3.1",
+      "default_version": "0.3.1"
+    }
+  ],
+  "scope": "Read-only extension availability before preparing authenticated scheduling; no jobs/keys created.",
+  "generatedAt": "2026-11-07T23:23:11.824Z"
+}

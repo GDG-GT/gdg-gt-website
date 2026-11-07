@@ -1,3 +1,40 @@
+# Immediate checkpoint — 2026-11-07 23:32 UTC
+
+Current live9dd95a6 dpl_FAByNjcSU6cwwtWWcGNpksgDhizL READY/PROMOTED. Router SSR
+fix VERIFIED: all34 canonical HTTPS readiness checks PASS. Actual hosted hero7
+checks PASS with no input, no posterflash, realSSR, 3distinctmovingframes,fallbacks.
+Raw /tmp/gdg-production-hero-browser-final.log, capturesartifacts/browser/production-hero.
+Full2772testsPASS coverage78.35lines/76.29statements/71.04functions/75.72branches,
+unchangedallgates. Finalherobrowser8PASS4existingnonapplicableskip, actual localhero6.
+Full6performance nowPASS: home mobile99/LCP1954ms,desktop100/LCP643ms, accessibility100,
+CLS0. Latestmobile derivative quality78vs82 reduced37.6k->32.5k,no desktopassetchange.
+Raw /tmp/gdg-production-final-optimized-performance.log. PWA15/update9PASS.
+
+Supabase cron infrastructure configuredunderexistingprodscope. Elevennamedgdg-gt-*
+HTTPSjobs,9active,delivery/newsletterinactivependingemail. Secret inencryptedVault
+onlyboundparameterSQL,verifiedmatchesruntime. Realmanual9jobAPI200checksPASS; actual
+5scheduledcronexecsverified200notimeout. Allsource140migrationsUNCHANGED,no replay.
+Privateprovider79985ACTIVE; noCUAcleanup. No duplicatekeys/DNS/projects.
+
+One actual Resend SIMULATOR-only email sent withdedicatedruntimekey throughreal
+mailtransport, idempotencykeygdg-gt-production-simulator-20261107. Messageid
+01a1b856-e1a4-7d08-a72a-6043cf538aef deliveredproviderconfirmed; webhookeventsABSENT.
+ActualPOSTwithoutsignaturesreturned503RAW_BODY_REQUIRED:VercelstandaloneNodehelpers
+parsedJSON despiteNextstyleapi.bodyParserfalse. Officialbuildersourceconfirms
+NODEJS_HELPERS=0 disablesaddHelpers. ThisnonsecretProductionprojectenvNOWset+verified;
+needsNEXTbuild/deploy. APIcomment/envexample/runtimedocs updated. Needverifyinvalid
+signature401 + actualproviderretrycallbacksafterdeployment; do NOT blindlyresendfirst
+email. /tmp/gdg-production-email-check.mjs readsprovider+DBstatus. Recipientonly
+delivered+gdg-gt-launch@resend.dev, nohumanrecipient. GlobalEMAIL/PUSH/UPLOADfalse.
+
+Abouttocommitbatchedmobileoptimization+hostrawbodyconfigdocumentation+actualevidence,
+thenpush/autodeploydedup. Userquestionsreaskedasyncowneremail/name+workerhostcapacity,
+noanswerasyet. No arbitraryowner, paidplanorhost. KeepSSO/Google/Bevy/Engagedeferred.
+Preserve3unrelateduserfiles; noAItrailers. CurrentremoteCI42424973778(9dd95a6)active
+butnextneededsourcepushwillsupersede;neverclaimremoteCIgreenuntilverified.
+
+Earlier history (superseded):
+
 # Immediate checkpoint — 2026-11-07 23:23 UTC
 
 8e1d19c auto-Git production dpl_Cb8pfEbtzNKaDZVv1WYmKDJryHos READY. Direct hero

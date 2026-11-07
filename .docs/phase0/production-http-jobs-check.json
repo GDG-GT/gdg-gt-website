@@ -1,0 +1,120 @@
+{
+  "completed": true,
+  "results": [
+    {
+      "job": "form-schedules",
+      "status": 200,
+      "passed": true,
+      "counts": {
+        "closed": 0,
+        "opened": 0
+      }
+    },
+    {
+      "job": "form-cleanup",
+      "status": 200,
+      "passed": true,
+      "counts": {
+        "drafts": 0,
+        "responsesExpired": 0,
+        "claimed": 0,
+        "purged": 0,
+        "retried": 0,
+        "mediaClaimed": 0,
+        "mediaPurged": 0,
+        "mediaRetried": 0,
+        "eventMailReviewsExpired": 0,
+        "privacyReviewsExpired": 0
+      }
+    },
+    {
+      "job": "task-overdue",
+      "status": 200,
+      "passed": true,
+      "counts": {
+        "marked": 0,
+        "notified": 0
+      }
+    },
+    {
+      "job": "announcements",
+      "status": 200,
+      "passed": true,
+      "counts": {
+        "expired": 0,
+        "cancelled": 0,
+        "published": 0
+      }
+    },
+    {
+      "job": "event-push",
+      "status": 200,
+      "passed": true,
+      "counts": {
+        "queued": 0,
+        "claimed": 0,
+        "accepted": 0,
+        "skipped": 0,
+        "expired": 0,
+        "retried": 0,
+        "failed": 0,
+        "lostLease": 0,
+        "logsExpired": 0,
+        "subscriptionsRevoked": 0,
+        "verificationsExpired": 0
+      }
+    },
+    {
+      "job": "session-cleanup",
+      "status": 200,
+      "passed": true,
+      "counts": {
+        "csrfExpired": 0,
+        "gatesExpired": 0,
+        "sessionsExpired": 0,
+        "idempotencyExpired": 0,
+        "riskWindowsExpired": 0,
+        "rateAggregatesExpired": 0,
+        "securityEventsExpired": 0,
+        "deliveryDetailsExpired": 0,
+        "abandonedUploadsExpired": 0,
+        "batches": 1,
+        "backlogRemaining": 0
+      }
+    },
+    {
+      "job": "notification-cleanup",
+      "status": 200,
+      "passed": true,
+      "counts": {
+        "notificationsExpired": 0,
+        "batches": 1,
+        "backlogRemaining": 0
+      }
+    },
+    {
+      "job": "report-cache-cleanup",
+      "status": 200,
+      "passed": true,
+      "counts": {
+        "reportCachesExpired": 0,
+        "batches": 1,
+        "backlogRemaining": 0
+      }
+    },
+    {
+      "job": "operations-monitor",
+      "status": 200,
+      "passed": true,
+      "counts": {
+        "alertsExpired": 0,
+        "alertsResolved": 0,
+        "jobHistoryExpired": 0,
+        "metricBucketsExpired": 0,
+        "conditionsAboveThreshold": 1
+      }
+    }
+  ],
+  "scope": "Actual authenticated canonical-host scheduled job invocations; no browser credentials or real provider sends. Delivery/newsletter deferred until email configuration acceptance.",
+  "generatedAt": "2026-11-07T23:25:48.174Z"
+}

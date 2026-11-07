@@ -1,0 +1,8 @@
+{
+  "configured": true,
+  "key": "NODEJS_HELPERS",
+  "value": "0",
+  "target": "production",
+  "scope": "Vercel builder documented standalone helper switch. Non-secret host setting; next build must precede actual raw-body/signature acceptance.",
+  "generatedAt": "2026-11-07T23:31:05.065Z"
+}

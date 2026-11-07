@@ -1,0 +1,21 @@
+{
+  "extensions": [
+    {
+      "extname": "pg_cron",
+      "extversion": "1.6.4"
+    },
+    {
+      "extname": "pg_net",
+      "extversion": "0.20.4"
+    },
+    {
+      "extname": "supabase_vault",
+      "extversion": "0.3.1"
+    }
+  ],
+  "vaultSecretConfigured": true,
+  "vaultSecretMatchesRuntime": true,
+  "jobs": [],
+  "scope": "Authenticated scheduler infrastructure installed under existing production authorization. Secret passed as bound parameter and stored in encrypted Vault; no credential in SQL/job definitions/logs. No schedules created by this setup phase.",
+  "generatedAt": "2026-11-07T23:24:59.247Z"
+}

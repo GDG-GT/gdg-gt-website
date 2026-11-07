@@ -72,3 +72,23 @@ object design never flashes first. Reduced-motion, mobile and constrained device
 retain the static scene; unsupported WebGL has a fallback. Eight browser cases pass
 with four existing non-applicable software-WebGL skips, and the actual loopback
 moving-frame/fallback check passes. Final hosted verification follows deployment.
+
+## Verified production repair and operating jobs
+
+The router runtime was missing from the Vercel function. Bundling the two router
+packages repaired server rendering; 34/34 canonical HTTPS checks pass, including
+real SSR/hydration, API dispatch, anonymous rejection and private-file exclusion.
+Seven actual canonical hero checks pass: automatic 3D startup, no poster flash,
+three distinct moving frames, reduced-motion/mobile fallbacks and no page errors.
+All 2,772 source tests and existing coverage gates pass. Final six isolated
+performance checks pass (home mobile99/desktop100, accessibility100, CLS0);
+PWA boundaries15 and update9 checks pass on the final build. These are lab and
+functional checks, not physical-device or 48-hour acceptance.
+
+Supabase Cron/pg_net and encrypted Vault now support eleven HTTPS job definitions.
+Nine verified no-send job routes are active; delivery and newsletter remain
+inactive while email is disabled. One real transport test to the Resend simulator
+was delivered by Resend, but the callback exposed Vercel's JSON body helper.
+`NODEJS_HELPERS=0` is configured for the next build; signed webhook acceptance
+is still pending actual redeployment/verification. No human recipient was sent
+a test message. Provider simulator tests consume the normal sending quota.

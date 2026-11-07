@@ -16,7 +16,11 @@ verify the compiled renderer without network access. Deploy the
 versioned API and public-document handler, not a static-only SPA rewrite; retain
 the routing, CSP, no-store private responses, immutable hashed assets, gzip/Brotli,
 HTTPS and service-worker headers defined in `vercel.json` on any chosen host.
-The Vercel adapter packages shared TypeScript imports explicitly. A single
+The Vercel adapter packages shared TypeScript imports explicitly. Set
+`NODEJS_HELPERS=0` in the Vercel Production project environment before building:
+standalone Node function helpers otherwise supply parsed JSON bodies, even when
+Next-style `api.bodyParser=false` is exported. Provider signatures require the
+original bytes. Ordinary JSON routes already implement bounded stream parsing. A single
 `api/v1.mjs` function handles nested API routes through the reviewed versioned
 rewrite; the root homepage also has an explicit SSR rewrite so the static index
 cannot take precedence. Its adapter retains the original webhook byte stream.
@@ -92,3 +96,14 @@ Keep rollback available and observe job outcomes, authentication, error rates an
 delivery for 48 hours **after** deployment. Live keys are planned launch inputs;
 they do not block completion of local features. SSO/Google and Bevy/Engage remain
 explicitly deferred.
+
+## Current hosted scheduler
+
+The canonical Supabase project has eleven named `gdg-gt-*` Cron jobs using pg_net
+to POST to the existing authenticated HTTPS endpoints. The nine maintenance jobs
+are active. Delivery and newsletter jobs are inactive until email launch checks
+finish. Their commands read the shared cron bearer from encrypted Vault
+`gdg_gt_cron_secret`; commands contain no plaintext bearer. Cron-secret rotation
+must update both Vercel `CRON_SECRET` and that Vault entry. Do not recreate these
+jobs or run a second scheduler against them. This replaces the separate scheduler
+process only; private scanner/upload/media/export workers still need their host.

@@ -1,6 +1,6 @@
 {
-  "id": "dpl_Cb8pfEbtzNKaDZVv1WYmKDJryHos",
-  "url": "gdg-gt-website-mws9w08b7-gdggt.vercel.app",
+  "id": "dpl_FAByNjcSU6cwwtWWcGNpksgDhizL",
+  "url": "gdg-gt-website-k6eaqce27-gdggt.vercel.app",
   "readyState": "READY",
   "readySubstate": "PROMOTED",
   "target": "production",
@@ -11,7 +11,7 @@
     "gdg-gt-website-gdggt.vercel.app",
     "gdg-gt-website-git-main-gdggt.vercel.app"
   ],
-  "createdAt": 1794093452094,
+  "createdAt": 1794093759944,
   "scope": "Actual Vercel deployment status; custom-domain DNS and application acceptance are separate checks.",
-  "generatedAt": "2026-11-07T23:20:22.217Z"
+  "generatedAt": "2026-11-07T23:25:33.607Z"
 }

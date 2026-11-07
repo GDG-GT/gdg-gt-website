@@ -1,0 +1,38 @@
+{
+  "generatedAt": "2026-11-07T23:29:46.127Z",
+  "completed": true,
+  "checks": [
+    {
+      "name": "actual canonical desktop loads WebGL without interaction",
+      "passed": true
+    },
+    {
+      "name": "no static object poster flashes before real 3D",
+      "passed": true
+    },
+    {
+      "name": "live homepage uses the real server-rendered boundary",
+      "passed": true
+    },
+    {
+      "name": "live scene produces three distinct moving frames",
+      "passed": true
+    },
+    {
+      "name": "live reduced-motion change replaces WebGL with its supported fallback",
+      "passed": true
+    },
+    {
+      "name": "live mobile viewport keeps the lightweight fallback",
+      "passed": true
+    },
+    {
+      "name": "live hero checks produce no page errors, writes or third-party requests",
+      "passed": true
+    }
+  ],
+  "pageErrorCount": 0,
+  "blockedWrites": 0,
+  "externalRequests": 0,
+  "scope": "Actual canonical verified HTTPS browser; no user interaction before WebGL starts, per-frame no-poster observation and real rendered frame captures. Read-only public access. Software GPU functional acceptance only, not hardware FPS or physical-device acceptance."
+}

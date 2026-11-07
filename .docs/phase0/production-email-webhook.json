@@ -1,0 +1,8 @@
+{
+  "providerMessageId": "01a1b856-e1a4-7d08-a72a-6043cf538aef",
+  "providerLastEvent": "delivered",
+  "verifiedSignatureEvents": [],
+  "deliveredWebhookVerified": false,
+  "scope": "Read-only actual provider status plus event records accepted by deployed signature-checking handler. Simulator only; no resend/new email or participant data.",
+  "generatedAt": "2026-11-07T23:29:27.003Z"
+}

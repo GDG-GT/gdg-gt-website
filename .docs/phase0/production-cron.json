@@ -1,0 +1,78 @@
+{
+  "completed": true,
+  "jobs": [
+    {
+      "jobid": 5,
+      "jobname": "gdg-gt-announcements",
+      "schedule": "*/5 * * * *",
+      "active": true
+    },
+    {
+      "jobid": 3,
+      "jobname": "gdg-gt-delivery",
+      "schedule": "* * * * *",
+      "active": false
+    },
+    {
+      "jobid": 7,
+      "jobname": "gdg-gt-event-push",
+      "schedule": "*/5 * * * *",
+      "active": true
+    },
+    {
+      "jobid": 2,
+      "jobname": "gdg-gt-form-cleanup",
+      "schedule": "7 * * * *",
+      "active": true
+    },
+    {
+      "jobid": 1,
+      "jobname": "gdg-gt-form-schedules",
+      "schedule": "*/5 * * * *",
+      "active": true
+    },
+    {
+      "jobid": 6,
+      "jobname": "gdg-gt-newsletter-campaigns",
+      "schedule": "*/5 * * * *",
+      "active": false
+    },
+    {
+      "jobid": 9,
+      "jobname": "gdg-gt-notification-cleanup",
+      "schedule": "23 3 * * *",
+      "active": true
+    },
+    {
+      "jobid": 11,
+      "jobname": "gdg-gt-operations-monitor",
+      "schedule": "*/5 * * * *",
+      "active": true
+    },
+    {
+      "jobid": 10,
+      "jobname": "gdg-gt-report-cache-cleanup",
+      "schedule": "37 3 * * *",
+      "active": true
+    },
+    {
+      "jobid": 8,
+      "jobname": "gdg-gt-session-cleanup",
+      "schedule": "11 3 * * *",
+      "active": true
+    },
+    {
+      "jobid": 4,
+      "jobname": "gdg-gt-task-overdue",
+      "schedule": "*/15 * * * *",
+      "active": true
+    }
+  ],
+  "activeJobs": 9,
+  "deferredJobs": [
+    "delivery",
+    "newsletter-campaigns"
+  ],
+  "scope": "Actual pg_cron + pg_net authenticated HTTPS schedules; encrypted Vault secret referenced at runtime, no plaintext credential stored in cron command. Nine verified no-send jobs active; mail jobs remain inactive pending email acceptance. These are application operating schedules, not assistant auto-resume timers.",
+  "generatedAt": "2026-11-07T23:26:30.351Z"
+}

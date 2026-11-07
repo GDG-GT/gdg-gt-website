@@ -1,0 +1,91 @@
+{
+  "jobs": [
+    {
+      "jobname": "gdg-gt-announcements",
+      "active": true,
+      "runs": 1,
+      "scheduler_successes": 1
+    },
+    {
+      "jobname": "gdg-gt-delivery",
+      "active": false,
+      "runs": 0,
+      "scheduler_successes": 0
+    },
+    {
+      "jobname": "gdg-gt-event-push",
+      "active": true,
+      "runs": 1,
+      "scheduler_successes": 1
+    },
+    {
+      "jobname": "gdg-gt-form-cleanup",
+      "active": true,
+      "runs": 0,
+      "scheduler_successes": 0
+    },
+    {
+      "jobname": "gdg-gt-form-schedules",
+      "active": true,
+      "runs": 1,
+      "scheduler_successes": 1
+    },
+    {
+      "jobname": "gdg-gt-newsletter-campaigns",
+      "active": false,
+      "runs": 0,
+      "scheduler_successes": 0
+    },
+    {
+      "jobname": "gdg-gt-notification-cleanup",
+      "active": true,
+      "runs": 0,
+      "scheduler_successes": 0
+    },
+    {
+      "jobname": "gdg-gt-operations-monitor",
+      "active": true,
+      "runs": 1,
+      "scheduler_successes": 1
+    },
+    {
+      "jobname": "gdg-gt-report-cache-cleanup",
+      "active": true,
+      "runs": 0,
+      "scheduler_successes": 0
+    },
+    {
+      "jobname": "gdg-gt-session-cleanup",
+      "active": true,
+      "runs": 0,
+      "scheduler_successes": 0
+    },
+    {
+      "jobname": "gdg-gt-task-overdue",
+      "active": true,
+      "runs": 1,
+      "scheduler_successes": 1
+    }
+  ],
+  "http": [
+    {
+      "status_code": 200,
+      "timed_out": false,
+      "count": 5
+    }
+  ],
+  "access": [
+    {
+      "role": "anon",
+      "vault_read": false,
+      "cron_read": true
+    },
+    {
+      "role": "authenticated",
+      "vault_read": false,
+      "cron_read": true
+    }
+  ],
+  "scope": "Actual scheduler executions and HTTPS result status aggregates; no commands, headers, decrypted values or response bodies retained.",
+  "generatedAt": "2026-11-07T23:31:39.315Z"
+}

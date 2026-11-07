@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-11-07T23:06:25.304Z",
+  "generatedAt": "2026-11-07T23:25:50.925Z",
   "origin": "https://gdggt.dev",
-  "completed": false,
+  "completed": true,
   "checks": [
     {
       "name": "/ serves successful HTML over verified HTTPS",
@@ -9,11 +9,11 @@
     },
     {
       "name": "/ serves actual public content before JavaScript",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/ includes the public hydration boundary",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/ prevents shared caching of current public availability",
@@ -33,11 +33,11 @@
     },
     {
       "name": "/events serves actual public content before JavaScript",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/events includes the public hydration boundary",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/events prevents shared caching of current public availability",
@@ -57,11 +57,11 @@
     },
     {
       "name": "/contact serves actual public content before JavaScript",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/contact includes the public hydration boundary",
-      "passed": false
+      "passed": true
     },
     {
       "name": "/contact prevents shared caching of current public availability",

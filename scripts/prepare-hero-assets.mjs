@@ -21,7 +21,7 @@ for (const [name, position] of [
     left = Math.round((metadata.width - width) * position);
   await sharp(input.pathname)
     .extract({ left, top: 0, width, height: metadata.height })
-    .webp({ quality: 82, effort: 6 })
+    .webp({ quality: name === "hero-atmosphere" ? 78 : 82, effort: 6 })
     .toFile(output.pathname);
   await chmod(output, 0o644);
   if ((await stat(output)).size > 50000)
