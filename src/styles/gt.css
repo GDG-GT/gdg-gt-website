@@ -4968,10 +4968,11 @@ fieldset.gt-event-fields {
   align-items: center;
   gap: 16px;
   padding: 20px;
-  color: #96704d;
+  color: var(--ink);
 }
 .gt-publish-summary > span {
   font-size: 0.75rem;
+  color: var(--text-secondary);
 }
 .gt-validation-list {
   padding-left: 20px;
@@ -6832,6 +6833,16 @@ fieldset.gt-event-fields {
   font-size: 1rem;
   font-weight: 650;
   margin-block: 0.8rem 0.4rem;
+}
+.gt-response-history > .gt-check {
+  min-height: 44px;
+  align-items: center;
+  margin-block: 8px;
+}
+.gt-response-history > .gt-check input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  margin-top: 0;
 }
 .gt-history-field {
   padding-block: 0.8rem;

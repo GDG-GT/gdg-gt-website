@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-11-07T05:49:05.982952+00:00",
+  "completed": true,
+  "allPassed": false,
+  "stats": {
+    "startTime": "2026-11-07T05:45:32.012Z",
+    "duration": 99430.68,
+    "expected": 5,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  },
+  "scope": "First8state desktop composition diagnostic:5pass/3fail. Three new select locators used exact label text; wrapping labels contain option text, while accessible combobox names are exact Libraryscope/Audience. DOM snapshots show controls present. Replaced only those new locators with semantic combobox+exact names; no product/timeout/assertion-count/gate changes. Raw/tmp/gdg-publication-campaign-initial.json retained. Synthetic send-reviewPOST handled solely byfictional fixture; no real writes/publishing/uploads/provider sends."
+}

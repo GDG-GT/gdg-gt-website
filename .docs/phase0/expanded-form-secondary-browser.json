@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-11-07T06:31:26.741397+00:00",
+  "completed": true,
+  "allPassed": true,
+  "stats": {
+    "startTime": "2026-11-07T06:27:30.429Z",
+    "duration": 213105.739,
+    "expected": 264,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "states": 44,
+  "captures": 344,
+  "build": {
+    "index.html": "9fbfa41f3f195ea7a5fbfbedb394793e2a478684f098258a3e852898da6ca658",
+    ".vite/manifest.json": "0a4ebd3da0af976bc71ed74a86c1bd81121e3ae384e12d6d707d66c8869cee16",
+    "assets/public-entry.js": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+  },
+  "scope": "Complete combined 264-case secondary invocation across all six profiles, no skips/failures/retries. Strict index requires 344 exact named captures, including access lower controls only for the two profiles with that actual mobile modal; desktop access remains inline. All application mutations refused except exact campaign/event review POSTs fulfilled entirely by fictional fixtures. No real server approval receipt, audience freeze, upload, publication, export, hold or provider send. Review candidates remain unapproved."
+}

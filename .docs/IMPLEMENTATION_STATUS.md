@@ -8,6 +8,29 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Keyboard review access and Forms review — 2026-11-07
+
+- Long recipient lists, campaign message previews and campaign/chart data tables
+  now have named keyboard scrolling. Real mobile accessibility failures are
+  retained separately from the passing37state/222case secondary invocation.
+- Seven further form states pass42checks across6profiles. Publication summary
+  contrast and history-checkbox target size were corrected; router-controlled
+  checkbox tests now assert eventual checked/URL/read/content state. No approval,
+  export, hold, publication, upload or provider send was committed.
+- Complete source coverage passes2,722tests/222files, unchanged70global and
+  21critical90branch gates. Later fixes are CSS-only; instrumented source unchanged.
+  Final build/types/byte/catalog gates pass, lint0errors/10inheritedwarnings.
+- Expanded combined264case scope passes with344unapproved captures, no failures,
+  skips or retries. List-only inventory is1,548unique
+  cases/516per shard. No full current inventory execution, approved goldens,
+  human fidelity/device/hosted acceptance or PRD completion is claimed.
+- Final PWA15/update9/HTTPS46 checks pass. Isolated mobileLCP3040/2859/3007ms
+  still fails2500; desktop100/a11y100/labels/CLS0 pass. Fresh production audit0
+  findings and source/history scan0unreviewed. Local save and full inventory
+  execution are next. See `KEYBOARD_REVIEW_ACCESSIBILITY.md` and checkpoint.
+
+
+
 ### Visible labels and expanded event review — 2026-11-06
 
 - Brand, search, builder field-type and gallery card names now include visible

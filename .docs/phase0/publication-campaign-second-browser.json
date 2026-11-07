@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-11-07T05:50:15.295476+00:00",
+  "completed": true,
+  "allPassed": false,
+  "stats": {
+    "startTime": "2026-11-07T05:47:40.101Z",
+    "duration": 68838.895,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "scope": "Second8state desktop diagnostic:6pass/2filepicker locator failures. Accessible snapshot shows correctly named native filepicker, but wrapping label text joins adjacent hint without whitespace. Replaced only new getByLabel locator with scoped native input[type=file] plus explicit accessible-name assertion before setInputFiles. No product/timeout/retry/gate changes; raw/tmp/gdg-publication-campaign-corrected.json and artifacts preserved. Allcampaign andpublication/revocation checks pass, no actualwrites/provider sends."
+}

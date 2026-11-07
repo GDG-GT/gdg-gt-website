@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-11-07T06:19:44.320376+00:00",
+  "completed": true,
+  "allPassed": true,
+  "stats": {
+    "startTime": "2026-11-07T06:16:54.174Z",
+    "duration": 149188.961,
+    "expected": 222,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "states": 37,
+  "captures": 270,
+  "build": {
+    "index.html": "c4c22144c5b50bbede1e5d38a88ac5fb70176d0a5e7da782c6dc6aeb17319dbf",
+    ".vite/manifest.json": "53aee3c931c326a3214817b17675d282842b563577b27db2296659a9ec6ae23d",
+    "assets/public-entry.js": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+  },
+  "scope": "Complete 222-case secondary invocation across all six profiles. Includes long campaign reviews, event recipient review, horizontal data tables and private publication reviews. No skipped, failed or retried cases. Exact review POSTs are fixture responses; no real server write, upload, approval or provider send. Captures are unapproved review candidates, not fidelity acceptance."
+}

@@ -9,6 +9,7 @@ import {
   subscriberCreate,
 } from "../../../shared/newsletter.mjs";
 import { Button, Badge, Field } from "../primitives";
+import ScrollableTable from "../ScrollableTable";
 import FormIntegrations from "../forms/FormIntegrations";
 import NewsletterSend from "./NewsletterSend";
 import {
@@ -206,7 +207,7 @@ function DeliveryStatus({ record }: { record: NewsletterRecord }) {
               </div>
             ))}
           </dl>
-          <div className="gt-table-wrap">
+          <ScrollableTable label="Campaign delivery table, scroll horizontally for all columns">
             <table className="gt-table">
               <caption className="sr-only">
                 Frozen audience delivery results
@@ -236,7 +237,7 @@ function DeliveryStatus({ record }: { record: NewsletterRecord }) {
                 ))}
               </tbody>
             </table>
-          </div>
+          </ScrollableTable>
           <div className="gt-inline-actions">
             <Button
               type="button"

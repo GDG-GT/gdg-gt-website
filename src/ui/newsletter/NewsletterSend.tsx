@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
+import { scrollWithKeyboard } from "../keyboard-scroll";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { Button, Field } from "../primitives";
 import { date, useNewsletterWork, type NewsletterRecord } from "./types";
@@ -293,14 +294,27 @@ export default function NewsletterSend({
               </p>
               <details>
                 <summary>Review recipient addresses ({review.count})</summary>
-                <ul className="gt-newsletter-recipient-list">
+                <ul
+                  className="gt-newsletter-recipient-list"
+                  aria-label="Confirmed recipient addresses for review"
+                  tabIndex={0}
+                  onKeyDown={(event) => scrollWithKeyboard(event, "vertical")}
+                >
                   {review.recipients.map((r) => (
                     <li key={r.id}>{r.email}</li>
                   ))}
                 </ul>
               </details>
               <h4>{review.subject}</h4>
-              <div className="gt-newsletter-message">{review.content}</div>
+              <div
+                className="gt-newsletter-message"
+                role="region"
+                aria-label="Campaign message for review"
+                tabIndex={0}
+                onKeyDown={(event) => scrollWithKeyboard(event, "vertical")}
+              >
+                {review.content}
+              </div>
               <p className="gt-helper">
                 The final email also includes chapter identity and an individual
                 unsubscribe link.

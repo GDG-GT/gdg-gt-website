@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-11-07T06:31:45.246396+00:00",
+  "build": {
+    "index.html": "9fbfa41f3f195ea7a5fbfbedb394793e2a478684f098258a3e852898da6ca658",
+    ".vite/manifest.json": "0a4ebd3da0af976bc71ed74a86c1bd81121e3ae384e12d6d707d66c8869cee16",
+    "assets/public-entry.js": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+  },
+  "probes": {
+    "pwaBoundaries": {
+      "evidence": "production-pwa-boundaries.json",
+      "generatedAt": "2026-11-07T06:31:12.433Z",
+      "checks": 15,
+      "allPassed": true
+    },
+    "pwaUpdates": {
+      "evidence": "production-pwa-update.json",
+      "generatedAt": "2026-11-07T06:31:14.903Z",
+      "checks": 9,
+      "allPassed": true
+    },
+    "httpsHeaders": {
+      "evidence": "production-security-headers.json",
+      "generatedAt": "2026-11-07T06:31:16.259Z",
+      "checks": 46,
+      "allPassed": true
+    }
+  },
+  "scope": "Sequential final review-accessibility artifact probes: real public-only worker boundaries, changed-asset/two-tab update and configured HTTPS/CSP/header/cache enforcement. Owned listeners and browser contexts closed. No actual app/provider writes, hosted/device/manual acceptance or deployment."
+}

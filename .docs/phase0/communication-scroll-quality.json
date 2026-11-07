@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-11-07T06:24:37.603746+00:00",
+  "completed": true,
+  "allPassed": true,
+  "files": 222,
+  "passed": 2722,
+  "failed": 0,
+  "coverage": {
+    "lines": 78.16,
+    "statements": 76.17,
+    "functions": 70.77,
+    "branches": 75.63
+  },
+  "globalAndCriticalGatesPassed": true,
+  "criticalModules": 21,
+  "workers": 1,
+  "build": {
+    "index.html": "c4c22144c5b50bbede1e5d38a88ac5fb70176d0a5e7da782c6dc6aeb17319dbf",
+    ".vite/manifest.json": "53aee3c931c326a3214817b17675d282842b563577b27db2296659a9ec6ae23d",
+    "assets/public-entry.js": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+  },
+  "scope": "Complete source coverage with unchanged global 70% and all 21 individual critical 90%-branch gates. No competing browser, build, types or performance process. Three new shared keyboard navigation tests included. Browser form review candidates are separate and were not run concurrently. Raw artifacts/quality/communication-scroll-coverage.json; log /tmp/gdg-communication-scroll-coverage.log."
+}

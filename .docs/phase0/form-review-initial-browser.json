@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-11-07T06:25:43.949759+00:00",
+  "completed": true,
+  "allPassed": false,
+  "stats": {
+    "startTime": "2026-11-07T06:24:37.080Z",
+    "duration": 29787.535,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  },
+  "scope": "First seven-state Chromium desktop diagnostic: four passes, three failures. Real publication summary contrast 4.14:1; real history checkbox target size 18px; router-controlled checkbox check() immediate-state harness error (saved error snapshot shows checked). All failures retained; correction does not weaken axe, limits or checked-state assertions. No writes or real provider sends."
+}

@@ -2779,6 +2779,7 @@
       "scope": "Admin overview populated composition review candidates",
       "automated": [
         "tests/browser/workspace-compositions.spec.ts",
+        "tests/browser/publication-campaign-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2799,6 +2800,7 @@
       "automated": [
         "tests/browser/workspace-compositions.spec.ts",
         "tests/browser/event-compositions.spec.ts",
+        "tests/browser/publication-campaign-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2860,6 +2862,7 @@
         "tests/browser/operations-compositions.spec.ts",
         "tests/browser/secondary-compositions.spec.ts",
         "tests/browser/task-message-compositions.spec.ts",
+        "tests/browser/publication-campaign-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2880,6 +2883,7 @@
       "automated": [
         "tests/browser/operations-compositions.spec.ts",
         "tests/browser/secondary-compositions.spec.ts",
+        "tests/browser/publication-campaign-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2919,6 +2923,7 @@
       "automated": [
         "tests/browser/workspace-compositions.spec.ts",
         "tests/browser/secondary-compositions.spec.ts",
+        "tests/browser/form-review-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2958,6 +2963,7 @@
       "automated": [
         "tests/browser/workspace-compositions.spec.ts",
         "tests/browser/secondary-compositions.spec.ts",
+        "tests/browser/form-review-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -6124,6 +6130,9 @@
       "scope": "Authenticated workspace contrast, keyboard-scrollable named tables, desktop/mobile overflow and scroll, private browser read inventory and shared-shell browser regressions",
       "automated": [
         "tests/client/scrollable-table.test.tsx",
+        "tests/client/keyboard-scroll.test.tsx",
+        "tests/browser/publication-campaign-compositions.spec.ts",
+        "tests/browser/form-review-compositions.spec.ts",
         "tests/browser/workspace-smoke.spec.ts",
         "tests/client/admin-navigation-focus.test.tsx",
         "tests/browser/full-workspace-navigation.spec.ts",

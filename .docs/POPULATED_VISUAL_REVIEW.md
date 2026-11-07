@@ -1,5 +1,32 @@
 # Populated production-build review — 2026-11-06
 
+## Current keyboard and form review — 2026-11-07
+
+The strict secondary index now has **44 states, 264 passing checks across six
+profiles and 344 unapproved captures**, with no skips, failures or retries.
+It includes private upload validation, publication/revocation review, custom
+campaign audiences, send approval/delivery results, registration chart data,
+event email review and seven further Forms states: access, version comparison,
+publication, response history, retention, export review and sensitive reveal.
+
+Actual mobile keyboard overflow findings in delivery/recipient/message panels,
+publication-summary contrast and the history checkbox target were corrected.
+Tests preserve existing axe, width, scroll, no-error and no-write assertions.
+Long campaign reviews contain18fictional recipients/24paragraphs. Review POSTs
+are fulfilled entirely by fixtures; no server receipt, frozen audience, upload,
+publication, export, hold or provider send occurs. All other mutations refused.
+
+Mobile long reviews, access/version dialogs and lower response-history controls
+were inspected. The index requires lower access controls only in the two mobile
+profiles where access is a dialog; desktop access is inline. Missing/duplicate
+or unexpected captures still fail. These are unapproved review candidates.
+See `KEYBOARD_REVIEW_ACCESSIBILITY.md` and
+`phase0/expanded-form-secondary-browser.json`. Earlier diagnostic/accessibility
+failures and passing narrower scopes remain separate. The primary index retains
+its original successful full invocation. A list-only1,548case inventory does not
+establish full execution, human approval, actual devices or complete PRD acceptance.
+The dated entries below are historical.
+
 ## Actual drawing-editor continuation
 
 Two additional read-only states use the actual chapter drawing editor and

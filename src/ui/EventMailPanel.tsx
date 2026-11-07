@@ -17,6 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button, Field } from "./primitives";
+import { scrollWithKeyboard } from "./keyboard-scroll";
 type Review = {
   reviewId: string;
   expiresAt: string;
@@ -541,7 +542,12 @@ function EventMailContent({
             <p className="gt-mail-preview">{review.message}</p>
             <details>
               <summary>Inspect all {review.count} recipient addresses</summary>
-              <ul className="gt-mail-recipients">
+              <ul
+                className="gt-mail-recipients"
+                aria-label="Event email recipient addresses for review"
+                tabIndex={0}
+                onKeyDown={(event) => scrollWithKeyboard(event, "vertical")}
+              >
                 {review.recipients.map((person) => (
                   <li key={person.id}>{person.email}</li>
                 ))}

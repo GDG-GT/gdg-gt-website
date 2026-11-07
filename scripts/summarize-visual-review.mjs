@@ -52,6 +52,7 @@ const primaryPrompts = [
 ];
 const prompts = secondary
   ? [
+      ["VIS-TEST-013", "Overview chart data", ["registration data table"]],
       [
         "VIS-TEST-014",
         "Events and attendance",
@@ -63,6 +64,7 @@ const prompts = secondary
           "attendee removal review lower controls",
           "event email draft",
           "event email history",
+          "event email approval review",
           "event archive review",
           "event archive review lower controls",
           "event cancellation review",
@@ -95,9 +97,23 @@ const prompts = secondary
           "private conversation",
           "private message compose",
           "private review request",
+          "campaign custom audience",
+          "campaign send entry",
+          "campaign send approval",
+          "campaign delivery results",
         ],
       ],
-      ["VIS-TEST-018", "Content and media", ["media inspector"]],
+      [
+        "VIS-TEST-018",
+        "Content and media",
+        [
+          "media inspector",
+          "private upload selection",
+          "private upload validation",
+          "image publication review",
+          "image revocation review",
+        ],
+      ],
       [
         "VIS-TEST-020",
         "Form builder",
@@ -106,6 +122,12 @@ const prompts = secondary
           "builder settings",
           "builder logic lower controls",
           "builder settings lower controls",
+          "builder access",
+          "builder access lower controls",
+          "published version comparison",
+          "published version comparison lower controls",
+          "form publication review",
+          "form publication review lower controls",
         ],
       ],
       [
@@ -115,6 +137,13 @@ const prompts = secondary
           "response analytics",
           "individual response",
           "individual response lower controls",
+          "response revision review",
+          "response revision review lower controls",
+          "response retention review",
+          "response retention review lower controls",
+          "response export review",
+          "response sensitive reveal",
+          "response sensitive reveal lower controls",
         ],
       ],
     ]
@@ -131,7 +160,7 @@ async function visit(suites) {
       if (
         !(
           secondary
-            ? /^(?:(?:secondary|event|task-message)-compositions|whiteboard-composition)\.spec\.ts$/
+            ? /^(?:(?:secondary|event|task-message|publication-campaign|form-review)-compositions|whiteboard-composition)\.spec\.ts$/
             : /^(?:operations|public|workspace)-compositions\.spec\.ts$/
         ).test(path.basename(spec.file || suite.file || ""))
       )
@@ -196,14 +225,21 @@ const required = [
 const rows = prompts.map(([id, title, names]) => {
   const matches = captures.filter((c) => names.includes(c.name));
   for (const name of names)
-    for (const project of required)
+    for (const project of required) {
+      // Access is inline on desktop and a scrolling dialog on mobile. Require
+      // lower-control captures only where that modal actually exists, and
+      // reject any unexpected desktop counterpart rather than inventing one.
+      const expected =
+        secondary && name === "builder access lower controls" &&
+        !project.endsWith("-mobile") ? 0 : 1;
       if (
         matches.filter((c) => c.name === name && c.project === project)
-          .length !== 1
+          .length !== expected
       )
         throw Error(
           "Missing or duplicate prompt capture: " + name + " / " + project,
         );
+    }
   return {
     id,
     title,
@@ -217,14 +253,14 @@ const supplementalCaptures = captures.filter(
 );
 if (secondary && supplementalCaptures.length)
   throw Error("Unexpected secondary review capture names.");
-if (secondary && (compositionChecks !== 162 || captures.length !== 210))
+if (secondary && (compositionChecks !== 264 || captures.length !== 344))
   throw Error(
-    "The secondary review requires all twenty-seven named states across all six profiles.",
+    "The secondary review requires all forty-four named states across all six profiles.",
   );
 const note =
   "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. " +
   (secondary
-    ? "These twenty-seven secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review."
+    ? "These forty-four secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review."
     : "Primary compositions are captured; every secondary drawer, editor inspector, chart, collaboration surface and confirmation state still requires its own applicable acceptance review.");
 const summary = {
   generatedAt: new Date().toISOString(),

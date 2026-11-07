@@ -1,5 +1,20 @@
 # Public entry delivery and availability — 2026-11-06
 
+## Review accessibility artifact — 2026-11-07
+
+The final keyboard-review plus scoped contrast/target CSS artifact passes byte
+ceilings: initialJS108166gzip, public-route union148960, CSS29936,font48432 and
+offline493275raw. Its isolated six-route measurement records mobile
+Home3040/Events2859/Contact3007ms; all three LCP gates still fail2500ms. All
+three desktop performance scores are100, all accessibility scores100, explicit
+visible-label matching passes andCLS0. No competing verification or changed
+preset/threshold, and no causal, fieldp75 or hardware improvement is inferred.
+The preceding report is retained in
+`phase0/production-performance-before-review-accessibility.json`. Current report
+is `phase0/production-performance.json`;15PWA/nine update/46HTTPS checks pass on
+that artifact. The older entries below are historical.
+
+
 ## Early public-route downloads — 2026-11-07
 
 The existing independent async helper now starts the exact emitted static

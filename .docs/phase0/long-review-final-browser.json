@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-11-07T06:09:12.618053+00:00",
+  "completed": true,
+  "allPassed": true,
+  "stats": {
+    "startTime": "2026-11-07T06:07:36.532Z",
+    "duration": 37979.301,
+    "expected": 18,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "build": {
+    "index.html": "881eb89b0580e94bbdb32f980bf23e196dfdc175edcdb49065474e87b7d68ef2",
+    ".vite/manifest.json": "7680e49b5d41d2feea3b2cc28ec096ee8840e542942b62351711a02afaec72c9",
+    "assets/public-entry.js": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+  },
+  "scope": "Three actual bounded-data states across6profiles: campaign18recipient/24paragraph approvalreview, deliverytable, expandedregistrationtable. NativeUL list semantics retained, reviewmessage namedregion; focus/ArrowDown/PageDown/End/Home tested on requiredactualverticaloverflow. Tablefocus/horizontalArrowRight/Home tested onactualoverflow. Alloriginal accessibility/no-write/error/width/scroll assertions retained. No realreviewreceipt, upload,publication, frozenaudience/provider send. No hardware/physical/manual/hosted/fullPRD claim."
+}

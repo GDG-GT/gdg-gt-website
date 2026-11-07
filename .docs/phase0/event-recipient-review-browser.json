@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-11-07T06:16:56.194929+00:00",
+  "completed": true,
+  "allPassed": true,
+  "stats": {
+    "startTime": "2026-11-07T06:15:15.107Z",
+    "duration": 22488.947,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "build": {
+    "index.html": "c4c22144c5b50bbede1e5d38a88ac5fb70176d0a5e7da782c6dc6aeb17319dbf",
+    ".vite/manifest.json": "53aee3c931c326a3214817b17675d282842b563577b27db2296659a9ec6ae23d",
+    "assets/public-entry.js": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+  },
+  "scope": "Eventemailreview18fictionalattendees/6profiles. NamednativeUL retainslistsemantics; actualoverflow/focus/PageDown/End/Home/disabledQueue18/zeroapprovalcommit assertions pass, alongside sharedaxe/scroll/width/noerror checks. SyntheticreviewPOST subject/message returnedentirelybyfixture. No actualserverreceipt, frozenaudience,provider send, hosted/manual/device/fullPRD claim."
+}

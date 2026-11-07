@@ -1,0 +1,20 @@
+{
+  "generatedAt": "2026-11-07T06:27:29.368454+00:00",
+  "completed": true,
+  "allPassed": true,
+  "stats": {
+    "startTime": "2026-11-07T06:26:19.213Z",
+    "duration": 55157.002,
+    "expected": 42,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "states": 7,
+  "build": {
+    "index.html": "9fbfa41f3f195ea7a5fbfbedb394793e2a478684f098258a3e852898da6ca658",
+    ".vite/manifest.json": "0a4ebd3da0af976bc71ed74a86c1bd81121e3ae384e12d6d707d66c8869cee16",
+    "assets/public-entry.js": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+  },
+  "scope": "Seven form review states across six profiles, 42 passes; no skips/failures/retries. Existing accessibility, width, scroll and capture gates unchanged. Publication contrast and history checkbox target corrected; router-controlled checkbox uses click plus eventual checked/URL/read/content assertions. Read-only fictional fixtures, every application write refused. Mobile access/version captures inspected; review candidates remain unapproved."
+}

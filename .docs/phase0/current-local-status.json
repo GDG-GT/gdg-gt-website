@@ -1,22 +1,23 @@
 {
-  "generatedAt": "2026-11-07T05:39:35.004257+00:00",
-  "buildIndexSha256": "65b7bc88104bbc6797e6a281207d10008e4f278caa4072307a5719545a0f90d5",
+  "generatedAt": "2026-11-07T06:33:58.981972+00:00",
+  "buildIndexSha256": "9fbfa41f3f195ea7a5fbfbedb394793e2a478684f098258a3e852898da6ca658",
   "quality": {
     "tests": {
-      "files": 221,
-      "passed": 2719,
+      "files": 222,
+      "passed": 2722,
       "failed": 0
     },
     "coverage": {
       "lines": 78.16,
-      "statements": 76.16,
-      "functions": 70.8,
-      "branches": 75.61
+      "statements": 76.17,
+      "functions": 70.77,
+      "branches": 75.63
     },
     "globalAndCriticalGatesPassed": true,
     "criticalModules": 21,
     "currentBuildFullCoveragePassed": true,
-    "evidence": "phase0/public-route-hints-quality.json"
+    "evidence": "phase0/communication-scroll-quality.json",
+    "scope": "Full instrumented application source passed before subsequent CSS-only contrast/target fixes; instrumented source unchanged. Four catalog tests pass separately after mapping additions."
   },
   "browser": {
     "initialCompleteV7": {
@@ -36,7 +37,7 @@
       "flaky": 0
     },
     "fullCurrentInventoryPassingInvocation": false,
-    "note": "Saved4ed0b55 full1380 pass remains historical. Currenttrial public/startup/lazyshell scope130passes/eight expectedskips; bothoriginaldesktopmotion checks pass. Prior softwareGPU andnewWebKit harness failures retained. Secondary162passes on same emittedappmodule/CSSgraph beforeHTML/helper trial. No full1446case execution claimed.",
+    "note": "Current complete secondary invocation: 264 passes, no skips/failures/retries, six profiles. Saved full 1,380-case invocation and public/startup 130-pass/eight-skip scope remain historical; complete 1,548-case current inventory not yet executed.",
     "initialPublicReader": {
       "startTime": "2026-11-07T00:15:21.145Z",
       "duration": 89800.388,
@@ -62,9 +63,9 @@
       "flaky": 0
     },
     "expandedSecondary": {
-      "startTime": "2026-11-07T05:14:16.332Z",
-      "duration": 250371.915,
-      "expected": 162,
+      "startTime": "2026-11-07T06:27:30.429Z",
+      "duration": 213105.739,
+      "expected": 264,
       "skipped": 0,
       "unexpected": 0,
       "flaky": 0
@@ -84,9 +85,9 @@
     "reviewCaptures": 162,
     "compositionChecks": 138,
     "approved": false,
-    "secondaryStates": 27,
-    "secondaryCompositionChecks": 162,
-    "secondaryCaptures": 210,
+    "secondaryStates": 44,
+    "secondaryCompositionChecks": 264,
+    "secondaryCaptures": 344,
     "primaryIndex": "artifacts/browser/current-primary-review/index.html",
     "secondaryIndex": "artifacts/browser/secondary-review/index.html",
     "primaryNote": "Saved4ed0b55 full invocation preserved; attachment paths resolved to moved original directory without changing images/report."
@@ -106,95 +107,467 @@
   },
   "secrets": {
     "unreviewed": 0,
-    "scope": "Read-only all-local-ref history plus current tracked/nonignored untracked file snapshot. Default rules, decoded text depth 5, no baseline/rule/path exclusions or inline suppression. Ignored local credentials/dependencies/caches, archive contents and image OCR are outside the source scan. Findings are redacted; only exact reviewed source-line hashes may pass as non-secrets. Not proof that no secret could exist."
+    "scope": "Read-only all-local-ref history plus current tracked/nonignored untracked file snapshot. Default rules, decoded text depth 5, no baseline/rule/path exclusions or inline suppression. Ignored local credentials/dependencies/caches, archive contents and image OCR are outside the source scan. Findings are redacted; only exact reviewed source-line hashes may pass as non-secrets. Not proof that no secret could exist.",
+    "commits": 153,
+    "currentFiles": 1900
   },
   "shards": {
-    "total": 1446,
+    "total": 1548,
     "shards": [
       {
         "shard": 1,
-        "cases": 482
+        "cases": 516
       },
       {
         "shard": 2,
-        "cases": 482
+        "cases": 516
       },
       {
         "shard": 3,
-        "cases": 482
+        "cases": 516
       }
     ],
     "duplicates": 0,
-    "scope": "List-only exact disjoint partition; not full execution."
+    "scope": "List-only exact disjoint union: 44 secondary states; 1,548 unique cases, 516 per shard. This does not claim a complete execution, CI run or PRD acceptance."
   },
   "performance": {
     "scope": "Isolated loopback static production build, gzip-negotiated HTML/JS/CSS/JSON/SVG, anonymous allowlisted reads to local API only; HTTPS requests blocked, no account or writes/provider sends. Lighthouse default simulated mobile and desktop presets; measurements must run without competing browser/build/coverage load. Compression models a required hosting delivery setting, not evidence that it is deployed. Lab LCP/CLS/TBT and accessibility only; TBT is not INP and these runs do not certify field p75 INP/LCP, representative 3D hardware or hosted latency. Raw reports in ignored artifacts/performance.",
     "routes": [
-      {
-        "route": "/",
-        "preset": "mobile",
-        "accessibility": 100,
-        "visibleLabelsMatchNames": true,
-        "lcpMs": 3024.6628,
-        "cls": 0,
-        "passed": false,
-        "score": 94
-      },
-      {
-        "route": "/events",
-        "preset": "mobile",
-        "accessibility": 100,
-        "visibleLabelsMatchNames": true,
-        "lcpMs": 3008.4274000000014,
-        "cls": 0,
-        "passed": false,
-        "score": 95
-      },
-      {
-        "route": "/contact",
-        "preset": "mobile",
-        "accessibility": 100,
-        "visibleLabelsMatchNames": true,
-        "lcpMs": 3007.3582000000006,
-        "cls": 0,
-        "passed": false,
-        "score": 95
-      },
-      {
-        "route": "/",
-        "preset": "desktop",
-        "accessibility": 100,
-        "visibleLabelsMatchNames": true,
-        "lcpMs": 644.4757999999999,
-        "cls": 0,
-        "passed": true,
-        "score": 100
-      },
-      {
-        "route": "/events",
-        "preset": "desktop",
-        "accessibility": 100,
-        "visibleLabelsMatchNames": true,
-        "lcpMs": 686.3996,
-        "cls": 0,
-        "passed": true,
-        "score": 100
-      },
-      {
-        "route": "/contact",
-        "preset": "desktop",
-        "accessibility": 100,
-        "visibleLabelsMatchNames": true,
-        "lcpMs": 683.8144,
-        "cls": 0,
-        "passed": true,
-        "score": 100
-      }
+      "/",
+      "/events",
+      "/contact"
     ],
     "mobileLcpPassed": false,
     "fieldP75Verified": false,
     "matchesCurrentBuild": true,
-    "note": "Isolated public-route hint trial: mobileHome3025/Events3008/Contact3007ms still fails2500. Compared with saved2841/3161/3156, publicroutes lower andHome higher; one run does not establish causality or field benefit. Desktop100/a11y100/explicitlabels/CLS0 pass. No competingchecks or preset/threshold changes."
+    "note": "Final isolated review-accessibility artifact: mobile Home3040/Events2859/Contact3007ms still fails2500. Desktop performance100, accessibility100, visible-label matching and CLS0 pass. No competing verification or preset/threshold changes; no field/hardware/causal claim.",
+    "generatedAt": "2026-11-07T06:32:51.150Z",
+    "completed": true,
+    "lighthouseVersion": "13.6.0",
+    "build": {
+      "index.html": {
+        "bytes": 2206,
+        "sha256": "9fbfa41f3f195ea7a5fbfbedb394793e2a478684f098258a3e852898da6ca658"
+      },
+      ".vite/manifest.json": {
+        "bytes": 116004,
+        "sha256": "0a4ebd3da0af976bc71ed74a86c1bd81121e3ae384e12d6d707d66c8869cee16"
+      },
+      "assets/hero-atmosphere-mobile.webp": {
+        "bytes": 37624,
+        "sha256": "d46fa6b9bfe5d234b9f6a2e2e20b0f4ca0cf16ae484f4f1e4865fca003dde738"
+      },
+      "assets/hero-campus-mobile.webp": {
+        "bytes": 21932,
+        "sha256": "39aed7e7d2a6a02da4734fd07c6500a35257caf618a460b7a9516d3481744db6"
+      },
+      "assets/public-entry.js": {
+        "bytes": 1099,
+        "sha256": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+      }
+    },
+    "presets": [
+      "mobile",
+      "desktop"
+    ],
+    "tests": [
+      {
+        "route": "/",
+        "preset": "mobile",
+        "performance": 94,
+        "accessibility": 100,
+        "visibleLabelsMatchNames": true,
+        "bestPractices": 96,
+        "seo": 100,
+        "lcpMs": 3039.8566,
+        "cls": 0,
+        "tbtMs": 23.5,
+        "failedAudits": [
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.77,
+            "display": "3.0\u00a0s"
+          },
+          {
+            "id": "max-potential-fid",
+            "title": "Max Potential First Input Delay",
+            "score": 0.97,
+            "display": "100\u00a0ms"
+          },
+          {
+            "id": "errors-in-console",
+            "title": "Browser errors were logged to the console",
+            "score": 0
+          },
+          {
+            "id": "interactive",
+            "title": "Time to Interactive",
+            "score": 0.95,
+            "display": "3.1\u00a0s"
+          },
+          {
+            "id": "unused-css-rules",
+            "title": "Reduce unused CSS",
+            "score": 0,
+            "display": "Est savings of 24\u00a0KiB"
+          },
+          {
+            "id": "unused-javascript",
+            "title": "Reduce unused JavaScript",
+            "score": 0,
+            "display": "Est savings of 39\u00a0KiB"
+          },
+          {
+            "id": "bf-cache",
+            "title": "Page prevented back/forward cache restoration",
+            "score": 0,
+            "display": "2 failure reasons"
+          },
+          {
+            "id": "image-delivery-insight",
+            "title": "Improve image delivery",
+            "score": 0,
+            "display": "Est savings of 115\u00a0KiB"
+          },
+          {
+            "id": "network-dependency-tree-insight",
+            "title": "Network dependency tree",
+            "score": 0
+          },
+          {
+            "id": "render-blocking-insight",
+            "title": "Render-blocking requests",
+            "score": 0,
+            "display": "Est savings of 260\u00a0ms"
+          }
+        ],
+        "runtimeError": null,
+        "passed": false
+      },
+      {
+        "route": "/events",
+        "preset": "mobile",
+        "performance": 95,
+        "accessibility": 100,
+        "visibleLabelsMatchNames": true,
+        "bestPractices": 96,
+        "seo": 100,
+        "lcpMs": 2859.3788000000013,
+        "cls": 0,
+        "tbtMs": 0,
+        "failedAudits": [
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.81,
+            "display": "2.9\u00a0s"
+          },
+          {
+            "id": "errors-in-console",
+            "title": "Browser errors were logged to the console",
+            "score": 0
+          },
+          {
+            "id": "interactive",
+            "title": "Time to Interactive",
+            "score": 0.96,
+            "display": "2.9\u00a0s"
+          },
+          {
+            "id": "unused-css-rules",
+            "title": "Reduce unused CSS",
+            "score": 0,
+            "display": "Est savings of 24\u00a0KiB"
+          },
+          {
+            "id": "unused-javascript",
+            "title": "Reduce unused JavaScript",
+            "score": 0,
+            "display": "Est savings of 37\u00a0KiB"
+          },
+          {
+            "id": "bf-cache",
+            "title": "Page prevented back/forward cache restoration",
+            "score": 0,
+            "display": "2 failure reasons"
+          },
+          {
+            "id": "image-delivery-insight",
+            "title": "Improve image delivery",
+            "score": 0.5,
+            "display": "Est savings of 12\u00a0KiB"
+          },
+          {
+            "id": "network-dependency-tree-insight",
+            "title": "Network dependency tree",
+            "score": 0
+          },
+          {
+            "id": "render-blocking-insight",
+            "title": "Render-blocking requests",
+            "score": 0,
+            "display": "Est savings of 290\u00a0ms"
+          }
+        ],
+        "runtimeError": null,
+        "passed": false
+      },
+      {
+        "route": "/contact",
+        "preset": "mobile",
+        "performance": 95,
+        "accessibility": 100,
+        "visibleLabelsMatchNames": true,
+        "bestPractices": 96,
+        "seo": 100,
+        "lcpMs": 3006.7266,
+        "cls": 0,
+        "tbtMs": 1,
+        "failedAudits": [
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.78,
+            "display": "3.0\u00a0s"
+          },
+          {
+            "id": "errors-in-console",
+            "title": "Browser errors were logged to the console",
+            "score": 0
+          },
+          {
+            "id": "interactive",
+            "title": "Time to Interactive",
+            "score": 0.96,
+            "display": "3.0\u00a0s"
+          },
+          {
+            "id": "unused-css-rules",
+            "title": "Reduce unused CSS",
+            "score": 0,
+            "display": "Est savings of 25\u00a0KiB"
+          },
+          {
+            "id": "unused-javascript",
+            "title": "Reduce unused JavaScript",
+            "score": 0,
+            "display": "Est savings of 37\u00a0KiB"
+          },
+          {
+            "id": "bf-cache",
+            "title": "Page prevented back/forward cache restoration",
+            "score": 0,
+            "display": "2 failure reasons"
+          },
+          {
+            "id": "image-delivery-insight",
+            "title": "Improve image delivery",
+            "score": 0,
+            "display": "Est savings of 12\u00a0KiB"
+          },
+          {
+            "id": "network-dependency-tree-insight",
+            "title": "Network dependency tree",
+            "score": 0
+          },
+          {
+            "id": "render-blocking-insight",
+            "title": "Render-blocking requests",
+            "score": 0,
+            "display": "Est savings of 300\u00a0ms"
+          }
+        ],
+        "runtimeError": null,
+        "passed": false
+      },
+      {
+        "route": "/",
+        "preset": "desktop",
+        "performance": 100,
+        "accessibility": 100,
+        "visibleLabelsMatchNames": true,
+        "bestPractices": 96,
+        "seo": 100,
+        "lcpMs": 655.0742,
+        "cls": 0,
+        "tbtMs": 0,
+        "failedAudits": [
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.99,
+            "display": "0.7\u00a0s"
+          },
+          {
+            "id": "errors-in-console",
+            "title": "Browser errors were logged to the console",
+            "score": 0
+          },
+          {
+            "id": "unused-css-rules",
+            "title": "Reduce unused CSS",
+            "score": 0.5,
+            "display": "Est savings of 25\u00a0KiB"
+          },
+          {
+            "id": "unused-javascript",
+            "title": "Reduce unused JavaScript",
+            "score": 0.5,
+            "display": "Est savings of 39\u00a0KiB"
+          },
+          {
+            "id": "bf-cache",
+            "title": "Page prevented back/forward cache restoration",
+            "score": 0,
+            "display": "2 failure reasons"
+          },
+          {
+            "id": "image-delivery-insight",
+            "title": "Improve image delivery",
+            "score": 0.5,
+            "display": "Est savings of 134\u00a0KiB"
+          },
+          {
+            "id": "network-dependency-tree-insight",
+            "title": "Network dependency tree",
+            "score": 0
+          },
+          {
+            "id": "render-blocking-insight",
+            "title": "Render-blocking requests",
+            "score": 0,
+            "display": "Est savings of 80\u00a0ms"
+          }
+        ],
+        "runtimeError": null,
+        "passed": true
+      },
+      {
+        "route": "/events",
+        "preset": "desktop",
+        "performance": 100,
+        "accessibility": 100,
+        "visibleLabelsMatchNames": true,
+        "bestPractices": 96,
+        "seo": 100,
+        "lcpMs": 646.9355999999999,
+        "cls": 0,
+        "tbtMs": 0,
+        "failedAudits": [
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.99,
+            "display": "0.6\u00a0s"
+          },
+          {
+            "id": "errors-in-console",
+            "title": "Browser errors were logged to the console",
+            "score": 0
+          },
+          {
+            "id": "unused-css-rules",
+            "title": "Reduce unused CSS",
+            "score": 0,
+            "display": "Est savings of 25\u00a0KiB"
+          },
+          {
+            "id": "unused-javascript",
+            "title": "Reduce unused JavaScript",
+            "score": 0,
+            "display": "Est savings of 37\u00a0KiB"
+          },
+          {
+            "id": "bf-cache",
+            "title": "Page prevented back/forward cache restoration",
+            "score": 0,
+            "display": "2 failure reasons"
+          },
+          {
+            "id": "image-delivery-insight",
+            "title": "Improve image delivery",
+            "score": 0.5,
+            "display": "Est savings of 12\u00a0KiB"
+          },
+          {
+            "id": "network-dependency-tree-insight",
+            "title": "Network dependency tree",
+            "score": 0
+          },
+          {
+            "id": "render-blocking-insight",
+            "title": "Render-blocking requests",
+            "score": 0,
+            "display": "Est savings of 80\u00a0ms"
+          }
+        ],
+        "runtimeError": null,
+        "passed": true
+      },
+      {
+        "route": "/contact",
+        "preset": "desktop",
+        "performance": 100,
+        "accessibility": 100,
+        "visibleLabelsMatchNames": true,
+        "bestPractices": 96,
+        "seo": 100,
+        "lcpMs": 644.7238,
+        "cls": 0,
+        "tbtMs": 0,
+        "failedAudits": [
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.99,
+            "display": "0.6\u00a0s"
+          },
+          {
+            "id": "errors-in-console",
+            "title": "Browser errors were logged to the console",
+            "score": 0
+          },
+          {
+            "id": "unused-css-rules",
+            "title": "Reduce unused CSS",
+            "score": 0,
+            "display": "Est savings of 25\u00a0KiB"
+          },
+          {
+            "id": "unused-javascript",
+            "title": "Reduce unused JavaScript",
+            "score": 0,
+            "display": "Est savings of 37\u00a0KiB"
+          },
+          {
+            "id": "bf-cache",
+            "title": "Page prevented back/forward cache restoration",
+            "score": 0,
+            "display": "2 failure reasons"
+          },
+          {
+            "id": "image-delivery-insight",
+            "title": "Improve image delivery",
+            "score": 0.5,
+            "display": "Est savings of 12\u00a0KiB"
+          },
+          {
+            "id": "network-dependency-tree-insight",
+            "title": "Network dependency tree",
+            "score": 0
+          },
+          {
+            "id": "render-blocking-insight",
+            "title": "Render-blocking requests",
+            "score": 0,
+            "display": "Est savings of 80\u00a0ms"
+          }
+        ],
+        "runtimeError": null,
+        "passed": true
+      }
+    ]
   },
   "services": [
     {
@@ -210,29 +583,28 @@
   ],
   "prdComplete": false,
   "remaining": [
-    "MobileLCP3025/3008/3007ms remains over2500ms; representativehardware/field acceptance remains",
     "Mobile LCP and representative hardware/load/field p75 LCP-INP-CLS",
     "Complete secondary visual prompt surfaces, approved chapter assets/content, blocking human fidelity approval and approved 1% screenshot baselines",
     "Complete keyboard/assistive-technology/actual 200% zoom/forced-colors and physical Safari/device/install/push acceptance",
     "Actual GT staging/hosting/domains/secrets/provider configuration, report-only CSP rollout and hosted headers/cache/CI/scheduler/monitoring/alerts",
     "Hosted PITR/object restore with measured RPO-RTO, migration rehearsal, rollback and 48-hour observation",
-    "Institutional brand/privacy/retention/finance sign-off; inherited warning remediation and compatible low-dependency review"
+    "Institutional brand/privacy/retention/finance sign-off; inherited warning remediation"
   ],
   "deferred": [
     "SSO/Google",
     "Bevy/Engage"
   ],
   "scope": "Local only; no deployment, push, purchase, real provider send, production change, another timer or AI commit trailer.",
-  "verificationScopeNote": "Current completecoverage2719/221, public/startup/lazyshell130/eightexpectedskips and PWA15/update9/HTTPS46 pass. Bothoriginaldesktopmotion checks pass, earlierfailures retained. Secondary162 from same emittedappmodule/CSSgraph is preHTML/helperchange. MobileLCPstillfails; no full1446execution/human/device/hosted/fullPRD claim. New8publication/campaign states not yetverified.",
+  "verificationScopeNote": "Current secondary 44 states/264 checks/344 unapproved captures passes. No fixture review POST reaches real server. Complete source coverage unchanged after CSS-only fixes; final artifact probes pass. No full 1548-case execution, human/device/hosted/full PRD acceptance claimed.",
   "delivery": {
-    "initialJsGzipBytes": 108174,
+    "initialJsGzipBytes": 108166,
     "copiedHelperGzipBytes": 585,
     "routeAwareHeroHints": true,
     "fontPreload": "retained",
-    "cssGzipBytes": 29899,
+    "cssGzipBytes": 29936,
     "fontBytes": 48432,
-    "offlineInstallRawBytes": 493073,
-    "publicRouteJsGzipBytes": 148998
+    "offlineInstallRawBytes": 493275,
+    "publicRouteJsGzipBytes": 148960
   },
   "dependencies": {
     "router": "7.18.5",
@@ -245,11 +617,11 @@
       "total": 0
     },
     "rawAuditExit": 0,
-    "remaining": "Scoped KaTeX0.18.2 override installed; compatibility/regression passed, final artifact acceptance still open."
+    "remaining": "Fresh production audit has zero findings; KaTeX compatibility/regression evidence retained. Hosted launch review separate."
   },
   "activeVerification": {
-    "savedBaseline": "3072698",
-    "changes": "Early public-route static module hints; no page/layout/API/SQL changes",
-    "status": "Finalcompletecoverage2719/221, publicscope130/eightexpectedskips, PWA15/update9/HTTPS46 pass. MobileLCP3025/3008/3007 remainsfailing; desktop/a11y/labels/CLS pass. Newpublication/campaign8state diagnostic inprogress, no productsource change."
+    "savedBaseline": "c9d73e1",
+    "changes": "Keyboard-scrollable long reviews/tables; publication-summary contrast and history checkbox target fixes. Forty-four review states verified.",
+    "status": "264 secondary checks, 2722 source tests and all final PWA/header/build/types/catalog/byte/audit checks pass. Final isolated performance completes but all three mobile LCP gates fail. Local save then full1548-case browser execution next."
   }
 }

@@ -5,34 +5,35 @@ Router7.18.5, the scoped KaTeX0.18.2 security patch, visible-label corrections a
 native drawing-control names. Production dependency audit exits0 with no current
 findings. That is not a full security or launch certificate.
 
-Complete source coverage passes **2719tests/221files**, unchanged global70 and
-21critical90 branch gates: lines78.16/statements76.16/functions70.80/branches75.61.
-It ran with one worker and no competing verification. Earlier failed coverage
-invocations remain recorded separately. Build/types/byte/traceability gates pass;
-lint has0errors/10inherited warnings. See `phase0/public-route-hints-quality.json`.
+Complete source coverage passes **2,722 tests/222 files**, unchanged global70
+and21critical90 branch gates: lines78.16/statements76.17/functions70.77/
+branches75.63. It ran with one worker and no competing verification. The later
+publication/history corrections change CSS only; instrumented application source
+is unchanged. See `phase0/communication-scroll-quality.json`. Final build, types,
+byte and traceability checks pass; lint has0errors/10inherited warnings.
 
-Saved4ed0b55 complete browser invocation passes1372cases/eight expected skips.
-Earlier KaTeX/editor/public/navigation scope passed92/eight expected skips/two
-software-WebGL failures, while all12actual editor and6navigation cases pass.
-That earlier two-case motion isolation timed out during screenshot readback
-after same-geometry sprinkle instancing. Both original desktop cases pass in
-two later public scopes; thresholds/assertions/retries remain unchanged.
-These are separate builds and scopes, not a passing full current inventory.
+Saved4ed0b55 full browser invocation passes1,372cases/eight expected skips.
+A later public/startup/lazy-shell scope passes130cases/eight expected skips,
+including both original desktop motion checks. Earlier WebKit harness and
+software-WebGL failures remain recorded separately. They are not relabeled as
+passing complete invocations.
 
-The expanded secondary review passes27states/162checks, with210unapproved
-captures and no skips/failures/retries. Six new task/message states passed their corrected desktop diagnostic.
-The first diagnostic's four bare-label locator errors are retained. Current public/startup/lazy-shell scope passes130cases/eight expected skips,
-including the unchanged original desktop motion checks. Failed earlier scopes
-remain historical. List-only inventory verifies1446unique cases in three disjoint
-482-case shards. Eight more publication/campaign states are prepared and under
-diagnostic; no full1494-case inventory or execution is claimed yet. No remote
-CI, approved goldens, human fidelity approval or physical-device claim follows.
+The keyboard review continuation passes37secondary states/222checks/270unapproved
+captures, with no skips/failures/retries. Seven additional form review states
+pass42checks across6profiles. They exposed and corrected real publication-summary
+contrast and history checkbox target-size findings. The earlier mobile delivery/
+recipient/message keyboard-scroll failures and initial test harness failures
+remain retained. Expanded44state combined review now passes all264checks with344unapproved
+captures; no failures/skips/retries. List-only inventory verifies1,548unique cases and
+three disjoint516case shards; no complete1,548case execution or remote CI claim.
+See `KEYBOARD_REVIEW_ACCESSIBILITY.md` and the dated evidence files.
 
-Current isolated mobile labLCP3025/3008/3007ms still fails2500ms; desktop100,
-accessibility100, explicit visible-label names pass andCLS0. Current-artifact
-15PWA/nine update/46HTTPS checks pass. Full
-PRD remains incomplete: all146requirements/307logical cases are source-mapped,
-with full acceptance unverified. The manual/device/hosted gates below remain.
+Final CSS artifact passes15PWA/nine update/46HTTPS checks. Its isolated mobile
+LCP3040/2859/3007ms still fails2500ms; desktop performance100, accessibility100,
+matching visible labels andCLS0 pass. Field/representative hardware acceptance
+remain open. Full PRD remains incomplete:
+all146requirements/307logical cases are source-mapped, with complete acceptance
+unverified. No local test or screenshot certifies the manual/device/hosted gates.
 
 ## Historical implementation evidence
 

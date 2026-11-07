@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-11-07T05:34:04.676Z",
+  "generatedAt": "2026-11-07T06:32:51.150Z",
   "completed": true,
   "lighthouseVersion": "13.6.0",
   "build": {
     "index.html": {
       "bytes": 2206,
-      "sha256": "65b7bc88104bbc6797e6a281207d10008e4f278caa4072307a5719545a0f90d5"
+      "sha256": "9fbfa41f3f195ea7a5fbfbedb394793e2a478684f098258a3e852898da6ca658"
     },
     ".vite/manifest.json": {
-      "bytes": 115928,
-      "sha256": "554aabaca5c459737d4ed22bef5aae6c55f65396a7ce497d628b7647fae3cc6e"
+      "bytes": 116004,
+      "sha256": "0a4ebd3da0af976bc71ed74a86c1bd81121e3ae384e12d6d707d66c8869cee16"
     },
     "assets/hero-atmosphere-mobile.webp": {
       "bytes": 37624,
@@ -43,9 +43,9 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 3024.6628,
+      "lcpMs": 3039.8566,
       "cls": 0,
-      "tbtMs": 11,
+      "tbtMs": 23.5,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
@@ -56,8 +56,8 @@
         {
           "id": "max-potential-fid",
           "title": "Max Potential First Input Delay",
-          "score": 0.99,
-          "display": "70 ms"
+          "score": 0.97,
+          "display": "100 ms"
         },
         {
           "id": "errors-in-console",
@@ -103,7 +103,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 270 ms"
+          "display": "Est savings of 260 ms"
         }
       ],
       "runtimeError": null,
@@ -117,15 +117,15 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 3008.4274000000014,
+      "lcpMs": 2859.3788000000013,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
-          "score": 0.78,
-          "display": "3.0 s"
+          "score": 0.81,
+          "display": "2.9 s"
         },
         {
           "id": "errors-in-console",
@@ -136,7 +136,7 @@
           "id": "interactive",
           "title": "Time to Interactive",
           "score": 0.96,
-          "display": "3.0 s"
+          "display": "2.9 s"
         },
         {
           "id": "unused-css-rules",
@@ -159,7 +159,7 @@
         {
           "id": "image-delivery-insight",
           "title": "Improve image delivery",
-          "score": 0,
+          "score": 0.5,
           "display": "Est savings of 12 KiB"
         },
         {
@@ -171,7 +171,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 300 ms"
+          "display": "Est savings of 290 ms"
         }
       ],
       "runtimeError": null,
@@ -185,9 +185,9 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 3007.3582000000006,
+      "lcpMs": 3006.7266,
       "cls": 0,
-      "tbtMs": 0,
+      "tbtMs": 1,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
@@ -253,7 +253,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 644.4757999999999,
+      "lcpMs": 655.0742,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -261,7 +261,7 @@
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
           "score": 0.99,
-          "display": "0.6 s"
+          "display": "0.7 s"
         },
         {
           "id": "errors-in-console",
@@ -315,7 +315,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 686.3996,
+      "lcpMs": 646.9355999999999,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -323,7 +323,7 @@
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
           "score": 0.99,
-          "display": "0.7 s"
+          "display": "0.6 s"
         },
         {
           "id": "errors-in-console",
@@ -363,7 +363,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 40 ms"
+          "display": "Est savings of 80 ms"
         }
       ],
       "runtimeError": null,
@@ -377,7 +377,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 683.8144,
+      "lcpMs": 644.7238,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -385,7 +385,7 @@
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
           "score": 0.99,
-          "display": "0.7 s"
+          "display": "0.6 s"
         },
         {
           "id": "errors-in-console",

@@ -1,3 +1,5 @@
+import ScrollableTable from "./ScrollableTable";
+
 type Registration = {
   id: string;
   title: string;
@@ -60,7 +62,10 @@ export function RegistrationChart({
           </ul>
           <details>
             <summary>View registration data table</summary>
-            <div className="gt-table-scroll">
+            <ScrollableTable
+              className="gt-table-scroll"
+              label="Registration data table, scroll horizontally for all columns"
+            >
               <table className="gt-table">
                 <caption>Registrations by event</caption>
                 <thead>
@@ -82,7 +87,7 @@ export function RegistrationChart({
                   ))}
                 </tbody>
               </table>
-            </div>
+            </ScrollableTable>
           </details>
         </>
       )}

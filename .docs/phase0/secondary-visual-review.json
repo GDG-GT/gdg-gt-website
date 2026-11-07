@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-11-07T05:18:31.270Z",
+  "generatedAt": "2026-11-07T06:31:26.491Z",
   "completed": true,
   "scope": "secondary",
   "sourceCaptureDirectory": "artifacts/browser/secondary-review",
-  "note": "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. These twenty-seven secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review.",
+  "note": "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. These forty-four secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review.",
   "stats": {
-    "startTime": "2026-11-07T05:14:16.332Z",
-    "duration": 250371.915,
-    "expected": 162,
+    "startTime": "2026-11-07T06:27:30.429Z",
+    "duration": 213105.739,
+    "expected": 264,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
@@ -20,9 +20,52 @@
     "webkit-1440",
     "webkit-mobile"
   ],
-  "compositionChecks": 162,
-  "captureCount": 210,
+  "compositionChecks": 264,
+  "captureCount": 344,
   "prompts": [
+    {
+      "id": "VIS-TEST-013",
+      "title": "Overview chart data",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "registration data table",
+          "project": "chromium-1920",
+          "test": "secondary registration data table keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-d8f97-nd-delivery-status-readable-chromium-1920/attachments/registration-data-table-6e4421778deabd966111d4f45444dc59c5fa4e97.png"
+        },
+        {
+          "name": "registration data table",
+          "project": "chromium-1440",
+          "test": "secondary registration data table keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-d8f97-nd-delivery-status-readable-chromium-1440/attachments/registration-data-table-aa7380b46b545c01efafe8d49d4a16c561b7f88d.png"
+        },
+        {
+          "name": "registration data table",
+          "project": "chromium-mobile",
+          "test": "secondary registration data table keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-d8f97-nd-delivery-status-readable-chromium-mobile/attachments/registration-data-table-79324c043e5af88f85ed79e944832d27ff7ead44.png"
+        },
+        {
+          "name": "registration data table",
+          "project": "firefox-1440",
+          "test": "secondary registration data table keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-d8f97-nd-delivery-status-readable-firefox-1440/attachments/registration-data-table-fe29149ba39718bd501d86fe2967e0db811cde0b.png"
+        },
+        {
+          "name": "registration data table",
+          "project": "webkit-1440",
+          "test": "secondary registration data table keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-d8f97-nd-delivery-status-readable-webkit-1440/attachments/registration-data-table-758f05412b66eebc839af4b2f94a67b358adaa65.png"
+        },
+        {
+          "name": "registration data table",
+          "project": "webkit-mobile",
+          "test": "secondary registration data table keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-d8f97-nd-delivery-status-readable-webkit-mobile/attachments/registration-data-table-96da2d7a12d501fcf009e4f4a39ead828a1fed47.png"
+        }
+      ]
+    },
     {
       "id": "VIS-TEST-014",
       "title": "Events and attendance",
@@ -567,6 +610,42 @@
           "project": "webkit-mobile",
           "test": "secondary event duplication review composition remains readable and accessible",
           "file": "artifacts/browser/secondary-review/event-compositions-seconda-9d956-ins-readable-and-accessible-webkit-mobile/attachments/event-duplication-review-46905c6e25a7e405977f6cc72979eb054609e1ef.png"
+        },
+        {
+          "name": "event email approval review",
+          "project": "chromium-1920",
+          "test": "secondary event email approval review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-dcbe5-nd-delivery-status-readable-chromium-1920/attachments/event-email-approval-review-47e6b188e404431b0e4ddc8ccf1a5f38cf02007f.png"
+        },
+        {
+          "name": "event email approval review",
+          "project": "chromium-1440",
+          "test": "secondary event email approval review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-dcbe5-nd-delivery-status-readable-chromium-1440/attachments/event-email-approval-review-22c8dcf5c0fa8771c606ac5746d4d08fb8ea2014.png"
+        },
+        {
+          "name": "event email approval review",
+          "project": "chromium-mobile",
+          "test": "secondary event email approval review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-dcbe5-nd-delivery-status-readable-chromium-mobile/attachments/event-email-approval-review-7db0f5b6681314eb2d0227818451a997b91cc4bc.png"
+        },
+        {
+          "name": "event email approval review",
+          "project": "firefox-1440",
+          "test": "secondary event email approval review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-dcbe5-nd-delivery-status-readable-firefox-1440/attachments/event-email-approval-review-0702cf8b84fff13f03c736eaf23101e5d308f896.png"
+        },
+        {
+          "name": "event email approval review",
+          "project": "webkit-1440",
+          "test": "secondary event email approval review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-dcbe5-nd-delivery-status-readable-webkit-1440/attachments/event-email-approval-review-9e21ae8f0de3f24b7e992fb8e2a2df4769fbd38b.png"
+        },
+        {
+          "name": "event email approval review",
+          "project": "webkit-mobile",
+          "test": "secondary event email approval review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-dcbe5-nd-delivery-status-readable-webkit-mobile/attachments/event-email-approval-review-df99cc0593c43b5827a5a4bf641ceb02846ad766.png"
         }
       ]
     },
@@ -762,6 +841,150 @@
       "title": "Communications and newsletter",
       "acceptance": "unverified",
       "captures": [
+        {
+          "name": "campaign custom audience",
+          "project": "chromium-1920",
+          "test": "secondary campaign custom audience keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-52760-nd-delivery-status-readable-chromium-1920/attachments/campaign-custom-audience-5bd72c8137a8536129f70d9d8dee8288e0702307.png"
+        },
+        {
+          "name": "campaign send entry",
+          "project": "chromium-1920",
+          "test": "secondary campaign send entry keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-2dc1c-nd-delivery-status-readable-chromium-1920/attachments/campaign-send-entry-20e8997304ab5661140a4afe57afa538f5214ead.png"
+        },
+        {
+          "name": "campaign send approval",
+          "project": "chromium-1920",
+          "test": "secondary campaign send approval keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-d9921-nd-delivery-status-readable-chromium-1920/attachments/campaign-send-approval-6ddcb1837cc4b7767887cd382be1d4bafb1c2b86.png"
+        },
+        {
+          "name": "campaign delivery results",
+          "project": "chromium-1920",
+          "test": "secondary campaign delivery results keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-a7680-nd-delivery-status-readable-chromium-1920/attachments/campaign-delivery-results-032b95f029ff6e0e9d9ce83975a7096603073d3d.png"
+        },
+        {
+          "name": "campaign custom audience",
+          "project": "chromium-1440",
+          "test": "secondary campaign custom audience keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-52760-nd-delivery-status-readable-chromium-1440/attachments/campaign-custom-audience-3d86213a1ae8b35dca4db4849b09bde5f459621e.png"
+        },
+        {
+          "name": "campaign send entry",
+          "project": "chromium-1440",
+          "test": "secondary campaign send entry keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-2dc1c-nd-delivery-status-readable-chromium-1440/attachments/campaign-send-entry-a7d45ac9174f4f8b7ac5b714bbab61078f3aa365.png"
+        },
+        {
+          "name": "campaign send approval",
+          "project": "chromium-1440",
+          "test": "secondary campaign send approval keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-d9921-nd-delivery-status-readable-chromium-1440/attachments/campaign-send-approval-53cdf29b63c5ca58f442196cf219a33809b8b3d7.png"
+        },
+        {
+          "name": "campaign delivery results",
+          "project": "chromium-1440",
+          "test": "secondary campaign delivery results keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-a7680-nd-delivery-status-readable-chromium-1440/attachments/campaign-delivery-results-e3122ac4bc2cb14794bf50074b4d1665855620ee.png"
+        },
+        {
+          "name": "campaign custom audience",
+          "project": "chromium-mobile",
+          "test": "secondary campaign custom audience keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-52760-nd-delivery-status-readable-chromium-mobile/attachments/campaign-custom-audience-bac994225c35d8fb132320d2b12352d5181f8ae1.png"
+        },
+        {
+          "name": "campaign send entry",
+          "project": "chromium-mobile",
+          "test": "secondary campaign send entry keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-2dc1c-nd-delivery-status-readable-chromium-mobile/attachments/campaign-send-entry-a1dfdd3ef0787ffa0fe6181cc52cc5d2a7ff6b03.png"
+        },
+        {
+          "name": "campaign send approval",
+          "project": "chromium-mobile",
+          "test": "secondary campaign send approval keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-d9921-nd-delivery-status-readable-chromium-mobile/attachments/campaign-send-approval-66a8a62129f325f81b5a468d93ff1174962ff540.png"
+        },
+        {
+          "name": "campaign delivery results",
+          "project": "chromium-mobile",
+          "test": "secondary campaign delivery results keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-a7680-nd-delivery-status-readable-chromium-mobile/attachments/campaign-delivery-results-e52067c02d7bc63d26892bb4fcd57ed932783bf0.png"
+        },
+        {
+          "name": "campaign custom audience",
+          "project": "firefox-1440",
+          "test": "secondary campaign custom audience keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-52760-nd-delivery-status-readable-firefox-1440/attachments/campaign-custom-audience-83331f2e1dad7066643bd44e11d859744e84de98.png"
+        },
+        {
+          "name": "campaign send entry",
+          "project": "firefox-1440",
+          "test": "secondary campaign send entry keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-2dc1c-nd-delivery-status-readable-firefox-1440/attachments/campaign-send-entry-8c2bd0c2b6b6ed185b7b956367612329a9743d1f.png"
+        },
+        {
+          "name": "campaign send approval",
+          "project": "firefox-1440",
+          "test": "secondary campaign send approval keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-d9921-nd-delivery-status-readable-firefox-1440/attachments/campaign-send-approval-d5b95f6bd58dee64aef6593cc59d5d55cc310c86.png"
+        },
+        {
+          "name": "campaign delivery results",
+          "project": "firefox-1440",
+          "test": "secondary campaign delivery results keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-a7680-nd-delivery-status-readable-firefox-1440/attachments/campaign-delivery-results-9244430a2275d6e38ac7a5ad8c1c151b58bc7dae.png"
+        },
+        {
+          "name": "campaign custom audience",
+          "project": "webkit-1440",
+          "test": "secondary campaign custom audience keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-52760-nd-delivery-status-readable-webkit-1440/attachments/campaign-custom-audience-8eb907a74a570b06941f00d7a7fbe4ad3383f81c.png"
+        },
+        {
+          "name": "campaign send entry",
+          "project": "webkit-1440",
+          "test": "secondary campaign send entry keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-2dc1c-nd-delivery-status-readable-webkit-1440/attachments/campaign-send-entry-2488ffcfdf5a76e22c162c27ef5ab905a4d62cbd.png"
+        },
+        {
+          "name": "campaign send approval",
+          "project": "webkit-1440",
+          "test": "secondary campaign send approval keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-d9921-nd-delivery-status-readable-webkit-1440/attachments/campaign-send-approval-21b7e92a34208c350c44c7471a223a351fadf93a.png"
+        },
+        {
+          "name": "campaign delivery results",
+          "project": "webkit-1440",
+          "test": "secondary campaign delivery results keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-a7680-nd-delivery-status-readable-webkit-1440/attachments/campaign-delivery-results-95a585973289da30b0359bd43babe727eb4b999e.png"
+        },
+        {
+          "name": "campaign custom audience",
+          "project": "webkit-mobile",
+          "test": "secondary campaign custom audience keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-52760-nd-delivery-status-readable-webkit-mobile/attachments/campaign-custom-audience-391edec62a202ce636c6e2606b8d2b938e90d74d.png"
+        },
+        {
+          "name": "campaign send entry",
+          "project": "webkit-mobile",
+          "test": "secondary campaign send entry keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-2dc1c-nd-delivery-status-readable-webkit-mobile/attachments/campaign-send-entry-e896d7faea1f412eeba4eb50b1cd729867f8c370.png"
+        },
+        {
+          "name": "campaign send approval",
+          "project": "webkit-mobile",
+          "test": "secondary campaign send approval keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-d9921-nd-delivery-status-readable-webkit-mobile/attachments/campaign-send-approval-84363b5a1199fa958a05cb4604b1f8013b1da760.png"
+        },
+        {
+          "name": "campaign delivery results",
+          "project": "webkit-mobile",
+          "test": "secondary campaign delivery results keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-a7680-nd-delivery-status-readable-webkit-mobile/attachments/campaign-delivery-results-23c86229b3dc753401e898e0572cd34ad434070e.png"
+        },
         {
           "name": "campaign preview",
           "project": "chromium-1920",
@@ -1022,6 +1245,150 @@
       "acceptance": "unverified",
       "captures": [
         {
+          "name": "private upload selection",
+          "project": "chromium-1920",
+          "test": "secondary private upload selection keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-68471-nd-delivery-status-readable-chromium-1920/attachments/private-upload-selection-b80a932808b2114fb2ef26529e6cfcf4cdc402f2.png"
+        },
+        {
+          "name": "private upload validation",
+          "project": "chromium-1920",
+          "test": "secondary private upload validation keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-2930c-nd-delivery-status-readable-chromium-1920/attachments/private-upload-validation-cc74478347a07379da1640b8c06a4f4b91c4b51f.png"
+        },
+        {
+          "name": "image publication review",
+          "project": "chromium-1920",
+          "test": "secondary image publication review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-1b1ec-nd-delivery-status-readable-chromium-1920/attachments/image-publication-review-a4b2001940888167e9744a38c9500c09a029ba87.png"
+        },
+        {
+          "name": "image revocation review",
+          "project": "chromium-1920",
+          "test": "secondary image revocation review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-e24c6-nd-delivery-status-readable-chromium-1920/attachments/image-revocation-review-04427b52f497d696be4cc2f5d7733dc298011467.png"
+        },
+        {
+          "name": "private upload selection",
+          "project": "chromium-1440",
+          "test": "secondary private upload selection keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-68471-nd-delivery-status-readable-chromium-1440/attachments/private-upload-selection-9f5bef8a20b54659b7b79c2e2becad843dc04040.png"
+        },
+        {
+          "name": "private upload validation",
+          "project": "chromium-1440",
+          "test": "secondary private upload validation keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-2930c-nd-delivery-status-readable-chromium-1440/attachments/private-upload-validation-be2d5a750a8d3354d82d948a07489fb5a17ef928.png"
+        },
+        {
+          "name": "image publication review",
+          "project": "chromium-1440",
+          "test": "secondary image publication review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-1b1ec-nd-delivery-status-readable-chromium-1440/attachments/image-publication-review-f2363e8b933f76055fbd61c11555bb1679c3bb14.png"
+        },
+        {
+          "name": "image revocation review",
+          "project": "chromium-1440",
+          "test": "secondary image revocation review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-e24c6-nd-delivery-status-readable-chromium-1440/attachments/image-revocation-review-fbbaf9a0ff82dda08cb6b8199a8a5d68cd49b9b7.png"
+        },
+        {
+          "name": "private upload selection",
+          "project": "chromium-mobile",
+          "test": "secondary private upload selection keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-68471-nd-delivery-status-readable-chromium-mobile/attachments/private-upload-selection-b4e55643794064e6e37f06999736181abdd94b32.png"
+        },
+        {
+          "name": "private upload validation",
+          "project": "chromium-mobile",
+          "test": "secondary private upload validation keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-2930c-nd-delivery-status-readable-chromium-mobile/attachments/private-upload-validation-c2fe2eac137dc01f51b273e4cef55f2f2e30dcec.png"
+        },
+        {
+          "name": "image publication review",
+          "project": "chromium-mobile",
+          "test": "secondary image publication review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-1b1ec-nd-delivery-status-readable-chromium-mobile/attachments/image-publication-review-17cb7887eaa3065e0985f0c63f0f223af8027a91.png"
+        },
+        {
+          "name": "image revocation review",
+          "project": "chromium-mobile",
+          "test": "secondary image revocation review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-e24c6-nd-delivery-status-readable-chromium-mobile/attachments/image-revocation-review-e03a4641929176543fd8258ca317183200154b1f.png"
+        },
+        {
+          "name": "private upload selection",
+          "project": "firefox-1440",
+          "test": "secondary private upload selection keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-68471-nd-delivery-status-readable-firefox-1440/attachments/private-upload-selection-abb4fec9603479a2c3a6b83930c5626b25a676dc.png"
+        },
+        {
+          "name": "private upload validation",
+          "project": "firefox-1440",
+          "test": "secondary private upload validation keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-2930c-nd-delivery-status-readable-firefox-1440/attachments/private-upload-validation-888c7034d787f811b5b8c15f8b34a9becce5adbe.png"
+        },
+        {
+          "name": "image publication review",
+          "project": "firefox-1440",
+          "test": "secondary image publication review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-1b1ec-nd-delivery-status-readable-firefox-1440/attachments/image-publication-review-7d5edb1f405adcb092abab738f2f84a762afe029.png"
+        },
+        {
+          "name": "image revocation review",
+          "project": "firefox-1440",
+          "test": "secondary image revocation review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-e24c6-nd-delivery-status-readable-firefox-1440/attachments/image-revocation-review-ce230faa8c5f0406ffe10d46b92eb0dc9104858c.png"
+        },
+        {
+          "name": "private upload selection",
+          "project": "webkit-1440",
+          "test": "secondary private upload selection keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-68471-nd-delivery-status-readable-webkit-1440/attachments/private-upload-selection-0ae450a6de0b717a8f016c9a192fc1eab82c4623.png"
+        },
+        {
+          "name": "private upload validation",
+          "project": "webkit-1440",
+          "test": "secondary private upload validation keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-2930c-nd-delivery-status-readable-webkit-1440/attachments/private-upload-validation-43674416683daf1001a188f54bd8482279ce4b2c.png"
+        },
+        {
+          "name": "image publication review",
+          "project": "webkit-1440",
+          "test": "secondary image publication review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-1b1ec-nd-delivery-status-readable-webkit-1440/attachments/image-publication-review-51813a2ce7514fee4c37c1189de56ca69114a766.png"
+        },
+        {
+          "name": "image revocation review",
+          "project": "webkit-1440",
+          "test": "secondary image revocation review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-e24c6-nd-delivery-status-readable-webkit-1440/attachments/image-revocation-review-563d7633218667d7114f99ea95bcdb5c9f15bd64.png"
+        },
+        {
+          "name": "private upload selection",
+          "project": "webkit-mobile",
+          "test": "secondary private upload selection keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-68471-nd-delivery-status-readable-webkit-mobile/attachments/private-upload-selection-f663a0e091b7c351118130fce1af435dd333feb0.png"
+        },
+        {
+          "name": "private upload validation",
+          "project": "webkit-mobile",
+          "test": "secondary private upload validation keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-2930c-nd-delivery-status-readable-webkit-mobile/attachments/private-upload-validation-eea519734b3bad1278fac9afdf8ab889a977ca81.png"
+        },
+        {
+          "name": "image publication review",
+          "project": "webkit-mobile",
+          "test": "secondary image publication review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-1b1ec-nd-delivery-status-readable-webkit-mobile/attachments/image-publication-review-ce0f6b3363db65931e41816a00ebce0ecac78783.png"
+        },
+        {
+          "name": "image revocation review",
+          "project": "webkit-mobile",
+          "test": "secondary image revocation review keeps publication consequences and delivery status readable",
+          "file": "artifacts/browser/secondary-review/publication-campaign-compo-e24c6-nd-delivery-status-readable-webkit-mobile/attachments/image-revocation-review-c4e1c9df81c6117c010a2e7042e71518fc4cd58b.png"
+        },
+        {
           "name": "media inspector",
           "project": "chromium-1920",
           "test": "secondary media inspector composition remains readable and accessible",
@@ -1064,6 +1431,198 @@
       "title": "Form builder",
       "acceptance": "unverified",
       "captures": [
+        {
+          "name": "builder access",
+          "project": "chromium-1920",
+          "test": "secondary builder access keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-3f218-and-private-review-readable-chromium-1920/attachments/builder-access-7fb9c62ae60e8f9ab3973f35f3a7518c94691374.png"
+        },
+        {
+          "name": "published version comparison lower controls",
+          "project": "chromium-1920",
+          "test": "secondary published version comparison keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-71b2c-and-private-review-readable-chromium-1920/attachments/published-version-comparison-lower-controls-64ab17f8ae53d6d87de118e9ea709229b4a8cecc.png"
+        },
+        {
+          "name": "published version comparison",
+          "project": "chromium-1920",
+          "test": "secondary published version comparison keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-71b2c-and-private-review-readable-chromium-1920/attachments/published-version-comparison-fa0d6faf9ae6e84b57b5cac10baf96d76e071e6a.png"
+        },
+        {
+          "name": "form publication review lower controls",
+          "project": "chromium-1920",
+          "test": "secondary form publication review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-a9fe0-and-private-review-readable-chromium-1920/attachments/form-publication-review-lower-controls-8463a6c6ac4adfe6574bd7267b2115c4996509d0.png"
+        },
+        {
+          "name": "form publication review",
+          "project": "chromium-1920",
+          "test": "secondary form publication review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-a9fe0-and-private-review-readable-chromium-1920/attachments/form-publication-review-da95c1b1481dc06ebcc14a537020cddc614abd32.png"
+        },
+        {
+          "name": "builder access",
+          "project": "chromium-1440",
+          "test": "secondary builder access keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-3f218-and-private-review-readable-chromium-1440/attachments/builder-access-13b80ba5dc2535954809b72a649b3541b6e36072.png"
+        },
+        {
+          "name": "published version comparison lower controls",
+          "project": "chromium-1440",
+          "test": "secondary published version comparison keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-71b2c-and-private-review-readable-chromium-1440/attachments/published-version-comparison-lower-controls-b36eb74ab93638b76158b19996fd8d76a991ddce.png"
+        },
+        {
+          "name": "published version comparison",
+          "project": "chromium-1440",
+          "test": "secondary published version comparison keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-71b2c-and-private-review-readable-chromium-1440/attachments/published-version-comparison-42a16c667da00777db401090ca7b46e5d9c275db.png"
+        },
+        {
+          "name": "form publication review lower controls",
+          "project": "chromium-1440",
+          "test": "secondary form publication review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-a9fe0-and-private-review-readable-chromium-1440/attachments/form-publication-review-lower-controls-07b5ddbf9d48884f40d1a7dee130939513353ce4.png"
+        },
+        {
+          "name": "form publication review",
+          "project": "chromium-1440",
+          "test": "secondary form publication review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-a9fe0-and-private-review-readable-chromium-1440/attachments/form-publication-review-dddb3d806021dd5fe9cac08b2b1facc24bd40c87.png"
+        },
+        {
+          "name": "builder access lower controls",
+          "project": "chromium-mobile",
+          "test": "secondary builder access keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-3f218-and-private-review-readable-chromium-mobile/attachments/builder-access-lower-controls-6288057930fb5e8189588ccb13c57b380ef247d9.png"
+        },
+        {
+          "name": "builder access",
+          "project": "chromium-mobile",
+          "test": "secondary builder access keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-3f218-and-private-review-readable-chromium-mobile/attachments/builder-access-c21dca7bef847770d299690e52493714cc08e104.png"
+        },
+        {
+          "name": "published version comparison lower controls",
+          "project": "chromium-mobile",
+          "test": "secondary published version comparison keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-71b2c-and-private-review-readable-chromium-mobile/attachments/published-version-comparison-lower-controls-4a8821beb8211b575eeb96cabce00be237fc9647.png"
+        },
+        {
+          "name": "published version comparison",
+          "project": "chromium-mobile",
+          "test": "secondary published version comparison keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-71b2c-and-private-review-readable-chromium-mobile/attachments/published-version-comparison-23b63326c7182ecba2f16eae7a30f8f9ae3f14e6.png"
+        },
+        {
+          "name": "form publication review lower controls",
+          "project": "chromium-mobile",
+          "test": "secondary form publication review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-a9fe0-and-private-review-readable-chromium-mobile/attachments/form-publication-review-lower-controls-243f1bc027c6c3af4d5c4c4fc65800f944e27a73.png"
+        },
+        {
+          "name": "form publication review",
+          "project": "chromium-mobile",
+          "test": "secondary form publication review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-a9fe0-and-private-review-readable-chromium-mobile/attachments/form-publication-review-509eb45575e8c1afa0e09033f7ed42db59aa8ff3.png"
+        },
+        {
+          "name": "builder access",
+          "project": "firefox-1440",
+          "test": "secondary builder access keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-3f218-and-private-review-readable-firefox-1440/attachments/builder-access-e492ac17c90be9fa1623caa09009481be339fae8.png"
+        },
+        {
+          "name": "published version comparison lower controls",
+          "project": "firefox-1440",
+          "test": "secondary published version comparison keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-71b2c-and-private-review-readable-firefox-1440/attachments/published-version-comparison-lower-controls-76251b7c17c5e4a932c4c8ddecd44029d6ebccee.png"
+        },
+        {
+          "name": "published version comparison",
+          "project": "firefox-1440",
+          "test": "secondary published version comparison keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-71b2c-and-private-review-readable-firefox-1440/attachments/published-version-comparison-7990dad8565dec9107c92e1c5d19b5b505b22935.png"
+        },
+        {
+          "name": "form publication review lower controls",
+          "project": "firefox-1440",
+          "test": "secondary form publication review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-a9fe0-and-private-review-readable-firefox-1440/attachments/form-publication-review-lower-controls-aee90a7a2bd88b9193b83604eb2bc18c654d2982.png"
+        },
+        {
+          "name": "form publication review",
+          "project": "firefox-1440",
+          "test": "secondary form publication review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-a9fe0-and-private-review-readable-firefox-1440/attachments/form-publication-review-f5f7615eec80efc0f3b056ef94393107f5ffe9f6.png"
+        },
+        {
+          "name": "builder access",
+          "project": "webkit-1440",
+          "test": "secondary builder access keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-3f218-and-private-review-readable-webkit-1440/attachments/builder-access-ce255cfeea6433e83100ed978e5188d49fa87b82.png"
+        },
+        {
+          "name": "published version comparison lower controls",
+          "project": "webkit-1440",
+          "test": "secondary published version comparison keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-71b2c-and-private-review-readable-webkit-1440/attachments/published-version-comparison-lower-controls-9a2118a5be2df5ec2c561a26b5da164db7172101.png"
+        },
+        {
+          "name": "published version comparison",
+          "project": "webkit-1440",
+          "test": "secondary published version comparison keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-71b2c-and-private-review-readable-webkit-1440/attachments/published-version-comparison-d1c0202853ca5f297e8144988a6729a982f5b8cb.png"
+        },
+        {
+          "name": "form publication review lower controls",
+          "project": "webkit-1440",
+          "test": "secondary form publication review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-a9fe0-and-private-review-readable-webkit-1440/attachments/form-publication-review-lower-controls-ad14277928343924bd6e562a5a2a62a1fec787e9.png"
+        },
+        {
+          "name": "form publication review",
+          "project": "webkit-1440",
+          "test": "secondary form publication review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-a9fe0-and-private-review-readable-webkit-1440/attachments/form-publication-review-77a1cb1cd0978679f9076b9984a8fee0d4b17a5e.png"
+        },
+        {
+          "name": "builder access lower controls",
+          "project": "webkit-mobile",
+          "test": "secondary builder access keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-3f218-and-private-review-readable-webkit-mobile/attachments/builder-access-lower-controls-d849493beda0fc35f440a9e654dc68079b9161a2.png"
+        },
+        {
+          "name": "builder access",
+          "project": "webkit-mobile",
+          "test": "secondary builder access keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-3f218-and-private-review-readable-webkit-mobile/attachments/builder-access-6296036e642eb52fb41c2e96e5252935c9bf2c17.png"
+        },
+        {
+          "name": "published version comparison lower controls",
+          "project": "webkit-mobile",
+          "test": "secondary published version comparison keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-71b2c-and-private-review-readable-webkit-mobile/attachments/published-version-comparison-lower-controls-d8dd244c71feac9c8d4c61064db65466669b288f.png"
+        },
+        {
+          "name": "published version comparison",
+          "project": "webkit-mobile",
+          "test": "secondary published version comparison keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-71b2c-and-private-review-readable-webkit-mobile/attachments/published-version-comparison-6eb5323087d0ca96faecd93c791a0ddcac9e2187.png"
+        },
+        {
+          "name": "form publication review lower controls",
+          "project": "webkit-mobile",
+          "test": "secondary form publication review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-a9fe0-and-private-review-readable-webkit-mobile/attachments/form-publication-review-lower-controls-342b8ccd6ba8ae9fa1e715ccbea488db94ea5842.png"
+        },
+        {
+          "name": "form publication review",
+          "project": "webkit-mobile",
+          "test": "secondary form publication review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-a9fe0-and-private-review-readable-webkit-mobile/attachments/form-publication-review-0c15af2aaec9650658baf44f8c262bb1de153958.png"
+        },
         {
           "name": "builder logic lower controls",
           "project": "chromium-1920",
@@ -1215,6 +1774,258 @@
       "title": "Form responses",
       "acceptance": "unverified",
       "captures": [
+        {
+          "name": "response revision review lower controls",
+          "project": "chromium-1920",
+          "test": "secondary response revision review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-76da3-and-private-review-readable-chromium-1920/attachments/response-revision-review-lower-controls-18913859309fadafaa4d473b76123d8a9c8b7495.png"
+        },
+        {
+          "name": "response revision review",
+          "project": "chromium-1920",
+          "test": "secondary response revision review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-76da3-and-private-review-readable-chromium-1920/attachments/response-revision-review-51a7192de890392c11993292702f5f368c8d17aa.png"
+        },
+        {
+          "name": "response retention review lower controls",
+          "project": "chromium-1920",
+          "test": "secondary response retention review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-8c29a-and-private-review-readable-chromium-1920/attachments/response-retention-review-lower-controls-3ba8da322056f7ea6d6cf6449f989d7ba3b5e845.png"
+        },
+        {
+          "name": "response retention review",
+          "project": "chromium-1920",
+          "test": "secondary response retention review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-8c29a-and-private-review-readable-chromium-1920/attachments/response-retention-review-8b29f1d3d38239b38ea6a4a6f597e3ba89d0cb11.png"
+        },
+        {
+          "name": "response export review",
+          "project": "chromium-1920",
+          "test": "secondary response export review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-08f3b-and-private-review-readable-chromium-1920/attachments/response-export-review-89526272806b3ad17ce01b04c7ba049b4f20d5ea.png"
+        },
+        {
+          "name": "response sensitive reveal lower controls",
+          "project": "chromium-1920",
+          "test": "secondary response sensitive reveal keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-e510e-and-private-review-readable-chromium-1920/attachments/response-sensitive-reveal-lower-controls-530650e718dc797b45b0b9f8bcd77b9f1f5eb2a0.png"
+        },
+        {
+          "name": "response sensitive reveal",
+          "project": "chromium-1920",
+          "test": "secondary response sensitive reveal keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-e510e-and-private-review-readable-chromium-1920/attachments/response-sensitive-reveal-6a27e810834896b5abe6f954e658959dc0548ae2.png"
+        },
+        {
+          "name": "response revision review lower controls",
+          "project": "chromium-1440",
+          "test": "secondary response revision review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-76da3-and-private-review-readable-chromium-1440/attachments/response-revision-review-lower-controls-992c76afa759ac374ae82520f74d07293251445e.png"
+        },
+        {
+          "name": "response revision review",
+          "project": "chromium-1440",
+          "test": "secondary response revision review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-76da3-and-private-review-readable-chromium-1440/attachments/response-revision-review-03b3446fc27579c9d3310c84219fe01eaea6baa9.png"
+        },
+        {
+          "name": "response retention review lower controls",
+          "project": "chromium-1440",
+          "test": "secondary response retention review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-8c29a-and-private-review-readable-chromium-1440/attachments/response-retention-review-lower-controls-78b83db25dd411c4675e5f9ba6b9db60f5c97061.png"
+        },
+        {
+          "name": "response retention review",
+          "project": "chromium-1440",
+          "test": "secondary response retention review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-8c29a-and-private-review-readable-chromium-1440/attachments/response-retention-review-006c01cf1a5a2569c510fedab98de12a7fa74bff.png"
+        },
+        {
+          "name": "response export review",
+          "project": "chromium-1440",
+          "test": "secondary response export review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-08f3b-and-private-review-readable-chromium-1440/attachments/response-export-review-692aae1cbd440bde13f4e31700e3d36042d3cfa3.png"
+        },
+        {
+          "name": "response sensitive reveal lower controls",
+          "project": "chromium-1440",
+          "test": "secondary response sensitive reveal keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-e510e-and-private-review-readable-chromium-1440/attachments/response-sensitive-reveal-lower-controls-df65a0f95686f3c7189de348db23ef084f3f6625.png"
+        },
+        {
+          "name": "response sensitive reveal",
+          "project": "chromium-1440",
+          "test": "secondary response sensitive reveal keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-e510e-and-private-review-readable-chromium-1440/attachments/response-sensitive-reveal-3ddd64eae5d9db56dc99ef7c642f86ebf5a1b318.png"
+        },
+        {
+          "name": "response revision review lower controls",
+          "project": "chromium-mobile",
+          "test": "secondary response revision review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-76da3-and-private-review-readable-chromium-mobile/attachments/response-revision-review-lower-controls-c62653a08dda4f7b4f5760c2b9380029a49be9ab.png"
+        },
+        {
+          "name": "response revision review",
+          "project": "chromium-mobile",
+          "test": "secondary response revision review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-76da3-and-private-review-readable-chromium-mobile/attachments/response-revision-review-4974b7faee5b05bcc890e9472b02084465a61970.png"
+        },
+        {
+          "name": "response retention review lower controls",
+          "project": "chromium-mobile",
+          "test": "secondary response retention review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-8c29a-and-private-review-readable-chromium-mobile/attachments/response-retention-review-lower-controls-f219eede158e7d800a656578250b822801ff67f4.png"
+        },
+        {
+          "name": "response retention review",
+          "project": "chromium-mobile",
+          "test": "secondary response retention review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-8c29a-and-private-review-readable-chromium-mobile/attachments/response-retention-review-9fd5863689a178f72fc6afd9af61ffb7420d88eb.png"
+        },
+        {
+          "name": "response export review",
+          "project": "chromium-mobile",
+          "test": "secondary response export review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-08f3b-and-private-review-readable-chromium-mobile/attachments/response-export-review-e68b35b26b3a7bb80bf24a9288b7eb97c4a45817.png"
+        },
+        {
+          "name": "response sensitive reveal lower controls",
+          "project": "chromium-mobile",
+          "test": "secondary response sensitive reveal keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-e510e-and-private-review-readable-chromium-mobile/attachments/response-sensitive-reveal-lower-controls-b11b3f5e11427d149e3ae0b27d339c53d93aad53.png"
+        },
+        {
+          "name": "response sensitive reveal",
+          "project": "chromium-mobile",
+          "test": "secondary response sensitive reveal keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-e510e-and-private-review-readable-chromium-mobile/attachments/response-sensitive-reveal-18b4fa9364f6fdfac504cd86eec078f3416956ce.png"
+        },
+        {
+          "name": "response revision review lower controls",
+          "project": "firefox-1440",
+          "test": "secondary response revision review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-76da3-and-private-review-readable-firefox-1440/attachments/response-revision-review-lower-controls-a32fdfa9e3ef2ebb1dccc57316e6e31724543da6.png"
+        },
+        {
+          "name": "response revision review",
+          "project": "firefox-1440",
+          "test": "secondary response revision review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-76da3-and-private-review-readable-firefox-1440/attachments/response-revision-review-0cb62edb55de5518bc256d3f0c9f35ee907e8063.png"
+        },
+        {
+          "name": "response retention review lower controls",
+          "project": "firefox-1440",
+          "test": "secondary response retention review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-8c29a-and-private-review-readable-firefox-1440/attachments/response-retention-review-lower-controls-eb4715f3a0c7f15ca6b226fb5b0233d890ccdc30.png"
+        },
+        {
+          "name": "response retention review",
+          "project": "firefox-1440",
+          "test": "secondary response retention review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-8c29a-and-private-review-readable-firefox-1440/attachments/response-retention-review-23bea8db7e829b7d4ab48849ab4d3a006e0121b2.png"
+        },
+        {
+          "name": "response export review",
+          "project": "firefox-1440",
+          "test": "secondary response export review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-08f3b-and-private-review-readable-firefox-1440/attachments/response-export-review-832e2972c4071d8de26f05635dc8011d168c4d01.png"
+        },
+        {
+          "name": "response sensitive reveal lower controls",
+          "project": "firefox-1440",
+          "test": "secondary response sensitive reveal keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-e510e-and-private-review-readable-firefox-1440/attachments/response-sensitive-reveal-lower-controls-45cd3e36efd03f74a468d57afd4a3dd2ba79b6c5.png"
+        },
+        {
+          "name": "response sensitive reveal",
+          "project": "firefox-1440",
+          "test": "secondary response sensitive reveal keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-e510e-and-private-review-readable-firefox-1440/attachments/response-sensitive-reveal-cd3129e5bf5d91e4833eaa26c4c373ae89ae753b.png"
+        },
+        {
+          "name": "response revision review lower controls",
+          "project": "webkit-1440",
+          "test": "secondary response revision review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-76da3-and-private-review-readable-webkit-1440/attachments/response-revision-review-lower-controls-7588b37dbf0511e4b091a7651423b689c6c50f74.png"
+        },
+        {
+          "name": "response revision review",
+          "project": "webkit-1440",
+          "test": "secondary response revision review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-76da3-and-private-review-readable-webkit-1440/attachments/response-revision-review-10f40c23fb3d325118d59b14ee10baac86cae7d3.png"
+        },
+        {
+          "name": "response retention review lower controls",
+          "project": "webkit-1440",
+          "test": "secondary response retention review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-8c29a-and-private-review-readable-webkit-1440/attachments/response-retention-review-lower-controls-213f9c6fc8921e842aeb9dbec49264a72dfdb9d7.png"
+        },
+        {
+          "name": "response retention review",
+          "project": "webkit-1440",
+          "test": "secondary response retention review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-8c29a-and-private-review-readable-webkit-1440/attachments/response-retention-review-e4264d200571e440dfe97003c11b7eef21d3d618.png"
+        },
+        {
+          "name": "response export review",
+          "project": "webkit-1440",
+          "test": "secondary response export review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-08f3b-and-private-review-readable-webkit-1440/attachments/response-export-review-b09fbd1eb81c18e27b2eb60a33e9733f7d335798.png"
+        },
+        {
+          "name": "response sensitive reveal lower controls",
+          "project": "webkit-1440",
+          "test": "secondary response sensitive reveal keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-e510e-and-private-review-readable-webkit-1440/attachments/response-sensitive-reveal-lower-controls-5b581a8e669d45d40f0999dcc7e343e0e5153b1d.png"
+        },
+        {
+          "name": "response sensitive reveal",
+          "project": "webkit-1440",
+          "test": "secondary response sensitive reveal keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-e510e-and-private-review-readable-webkit-1440/attachments/response-sensitive-reveal-0e495b7b4d0782d13f72a9f055e2972ae8e77d88.png"
+        },
+        {
+          "name": "response revision review lower controls",
+          "project": "webkit-mobile",
+          "test": "secondary response revision review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-76da3-and-private-review-readable-webkit-mobile/attachments/response-revision-review-lower-controls-07b58cdd02358f0af5f0da0410c1bbcc40d5a900.png"
+        },
+        {
+          "name": "response revision review",
+          "project": "webkit-mobile",
+          "test": "secondary response revision review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-76da3-and-private-review-readable-webkit-mobile/attachments/response-revision-review-961011ba771929306a048a440d0dbc7e3b22d682.png"
+        },
+        {
+          "name": "response retention review lower controls",
+          "project": "webkit-mobile",
+          "test": "secondary response retention review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-8c29a-and-private-review-readable-webkit-mobile/attachments/response-retention-review-lower-controls-27860ac8f1174622849b71f6a4bcecc599d9dc18.png"
+        },
+        {
+          "name": "response retention review",
+          "project": "webkit-mobile",
+          "test": "secondary response retention review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-8c29a-and-private-review-readable-webkit-mobile/attachments/response-retention-review-c0dc40394fcdf1dc7f1380b190bfc2f5d8b065d4.png"
+        },
+        {
+          "name": "response export review",
+          "project": "webkit-mobile",
+          "test": "secondary response export review keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-08f3b-and-private-review-readable-webkit-mobile/attachments/response-export-review-b5287627e83e44f199676fd7ace45bf2c5fda919.png"
+        },
+        {
+          "name": "response sensitive reveal lower controls",
+          "project": "webkit-mobile",
+          "test": "secondary response sensitive reveal keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-e510e-and-private-review-readable-webkit-mobile/attachments/response-sensitive-reveal-lower-controls-57ba67ab23e7041d0b8cd36ec42f45d64da11de9.png"
+        },
+        {
+          "name": "response sensitive reveal",
+          "project": "webkit-mobile",
+          "test": "secondary response sensitive reveal keeps permissions and private review readable",
+          "file": "artifacts/browser/secondary-review/form-review-compositions-s-e510e-and-private-review-readable-webkit-mobile/attachments/response-sensitive-reveal-d8c078b7ce69159a9aa6ad5ca74ca633c4342b27.png"
+        },
         {
           "name": "response analytics",
           "project": "chromium-1920",

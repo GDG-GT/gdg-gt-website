@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-11-07T06:32:09.798680+00:00",
+  "command": "npm audit --omit=dev --json",
+  "exitCode": 0,
+  "vulnerabilities": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "packageLockSha256": "817b2345afa696c5006fc193523defb48899d0b0b90c994b19b991fe408a2750",
+  "scope": "Fresh read-only production dependency advisory audit; no install or package change. Zero current findings is not a complete security or launch certificate. Raw report /tmp/gdg-communication-form-production-audit.json."
+}
