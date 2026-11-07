@@ -80,6 +80,7 @@ function FormsLibraryWorkspace() {
   const navigationSafety = useNavigationSafety();
   const { isSuperAdmin } = useAdmin();
   const [deletion, setDeletion] = useState<PreviewForm | null>(null);
+  const [activeActions, setActiveActions] = useState<string | null>(null);
   const [review, setReview] = useState<{
     form: PreviewForm;
     action: "archive" | "restore" | "close" | "reopen" | "duplicate";
@@ -168,6 +169,7 @@ function FormsLibraryWorkspace() {
     setAbandonRecovery(false);
     setReview(undefined);
     setDeletion(null);
+    setActiveActions(null);
     setShare(null);
     setCreateOpen(false);
     setTitle("");
@@ -702,7 +704,12 @@ function FormsLibraryWorkspace() {
                         })}
                       </td>
                       <td>
-                        <DropdownMenu>
+                        <DropdownMenu
+                          open={activeActions === form.id}
+                          onOpenChange={(open) =>
+                            setActiveActions(open ? form.id : null)
+                          }
+                        >
                           <DropdownMenuTrigger asChild>
                             <button
                               className="gt-icon-button"
@@ -712,7 +719,22 @@ function FormsLibraryWorkspace() {
                               <MoreHorizontal size={19} />
                             </button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
+                          <DropdownMenuContent
+                            align="end"
+                            onKeyDownCapture={(event) => {
+                              // Keep Escape available as soon as menu focus is
+                              // established, including before Radix's deferred
+                              // document-layer registration has completed.
+                              if (
+                                event.key === "Escape" &&
+                                !event.nativeEvent.isComposing &&
+                                !event.defaultPrevented
+                              ) {
+                                event.preventDefault();
+                                setActiveActions(null);
+                              }
+                            }}
+                          >
                             <DropdownMenuItem
                               onClick={() =>
                                 navigate(`/admin/forms/${form.id}/edit`)

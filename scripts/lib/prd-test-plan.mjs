@@ -1674,6 +1674,14 @@ add(
 );
 prdTestCases.at(-1).normative = ["23", "24", "28.3", "28.4", "31.2"];
 
+// Real local browser/API/database round trips complement isolated browser
+// fixtures and service suites. These references do not promote full acceptance.
+for (const id of ["AUTH-TEST-001", "EVT-TEST-003", "EVT-TEST-017", "TEAM-TEST-025", "COMM-TEST-004", "FORM-TEST-031", "NEWS-TEST-002"]) {
+  const entry = prdTestCases.find((item) => item.id === id);
+  if (!entry) throw Error("Missing reviewed local functional mapping: " + id);
+  entry.automated.push(local("functional-flows"));
+}
+
 export const requirementOverrides = {
   "FORM-007":
     "Tejas requested an opt-in exact own-response copy only to the entered address, including own sensitive answers and excluding file bytes/private links; separate reviewed owner receipts retain their existing policy.",

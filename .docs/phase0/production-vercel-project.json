@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-11-07T22:18:20.598975+00:00",
+  "created": true,
+  "id": "prj_p6dWtmkiB6rk0C4fsKX4upEKxQNQ",
+  "name": "gdg-gt-website",
+  "teamId": "team_JgYBymEvh6iYyZXJGEhFchkM",
+  "framework": "vite",
+  "nodeVersion": "24.x",
+  "deploymentCreated": false,
+  "scope": "Authorized Vercel project setup only; no deployment or DNS change is implied."
+}

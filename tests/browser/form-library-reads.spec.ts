@@ -47,14 +47,41 @@ test("library retains failed reads and proposed titles, pauses writes and clears
   await expect(
     page.getByRole("button", { name: "Create form", exact: true }),
   ).toBeDisabled();
-  await page
-    .getByRole("button", { name: "Actions for " + fictionalBuilderForm.title })
-    .click();
+  const actions = page.getByRole("button", {
+    name: "Actions for " + fictionalBuilderForm.title,
+  });
+  await actions.click();
   for (const name of ["Duplicate", "Archive form"])
     await expect(
       page.getByRole("menuitem", { name, exact: true }),
     ).toBeDisabled();
+  // Do not send Escape before the menu's open autofocus completes.
+  await expect(page.getByRole("menu")).toBeFocused();
   await page.keyboard.press("Escape");
+  // Inspect the settled page after the portalled menu finishes closing. Its
+  // exit animation retains aria-hidden on the root until the portal unmounts.
+  try {
+    await expect(page.locator('[role="menu"]')).toHaveCount(0);
+  } catch (error) {
+    await info.attach("menu-dismissal-state", {
+      contentType: "application/json",
+      body: JSON.stringify(await page.locator('[role="menu"]').evaluateAll((nodes) =>
+        nodes.map((node) => ({
+          state: node.getAttribute("data-state"),
+          animationName: getComputedStyle(node).animationName,
+          animationDuration: getComputedStyle(node).animationDuration,
+          animationPlayState: getComputedStyle(node).animationPlayState,
+          animations: node.getAnimations().map((animation) => ({
+            playState: animation.playState,
+            currentTime: animation.currentTime,
+          })),
+          focused: node === document.activeElement,
+        })))),
+    });
+    throw error;
+  }
+  await expect(page.locator("#root")).not.toHaveAttribute("aria-hidden", "true");
+  await expect(actions).toBeFocused();
   expect(await accessibility(page)).toEqual([]);
   await page.locator("#form-library-read-status").focus();
   await page

@@ -1,0 +1,207 @@
+{
+  "generatedAt": "2026-11-07T22:15:40.890917+00:00",
+  "scope": "Local functional verification with fresh complete source execution and final affected-browser verification. Original broad-run failures remain explicit, never merged into a fabricated single green invocation. Production setup authorized afterward and tracked separately.",
+  "source": {
+    "file": "artifacts/quality/native-verified-source-tests.json",
+    "sha256": "8f9e3543ed885847a725655c2a39958e5b6c544a63d50efa39d32bb2bcdd788a",
+    "passed": 2757,
+    "failed": 0,
+    "files": 228,
+    "coverage": {
+      "lines": 78.23,
+      "statements": 76.18,
+      "functions": 71,
+      "branches": 75.66
+    },
+    "unchangedGatesPassed": true
+  },
+  "browser": {
+    "broad": {
+      "listed": 1812,
+      "passed": 1802,
+      "skipped": 8,
+      "failed": 2,
+      "flaky": 0,
+      "retries": 0,
+      "identitiesExactlyMatchCatalog": true,
+      "duplicates": 0,
+      "missing": 0,
+      "unexpectedIdentities": 0,
+      "shards": [
+        {
+          "shard": 1,
+          "cases": 604,
+          "exitCode": 1,
+          "stats": {
+            "startTime": "2026-11-07T21:48:27.852Z",
+            "duration": 690931.605,
+            "expected": 601,
+            "skipped": 2,
+            "unexpected": 1,
+            "flaky": 0
+          },
+          "rawReport": "artifacts/browser/native-final-20261107/reports/shard-1.json",
+          "sha256": "42491670054a5e3e989c104cd32bce20d0a9e264ca9a0bb469de9a370ffe220c"
+        },
+        {
+          "shard": 2,
+          "cases": 604,
+          "exitCode": 1,
+          "stats": {
+            "startTime": "2026-11-07T21:48:27.868Z",
+            "duration": 767837.974,
+            "expected": 600,
+            "skipped": 3,
+            "unexpected": 1,
+            "flaky": 0
+          },
+          "rawReport": "artifacts/browser/native-final-20261107/reports/shard-2.json",
+          "sha256": "3ce0048cbd7eecd802ceff87f6a5829ea5751d732c2492b71582b1c5b2303f90"
+        },
+        {
+          "shard": 3,
+          "cases": 604,
+          "exitCode": 0,
+          "stats": {
+            "startTime": "2026-11-07T21:48:27.871Z",
+            "duration": 818441.725,
+            "expected": 601,
+            "skipped": 3,
+            "unexpected": 0,
+            "flaky": 0
+          },
+          "rawReport": "artifacts/browser/native-final-20261107/reports/shard-3.json",
+          "sha256": "37c64e661d2ec6552e446c1796fda834d28920696628e6e703f0a5b73c65ca7a"
+        }
+      ],
+      "failures": [
+        {
+          "file": "public-smoke.spec.ts",
+          "title": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+          "profile": "chromium-1920"
+        },
+        {
+          "file": "form-library-reads.spec.ts",
+          "title": "library retains failed reads and proposed titles, pauses writes and clears denial",
+          "profile": "chromium-mobile"
+        }
+      ],
+      "scope": "Complete frozen-artifact invocation. Original failures retained; later targeted invocations are separate evidence, never substituted into this run."
+    },
+    "separateFollowups": [
+      {
+        "file": "artifacts/browser/native-final-20261107/reports/isolated-original-motion.json",
+        "sha256": "babf9480e45fb5edfe4b21ca7fbdf3a32f44350de95b6d8936df905675539033",
+        "stats": {
+          "startTime": "2026-11-07T22:02:29.977Z",
+          "duration": 17963.628,
+          "expected": 2,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        }
+      },
+      {
+        "file": "artifacts/browser/native-final-20261107/reports/menu-fixed-repeated.json",
+        "sha256": "3c90aa6be4582853f30eaae31cf377b38414c32ef4301e0b1499a4213286c007",
+        "stats": {
+          "startTime": "2026-11-07T22:06:32.356Z",
+          "duration": 45091.388999999996,
+          "expected": 18,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        }
+      },
+      {
+        "file": "artifacts/browser/native-final-20261107/reports/final-affected-scope.json",
+        "sha256": "220ca7b8964c7df0c1d81bc60f42e7d49431b97f5e166b3da49debe0f076c39f",
+        "stats": {
+          "startTime": "2026-11-07T22:07:30.766Z",
+          "duration": 185421.794,
+          "expected": 178,
+          "skipped": 8,
+          "unexpected": 0,
+          "flaky": 0
+        }
+      }
+    ],
+    "singleFullInvocationPassing": false,
+    "finalAffectedScopesPassing": true,
+    "fix": "Forms library controlled actions-menu state with a direct Escape capture fallback; test asserts focus, complete menu unmount, root accessibility and returned focus. Diagnostic proved open/focused state persisted after Escape with no active animation.",
+    "hero": "Both original desktop animation checks pass in isolation and again in final public scope. Shared-load sensitivity is an inference; original failed invocation retained."
+  },
+  "realBackend": {
+    "file": ".docs/phase0/local-functional-flows.json",
+    "sha256": "5aaa2b71cee83a038263aa815574e219f9db712bda4d3d5127868cc0dfa6687e"
+  },
+  "fixtureCleanup": {
+    "file": ".docs/phase0/local-functional-cleanup.json",
+    "sha256": "cc4716cf6dce52974f298e2ba8fba6f921b53e7748b974e62929363dae8b72ee"
+  },
+  "actualZoom": {
+    "file": ".docs/phase0/local-actual-browser-zoom.json",
+    "sha256": "7bbb12a174665a7de2bf9732b775f17eabb9bc4a6e4d15a8bbde9b2a62538e16"
+  },
+  "nativeVoiceOverAttempt": {
+    "file": ".docs/phase0/local-native-voiceover-attempt.json",
+    "sha256": "516b690e9790af97a5726937888423f44573c5b537952d5237df59de2a7d7e43"
+  },
+  "probes": {
+    "public-ssr-artifact": {
+      "file": ".docs/phase0/public-ssr-artifact.json",
+      "sha256": "c3fd263651b47c6e44e6e8936eba044dc5c9f0daeec12aba734100907fe47541",
+      "passed": 25
+    },
+    "production-pwa-boundaries": {
+      "file": ".docs/phase0/production-pwa-boundaries.json",
+      "sha256": "e5441d7ae9fe5d158b316053656bb3ce5dd112d8d3d45f4d399d677aa26fe1e4",
+      "passed": 15
+    },
+    "production-pwa-update": {
+      "file": ".docs/phase0/production-pwa-update.json",
+      "sha256": "447b9e3baa9c79690d4b6015ddf886d7530ce731639bce5501c099f02da513f8",
+      "passed": 9
+    },
+    "production-security-headers": {
+      "file": ".docs/phase0/production-security-headers.json",
+      "sha256": "c53e87ce51bf208da8538f5213bce9f9d3ab6a560a341dfd89cda60e6e7f1030",
+      "passed": 52
+    }
+  },
+  "performance": {
+    "file": ".docs/phase0/production-performance.json",
+    "sha256": "ab124de488b4a51bce5b35c12d11e3d3314f8416c659762f42acd94dd7b93a85",
+    "allSixGatesPassed": true,
+    "lcpMs": [
+      1953.2472000000002,
+      903.6786,
+      901.9929,
+      643.82475,
+      252.73919999999998,
+      251.49099999999999
+    ]
+  },
+  "database": "Existing normal/legacy-grants 140-migration suites, last-slot concurrency and isolated restore remain recorded unchanged evidence; no local reset or replay. New hosted setup is separate.",
+  "buildPassed": true,
+  "typesPassed": true,
+  "bundleBudgetsPassed": true,
+  "lintErrors": 0,
+  "lintInheritedWarnings": 9,
+  "fullPrdAcceptance": false,
+  "remainingAcceptance": [
+    "Human screen-reader critical paths (native attempt blocked by tool output)",
+    "Physical-device installation, push, Safari/mobile keyboard/orientation and OS high contrast",
+    "Owner visual/content approval excluded from current functional scope",
+    "Hosted runtime, real storage/scanner/jobs/provider/backup/rollback checks and post-deployment observation"
+  ],
+  "deferred": [
+    "SSO/Google",
+    "Bevy/Engage"
+  ],
+  "runtime": {
+    "ui": "http://127.0.0.1:8080",
+    "api": "http://127.0.0.1:8081"
+  },
+  "productionAuthorization": "User now authorizes GDG-GT GitHub push and deployment on the supplied services. Credentials remain excluded from source and reports."
+}

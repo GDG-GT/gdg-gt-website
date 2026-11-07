@@ -9,6 +9,8 @@ import path from "node:path";
 import { chromium } from "@playwright/test";
 import { gzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
+if (process.env.NODE_ENV !== "production")
+  throw Error("Run the compiled-renderer performance probe with NODE_ENV=production.");
 const root = path.resolve("dist"),
   port = 4186,
   origin = "http://127.0.0.1:" + port,

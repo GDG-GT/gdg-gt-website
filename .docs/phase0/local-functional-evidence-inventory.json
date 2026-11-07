@@ -1,0 +1,1981 @@
+{
+  "generatedAt": "2026-11-07T22:17:33.894Z",
+  "completedEvidenceInventory": true,
+  "scope": "Non-visual PRD evidence inventory. Confirms referenced native scripts have passing recorded reports, unit references belong to the current complete passing source execution, and SQL references belong to the recorded passing canonical database execution. Source mapping/report existence alone is not exhaustive functional proof or full PRD acceptance. Historical runs are not relabeled as freshly executed.",
+  "prdLogicalCases": 307,
+  "nonVisualLogicalCases": 285,
+  "currentSource": {
+    "report": "artifacts/quality/native-verified-source-tests.json",
+    "passed": 2757,
+    "failed": 0,
+    "files": 228,
+    "reportSha256": "8f9e3543ed885847a725655c2a39958e5b6c544a63d50efa39d32bb2bcdd788a",
+    "coverage": {
+      "lines": 78.23,
+      "statements": 76.18,
+      "functions": 71,
+      "branches": 75.66
+    }
+  },
+  "databases": {
+    "normal": ".docs/phase0/canonical-tests.json",
+    "legacyGrants": ".docs/phase0/canonical-tests-legacy-grants.json",
+    "migrations": 140,
+    "sqlChecks": 253,
+    "unchangedDataAndCapacityAssertions": true
+  },
+  "native": [
+    {
+      "script": "scripts/test-local-announcements.mjs",
+      "sourceSha256": "14ce7910558a64164d8faf88466ce83e7c494707fe131addc5366e3444a46705",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-announcements-integration.json",
+          "checks": 30,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-audit-read-recovery.mjs",
+      "sourceSha256": "fbb8e130f09708148c7a564b7a7fe7df898b59c3da4885e118f9e1baa364aeac",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-audit-read-recovery.json",
+          "checks": 23,
+          "generatedAt": "2026-11-07T21:33:31.962Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-auth.mjs",
+      "sourceSha256": "c37c88d6404c0bff7243afe66345f2dacc7d58894860c3f9a4d746f3e84a24c7",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-auth-integration.json",
+          "checks": 16,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-blog-uploads.mjs",
+      "sourceSha256": "52e716b156c95c1d782190411196aa3667c76a59f3d70ac0d412468636e12cf9",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-blog-uploads-integration.json",
+          "checks": 23,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-blog.mjs",
+      "sourceSha256": "bef3d649eeb581c6fe03bde715c7c2f456c9e564d58d99bbb090a0d15bf5188c",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-blog-integration.json",
+          "checks": 35,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-browser-zoom.mjs",
+      "sourceSha256": "f86c5a99f25ce34e7c62be98e0e2b4a356d8874b3bc12d105bf9011c0854de99",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-actual-browser-zoom.json",
+          "checks": 164,
+          "generatedAt": "2026-11-07T21:25:14.332Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-channels.mjs",
+      "sourceSha256": "58881f0235e4b64ea61769c655e2feba853411d51e338d8d76b4449a362a512a",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-channels-integration.json",
+          "checks": 33,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-cms-recovery.mjs",
+      "sourceSha256": "42a5fd867d57815b7af6425f2fa52445634ef76223e79a665328b0de31369dc1",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-cms-recovery.json",
+          "checks": 18,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-collection-recovery.mjs",
+      "sourceSha256": "1f8a2aeb498eafea57de7b32e0199102124e5ac89a4d38f191aa3d9e85f4d713",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-collection-recovery.json",
+          "checks": 25,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-contact-files.mjs",
+      "sourceSha256": "3b03c303fadf68d0573606433bdcb5d479b1772217a867ce88abb377f85d451d",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-contact-files.json",
+          "checks": 30,
+          "generatedAt": "2026-10-26T17:46:29.623Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-contact-inbox-reads.mjs",
+      "sourceSha256": "1f821ff28540b808e1842627cfff1cce8b502c4acf1485f8fc57b5558d846bd2",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-contact-inbox-reads.json",
+          "checks": 14,
+          "generatedAt": "2026-11-06T15:04:18.294Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-contact-write-recovery.mjs",
+      "sourceSha256": "a880c52194e9c197d264ccea2fb5f1237c176b1e35fff75f2d7ea7b477772e60",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-contact-write-recovery.json",
+          "checks": 65,
+          "generatedAt": "2026-11-06T17:05:08.988Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-content.mjs",
+      "sourceSha256": "487bfd1f9ee54056bb25f3d0b0358b3b098c9326560cfad6ed58d1a43f6df120",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-content-integration.json",
+          "checks": 23,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-dev-security.mjs",
+      "sourceSha256": "d2b80db56098ffcecdaab3cbd3d2c8e567f314a452cfa69415bf1ac14da62583",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-dev-file-security.json",
+          "checks": 12,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-direct-messages.mjs",
+      "sourceSha256": "8937650e865849bfc3a3ca83fd245fbfa33b6a99b6f5ad99a8d66bab08a21625",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-direct-messages-integration.json",
+          "checks": 40,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-documents.mjs",
+      "sourceSha256": "998c7f4cdb644e26f25418a3191c9c4120ee214c7d0774e8b29b8e5792a8907f",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-public-documents.json",
+          "checks": 11,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-event-inventory.mjs",
+      "sourceSha256": "d93b837983605358b08a911b3661ad81911f7bc38d47d43a55e113a5de0ff417",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-event-inventory.json",
+          "checks": 10,
+          "generatedAt": "2026-10-26T07:37:30.329Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-event-mail-recovery.mjs",
+      "sourceSha256": "c5309e30fa8a95264803ba02e33916b600d10994a81e1b6f3d576b248ed8f468",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-event-mail-recovery.json",
+          "checks": 19,
+          "generatedAt": "2026-11-06T03:27:04.804Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-event-mutation-recovery.mjs",
+      "sourceSha256": "d9d3090d7d4030b99469229e4b33b5501d588b2e4617aa38ab625f8ca5fcf92a",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-event-mutation-recovery.json",
+          "checks": 39,
+          "generatedAt": "2026-11-05T22:55:34.251Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-event-read-recovery.mjs",
+      "sourceSha256": "8ebdab92748f97437a7170fe1b481a882204a71a309c4ff7eb35fd2ca199a36c",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-event-read-recovery.json",
+          "checks": 19,
+          "generatedAt": "2026-11-05T22:51:16.957Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-events.mjs",
+      "sourceSha256": "ee646295e4410b63a8768b5d5e69d8ca996ea908f0ab3b43ddeed2fd9d066832",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-events-integration.json",
+          "checks": 30,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-finance-recovery.mjs",
+      "sourceSha256": "fd59dfb4e9f36aabe444928952644708ddc1515a4ff4881070448b066dad4120",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-finance-recovery.json",
+          "checks": 7,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-finance-uploads.mjs",
+      "sourceSha256": "1715c69fcd740178932ccb3a1118f752585accc0c7ea38411c7178e8e0a9da4a",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-finance-uploads-integration.json",
+          "checks": 22,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-finances.mjs",
+      "sourceSha256": "a04f34614c8db74142f3718ac855834f08daf9a19d7f79014fd6cbbaf47c4f10",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-finances-integration.json",
+          "checks": 37,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-access-inventory.mjs",
+      "sourceSha256": "43a1072ce96437fd462209be07ffb4f4c369e45bd54ccb75e29cbb504e19d789",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-access-inventory.json",
+          "checks": 27,
+          "generatedAt": "2026-11-06T10:01:59.898Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-access.mjs",
+      "sourceSha256": "43b9ce31c85fb2be571b727837c3e5606413c1958bf1e148f802015d2c9fea70",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-access-integration.json",
+          "checks": 34,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-archived-view.mjs",
+      "sourceSha256": "44b49f439756003eae98d85e7a7f7cac0d39033cc44ee48e9eb84df6f7de8250",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-archived-view-recovery.json",
+          "checks": 16,
+          "generatedAt": "2026-11-06T05:46:37.745Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-authoring-recovery.mjs",
+      "sourceSha256": "e3293e7be95a8027e0cab9169fe9870470cea115ae3ce5a54544bb1dcd884831",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-authoring-recovery.json",
+          "checks": 18,
+          "generatedAt": "2026-11-06T04:24:19.154Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-branches.mjs",
+      "sourceSha256": "1d32da553c52ac3d1c11502a2b5fbf4392aa2c4a889a01dbb103a968a38f0b6c",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-branches-integration.json",
+          "checks": 11,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-builder-read-scope.mjs",
+      "sourceSha256": "45557d73cdfe330efefb673bb054051650f519fba05a1956713d41c3ede8fd12",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-builder-read-scope.json",
+          "checks": 16,
+          "generatedAt": "2026-11-06T03:42:23.702Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-collaborator-recovery.mjs",
+      "sourceSha256": "0e4437d4870e014a96cdb269059024d65cde4c889ae8e4bf69f533c70cd55fe3",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-collaborator-recovery.json",
+          "checks": 40,
+          "generatedAt": "2026-11-06T10:05:19.475Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-deletion-recovery.mjs",
+      "sourceSha256": "ac67d0b9933709b44c25acccba526df30ec90b34ddb39021c115855fc2d4b391",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-deletion-recovery.json",
+          "checks": 30,
+          "generatedAt": "2026-11-06T10:21:42.801Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-deletion.mjs",
+      "sourceSha256": "fa43f6c185a12183f51ffd1bd4029bc1ef00569929ca972446b39693e747b083",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-deletion.json",
+          "checks": 19,
+          "generatedAt": "2026-10-22T05:05:41.557Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-delivery-recovery.mjs",
+      "sourceSha256": "7eae11fd12364328ad72fc0a10217c01fa4c2afe933e122193827d8222b5bdf1",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-delivery-recovery.json",
+          "checks": 38,
+          "generatedAt": "2026-11-06T09:30:24.770Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-delivery.mjs",
+      "sourceSha256": "ed68ca27157f731d47edb675946e06776e4d761c0e3d29703dc5a126073e9427",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-delivery-integration.json",
+          "checks": 19,
+          "generatedAt": "2026-10-22T01:23:15.766Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-export-recovery.mjs",
+      "sourceSha256": "dc4480af29d80213f63aa8ca857c2751ec5a764684a521064cbc590eea2852cc",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-export-write-recovery.json",
+          "checks": 38,
+          "generatedAt": "2026-11-06T06:56:54.069Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-exports.mjs",
+      "sourceSha256": "88110ac7590945270d30ba0187add4997504eee5043d0f44c8ecb6369aa9b86f",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-exports-integration.json",
+          "checks": 28,
+          "generatedAt": "2026-10-22T01:25:02.573Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-history-read.mjs",
+      "sourceSha256": "0ba79ba2d6899914c335041ce145b9a24d7b56dccc6fb0d78e3a2671eb32c0b0",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-history-read-recovery.json",
+          "checks": 24,
+          "generatedAt": "2026-11-06T06:03:58.883Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-history.mjs",
+      "sourceSha256": "f131fdcabd3be1ed8ff9074e8cb075643fc6a7a99ca5c4bba02fe0d2ba563790",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-history-integration.json",
+          "checks": 15,
+          "generatedAt": "2026-10-22T01:23:16.471Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-images.mjs",
+      "sourceSha256": "af1b7a184192688bacf01f5ce2172edc913380fcb82de96628a18a2a02dc207e",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-navigation.json",
+          "checks": 15,
+          "generatedAt": "2026-10-22T12:15:37.301Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        },
+        {
+          "file": ".docs/phase0/local-form-presentation.json",
+          "checks": 16,
+          "generatedAt": "2026-10-22T11:56:11.801Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        },
+        {
+          "file": ".docs/phase0/local-form-images.json",
+          "checks": 13,
+          "generatedAt": "2026-10-22T11:40:49.307Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-integration-recovery.mjs",
+      "sourceSha256": "77199be317b20c058d12edbd8c12c0dfec651871d4ddb64390ec040d980ba40a",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-integration-recovery.json",
+          "checks": 48,
+          "generatedAt": "2026-11-06T11:28:38.238Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-integrations.mjs",
+      "sourceSha256": "d6f21cefd770707144bd693c89234137b1e069e1ab2c089ef336161db10b8542",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-integrations.json",
+          "checks": 15,
+          "generatedAt": "2026-11-06T11:25:40.822Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-library-read.mjs",
+      "sourceSha256": "fb108c8067caddcffc81cf54c571dbcb734e854d7e5249fa4587838b2479b3da",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-library-read.json",
+          "checks": 16,
+          "generatedAt": "2026-11-06T04:44:13.815Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-library-write.mjs",
+      "sourceSha256": "8ba84833db92d794a5459e3046a9b98adf8ed06966ebf0e9a75796d0bd2335da",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-library-write-recovery.json",
+          "checks": 58,
+          "generatedAt": "2026-11-06T05:17:09.622Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-library.mjs",
+      "sourceSha256": "32209fcf93076ebc76e18a805f937ca250c6b3e98111ec9d65dfcee380fd6ecb",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-library.json",
+          "checks": 18,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-link-recovery.mjs",
+      "sourceSha256": "e0650218499427d5ad698d40edf225ad9b672a86bc0f8c85b272b5e8543754a9",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-link-recovery.json",
+          "checks": 58,
+          "generatedAt": "2026-11-06T10:53:24.071Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-privacy-recovery.mjs",
+      "sourceSha256": "e194a4d25c0a26a7a25c2463e24563450f5d6474e113e8d24570d5eccb4344f2",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-privacy-recovery.json",
+          "checks": 58,
+          "generatedAt": "2026-11-06T08:41:42.442Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-privacy.mjs",
+      "sourceSha256": "c92d9335654639ed201cca4525b01c4b77e4ac98d14d81526c63f6f22c996d65",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-privacy.json",
+          "checks": 20,
+          "generatedAt": "2026-10-22T01:23:17.631Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-respondent.mjs",
+      "sourceSha256": "09b99bcd47c382e1e80bb81768d1968890bfd99e783684ce369963f0f938ac88",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-respondent-integration.json",
+          "checks": 16,
+          "generatedAt": "2026-10-22T12:50:05.125Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-response-availability.mjs",
+      "sourceSha256": "d9263ab6eee132bb1d72198d67d9764719934e6412366518bbf0aa94fa39aab4",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-response-availability.json",
+          "checks": 38,
+          "generatedAt": "2026-11-06T07:50:48.392Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-response-read.mjs",
+      "sourceSha256": "386d679075d56f07da78721ab7d7f83d5b83c35f47e500dc86ba4a6b439029d2",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-response-read-recovery.json",
+          "checks": 24,
+          "generatedAt": "2026-11-06T06:25:12.396Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-response-write.mjs",
+      "sourceSha256": "2313ff0574b716c35cf42a74eded97bdf4563f7f3f92721e715221180ea2a75f",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-response-write-recovery.json",
+          "checks": 40,
+          "generatedAt": "2026-11-06T07:40:20.668Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-runtime.mjs",
+      "sourceSha256": "e3ff7bd3720910ae3e72c2277b89c07902ec433201a77e7715aa5dc9e59f70ec",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-runtime.json",
+          "checks": 9,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-saved-view-recovery.mjs",
+      "sourceSha256": "6a088367b8c0c8b289e25510fb71cf9f7ae3cad5a69ad60dffab42a9e5c38c1c",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-saved-view-recovery.json",
+          "checks": 50,
+          "generatedAt": "2026-11-06T08:09:37.414Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-settings-reads.mjs",
+      "sourceSha256": "9a966558bf513307a666bc12e653982be9c46c71ed069f314cc7a766cc5213d6",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-settings-reads.json",
+          "checks": 7,
+          "generatedAt": "2026-11-05T03:29:50.143Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-form-viewing.mjs",
+      "sourceSha256": "b722152e5056d3c22869673bfe4a1e370f22f227e3de7ec43ffbe8d41cf84d81",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-form-viewing.json",
+          "checks": 11,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-forms.mjs",
+      "sourceSha256": "3c9d6a1f87a4ff801814b9e4f7766d0d9c126e3c0ee663f8803cbe5385b53b94",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-forms-integration.json",
+          "checks": 39,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-functional-flows.mjs",
+      "sourceSha256": "53054805af5213f1adf0cf7efb096fd2d635cd5c56f78e8ccb6cada767134047",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-functional-flows.json",
+          "checks": 144,
+          "generatedAt": "2026-11-07T21:55:56.086623+00:00",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-hero-browser.mjs",
+      "sourceSha256": "5fe0ca63dc8574b6ad86205afe2828615a36f3e1b811d4dc96542cdc6538f0e8",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-hero-browser.json",
+          "checks": 6,
+          "generatedAt": "2026-11-05T04:08:20.135Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-invitation-mutation-recovery.mjs",
+      "sourceSha256": "28179cd959bdd40ba75d4e411ad0e72a06578d1260273b3e0b1c310737754803",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-invitation-mutation-recovery.json",
+          "checks": 20,
+          "generatedAt": "2026-11-06T01:54:01.699Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-jobs.mjs",
+      "sourceSha256": "6b472648084429bc17bc06ad363b2a60daefe6b22dbe0335c49ff42cab451995",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-jobs-integration.json",
+          "checks": 14,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-linktree.mjs",
+      "sourceSha256": "371732cfd2e9106d589c8afbdca465c6d6b2db9fb04269b014285f4794bbd7e9",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-linktree-integration.json",
+          "checks": 37,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-media-core.mjs",
+      "sourceSha256": "99f5d0fa3e6068748686bb1b08a67e6587c2784460bb42cc82d772808b5fdfd4",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-media-core.json",
+          "checks": 12,
+          "generatedAt": "2026-10-27T21:36:16.265Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-media-files.mjs",
+      "sourceSha256": "e7a27fd4b971206a23f37d495124418a521c92db9e966cc033b22ab5adcf6817",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-media-files.json",
+          "checks": 45,
+          "generatedAt": "2026-10-27T21:36:25.972Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-media-recovery.mjs",
+      "sourceSha256": "7b4956e65d6243b412d9839aa62e6f88f22eaf476390ac360bda5164a73e6346",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-media-recovery.json",
+          "checks": 6,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-member-merge-recovery.mjs",
+      "sourceSha256": "f969fa9044a4ea60c21910c94008be017415feeeae10c50b655d02448ccf228d",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-member-merge-recovery.json",
+          "checks": 53,
+          "generatedAt": "2026-11-06T19:08:40.822Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-member-read-recovery.mjs",
+      "sourceSha256": "61d5bb7780a68e463d3d2d701724daff60571969bdebe9e08641bc8dca37e404",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-member-read-recovery.json",
+          "checks": 14,
+          "generatedAt": "2026-11-06T13:37:56.711Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-member-selection.mjs",
+      "sourceSha256": "359dcd607b51d904bcadad32bb6b193061df76c0852f0678b18e3a51b035b997",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-member-selection.json",
+          "checks": 14,
+          "generatedAt": "2026-11-06T13:56:01.739Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-member-transfer.mjs",
+      "sourceSha256": "dab7e392c302df4d3849ebe20667fcedecf800d5c16968a0688ccfae7b915d59",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-member-transfer.json",
+          "checks": 22,
+          "generatedAt": "2026-10-27T00:41:48.883Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-member-write-recovery.mjs",
+      "sourceSha256": "bfd3a2f0a710fc99e638a69a42d1442ceb4748b32528b3c4330b2f7143f533b9",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-member-write-recovery.json",
+          "checks": 61,
+          "generatedAt": "2026-11-06T16:50:16.612Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-newsletter-review.mjs",
+      "sourceSha256": "eda3baad4efe52f27d1d76207483bb5ae6f7b21d8b6882b6e99f8f31ad26a3e9",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-newsletter-review.json",
+          "checks": 9,
+          "generatedAt": "2026-10-26T18:11:50.760Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-newsletter.mjs",
+      "sourceSha256": "382da0fe5372e5fad4d5a608fdb6264fda4b9af6641111fe2776ab85f2473c3a",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-newsletter.json",
+          "checks": 36,
+          "generatedAt": "2026-10-27T22:09:37.431Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-notification-bulk.mjs",
+      "sourceSha256": "ac44ec86b9fbd72eac9d0473ab98c68d600a5e96de8534d13110acaf046984af",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-notification-bulk.json",
+          "checks": 8,
+          "generatedAt": "2026-10-26T19:37:27.839Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-overview-read-recovery.mjs",
+      "sourceSha256": "7fa9acb7abcaa4f73324bbe041213c1c6cae1c59f7c1e447654883eda9374dc1",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-overview-read-recovery.json",
+          "checks": 18,
+          "generatedAt": "2026-11-05T23:42:00.853Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-person-privacy-recovery.mjs",
+      "sourceSha256": "b522a93d3c78a5311c6dc21de956971aef477666bca109b7d07933f884241072",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-person-privacy-recovery.json",
+          "checks": 50,
+          "generatedAt": "2026-11-06T19:26:57.853Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-privacy-read-recovery.mjs",
+      "sourceSha256": "a4df86b720bcfa3b4288df0f1d17c1b34f88fe238cf61fbe4bdf1d82be3067c4",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-privacy-read-recovery.json",
+          "checks": 15,
+          "generatedAt": "2026-11-06T15:15:35.835Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-profile-browser.mjs",
+      "sourceSha256": "c16702dda1660f7127f93038124ba18884353cfcdc86810e95eb0a997526909e",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-profile-browser.json",
+          "checks": 18,
+          "generatedAt": "2026-11-05T22:21:23.486Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-profile-mutations.mjs",
+      "sourceSha256": "bd5610e6e717f587c8c819c806cdbbc26b230f1ecb819b4bbf5dae050638feca",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-profile-mutations.json",
+          "checks": 15,
+          "generatedAt": "2026-11-05T22:16:27.502Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-profile-reads.mjs",
+      "sourceSha256": "fa34035c91607032670f0865e209e88ca3a79e3667111e1cdeb8a4ece19dfde1",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-profile-reads.json",
+          "checks": 7,
+          "generatedAt": "2026-11-05T03:21:00.591Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-projects.mjs",
+      "sourceSha256": "17584716decf7bc9a44c65c7b660df059439c80dea9f090e6417fa77289899ab",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-projects-integration.json",
+          "checks": 28,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-public-browser.mjs",
+      "sourceSha256": "aa2c9e41d1e933901032c58cf58062cc4fde57c17e3d32f1d75b02716d06c427",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-public-browser.json",
+          "checks": 21,
+          "generatedAt": "2026-11-07T21:11:59.344Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-public-collections.mjs",
+      "sourceSha256": "bd3a18886d30af234a5a622d598720aa6675f9d19086ae06ff8c419221f07faa",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-public-collections.json",
+          "checks": 17,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-push.mjs",
+      "sourceSha256": "59d6a750d478a5e4a7e452de64e1ce3686f78028a71006f86ddfaff92562aca6",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-push.json",
+          "checks": 27,
+          "generatedAt": "2026-10-22T00:57:28.994Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-realtime.mjs",
+      "sourceSha256": "3a3b267d904519789169c61730c53428bbf6dfc967899849f7d274ddb06e91d4",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-realtime-integration.json",
+          "checks": 19,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-respondent-upload-recovery.mjs",
+      "sourceSha256": "814f2ad42802e2009e41d7eef7e7b8014db5f24ecf2ec0666a4511a9ede41df9",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-respondent-upload-recovery.json",
+          "checks": 40,
+          "generatedAt": "2026-11-06T12:20:23.274Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-respondent-write-recovery.mjs",
+      "sourceSha256": "04cadf1a779be8fb30d207680ed6727d8bb8d9fcee228bf17fbad37e5177265c",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-respondent-write-recovery.json",
+          "checks": 54,
+          "generatedAt": "2026-11-06T13:21:19.759Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-scanner.mjs",
+      "sourceSha256": "3de9d464df29b94fe183306d8193cab3a29892fcdedef31b90db0d642e71ff61",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-scanner-integration.json",
+          "checks": 3,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-session-generation.mjs",
+      "sourceSha256": "00df444dc5f25e588e84ef8db30e71d25ce0e4c2c479d8408f643654cc7b1b01",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-session-generation.json",
+          "checks": 6,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-site-content.mjs",
+      "sourceSha256": "a9139a0d5e0f8c64b83c8f9c0bd5325539481e4eec85b15d013e511230625212",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-site-content-integration.json",
+          "checks": 21,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-site-status.mjs",
+      "sourceSha256": "4d62d1060fb4471e5614f52b21a030619372de2c1b9779faa7f8dc00a593b86f",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-site-status-integration.json",
+          "checks": 21,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-submissions.mjs",
+      "sourceSha256": "b48f5cb89aefea118029540d75638c5dc4c8cf4e1616bd71516323d1e19150b2",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-public-submissions.json",
+          "checks": 16,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-task-privacy.mjs",
+      "sourceSha256": "449bc05571257ebba6cb84bbe06bdfebe3d51b7280ec366ea7b2e627634ec007",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-task-privacy-integration.json",
+          "checks": 7,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-tasks.mjs",
+      "sourceSha256": "f7e1d3505fc7f8327bc67bc8218cb3e545c3a1f994e78eb1da7ba2135a3f821f",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-tasks-integration.json",
+          "checks": 40,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-team-announcement-mutation-recovery.mjs",
+      "sourceSha256": "aa7d51cc564b10a2c7931a543a8004f501d432f5c284388a69262f370d1e93da",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-team-announcement-mutation-recovery.json",
+          "checks": 34,
+          "generatedAt": "2026-11-06T02:15:30.683Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-team-chat.mjs",
+      "sourceSha256": "0ead8d62cfa8a21302103ad2395ec8faed220c9522917e20c07839d7edc0f169",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-team-chat-integration.json",
+          "checks": 29,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-team-child-read-recovery.mjs",
+      "sourceSha256": "a5e362230da2ec5de778fc1dffcd1b92b83d84e9cd22c11f6440c0fd6d212a70",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-team-child-read-recovery.json",
+          "checks": 30,
+          "generatedAt": "2026-11-06T01:38:03.719Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-team-invitations.mjs",
+      "sourceSha256": "0ffe2dbf3fec3d8fade076d4c70a5c672ea4d28c7aacfa79cf5f198823d52760",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-team-invitations-integration.json",
+          "checks": 33,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-team-mutation-recovery.mjs",
+      "sourceSha256": "b498f1e125ed6dc7aaa84e198e02cdb619661309d3e0880f4b34a33ddd22aa00",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-team-mutation-recovery.json",
+          "checks": 33,
+          "generatedAt": "2026-11-06T01:23:57.678Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-team-read-recovery.mjs",
+      "sourceSha256": "51adb305cad442d040bd751f0b1cfdf8e903ffaaca8b71b693c88d7a260dde15",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-team-read-recovery.json",
+          "checks": 28,
+          "generatedAt": "2026-11-06T01:11:24.102Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-teams.mjs",
+      "sourceSha256": "aa9a5559260cee7e89ca3615710e70844f6e027aa312349aa4fee06e3b869fda",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-teams-integration.json",
+          "checks": 28,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-uploads.mjs",
+      "sourceSha256": "d9bd48481261c502b39159b075262a016acb0b5af2126e6720866c2ba95dbf11",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-upload-integration.json",
+          "checks": 40,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-user-mutation-recovery.mjs",
+      "sourceSha256": "87ea01ce527145aea015f38b686753c3d5fee620e8adb8fd9d8385484cdf98b8",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-user-mutation-recovery.json",
+          "checks": 28,
+          "generatedAt": "2026-11-06T00:07:26.133Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-user-read-recovery.mjs",
+      "sourceSha256": "08398076cf529707ee097d9e85460b226c4cf3a0a88327edf9fbc012d598cbea",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-user-read-recovery.json",
+          "checks": 21,
+          "generatedAt": "2026-11-05T23:50:18.988Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-whiteboards.mjs",
+      "sourceSha256": "2802666c11160b829da7e6c4c718e9985b0e0ed38d1eecd070c033f62cb1f7c4",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-whiteboards-integration.json",
+          "checks": 38,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-workspace-browser.mjs",
+      "sourceSha256": "113a4ec7a305e8eab4dc42e4dbc897bd546156cab73bdbbeb11028492e7acbc7",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-workspace-browser.json",
+          "checks": 93,
+          "generatedAt": "2026-11-07T21:18:46.023Z",
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    },
+    {
+      "script": "scripts/test-local-workspace.mjs",
+      "sourceSha256": "57b85d94a001591d0dc4dfd90f8bfa8f9019f0fb3c58eafecfdd3aaf2f7cc1ee",
+      "recordedPassingEvidence": [
+        {
+          "file": ".docs/phase0/local-workspace-integration.json",
+          "checks": 15,
+          "generatedAt": null,
+          "source": "Recorded real-local-service evidence; historical timestamps remain explicit. Not a claim that every service suite ran again on this source revision."
+        }
+      ]
+    }
+  ],
+  "byDomain": {
+    "AUTH": {
+      "logicalCases": 20,
+      "casesWithAutomatedSources": 20,
+      "nativeScripts": [
+        "scripts/test-local-auth.mjs",
+        "scripts/test-local-functional-flows.mjs",
+        "scripts/test-local-profile-browser.mjs",
+        "scripts/test-local-profile-mutations.mjs",
+        "scripts/test-local-profile-reads.mjs",
+        "scripts/test-local-session-generation.mjs",
+        "scripts/test-local-user-mutation-recovery.mjs",
+        "scripts/test-local-user-read-recovery.mjs"
+      ],
+      "unitFiles": [
+        "src/ui/newsletter-entry.test.ts",
+        "tests/client/api-session-generation.test.mjs",
+        "tests/client/profile-mutation-recovery.test.tsx",
+        "tests/client/profile-read-recovery.test.tsx",
+        "tests/client/user-account-mutations.test.tsx",
+        "tests/client/user-directory-read-recovery.test.tsx",
+        "tests/server/auth.test.mjs",
+        "tests/server/entry.test.mjs",
+        "tests/server/http.test.mjs",
+        "tests/server/newsletter-gate.test.mjs",
+        "tests/server/pwa-worker.test.mjs",
+        "tests/server/security.test.mjs",
+        "tests/server/users.test.mjs"
+      ],
+      "sqlFiles": [
+        "database/tests/001_security_foundation.sql",
+        "database/tests/004_password_and_lockout.sql",
+        "database/tests/013_gate_failures.sql",
+        "database/tests/113_account_mutation_replay.sql"
+      ]
+    },
+    "SEC": {
+      "logicalCases": 30,
+      "casesWithAutomatedSources": 30,
+      "nativeScripts": [
+        "scripts/test-local-audit-read-recovery.mjs",
+        "scripts/test-local-auth.mjs",
+        "scripts/test-local-dev-security.mjs",
+        "scripts/test-local-realtime.mjs",
+        "scripts/test-local-scanner.mjs",
+        "scripts/test-local-workspace.mjs"
+      ],
+      "unitFiles": [
+        "tests/client-architecture.test.mjs",
+        "tests/client-import-graph.test.mjs",
+        "tests/client/account-security.test.tsx",
+        "tests/client/api-session-generation.test.mjs",
+        "tests/client/api.test.mjs",
+        "tests/client/audit-read-recovery.test.tsx",
+        "tests/client/form-link-recovery.test.tsx",
+        "tests/client/form-response-mutation-recovery.test.tsx",
+        "tests/client/workspace-ui.test.tsx",
+        "tests/phase0-inventory.test.mjs",
+        "tests/server/access.test.mjs",
+        "tests/server/account-security.test.mjs",
+        "tests/server/audit-routes.test.mjs",
+        "tests/server/auth.test.mjs",
+        "tests/server/blog.test.mjs",
+        "tests/server/contact.test.mjs",
+        "tests/server/entry.test.mjs",
+        "tests/server/event-mail.test.mjs",
+        "tests/server/events.test.mjs",
+        "tests/server/finance-routes.test.mjs",
+        "tests/server/form-admin-routes.test.mjs",
+        "tests/server/form-delivery.test.mjs",
+        "tests/server/form-exports.test.mjs",
+        "tests/server/form-links-routes.test.mjs",
+        "tests/server/form-public-routes.test.mjs",
+        "tests/server/forms.test.mjs",
+        "tests/server/http.test.mjs",
+        "tests/server/linktree.test.mjs",
+        "tests/server/newsletter.test.mjs",
+        "tests/server/object-storage.test.mjs",
+        "tests/server/projects.test.mjs",
+        "tests/server/push.test.mjs",
+        "tests/server/realtime-route.test.mjs",
+        "tests/server/realtime-token.test.mjs",
+        "tests/server/scanner.test.mjs",
+        "tests/server/secret-scan.test.mjs",
+        "tests/server/security.test.mjs",
+        "tests/server/site-document.test.mjs",
+        "tests/server/site-status.test.mjs",
+        "tests/server/telemetry.test.mjs",
+        "tests/server/upload-content.test.mjs",
+        "tests/server/upload-routes.test.mjs",
+        "tests/server/users.test.mjs",
+        "tests/server/validation.test.mjs"
+      ],
+      "sqlFiles": [
+        "database/tests/001_security_foundation.sql",
+        "database/tests/007_public_submissions.sql",
+        "database/tests/030_scoped_realtime.sql",
+        "database/tests/089_event_mail_review.sql",
+        "database/tests/097_operational_monitoring.sql",
+        "database/tests/105_audit_statistics.sql",
+        "database/tests/138_account_security.sql"
+      ]
+    },
+    "EVT": {
+      "logicalCases": 25,
+      "casesWithAutomatedSources": 25,
+      "nativeScripts": [
+        "scripts/test-local-documents.mjs",
+        "scripts/test-local-event-inventory.mjs",
+        "scripts/test-local-event-mail-recovery.mjs",
+        "scripts/test-local-event-mutation-recovery.mjs",
+        "scripts/test-local-event-read-recovery.mjs",
+        "scripts/test-local-events.mjs",
+        "scripts/test-local-functional-flows.mjs"
+      ],
+      "unitFiles": [
+        "tests/client/event-admin-mutations.test.tsx",
+        "tests/client/event-admin-read-recovery.test.tsx",
+        "tests/client/event-mail-paused.test.tsx",
+        "tests/client/event-mail-recovery.test.tsx",
+        "tests/client/event-ui.test.tsx",
+        "tests/server/event-mail-recovery.test.mjs",
+        "tests/server/event-mail.test.mjs",
+        "tests/server/event-workspace-mutations.test.mjs",
+        "tests/server/events.test.mjs",
+        "tests/server/mail-transport.test.mjs",
+        "tests/server/public-collections.test.mjs",
+        "tests/server/seo.test.mjs",
+        "tests/server/site-document.test.mjs"
+      ],
+      "sqlFiles": [
+        "database/tests/002_event_registration.sql",
+        "database/tests/003_event_concurrency.sql",
+        "database/tests/005_event_operations.sql",
+        "database/tests/106_public_event_inventory.sql",
+        "database/tests/107_event_rescheduling.sql",
+        "database/tests/112_event_mutation_replay.sql",
+        "database/tests/117_event_mail_recovery_read.sql"
+      ]
+    },
+    "TEAM": {
+      "logicalCases": 25,
+      "casesWithAutomatedSources": 25,
+      "nativeScripts": [
+        "scripts/test-local-functional-flows.mjs",
+        "scripts/test-local-invitation-mutation-recovery.mjs",
+        "scripts/test-local-member-merge-recovery.mjs",
+        "scripts/test-local-member-read-recovery.mjs",
+        "scripts/test-local-member-selection.mjs",
+        "scripts/test-local-member-transfer.mjs",
+        "scripts/test-local-member-write-recovery.mjs",
+        "scripts/test-local-public-collections.mjs",
+        "scripts/test-local-team-announcement-mutation-recovery.mjs",
+        "scripts/test-local-team-child-read-recovery.mjs",
+        "scripts/test-local-team-invitations.mjs",
+        "scripts/test-local-team-mutation-recovery.mjs",
+        "scripts/test-local-team-read-recovery.mjs",
+        "scripts/test-local-teams.mjs"
+      ],
+      "unitFiles": [
+        "tests/client/invitation-mutation-recovery.test.tsx",
+        "tests/client/member-directory-read-recovery.test.tsx",
+        "tests/client/member-merge-read-recovery.test.tsx",
+        "tests/client/member-merge-write-recovery.test.tsx",
+        "tests/client/member-transfer-ui.test.tsx",
+        "tests/client/member-write-recovery.test.tsx",
+        "tests/client/team-announcement-mutations.test.tsx",
+        "tests/client/team-child-read-recovery.test.tsx",
+        "tests/client/team-mutation-recovery.test.tsx",
+        "tests/client/team-parent-pause.test.tsx",
+        "tests/client/team-read-recovery.test.tsx",
+        "tests/server/invitation-mutation-recovery.test.mjs",
+        "tests/server/member-transfer.test.mjs",
+        "tests/server/members.test.mjs",
+        "tests/server/public-collections.test.mjs",
+        "tests/server/realtime-token.test.mjs",
+        "tests/server/team-announcement-recovery.test.mjs",
+        "tests/server/team-announcements.test.mjs",
+        "tests/server/team-chat.test.mjs",
+        "tests/server/team-mutation-recovery.test.mjs",
+        "tests/server/teams.test.mjs"
+      ],
+      "sqlFiles": [
+        "database/tests/025_teams.sql",
+        "database/tests/026_explicit_team_actions.sql",
+        "database/tests/027_team_invitations.sql",
+        "database/tests/028_team_announcements.sql",
+        "database/tests/048_managed_team_chat.sql",
+        "database/tests/058_community_members.sql",
+        "database/tests/103_invitation_decline.sql",
+        "database/tests/114_team_mutation_replay.sql",
+        "database/tests/115_invitation_mutation_replay.sql",
+        "database/tests/116_team_announcement_replay.sql",
+        "database/tests/132_member_selection_reads.sql",
+        "database/tests/133_member_write_replay.sql",
+        "database/tests/135_member_merge_recovery.sql"
+      ]
+    },
+    "COMM": {
+      "logicalCases": 20,
+      "casesWithAutomatedSources": 20,
+      "nativeScripts": [
+        "scripts/test-local-announcements.mjs",
+        "scripts/test-local-channels.mjs",
+        "scripts/test-local-direct-messages.mjs",
+        "scripts/test-local-functional-flows.mjs",
+        "scripts/test-local-notification-bulk.mjs",
+        "scripts/test-local-task-privacy.mjs",
+        "scripts/test-local-tasks.mjs",
+        "scripts/test-local-team-chat.mjs",
+        "scripts/test-local-whiteboards.mjs"
+      ],
+      "unitFiles": [
+        "tests/client/accessibility-structure.test.tsx",
+        "tests/client/announcement-recovery.test.tsx",
+        "tests/client/channel-recovery.test.tsx",
+        "tests/client/direct-message-lifecycle.test.tsx",
+        "tests/client/drawing-control-names.test.ts",
+        "tests/client/notification-inbox-ui.test.tsx",
+        "tests/client/task-recovery.test.tsx",
+        "tests/client/whiteboard-recovery.test.tsx",
+        "tests/server/channels.test.mjs",
+        "tests/server/chapter-announcements.test.mjs",
+        "tests/server/direct-message-routes.test.mjs",
+        "tests/server/direct-messages.test.mjs",
+        "tests/server/drawing-renderer-dependency.test.mjs",
+        "tests/server/event-mail.test.mjs",
+        "tests/server/realtime-route.test.mjs",
+        "tests/server/realtime-token.test.mjs",
+        "tests/server/tasks.test.mjs",
+        "tests/server/team-chat.test.mjs",
+        "tests/server/whiteboards.test.mjs"
+      ],
+      "sqlFiles": [
+        "database/tests/029_channels.sql",
+        "database/tests/030_scoped_realtime.sql",
+        "database/tests/034_whiteboards.sql",
+        "database/tests/036_whiteboard_realtime.sql",
+        "database/tests/038_tasks.sql",
+        "database/tests/043_direct_messages.sql",
+        "database/tests/045_chapter_announcements.sql",
+        "database/tests/048_managed_team_chat.sql",
+        "database/tests/049_channel_reconnect_cursor.sql",
+        "database/tests/089_event_mail_review.sql"
+      ]
+    },
+    "FIN": {
+      "logicalCases": 20,
+      "casesWithAutomatedSources": 20,
+      "nativeScripts": [
+        "scripts/test-local-finance-recovery.mjs",
+        "scripts/test-local-finance-uploads.mjs",
+        "scripts/test-local-finances.mjs"
+      ],
+      "unitFiles": [
+        "tests/client/finance-recovery.test.tsx",
+        "tests/server/finance-routes.test.mjs",
+        "tests/server/finances.test.mjs"
+      ],
+      "sqlFiles": [
+        "database/tests/050_finance_ledger.sql",
+        "database/tests/051_finance_attachments.sql",
+        "database/tests/052_finance_inactive_budgets_cleanup.sql"
+      ]
+    },
+    "NEWS": {
+      "logicalCases": 20,
+      "casesWithAutomatedSources": 20,
+      "nativeScripts": [
+        "scripts/test-local-functional-flows.mjs",
+        "scripts/test-local-newsletter-review.mjs",
+        "scripts/test-local-newsletter.mjs",
+        "scripts/test-local-submissions.mjs"
+      ],
+      "unitFiles": [
+        "tests/client/newsletter-navigation.test.tsx",
+        "tests/client/newsletter-recovery.test.tsx",
+        "tests/client/newsletter-token-ui.test.tsx",
+        "tests/server/mail-transport.test.mjs",
+        "tests/server/newsletter-gate.test.mjs",
+        "tests/server/newsletter-token-review.test.mjs",
+        "tests/server/newsletter-webhook.test.mjs",
+        "tests/server/newsletter.test.mjs"
+      ],
+      "sqlFiles": [
+        "database/tests/007_public_submissions.sql",
+        "database/tests/082_newsletter_workspace.sql",
+        "database/tests/083_newsletter_send_review.sql",
+        "database/tests/084_newsletter_delivery.sql",
+        "database/tests/085_newsletter_results_cleanup.sql",
+        "database/tests/087_newsletter_token_bulk_cleanup.sql",
+        "database/tests/108_newsletter_token_review.sql"
+      ]
+    },
+    "CONTENT": {
+      "logicalCases": 20,
+      "casesWithAutomatedSources": 20,
+      "nativeScripts": [
+        "scripts/test-local-cms-recovery.mjs",
+        "scripts/test-local-collection-recovery.mjs",
+        "scripts/test-local-contact-files.mjs",
+        "scripts/test-local-contact-inbox-reads.mjs",
+        "scripts/test-local-contact-write-recovery.mjs",
+        "scripts/test-local-content.mjs",
+        "scripts/test-local-linktree.mjs",
+        "scripts/test-local-media-core.mjs",
+        "scripts/test-local-media-files.mjs",
+        "scripts/test-local-media-recovery.mjs",
+        "scripts/test-local-projects.mjs",
+        "scripts/test-local-public-collections.mjs",
+        "scripts/test-local-site-content.mjs",
+        "scripts/test-local-site-status.mjs",
+        "scripts/test-local-uploads.mjs"
+      ],
+      "unitFiles": [
+        "tests/client/cms-recovery.test.tsx",
+        "tests/client/collection-recovery.test.tsx",
+        "tests/client/collection-retries.test.tsx",
+        "tests/client/contact-inbox-read-recovery.test.tsx",
+        "tests/client/contact-ui.test.tsx",
+        "tests/client/contact-write-recovery.test.tsx",
+        "tests/client/content-snapshot.test.ts",
+        "tests/client/linktree-workspace-recovery.test.tsx",
+        "tests/client/media-recovery.test.tsx",
+        "tests/client/project-recovery.test.tsx",
+        "tests/client/public-content-recovery.test.tsx",
+        "tests/client/public-discovery-ui.test.tsx",
+        "tests/client/public-gallery-ui.test.tsx",
+        "tests/client/site-availability-loading.test.tsx",
+        "tests/client/site-status-recovery.test.tsx",
+        "tests/server/contact-upload.test.ts",
+        "tests/server/contact-write-recovery.test.mjs",
+        "tests/server/contact.test.mjs",
+        "tests/server/content-records.test.mjs",
+        "tests/server/curated-content-retries.test.mjs",
+        "tests/server/linktree-routes.test.mjs",
+        "tests/server/linktree.test.mjs",
+        "tests/server/mail-transport.test.mjs",
+        "tests/server/public-collections.test.mjs",
+        "tests/server/public-site-status-read.test.mjs",
+        "tests/server/public-site-status.test.mjs",
+        "tests/server/site-content.test.mjs",
+        "tests/server/site-preview-routes.test.mjs",
+        "tests/server/site-status.test.mjs",
+        "tests/server/upload-content.test.mjs",
+        "tests/server/upload-routes.test.mjs"
+      ],
+      "sqlFiles": [
+        "database/tests/007_public_submissions.sql",
+        "database/tests/022_site_content.sql",
+        "database/tests/053_linktree_workflows.sql",
+        "database/tests/054_linktree_team_publication_guard.sql",
+        "database/tests/057_site_status_control.sql",
+        "database/tests/073_private_media_core.sql",
+        "database/tests/075_private_media_uploads.sql",
+        "database/tests/077_media_publication.sql",
+        "database/tests/081_gallery_image_grants.sql",
+        "database/tests/088_contact_attachments.sql",
+        "database/tests/100_public_sponsor_ordering.sql",
+        "database/tests/110_curated_content_retries.sql",
+        "database/tests/134_contact_write_replay.sql"
+      ]
+    },
+    "PRIVATE": {
+      "logicalCases": 10,
+      "casesWithAutomatedSources": 10,
+      "nativeScripts": [
+        "scripts/test-local-blog-uploads.mjs",
+        "scripts/test-local-blog.mjs",
+        "scripts/test-local-documents.mjs",
+        "scripts/test-local-projects.mjs"
+      ],
+      "unitFiles": [
+        "tests/client/blog-recovery.test.tsx",
+        "tests/client/project-recovery.test.tsx",
+        "tests/server/blog.test.mjs",
+        "tests/server/projects.test.mjs",
+        "tests/server/seo.test.mjs",
+        "tests/server/site-document.test.mjs"
+      ],
+      "sqlFiles": [
+        "database/tests/055_private_projects.sql",
+        "database/tests/061_private_blog.sql",
+        "database/tests/062_private_blog_uploads.sql",
+        "database/tests/104_editorial_overview.sql"
+      ]
+    },
+    "PWA": {
+      "logicalCases": 20,
+      "casesWithAutomatedSources": 18,
+      "nativeScripts": [
+        "scripts/test-local-push.mjs"
+      ],
+      "unitFiles": [
+        "tests/client/submission-queue-ui.test.tsx",
+        "tests/server/build-graph.test.mjs",
+        "tests/server/public-queue.test.mjs",
+        "tests/server/push.test.mjs",
+        "tests/server/pwa-policy.test.mjs",
+        "tests/server/pwa-worker.test.mjs"
+      ],
+      "sqlFiles": [
+        "database/tests/090_event_push.sql",
+        "database/tests/091_push_fences.sql"
+      ]
+    },
+    "A11Y": {
+      "logicalCases": 20,
+      "casesWithAutomatedSources": 18,
+      "nativeScripts": [
+        "scripts/test-local-browser-zoom.mjs",
+        "scripts/test-local-hero-browser.mjs",
+        "scripts/test-local-overview-read-recovery.mjs",
+        "scripts/test-local-public-browser.mjs",
+        "scripts/test-local-workspace-browser.mjs"
+      ],
+      "unitFiles": [
+        "tests/client/accessibility-structure.test.tsx",
+        "tests/client/admin-navigation-focus.test.tsx",
+        "tests/client/contact-ui.test.tsx",
+        "tests/client/event-ui.test.tsx",
+        "tests/client/form-editor-permissions.test.tsx",
+        "tests/client/form-response-file-recovery.test.tsx",
+        "tests/client/form-settings-ui.test.tsx",
+        "tests/client/keyboard-scroll.test.tsx",
+        "tests/client/linktree-ui.test.tsx",
+        "tests/client/navigation-review-loading.test.tsx",
+        "tests/client/overview-read-recovery.test.tsx",
+        "tests/client/public-bootstrap.test.ts",
+        "tests/client/public-content-recovery.test.tsx",
+        "tests/client/public-gallery-ui.test.tsx",
+        "tests/client/public-image.test.tsx",
+        "tests/client/public-links.test.tsx",
+        "tests/client/public-session-start.test.ts",
+        "tests/client/pwa-registration.test.ts",
+        "tests/client/respondent-file-recovery.test.tsx",
+        "tests/client/route-focus.test.tsx",
+        "tests/client/scrollable-table.test.tsx",
+        "tests/client/site-availability-loading.test.tsx",
+        "tests/client/workspace-ui.test.tsx",
+        "tests/form-images.test.ts",
+        "tests/public-entry-hints.test.mjs",
+        "tests/public-route-hints.test.ts",
+        "tests/server/media-content.test.mjs"
+      ],
+      "sqlFiles": []
+    },
+    "OPS": {
+      "logicalCases": 15,
+      "casesWithAutomatedSources": 14,
+      "nativeScripts": [
+        "scripts/test-local-form-exports.mjs",
+        "scripts/test-local-jobs.mjs",
+        "scripts/test-local-media-files.mjs",
+        "scripts/test-local-person-privacy-recovery.mjs",
+        "scripts/test-local-privacy-read-recovery.mjs",
+        "scripts/test-local-scanner.mjs"
+      ],
+      "unitFiles": [
+        "tests/client/privacy-read-recovery.test.tsx",
+        "tests/client/privacy-write-recovery.test.tsx",
+        "tests/server/asset-cache-policy.test.mjs",
+        "tests/server/audit-routes.test.mjs",
+        "tests/server/event-mail.test.mjs",
+        "tests/server/events.test.mjs",
+        "tests/server/form-exports.test.mjs",
+        "tests/server/jobs.test.mjs",
+        "tests/server/mail-transport.test.mjs",
+        "tests/server/media-content.test.mjs",
+        "tests/server/media.test.mjs",
+        "tests/server/person-privacy.test.mjs",
+        "tests/server/retention-worker.test.mjs",
+        "tests/server/runtime-plan.test.mjs",
+        "tests/server/scanner.test.mjs",
+        "tests/server/telemetry.test.mjs"
+      ],
+      "sqlFiles": [
+        "database/tests/019_scheduled_jobs.sql",
+        "database/tests/039_task_jobs.sql",
+        "database/tests/094_person_privacy.sql",
+        "database/tests/096_operational_retention.sql",
+        "database/tests/097_operational_monitoring.sql",
+        "database/tests/136_person_privacy_write_recovery.sql",
+        "database/tests/139_media_cursor.sql"
+      ]
+    },
+    "FORM": {
+      "logicalCases": 40,
+      "casesWithAutomatedSources": 40,
+      "nativeScripts": [
+        "scripts/test-local-form-access-inventory.mjs",
+        "scripts/test-local-form-access.mjs",
+        "scripts/test-local-form-archived-view.mjs",
+        "scripts/test-local-form-authoring-recovery.mjs",
+        "scripts/test-local-form-branches.mjs",
+        "scripts/test-local-form-builder-read-scope.mjs",
+        "scripts/test-local-form-collaborator-recovery.mjs",
+        "scripts/test-local-form-deletion-recovery.mjs",
+        "scripts/test-local-form-deletion.mjs",
+        "scripts/test-local-form-delivery-recovery.mjs",
+        "scripts/test-local-form-delivery.mjs",
+        "scripts/test-local-form-export-recovery.mjs",
+        "scripts/test-local-form-exports.mjs",
+        "scripts/test-local-form-history-read.mjs",
+        "scripts/test-local-form-history.mjs",
+        "scripts/test-local-form-images.mjs",
+        "scripts/test-local-form-integration-recovery.mjs",
+        "scripts/test-local-form-integrations.mjs",
+        "scripts/test-local-form-library-read.mjs",
+        "scripts/test-local-form-library-write.mjs",
+        "scripts/test-local-form-library.mjs",
+        "scripts/test-local-form-link-recovery.mjs",
+        "scripts/test-local-form-privacy-recovery.mjs",
+        "scripts/test-local-form-privacy.mjs",
+        "scripts/test-local-form-respondent.mjs",
+        "scripts/test-local-form-response-availability.mjs",
+        "scripts/test-local-form-response-read.mjs",
+        "scripts/test-local-form-response-write.mjs",
+        "scripts/test-local-form-runtime.mjs",
+        "scripts/test-local-form-saved-view-recovery.mjs",
+        "scripts/test-local-form-settings-reads.mjs",
+        "scripts/test-local-form-viewing.mjs",
+        "scripts/test-local-forms.mjs",
+        "scripts/test-local-functional-flows.mjs",
+        "scripts/test-local-respondent-upload-recovery.mjs",
+        "scripts/test-local-respondent-write-recovery.mjs",
+        "scripts/test-local-uploads.mjs"
+      ],
+      "unitFiles": [
+        "tests/capability-navigation.test.ts",
+        "tests/client/api-session-generation.test.mjs",
+        "tests/client/form-access-recovery.test.tsx",
+        "tests/client/form-availability-review.test.tsx",
+        "tests/client/form-builder-read-scope.test.tsx",
+        "tests/client/form-collaborator-api.test.ts",
+        "tests/client/form-data-recovery.test.tsx",
+        "tests/client/form-deletion-recovery.test.tsx",
+        "tests/client/form-delivery-mutation-recovery.test.tsx",
+        "tests/client/form-editor-permissions.test.tsx",
+        "tests/client/form-export-recovery.test.tsx",
+        "tests/client/form-image-picker-recovery.test.tsx",
+        "tests/client/form-integration-recovery.test.tsx",
+        "tests/client/form-library-mutation-recovery.test.tsx",
+        "tests/client/form-library-read-recovery.test.tsx",
+        "tests/client/form-link-recovery.test.tsx",
+        "tests/client/form-privacy-mutation-recovery.test.tsx",
+        "tests/client/form-response-availability.test.tsx",
+        "tests/client/form-response-file-recovery.test.tsx",
+        "tests/client/form-response-history-recovery.test.tsx",
+        "tests/client/form-response-mutation-recovery.test.tsx",
+        "tests/client/form-response-workspace-read.test.tsx",
+        "tests/client/form-saved-view-recovery.test.tsx",
+        "tests/client/form-settings-read-retry.test.tsx",
+        "tests/client/form-settings-ui.test.tsx",
+        "tests/client/form-write-recovery.test.tsx",
+        "tests/client/public-form-ui.test.tsx",
+        "tests/client/respondent-file-recovery.test.tsx",
+        "tests/client/respondent-write-recovery.test.tsx",
+        "tests/form-builder-validation.test.ts",
+        "tests/form-images.test.ts",
+        "tests/form-library.test.ts",
+        "tests/form-presentation.test.ts",
+        "tests/form-runtime-fields.test.ts",
+        "tests/server/access.test.mjs",
+        "tests/server/form-access-routes.test.mjs",
+        "tests/server/form-admin-routes.test.mjs",
+        "tests/server/form-authoring-replay.test.mjs",
+        "tests/server/form-branches.test.mjs",
+        "tests/server/form-collaborator-routes.test.mjs",
+        "tests/server/form-deletion-routes.test.mjs",
+        "tests/server/form-deletion.test.mjs",
+        "tests/server/form-delivery-replay.test.mjs",
+        "tests/server/form-delivery.test.mjs",
+        "tests/server/form-export-replay.test.mjs",
+        "tests/server/form-exports.test.mjs",
+        "tests/server/form-integration-routes.test.mjs",
+        "tests/server/form-integrations.test.mjs",
+        "tests/server/form-library-replay.test.mjs",
+        "tests/server/form-lifetime.test.mjs",
+        "tests/server/form-links-routes.test.mjs",
+        "tests/server/form-privacy-replay.test.mjs",
+        "tests/server/form-privacy.test.mjs",
+        "tests/server/form-public-routes.test.mjs",
+        "tests/server/form-respondent-recovery.test.mjs",
+        "tests/server/form-respondent.test.mjs",
+        "tests/server/form-response-replay.test.mjs",
+        "tests/server/form-view-replay.test.mjs",
+        "tests/server/forms.test.mjs",
+        "tests/server/scanner.test.mjs",
+        "tests/server/seo.test.mjs",
+        "tests/server/site-document.test.mjs",
+        "tests/server/upload-routes.test.mjs"
+      ],
+      "sqlFiles": [
+        "database/tests/010_forms.sql",
+        "database/tests/014_form_access_uploads.sql",
+        "database/tests/063_form_background_exports.sql",
+        "database/tests/064_form_response_history.sql",
+        "database/tests/065_form_reviewed_delivery.sql",
+        "database/tests/066_form_retention_holds.sql",
+        "database/tests/071_form_integrations.sql",
+        "database/tests/072_form_permanent_deletion.sql",
+        "database/tests/092_identified_forms.sql",
+        "database/tests/099_form_library_filters.sql",
+        "database/tests/109_form_library_creation_capabilities.sql",
+        "database/tests/111_form_access_account_inventory.sql",
+        "database/tests/118_form_authoring_replay.sql",
+        "database/tests/119_form_library_replay.sql",
+        "database/tests/120_form_export_replay.sql",
+        "database/tests/121_form_response_replay.sql",
+        "database/tests/122_form_saved_view_replay.sql",
+        "database/tests/123_form_privacy_replay.sql",
+        "database/tests/124_form_delivery_replay.sql",
+        "database/tests/125_form_collaborator_replay.sql",
+        "database/tests/126_form_deletion_replay.sql",
+        "database/tests/128_form_access_link_replay.sql",
+        "database/tests/129_form_integration_replay.sql",
+        "database/tests/130_form_upload_intent_replay.sql",
+        "database/tests/131_respondent_draft_replay.sql"
+      ]
+    }
+  },
+  "missingNativeEvidence": [],
+  "missingUnitExecution": [],
+  "missingSqlExecution": [],
+  "manualOnly": [
+    {
+      "id": "PWA-TEST-019",
+      "scope": "Installed iOS/Android permission, delivery and click flows work on actual supported devices",
+      "remaining": [
+        "Physical installed-device permission, real opt-in delivery/click and browser support acceptance; no provider send is authorized in this local task",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ]
+    },
+    {
+      "id": "A11Y-TEST-013",
+      "scope": "Screen-reader critical paths work with VoiceOver, NVDA or JAWS",
+      "remaining": [
+        "Manual assistive-technology paths, names, announcements and reading order",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ]
+    },
+    {
+      "id": "A11Y-TEST-014",
+      "scope": "Actual Safari/devices preserve orientation, viewport and software-keyboard behavior",
+      "remaining": [
+        "Physical supported devices and Safari; emulated WebKit is separate evidence",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ]
+    },
+    {
+      "id": "OPS-TEST-015",
+      "scope": "Exact-artifact promotion, rollback and 48-hour observation are signed off",
+      "remaining": [
+        "Authorized staging/production rollout, rollback drill and full 48-hour observation; deployment remains outside this local task",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ]
+    },
+    {
+      "id": "PWA-TEST-004",
+      "scope": "Actual installability on supported Chromium/Android/iOS",
+      "remaining": [
+        "Real supported-device installation/uninstall/reinstall acceptance",
+        "Production-like staging review and applicable visual/device/manual acceptance"
+      ]
+    }
+  ],
+  "fullPrdAcceptance": false
+}

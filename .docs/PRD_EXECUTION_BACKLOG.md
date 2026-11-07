@@ -1,23 +1,30 @@
 # Remaining PRD execution and acceptance
 
-Latest local release checkpoint — 2026-11-07:
-read [PUBLIC_RENDERING_AND_RELEASE_CHECKS.md](PUBLIC_RENDERING_AND_RELEASE_CHECKS.md)
-and [the exact evidence](phase0/public-rendering-release-20261107.json) first.
-All confirmed local implementation gaps from this audit are addressed. Complete
-source coverage passes 2,755 tests in 228 files; the complete 1,812-case browser
-inventory passes 1,804 with eight existing profile skips, zero failures/retries.
-All six unchanged 2,500 ms lab LCP gates now pass. Migrations through 140,
-normal/legacy-grants database checks and isolated restore pass. Final PWA/update/
-HTTPS checks pass 15/9/52, including actual server-rendered hydration under CSP.
-The local website runs at http://127.0.0.1:8080, API at 8081.
+Latest functional continuation — 2026-11-07:
+read [LOCAL_FUNCTIONAL_VERIFICATION.md](LOCAL_FUNCTIONAL_VERIFICATION.md) and
+[the exact current evidence](phase0/local-functional-release-20261107.json).
+The additional audit fixed the populated Audit history accessible name,
+notification poll cancellation/order, and an actual Forms actions-menu Escape
+failure. Final source coverage passes 2,757 tests/228 files with unchanged gates.
+Real UI/API/database/local-SMTP workflows pass 144 checks across six profiles;
+actual browser zoom passes 164 checks. The broad 1,812-case invocation finished
+1,802 passes/eight expected skips/two failures. Both failures were investigated:
+the menu fix passes 18 repeated checks and the final affected public/Forms scope
+passes 178/eight expected skips. Original failures remain separate; this is not
+a fabricated single-invocation green result. Build/types/bytes/SSR25, PWA15/update9/
+HTTPS52 and all six performance gates pass on the final artifact.
 
-The remaining work is launch acceptance: owner-approved content/visual baselines,
-manual accessibility and physical-device checks, the owner's chosen host/domain,
-live Resend/VAPID configuration and authorized smoke tests, hosted restore/
-rollback/RPO-RTO, and 48-hour observation after deployment. Keys are planned
-launch inputs, not unfinished local features. SSO/Google and Bevy/Engage remain
-deferred. No deployment, production changes or real provider sends occurred.
-Full PRD acceptance is not claimed; no invented completion percentage applies.
+No confirmed local implementation gap remains from this continuation. Human
+screen-reader acceptance is unproved (native tool output failed; preferences were
+restored), and physical-device/OS acceptance remains distinct. Visual approval is
+excluded from the functional task. Full PRD acceptance is not claimed.
+
+The user has now authorized GDG-GT organization push and production deployment.
+Setup is in progress, not claimed live. Domain/provider configuration, hosted
+workers/storage/scanner, owner setup and hosted release validation are separate
+production work. Live keys are supplied inputs, not missing local features.
+SSO/Google and Bevy/Engage remain deferred. No AI commit trailers.
+
 
 ## Historical implementation checkpoints (superseded)
 

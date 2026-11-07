@@ -655,9 +655,9 @@ group(
     [
       12,
       "Real 200-percent browser zoom and reflow preserve all workflows and controls",
-      [],
+      ["scripts/test-local-browser-zoom.mjs"],
       [
-        "Actual browser zoom/reflow across public, workspace and Forms routes; CSS or viewport emulation is insufficient",
+        "Actual Chromium browser zoom is covered across public, workspace and Forms routes; remaining manual critical workflows and other supported browsers/devices require review",
       ],
     ],
     [
@@ -709,7 +709,7 @@ group(
     [
       19,
       "Forced-colors and user transparency/motion preferences retain readable controls",
-      [],
+      ["scripts/test-local-browser-zoom.mjs"],
       [
         "Actual forced-colors/high-contrast and user preference review on supported systems",
       ],

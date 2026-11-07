@@ -1,0 +1,647 @@
+{
+  "generatedAt": "2026-11-07T21:55:56.086623+00:00",
+  "completed": true,
+  "profiles": [
+    {
+      "profile": "chromium-desktop-explicit-entry",
+      "completed": true,
+      "checks": 24,
+      "scenarios": 6,
+      "generatedAt": "2026-11-07T21:48:40.104Z",
+      "evidence": ".docs/phase0/local-functional-flows-chromium-desktop-explicit-entry.json",
+      "reportSha256": "e245c3eed3e69d06a394205c5d3b34f00e56c790081363fc388549e38efcb83d",
+      "directWindowErrorObservation": false
+    },
+    {
+      "profile": "firefox-desktop-explicit-entry",
+      "completed": true,
+      "checks": 24,
+      "scenarios": 6,
+      "generatedAt": "2026-11-07T21:48:56.088Z",
+      "evidence": ".docs/phase0/local-functional-flows-firefox-desktop-explicit-entry.json",
+      "reportSha256": "2c0d4195844c3ded068976a840ec69cf1e7699b7fe290f2471ff118c66c23743",
+      "directWindowErrorObservation": false
+    },
+    {
+      "profile": "webkit-desktop-explicit-entry",
+      "completed": true,
+      "checks": 24,
+      "scenarios": 6,
+      "generatedAt": "2026-11-07T21:42:37.126Z",
+      "evidence": ".docs/phase0/local-functional-flows-webkit-desktop-explicit-entry.json",
+      "reportSha256": "ff7e79478101e79e6cb3b40745550434bc7865cadd62288ad74d694fc854f2dc",
+      "directWindowErrorObservation": false
+    },
+    {
+      "profile": "chromium-mobile-explicit-entry",
+      "completed": true,
+      "checks": 24,
+      "scenarios": 6,
+      "generatedAt": "2026-11-07T21:43:13.852Z",
+      "evidence": ".docs/phase0/local-functional-flows-chromium-mobile-explicit-entry.json",
+      "reportSha256": "d80ba5f6a64bb8ffd78524134b0284c94d253cf76f57a433d79f7206f47e5bf9",
+      "directWindowErrorObservation": false
+    },
+    {
+      "profile": "firefox-mobile-explicit-entry",
+      "completed": true,
+      "checks": 24,
+      "scenarios": 6,
+      "generatedAt": "2026-11-07T21:54:43.413Z",
+      "evidence": ".docs/phase0/local-functional-flows-firefox-mobile-explicit-entry.json",
+      "reportSha256": "39d0fc61959c6c1a6472fcb38906c8cae71b592a5ea67961534371a2552eeba1",
+      "directWindowErrorObservation": true
+    },
+    {
+      "profile": "webkit-mobile-explicit-entry",
+      "completed": true,
+      "checks": 24,
+      "scenarios": 6,
+      "generatedAt": "2026-11-07T21:52:57.275Z",
+      "evidence": ".docs/phase0/local-functional-flows-webkit-mobile-explicit-entry.json",
+      "reportSha256": "f86dc754ba582f232dc16704c6218dcf0cb86c4f909768b01b77b85fccc80481",
+      "directWindowErrorObservation": true
+    }
+  ],
+  "scenarioExecutions": 36,
+  "checks": 144,
+  "tests": [
+    {
+      "name": "chromium-desktop-explicit-entry: real hidden entrance accepts Shift+Enter and issues an HttpOnly session",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: browser sign-in stores no authentication secret in localStorage",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: browser-authored event is published in the real database",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: public browser registration commits exactly one real attendee",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: published browser-authored event has a real calendar download",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: browser member creation commits the declared identity",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: browser member edit persists through the real mutation contract",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: reviewed browser CSV upload imports exactly one member",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: actual browser CSV download includes both filtered owned records",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: real browser form submission queues the requested respondent copy",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: form submission persists the declared respondent email",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: one real submitted response queues exactly one copy",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: real copy renderer addresses only the respondent and includes their exact question and answer",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: owned response-copy job completes through the actual local SMTP transport",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: local mail inbox receives exactly one requested response copy",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: received local email preserves exact answers and a single recipient",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: browser-submitted response is available through the protected response workspace",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: notification read-all reaches the real saved inbox",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: notification dismiss-all removes the real read notification",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: opening a real confirmation link does not subscribe the person",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: explicit browser newsletter confirmation activates the real subscriber",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: opening a real unsubscribe link leaves the subscription active",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: explicit browser unsubscribe persists the real preference",
+      "passed": true
+    },
+    {
+      "name": "chromium-desktop-explicit-entry: real functional flows produce no uncaught browser exceptions",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: real hidden entrance accepts Shift+Enter and issues an HttpOnly session",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: browser sign-in stores no authentication secret in localStorage",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: browser-authored event is published in the real database",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: public browser registration commits exactly one real attendee",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: published browser-authored event has a real calendar download",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: browser member creation commits the declared identity",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: browser member edit persists through the real mutation contract",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: reviewed browser CSV upload imports exactly one member",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: actual browser CSV download includes both filtered owned records",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: real browser form submission queues the requested respondent copy",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: form submission persists the declared respondent email",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: one real submitted response queues exactly one copy",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: real copy renderer addresses only the respondent and includes their exact question and answer",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: owned response-copy job completes through the actual local SMTP transport",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: local mail inbox receives exactly one requested response copy",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: received local email preserves exact answers and a single recipient",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: browser-submitted response is available through the protected response workspace",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: notification read-all reaches the real saved inbox",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: notification dismiss-all removes the real read notification",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: opening a real confirmation link does not subscribe the person",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: explicit browser newsletter confirmation activates the real subscriber",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: opening a real unsubscribe link leaves the subscription active",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: explicit browser unsubscribe persists the real preference",
+      "passed": true
+    },
+    {
+      "name": "firefox-desktop-explicit-entry: real functional flows produce no uncaught browser exceptions",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: real hidden entrance accepts Shift+Enter and issues an HttpOnly session",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: browser sign-in stores no authentication secret in localStorage",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: browser-authored event is published in the real database",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: public browser registration commits exactly one real attendee",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: published browser-authored event has a real calendar download",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: browser member creation commits the declared identity",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: browser member edit persists through the real mutation contract",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: reviewed browser CSV upload imports exactly one member",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: actual browser CSV download includes both filtered owned records",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: real browser form submission queues the requested respondent copy",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: form submission persists the declared respondent email",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: one real submitted response queues exactly one copy",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: real copy renderer addresses only the respondent and includes their exact question and answer",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: owned response-copy job completes through the actual local SMTP transport",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: local mail inbox receives exactly one requested response copy",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: received local email preserves exact answers and a single recipient",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: browser-submitted response is available through the protected response workspace",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: notification read-all reaches the real saved inbox",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: notification dismiss-all removes the real read notification",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: opening a real confirmation link does not subscribe the person",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: explicit browser newsletter confirmation activates the real subscriber",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: opening a real unsubscribe link leaves the subscription active",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: explicit browser unsubscribe persists the real preference",
+      "passed": true
+    },
+    {
+      "name": "webkit-desktop-explicit-entry: real functional flows produce no uncaught browser exceptions",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: real hidden entrance accepts Shift+Enter and issues an HttpOnly session",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: browser sign-in stores no authentication secret in localStorage",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: browser-authored event is published in the real database",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: public browser registration commits exactly one real attendee",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: published browser-authored event has a real calendar download",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: browser member creation commits the declared identity",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: browser member edit persists through the real mutation contract",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: reviewed browser CSV upload imports exactly one member",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: actual browser CSV download includes both filtered owned records",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: real browser form submission queues the requested respondent copy",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: form submission persists the declared respondent email",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: one real submitted response queues exactly one copy",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: real copy renderer addresses only the respondent and includes their exact question and answer",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: owned response-copy job completes through the actual local SMTP transport",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: local mail inbox receives exactly one requested response copy",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: received local email preserves exact answers and a single recipient",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: browser-submitted response is available through the protected response workspace",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: notification read-all reaches the real saved inbox",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: notification dismiss-all removes the real read notification",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: opening a real confirmation link does not subscribe the person",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: explicit browser newsletter confirmation activates the real subscriber",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: opening a real unsubscribe link leaves the subscription active",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: explicit browser unsubscribe persists the real preference",
+      "passed": true
+    },
+    {
+      "name": "chromium-mobile-explicit-entry: real functional flows produce no uncaught browser exceptions",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: real hidden entrance accepts Shift+Enter and issues an HttpOnly session",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: browser sign-in stores no authentication secret in localStorage",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: browser-authored event is published in the real database",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: public browser registration commits exactly one real attendee",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: published browser-authored event has a real calendar download",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: browser member creation commits the declared identity",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: browser member edit persists through the real mutation contract",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: reviewed browser CSV upload imports exactly one member",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: actual browser CSV download includes both filtered owned records",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: real browser form submission queues the requested respondent copy",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: form submission persists the declared respondent email",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: one real submitted response queues exactly one copy",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: real copy renderer addresses only the respondent and includes their exact question and answer",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: owned response-copy job completes through the actual local SMTP transport",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: local mail inbox receives exactly one requested response copy",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: received local email preserves exact answers and a single recipient",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: browser-submitted response is available through the protected response workspace",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: notification read-all reaches the real saved inbox",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: notification dismiss-all removes the real read notification",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: opening a real confirmation link does not subscribe the person",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: explicit browser newsletter confirmation activates the real subscriber",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: opening a real unsubscribe link leaves the subscription active",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: explicit browser unsubscribe persists the real preference",
+      "passed": true
+    },
+    {
+      "name": "firefox-mobile-explicit-entry: real functional flows produce no uncaught browser exceptions",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: real hidden entrance accepts Shift+Enter and issues an HttpOnly session",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: browser sign-in stores no authentication secret in localStorage",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: browser-authored event is published in the real database",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: public browser registration commits exactly one real attendee",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: published browser-authored event has a real calendar download",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: browser member creation commits the declared identity",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: browser member edit persists through the real mutation contract",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: reviewed browser CSV upload imports exactly one member",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: actual browser CSV download includes both filtered owned records",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: real browser form submission queues the requested respondent copy",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: form submission persists the declared respondent email",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: one real submitted response queues exactly one copy",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: real copy renderer addresses only the respondent and includes their exact question and answer",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: owned response-copy job completes through the actual local SMTP transport",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: local mail inbox receives exactly one requested response copy",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: received local email preserves exact answers and a single recipient",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: browser-submitted response is available through the protected response workspace",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: notification read-all reaches the real saved inbox",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: notification dismiss-all removes the real read notification",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: opening a real confirmation link does not subscribe the person",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: explicit browser newsletter confirmation activates the real subscriber",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: opening a real unsubscribe link leaves the subscription active",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: explicit browser unsubscribe persists the real preference",
+      "passed": true
+    },
+    {
+      "name": "webkit-mobile-explicit-entry: real functional flows produce no uncaught browser exceptions",
+      "passed": true
+    }
+  ],
+  "scope": "Actual loopback UI/API/PostgreSQL/local SMTP across Chromium/Firefox/WebKit at desktop and mobile widths. The final six profiles use the explicitly supported Shift+Enter officer-entry path; normal Enter was separately exercised in retained desktop reports. No application responses mocked. All original zero-pageerror assertions pass in the listed runs. Historical failed/rate-limited/transport diagnostic invocations remain separate. Mobile widths do not certify physical devices, software keyboards, installation or push. No production or external provider sends. Owned retained records archived, test accounts disabled and sessions revoked."
+}

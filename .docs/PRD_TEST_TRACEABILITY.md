@@ -21,9 +21,13 @@ The catalog includes every ID in all 14 mandatory ranges, including 22 visual
 groups and explicitly manual/hosted cases. The checker rejects a missing
 mandatory ID even if all 146 feature bullets still map successfully. References
 are reviewed by domain in `scripts/lib/prd-normative-cases.mjs`; listing a suite
-does not assert that it alone completes a logical case. Seven cases deliberately
-have no automated source: real installation, installed push, actual zoom, screen
-readers, Safari/devices, forced colors and rollout observation. Hosted headers
+does not assert that it alone completes a logical case. Five cases deliberately
+have no automated source: real installation, installed push, screen readers,
+Safari/devices and rollout observation. Actual Chromium browser zoom now has
+164 real local checks using tabs.setZoom(2), across 41 routes and both desktop
+window sizes; the same document also has browser-emulated forced-colors checks.
+These do not replace manual critical paths, other browser zoom, physical devices
+or actual OS high-contrast acceptance. Hosted headers
 have a separate local HTTPS/CSP probe; actual hosting still requires verification.
 Those require their stated manual/hosted evidence before phase/launch sign-off.
 

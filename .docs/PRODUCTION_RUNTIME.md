@@ -1,8 +1,9 @@
 # Production runtime and first-owner setup
 
 The owner chooses the host and domain. No Georgia Tech hosting account is needed.
-All work and verification so far are local. These instructions do not certify a
-deployed environment or authorize deployment/provider sends.
+The user authorized GDG-GT GitHub push and production deployment on 2026-11-07.
+Hosted setup is now in progress; local checks do not certify a deployed environment.
+See CURRENT_CHECKPOINT.md and LOCAL_FUNCTIONAL_VERIFICATION.md for current evidence.
 
 Use Node 24 LTS for API and worker processes (server modules import TypeScript
 directly). Build with `npm ci` and `npm run build` in CI. The build produces static browser

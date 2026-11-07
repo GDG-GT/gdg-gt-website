@@ -336,4 +336,34 @@ describe("Account notification read/dismiss and race recovery", () => {
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(screen.queryByRole("heading", { name: item.title })).toBeNull();
   });
+  it("keeps a newer unread count when an older background read finishes late", async () => {
+    const older = pending<ReturnType<typeof inbox>>(), newer = pending<ReturnType<typeof inbox>>();
+    apiMock.mockReturnValueOnce(older.promise).mockReturnValueOnce(newer.promise);
+    vi.spyOn(document, "visibilityState", "get").mockReturnValue("visible");
+    render(<MemoryRouter><NotificationBell /></MemoryRouter>);
+    const firstSignal = apiMock.mock.calls[0][1].signal;
+    fireEvent(document, new Event("visibilitychange"));
+    expect(firstSignal.aborted).toBe(true);
+    await act(async () => newer.resolve(inbox({ unread: 2 })));
+    expect(screen.getByRole("button", { name: "Notifications, 2 unread" })).toBeTruthy();
+    await act(async () => older.resolve(inbox({ unread: 9 })));
+    expect(screen.getByRole("button", { name: "Notifications, 2 unread" })).toBeTruthy();
+  });
+  it("cancels a background read before the document leaves or becomes hidden", async () => {
+    const reading = pending<ReturnType<typeof inbox>>();
+    apiMock.mockReturnValue(reading.promise);
+    const visible = vi.spyOn(document, "visibilityState", "get").mockReturnValue("visible");
+    const view = render(<MemoryRouter><NotificationBell /></MemoryRouter>);
+    const firstSignal = apiMock.mock.calls[0][1].signal;
+    fireEvent(window, new Event("pagehide"));
+    expect(firstSignal.aborted).toBe(true);
+    fireEvent(document, new Event("visibilitychange"));
+    const secondSignal = apiMock.mock.calls[1][1].signal;
+    visible.mockReturnValue("hidden");
+    fireEvent(document, new Event("visibilitychange"));
+    expect(secondSignal.aborted).toBe(true);
+    expect(apiMock).toHaveBeenCalledTimes(2);
+    view.unmount();
+    await act(async () => reading.resolve(inbox({ unread: 9 })));
+  });
 });

@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-11-07T21:41:30.554Z",
+  "completed": false,
+  "profile": "webkit-desktop",
+  "stage": "Hidden entrance and real browser authentication",
+  "scenarios": [
+    {
+      "name": "Hidden entrance and real browser authentication",
+      "passed": false,
+      "checks": 0,
+      "errorType": "Error"
+    }
+  ],
+  "tests": [],
+  "pageErrors": [],
+  "scope": "Real loopback browser/UI/API/database round trips, fresh fictional account and explicitly owned records. No application responses mocked; external origins blocked, local mail only, real email/push delivery disabled. Credentials/capabilities are memory-only; original chapter data/gate/account unchanged. Owned retained records archived, test account disabled/sessions revoked. Not physical-device push or human screen-reader acceptance."
+}

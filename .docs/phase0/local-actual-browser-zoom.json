@@ -1,0 +1,3289 @@
+{
+  "generatedAt": "2026-11-07T21:25:14.332Z",
+  "completed": true,
+  "cleanupComplete": true,
+  "scope": "Actual Chromium tabs.setZoom(2) in automatic/per-tab mode, independent owned temporary extension/profile, with getZoom=2, doubled devicePixelRatio, halved CSS viewport and CSS zoom=1 assertions. Existing app OS/browser profiles unchanged. Real loopback UI/API reads, fresh fictional account/form, writes blocked after fixture preparation; Realtime grant paused. Forced colors uses browser media emulation and does not certify actual OS high-contrast or manual screen-reader behavior. No deployment or provider sends.",
+  "reference": "https://developer.chrome.com/docs/extensions/reference/api/tabs#method-setZoom",
+  "checks": [
+    {
+      "path": "/",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/events",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/events",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/team",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/team",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/resources",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/resources",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/sponsors",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/sponsors",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/gallery",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/gallery",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/contact",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/contact",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/privacy",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/privacy",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/accessibility",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/accessibility",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/offline",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/offline",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/forms/:owned-form",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/forms/:owned-form",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/events",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/events",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/content",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/content",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/team",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/team",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/projects",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/projects",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/members",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/members",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/resources",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/resources",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/newsletter",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/newsletter",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/blog",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/blog",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/users",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/users",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/profile",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/profile",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/sponsors",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/sponsors",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/communications",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/communications",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/media",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/media",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/guide",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/guide",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/linktree",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/linktree",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/site-status",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/site-status",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/teams",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/teams",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/channels",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/channels",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/whiteboard",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/whiteboard",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/gallery",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/gallery",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/finances",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/finances",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/audit-log",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/audit-log",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/privacy",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/privacy",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/operations",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/operations",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/blog-editor",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/blog-editor",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/blog-media",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/blog-media",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/forms",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/forms",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/forms/:owned-form/edit",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/forms/:owned-form/edit",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/forms/:owned-form/responses",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/forms/:owned-form/responses",
+      "browserWindowWidth": 1440,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 720,
+        "outerWidth": 1440,
+        "dpr": 2,
+        "scrollWidth": 720,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/events",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/events",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/team",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/team",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/resources",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/resources",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/sponsors",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/sponsors",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/gallery",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/gallery",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/contact",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/contact",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/privacy",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/privacy",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/accessibility",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/accessibility",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/offline",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/offline",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/forms/:owned-form",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/forms/:owned-form",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/events",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/events",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/content",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/content",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/team",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/team",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/projects",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/projects",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/members",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/members",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/resources",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/resources",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/newsletter",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/newsletter",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/blog",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/blog",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/users",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/users",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/profile",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/profile",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/sponsors",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/sponsors",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/communications",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/communications",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/media",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/media",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/guide",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/guide",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/linktree",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/linktree",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/site-status",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/site-status",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/teams",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/teams",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/channels",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/channels",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/whiteboard",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/whiteboard",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/gallery",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/gallery",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/finances",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/finances",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/audit-log",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/audit-log",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/privacy",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/privacy",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/operations",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/operations",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/blog-editor",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/blog-editor",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/blog-media",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/blog-media",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/forms",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/forms",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/forms/:owned-form/edit",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/forms/:owned-form/edit",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/forms/:owned-form/responses",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "none",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": false
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    },
+    {
+      "path": "/admin/forms/:owned-form/responses",
+      "browserWindowWidth": 1920,
+      "actualBrowserZoom": 2,
+      "forcedColors": "active",
+      "layout": {
+        "innerWidth": 960,
+        "outerWidth": 1920,
+        "dpr": 2,
+        "scrollWidth": 960,
+        "cssZoom": "1",
+        "headings": 1,
+        "forcedColors": true
+      },
+      "violations": [],
+      "pageErrorNames": [],
+      "failedReadStatuses": [],
+      "blockedWrites": [],
+      "passed": true
+    }
+  ]
+}

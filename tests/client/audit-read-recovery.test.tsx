@@ -155,7 +155,7 @@ describe("Audit history and entry recovery", () => {
       screen.queryByRole("link", { name: "Export filtered CSV" }),
     ).toBeNull();
     expect(
-      screen.getByRole("button", { name: /^Details for/ }).matches(":disabled"),
+      screen.getByRole("button", { name: /^View details for/ }).matches(":disabled"),
     ).toBe(true);
   });
   it("recovers a failed detail independently from the loaded history", async () => {

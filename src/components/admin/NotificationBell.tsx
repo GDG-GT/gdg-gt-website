@@ -343,11 +343,16 @@ function NotificationBellWorkspace({ accountId }: { accountId?: string }) {
   useEffect(() => {
     if (!accountId) return;
     let active = true;
+    let controller: AbortController | undefined;
+    const cancel = () => controller?.abort();
     const update = () => {
+      cancel();
       if (document.visibilityState === "hidden") return;
-      api<Inbox>("/admin/notifications?pageSize=1")
+      const current = new AbortController();
+      controller = current;
+      api<Inbox>("/admin/notifications?pageSize=1", { signal: current.signal })
         .then((r) => {
-          if (active) setCount(r.unreadCount);
+          if (active && !current.signal.aborted) setCount(r.unreadCount);
         })
         .catch(() => {
           /* Opening the inbox exposes errors with retry. */
@@ -356,10 +361,13 @@ function NotificationBellWorkspace({ accountId }: { accountId?: string }) {
     update();
     const timer = window.setInterval(update, 30000);
     document.addEventListener("visibilitychange", update);
+    window.addEventListener("pagehide", cancel);
     return () => {
       active = false;
+      cancel();
       clearInterval(timer);
       document.removeEventListener("visibilitychange", update);
+      window.removeEventListener("pagehide", cancel);
     };
   }, [accountId, revision]);
   return (

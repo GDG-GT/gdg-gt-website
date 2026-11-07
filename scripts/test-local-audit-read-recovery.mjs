@@ -253,7 +253,7 @@ try {
         page.getByText(/Last successful history read/),
       ).toBeVisible();
       await expect(
-        page.getByRole("button", { name: /^Details for/ }),
+        page.getByRole("button", { name: /^View details for/ }),
       ).toBeDisabled();
       await expect(
         page.getByRole("button", { name: "Export filtered CSV" }),
@@ -265,7 +265,7 @@ try {
       );
       failHistory = false;
       await page.getByRole("button", { name: "Retry audit history" }).click();
-      const opener = page.getByRole("button", { name: /^Details for/ });
+      const opener = page.getByRole("button", { name: /^View details for/ });
       await expect(opener).toBeEnabled();
       failEntry = true;
       await opener.click();

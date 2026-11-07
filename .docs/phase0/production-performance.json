@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-11-07T19:32:21.763Z",
+  "generatedAt": "2026-11-07T22:13:40.049Z",
   "completed": true,
   "lighthouseVersion": "13.6.0",
   "build": {
     "index.html": {
       "bytes": 2215,
-      "sha256": "4ded1657c18aec5db49a5d47a0f72568300b79673d5946861b93bce3be08dc96"
+      "sha256": "b2bc12ed39c97e7c78a5dbf1c8ea0646dbde77dd8d9744293f7901c905d2805b"
     },
     ".vite/manifest.json": {
       "bytes": 117372,
-      "sha256": "2046abdcd92868503017e20a43e37bd86fcc83bd6158a1b6e3342f4e9a990ca4"
+      "sha256": "17ebbbc5f410ddb0ac4558b293de03cdabc3db0b0a62e020405333dd0a043ff7"
     },
     "assets/hero-atmosphere-mobile.webp": {
       "bytes": 37624,
@@ -29,7 +29,7 @@
     },
     ".build/ssr/entry.mjs": {
       "bytes": 139481,
-      "sha256": "2383e7ee08a07436b42eb46c4c0cb356fbb82e4965556fe626a354208baafce7"
+      "sha256": "4e48b49b67a77807991aaebae9b5dd136dc1d68c274598f1e62ca9c7afb44b4f"
     },
     "api/site.mjs": {
       "bytes": 3225,
@@ -59,21 +59,15 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 1954.8497000000002,
+      "lcpMs": 1953.2472000000002,
       "cls": 0,
-      "tbtMs": 37,
+      "tbtMs": 0,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
           "score": 0.97,
           "display": "2.0 s"
-        },
-        {
-          "id": "max-potential-fid",
-          "title": "Max Potential First Input Delay",
-          "score": 0.97,
-          "display": "90 ms"
         },
         {
           "id": "errors-in-console",
@@ -83,8 +77,8 @@
         {
           "id": "interactive",
           "title": "Time to Interactive",
-          "score": 0.98,
-          "display": "2.5 s"
+          "score": 0.99,
+          "display": "2.0 s"
         },
         {
           "id": "unused-javascript",
@@ -113,7 +107,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 250 ms"
+          "display": "Est savings of 200 ms"
         }
       ],
       "runtimeError": null,
@@ -127,26 +121,14 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 909.0474999999999,
+      "lcpMs": 903.6786,
       "cls": 0,
-      "tbtMs": 21,
+      "tbtMs": 2,
       "failedAudits": [
-        {
-          "id": "max-potential-fid",
-          "title": "Max Potential First Input Delay",
-          "score": 0.98,
-          "display": "80 ms"
-        },
         {
           "id": "errors-in-console",
           "title": "Browser errors were logged to the console",
           "score": 0
-        },
-        {
-          "id": "interactive",
-          "title": "Time to Interactive",
-          "score": 0.99,
-          "display": "2.2 s"
         },
         {
           "id": "unused-javascript",
@@ -189,16 +171,10 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 901.7976000000001,
+      "lcpMs": 901.9929,
       "cls": 0,
-      "tbtMs": 12,
+      "tbtMs": 0,
       "failedAudits": [
-        {
-          "id": "max-potential-fid",
-          "title": "Max Potential First Input Delay",
-          "score": 0.99,
-          "display": "70 ms"
-        },
         {
           "id": "errors-in-console",
           "title": "Browser errors were logged to the console",
@@ -231,7 +207,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 280 ms"
+          "display": "Est savings of 290 ms"
         }
       ],
       "runtimeError": null,
@@ -245,7 +221,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 645.4427499999999,
+      "lcpMs": 643.82475,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -301,7 +277,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 252.6248,
+      "lcpMs": 252.73919999999998,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -351,7 +327,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 253.82420000000002,
+      "lcpMs": 251.49099999999999,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [

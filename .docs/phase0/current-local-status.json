@@ -1,290 +1,209 @@
 {
-  "generatedAt": "2026-11-07T19:56:35.486307+00:00",
-  "evidence": "phase0/public-rendering-release-20261107.json",
-  "scope": "Current local source/build verification; fictional intercepted browser writes only. No deployment, production changes or real provider sends. Not full PRD acceptance.",
-  "migrationsAppliedThrough": 140,
-  "quality": {
-    "typesPassed": true,
-    "buildPassed": true,
-    "bundleBudgetsPassed": true,
-    "lintErrors": 0,
-    "lintInheritedWarnings": 9,
-    "productionDependencyFindings": 0,
-    "ciExecuted": false,
-    "ciBrowserJobBudgetMinutes": 40,
-    "perTestTimeoutsRetriesAndAssertionsUnchanged": true,
-    "sourceTests": {
-      "passed": 2755,
-      "failed": 0,
-      "files": 228,
-      "rawReport": "artifacts/quality/completion-final-tests.json",
-      "sha256": "c5fa6df5ceb83d69bb8c4d6087b2132f4711e01a2b6b4c76492042ad2f43a7f9",
-      "coverage": {
-        "lines": 78.24,
-        "statements": 76.17,
-        "functions": 71.02,
-        "branches": 75.67
-      },
-      "globalThresholdPercent": 70,
-      "criticalBranchThresholdPercent": 90,
-      "criticalModules": 22,
-      "allExistingGatesPassed": true
+  "generatedAt": "2026-11-07T22:15:40.890917+00:00",
+  "scope": "Local functional verification with fresh complete source execution and final affected-browser verification. Original broad-run failures remain explicit, never merged into a fabricated single green invocation. Production setup authorized afterward and tracked separately.",
+  "source": {
+    "file": "artifacts/quality/native-verified-source-tests.json",
+    "sha256": "8f9e3543ed885847a725655c2a39958e5b6c544a63d50efa39d32bb2bcdd788a",
+    "passed": 2757,
+    "failed": 0,
+    "files": 228,
+    "coverage": {
+      "lines": 78.23,
+      "statements": 76.18,
+      "functions": 71,
+      "branches": 75.66
     },
-    "secretScan": {
-      "passed": true,
-      "commits": 159,
-      "files": 1992,
-      "unreviewed": 0,
-      "evidence": "phase0/secret-scan.json",
-      "scope": "Final pre-save all-local-ref history/current source scan; exact public identity-digest line review, no broad exclusions."
-    }
+    "unchangedGatesPassed": true
   },
   "browser": {
-    "listed": 1812,
-    "passed": 1804,
-    "skipped": 8,
-    "failed": 0,
-    "flaky": 0,
-    "retries": 0,
-    "profiles": {
-      "chromium-1920": 302,
-      "chromium-1440": 302,
-      "chromium-mobile": 302,
-      "firefox-1440": 302,
-      "webkit-1440": 302,
-      "webkit-mobile": 302
+    "broad": {
+      "listed": 1812,
+      "passed": 1802,
+      "skipped": 8,
+      "failed": 2,
+      "flaky": 0,
+      "retries": 0,
+      "identitiesExactlyMatchCatalog": true,
+      "duplicates": 0,
+      "missing": 0,
+      "unexpectedIdentities": 0,
+      "shards": [
+        {
+          "shard": 1,
+          "cases": 604,
+          "exitCode": 1,
+          "stats": {
+            "startTime": "2026-11-07T21:48:27.852Z",
+            "duration": 690931.605,
+            "expected": 601,
+            "skipped": 2,
+            "unexpected": 1,
+            "flaky": 0
+          },
+          "rawReport": "artifacts/browser/native-final-20261107/reports/shard-1.json",
+          "sha256": "42491670054a5e3e989c104cd32bce20d0a9e264ca9a0bb469de9a370ffe220c"
+        },
+        {
+          "shard": 2,
+          "cases": 604,
+          "exitCode": 1,
+          "stats": {
+            "startTime": "2026-11-07T21:48:27.868Z",
+            "duration": 767837.974,
+            "expected": 600,
+            "skipped": 3,
+            "unexpected": 1,
+            "flaky": 0
+          },
+          "rawReport": "artifacts/browser/native-final-20261107/reports/shard-2.json",
+          "sha256": "3ce0048cbd7eecd802ceff87f6a5829ea5751d732c2492b71582b1c5b2303f90"
+        },
+        {
+          "shard": 3,
+          "cases": 604,
+          "exitCode": 0,
+          "stats": {
+            "startTime": "2026-11-07T21:48:27.871Z",
+            "duration": 818441.725,
+            "expected": 601,
+            "skipped": 3,
+            "unexpected": 0,
+            "flaky": 0
+          },
+          "rawReport": "artifacts/browser/native-final-20261107/reports/shard-3.json",
+          "sha256": "37c64e661d2ec6552e446c1796fda834d28920696628e6e703f0a5b73c65ca7a"
+        }
+      ],
+      "failures": [
+        {
+          "file": "public-smoke.spec.ts",
+          "title": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+          "profile": "chromium-1920"
+        },
+        {
+          "file": "form-library-reads.spec.ts",
+          "title": "library retains failed reads and proposed titles, pauses writes and clears denial",
+          "profile": "chromium-mobile"
+        }
+      ],
+      "scope": "Complete frozen-artifact invocation. Original failures retained; later targeted invocations are separate evidence, never substituted into this run."
     },
-    "shards": [
+    "separateFollowups": [
       {
-        "shard": 1,
-        "cases": 604,
-        "exitCode": 0,
+        "file": "artifacts/browser/native-final-20261107/reports/isolated-original-motion.json",
+        "sha256": "babf9480e45fb5edfe4b21ca7fbdf3a32f44350de95b6d8936df905675539033",
         "stats": {
-          "startTime": "2026-11-07T19:32:52.820Z",
-          "duration": 1126320.048,
-          "expected": 602,
-          "skipped": 2,
+          "startTime": "2026-11-07T22:02:29.977Z",
+          "duration": 17963.628,
+          "expected": 2,
+          "skipped": 0,
           "unexpected": 0,
           "flaky": 0
-        },
-        "rawReport": "artifacts/browser/full-prd-20261107/reports/shard-1.json",
-        "sha256": "7b8c62f8a0d1e6ac37d2e19197f0995a6eae52bf4b5589ca656783851ceadd2b"
+        }
       },
       {
-        "shard": 2,
-        "cases": 604,
-        "exitCode": 0,
+        "file": "artifacts/browser/native-final-20261107/reports/menu-fixed-repeated.json",
+        "sha256": "3c90aa6be4582853f30eaae31cf377b38414c32ef4301e0b1499a4213286c007",
         "stats": {
-          "startTime": "2026-11-07T19:32:52.840Z",
-          "duration": 1264699.438,
-          "expected": 601,
-          "skipped": 3,
+          "startTime": "2026-11-07T22:06:32.356Z",
+          "duration": 45091.388999999996,
+          "expected": 18,
+          "skipped": 0,
           "unexpected": 0,
           "flaky": 0
-        },
-        "rawReport": "artifacts/browser/full-prd-20261107/reports/shard-2.json",
-        "sha256": "103fb03c9fc3f76ac882bc2a63cc583b102cf3d957e076945f3f4f4cd48d1328"
+        }
       },
       {
-        "shard": 3,
-        "cases": 604,
-        "exitCode": 0,
+        "file": "artifacts/browser/native-final-20261107/reports/final-affected-scope.json",
+        "sha256": "220ca7b8964c7df0c1d81bc60f42e7d49431b97f5e166b3da49debe0f076c39f",
         "stats": {
-          "startTime": "2026-11-07T19:32:52.814Z",
-          "duration": 1291388.31,
-          "expected": 601,
-          "skipped": 3,
+          "startTime": "2026-11-07T22:07:30.766Z",
+          "duration": 185421.794,
+          "expected": 178,
+          "skipped": 8,
           "unexpected": 0,
           "flaky": 0
-        },
-        "rawReport": "artifacts/browser/full-prd-20261107/reports/shard-3.json",
-        "sha256": "2042ff9428ad6793ad43bd2e324ee08fd6b56b58138eb81c7ae7bfb315c3a5f9"
+        }
       }
     ],
-    "identitiesExactlyMatchCatalog": true,
-    "duplicates": 0,
-    "missing": 0,
-    "unexpected": 0,
-    "identityList": "artifacts/browser/full-prd-20261107/reports/executed-identities.json",
-    "identitySha256": "d6b1f15ee678320580c30137f8e398d0a8d3775699f878980cf53940b09caa96",
-    "expectedSkips": [
-      {
-        "file": "public-smoke.spec.ts",
-        "name": "mobile navigation stays at the top and returns keyboard focus on escape",
-        "profile": "chromium-1920",
-        "reason": "Mobile navigation is intentionally hidden at desktop widths"
-      },
-      {
-        "file": "public-smoke.spec.ts",
-        "name": "mobile navigation stays at the top and returns keyboard focus on escape",
-        "profile": "chromium-1440",
-        "reason": "Mobile navigation is intentionally hidden at desktop widths"
-      },
-      {
-        "file": "public-smoke.spec.ts",
-        "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
-        "profile": "chromium-mobile",
-        "reason": "Functional software-WebGL check uses the capable desktop Chromium profile"
-      },
-      {
-        "file": "public-smoke.spec.ts",
-        "name": "mobile navigation stays at the top and returns keyboard focus on escape",
-        "profile": "firefox-1440",
-        "reason": "Mobile navigation is intentionally hidden at desktop widths"
-      },
-      {
-        "file": "public-smoke.spec.ts",
-        "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
-        "profile": "firefox-1440",
-        "reason": "Functional software-WebGL check uses the capable desktop Chromium profile"
-      },
-      {
-        "file": "public-smoke.spec.ts",
-        "name": "mobile navigation stays at the top and returns keyboard focus on escape",
-        "profile": "webkit-1440",
-        "reason": "Mobile navigation is intentionally hidden at desktop widths"
-      },
-      {
-        "file": "public-smoke.spec.ts",
-        "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
-        "profile": "webkit-1440",
-        "reason": "Functional software-WebGL check uses the capable desktop Chromium profile"
-      },
-      {
-        "file": "public-smoke.spec.ts",
-        "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
-        "profile": "webkit-mobile",
-        "reason": "Functional software-WebGL check uses the capable desktop Chromium profile"
-      }
-    ],
-    "newScopes": {
-      "style-cascade-parity.spec.ts": {
-        "passed": 90,
-        "failed": 0
-      },
-      "public-hydration.spec.ts": {
-        "passed": 24,
-        "failed": 0
-      },
-      "security-release.spec.ts": {
-        "passed": 18,
-        "failed": 0
-      }
-    },
-    "originalDesktopMovingHeroCasesPassed": 2,
-    "captures": 1336,
-    "captureIndex": "artifacts/browser/full-prd-20261107/index.html",
-    "approvedGoldens": false
+    "singleFullInvocationPassing": false,
+    "finalAffectedScopesPassing": true,
+    "fix": "Forms library controlled actions-menu state with a direct Escape capture fallback; test asserts focus, complete menu unmount, root accessibility and returned focus. Diagnostic proved open/focused state persisted after Escape with no active animation.",
+    "hero": "Both original desktop animation checks pass in isolation and again in final public scope. Shared-load sensitivity is an inference; original failed invocation retained."
+  },
+  "realBackend": {
+    "file": ".docs/phase0/local-functional-flows.json",
+    "sha256": "5aaa2b71cee83a038263aa815574e219f9db712bda4d3d5127868cc0dfa6687e"
+  },
+  "fixtureCleanup": {
+    "file": ".docs/phase0/local-functional-cleanup.json",
+    "sha256": "cc4716cf6dce52974f298e2ba8fba6f921b53e7748b974e62929363dae8b72ee"
+  },
+  "actualZoom": {
+    "file": ".docs/phase0/local-actual-browser-zoom.json",
+    "sha256": "7bbb12a174665a7de2bf9732b775f17eabb9bc4a6e4d15a8bbde9b2a62538e16"
+  },
+  "nativeVoiceOverAttempt": {
+    "file": ".docs/phase0/local-native-voiceover-attempt.json",
+    "sha256": "516b690e9790af97a5726937888423f44573c5b537952d5237df59de2a7d7e43"
   },
   "probes": {
     "public-ssr-artifact": {
-      "passed": 25,
-      "failed": 0,
-      "evidence": ".docs/phase0/public-ssr-artifact.json",
-      "sha256": "1fd1e51db5bca556ad224ac0096a54e4dc50f2aaccf109b88c42dbe3389b653d"
-    },
-    "local-dev-file-security": {
-      "passed": 12,
-      "failed": 0,
-      "evidence": ".docs/phase0/local-dev-file-security.json",
-      "sha256": "721c2494abf2a8b640f3d74cd22da39f850b214031617a28e3b45ca3ac9f0f1b"
+      "file": ".docs/phase0/public-ssr-artifact.json",
+      "sha256": "c3fd263651b47c6e44e6e8936eba044dc5c9f0daeec12aba734100907fe47541",
+      "passed": 25
     },
     "production-pwa-boundaries": {
-      "passed": 15,
-      "failed": 0,
-      "evidence": ".docs/phase0/production-pwa-boundaries.json",
-      "sha256": "981d1d00afbfb62efa8615fd2993cf0559c8b197ad5646f261377b3243c0b763"
+      "file": ".docs/phase0/production-pwa-boundaries.json",
+      "sha256": "e5441d7ae9fe5d158b316053656bb3ce5dd112d8d3d45f4d399d677aa26fe1e4",
+      "passed": 15
     },
     "production-pwa-update": {
-      "passed": 9,
-      "failed": 0,
-      "evidence": ".docs/phase0/production-pwa-update.json",
-      "sha256": "3ce5f32f4e3b4451ea860bc6a89c7af2ecfd4e8b0c615c1405a0393a63b26395"
+      "file": ".docs/phase0/production-pwa-update.json",
+      "sha256": "447b9e3baa9c79690d4b6015ddf886d7530ce731639bce5501c099f02da513f8",
+      "passed": 9
     },
     "production-security-headers": {
-      "passed": 52,
-      "failed": 0,
-      "evidence": ".docs/phase0/production-security-headers.json",
-      "sha256": "fd2f4eb45005db71076944edce1690e3055bddbd02acc1c0b4b99e8c746b4035"
+      "file": ".docs/phase0/production-security-headers.json",
+      "sha256": "c53e87ce51bf208da8538f5213bce9f9d3ab6a560a341dfd89cda60e6e7f1030",
+      "passed": 52
     }
   },
   "performance": {
-    "evidence": ".docs/phase0/production-performance.json",
-    "sha256": "bffa17a1717f2bb0d6e53754c2522bb3620a5a67ce181a800f765e576fcf5d9d",
-    "matchesCurrentArtifact": true,
-    "lighthouseVersion": "13.6.0",
-    "mobileLcpThresholdMs": 2500,
-    "allSixLabGatesPassed": true,
-    "routes": [
-      {
-        "route": "/",
-        "preset": "mobile",
-        "lcpMs": 1954.8497000000002,
-        "performance": 99,
-        "accessibility": 100,
-        "cls": 0
-      },
-      {
-        "route": "/events",
-        "preset": "mobile",
-        "lcpMs": 909.0474999999999,
-        "performance": 100,
-        "accessibility": 100,
-        "cls": 0
-      },
-      {
-        "route": "/contact",
-        "preset": "mobile",
-        "lcpMs": 901.7976000000001,
-        "performance": 100,
-        "accessibility": 100,
-        "cls": 0
-      },
-      {
-        "route": "/",
-        "preset": "desktop",
-        "lcpMs": 645.4427499999999,
-        "performance": 100,
-        "accessibility": 100,
-        "cls": 0
-      },
-      {
-        "route": "/events",
-        "preset": "desktop",
-        "lcpMs": 252.6248,
-        "performance": 100,
-        "accessibility": 100,
-        "cls": 0
-      },
-      {
-        "route": "/contact",
-        "preset": "desktop",
-        "lcpMs": 253.82420000000002,
-        "performance": 100,
-        "accessibility": 100,
-        "cls": 0
-      }
-    ],
-    "fieldP75Verified": false
+    "file": ".docs/phase0/production-performance.json",
+    "sha256": "ab124de488b4a51bce5b35c12d11e3d3314f8416c659762f42acd94dd7b93a85",
+    "allSixGatesPassed": true,
+    "lcpMs": [
+      1953.2472000000002,
+      903.6786,
+      901.9929,
+      643.82475,
+      252.73919999999998,
+      251.49099999999999
+    ]
   },
-  "remainingLaunchAcceptance": [
-    "Owner-approved content/assets and visual baselines",
-    "Manual assistive technology, actual 200% zoom and forced colors",
-    "Physical Safari/mobile install/update/push",
-    "Chosen-host secrets/domain/routing/CSP/cache and supervised jobs/scanner/watchdog",
-    "Authorized live Resend send/signed webhook and VAPID smoke checks after launch keys",
-    "Hosted PITR/object restore, rollback and measured RPO/RTO",
-    "48-hour observation after deployment"
+  "database": "Existing normal/legacy-grants 140-migration suites, last-slot concurrency and isolated restore remain recorded unchanged evidence; no local reset or replay. New hosted setup is separate.",
+  "buildPassed": true,
+  "typesPassed": true,
+  "bundleBudgetsPassed": true,
+  "lintErrors": 0,
+  "lintInheritedWarnings": 9,
+  "fullPrdAcceptance": false,
+  "remainingAcceptance": [
+    "Human screen-reader critical paths (native attempt blocked by tool output)",
+    "Physical-device installation, push, Safari/mobile keyboard/orientation and OS high contrast",
+    "Owner visual/content approval excluded from current functional scope",
+    "Hosted runtime, real storage/scanner/jobs/provider/backup/rollback checks and post-deployment observation"
   ],
   "deferred": [
     "SSO/Google",
     "Bevy/Engage"
   ],
-  "liveKeys": "Planned launch inputs; no unfinished local feature is attributed to missing keys",
-  "fullPrdAcceptance": false,
   "runtime": {
     "ui": "http://127.0.0.1:8080",
-    "api": "http://127.0.0.1:8081",
-    "localOnly": true
-  }
+    "api": "http://127.0.0.1:8081"
+  },
+  "productionAuthorization": "User now authorizes GDG-GT GitHub push and deployment on the supplied services. Credentials remain excluded from source and reports.",
+  "evidence": "phase0/local-functional-release-20261107.json",
+  "productionStatus": "Setup in progress; not claimed deployed"
 }

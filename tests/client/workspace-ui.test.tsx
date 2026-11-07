@@ -178,8 +178,13 @@ describe("A11Y-TEST-003: audit interaction, focus, cursor and filter recovery", 
   it("focuses opened entry details and restores the invoking control when closed", async () => {
     mount(<AuditWorkspace />, "/admin/audit-log");
     const opener = await screen.findByRole("button", {
-      name: /^Details for forms.exported/,
+      name: /^View details for forms.exported/,
     });
+    // The complete visible command must remain in its accessible name so
+    // speech users can invoke the same words they see on a populated row.
+    expect(opener.getAttribute("aria-label")?.toLowerCase()).toContain(
+      opener.textContent!.trim().toLowerCase(),
+    );
     opener.focus();
     fireEvent.click(opener);
     const heading = await screen.findByRole("heading", {

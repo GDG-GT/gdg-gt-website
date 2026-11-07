@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-05T04:03:27.530Z",
+  "generatedAt": "2026-11-07T21:11:59.344Z",
   "completed": true,
   "browser": "Pinned Playwright Chromium 1.64.1 on local macOS",
   "note": "Actual loopback UI/API reads with fresh anonymous browser contexts and existing published inventories. All non-read API requests and external origins blocked. No data writes, credentials, provider sends or production changes. Reduced motion used; captures are unapproved review candidates, not golden baselines. Contrast-enabled axe checks do not replace manual accessibility/device/visual/hosted acceptance.",

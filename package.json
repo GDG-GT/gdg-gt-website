@@ -31,6 +31,8 @@
     "db:prepare": "node scripts/prepare-local-db.mjs",
     "setup:local-auth": "node scripts/setup-local-auth.mjs",
     "test:local-auth": "node scripts/test-local-auth.mjs",
+    "test:local:functional": "node scripts/test-local-functional-flows.mjs",
+    "test:local:zoom": "node scripts/test-local-browser-zoom.mjs",
     "test:local-events": "node scripts/test-local-events.mjs",
     "test:local-event-inventory": "node scripts/test-local-event-inventory.mjs",
     "test:local-workspace": "node scripts/test-local-workspace.mjs",

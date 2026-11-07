@@ -438,7 +438,7 @@ function AuditHistory() {
                             variant="ghost"
                             onClick={() => choose(row.id)}
                             aria-label={
-                              "Details for " +
+                              "View details for " +
                               row.action +
                               " at " +
                               date(row.created_at)

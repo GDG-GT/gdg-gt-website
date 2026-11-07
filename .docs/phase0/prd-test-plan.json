@@ -491,7 +491,8 @@
       "scope": "Calendar downloads fold UTF-8, escape content and preserve stable identity on cancellation",
       "automated": [
         "tests/server/events.test.mjs",
-        "tests/client/event-ui.test.tsx"
+        "tests/client/event-ui.test.tsx",
+        "scripts/test-local-functional-flows.mjs"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"
@@ -2117,9 +2118,11 @@
       "id": "A11Y-TEST-012",
       "requirements": [],
       "scope": "Real 200-percent browser zoom and reflow preserve all workflows and controls",
-      "automated": [],
+      "automated": [
+        "scripts/test-local-browser-zoom.mjs"
+      ],
       "remaining": [
-        "Actual browser zoom/reflow across public, workspace and Forms routes; CSS or viewport emulation is insufficient",
+        "Actual Chromium browser zoom is covered across public, workspace and Forms routes; remaining manual critical workflows and other supported browsers/devices require review",
         "Production-like staging review and applicable visual/device/manual acceptance"
       ],
       "acceptance": "unverified",
@@ -2255,7 +2258,9 @@
       "id": "A11Y-TEST-019",
       "requirements": [],
       "scope": "Forced-colors and user transparency/motion preferences retain readable controls",
-      "automated": [],
+      "automated": [
+        "scripts/test-local-browser-zoom.mjs"
+      ],
       "remaining": [
         "Actual forced-colors/high-contrast and user preference review on supported systems",
         "Production-like staging review and applicable visual/device/manual acceptance"
@@ -3047,7 +3052,8 @@
       "automated": [
         "src/ui/newsletter-entry.test.ts",
         "tests/server/newsletter-gate.test.mjs",
-        "scripts/test-local-auth.mjs"
+        "scripts/test-local-auth.mjs",
+        "scripts/test-local-functional-flows.mjs"
       ],
       "remaining": [
         "Real keyboard Enter/Subscribe/Shift+Enter paths",
@@ -3426,7 +3432,8 @@
       "scope": "Event state/CRUD and current team/action scope",
       "automated": [
         "database/tests/005_event_operations.sql",
-        "scripts/test-local-events.mjs"
+        "scripts/test-local-events.mjs",
+        "scripts/test-local-functional-flows.mjs"
       ],
       "remaining": [
         "Production-like staging review and applicable visual/device/manual acceptance"
@@ -4101,7 +4108,8 @@
       "automated": [
         "tests/client/notification-inbox-ui.test.tsx",
         "tests/client/accessibility-structure.test.tsx",
-        "scripts/test-local-notification-bulk.mjs"
+        "scripts/test-local-notification-bulk.mjs",
+        "scripts/test-local-functional-flows.mjs"
       ],
       "remaining": [
         "Full supported-browser/screen-reader/realtime outage and institutional notification acceptance",
@@ -4213,7 +4221,8 @@
         "database/tests/082_newsletter_workspace.sql",
         "database/tests/083_newsletter_send_review.sql",
         "database/tests/084_newsletter_delivery.sql",
-        "scripts/test-local-newsletter.mjs"
+        "scripts/test-local-newsletter.mjs",
+        "scripts/test-local-functional-flows.mjs"
       ],
       "remaining": [
         "Real provider/sender-domain/retry/load acceptance",
@@ -5552,7 +5561,8 @@
       ],
       "scope": "Respondent identity, copy, pending/idempotent submit, resume/edit fragments, preview and error focus interactions",
       "automated": [
-        "tests/client/public-form-ui.test.tsx"
+        "tests/client/public-form-ui.test.tsx",
+        "scripts/test-local-functional-flows.mjs"
       ],
       "remaining": [
         "Transport is injected; real server/storage/scanner integration and manual assistive-technology acceptance remain separate",
@@ -5655,7 +5665,8 @@
       "automated": [
         "tests/client/member-transfer-ui.test.tsx",
         "tests/server/member-transfer.test.mjs",
-        "scripts/test-local-member-transfer.mjs"
+        "scripts/test-local-member-transfer.mjs",
+        "scripts/test-local-functional-flows.mjs"
       ],
       "remaining": [
         "Supported-device/screen-reader and real-browser network interruption/download acceptance",

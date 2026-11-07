@@ -1,0 +1,140 @@
+{
+  "generatedAt": "2026-11-07T21:54:43.413Z",
+  "completed": true,
+  "profile": "firefox-mobile-explicit-entry",
+  "stage": "Newsletter capability review, confirm and unsubscribe",
+  "scenarios": [
+    {
+      "name": "Hidden entrance and real browser authentication",
+      "passed": true,
+      "checks": 2
+    },
+    {
+      "name": "Event authoring, publication and public registration",
+      "passed": true,
+      "checks": 3
+    },
+    {
+      "name": "Community member creation, edit, CSV import and export",
+      "passed": true,
+      "checks": 4
+    },
+    {
+      "name": "Declared-identity form submission and exact response-copy queue",
+      "passed": true,
+      "checks": 8
+    },
+    {
+      "name": "Notification read-all changes to dismiss-all",
+      "passed": true,
+      "checks": 2
+    },
+    {
+      "name": "Newsletter capability review, confirm and unsubscribe",
+      "passed": true,
+      "checks": 4
+    }
+  ],
+  "tests": [
+    {
+      "name": "real hidden entrance accepts Shift+Enter and issues an HttpOnly session",
+      "passed": true
+    },
+    {
+      "name": "browser sign-in stores no authentication secret in localStorage",
+      "passed": true
+    },
+    {
+      "name": "browser-authored event is published in the real database",
+      "passed": true
+    },
+    {
+      "name": "public browser registration commits exactly one real attendee",
+      "passed": true
+    },
+    {
+      "name": "published browser-authored event has a real calendar download",
+      "passed": true
+    },
+    {
+      "name": "browser member creation commits the declared identity",
+      "passed": true
+    },
+    {
+      "name": "browser member edit persists through the real mutation contract",
+      "passed": true
+    },
+    {
+      "name": "reviewed browser CSV upload imports exactly one member",
+      "passed": true
+    },
+    {
+      "name": "actual browser CSV download includes both filtered owned records",
+      "passed": true
+    },
+    {
+      "name": "real browser form submission queues the requested respondent copy",
+      "passed": true
+    },
+    {
+      "name": "form submission persists the declared respondent email",
+      "passed": true
+    },
+    {
+      "name": "one real submitted response queues exactly one copy",
+      "passed": true
+    },
+    {
+      "name": "real copy renderer addresses only the respondent and includes their exact question and answer",
+      "passed": true
+    },
+    {
+      "name": "owned response-copy job completes through the actual local SMTP transport",
+      "passed": true
+    },
+    {
+      "name": "local mail inbox receives exactly one requested response copy",
+      "passed": true
+    },
+    {
+      "name": "received local email preserves exact answers and a single recipient",
+      "passed": true
+    },
+    {
+      "name": "browser-submitted response is available through the protected response workspace",
+      "passed": true
+    },
+    {
+      "name": "notification read-all reaches the real saved inbox",
+      "passed": true
+    },
+    {
+      "name": "notification dismiss-all removes the real read notification",
+      "passed": true
+    },
+    {
+      "name": "opening a real confirmation link does not subscribe the person",
+      "passed": true
+    },
+    {
+      "name": "explicit browser newsletter confirmation activates the real subscriber",
+      "passed": true
+    },
+    {
+      "name": "opening a real unsubscribe link leaves the subscription active",
+      "passed": true
+    },
+    {
+      "name": "explicit browser unsubscribe persists the real preference",
+      "passed": true
+    },
+    {
+      "name": "real functional flows produce no uncaught browser exceptions",
+      "passed": true
+    }
+  ],
+  "pageErrors": [],
+  "windowErrors": [],
+  "requestFailures": [],
+  "scope": "Real loopback browser/UI/API/database round trips, fresh fictional account and explicitly owned records. No application responses mocked; external origins blocked, local mail only, real email/push delivery disabled. Credentials/capabilities are memory-only; original chapter data/gate/account unchanged. Owned retained records archived, test account disabled/sessions revoked. Not physical-device push or human screen-reader acceptance."
+}

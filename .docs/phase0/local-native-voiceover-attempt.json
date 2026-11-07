@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-11-07T21:39:15.819446+00:00",
+  "completedScreenReaderAcceptance": false,
+  "userAuthorizedTemporaryEnable": true,
+  "baseline": {
+    "voiceOver": "off",
+    "showCaptionPanel": true,
+    "displayWelcomeDialog": true
+  },
+  "observed": [
+    "System Settings VoiceOver switch changed to on",
+    "VoiceOver Utility caption-panel preference already enabled and left unchanged",
+    "Native Safari loaded the real local Contact page and exposed heading, required field names, message help text, submit control and chapter navigation through the macOS accessibility tree"
+  ],
+  "blockingEvidence": [
+    "VoiceOver app output retrieval timed out with computer-use error -10005 timeoutReached",
+    "Native Safari later returned -10005 noWindowsAvailable during the follow-up interaction",
+    "Actual spoken announcements/caption output and the five complete screen-reader critical paths could not be reliably observed"
+  ],
+  "restored": {
+    "voiceOver": "off, verified in System Settings",
+    "showCaptionPanel": "unchanged true",
+    "displayWelcomeDialog": "true, verified restored to observed baseline",
+    "utilityAndSystemSettingsClosed": true
+  },
+  "scope": "Native macOS/Safari observation, separate from WebKit emulation and axe. No captured private start-page content retained, no live form submission, no production/provider action. This is a blocked manual acceptance attempt, not a passed screen-reader test."
+}
