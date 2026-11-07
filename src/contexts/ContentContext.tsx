@@ -79,14 +79,15 @@ export function ContentSnapshotProvider({
   );
 }
 export const ContentProvider = ({
-  children,
+  children, initial,
 }: {
   children: React.ReactNode;
+  initial?: HomeContent;
 }) => {
-  const [snapshot, setSnapshot] = useState<HomeContent>(),
-    [isLoading, setLoading] = useState(true),
+  const [snapshot, setSnapshot] = useState<HomeContent | undefined>(initial),
+    [isLoading, setLoading] = useState(!initial),
     [contentError, setError] = useState(""),
-    [lastUpdated, setLastUpdated] = useState<number>();
+    [lastUpdated, setLastUpdated] = useState<number | undefined>(() => initial ? Date.now() : undefined);
   const request = useRef(0);
   const loadEssential = useCallback(async (signal?: AbortSignal) => {
     const sequence = ++request.current;
@@ -108,14 +109,16 @@ export const ContentProvider = ({
       if (!signal?.aborted && sequence === request.current) setLoading(false);
     }
   }, []);
+  const invalidateRequest = useCallback(() => { request.current++; }, []);
   useEffect(() => {
+    if (initial) return;
     const controller = new AbortController();
     void loadEssential(controller.signal);
     return () => {
       controller.abort();
-      request.current++;
+      invalidateRequest();
     };
-  }, [loadEssential]);
+  }, [loadEssential, initial, invalidateRequest]);
   const { settings, pages, footer } = projectContent(
     snapshot || {
       settings: [],

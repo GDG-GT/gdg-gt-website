@@ -1,696 +1,290 @@
 {
-  "generatedAt": "2026-11-07T08:31:16.545784+00:00",
-  "buildIndexSha256": "2c5507ea71587e8c30be46751f363bb64238bec80a3541b611b91faef09a9dc2",
+  "generatedAt": "2026-11-07T19:56:35.486307+00:00",
+  "evidence": "phase0/public-rendering-release-20261107.json",
+  "scope": "Current local source/build verification; fictional intercepted browser writes only. No deployment, production changes or real provider sends. Not full PRD acceptance.",
+  "migrationsAppliedThrough": 140,
   "quality": {
-    "tests": {
-      "files": 222,
-      "passed": 2722,
-      "failed": 0
-    },
-    "coverage": {
-      "lines": 78.16,
-      "statements": 76.17,
-      "functions": 70.77,
-      "branches": 75.63
-    },
-    "globalAndCriticalGatesPassed": true,
-    "criticalModules": 21,
-    "currentBuildFullCoveragePassed": true,
-    "evidence": "phase0/table-keyboard-quality.json",
-    "scope": "Complete current source coverage2722tests/222files passes unchanged global/critical gates after all table/grid/sizing fixes. Targeted types/build/bytes/scoped lint and artifact checks also pass.",
-    "lint": {
-      "errors": 0,
-      "warnings": 10,
-      "unchangedWarningBudget": true
+    "typesPassed": true,
+    "buildPassed": true,
+    "bundleBudgetsPassed": true,
+    "lintErrors": 0,
+    "lintInheritedWarnings": 9,
+    "productionDependencyFindings": 0,
+    "ciExecuted": false,
+    "ciBrowserJobBudgetMinutes": 40,
+    "perTestTimeoutsRetriesAndAssertionsUnchanged": true,
+    "sourceTests": {
+      "passed": 2755,
+      "failed": 0,
+      "files": 228,
+      "rawReport": "artifacts/quality/completion-final-tests.json",
+      "sha256": "c5fa6df5ceb83d69bb8c4d6087b2132f4711e01a2b6b4c76492042ad2f43a7f9",
+      "coverage": {
+        "lines": 78.24,
+        "statements": 76.17,
+        "functions": 71.02,
+        "branches": 75.67
+      },
+      "globalThresholdPercent": 70,
+      "criticalBranchThresholdPercent": 90,
+      "criticalModules": 22,
+      "allExistingGatesPassed": true
     },
     "secretScan": {
-      "commits": 157,
-      "files": 1940,
+      "passed": true,
+      "commits": 159,
+      "files": 1992,
       "unreviewed": 0,
       "evidence": "phase0/secret-scan.json",
-      "scope": "Final pre-documentation-commit source/history scan; exact non-secret checksum reviews only."
+      "scope": "Final pre-save all-local-ref history/current source scan; exact public identity-digest line review, no broad exclusions."
     }
   },
   "browser": {
-    "initialCompleteV7": {
-      "startTime": "2026-11-06T23:47:56.738Z",
-      "duration": 843609.137,
-      "expected": 1311,
-      "skipped": 8,
-      "unexpected": 1,
-      "flaky": 0
+    "listed": 1812,
+    "passed": 1804,
+    "skipped": 8,
+    "failed": 0,
+    "flaky": 0,
+    "retries": 0,
+    "profiles": {
+      "chromium-1920": 302,
+      "chromium-1440": 302,
+      "chromium-mobile": 302,
+      "firefox-1440": 302,
+      "webkit-1440": 302,
+      "webkit-mobile": 302
     },
-    "finalNavigationV7": {
-      "startTime": "2026-11-07T00:03:12.236Z",
-      "duration": 68454.96,
-      "expected": 108,
-      "skipped": 0,
-      "unexpected": 0,
-      "flaky": 0
-    },
-    "fullCurrentInventoryPassingInvocation": false,
-    "note": "New finance/content78, remaining-table30, inventory/grid24 and builder-tool12 scopes pass as separate invocations/source checkpoints. Saved f163842 complete1540passes/eight expectedskips retained. Current listed inventory1680cases/560per shard; a complete current execution has not been repeated.",
-    "initialPublicReader": {
-      "startTime": "2026-11-07T00:15:21.145Z",
-      "duration": 89800.388,
-      "expected": 111,
-      "skipped": 8,
-      "unexpected": 1,
-      "flaky": 0
-    },
-    "finalPublicReader": {
-      "startTime": "2026-11-07T00:20:43.291Z",
-      "duration": 93874.298,
-      "expected": 112,
-      "skipped": 8,
-      "unexpected": 0,
-      "flaky": 0
-    },
-    "visibleLabelComplete": {
-      "startTime": "2026-11-07T01:55:17.542Z",
-      "duration": 1135905.2079999999,
-      "expected": 1372,
-      "skipped": 8,
-      "unexpected": 0,
-      "flaky": 0
-    },
-    "expandedSecondary": {
-      "startTime": "2026-11-07T06:27:30.429Z",
-      "duration": 213105.739,
-      "expected": 264,
-      "skipped": 0,
-      "unexpected": 0,
-      "flaky": 0
-    },
-    "publicRouteHints": {
-      "startTime": "2026-11-07T05:31:12.290Z",
-      "duration": 105078.888,
-      "expected": 130,
-      "skipped": 8,
-      "unexpected": 0,
-      "flaky": 0
-    },
-    "currentDesktopMotionPassingScope": "phase0/public-route-hints-final-browser.json",
-    "finalCurrentInventory": {
-      "startTime": "2026-11-07T06:34:34.328Z",
-      "duration": 1235411.659,
-      "expected": 1540,
-      "skipped": 8,
-      "unexpected": 0,
-      "flaky": 0
-    },
-    "financeContent": {
-      "startTime": "2026-11-07T08:18:13.166Z",
-      "duration": 97057.313,
-      "expected": 78,
-      "skipped": 0,
-      "unexpected": 0,
-      "flaky": 0
-    },
-    "remainingTables": {
-      "startTime": "2026-11-07T08:19:50.761Z",
-      "duration": 40268.163,
-      "expected": 30,
-      "skipped": 0,
-      "unexpected": 0,
-      "flaky": 0
-    },
-    "inventoryKeyboard": {
-      "startTime": "2026-11-07T08:23:42.404Z",
-      "duration": 40629.011999999995,
-      "expected": 24,
-      "skipped": 0,
-      "unexpected": 0,
-      "flaky": 0
-    },
-    "builderToolRegression": {
-      "startTime": "2026-11-07T08:24:23.550Z",
-      "duration": 23415.83,
-      "expected": 12,
-      "skipped": 0,
-      "unexpected": 0,
-      "flaky": 0
-    }
-  },
-  "visual": {
-    "primaryPromptGroups": 22,
-    "reviewCaptures": 162,
-    "compositionChecks": 138,
-    "approved": false,
-    "secondaryStates": 44,
-    "secondaryCompositionChecks": 264,
-    "secondaryCaptures": 344,
-    "primaryIndex": "artifacts/browser/current-primary-review/index.html",
-    "secondaryIndex": "artifacts/browser/secondary-review/index.html",
-    "primaryNote": "Refreshed from the complete passing20b59e2 invocation; previous primary index and original captures preserved.",
-    "recoveryIndex": "artifacts/browser/current-recovery-review/index.html",
-    "recoveryStates": 18,
-    "recoveryCaptures": 108,
-    "recoveryApproved": false,
-    "financeContentStates": 13,
-    "financeContentChecks": 78,
-    "financeContentCaptures": 78,
-    "financeContentIndex": "artifacts/browser/finance-content-current-review/index.html",
-    "remainingTableStates": 5,
-    "remainingTableChecks": 30,
-    "remainingTableCaptures": 32,
-    "remainingTableIndex": "artifacts/browser/remaining-table-review/index.html",
-    "inventoryKeyboardStates": 4,
-    "inventoryKeyboardChecks": 24,
-    "inventoryKeyboardCaptures": 24,
-    "inventoryKeyboardIndex": "artifacts/browser/inventory-keyboard-review/index.html",
-    "currentCheckpointScope": "All review captures remain unapproved and retain their own source invocation/build checkpoint; counts are not a complete final-build pixel-comparison claim."
-  },
-  "pwa": {
-    "boundaries": 15,
-    "boundariesPassed": true,
-    "changedAssetUpdates": 9,
-    "changedAssetUpdatesPassed": true,
-    "matchesCurrentBuild": true
-  },
-  "headers": {
-    "checks": 46,
-    "localEnforcementPassed": true,
-    "hosted": false,
-    "matchesCurrentBuild": true
-  },
-  "secrets": {
-    "unreviewed": 0,
-    "scope": "Read-only all-local-ref history plus current tracked/nonignored untracked file snapshot. Default rules, decoded text depth 5, no baseline/rule/path exclusions or inline suppression. Ignored local credentials/dependencies/caches, archive contents and image OCR are outside the source scan. Findings are redacted; only exact reviewed source-line hashes may pass as non-secrets. Not proof that no secret could exist.",
-    "commits": 153,
-    "currentFiles": 1900
-  },
-  "shards": {
-    "total": 1548,
     "shards": [
       {
         "shard": 1,
-        "cases": 516
+        "cases": 604,
+        "exitCode": 0,
+        "stats": {
+          "startTime": "2026-11-07T19:32:52.820Z",
+          "duration": 1126320.048,
+          "expected": 602,
+          "skipped": 2,
+          "unexpected": 0,
+          "flaky": 0
+        },
+        "rawReport": "artifacts/browser/full-prd-20261107/reports/shard-1.json",
+        "sha256": "7b8c62f8a0d1e6ac37d2e19197f0995a6eae52bf4b5589ca656783851ceadd2b"
       },
       {
         "shard": 2,
-        "cases": 516
+        "cases": 604,
+        "exitCode": 0,
+        "stats": {
+          "startTime": "2026-11-07T19:32:52.840Z",
+          "duration": 1264699.438,
+          "expected": 601,
+          "skipped": 3,
+          "unexpected": 0,
+          "flaky": 0
+        },
+        "rawReport": "artifacts/browser/full-prd-20261107/reports/shard-2.json",
+        "sha256": "103fb03c9fc3f76ac882bc2a63cc583b102cf3d957e076945f3f4f4cd48d1328"
       },
       {
         "shard": 3,
-        "cases": 516
+        "cases": 604,
+        "exitCode": 0,
+        "stats": {
+          "startTime": "2026-11-07T19:32:52.814Z",
+          "duration": 1291388.31,
+          "expected": 601,
+          "skipped": 3,
+          "unexpected": 0,
+          "flaky": 0
+        },
+        "rawReport": "artifacts/browser/full-prd-20261107/reports/shard-3.json",
+        "sha256": "2042ff9428ad6793ad43bd2e324ee08fd6b56b58138eb81c7ae7bfb315c3a5f9"
       }
     ],
+    "identitiesExactlyMatchCatalog": true,
     "duplicates": 0,
-    "scope": "List-only exact disjoint union: 44 secondary states; 1,548 unique cases, 516 per shard. This does not claim a complete execution, CI run or PRD acceptance."
+    "missing": 0,
+    "unexpected": 0,
+    "identityList": "artifacts/browser/full-prd-20261107/reports/executed-identities.json",
+    "identitySha256": "d6b1f15ee678320580c30137f8e398d0a8d3775699f878980cf53940b09caa96",
+    "expectedSkips": [
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+        "profile": "chromium-1920",
+        "reason": "Mobile navigation is intentionally hidden at desktop widths"
+      },
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+        "profile": "chromium-1440",
+        "reason": "Mobile navigation is intentionally hidden at desktop widths"
+      },
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+        "profile": "chromium-mobile",
+        "reason": "Functional software-WebGL check uses the capable desktop Chromium profile"
+      },
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+        "profile": "firefox-1440",
+        "reason": "Mobile navigation is intentionally hidden at desktop widths"
+      },
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+        "profile": "firefox-1440",
+        "reason": "Functional software-WebGL check uses the capable desktop Chromium profile"
+      },
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+        "profile": "webkit-1440",
+        "reason": "Mobile navigation is intentionally hidden at desktop widths"
+      },
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+        "profile": "webkit-1440",
+        "reason": "Functional software-WebGL check uses the capable desktop Chromium profile"
+      },
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+        "profile": "webkit-mobile",
+        "reason": "Functional software-WebGL check uses the capable desktop Chromium profile"
+      }
+    ],
+    "newScopes": {
+      "style-cascade-parity.spec.ts": {
+        "passed": 90,
+        "failed": 0
+      },
+      "public-hydration.spec.ts": {
+        "passed": 24,
+        "failed": 0
+      },
+      "security-release.spec.ts": {
+        "passed": 18,
+        "failed": 0
+      }
+    },
+    "originalDesktopMovingHeroCasesPassed": 2,
+    "captures": 1336,
+    "captureIndex": "artifacts/browser/full-prd-20261107/index.html",
+    "approvedGoldens": false
+  },
+  "probes": {
+    "public-ssr-artifact": {
+      "passed": 25,
+      "failed": 0,
+      "evidence": ".docs/phase0/public-ssr-artifact.json",
+      "sha256": "1fd1e51db5bca556ad224ac0096a54e4dc50f2aaccf109b88c42dbe3389b653d"
+    },
+    "local-dev-file-security": {
+      "passed": 12,
+      "failed": 0,
+      "evidence": ".docs/phase0/local-dev-file-security.json",
+      "sha256": "721c2494abf2a8b640f3d74cd22da39f850b214031617a28e3b45ca3ac9f0f1b"
+    },
+    "production-pwa-boundaries": {
+      "passed": 15,
+      "failed": 0,
+      "evidence": ".docs/phase0/production-pwa-boundaries.json",
+      "sha256": "981d1d00afbfb62efa8615fd2993cf0559c8b197ad5646f261377b3243c0b763"
+    },
+    "production-pwa-update": {
+      "passed": 9,
+      "failed": 0,
+      "evidence": ".docs/phase0/production-pwa-update.json",
+      "sha256": "3ce5f32f4e3b4451ea860bc6a89c7af2ecfd4e8b0c615c1405a0393a63b26395"
+    },
+    "production-security-headers": {
+      "passed": 52,
+      "failed": 0,
+      "evidence": ".docs/phase0/production-security-headers.json",
+      "sha256": "fd2f4eb45005db71076944edce1690e3055bddbd02acc1c0b4b99e8c746b4035"
+    }
   },
   "performance": {
-    "scope": "Saved baseline20b59e2 unchanged-threshold performance, not a new run for current wrappers. All isolated hydration/native-hint/priority trials still fail and were not adopted.",
-    "routes": [
-      "/",
-      "/events",
-      "/contact"
-    ],
-    "mobileLcpPassed": false,
-    "fieldP75Verified": false,
-    "matchesCurrentBuild": true,
-    "note": "Final isolated review-accessibility artifact: mobile Home3040/Events2859/Contact3007ms still fails2500. Desktop performance100, accessibility100, visible-label matching and CLS0 pass. No competing verification or preset/threshold changes; no field/hardware/causal claim.",
-    "generatedAt": "2026-11-07T06:32:51.150Z",
-    "completed": true,
+    "evidence": ".docs/phase0/production-performance.json",
+    "sha256": "bffa17a1717f2bb0d6e53754c2522bb3620a5a67ce181a800f765e576fcf5d9d",
+    "matchesCurrentArtifact": true,
     "lighthouseVersion": "13.6.0",
-    "build": {
-      "index.html": {
-        "bytes": 2206,
-        "sha256": "9fbfa41f3f195ea7a5fbfbedb394793e2a478684f098258a3e852898da6ca658"
+    "mobileLcpThresholdMs": 2500,
+    "allSixLabGatesPassed": true,
+    "routes": [
+      {
+        "route": "/",
+        "preset": "mobile",
+        "lcpMs": 1954.8497000000002,
+        "performance": 99,
+        "accessibility": 100,
+        "cls": 0
       },
-      ".vite/manifest.json": {
-        "bytes": 116004,
-        "sha256": "0a4ebd3da0af976bc71ed74a86c1bd81121e3ae384e12d6d707d66c8869cee16"
+      {
+        "route": "/events",
+        "preset": "mobile",
+        "lcpMs": 909.0474999999999,
+        "performance": 100,
+        "accessibility": 100,
+        "cls": 0
       },
-      "assets/hero-atmosphere-mobile.webp": {
-        "bytes": 37624,
-        "sha256": "d46fa6b9bfe5d234b9f6a2e2e20b0f4ca0cf16ae484f4f1e4865fca003dde738"
+      {
+        "route": "/contact",
+        "preset": "mobile",
+        "lcpMs": 901.7976000000001,
+        "performance": 100,
+        "accessibility": 100,
+        "cls": 0
       },
-      "assets/hero-campus-mobile.webp": {
-        "bytes": 21932,
-        "sha256": "39aed7e7d2a6a02da4734fd07c6500a35257caf618a460b7a9516d3481744db6"
+      {
+        "route": "/",
+        "preset": "desktop",
+        "lcpMs": 645.4427499999999,
+        "performance": 100,
+        "accessibility": 100,
+        "cls": 0
       },
-      "assets/public-entry.js": {
-        "bytes": 1099,
-        "sha256": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+      {
+        "route": "/events",
+        "preset": "desktop",
+        "lcpMs": 252.6248,
+        "performance": 100,
+        "accessibility": 100,
+        "cls": 0
+      },
+      {
+        "route": "/contact",
+        "preset": "desktop",
+        "lcpMs": 253.82420000000002,
+        "performance": 100,
+        "accessibility": 100,
+        "cls": 0
       }
-    },
-    "presets": [
-      "mobile",
-      "desktop"
     ],
-    "tests": [
-      {
-        "route": "/",
-        "preset": "mobile",
-        "performance": 94,
-        "accessibility": 100,
-        "visibleLabelsMatchNames": true,
-        "bestPractices": 96,
-        "seo": 100,
-        "lcpMs": 3039.8566,
-        "cls": 0,
-        "tbtMs": 23.5,
-        "failedAudits": [
-          {
-            "id": "largest-contentful-paint",
-            "title": "Largest Contentful Paint",
-            "score": 0.77,
-            "display": "3.0\u00a0s"
-          },
-          {
-            "id": "max-potential-fid",
-            "title": "Max Potential First Input Delay",
-            "score": 0.97,
-            "display": "100\u00a0ms"
-          },
-          {
-            "id": "errors-in-console",
-            "title": "Browser errors were logged to the console",
-            "score": 0
-          },
-          {
-            "id": "interactive",
-            "title": "Time to Interactive",
-            "score": 0.95,
-            "display": "3.1\u00a0s"
-          },
-          {
-            "id": "unused-css-rules",
-            "title": "Reduce unused CSS",
-            "score": 0,
-            "display": "Est savings of 24\u00a0KiB"
-          },
-          {
-            "id": "unused-javascript",
-            "title": "Reduce unused JavaScript",
-            "score": 0,
-            "display": "Est savings of 39\u00a0KiB"
-          },
-          {
-            "id": "bf-cache",
-            "title": "Page prevented back/forward cache restoration",
-            "score": 0,
-            "display": "2 failure reasons"
-          },
-          {
-            "id": "image-delivery-insight",
-            "title": "Improve image delivery",
-            "score": 0,
-            "display": "Est savings of 115\u00a0KiB"
-          },
-          {
-            "id": "network-dependency-tree-insight",
-            "title": "Network dependency tree",
-            "score": 0
-          },
-          {
-            "id": "render-blocking-insight",
-            "title": "Render-blocking requests",
-            "score": 0,
-            "display": "Est savings of 260\u00a0ms"
-          }
-        ],
-        "runtimeError": null,
-        "passed": false
-      },
-      {
-        "route": "/events",
-        "preset": "mobile",
-        "performance": 95,
-        "accessibility": 100,
-        "visibleLabelsMatchNames": true,
-        "bestPractices": 96,
-        "seo": 100,
-        "lcpMs": 2859.3788000000013,
-        "cls": 0,
-        "tbtMs": 0,
-        "failedAudits": [
-          {
-            "id": "largest-contentful-paint",
-            "title": "Largest Contentful Paint",
-            "score": 0.81,
-            "display": "2.9\u00a0s"
-          },
-          {
-            "id": "errors-in-console",
-            "title": "Browser errors were logged to the console",
-            "score": 0
-          },
-          {
-            "id": "interactive",
-            "title": "Time to Interactive",
-            "score": 0.96,
-            "display": "2.9\u00a0s"
-          },
-          {
-            "id": "unused-css-rules",
-            "title": "Reduce unused CSS",
-            "score": 0,
-            "display": "Est savings of 24\u00a0KiB"
-          },
-          {
-            "id": "unused-javascript",
-            "title": "Reduce unused JavaScript",
-            "score": 0,
-            "display": "Est savings of 37\u00a0KiB"
-          },
-          {
-            "id": "bf-cache",
-            "title": "Page prevented back/forward cache restoration",
-            "score": 0,
-            "display": "2 failure reasons"
-          },
-          {
-            "id": "image-delivery-insight",
-            "title": "Improve image delivery",
-            "score": 0.5,
-            "display": "Est savings of 12\u00a0KiB"
-          },
-          {
-            "id": "network-dependency-tree-insight",
-            "title": "Network dependency tree",
-            "score": 0
-          },
-          {
-            "id": "render-blocking-insight",
-            "title": "Render-blocking requests",
-            "score": 0,
-            "display": "Est savings of 290\u00a0ms"
-          }
-        ],
-        "runtimeError": null,
-        "passed": false
-      },
-      {
-        "route": "/contact",
-        "preset": "mobile",
-        "performance": 95,
-        "accessibility": 100,
-        "visibleLabelsMatchNames": true,
-        "bestPractices": 96,
-        "seo": 100,
-        "lcpMs": 3006.7266,
-        "cls": 0,
-        "tbtMs": 1,
-        "failedAudits": [
-          {
-            "id": "largest-contentful-paint",
-            "title": "Largest Contentful Paint",
-            "score": 0.78,
-            "display": "3.0\u00a0s"
-          },
-          {
-            "id": "errors-in-console",
-            "title": "Browser errors were logged to the console",
-            "score": 0
-          },
-          {
-            "id": "interactive",
-            "title": "Time to Interactive",
-            "score": 0.96,
-            "display": "3.0\u00a0s"
-          },
-          {
-            "id": "unused-css-rules",
-            "title": "Reduce unused CSS",
-            "score": 0,
-            "display": "Est savings of 25\u00a0KiB"
-          },
-          {
-            "id": "unused-javascript",
-            "title": "Reduce unused JavaScript",
-            "score": 0,
-            "display": "Est savings of 37\u00a0KiB"
-          },
-          {
-            "id": "bf-cache",
-            "title": "Page prevented back/forward cache restoration",
-            "score": 0,
-            "display": "2 failure reasons"
-          },
-          {
-            "id": "image-delivery-insight",
-            "title": "Improve image delivery",
-            "score": 0,
-            "display": "Est savings of 12\u00a0KiB"
-          },
-          {
-            "id": "network-dependency-tree-insight",
-            "title": "Network dependency tree",
-            "score": 0
-          },
-          {
-            "id": "render-blocking-insight",
-            "title": "Render-blocking requests",
-            "score": 0,
-            "display": "Est savings of 300\u00a0ms"
-          }
-        ],
-        "runtimeError": null,
-        "passed": false
-      },
-      {
-        "route": "/",
-        "preset": "desktop",
-        "performance": 100,
-        "accessibility": 100,
-        "visibleLabelsMatchNames": true,
-        "bestPractices": 96,
-        "seo": 100,
-        "lcpMs": 655.0742,
-        "cls": 0,
-        "tbtMs": 0,
-        "failedAudits": [
-          {
-            "id": "largest-contentful-paint",
-            "title": "Largest Contentful Paint",
-            "score": 0.99,
-            "display": "0.7\u00a0s"
-          },
-          {
-            "id": "errors-in-console",
-            "title": "Browser errors were logged to the console",
-            "score": 0
-          },
-          {
-            "id": "unused-css-rules",
-            "title": "Reduce unused CSS",
-            "score": 0.5,
-            "display": "Est savings of 25\u00a0KiB"
-          },
-          {
-            "id": "unused-javascript",
-            "title": "Reduce unused JavaScript",
-            "score": 0.5,
-            "display": "Est savings of 39\u00a0KiB"
-          },
-          {
-            "id": "bf-cache",
-            "title": "Page prevented back/forward cache restoration",
-            "score": 0,
-            "display": "2 failure reasons"
-          },
-          {
-            "id": "image-delivery-insight",
-            "title": "Improve image delivery",
-            "score": 0.5,
-            "display": "Est savings of 134\u00a0KiB"
-          },
-          {
-            "id": "network-dependency-tree-insight",
-            "title": "Network dependency tree",
-            "score": 0
-          },
-          {
-            "id": "render-blocking-insight",
-            "title": "Render-blocking requests",
-            "score": 0,
-            "display": "Est savings of 80\u00a0ms"
-          }
-        ],
-        "runtimeError": null,
-        "passed": true
-      },
-      {
-        "route": "/events",
-        "preset": "desktop",
-        "performance": 100,
-        "accessibility": 100,
-        "visibleLabelsMatchNames": true,
-        "bestPractices": 96,
-        "seo": 100,
-        "lcpMs": 646.9355999999999,
-        "cls": 0,
-        "tbtMs": 0,
-        "failedAudits": [
-          {
-            "id": "largest-contentful-paint",
-            "title": "Largest Contentful Paint",
-            "score": 0.99,
-            "display": "0.6\u00a0s"
-          },
-          {
-            "id": "errors-in-console",
-            "title": "Browser errors were logged to the console",
-            "score": 0
-          },
-          {
-            "id": "unused-css-rules",
-            "title": "Reduce unused CSS",
-            "score": 0,
-            "display": "Est savings of 25\u00a0KiB"
-          },
-          {
-            "id": "unused-javascript",
-            "title": "Reduce unused JavaScript",
-            "score": 0,
-            "display": "Est savings of 37\u00a0KiB"
-          },
-          {
-            "id": "bf-cache",
-            "title": "Page prevented back/forward cache restoration",
-            "score": 0,
-            "display": "2 failure reasons"
-          },
-          {
-            "id": "image-delivery-insight",
-            "title": "Improve image delivery",
-            "score": 0.5,
-            "display": "Est savings of 12\u00a0KiB"
-          },
-          {
-            "id": "network-dependency-tree-insight",
-            "title": "Network dependency tree",
-            "score": 0
-          },
-          {
-            "id": "render-blocking-insight",
-            "title": "Render-blocking requests",
-            "score": 0,
-            "display": "Est savings of 80\u00a0ms"
-          }
-        ],
-        "runtimeError": null,
-        "passed": true
-      },
-      {
-        "route": "/contact",
-        "preset": "desktop",
-        "performance": 100,
-        "accessibility": 100,
-        "visibleLabelsMatchNames": true,
-        "bestPractices": 96,
-        "seo": 100,
-        "lcpMs": 644.7238,
-        "cls": 0,
-        "tbtMs": 0,
-        "failedAudits": [
-          {
-            "id": "largest-contentful-paint",
-            "title": "Largest Contentful Paint",
-            "score": 0.99,
-            "display": "0.6\u00a0s"
-          },
-          {
-            "id": "errors-in-console",
-            "title": "Browser errors were logged to the console",
-            "score": 0
-          },
-          {
-            "id": "unused-css-rules",
-            "title": "Reduce unused CSS",
-            "score": 0,
-            "display": "Est savings of 25\u00a0KiB"
-          },
-          {
-            "id": "unused-javascript",
-            "title": "Reduce unused JavaScript",
-            "score": 0,
-            "display": "Est savings of 37\u00a0KiB"
-          },
-          {
-            "id": "bf-cache",
-            "title": "Page prevented back/forward cache restoration",
-            "score": 0,
-            "display": "2 failure reasons"
-          },
-          {
-            "id": "image-delivery-insight",
-            "title": "Improve image delivery",
-            "score": 0.5,
-            "display": "Est savings of 12\u00a0KiB"
-          },
-          {
-            "id": "network-dependency-tree-insight",
-            "title": "Network dependency tree",
-            "score": 0
-          },
-          {
-            "id": "render-blocking-insight",
-            "title": "Render-blocking requests",
-            "score": 0,
-            "display": "Est savings of 80\u00a0ms"
-          }
-        ],
-        "runtimeError": null,
-        "passed": true
-      }
-    ]
+    "fieldP75Verified": false
   },
-  "services": [
-    {
-      "label": "Local application",
-      "url": "http://127.0.0.1:8080/",
-      "status": 200
-    },
-    {
-      "label": "Local API health",
-      "url": "http://127.0.0.1:8081/api/v1/health",
-      "status": 200
-    }
-  ],
-  "prdComplete": false,
-  "remaining": [
-    "Mobile LCP and representative hardware/load/field p75 LCP-INP-CLS",
-    "Complete secondary visual prompt surfaces, approved chapter assets/content, blocking human fidelity approval and approved 1% screenshot baselines",
-    "Complete keyboard/assistive-technology/actual 200% zoom/forced-colors and physical Safari/device/install/push acceptance",
-    "Actual GT staging/hosting/domains/secrets/provider configuration, report-only CSP rollout and hosted headers/cache/CI/scheduler/monitoring/alerts",
-    "Hosted PITR/object restore with measured RPO-RTO, migration rehearsal, rollback and 48-hour observation",
-    "Institutional brand/privacy/retention/finance sign-off; inherited warning remediation"
+  "remainingLaunchAcceptance": [
+    "Owner-approved content/assets and visual baselines",
+    "Manual assistive technology, actual 200% zoom and forced colors",
+    "Physical Safari/mobile install/update/push",
+    "Chosen-host secrets/domain/routing/CSP/cache and supervised jobs/scanner/watchdog",
+    "Authorized live Resend send/signed webhook and VAPID smoke checks after launch keys",
+    "Hosted PITR/object restore, rollback and measured RPO/RTO",
+    "48-hour observation after deployment"
   ],
   "deferred": [
     "SSO/Google",
     "Bevy/Engage"
   ],
-  "scope": "Local only; no deployment, push, purchase, real provider send, production change, another timer or AI commit trailer.",
-  "verificationScopeNote": "Complete source coverage2722 and browser1540/eight expectedskips pass, alongside final artifact/type/build/catalog/byte/audit checks. Captures remain unapproved; mobile LCP still fails. No full PRD/device/manual/field/hosted claim.",
-  "delivery": {
-    "initialJsGzipBytes": 108187,
-    "copiedHelperGzipBytes": 585,
-    "routeAwareHeroHints": true,
-    "fontPreload": "retained",
-    "cssGzipBytes": 29947,
-    "fontBytes": 48432,
-    "offlineInstallRawBytes": 493327,
-    "publicRouteJsGzipBytes": 149001
-  },
-  "dependencies": {
-    "router": "7.18.5",
-    "productionAudit": {
-      "info": 0,
-      "low": 0,
-      "moderate": 0,
-      "high": 0,
-      "critical": 0,
-      "total": 0
-    },
-    "rawAuditExit": 0,
-    "remaining": "Fresh production audit has zero findings; KaTeX compatibility/regression evidence retained. Hosted launch review separate."
-  },
-  "activeVerification": {
-    "savedBaseline": "aeb6fca",
-    "changes": "All36native tables use named keyboard wrapper. Populated private-link Form access dialog fits viewport via scoped grid sizing. Native nested radio/checkbox controls preserved. Finance review fixture corrected to canonical pending/different submitter.",
-    "status": "Table/grid/mobile fixes savedaeb6fca with complete current source coverage2722passes, separate new132browser checks and12tool regressions, types/build/bytes/lint/artifact gates. Full current1680browser execution not claimed. Subsequent isolated paint-first-download and primary-async-decode trials pass12browser cases each but still fail mobileLCP2884/2808ms; neither adopted. Main source/dist unchanged. Full PRD human/device/performance/field/hosted acceptance remains open."
+  "liveKeys": "Planned launch inputs; no unfinished local feature is attributed to missing keys",
+  "fullPrdAcceptance": false,
+  "runtime": {
+    "ui": "http://127.0.0.1:8080",
+    "api": "http://127.0.0.1:8081",
+    "localOnly": true
   }
 }

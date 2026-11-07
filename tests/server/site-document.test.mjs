@@ -206,6 +206,7 @@ describe("SEO-TEST production HTML handler", () => {
   function handler(f = fixture()) {
     const loadTemplate = vi.fn(async () => template),
       call = createSiteDocumentHandler({
+        loadRenderer: async () => undefined,
         configFactory: () => f.config,
         databaseFactory: () => f.db,
         loadTemplate,

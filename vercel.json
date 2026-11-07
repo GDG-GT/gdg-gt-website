@@ -121,7 +121,7 @@
       "destination": "/api/rss"
     },
     {
-      "source": "/:route((?!api|assets|icons|_next|sw.js|offline.html|manifest.json|logo.png|favicon.png|favicon.ico|sitemap.xml|rss.xml|robots.txt|humans.txt).*)",
+      "source": "/:route((?!api|assets|icons|_next|sw.js|offline.html|manifest.json|logo.png|logo.webp|favicon.png|favicon.ico|sitemap.xml|rss.xml|robots.txt|humans.txt).*)",
       "destination": "/api/site?__route=/:route"
     }
   ],
@@ -133,7 +133,7 @@
     }
   ],
   "functions": {
-    "api/site.mjs": { "maxDuration": 30, "includeFiles": "dist/index.html" },
+    "api/site.mjs": { "maxDuration": 30, "includeFiles": "{dist/index.html,.build/ssr/**}" },
     "api/v1/[...path].mjs": {
       "maxDuration": 60
     }

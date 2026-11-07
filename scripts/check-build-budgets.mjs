@@ -5,6 +5,8 @@ import { parseEnv } from 'node:util';
 import { entryAssets, offlinePrecacheAssets } from './lib/build-graph.mjs';
 
 const directory = path.resolve('dist');
+const publicHydrator = await readFile(path.join(directory, 'assets/public-hydrate.js'));
+if (publicHydrator.length > 2000) throw Error('Public hydration bootstrap exceeds its 2 kB raw ceiling.');
 const manifest = JSON.parse(await readFile(path.join(directory, '.vite/manifest.json'), 'utf8'));
 const failures = [];
 const limit = (label, actual, maximum) => {
@@ -57,7 +59,7 @@ for (const entry of ['index.html', 'offline.html']) {
   report[entry] = { jsGzipBytes: js, cssGzipBytes: css, fontBytes: fonts,
     ...(publicRouteJs !== undefined ? { publicRouteJsGzipBytes: publicRouteJs } : {}) };
 }
-for (const image of ['hero-atmosphere.webp', 'hero-campus.webp', 'google-wordmark.png'])
+for (const image of ['hero-atmosphere.webp', 'hero-campus.webp', 'google-wordmark.png', 'google-wordmark.webp'])
   limit(`Above-fold ${image}`, (await stat(path.join(directory, 'assets', image))).size, 250_000);
 for (const name of ['hero-atmosphere-mobile.webp', 'hero-campus-mobile.webp'])
   limit(`Narrow portrait hero ${name}`, (await stat(path.join(directory, 'assets', name))).size, 50_000);

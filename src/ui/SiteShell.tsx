@@ -1,3 +1,4 @@
+import { HydratedForm } from "./PublicHydrationBoundary";
 import {
   useEffect,
   useRef,
@@ -119,6 +120,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
     if (sending) return;
     setNotice("");
     if (localPreviewEnabled && email === "local-preview") {
+      window.dispatchEvent(new Event("gdg:auth-needed"));
       setLoginOpen(true);
       return;
     }
@@ -133,7 +135,8 @@ export default function SiteShell({ children }: { children: ReactNode }) {
         });
         const result = response.ok ? await response.json() : null;
         if (result?.data?.gateValid) {
-          setLoginOpen(true);
+          window.dispatchEvent(new Event("gdg:auth-needed"));
+      setLoginOpen(true);
           setEmail("");
         } else setNotice("We couldn’t process that entry. Please try again.");
       } catch {
@@ -157,7 +160,8 @@ export default function SiteShell({ children }: { children: ReactNode }) {
           subscriptionRequest.current.key,
         );
         if (result.gateValid) {
-          setLoginOpen(true);
+          window.dispatchEvent(new Event("gdg:auth-needed"));
+      setLoginOpen(true);
           setEmail("");
           return;
         }
@@ -398,7 +402,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
                 footerNewsletter.description ||
                 "Events, workshops, and new opportunities. A little inspiration for your inbox."}
             </p>
-            <form onSubmit={subscribe} className="gt-newsletter" noValidate>
+            <HydratedForm onSubmit={subscribe} className="gt-newsletter" noValidate>
               <label htmlFor="newsletter-email" className="sr-only">
                 Email address
               </label>
@@ -419,7 +423,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
                 {sending ? "Saving…" : "Subscribe"}
                 <ArrowRight size={16} />
               </Button>
-            </form>
+            </HydratedForm>
             <p className="gt-footer-feedback" role="status">
               {notice}
             </p>

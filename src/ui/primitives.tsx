@@ -23,7 +23,7 @@ export function Brand({
           : "GDG@GT on campus · Georgia Tech home"
       }
     >
-      <img src="/logo.png" alt="" width="38" height="24" />
+      <img src="/logo.webp" alt="" width="38" height="24" />
       <span>
         GDG<span className="gt-brand-at">@</span>GT
         {!compact && <small>on campus · Georgia Tech</small>}

@@ -1,0 +1,107 @@
+{
+  "generatedAt": "2026-11-07T19:31:09.254Z",
+  "scope": "Production-mode compiled React renderer with fictional public snapshots, no network, database writes or provider calls. Not browser hydration or hosted acceptance.",
+  "rendererSha256": "2383e7ee08a07436b42eb46c4c0cb356fbb82e4965556fe626a354208baafce7",
+  "tests": [
+    {
+      "name": "/ renders one actual heading without inline execution",
+      "passed": true
+    },
+    {
+      "name": "/ keeps server-rendered forms inert before hydration",
+      "passed": true
+    },
+    {
+      "name": "Home renders the real hero with parser-discoverable image sources",
+      "passed": true
+    },
+    {
+      "name": "/ gives complete public markup a paint opportunity before framework startup",
+      "passed": true
+    },
+    {
+      "name": "/ escapes bootstrap data and preserves literal replacement tokens",
+      "passed": true
+    },
+    {
+      "name": "/ avoids redundant initial public API preloads",
+      "passed": true
+    },
+    {
+      "name": "/events renders one actual heading without inline execution",
+      "passed": true
+    },
+    {
+      "name": "/events keeps server-rendered forms inert before hydration",
+      "passed": true
+    },
+    {
+      "name": "/events gives complete public markup a paint opportunity before framework startup",
+      "passed": true
+    },
+    {
+      "name": "/events escapes bootstrap data and preserves literal replacement tokens",
+      "passed": true
+    },
+    {
+      "name": "/events avoids redundant initial public API preloads",
+      "passed": true
+    },
+    {
+      "name": "/contact renders one actual heading without inline execution",
+      "passed": true
+    },
+    {
+      "name": "/contact keeps server-rendered forms inert before hydration",
+      "passed": true
+    },
+    {
+      "name": "/contact gives complete public markup a paint opportunity before framework startup",
+      "passed": true
+    },
+    {
+      "name": "/contact escapes bootstrap data and preserves literal replacement tokens",
+      "passed": true
+    },
+    {
+      "name": "/contact avoids redundant initial public API preloads",
+      "passed": true
+    },
+    {
+      "name": "public React rendering performs no network requests",
+      "passed": true
+    },
+    {
+      "name": "private renderer path rejected",
+      "passed": true
+    },
+    {
+      "name": "production handler renders fresh public HTML without shared caching",
+      "passed": true
+    },
+    {
+      "name": "/admin preserves its ordinary client/private boundary",
+      "passed": true
+    },
+    {
+      "name": "/forms/fictional preserves its ordinary client/private boundary",
+      "passed": true
+    },
+    {
+      "name": "/contact?type=membership preserves its ordinary client/private boundary",
+      "passed": true
+    },
+    {
+      "name": "HEAD checks availability without rendering an HTML body",
+      "passed": true
+    },
+    {
+      "name": "known maintenance redirects before public controls are served",
+      "passed": true
+    },
+    {
+      "name": "approved maintenance destination remains effective",
+      "passed": true
+    }
+  ]
+}

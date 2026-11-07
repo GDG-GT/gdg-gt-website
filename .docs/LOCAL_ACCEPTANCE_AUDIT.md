@@ -1,67 +1,61 @@
 # Local implementation and acceptance audit — 2026-11-07
 
-Latest continuation — account security / media / runtime (2026-11-07):
-read ACCOUNT_SECURITY_AND_MEDIA_CURSOR.md and
-phase0/release-security-media-20261107.json first. Migrations now through140;
-2,743 source tests/225files pass, 18 new six-profile browser checks pass and the
-140-migration isolated restore passes. Account-security UI/gate rotation,
-Operations denial clearing, media cursors and production runtime packaging are
-implemented. Mobile LCP and complete current browser execution remain open.
-Deployment is on the owner's chosen host/domain with Resend; GT institutional
-hosting is not required. Live keys arrive at launch and do not block local work.
-Older counts below are historical. Full PRD acceptance remains open.
+Latest local release checkpoint — 2026-11-07:
+read [PUBLIC_RENDERING_AND_RELEASE_CHECKS.md](PUBLIC_RENDERING_AND_RELEASE_CHECKS.md)
+and [the exact evidence](phase0/public-rendering-release-20261107.json) first.
+All confirmed local implementation gaps from this audit are addressed. Complete
+source coverage passes 2,755 tests in 228 files; the complete 1,812-case browser
+inventory passes 1,804 with eight existing profile skips, zero failures/retries.
+All six unchanged 2,500 ms lab LCP gates now pass. Migrations through 140,
+normal/legacy-grants database checks and isolated restore pass. Final PWA/update/
+HTTPS checks pass 15/9/52, including actual server-rendered hydration under CSP.
+The local website runs at http://127.0.0.1:8080, API at 8081.
 
-Current table/grid continuation (2026-11-07): all 36 native tables now use the
-existing named keyboard-scrolling wrapper. A scoped sizing fix prevents populated
-private-link rows from clipping the mobile Form access dialog. Complete current
-source coverage passes 2,722 tests/222 files with unchanged gates. Separate
-finance/content 78, remaining-table 30, inventory/grid 24 and builder-tool 12
-browser scopes pass; their review captures remain unapproved. Types, build,
-byte limits and latest PWA15/update9/HTTPS46 pass. The 1,680-case inventory is
-list-only; the saved full 1,540-pass/eight-skip run remains prior-source evidence.
-See REMAINING_TABLE_KEYBOARD_REVIEW.md for exact scope. Full PRD remains open.
+The remaining work is launch acceptance: owner-approved content/visual baselines,
+manual accessibility and physical-device checks, the owner's chosen host/domain,
+live Resend/VAPID configuration and authorized smoke tests, hosted restore/
+rollback/RPO-RTO, and 48-hour observation after deployment. Keys are planned
+launch inputs, not unfinished local features. SSO/Google and Bevy/Engage remain
+deferred. No deployment, production changes or real provider sends occurred.
+Full PRD acceptance is not claimed; no invented completion percentage applies.
 
-The current local application includes canonical recovery migrations through 137,
-React Router 7.18.5, the scoped KaTeX 0.18.2 security patch, visible-label and
-native drawing-control fixes, keyboard scrolling for long reviews/tables, and
-publication/history contrast and target-size corrections. Source fixes are saved
-in 20b59e2. No deployment, production change or provider send occurred.
+## Current verified evidence
 
-Complete source coverage passes **2,722 tests in 222 files**, with the unchanged
-70% global and all 21 individual 90%-branch gates. Coverage is 78.16% lines,
-76.17% statements, 70.77% functions and 75.63% branches. Subsequent application
-changes were CSS only; instrumented source stayed unchanged. Build, strict types,
-byte and traceability checks pass. Lint has zero errors and ten inherited warnings.
-The fresh production dependency audit has zero findings; the final source/history
-scan has zero unreviewed findings. None of these is a launch certificate.
+- Source: 2,755 tests / 228 files, zero failures. Coverage is 78.24% lines,
+  76.17% statements, 71.02% functions and 75.67% branches. The global 70% gates
+  and all 22 individual 90%-branch gates pass without threshold changes.
+- Browser: 1,804 passed / eight expected skips, six profiles, three disjoint
+  604-case shards. Every executed identity matches the listed inventory exactly.
+  No retries, flaky tests or failures. Both original desktop moving-WebGL cases
+  pass; all 90 canonical-style comparisons, 24 hydration/recovery cases and 18
+  security/media checks pass. See phase0/public-rendering-release-20261107.json.
+- Artifact: build, strict types, byte budgets and compiled SSR 25 checks pass.
+  Lint has zero errors and nine inherited warnings; the added HTTPS probe also
+  passes scoped lint. Production dependency audit has zero findings.
+- Runtime: 12 development-file boundaries pass; HMR and config restart survive
+  simultaneous no-content source/config touches and UI/API health return 200.
+  Final production PWA boundaries 15, update 9 and HTTPS/CSP/cache 52 pass. The
+  HTTPS probe includes actual compiled public trees and external hydration.
+- Database: both normal and legacy automatic-grants suites through migration 140
+  pass, including two 100-client last-slot checks. Isolated 140-migration restore
+  passes. No reset/replay of the existing local database or account/gate change.
+- Performance: Lighthouse 13.6 default simulated mobile LCP Home 1,954.850 ms,
+  Events 909.047 ms, Contact 901.798 ms. Desktop 645.443 / 252.625 / 253.824 ms.
+  All accessibility scores are 100, visible-label checks pass and CLS is zero.
+  The report's artifact hashes match the current build. Local lab evidence does
+  not establish field p75, actual device performance or chosen-host latency.
+- Visual: 1,336 original current-run captures have a searchable local index at
+  artifacts/browser/full-prd-20261107/index.html. Representative mobile security,
+  Contact and finance review captures were inspected. All remain unapproved,
+  with no golden baseline or full human fidelity/assistive-technology claim.
 
-The **complete 1,548-case browser invocation passes 1,540 cases with eight
-expected profile-specific skips**, zero failures or retries, across six profiles.
-All case identities match the listed inventory. Both original desktop WebGL
-motion checks pass. Four skips are the mobile-menu test on desktop profiles;
-four are the desktop-motion test on unsupported profiles. Earlier failing
-invocations remain historical evidence. See
-`phase0/final-current-inventory-browser.json`.
-
-The primary index now has 138 checks and 162 unapproved captures from that same
-full invocation. The secondary index has 44 states, 264 passing checks and 344
-unapproved captures. A separate recovery index links 18 states and 108 original
-functional screenshots; their retained scroll positions differ from initial
-composition views. Some mobile account/member/privacy and desktop privacy
-captures were inspected. No human visual approval, approved golden baseline or
-physical-device acceptance is claimed.
-
-The final artifact passes 15 PWA boundaries, nine update checks and 46 configured
-HTTPS/header checks. Isolated mobile LCP is **3,040 / 2,859 / 3,007ms** for
-Home/Events/Contact, still over 2,500ms. All three desktop performance scores and
-all accessibility scores are 100; explicit visible-label checks pass and CLS is
-zero. A scratch static-replacement first-paint trial still fails at 3,063ms and
-was rejected without changing the verified app. See `FIRST_PAINT_FEASIBILITY.md`.
-
-**The full PRD remains incomplete.** All 146 numbered requirements and 307 logical
-cases are source-mapped, with full acceptance unverified. Field/hardware,
-manual accessibility, approved visual/content, physical-device and hosted
-operations gates remain separate. The dated entries below are historical.
+All 146 numbered requirements and 307 logical mandatory cases remain mapped,
+with complete acceptance unverified. This conservative state includes manual,
+physical-device, owner visual and hosted gates; it does not mean all local
+features are missing. CI is configured but no remote CI execution is claimed.
+The browser job budget is now 40 minutes because 604-case shards took up to
+21.6 minutes locally before CI setup; per-test timeouts/retries/assertions remain
+unchanged. Failed earlier trials remain separate from the passing invocation.
 
 ## Historical implementation evidence
 

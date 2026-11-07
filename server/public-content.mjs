@@ -55,15 +55,7 @@ const select = {
     order: "order_index",
   },
 };
-export async function publicContentRoutes(
-  request,
-  response,
-  { db, config, requestId, store },
-) {
-  const url = new URL(request.url, config.origin),
-    resource = url.pathname.replace("/api/v1/", "");
-  if (resource === "public/home") {
-    allowMethod(request, response, ["GET"]);
+export async function readPublicHome(db) {
     const [
       settings,
       navigation,
@@ -159,11 +151,7 @@ export async function publicContentRoutes(
       metrics,
     ])
       checked(result);
-    // CMS JSON is curated public content, never arbitrary settings or private rows.
-    publicJson(
-      request,
-      response,
-      {
+  return {
         settings: settings.data,
         navigation: navigation.data.filter(
           (item) =>
@@ -188,9 +176,18 @@ export async function publicContentRoutes(
         team: team.data,
         sponsors: sponsors.data,
         metrics: metrics.data,
-      },
-      requestId,
-    );
+      };
+}
+export async function publicContentRoutes(
+  request,
+  response,
+  { db, config, requestId, store },
+) {
+  const url = new URL(request.url, config.origin),
+    resource = url.pathname.replace("/api/v1/", "");
+  if (resource === "public/home") {
+    allowMethod(request, response, ["GET"]);
+    publicJson(request, response, await readPublicHome(db), requestId);
     return true;
   }
   if (select[resource]) {

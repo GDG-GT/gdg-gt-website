@@ -47,3 +47,13 @@ infra/supabase/.branches/
 public/assets/excalidraw/
 public/assets/hero-*-mobile.webp
 excalidraw.offloaded-backup/
+
+# Server-only React renderer, packaged with the API, never static browser output.
+.build/
+
+# Deterministic lossless delivery variants; PNG sources remain canonical.
+public/logo.webp
+public/assets/google-wordmark.webp
+
+# Public stylesheet derives from canonical CSS and the public module closure.
+src/styles/public.generated.css

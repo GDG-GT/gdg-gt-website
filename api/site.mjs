@@ -1,3 +1,4 @@
+import { readPublicBootstrap } from "../server/public-bootstrap.mjs";
 import { readFile } from "node:fs/promises";
 import { serverConfig } from "../server/config.mjs";
 import { serverDatabase } from "../server/db/client.mjs";
@@ -6,10 +7,13 @@ import { renderSiteDocument } from "../shared/site-document.mjs";
 export function createSiteDocumentHandler({
   configFactory = serverConfig,
   databaseFactory = serverDatabase,
+  loadRenderer = () => import(/* @vite-ignore */ new URL("../.build/ssr/entry.mjs", import.meta.url).href),
+  loadBootstrap = readPublicBootstrap,
   loadTemplate = () =>
     readFile(new URL("../dist/index.html", import.meta.url), "utf8"),
 } = {}) {
   let template;
+  let rendererReady;
   return async function handler(request, response) {
     response.setHeader("Cache-Control", "no-store");
     response.setHeader("X-Content-Type-Options", "nosniff");
@@ -30,8 +34,9 @@ export function createSiteDocumentHandler({
       }
       const pathname =
         url.pathname === "/api/site" ? paths[0] || "/" : url.pathname;
+      const db = databaseFactory();
       const doc = await siteDocument({
-        db: databaseFactory(),
+        db,
         config,
         pathname,
       });
@@ -40,6 +45,20 @@ export function createSiteDocumentHandler({
         response.setHeader("Location", doc.redirect);
         response.end();
         return;
+      }
+      let rendered;
+      if (["/", "/events", "/contact"].includes(pathname) && [...url.searchParams.keys()].every((key) => key === "__route")) {
+        rendererReady ||= loadRenderer();
+        const renderer = await rendererReady;
+        if (renderer) {
+          const bootstrap = await loadBootstrap(db);
+          if (!bootstrap.status.is_live) {
+            response.statusCode = 302;
+            response.setHeader("Location", bootstrap.status.auto_redirect ? bootstrap.status.redirect_url : "/maintenance");
+            response.end(); return;
+          }
+          if (request.method !== "HEAD") rendered = { ...await renderer.renderPublicPage(pathname, bootstrap), path: pathname };
+        }
       }
       response.setHeader("Content-Type", "text/html; charset=utf-8");
       response.setHeader(
@@ -50,7 +69,7 @@ export function createSiteDocumentHandler({
       response.end(
         request.method === "HEAD"
           ? undefined
-          : renderSiteDocument(template, doc),
+          : renderSiteDocument(template, doc, rendered),
       );
     } catch {
       response.statusCode = 503;

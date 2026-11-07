@@ -1,173 +1,126 @@
-# GDG GT continuation checkpoint — 2026-11-07
+# GDG GT local release checkpoint — 2026-11-07
 
-Latest continuation — account security / media / runtime (2026-11-07):
-read ACCOUNT_SECURITY_AND_MEDIA_CURSOR.md and
-phase0/release-security-media-20261107.json first. Migrations now through140;
-2,743 source tests/225files pass, 18 new six-profile browser checks pass and the
-140-migration isolated restore passes. Account-security UI/gate rotation,
-Operations denial clearing, media cursors and production runtime packaging are
-implemented. Mobile LCP and complete current browser execution remain open.
-Deployment is on the owner's chosen host/domain with Resend; GT institutional
-hosting is not required. Live keys arrive at launch and do not block local work.
-Older counts below are historical. Full PRD acceptance remains open.
+The user authorized finishing all feasible local PRD work. All confirmed local
+implementation gaps from this audit are addressed and the final local regression
+passes. Full PRD/launch acceptance remains separate. Do not invent a percentage.
+Read PUBLIC_RENDERING_AND_RELEASE_CHECKS.md and
+phase0/public-rendering-release-20261107.json for the exact final evidence.
 
-The full PRD remains incomplete. Continue feasible local work, preserve edits
-and verify uncertain partial operations before repeating commands. No owned
-verification or experimental server process is currently running. Historical
-intermediate checkpoints are preserved in CHECKPOINT_HISTORY_TABLES_20261107.md.
-Read git log for the latest documentation save.
+## Boundaries to preserve
 
-## Authorization and preservation
+Owner's chosen host/domain, Resend email already integrated, live keys supplied
+at launch. Missing keys are launch inputs, not unfinished local features.
+SSO/Google and Bevy/Engage remain deferred. No deployment, production changes,
+purchases, real provider sends, new timers, subagents or AI commit trailers.
+Keep public officer-entry instructions hidden. Preserve the moving hero and
+neutral off-white workspace; no new yellow/pure-white redesign.
 
-Local only: no push/deploy, production changes, purchases, real provider sends,
-new timers or AI commit trailers. SSO/Google and Bevy/Engage remain deferred.
-No subagents requested; no goal or timer created. Keep the officer entrance
-hidden in public copy; preserve the moving hero and neutral workspace.
+Preserve/exclude these unrelated files from staging:
+- supabase/.temp/cli-latest
+- src/components/admin/PageAccessGuard 2.tsx
+- src/ui/linktree/useLinktreeRead 2.ts
 
-Preserve and exclude from staging:
+Never print .env.server.local or .docs/local-auth.local. Migrations 138–140 were
+applied forward once to the dedicated local DB. Do not reset/replay migrations,
+recreate accounts or change the existing gate. Local gate/cursor SQL fixtures
+rolled back; destructive first-owner tests ran only in disposable databases.
+Temporary read-only API authentication was signed out. Do not repeat bootstrap.
 
-- supabase/.temp/cli-latest (modified)
-- src/components/admin/PageAccessGuard 2.tsx (untracked)
-- src/ui/linktree/useLinktreeRead 2.ts (untracked)
+## Implemented and verified
 
-Never print .env.server.local or .docs/local-auth.local. SQL is applied through137.
-No SQL or actual application API mutation occurred in this continuation. Do not
-reset/bootstrap/replay migrations, reinstall packages or recreate actors. Do not
-touch shared user browser tabs/zoom/preferences or kill user processes.
+Saved functional commit 3ad1777 adds reviewed password-confirmed account-security
+metrics/gate rotation with atomic receipts, Operations denial clearing, media
+cursor pagination, production supervised-worker commands and first-owner setup.
+Read ACCOUNT_SECURITY_AND_MEDIA_CURSOR.md and PRODUCTION_RUNTIME.md.
 
-## Latest verified application
+The subsequent public startup work:
+- Home/Events/Contact render the actual React tree from fresh public content and
+  status. Escaped/validated bootstrap hydrates the same DOM. Known maintenance
+  redirects before controls; private/Forms/query-bearing routes retain CSR.
+  Native forms stay inert until handlers attach; a failed framework download
+  leaves them inert and offers refresh recovery. No inline executable JS.
+- Deterministic public CSS closure reduces initial CSS from 29,947 to 18,145 gzip
+  bytes. Admin reapplies all canonical sheets in original order. Lossless logo/
+  wordmark variants preserve visible RGBA; original artwork/font/moving 3D remain.
+- Bounded external loader gives fonts/primary-image decoding and paint an initial
+  opportunity, with 200 ms fallback and immediate hidden-tab path. It uses no
+  metric API. Public officer session restoration follows load/paint and expedites
+  on input/login/workspace intent; direct admin entry stays immediate.
+- PWA registration follows load/idle. Stable offline-event subscription fixes two
+  real regression failures without changing original assertions. Collapsing the
+  account-security disclosure preserves uncertain original operation intent.
+- Server renderer lives in private .build/ssr and is explicitly denied by Vite.
+  Host packaging includes it with api/site.mjs, never in static public storage.
+- Serialized native CSS watcher survives source/config HMR and server restart.
+  CI runs the compiled renderer probe. CI browser job budget is 40 minutes because
+  604-case shards took up to 21.6 minutes locally; no per-test timeout/retry/gate
+  was weakened. No remote CI run occurred.
 
-Branch feat/ui-local. Source fixes saved **aeb6fca** (39 owned paths); preceding
-finance/content fixes **9ebb6a8** (31 paths), earlier **20b59e2** and **f163842**.
-All saves have no AI trailer. Only the three preserved user files were dirty
-immediately after the source save; subsequent changes are trial evidence/docs.
+## Final checks — all completed, no active verification jobs
 
-All36 native JSX tables now use existing named ScrollableTable keyboard handling,
-including finance, CMS, collections, newsletter, forms, media, editorial and native
-answer grids. Nested radio/checkbox controls preserve their native key behavior.
-A scoped min-width0 rule on the builder dialog's direct tab panel fixes actual
-mobile clipping when populated private-link rows set a minimum content width.
-No global dialog or artwork redesign. Source ancestry audit:
-phase0/table-keyboard-source-audit.json.
+- Source coverage: 2,755 tests / 228 files, zero failures, exit 0. Lines 78.24%,
+  statements 76.17%, functions 71.02%, branches 75.67%. Unchanged global 70% and
+  all 22 individual 90%-branch gates pass. Raw report
+  artifacts/quality/completion-final-tests.json; coverage/completion-final-20261107;
+  log /tmp/gdg-completion-final-coverage.log. Do not repeat without new concerns.
+- Full browser inventory: 1,804 passed, eight expected profile skips, zero failures,
+  retries/flaky. Exact 1,812 identity match; three disjoint 604-case shards, 302
+  cases per each of six profiles. Both original desktop moving-WebGL checks pass.
+  All 90 cascade, 24 hydration/failure and 18 security/media checks pass.
+  Sessions 76840/21411/23905 reaped exit 0. Raw reports/listed/executed identities
+  copied to artifacts/browser/full-prd-20261107/reports; original /tmp shard files
+  also remain. Searchable index links 1,336 original unapproved screenshots.
+- PWA 15, update 9, HTTPS/CSP/cache 52 pass. Final HTTPS probe now exercises actual
+  compiled public HTML, external loader and form unlock under enforced policy.
+  Previous CSR-only 46-check report preserved in artifacts/quality. Logs
+  /tmp/gdg-completion-pwa.log, /tmp/gdg-completion-pwa-update.log,
+  /tmp/gdg-completion-https-ssr.log. Final probe scoped lint passes.
+- Strict types, build, byte budgets, compiled-renderer 25, traceability and
+  development-file 12 checks pass. Lint zero errors / nine inherited warnings.
+  Production dependency audit zero findings. No install/version churn.
+- Normal and legacy-default complete 140-migration DB suites pass, including two
+  100-client last-slot checks. Isolated 140-migration restore passes. Real local
+  security/media API reads returned 200, no actual gate mutation. No DB rerun needed.
+- Simultaneous no-content Home/config touches completed HMR and restart; UI root,
+  source module and API health read 200. No content/artifact changed afterward.
+- Final source/history secret scan passes: 159 commits, 1,992 current files, zero
+  unreviewed findings. The public test-identity checksum required an exact-line
+  non-secret review, recomputed from its retained identity artifact. No scanner
+  rule/path exclusion was added. See phase0/secret-scan.json and
+  /tmp/gdg-completion-final-secret-scan-reviewed.log.
 
-The finance review fixture was corrected to canonical pending status, matching
-count and a different submitting officer; unsupported previous fixture label was
-not a production state. Original and corrected invocations/captures are separate.
+## Current performance — all six unchanged lab gates pass
 
-## Completed checks — do not blindly repeat
+Lighthouse 13.6 default simulated mobile/desktop, gzip, 2,500 ms LCP gate:
+mobile Home 1,954.850 ms, Events 909.047 ms, Contact 901.798 ms;
+desktop 645.443 / 252.625 / 253.824 ms. Accessibility 100, visible labels match,
+CLS zero on all six. Independent earlier decoded-paint Home 1,953.908 ms also
+passes. Exact performance artifact hashes match the current dist/private renderer.
+See phase0/production-performance.json and artifacts/performance.
+Do not rerun without new source/build changes. Local lab evidence does not certify
+field p75 INP/LCP, chosen-host latency or representative physical 3D hardware.
 
-- Full current source coverage11866 finished/reaped0: **2722 tests/222 files**.
-  Unchanged global70% and all21 individual critical90%-branch gates pass.
-  Lines78.16/statements76.17/functions70.77/branches75.63. One worker, no competing
-  browser/build/types/performance. Raw artifacts/quality/table-keyboard-tests.json;
-  coverage/table-keyboard-final-20261107; /tmp/gdg-final-table-coverage.log;
-  phase0/table-keyboard-quality.json. App source unchanged afterward.
-- New finance/content78, remaining-table30 and inventory/grid24 browser checks
-  pass across all six profiles, with no skips/failures/retries. Twelve existing
-  builder Settings/Logic checks also pass. These are separate invocations/source
-  checkpoints, not one complete final-build run. Logs /tmp/gdg-finance-content-
-  refreshed-browser.log, /tmp/gdg-remaining-tables-final-browser.log,
-  /tmp/gdg-inventory-keyboard-final-browser.log and
-  /tmp/gdg-builder-tools-table-fix-browser.log. Sessions75056/89882 reaped0.
-- Targeted source scopes52/103/100 tests pass; full current2722 run supersedes
-  their source-count uncertainty. All types/build/byte/catalog checks pass.
-  Latest initialJS108187 gzip, public-route union149001, CSS29947, font48432,
-  offline493327 raw. New browser cases are mapped without accepting PRD IDs.
-- Latest artifact34141 reaped0: PWA15/update9/HTTPS46. See
-  phase0/final-table-artifact-probes.json and /tmp/gdg-final-tables-*.log.
-- Final full lint74094 reaped0: zero errors/10 inherited warnings, unchanged
-  warning budget. Initial full lint found three generated coverage-helper
-  warnings outside the existing coverage/** exclusion. Report moved intact into
-  coverage/table-keyboard-final-20261107; no rule/exclusion/limit changed. Original
-  failure log /tmp/gdg-final-tables-lint.log; passing final-lint.log separate.
-- Latest production dependency audit has zero findings; no dependency changed.
-  Source/history secret scans pass with exact non-secret checksum-line reviews,
-  no broad exclusions. Final docs scan54414 reaped0:157commits/1940files/0unreviewed.
-  Original intermediate scans remain historical; no rule/path exclusions added.
-- Exact list-only catalog: **1680 unique cases**, disjoint560-case shards.
-  phase0/browser-shard-inventory.json; /tmp/gdg-final-table-inventory[-1/-2/-3].json.
-  This is not execution or remote CI.
+Rejected trials and original failing runs remain separate; no degraded image,
+font axis or lowered test/coverage/performance threshold was adopted. Scratch
+trace scripts were preserved in ignored artifacts/performance/diagnostics.
 
-The previous complete1548-case run18562 passed1540/eight expected profile skips
-with zero failures/retries, on saved f163842-source artifact. Both original desktop
-WebGL motion checks pass. Four skips are mobile-menu checks on desktop; four are
-desktop-motion checks on unsupported profiles. Raw final-current-inventory and
-phase0/final-current-inventory-browser.json remain preserved. Do not call it a
-complete current1680-case execution.
+## Remaining external acceptance
 
-## Visual review evidence
+Owner-approved content/assets/visual fidelity and golden baselines; manual AT,
+actual 200% zoom and forced colors; physical Safari/mobile/install/update/push;
+chosen-host keys/domain/routing/CSP/cache/supervised jobs/scanner/watchdog;
+authorized live Resend + signed webhook and VAPID smoke checks after keys;
+hosted PITR/object restore/rollback and measured RPO/RTO; 48 hours of observation
+AFTER deployment. These are distinct from unfinished local features. All 146
+requirements / 307 logical mandatory cases remain conservatively unverified
+against the full PRD acceptance definition. No full PRD acceptance is claimed.
 
-All captures remain unapproved. Index paths are under artifacts/browser/:
+## Running local environment
 
-- current-primary-review/index.html:138 checks/162 captures/22 prompt groups from
-  the saved complete invocation.
-- secondary-review/index.html:44 states/264 checks/344 captures, separate run.
-- current-recovery-review/index.html:18 functional states/108 original captures;
-  scroll/table positions differ from initial composition views.
-- finance-content-current-review/index.html:13 states/78 checks/78 captures.
-  Earlier finance-content-review remains preserved with the original fixture.
-- remaining-table-review/index.html:5 states/30 checks/32 captures, including two
-  mobile private-link lower-control views.
-- inventory-keyboard-review/index.html:4 states/24 checks/24 captures.
-
-Mobile finance/resource editors, private-link dialog top/lower controls, native
-answer grid and editorial inventory, plus desktop finance reports were inspected.
-No human fidelity, approved goldens, physical-device or manual accessibility
-approval is inferred. Read REMAINING_TABLE_KEYBOARD_REVIEW.md for exact scope.
-Fixtures refuse real writes/decisions/publication/invitations/responses/sends.
-
-## Mobile performance — still failing; prototypes unadopted
-
-Last main baseline Home/Events/Contact mobileLCP3040/2859/3007ms fails2500. All
-desktop performance100, accessibility100/visible-label match, CLS0. This is a
-prior-source measurement, not a fresh run for final table wrappers.
-
-Separate rejected Home trials, same pinned Lighthouse13.6/default mobile/gzip:
-
-- Naive real-markup static replacement3063ms.
-- Matching React hydration2669ms; retained hero DOM and native lock proven.
-- Home CSS subset2714ms; scheduled attachment2785ms.
-- Native Home media hints2732ms; low module fetch priority2735ms.
-- Paint-first actual module download2884ms, TTI2948ms;12 browser cases pass.
-- Primary image decoding=async2808ms, TTI2889ms;12 browser cases pass.
-
-None meets the threshold or demonstrates a gain over simple matching hydration.
-No experimental app source or image/font change was adopted. See
-FIRST_PAINT_FEASIBILITY.md, phase0/hydration-*-trial.json and ignored
-artifacts/performance/hydration-* raw reports. All timing jobs/servers reaped.
-The initial malformed static fixture and wrong-heading test failures remain
-separate; no test/preset/timeout/retry/gate was weakened.
-
-Existing isolated trial root:
-/Users/tejas/.cache/gdg-hydration-trial-7shvwpda
-Detached checkout based on f163842, reused reviewed dependency cache, no install.
-Its source retains matching-hydration prototype changes; CSS loader/scheduler
-variants archived in probe/rejected-scheduled-source. Primary async hint source
-was restored; generated checkout dist/server/SSR document still contain the last
-async trial until a fresh baseline build. Do not infer restored generated files.
-Original source backups: probe/hydration-only-source and
-probe/home-before-async-decode.tsx. Last variants archived under probe/paint-first-*
-and probe/*async-decode*, immutable performance-*-dist clones retained. No active
-probe server. Do not recreate worktree, dependencies, prior trials or measurements.
-
-## Runtime
-
-Main UI8080/API8081; preview4173 for fictional browser review only. Supabase54361,
-DB54362, Mailpit54364, Colima colima-gdg-gt, DB supabase_db_gdg-gt-prd-local. Do not
-duplicate services. Last free space54GiB. Dependencies symlink to
-/Users/tejas/.cache/gdg-gt-deps.8xnflb18/node_modules; Node26.13.
-Pinned Lighthouse CLI:
-/Users/tejas/.npm/_npx/ba16b138af87a83e/node_modules/lighthouse/cli/index.js
-
-## Remaining PRD acceptance
-
-All146 requirements/307 logical cases are source-mapped; full acceptance remains
-unverified. Remaining: mobileLCP; representative3Dhardware/load and fieldp75
-LCP/INP/CLS; applicable content/account/operations secondary and complete manual
-keyboard/AT/actual200%zoom/forced-colors review; approved chapter assets/copy,
-blocking Tejas fidelity approval and approved1%goldens; physicalSafari/devices,
-install/update/push; GT staging/hosting/domains/secrets/providers/CORS/scanners/
-scheduler/CSP/CI/monitoring/alerts; hostedPITR/objectrestore/RPO-RTO/migration/
-rollback/48hour observation; institutional brand/privacy/retention/finance signoff.
-SSO/Google and Bevy/Engage remain explicitly deferred. No completion percentage
-or full PRD/launch success claim is warranted.
+UI http://127.0.0.1:8080 (owned session 97296 / PID 60171), API 8081 (PID 44949).
+Existing preview 4173 / PID 1531 was used by browser fixtures; do not kill or
+create duplicates. Supabase 54361 / DB 54362 / Mailpit 54364, colima-gdg-gt,
+DB supabase_db_gdg-gt-prd-local. Existing dependency cache symlink, no install.
+Node 26.13 locally / Node 24 in CI. Last free space approximately 54 GiB.
+Earlier detailed checkpoints are preserved in CHECKPOINT_HISTORY_PUBLIC_STARTUP_20261107.md
+and CHECKPOINT_HISTORY_TABLES_20261107.md; this checkpoint supersedes them.

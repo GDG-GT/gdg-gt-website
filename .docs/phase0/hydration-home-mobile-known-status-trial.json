@@ -1,0 +1,104 @@
+{
+  "generatedAt": "2026-11-07T17:52:05.256Z",
+  "completed": true,
+  "lighthouseVersion": "13.6.0",
+  "build": {
+    "index.html": {
+      "bytes": 14054,
+      "sha256": "b0783247a0afcfbb73ad30be817ae8831d21d57d04231df899a4e392677b8451"
+    },
+    ".vite/manifest.json": {
+      "bytes": 113757,
+      "sha256": "4a36a4badb85210abe8e8b2bb3886c2eda0130ea5e1c50f4c41d1890e0a54cc8"
+    },
+    "assets/hero-atmosphere-mobile.webp": {
+      "bytes": 37624,
+      "sha256": "d46fa6b9bfe5d234b9f6a2e2e20b0f4ca0cf16ae484f4f1e4865fca003dde738"
+    },
+    "assets/hero-campus-mobile.webp": {
+      "bytes": 21932,
+      "sha256": "39aed7e7d2a6a02da4734fd07c6500a35257caf618a460b7a9516d3481744db6"
+    },
+    "assets/public-entry.js": {
+      "bytes": 1099,
+      "sha256": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+    }
+  },
+  "presets": [
+    "mobile"
+  ],
+  "routes": [
+    "/"
+  ],
+  "scope": "Isolated matching known-live status hypothesis only, not production. Initial public status captured read-only from loopback before build; requires fresh per-request bootstrap for any adoption, never a baked live flag. Cloned build with real matching server React tree and explicit SSR marker, gzip-negotiated HTML/JS/CSS/JSON/SVG, anonymous allowlisted reads to local API only; HTTPS requests blocked, no account or writes/provider sends. Lighthouse default simulated mobile and desktop presets; measurements must run without competing browser/build/coverage load. Compression models a required hosting delivery setting, not evidence that it is deployed. Lab LCP/CLS/TBT and accessibility only; TBT is not INP and these runs do not certify field p75 INP/LCP, representative 3D hardware or hosted latency. Raw reports in ignored artifacts/performance.",
+  "tests": [
+    {
+      "route": "/",
+      "preset": "mobile",
+      "performance": 96,
+      "accessibility": 100,
+      "visibleLabelsMatchNames": true,
+      "bestPractices": 96,
+      "seo": 100,
+      "lcpMs": 2811.1364,
+      "cls": 0,
+      "tbtMs": 3.5,
+      "failedAudits": [
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "score": 0.83,
+          "display": "2.8 s"
+        },
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "score": 0.96,
+          "display": "2.9 s"
+        },
+        {
+          "id": "unused-css-rules",
+          "title": "Reduce unused CSS",
+          "score": 0,
+          "display": "Est savings of 24 KiB"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "display": "Est savings of 38 KiB"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "display": "2 failure reasons"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0.5,
+          "display": "Est savings of 115 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "display": "Est savings of 220 ms"
+        }
+      ],
+      "runtimeError": null,
+      "passed": false
+    }
+  ]
+}

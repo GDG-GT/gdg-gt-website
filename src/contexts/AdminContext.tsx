@@ -18,6 +18,7 @@ import {
   type PermissionAction,
 } from "@/services/permissionsService";
 import SessionService from "@/services/sessionService";
+import { schedulePublicSessionCheck } from "@/lib/public-session-start";
 interface Context {
   isAuthenticated: boolean;
   currentAdmin: AdminUser | null;
@@ -73,7 +74,7 @@ type Me = {
     is_active: boolean;
   };
 };
-export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
+export const AdminProvider = ({ children, deferSession = false }: { children: React.ReactNode; deferSession?: boolean }) => {
   const [currentAdmin, setCurrentAdmin] = useState<AdminUser | null>(null),
     [mergedProfile, setMergedProfile] = useState<MergedProfile | null>(null);
   const [userTeams, setUserTeams] = useState<TeamMembership[]>([]),
@@ -149,7 +150,7 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   };
   useEffect(() => {
     let live = true;
-    SessionService.validateSession()
+    const begin = () => SessionService.validateSession()
       .then(async (user) => {
         if (user && live) await load();
       })
@@ -159,10 +160,13 @@ export const AdminProvider = ({ children }: { children: React.ReactNode }) => {
       .finally(() => {
         if (live) setIsLoading(false);
       });
+    const cancel = deferSession ? schedulePublicSessionCheck(begin) : undefined;
+    if (!deferSession) void begin();
     return () => {
       live = false;
+      cancel?.();
     };
-  }, [load]);
+  }, [load, deferSession]);
   const login = async (credentials: { username: string; password: string }) => {
     setIsLoading(true);
     setError(null);

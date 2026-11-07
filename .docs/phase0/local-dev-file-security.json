@@ -22,6 +22,11 @@
       "passed": true
     },
     {
+      "path": "/.build/ssr/entry.mjs",
+      "status": 403,
+      "passed": true
+    },
+    {
       "path": "/database/migrations/202610200058_community_members.sql",
       "status": 403,
       "passed": true

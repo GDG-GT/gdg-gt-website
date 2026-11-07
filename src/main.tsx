@@ -1,10 +1,9 @@
-import { createRoot } from "react-dom/client";
+import { readPublicBootstrap } from "./ui/public-hydration";
+import { PublicHydrationBoundary } from "./ui/PublicHydrationBoundary";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
-import "./styles/gt.css";
-import "./styles/media.css";
-import "./styles/newsletter.css";
-import "./styles/contact-inbox.css";
+import "./styles/public.generated.css";
 import { registerPublicWorker } from "./pwa/register";
 // import { SpeedInsights } from "@vercel/speed-insights/react";
 
@@ -15,9 +14,8 @@ document
   .querySelectorAll("script[data-gdg-document]")
   .forEach((node) => node.remove());
 
-createRoot(document.getElementById("root")!).render(
-  <>
-    <App />
-    {/* <SpeedInsights /> */}
-  </>,
-);
+const root = document.getElementById("root")!;
+const bootstrap = readPublicBootstrap();
+const application = <PublicHydrationBoundary><App bootstrap={bootstrap} /></PublicHydrationBoundary>;
+if (bootstrap) hydrateRoot(root, application);
+else createRoot(root).render(application);

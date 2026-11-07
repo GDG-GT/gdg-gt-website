@@ -5,6 +5,9 @@ import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { chromium, expect } from "@playwright/test";
+import { renderSiteDocument } from "../shared/site-document.mjs";
+if (process.env.NODE_ENV !== "production")
+  throw Error("Run the compiled-renderer HTTPS probe with NODE_ENV=production.");
 const root = path.resolve("dist"),
   origin = "https://127.0.0.1:4187",
   tests = [],
@@ -26,6 +29,22 @@ const check = (condition, name) => {
   tests.push({ name, passed: true });
   console.info("PASS " + name);
 };
+// Exercise the actual compiled public document and external hydration loader,
+// rather than certifying only the ordinary CSR template under the policy.
+// These inert public fixtures contain no account data or provider credentials.
+const renderer = await import("../.build/ssr/entry.mjs"),
+  template = await readFile(path.join(root, "index.html"), "utf8"),
+  renderedPages = new Map();
+for (const route of ["/", "/events", "/contact"]) {
+  const rendered = await renderer.renderPublicPage(route, {
+    home: { settings: [], navigation: [], footer: [], social: [], metrics: [], sponsors: [], pages: [] },
+    status: { revision: 1, is_live: true, message: "", redirect_url: "", button_text: "Chapter updates", auto_redirect: false },
+  });
+  renderedPages.set(route, renderSiteDocument(template, {
+    title: "Fictional HTTPS verification", description: "Public policy fixture",
+    index: true, canonical: origin + route, image: "/logo.png",
+  }, { ...rendered, path: route }));
+}
 const scratch = await mkdtemp(path.join(tmpdir(), "gdg-owned-tls-"));
 await chmod(scratch, 0o700);
 let server,
@@ -121,6 +140,11 @@ try {
           res.setHeader("Content-Type", "application/json");
           return res.end(Buffer.from(await r.arrayBuffer()));
         }
+        if (renderedPages.has(url.pathname) && !url.search) {
+          res.setHeader("Content-Type", "text/html; charset=utf-8");
+          res.setHeader("Cache-Control", "no-store");
+          return res.end(req.method === "HEAD" ? undefined : renderedPages.get(url.pathname));
+        }
         let file = path.resolve(root, "." + decodeURIComponent(url.pathname));
         if (!file.startsWith(root + path.sep) && file !== root) {
           res.statusCode = 404;
@@ -199,6 +223,13 @@ try {
         "inert",
         false,
       );
+      if (renderedPages.has(route)) {
+        check((await response.text()).includes('data-gdg-ssr="' + route + '"'),
+          "HTTPS serves the actual compiled public tree: " + route);
+        await expect(page.locator("form.gt-newsletter")).toHaveJSProperty("inert", false);
+        check(await page.locator("#gdg-public-bootstrap").count() === 0,
+          "external public loader hydrates and unlocks forms under enforced CSP: " + route);
+      }
       check(
         errors.length === 0,
         "production route renders without page exceptions under enforced CSP: " +
@@ -282,7 +313,7 @@ try {
         completed,
         isolatedReports,
         scope:
-          "Isolated HTTPS loopback production build with the exact common CSP/security header values from vercel.json, including upgrade-insecure-requests. Ephemeral one-day self-signed loopback certificate is trusted only by this isolated context and removed afterward. Actual hosted TLS/certificate/header precedence, third-party frames, authenticated editors, WebGL, service workers and deployed caching remain separate acceptance. Anonymous allowlisted reads plus browser CSP reports terminated without inspecting/storing their bodies in this owned server; reports never reach the application API. All external requests and other non-read methods are refused. No credentials/application writes/provider sends.",
+          "Isolated HTTPS loopback production build with the exact common CSP/security header values from vercel.json, including upgrade-insecure-requests. Home/Events/Contact use the actual compiled renderer, external hydration loader and fictional public bootstrap; privacy retains CSR. Ephemeral one-day self-signed loopback certificate is trusted only by this isolated context and removed afterward. Actual hosted TLS/certificate/header precedence, third-party frames, authenticated editors, WebGL, service workers and deployed caching remain separate acceptance. Anonymous allowlisted reads plus browser CSP reports terminated without inspecting/storing their bodies in this owned server; reports never reach the application API. All external requests and other non-read methods are refused. No credentials/application writes/provider sends.",
         tests,
         unexpected,
       },

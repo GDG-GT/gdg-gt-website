@@ -5,7 +5,13 @@ All work and verification so far are local. These instructions do not certify a
 deployed environment or authorize deployment/provider sends.
 
 Use Node 24 LTS for API and worker processes (server modules import TypeScript
-directly). Build the browser with `npm ci` and `npm run build` in CI. Deploy the
+directly). Build with `npm ci` and `npm run build` in CI. The build produces static browser
+assets in `dist` and a server-only renderer in `.build/ssr`. Package both with
+`api/site.mjs`; never copy `.build/ssr` into public static storage. Home, Events
+and Contact render their current public content before hydration, with fresh
+availability checks and no-store HTML. Query-bearing/private/Forms routes keep
+their ordinary client boundary. Run `npm run test:public-ssr` after building to
+verify the compiled renderer without network access. Deploy the
 versioned API and public-document handler, not a static-only SPA rewrite; retain
 the routing, CSP, no-store private responses, immutable hashed assets, gzip/Brotli,
 HTTPS and service-worker headers defined in `vercel.json` on any chosen host.

@@ -40,6 +40,9 @@ describe("security controls and private operational recovery", () => {
     apiMock.mockImplementation((path, options) => options?.method ? Promise.reject(new Error("Fictional dropped response")) : path.includes("?key=") ? Promise.resolve({ committed: true, version: 8 }) : Promise.resolve(security));
     mount(<AccountSecurity />); await review(); fireEvent.click(screen.getByRole("button", { name: "Confirm gate rotation" }));
     await screen.findByText(/rotation result is unconfirmed/); expect((screen.getByLabelText("Your current password") as HTMLInputElement).value).toBe("");
+    // Collapsing this disclosure must not discard an uncertain operation.
+    fireEvent.click(screen.getByText("Account security"));
+    fireEvent.click(screen.getByText("Account security"));
     fireEvent.click(screen.getByRole("button", { name: "Check original rotation result" })); await screen.findByText(/original rotation completed/);
     expect(apiMock.mock.calls.filter(([, o]) => o?.method)).toHaveLength(1);
   });

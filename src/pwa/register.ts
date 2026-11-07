@@ -3,6 +3,14 @@ let ready = false;
 export async function registerPublicWorker() {
   if (!import.meta.env.PROD || !("serviceWorker" in navigator) || !window.isSecureContext) return;
   try {
+    // Installing the offline cache competes for first-visit bandwidth and CPU.
+    // Let the visible document load first; updates remain explicit below.
+    if (document.readyState !== "complete")
+      await new Promise<void>((resolve) => window.addEventListener("load", () => resolve(), { once: true }));
+    await new Promise<void>((resolve) => {
+      if ("requestIdleCallback" in window) window.requestIdleCallback(() => resolve(), { timeout: 2000 });
+      else globalThis.setTimeout(resolve, 0);
+    });
     registration = await navigator.serviceWorker.register("/sw.js", { scope: "/", updateViaCache: "none" });
     const announce = () => { if (registration?.waiting) window.dispatchEvent(new Event("gdg:pwa-update")); };
     announce();

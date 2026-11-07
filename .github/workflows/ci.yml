@@ -44,6 +44,8 @@ jobs:
         run: npm run test:backup-restore
       - run: npm run build
       - run: npm run test:bundles
+      - name: Verify the compiled public renderer without network access
+        run: npm run test:public-ssr
 
   coverage-gate:
     runs-on: ubuntu-24.04
@@ -61,7 +63,9 @@ jobs:
 
   browser-smoke:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    # The full 604-case shards take up to 22 minutes locally, before CI setup.
+    # Keep per-test timeouts, retries and all assertions unchanged.
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:

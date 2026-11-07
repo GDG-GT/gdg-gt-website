@@ -1,3 +1,10 @@
+// Reapply the complete canonical sheets in their original order after the
+// public subset. Every earlier rule has its later exact duplicate, preserving
+// the original admin cascade rather than changing selector precedence.
+import "../styles/gt.css";
+import "../styles/media.css";
+import "../styles/newsletter.css";
+import "../styles/contact-inbox.css";
 import {
   useCallback,
   useEffect,
@@ -119,6 +126,7 @@ const groups: { title: string; links: Destination[] }[] = [
 const workspaceDestinations = groups.flatMap((group) => group.links);
 
 export default function AdminShell({ children }: { children: ReactNode }) {
+  useEffect(() => { window.dispatchEvent(new Event("gdg:auth-needed")); }, []);
   const { currentAdmin, logout, isAuthenticated } = useAdmin();
   const navigationSafety = useNavigationSafety();
   const location = useLocation(),

@@ -1,3 +1,4 @@
+import { HydratedForm } from "./PublicHydrationBoundary";
 import { EventTile } from "./EventTile";
 import PrivacyNoticeDetails from "./PrivacyNoticeDetails";
 import PublicImage from "./PublicImage";
@@ -838,7 +839,7 @@ export function EventDetailPage() {
                         </p>
                       </div>
                     )}
-                  <form
+                  <HydratedForm
                     key={event.id}
                     ref={registrationForm}
                     onSubmit={register}
@@ -1026,7 +1027,7 @@ export function EventDetailPage() {
                         <Link to="/offline">Review, retry or discard it</Link>.
                       </p>
                     )}
-                  </form>
+                  </HydratedForm>
                 </>
               )}
             </>
@@ -1914,7 +1915,7 @@ function ContactPageContent({ initialType }: { initialType: string }) {
               </Button>
             </div>
           ) : (
-            <form
+            <HydratedForm
               ref={contactForm}
               className="gt-form"
               onSubmit={submit}
@@ -2174,7 +2175,7 @@ function ContactPageContent({ initialType }: { initialType: string }) {
                 We’ll use your information to respond to your inquiry.{" "}
                 <Link to="/privacy">Read our privacy notice.</Link>
               </small>
-            </form>
+            </HydratedForm>
           )}
         </div>
       </div>

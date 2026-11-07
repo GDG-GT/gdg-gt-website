@@ -1,3 +1,4 @@
+import { useInitialPictureSource } from "./public-hydration";
 import { EventTile } from "./EventTile";
 import { pictureFallback } from "./picture-fallback";
 import {
@@ -18,6 +19,7 @@ import { PublicCollectionNotice } from "./PublicCollection";
 import { isPast, useEvents, usePageTitle } from "./public-events";
 
 export function HomePage() {
+  const initialPicture = useInitialPictureSource("/assets/hero-atmosphere.webp");
   usePageTitle("A community of builders");
   const { getPageSection, chapterMetrics, featuredSponsors } = useContent(),
     hero = (getPageSection("home", "hero") || {}) as PageCopy,
@@ -43,6 +45,7 @@ export function HomePage() {
           <img
             className="gt-hero-art"
             data-fallback-src="/assets/hero-atmosphere.webp"
+            src={initialPicture}
             ref={pictureFallback}
             width="1920"
             height="800"
@@ -57,7 +60,7 @@ export function HomePage() {
             <h1>
               <span className="gt-google-name">
                 <img
-                  src="/assets/google-wordmark.png"
+                  src="/assets/google-wordmark.webp"
                   alt="Google"
                   width="272"
                   height="92"
@@ -246,6 +249,8 @@ export function HomePage() {
           <div className="gt-community-photo">
             <img
               src="/assets/event-hackathon.jpg"
+              decoding="async"
+              fetchPriority="low"
               alt="Illustrative photo of people collaborating around laptops"
               loading="lazy"
               width="720"

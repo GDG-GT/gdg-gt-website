@@ -1,3 +1,4 @@
+import { publicStyleSplit } from "./scripts/public-style-split";
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -21,6 +22,7 @@ export default defineConfig(({ mode }) => ({
         "**/.docs/**",
         "**/.tmp/**",
         "**/dist/**",
+        "**/.build/**",
         "**/database/**",
         "**/infra/**",
         "**/supabase/**",
@@ -41,6 +43,7 @@ export default defineConfig(({ mode }) => ({
         "**/.docs/**",
         "**/artifacts/**",
         "**/server/**",
+        "**/.build/**",
         "**/database/**",
         "**/infra/**",
         "**/supabase/**",
@@ -61,6 +64,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   plugins: [
+    publicStyleSplit(),
     publicRouteHints(),
     ...(loadEnv(mode, process.cwd(), "").VITE_REAL_API === "true"
       ? [siteDocuments()]

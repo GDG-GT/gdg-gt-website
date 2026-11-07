@@ -45,7 +45,8 @@ All 18 new browser checks pass across six profiles. The first mobile capture
 exposed heading spacing, corrected with scoped styles and retested separately.
 These captures are unapproved review evidence, not visual goldens.
 
-Remaining local work includes mobile LCP and the complete current browser run.
+The later PUBLIC_RENDERING_AND_RELEASE_CHECKS.md supersedes these counts:
+mobile LCP and the complete current browser run now pass.
 Manual accessibility, physical-device install/push, owner visual/content approval
 and chosen-host acceptance remain distinct. Own hosting/domain and Resend are the
 owner's decisions; live keys are launch inputs. SSO/Google and Bevy/Engage stay

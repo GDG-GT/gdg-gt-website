@@ -1,3 +1,4 @@
+import { PublicBootstrapContext, type PublicBootstrap } from "@/contexts/PublicBootstrapContext";
 import { lazy, Suspense, type ReactNode } from "react";
 import {
   createBrowserRouter,
@@ -171,7 +172,7 @@ function Frame({ children }: { children: ReactNode }) {
 function protectedPage(children: ReactNode) {
   return <PageAccessGuard>{children}</PageAccessGuard>;
 }
-function RoutedApplication() {
+export function RoutedApplication() {
   return (
     <NavigationSafety>
       <RouteFocus />
@@ -269,16 +270,18 @@ function RoutedApplication() {
     </NavigationSafety>
   );
 }
-const router = createBrowserRouter(
+const router = import.meta.env.SSR ? null : createBrowserRouter(
   [{ path: "*", element: <RoutedApplication /> }],
   {},
 );
-export default function App() {
+export default function App({ routerView, bootstrap }: { routerView?: ReactNode; bootstrap?: PublicBootstrap }) {
   return (
-    <AdminProvider>
-      <ContentProvider>
-        <RouterProvider router={router} />
-      </ContentProvider>
-    </AdminProvider>
+    <PublicBootstrapContext.Provider value={bootstrap}>
+      <AdminProvider deferSession={!!bootstrap}>
+        <ContentProvider initial={bootstrap?.home}>
+          {routerView || (router && <RouterProvider router={router} />)}
+        </ContentProvider>
+      </AdminProvider>
+    </PublicBootstrapContext.Provider>
   );
 }

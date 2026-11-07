@@ -14,6 +14,7 @@ for (const [path, expected] of [
   ],
   ["/.env.server.local", 403],
   ["/server/handler.mjs", 403],
+  ["/.build/ssr/entry.mjs", 403],
   ["/database/migrations/202610200058_community_members.sql", 403],
   ["/infra/supabase/config.toml", 403],
   ["/", 200],

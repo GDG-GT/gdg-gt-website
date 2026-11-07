@@ -1,3 +1,4 @@
+import { usePublicBootstrap } from "@/contexts/PublicBootstrapContext";
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { api } from "@/lib/api";
@@ -29,12 +30,17 @@ export default function SiteAvailability({
 }: {
   children: ReactNode;
 }) {
-  const [status, setStatus] = useState<SiteState>(),
+  const bootstrap = usePublicBootstrap();
+  const [status, setStatus] = useState<SiteState | undefined>(bootstrap?.status),
     [unavailable, setUnavailable] = useState(false),
     [tick, setTick] = useState(0);
   const { pathname } = useLocation(),
     navigate = useNavigate();
   useEffect(() => {
+    if (tick === 0 && bootstrap) {
+      try { localStorage.setItem(storageKey, JSON.stringify({ at: Date.now(), status: bootstrap.status })); } catch { /* Public optional snapshot only. */ }
+      return;
+    }
     const c = new AbortController();
     const timeout = window.setTimeout(() => {
       c.abort();
@@ -67,7 +73,7 @@ export default function SiteAvailability({
       window.clearTimeout(timeout);
       c.abort();
     };
-  }, [tick]);
+  }, [tick, bootstrap]);
   useEffect(() => {
     const refresh = () => setTick((v) => v + 1),
       timer = window.setInterval(refresh, 30000);
@@ -117,6 +123,7 @@ export default function SiteAvailability({
       )}
       <div
         className="gt-availability-frame"
+        {...(homeChecking || blocked ? { inert: "" } : {})}
         ref={(node) => {
           if (node) node.inert = homeChecking || blocked;
         }}

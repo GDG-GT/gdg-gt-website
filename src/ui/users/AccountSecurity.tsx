@@ -12,7 +12,7 @@ type Intent = { key: string; version: number; code: string; createdAt: number };
 export default function AccountSecurity() {
   const { currentAdmin } = useAdmin();
   const [expanded, setExpanded] = useState(false);
-  return currentAdmin?.role === "super_admin" ? <details className="gt-panel gt-account-security" onToggle={(e) => setExpanded(e.currentTarget.open)}>
+  return currentAdmin?.role === "super_admin" ? <details className="gt-panel gt-account-security" onToggle={(e) => { if (e.currentTarget.open) setExpanded(true); }}>
     <summary>Account security</summary>
     {expanded && <SecurityControls />}
   </details> : null;

@@ -1,5 +1,29 @@
 # PRD v1.5 implementation status
 
+Latest local release checkpoint — 2026-11-07:
+read [PUBLIC_RENDERING_AND_RELEASE_CHECKS.md](PUBLIC_RENDERING_AND_RELEASE_CHECKS.md)
+and [the exact evidence](phase0/public-rendering-release-20261107.json) first.
+All confirmed local implementation gaps from this audit are addressed. Complete
+source coverage passes 2,755 tests in 228 files; the complete 1,812-case browser
+inventory passes 1,804 with eight existing profile skips, zero failures/retries.
+All six unchanged 2,500 ms lab LCP gates now pass. Migrations through 140,
+normal/legacy-grants database checks and isolated restore pass. Final PWA/update/
+HTTPS checks pass 15/9/52, including actual server-rendered hydration under CSP.
+The local website runs at http://127.0.0.1:8080, API at 8081.
+
+The remaining work is launch acceptance: owner-approved content/visual baselines,
+manual accessibility and physical-device checks, the owner's chosen host/domain,
+live Resend/VAPID configuration and authorized smoke tests, hosted restore/
+rollback/RPO-RTO, and 48-hour observation after deployment. Keys are planned
+launch inputs, not unfinished local features. SSO/Google and Bevy/Engage remain
+deferred. No deployment, production changes or real provider sends occurred.
+Full PRD acceptance is not claimed; no invented completion percentage applies.
+
+## Historical implementation checkpoints (superseded)
+
+The counts and pending items below record their dated source checkpoints; the
+latest report above supersedes their current-status wording.
+
 Latest continuation — account security / media / runtime (2026-11-07):
 read ACCOUNT_SECURITY_AND_MEDIA_CURSOR.md and
 phase0/release-security-media-20261107.json first. Migrations now through140;

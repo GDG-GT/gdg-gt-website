@@ -1,21 +1,21 @@
 {
-  "generatedAt": "2026-11-07T08:27:03.272761+00:00",
+  "generatedAt": "2026-11-07T19:56:35.486307+00:00",
   "shards": [
     {
       "shard": 1,
-      "cases": 560
+      "cases": 604
     },
     {
       "shard": 2,
-      "cases": 560
+      "cases": 604
     },
     {
       "shard": 3,
-      "cases": 560
+      "cases": 604
     }
   ],
-  "total": 1680,
+  "total": 1812,
   "duplicates": 0,
-  "caseKeysSha256": "81ee6096e22c6630adcd49109b892edfdd87d18dc56bdfe0d72be9c43de10abd",
-  "note": "List-only exact disjoint union:1680unique cases,560per shard. New finance/content78, remaining-table30, inventory/grid24 and builder-tool12 passing scopes are separate invocations/source checkpoints. Prior complete1548-case run remains saved-source evidence; no complete current/CI/full PRD acceptance claim."
+  "caseKeysSha256": "d6b1f15ee678320580c30137f8e398d0a8d3775699f878980cf53940b09caa96",
+  "note": "Exact executed/listed identity union; 1804 passes/eight expected profile skips, zero failures/retries/flaky. SHA-256 of sorted [file,title,profile] arrays serialized as compact UTF-8 JSON plus newline. Raw identity/catalog/reports retained in artifacts/browser/full-prd-20261107/reports. Local invocation only; not remote CI or full PRD acceptance."
 }

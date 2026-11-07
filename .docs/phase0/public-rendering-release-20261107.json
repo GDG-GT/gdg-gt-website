@@ -1,0 +1,290 @@
+{
+  "generatedAt": "2026-11-07T19:56:35.486307+00:00",
+  "scope": "Current local source/build verification; fictional intercepted browser writes only. No deployment, production changes or real provider sends. Not full PRD acceptance.",
+  "completedLocalVerification": true,
+  "savedFunctionalCommit": "3ad1777",
+  "migrationsAppliedThrough": 140,
+  "sourceTests": {
+    "passed": 2755,
+    "failed": 0,
+    "files": 228,
+    "rawReport": "artifacts/quality/completion-final-tests.json",
+    "sha256": "c5fa6df5ceb83d69bb8c4d6087b2132f4711e01a2b6b4c76492042ad2f43a7f9",
+    "coverage": {
+      "lines": 78.24,
+      "statements": 76.17,
+      "functions": 71.02,
+      "branches": 75.67
+    },
+    "globalThresholdPercent": 70,
+    "criticalBranchThresholdPercent": 90,
+    "criticalModules": 22,
+    "allExistingGatesPassed": true
+  },
+  "browser": {
+    "listed": 1812,
+    "passed": 1804,
+    "skipped": 8,
+    "failed": 0,
+    "flaky": 0,
+    "retries": 0,
+    "profiles": {
+      "chromium-1920": 302,
+      "chromium-1440": 302,
+      "chromium-mobile": 302,
+      "firefox-1440": 302,
+      "webkit-1440": 302,
+      "webkit-mobile": 302
+    },
+    "shards": [
+      {
+        "shard": 1,
+        "cases": 604,
+        "exitCode": 0,
+        "stats": {
+          "startTime": "2026-11-07T19:32:52.820Z",
+          "duration": 1126320.048,
+          "expected": 602,
+          "skipped": 2,
+          "unexpected": 0,
+          "flaky": 0
+        },
+        "rawReport": "artifacts/browser/full-prd-20261107/reports/shard-1.json",
+        "sha256": "7b8c62f8a0d1e6ac37d2e19197f0995a6eae52bf4b5589ca656783851ceadd2b"
+      },
+      {
+        "shard": 2,
+        "cases": 604,
+        "exitCode": 0,
+        "stats": {
+          "startTime": "2026-11-07T19:32:52.840Z",
+          "duration": 1264699.438,
+          "expected": 601,
+          "skipped": 3,
+          "unexpected": 0,
+          "flaky": 0
+        },
+        "rawReport": "artifacts/browser/full-prd-20261107/reports/shard-2.json",
+        "sha256": "103fb03c9fc3f76ac882bc2a63cc583b102cf3d957e076945f3f4f4cd48d1328"
+      },
+      {
+        "shard": 3,
+        "cases": 604,
+        "exitCode": 0,
+        "stats": {
+          "startTime": "2026-11-07T19:32:52.814Z",
+          "duration": 1291388.31,
+          "expected": 601,
+          "skipped": 3,
+          "unexpected": 0,
+          "flaky": 0
+        },
+        "rawReport": "artifacts/browser/full-prd-20261107/reports/shard-3.json",
+        "sha256": "2042ff9428ad6793ad43bd2e324ee08fd6b56b58138eb81c7ae7bfb315c3a5f9"
+      }
+    ],
+    "identitiesExactlyMatchCatalog": true,
+    "duplicates": 0,
+    "missing": 0,
+    "unexpected": 0,
+    "identityList": "artifacts/browser/full-prd-20261107/reports/executed-identities.json",
+    "identitySha256": "d6b1f15ee678320580c30137f8e398d0a8d3775699f878980cf53940b09caa96",
+    "expectedSkips": [
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+        "profile": "chromium-1920",
+        "reason": "Mobile navigation is intentionally hidden at desktop widths"
+      },
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+        "profile": "chromium-1440",
+        "reason": "Mobile navigation is intentionally hidden at desktop widths"
+      },
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+        "profile": "chromium-mobile",
+        "reason": "Functional software-WebGL check uses the capable desktop Chromium profile"
+      },
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+        "profile": "firefox-1440",
+        "reason": "Mobile navigation is intentionally hidden at desktop widths"
+      },
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+        "profile": "firefox-1440",
+        "reason": "Functional software-WebGL check uses the capable desktop Chromium profile"
+      },
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+        "profile": "webkit-1440",
+        "reason": "Mobile navigation is intentionally hidden at desktop widths"
+      },
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+        "profile": "webkit-1440",
+        "reason": "Functional software-WebGL check uses the capable desktop Chromium profile"
+      },
+      {
+        "file": "public-smoke.spec.ts",
+        "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+        "profile": "webkit-mobile",
+        "reason": "Functional software-WebGL check uses the capable desktop Chromium profile"
+      }
+    ],
+    "newScopes": {
+      "style-cascade-parity.spec.ts": {
+        "passed": 90,
+        "failed": 0
+      },
+      "public-hydration.spec.ts": {
+        "passed": 24,
+        "failed": 0
+      },
+      "security-release.spec.ts": {
+        "passed": 18,
+        "failed": 0
+      }
+    },
+    "originalDesktopMovingHeroCasesPassed": 2,
+    "captures": 1336,
+    "captureIndex": "artifacts/browser/full-prd-20261107/index.html",
+    "approvedGoldens": false
+  },
+  "probes": {
+    "public-ssr-artifact": {
+      "passed": 25,
+      "failed": 0,
+      "evidence": ".docs/phase0/public-ssr-artifact.json",
+      "sha256": "1fd1e51db5bca556ad224ac0096a54e4dc50f2aaccf109b88c42dbe3389b653d"
+    },
+    "local-dev-file-security": {
+      "passed": 12,
+      "failed": 0,
+      "evidence": ".docs/phase0/local-dev-file-security.json",
+      "sha256": "721c2494abf2a8b640f3d74cd22da39f850b214031617a28e3b45ca3ac9f0f1b"
+    },
+    "production-pwa-boundaries": {
+      "passed": 15,
+      "failed": 0,
+      "evidence": ".docs/phase0/production-pwa-boundaries.json",
+      "sha256": "981d1d00afbfb62efa8615fd2993cf0559c8b197ad5646f261377b3243c0b763"
+    },
+    "production-pwa-update": {
+      "passed": 9,
+      "failed": 0,
+      "evidence": ".docs/phase0/production-pwa-update.json",
+      "sha256": "3ce5f32f4e3b4451ea860bc6a89c7af2ecfd4e8b0c615c1405a0393a63b26395"
+    },
+    "production-security-headers": {
+      "passed": 52,
+      "failed": 0,
+      "evidence": ".docs/phase0/production-security-headers.json",
+      "sha256": "fd2f4eb45005db71076944edce1690e3055bddbd02acc1c0b4b99e8c746b4035"
+    }
+  },
+  "performance": {
+    "evidence": ".docs/phase0/production-performance.json",
+    "sha256": "bffa17a1717f2bb0d6e53754c2522bb3620a5a67ce181a800f765e576fcf5d9d",
+    "matchesCurrentArtifact": true,
+    "lighthouseVersion": "13.6.0",
+    "mobileLcpThresholdMs": 2500,
+    "allSixLabGatesPassed": true,
+    "routes": [
+      {
+        "route": "/",
+        "preset": "mobile",
+        "lcpMs": 1954.8497000000002,
+        "performance": 99,
+        "accessibility": 100,
+        "cls": 0
+      },
+      {
+        "route": "/events",
+        "preset": "mobile",
+        "lcpMs": 909.0474999999999,
+        "performance": 100,
+        "accessibility": 100,
+        "cls": 0
+      },
+      {
+        "route": "/contact",
+        "preset": "mobile",
+        "lcpMs": 901.7976000000001,
+        "performance": 100,
+        "accessibility": 100,
+        "cls": 0
+      },
+      {
+        "route": "/",
+        "preset": "desktop",
+        "lcpMs": 645.4427499999999,
+        "performance": 100,
+        "accessibility": 100,
+        "cls": 0
+      },
+      {
+        "route": "/events",
+        "preset": "desktop",
+        "lcpMs": 252.6248,
+        "performance": 100,
+        "accessibility": 100,
+        "cls": 0
+      },
+      {
+        "route": "/contact",
+        "preset": "desktop",
+        "lcpMs": 253.82420000000002,
+        "performance": 100,
+        "accessibility": 100,
+        "cls": 0
+      }
+    ],
+    "fieldP75Verified": false
+  },
+  "quality": {
+    "typesPassed": true,
+    "buildPassed": true,
+    "bundleBudgetsPassed": true,
+    "lintErrors": 0,
+    "lintInheritedWarnings": 9,
+    "productionDependencyFindings": 0,
+    "ciExecuted": false,
+    "ciBrowserJobBudgetMinutes": 40,
+    "perTestTimeoutsRetriesAndAssertionsUnchanged": true,
+    "secretScan": {
+      "passed": true,
+      "commits": 159,
+      "files": 1992,
+      "unreviewed": 0,
+      "evidence": "phase0/secret-scan.json",
+      "scope": "Final pre-save all-local-ref history/current source scan; exact public identity-digest line review, no broad exclusions."
+    }
+  },
+  "visualInspection": {
+    "scope": "Representative current mobile account-security, Contact hydration and finance approval captures inspected; readable geometry, internal table scrolling and neutral workspace observed. Not every capture manually approved.",
+    "approved": false
+  },
+  "launchInputs": [
+    "Owner-approved content/assets and visual baselines",
+    "Manual assistive technology, actual 200% zoom and forced colors",
+    "Physical Safari/mobile install/update/push",
+    "Chosen-host secrets/domain/routing/CSP/cache and supervised jobs/scanner/watchdog",
+    "Authorized live Resend send/signed webhook and VAPID smoke checks after launch keys",
+    "Hosted PITR/object restore, rollback and measured RPO/RTO",
+    "48-hour observation after deployment"
+  ],
+  "deferred": [
+    "SSO/Google",
+    "Bevy/Engage"
+  ],
+  "liveKeys": "Planned launch inputs; no unfinished local feature is attributed to missing keys",
+  "prdAcceptanceComplete": false
+}

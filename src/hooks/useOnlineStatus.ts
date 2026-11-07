@@ -1,16 +1,14 @@
+import { isPublicHydration } from "@/ui/public-hydration";
 import { useState, useEffect } from 'react';
 
 export const useOnlineStatus = () => {
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isOnline, setIsOnline] = useState(() => typeof window === "undefined" || isPublicHydration() ? true : navigator.onLine);
   const [wasOffline, setWasOffline] = useState(false);
 
   useEffect(() => {
+    setIsOnline(navigator.onLine);
     const handleOnline = () => {
       setIsOnline(true);
-      // If we were offline and now we're online, we might want to show a notification
-      if (wasOffline) {
-        // Back online
-      }
       setWasOffline(false);
     };
 
@@ -31,7 +29,7 @@ export const useOnlineStatus = () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, [wasOffline]);
+  }, []);
 
   // Method to manually check connection (used by retry buttons)
   const checkRealConnection = async (): Promise<boolean> => {

@@ -1,3 +1,6 @@
+import { parseEnv } from "node:util";
+import { serverDatabase } from "../server/db/client.mjs";
+import { createSiteDocumentHandler } from "../api/site.mjs";
 import { createServer } from "node:http";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { once } from "node:events";
@@ -18,12 +21,17 @@ for (const file of [
   "assets/hero-atmosphere-mobile.webp",
   "assets/hero-campus-mobile.webp",
   "assets/public-entry.js",
+  "assets/public-hydrate.js",
 ]) {
   const bytes = await readFile(path.join(root, file));
   build[file] = {
     bytes: bytes.length,
     sha256: createHash("sha256").update(bytes).digest("hex"),
   };
+}
+for (const file of [".build/ssr/entry.mjs", "api/site.mjs", "server/public-bootstrap.mjs"]) {
+  const bytes = await readFile(file);
+  build[file] = { bytes: bytes.length, sha256: createHash("sha256").update(bytes).digest("hex") };
 }
 const args = process.argv.slice(2);
 if (args.length && (args.length !== 1 || args[0] !== "--home-mobile"))
@@ -49,6 +57,13 @@ if (packageInfo.version !== "13.6.0")
   throw Error(
     "Performance probe requires the reviewed pinned Lighthouse 13.6.0.",
   );
+const localEnv = parseEnv(await readFile(".env.server.local", "utf8"));
+if (localEnv.NODE_ENV !== "development" || localEnv.APP_ORIGIN !== "http://127.0.0.1:8080" || localEnv.SUPABASE_URL !== "http://127.0.0.1:54361") throw Error("Public rendering probe is restricted to the dedicated loopback database.");
+const renderDocument = createSiteDocumentHandler({
+  configFactory: () => ({ origin: localEnv.APP_ORIGIN }),
+  databaseFactory: () => serverDatabase(localEnv),
+  loadTemplate: () => readFile(path.join(root, "index.html"), "utf8"),
+});
 const mime = {
   ".js": "text/javascript",
   ".css": "text/css",
@@ -104,6 +119,15 @@ const server = createServer(async (req, res) => {
       res.statusCode = r.status;
       res.setHeader("Content-Type", "application/json");
       return res.end(Buffer.from(await r.arrayBuffer()));
+    }
+    if (["/", "/events", "/contact"].includes(url.pathname)) {
+      const rendered = { headers: new Map(), statusCode: 200, setHeader(name, value) { this.headers.set(name, value); }, end(value) { this.body = value; } };
+      await renderDocument(req, rendered);
+      res.statusCode = rendered.statusCode;
+      for (const [name, value] of rendered.headers) res.setHeader(name, value);
+      let bytes = Buffer.from(rendered.body || "");
+      if (/\bgzip\b/.test(req.headers["accept-encoding"] || "")) { bytes = gzipSync(bytes); res.setHeader("Content-Encoding", "gzip"); }
+      res.setHeader("Content-Length", bytes.length); return res.end(bytes);
     }
     const safe = decodeURIComponent(url.pathname);
     let file = path.resolve(root, "." + safe);
@@ -244,7 +268,7 @@ try {
         presets,
         routes,
         scope:
-          "Isolated loopback static production build, gzip-negotiated HTML/JS/CSS/JSON/SVG, anonymous allowlisted reads to local API only; HTTPS requests blocked, no account or writes/provider sends. Lighthouse default simulated mobile and desktop presets; measurements must run without competing browser/build/coverage load. Compression models a required hosting delivery setting, not evidence that it is deployed. Lab LCP/CLS/TBT and accessibility only; TBT is not INP and these runs do not certify field p75 INP/LCP, representative 3D hardware or hosted latency. Raw reports in ignored artifacts/performance.",
+          "Isolated loopback production build using the actual per-request public React renderer and current public-only database projections, gzip-negotiated HTML/JS/CSS/JSON/SVG, anonymous allowlisted reads to local API only; HTTPS requests blocked, no account or writes/provider sends. Lighthouse default simulated mobile and desktop presets; measurements must run without competing browser/build/coverage load. Compression models a required hosting delivery setting, not evidence that it is deployed. Lab LCP/CLS/TBT and accessibility only; TBT is not INP and these runs do not certify field p75 INP/LCP, representative 3D hardware or hosted latency. Raw reports in ignored artifacts/performance.",
         tests,
       },
       null,

@@ -1,10 +1,12 @@
+import { useInitialPictureSource } from "./public-hydration";
 import { Component, lazy, Suspense, useEffect, useState, type ReactNode } from 'react';
 import { allowHeroMotion } from '../../shared/hero-policy.mjs';
 import { pictureFallback } from './picture-fallback';
 
 const Objects = lazy(() => import('./HeroObjects'));
 function Still() {
-  return <div className="gt-hero-objects" aria-hidden="true"><picture className="gt-hero-picture"><source media="(max-width: 480px)" srcSet="/assets/hero-campus-mobile.webp" /><img className="gt-hero-static-objects" data-fallback-src="/assets/hero-campus.webp" ref={pictureFallback} alt="" width="1920" height="800" loading="lazy" decoding="async" fetchPriority="low" /></picture></div>;
+  const initialPicture = useInitialPictureSource("/assets/hero-campus.webp");
+  return <div className="gt-hero-objects" aria-hidden="true"><picture className="gt-hero-picture"><source media="(max-width: 480px)" srcSet="/assets/hero-campus-mobile.webp" /><img className="gt-hero-static-objects" data-fallback-src="/assets/hero-campus.webp" src={initialPicture} ref={pictureFallback} alt="" width="1920" height="800" loading="lazy" decoding="async" fetchPriority="low" /></picture></div>;
 }
 class SceneBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
