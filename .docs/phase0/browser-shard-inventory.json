@@ -1,21 +1,21 @@
 {
-  "generatedAt": "2026-11-07T08:12:10.783052+00:00",
+  "generatedAt": "2026-11-07T08:27:03.272761+00:00",
   "shards": [
     {
       "shard": 1,
-      "cases": 542
+      "cases": 560
     },
     {
       "shard": 2,
-      "cases": 542
+      "cases": 560
     },
     {
       "shard": 3,
-      "cases": 542
+      "cases": 560
     }
   ],
-  "total": 1626,
+  "total": 1680,
   "duplicates": 0,
-  "caseKeysSha256": "08a50f55d3e74d72d90dd930f6c087be4f2329b695633894d453264a2c3bbc9a",
-  "note": "List-only exact disjoint union: 1,626 unique cases, 542 per shard. Current finance/content13-state78-case run passes separately; prior complete1,548-case invocation preserved as saved-source evidence. No complete current/CI/PRD acceptance claim."
+  "caseKeysSha256": "81ee6096e22c6630adcd49109b892edfdd87d18dc56bdfe0d72be9c43de10abd",
+  "note": "List-only exact disjoint union:1680unique cases,560per shard. New finance/content78, remaining-table30, inventory/grid24 and builder-tool12 passing scopes are separate invocations/source checkpoints. Prior complete1548-case run remains saved-source evidence; no complete current/CI/full PRD acceptance claim."
 }

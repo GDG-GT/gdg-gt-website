@@ -6,6 +6,7 @@ import { useNavigationSafety } from "@/hooks/useDraftGuard";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import NewsletterEditor from "./NewsletterEditor";
 import SubscriberBulk from "./SubscriberBulk";
+import ScrollableTable from "../ScrollableTable";
 import {
   date,
   useNewsletterWork,
@@ -470,8 +471,8 @@ function NewsletterWorkspaceContent() {
             selected.length > 0 &&
             selected.every((r) => list.items.some((s) => s.id === r.id)) && (
               <SubscriberBulk
-                records={selected.map((r) =>
-                  list.items.find((s) => s.id === r.id)!,
+                records={selected.map(
+                  (r) => list.items.find((s) => s.id === r.id)!,
                 )}
                 archived={state === "trash"}
                 onLockChange={setBulkLocked}
@@ -516,7 +517,7 @@ function NewsletterWorkspaceContent() {
             </EmptyState>
           ) : (
             <>
-              <div className="gt-table-wrap">
+              <ScrollableTable label={`Newsletter ${kind} records`}>
                 <table className="gt-table gt-newsletter-table">
                   <caption className="sr-only">
                     {kind} in your accessible newsletter scopes
@@ -613,7 +614,7 @@ function NewsletterWorkspaceContent() {
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </ScrollableTable>
               <div className="gt-inline-actions gt-newsletter-pagination">
                 <span>
                   {list.total} matching {kind} · page {page}

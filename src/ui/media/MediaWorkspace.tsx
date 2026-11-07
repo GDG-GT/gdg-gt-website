@@ -15,6 +15,7 @@ import {
 import MediaUpload from "./MediaUpload";
 import MediaFileEditor from "./MediaFileEditor";
 import DestinationPicker from "./DestinationPicker";
+import ScrollableTable from "../ScrollableTable";
 type FolderMode =
   | { action: "create"; folder?: never }
   | { action: "update" | "move" | "delete"; folder: MediaFolder };
@@ -939,11 +940,9 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
             </p>
           )}
           {list.items.length ? (
-            <div
+            <ScrollableTable
               className="gt-table-scroll"
-              role="region"
-              aria-label="Media inventory, scroll horizontally for all columns"
-              tabIndex={0}
+              label="Media inventory, scroll horizontally for all columns"
             >
               <table className="gt-data-table gt-media-table">
                 <caption className="sr-only">
@@ -1043,7 +1042,7 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </ScrollableTable>
           ) : (
             !loading && (
               <EmptyState

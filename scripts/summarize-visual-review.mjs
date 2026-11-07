@@ -9,24 +9,36 @@ if (
       "--current-primary",
       "--final-primary",
       "--finance-content",
+      "--remaining-tables",
+      "--inventory-keyboard",
     ].includes(args[0]))
 )
   throw Error(
-    "Optional review scope: --secondary, --current-primary, --final-primary or --finance-content",
+    "Optional review scope: --secondary, --current-primary, --final-primary, --finance-content, --remaining-tables or --inventory-keyboard",
   );
 const finalPrimary = args[0] === "--final-primary";
 const financeContent = args[0] === "--finance-content";
-const secondary = args[0] === "--secondary" || financeContent,
+const remainingTables = args[0] === "--remaining-tables";
+const inventoryKeyboard = args[0] === "--inventory-keyboard";
+const secondary =
+    args[0] === "--secondary" ||
+    financeContent ||
+    remainingTables ||
+    inventoryKeyboard,
   currentPrimary = args[0] === "--current-primary" || finalPrimary;
 const root = path.resolve("."),
   output = path.resolve(
-    financeContent
-      ? "artifacts/browser/finance-content-review"
-      : currentPrimary
-        ? "artifacts/browser/current-primary-review"
-        : secondary
-          ? "artifacts/browser/secondary-review"
-          : "artifacts/browser/visual-review",
+    inventoryKeyboard
+      ? "artifacts/browser/inventory-keyboard-review"
+      : remainingTables
+        ? "artifacts/browser/remaining-table-review"
+        : financeContent
+          ? "artifacts/browser/finance-content-current-review"
+          : currentPrimary
+            ? "artifacts/browser/current-primary-review"
+            : secondary
+              ? "artifacts/browser/secondary-review"
+              : "artifacts/browser/visual-review",
   ),
   // The last full primary invocation is preserved before the secondary-only
   // expansion; never infer primary captures from a secondary-only run.
@@ -71,136 +83,169 @@ const primaryPrompts = [
   ["Public form", ["public form"]],
   ["Form responses", ["forms responses"]],
 ];
-const prompts = financeContent
+const prompts = inventoryKeyboard
   ? [
+      ["VIS-TEST-019", "Form library inventory", ["form library keyboard"]],
+      ["VIS-TEST-018", "Media inventory", ["media inventory keyboard"]],
       [
-        "VIS-TEST-016",
-        "Finance editors and decisions",
-        [
-          "finance request table",
-          "budget allocation table",
-          "finance draft editor",
-          "budget draft editor",
-          "budget management",
-          "finance approval review",
-          "finance rejection review",
-          "finance report tables",
-        ],
+        "VIS-TEST-013",
+        "Private editorial inventory",
+        ["editorial inventory keyboard"],
       ],
-      [
-        "VIS-TEST-018",
-        "Content editors and visibility reviews",
-        [
-          "resource editor",
-          "resource publication review",
-          "sponsor editor",
-          "sponsor archive review",
-          "team profile editor",
-        ],
-      ],
+      ["VIS-TEST-021", "Native form answer grid", ["answer grid keyboard"]],
     ]
-  : secondary
+  : remainingTables
     ? [
-        ["VIS-TEST-013", "Overview chart data", ["registration data table"]],
-        [
-          "VIS-TEST-014",
-          "Events and attendance",
-          [
-            "event editor",
-            "event attendees",
-            "attendee correction",
-            "attendee removal review",
-            "attendee removal review lower controls",
-            "event email draft",
-            "event email history",
-            "event email approval review",
-            "event archive review",
-            "event archive review lower controls",
-            "event cancellation review",
-            "event cancellation review lower controls",
-            "event unpublish review",
-            "event unpublish review lower controls",
-            "event duplication review",
-            "event duplication review lower controls",
-          ],
-        ],
-        [
-          "VIS-TEST-015",
-          "Teams and collaboration",
-          [
-            "team announcements",
-            "team conversation",
-            "channel conversation",
-            "whiteboard canvas",
-            "whiteboard collaborators",
-          ],
-        ],
-        [
-          "VIS-TEST-017",
-          "Communications and newsletter",
-          [
-            "campaign preview",
-            "task inventory",
-            "task discussion",
-            "task editor",
-            "private conversation",
-            "private message compose",
-            "private review request",
-            "campaign custom audience",
-            "campaign send entry",
-            "campaign send approval",
-            "campaign delivery results",
-          ],
-        ],
         [
           "VIS-TEST-018",
-          "Content and media",
-          [
-            "media inspector",
-            "private upload selection",
-            "private upload validation",
-            "image publication review",
-            "image revocation review",
-          ],
+          "Managed public copy",
+          ["CMS copy editor", "CMS publication review"],
         ],
+        ["VIS-TEST-017", "Newsletter inventory", ["newsletter campaign table"]],
         [
           "VIS-TEST-020",
-          "Form builder",
+          "Private access-link delivery",
           [
-            "builder logic",
-            "builder settings",
-            "builder logic lower controls",
-            "builder settings lower controls",
-            "builder access",
-            "builder access lower controls",
-            "published version comparison",
-            "published version comparison lower controls",
-            "form publication review",
-            "form publication review lower controls",
+            "private link delivery table",
+            "private link delivery table lower controls",
           ],
         ],
-        [
-          "VIS-TEST-022",
-          "Form responses",
-          [
-            "response analytics",
-            "individual response",
-            "individual response lower controls",
-            "response revision review",
-            "response revision review lower controls",
-            "response retention review",
-            "response retention review lower controls",
-            "response export review",
-            "response sensitive reveal",
-            "response sensitive reveal lower controls",
-          ],
-        ],
+        ["VIS-TEST-022", "Response inventory", ["response inventory keyboard"]],
       ]
-    : primaryPrompts.map(([title, names], i) => [
-        "VIS-TEST-" + String(i + 1).padStart(3, "0"),
-        title,
-        names,
-      ]);
+    : financeContent
+      ? [
+          [
+            "VIS-TEST-016",
+            "Finance editors and decisions",
+            [
+              "finance request table",
+              "budget allocation table",
+              "finance draft editor",
+              "budget draft editor",
+              "budget management",
+              "finance approval review",
+              "finance rejection review",
+              "finance report tables",
+            ],
+          ],
+          [
+            "VIS-TEST-018",
+            "Content editors and visibility reviews",
+            [
+              "resource editor",
+              "resource publication review",
+              "sponsor editor",
+              "sponsor archive review",
+              "team profile editor",
+            ],
+          ],
+        ]
+      : secondary
+        ? [
+            [
+              "VIS-TEST-013",
+              "Overview chart data",
+              ["registration data table"],
+            ],
+            [
+              "VIS-TEST-014",
+              "Events and attendance",
+              [
+                "event editor",
+                "event attendees",
+                "attendee correction",
+                "attendee removal review",
+                "attendee removal review lower controls",
+                "event email draft",
+                "event email history",
+                "event email approval review",
+                "event archive review",
+                "event archive review lower controls",
+                "event cancellation review",
+                "event cancellation review lower controls",
+                "event unpublish review",
+                "event unpublish review lower controls",
+                "event duplication review",
+                "event duplication review lower controls",
+              ],
+            ],
+            [
+              "VIS-TEST-015",
+              "Teams and collaboration",
+              [
+                "team announcements",
+                "team conversation",
+                "channel conversation",
+                "whiteboard canvas",
+                "whiteboard collaborators",
+              ],
+            ],
+            [
+              "VIS-TEST-017",
+              "Communications and newsletter",
+              [
+                "campaign preview",
+                "task inventory",
+                "task discussion",
+                "task editor",
+                "private conversation",
+                "private message compose",
+                "private review request",
+                "campaign custom audience",
+                "campaign send entry",
+                "campaign send approval",
+                "campaign delivery results",
+              ],
+            ],
+            [
+              "VIS-TEST-018",
+              "Content and media",
+              [
+                "media inspector",
+                "private upload selection",
+                "private upload validation",
+                "image publication review",
+                "image revocation review",
+              ],
+            ],
+            [
+              "VIS-TEST-020",
+              "Form builder",
+              [
+                "builder logic",
+                "builder settings",
+                "builder logic lower controls",
+                "builder settings lower controls",
+                "builder access",
+                "builder access lower controls",
+                "published version comparison",
+                "published version comparison lower controls",
+                "form publication review",
+                "form publication review lower controls",
+              ],
+            ],
+            [
+              "VIS-TEST-022",
+              "Form responses",
+              [
+                "response analytics",
+                "individual response",
+                "individual response lower controls",
+                "response revision review",
+                "response revision review lower controls",
+                "response retention review",
+                "response retention review lower controls",
+                "response export review",
+                "response sensitive reveal",
+                "response sensitive reveal lower controls",
+              ],
+            ],
+          ]
+        : primaryPrompts.map(([title, names], i) => [
+            "VIS-TEST-" + String(i + 1).padStart(3, "0"),
+            title,
+            names,
+          ]);
 const captures = [];
 let compositionChecks = 0;
 async function visit(suites) {
@@ -208,11 +253,15 @@ async function visit(suites) {
     for (const spec of suite.specs || []) {
       if (
         !(
-          financeContent
-            ? /^finance-content-compositions\.spec\.ts$/
-            : secondary
-              ? /^(?:(?:secondary|event|task-message|publication-campaign|form-review)-compositions|whiteboard-composition)\.spec\.ts$/
-              : /^(?:operations|public|workspace)-compositions\.spec\.ts$/
+          inventoryKeyboard
+            ? /^inventory-keyboard\.spec\.ts$/
+            : remainingTables
+              ? /^remaining-table-compositions\.spec\.ts$/
+              : financeContent
+                ? /^finance-content-compositions\.spec\.ts$/
+                : secondary
+                  ? /^(?:(?:secondary|event|task-message|publication-campaign|form-review)-compositions|whiteboard-composition)\.spec\.ts$/
+                  : /^(?:operations|public|workspace)-compositions\.spec\.ts$/
         ).test(path.basename(spec.file || suite.file || ""))
       )
         continue;
@@ -283,7 +332,10 @@ const rows = prompts.map(([id, title, names]) => {
       // reject any unexpected desktop counterpart rather than inventing one.
       const expected =
         secondary &&
-        name === "builder access lower controls" &&
+        [
+          "builder access lower controls",
+          "private link delivery table lower controls",
+        ].includes(name) &&
         !project.endsWith("-mobile")
           ? 0
           : 1;
@@ -319,8 +371,30 @@ if (
     "The finance/content review requires thirteen states across all six profiles, without skips.",
   );
 if (
+  remainingTables &&
+  (compositionChecks !== 30 ||
+    captures.length !== 32 ||
+    report.stats.expected !== 30 ||
+    report.stats.skipped)
+)
+  throw Error(
+    "Remaining-table review requires five states across six profiles, with two mobile dialog lower-control captures and no skips.",
+  );
+if (
+  inventoryKeyboard &&
+  (compositionChecks !== 24 ||
+    captures.length !== 24 ||
+    report.stats.expected !== 24 ||
+    report.stats.skipped)
+)
+  throw Error(
+    "Inventory keyboard review requires four states across six profiles, no missing captures or skipped cases.",
+  );
+if (
   secondary &&
   !financeContent &&
+  !remainingTables &&
+  !inventoryKeyboard &&
   (compositionChecks !== 264 || captures.length !== 344)
 )
   throw Error(
@@ -332,19 +406,27 @@ if (!secondary && (compositionChecks !== 138 || captures.length !== 162))
   );
 const note =
   "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. " +
-  (financeContent
-    ? "These thirteen finance/content states supplement the separately preserved primary and forty-four-state secondary reviews. Remaining surfaces and complete acceptance stay open."
-    : secondary
-      ? "These forty-four secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review."
-      : "Primary compositions are captured; every secondary drawer, editor inspector, chart, collaboration surface and confirmation state still requires its own applicable acceptance review.");
+  (inventoryKeyboard
+    ? "These four keyboard inventory/grid states supplement the separately preserved primary and secondary reviews. Native form answer controls are also checked; no full acceptance is claimed."
+    : remainingTables
+      ? "These five additional CMS/newsletter/private-link/response states supplement the preserved primary and other secondary reviews. Mobile private-link dialogs also retain their lower-control views. No full acceptance is claimed."
+      : financeContent
+        ? "These thirteen finance/content states supplement the separately preserved primary and forty-four-state secondary reviews. Remaining surfaces and complete acceptance stay open."
+        : secondary
+          ? "These forty-four secondary states supplement the primary review; remaining secondary and confirmation states still need their own applicable acceptance review."
+          : "Primary compositions are captured; every secondary drawer, editor inspector, chart, collaboration surface and confirmation state still requires its own applicable acceptance review.");
 const summary = {
   generatedAt: new Date().toISOString(),
   completed: true,
-  scope: financeContent
-    ? "finance-content-secondary"
-    : secondary
-      ? "secondary"
-      : "primary",
+  scope: inventoryKeyboard
+    ? "inventory-keyboard-secondary"
+    : remainingTables
+      ? "remaining-table-secondary"
+      : financeContent
+        ? "finance-content-secondary"
+        : secondary
+          ? "secondary"
+          : "primary",
   sourceCaptureDirectory: path.relative(root, captureRoot),
   ...(currentPrimary && !finalPrimary
     ? {
@@ -361,11 +443,15 @@ const summary = {
   supplementalCaptures,
 };
 await writeFile(
-  financeContent
-    ? ".docs/phase0/finance-content-visual-review.json"
-    : secondary
-      ? ".docs/phase0/secondary-visual-review.json"
-      : ".docs/phase0/populated-visual-review.json",
+  inventoryKeyboard
+    ? ".docs/phase0/inventory-keyboard-visual-review.json"
+    : remainingTables
+      ? ".docs/phase0/remaining-table-visual-review.json"
+      : financeContent
+        ? ".docs/phase0/finance-content-visual-review.json"
+        : secondary
+          ? ".docs/phase0/secondary-visual-review.json"
+          : ".docs/phase0/populated-visual-review.json",
   JSON.stringify(summary, null, 2) + "\n",
 );
 const esc = (v) =>

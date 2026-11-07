@@ -8,6 +8,24 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Remaining table and mobile access review — 2026-11-07
+
+- All 36 native tables now use the existing named keyboard-scrolling wrapper,
+  including CMS/newsletter/form/media/editorial inventories and native answer grids.
+  A scoped minimum-width fix keeps populated private-link access dialogs within
+  the mobile viewport while tables scroll inside them.
+- Thirty remaining-table, 24 inventory/grid and 12 existing builder-tool checks
+  pass across six profiles. The refreshed 78-case finance review also passes with
+  canonical pending requests from a different submitting officer. These are
+  separate source checkpoints/invocations; old failures/captures remain intact.
+- Complete current source coverage passes all 2,722 tests/222 files with unchanged
+  global and critical gates. Types, targeted units, scoped lint, build/bytes and
+  latest PWA15/update9/HTTPS46 pass. All review captures remain unapproved.
+- List-only inventory: 1,680 unique cases, three disjoint shards of 560. The saved
+  complete 1,540-pass/eight-skip run is prior-source evidence. Mobile performance,
+  visual/manual/device/field and hosted PRD acceptance remain open.
+  See REMAINING_TABLE_KEYBOARD_REVIEW.md.
+
 ### Finance/content keyboard access and review — 2026-11-07
 
 - Finance requests, budgets, month/category reports and content collection tables

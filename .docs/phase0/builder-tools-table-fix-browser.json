@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-11-07T08:26:36.045874+00:00",
+  "completed": true,
+  "stats": {
+    "startTime": "2026-11-07T08:24:23.550Z",
+    "duration": 23415.83,
+    "expected": 12,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "raw": "/tmp/gdg-builder-tools-table-fix-browser.json",
+  "scope": "Existing Settings and Logic composition checks after scoped dialog grid sizing correction, six profiles, same axe/geometry/nowrite checks. Additional regression invocation, not new full suite."
+}

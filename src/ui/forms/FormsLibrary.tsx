@@ -29,6 +29,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
+import ScrollableTable from "../ScrollableTable";
 import { createTemplate, type PreviewForm, type FormTemplate } from "./store";
 import {
   useFormLibrary,
@@ -627,11 +628,9 @@ function FormsLibraryWorkspace() {
             </p>
           )}
           {filtered.length ? (
-            <div
+            <ScrollableTable
               className="gt-table-scroll"
-              role="region"
-              aria-label="Form inventory table"
-              tabIndex={0}
+              label="Form inventory table"
             >
               <table className="gt-table">
                 <thead>
@@ -808,7 +807,7 @@ function FormsLibraryWorkspace() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </ScrollableTable>
           ) : !library.loading && !library.error && !dateError ? (
             <EmptyState
               title={

@@ -9,6 +9,7 @@ import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import { useContent } from "@/contexts/ContentContext";
 import { Badge, Button, EmptyState, Field } from "../primitives";
+import ScrollableTable from "../ScrollableTable";
 import {
   managedPublicPages,
   editablePageCopy,
@@ -931,7 +932,7 @@ function ContentEditor() {
           <span className="sr-only">Loading site content…</span>
         </div>
       ) : data?.items.length ? (
-        <div className="gt-table-wrap">
+        <ScrollableTable label={kinds[kind] + " records"}>
           <table className="gt-data-table">
             <caption className="sr-only">{kinds[kind]}</caption>
             <thead>
@@ -1017,7 +1018,7 @@ function ContentEditor() {
               ))}
             </tbody>
           </table>
-        </div>
+        </ScrollableTable>
       ) : (
         !listRead.error && (
           <EmptyState title="No content in this view">

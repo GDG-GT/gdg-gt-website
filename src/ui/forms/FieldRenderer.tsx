@@ -2,6 +2,7 @@ import { ArrowDown, ArrowUp, Star } from "lucide-react";
 import type { ReactNode } from "react";
 import { conditionValues, type Answer, type FormField } from "./store";
 import FormImage from "./FormImage";
+import ScrollableTable from "../ScrollableTable";
 
 export default function FieldRenderer({
   field,
@@ -191,7 +192,10 @@ export default function FieldRenderer({
           </label>
         )}
         {["likert", "grid"].includes(field.type) && (
-          <div className="gt-grid-question">
+          <ScrollableTable
+            className="gt-grid-question"
+            label={field.label + " answer grid"}
+          >
             <table>
               <thead>
                 <tr>
@@ -261,7 +265,7 @@ export default function FieldRenderer({
                 ))}
               </tbody>
             </table>
-          </div>
+          </ScrollableTable>
         )}
         {field.type === "ranking" && (
           <>

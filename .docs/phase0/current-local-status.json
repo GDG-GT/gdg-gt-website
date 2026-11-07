@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-07T08:11:51.314746+00:00",
-  "buildIndexSha256": "9d5a9d1461512c05e96723ce8908655d897b7ae56988a5b9da9013e232e465be",
+  "generatedAt": "2026-11-07T08:31:16.545784+00:00",
+  "buildIndexSha256": "2c5507ea71587e8c30be46751f363bb64238bec80a3541b611b91faef09a9dc2",
   "quality": {
     "tests": {
       "files": 222,
@@ -15,9 +15,20 @@
     },
     "globalAndCriticalGatesPassed": true,
     "criticalModules": 21,
-    "currentBuildFullCoveragePassed": false,
-    "evidence": "phase0/communication-scroll-quality.json",
-    "scope": "Saved source20b59e2 full coverage2722 passes. Current finance/content table wrappers pass52focused tests/5files, all types/build/byte/catalog/scoped lint checks; complete current coverage not repeated for these targeted changes."
+    "currentBuildFullCoveragePassed": true,
+    "evidence": "phase0/table-keyboard-quality.json",
+    "scope": "Complete current source coverage2722tests/222files passes unchanged global/critical gates after all table/grid/sizing fixes. Targeted types/build/bytes/scoped lint and artifact checks also pass.",
+    "lint": {
+      "errors": 0,
+      "warnings": 10,
+      "unchangedWarningBudget": true
+    },
+    "secretScan": {
+      "commits": 156,
+      "files": 1935,
+      "unreviewed": 0,
+      "evidence": "phase0/secret-scan.json"
+    }
   },
   "browser": {
     "initialCompleteV7": {
@@ -37,7 +48,7 @@
       "flaky": 0
     },
     "fullCurrentInventoryPassingInvocation": false,
-    "note": "Saved baseline f163842 complete1540passes/eight skips retained. Current finance/content13state78case targeted scope passes, no skips/failures/retries. This does not claim a complete current inventory execution.",
+    "note": "New finance/content78, remaining-table30, inventory/grid24 and builder-tool12 scopes pass as separate invocations/source checkpoints. Saved f163842 complete1540passes/eight expectedskips retained. Current listed inventory1680cases/560per shard; a complete current execution has not been repeated.",
     "initialPublicReader": {
       "startTime": "2026-11-07T00:15:21.145Z",
       "duration": 89800.388,
@@ -88,9 +99,33 @@
       "flaky": 0
     },
     "financeContent": {
-      "startTime": "2026-11-07T08:08:30.370Z",
-      "duration": 98653.605,
+      "startTime": "2026-11-07T08:18:13.166Z",
+      "duration": 97057.313,
       "expected": 78,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "remainingTables": {
+      "startTime": "2026-11-07T08:19:50.761Z",
+      "duration": 40268.163,
+      "expected": 30,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "inventoryKeyboard": {
+      "startTime": "2026-11-07T08:23:42.404Z",
+      "duration": 40629.011999999995,
+      "expected": 24,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "builderToolRegression": {
+      "startTime": "2026-11-07T08:24:23.550Z",
+      "duration": 23415.83,
+      "expected": 12,
       "skipped": 0,
       "unexpected": 0,
       "flaky": 0
@@ -114,7 +149,16 @@
     "financeContentStates": 13,
     "financeContentChecks": 78,
     "financeContentCaptures": 78,
-    "financeContentIndex": "artifacts/browser/finance-content-review/index.html"
+    "financeContentIndex": "artifacts/browser/finance-content-current-review/index.html",
+    "remainingTableStates": 5,
+    "remainingTableChecks": 30,
+    "remainingTableCaptures": 32,
+    "remainingTableIndex": "artifacts/browser/remaining-table-review/index.html",
+    "inventoryKeyboardStates": 4,
+    "inventoryKeyboardChecks": 24,
+    "inventoryKeyboardCaptures": 24,
+    "inventoryKeyboardIndex": "artifacts/browser/inventory-keyboard-review/index.html",
+    "currentCheckpointScope": "All review captures remain unapproved and retain their own source invocation/build checkpoint; counts are not a complete final-build pixel-comparison claim."
   },
   "pwa": {
     "boundaries": 15,
@@ -621,14 +665,14 @@
   "scope": "Local only; no deployment, push, purchase, real provider send, production change, another timer or AI commit trailer.",
   "verificationScopeNote": "Complete source coverage2722 and browser1540/eight expectedskips pass, alongside final artifact/type/build/catalog/byte/audit checks. Captures remain unapproved; mobile LCP still fails. No full PRD/device/manual/field/hosted claim.",
   "delivery": {
-    "initialJsGzipBytes": 108188,
+    "initialJsGzipBytes": 108187,
     "copiedHelperGzipBytes": 585,
     "routeAwareHeroHints": true,
     "fontPreload": "retained",
-    "cssGzipBytes": 29936,
+    "cssGzipBytes": 29947,
     "fontBytes": 48432,
-    "offlineInstallRawBytes": 493275,
-    "publicRouteJsGzipBytes": 148987
+    "offlineInstallRawBytes": 493327,
+    "publicRouteJsGzipBytes": 149001
   },
   "dependencies": {
     "router": "7.18.5",
@@ -644,8 +688,8 @@
     "remaining": "Fresh production audit has zero findings; KaTeX compatibility/regression evidence retained. Hosted launch review separate."
   },
   "activeVerification": {
-    "savedBaseline": "f163842",
-    "changes": "Named keyboard scrolling for finance requests/budgets/month/category reports and content collection tables; thirteen additional read-only review states.",
-    "status": "Current focused78browser/52unit/types/build/bytes/catalog/scoped lint and PWA15/update9/HTTPS46 all pass. Full1540browser and2722coverage retained as saved-source evidence. Prototype trials rejected, no production adoption. Human/device/field/hosted acceptance remains open."
+    "savedBaseline": "9ebb6a8",
+    "changes": "All36native tables use named keyboard wrapper. Populated private-link Form access dialog fits viewport via scoped grid sizing. Native nested radio/checkbox controls preserved. Finance review fixture corrected to canonical pending/different submitter.",
+    "status": "Complete current source coverage2722passes. New132browser checks plus12existing tool regressions pass in separate invocations/source checkpoints. Types/targetedunits/byte/build and latest PWA15/update9/HTTPS46 pass. Full lint0errors/10inheritedwarnings and source/history scan0unreviewed. Full current1680browser inventory not re-executed. Ready for local save; full PRD human/device/field/hosted acceptance remains open."
   }
 }

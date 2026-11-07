@@ -330,6 +330,109 @@ Final source/history scan36849 reaped0:155commits/1924files/0unreviewed. One new
 public case-ID digest exactline reviewed, no rule/path exclusions. Ready for local
 save; no pending verification process. Three user-file exclusions remain intact.
 
+## Remaining table review active after save9ebb6a8
+
+Finance/content source/evidence saved9ebb6a8,31ownedpaths/noAItrailer; user3files
+excluded. Next5state initial WebKit-mobile68657 finished/reaped1:0pass/5fail.
+Three missing CMS/newsletter regions, actual response EndscrollLeft0, and actual
+private-link table widens/clips Form access dialog so region itself doesn't
+overflow. Original report /tmp/gdg-remaining-tables-initial-browser.json and
+artifacts/browser/remaining-tables-initial retained; screenshot inspected.
+Main NOW CHANGED: SiteContentWorkspace, NewsletterWorkspace, PrivateFormLinks,
+ResponseWorkspace use existing named ScrollableTable. Scoped builder dialog
+direct tabpanel min-width0 corrects grid min-content width; no clipping/hidden
+overflow workaround. New5state remaining-table-compositions.spec.ts asserts
+mobile table overflow, actual Home/End, native nested checkbox and full dialog
+geometry, plus unchanged axe/width/scroll/noerrors/nowrite checks. Build29866
+active; inspect before repeat. Finance review fixture corrected from nonexistent
+pending-admin-approval to canonical pending with different submitting officer,
+matching pending count; old78pass captures retained until refreshed. This is
+fixture fidelity correction, no production finance logic or gate change.
+
+## Inventory and answer-grid continuation
+
+Remaining5state scope75056 finished/reaped0, after refreshedfinance78passes:
+30/30passes acrosssixprofiles;32unapprovedcaptures including2mobile lower-control
+views. Both strict --finance-content and --remaining-tables indexes generated0.
+Old9ebb6a8 finance invocation remains under finance-content-review; refreshed
+canonical-pending fixture/current proof is finance-content-current-review.
+103units/5files,types/bytes/mapping39257 andlint68849 passed0. Artifactprobes38307
+finished/reaped0:PWA15/update9/HTTPS46 plus4catalogunits. App changed again below,
+so this is the preceding rebuilt-artifact evidence, not the latest build.
+
+Read-only TS JSX ancestry scan found4remaining native tables outside shared
+keyboard wrapper: BlogWorkspace, FormsLibrary, MediaWorkspace, FieldRenderer
+answer grid. Initial mobile4scope75289 finished/reaped1, exactly missing editorial/
+answer-grid regions and form/media EndscrollLeft0. Original raw/log retained
+/tmp/gdg-inventory-keyboard-initial-browser.{json,log}, images artifacts/browser/
+inventory-keyboard-initial. New4case inventory-keyboard.spec.ts checksactual
+End/Home and nested native radio Space/ArrowRight plus axe/geometry/nowrites.
+Grid fixture IDs match row/column counts. No response submitted or record changed.
+
+These4main components NOW use ScrollableTable with original class/style/name
+preserved; answergrid has question-specific label. Build95078 finished/reaped0.
+Latestdiagnostic40885 and types/newtargetedunits/bytes/mapping/lint86426 active;
+inspect/reap before repeating. --inventory-keyboard index prepared for24cases/
+24captures across6profiles in separate artifacts/browser/inventory-keyboard-review.
+Latest source is not saved yet; no full-current source/browser/field/hosted claim.
+Next: complete24scope and existing builder Settings/Logic geometry scope after
+scoped dialog min-width fix, then latest artifact checks/evidence/save.
+
+## Final table verification / coverage active
+
+Latest24inventory/grid plus12existing Settings/Logic89882 finished/reaped0, zero
+failures/skips/retries. Strict --inventory-keyboard index generated0:24captures;
+source AST traversal36native tables/0outside shared wrapper. Mobile answer-grid
+radios and editorial inventory inspected; fixed private-link dialog top/lower
+views inspected, all unapproved. New targeted100units/6files/types/bytes/mapping/
+lint86426 reaped0. Finalartifact34141 reaped0:PWA15/update9/HTTPS46. Latest build
+95078 passed. All list-only1680inventory26122/59796/60442/12342 reaped0; validate
+exact560case shards before recording. No browser/build/type/performance active.
+
+CURRENT full source coverage11866 running, one worker, unchanged70global/21
+critical90branch gates; do not compete with browser/build/types/performance or
+repeat. Raw artifacts/quality/table-keyboard-tests.json; coverage dir artifacts/
+quality/table-keyboard-coverage; log /tmp/gdg-final-table-coverage.log. App source
+stable. After completion inspect exit/report/thresholds, update current status,
+final docs/source scan and local save. All preceding targeted scopes remain
+separate invocations/source checkpoints, not full current browser execution.
+
+## Full current source verification complete
+
+Coverage11866 finished/reaped0:2722tests/222files, lines78.16/statements76.17/
+functions70.77/branches75.63, all unchanged70global/21critical90branch gates.
+Raw artifacts/quality/table-keyboard-tests.json and table-keyboard-coverage, log
+/tmp/gdg-final-table-coverage.log. No source edits after this run, only docs/data.
+Types/build/targeted units/bytes/scoped lint and current artifact15/9/46 pass.
+List-only1680unique cases exact560shards verified; public checksum exactline
+reviewed without exclusions. Current coverage proof/table source audit and
+status/review docs saved in phase0; no full current browser execution claim.
+Final full lint then source/history secret scan37323 active; inspect/reap before
+repeat. Then record result, stage owned paths excluding3userfiles and local save.
+Potential next isolated Home trial (not prepared/executed yet): retain matching
+inert SSR/fulloriginalCSS/font/art, but move actual React module download behind
+a tiny external two-frame/100ms-fallback bootstrap. Earlier scheduling deferred
+attachment only AFTER loading/parsing the full module graph; lowfetchpriority
+also retained early graph. A genuinely paint-first module-fetch test is distinct,
+but requires original browser proof and unchanged timing before any adoption.
+No timer, provider send, deployment, migration or package change authorized.
+
+Full lint37323 stopped at13warnings:3generated HTML coverage helper files had
+been emitted under artifacts/quality, outside the existing coverage/** exclusion.
+No application warnings added. Entire generated22MiB report moved intact to
+coverage/table-keyboard-final-20261107, summaryhash verified; original generated
+path retained as provenance in table-keyboard-quality.json. No ESLint exclusion,
+warning budget or source rule changed. Old rawlint retained; secret scan didNOT
+run after that lint failure. Final lint/scan next with unchanged maxwarnings10.
+
+Final lint/scan74094 finished/reaped0:0errors/10inheritedwarnings;156commits/
+1935currentfiles/0unreviewed findings. Coverage report now at
+coverage/table-keyboard-final-20261107 with unchanged thresholds/report bytes;
+all verification processes reaped. App source stable since full2722passcoverage.
+Ready to save owned changes; exclude3userfiles. Then continue isolated mobile
+performance investigation from existing trial root; no duplicate timers/services.
+Full PRD still incomplete and current full1680browser execution not claimed.
+
 ## Runtime and previous saved work
 
 UI8080/API8081, Supabase54361/DB54362, Mailpit54364. Colima `colima-gdg-gt`,

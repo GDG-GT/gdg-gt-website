@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-07T08:11:51.314746+00:00",
+  "generatedAt": "2026-11-07T08:26:36.045874+00:00",
   "completed": true,
   "allPassed": true,
   "initialMissingRegions": {
@@ -15,14 +15,14 @@
     "cause": "Actual unnamed finance/budget overflow regions; corrected with existing ScrollableTable, preserving keys for nested controls and current styles."
   },
   "stats": {
-    "startTime": "2026-11-07T08:08:30.370Z",
-    "duration": 98653.605,
+    "startTime": "2026-11-07T08:18:13.166Z",
+    "duration": 97057.313,
     "expected": 78,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
   },
-  "raw": "artifacts/browser/finance-content-review/results.json",
+  "raw": "artifacts/browser/finance-content-current-review/results.json",
   "states": 13,
   "captures": 78,
   "typesPassed": true,
@@ -34,7 +34,22 @@
   "scopedLintErrors": 0,
   "buildPassed": true,
   "bytesPassed": true,
-  "index": "artifacts/browser/finance-content-review/index.html",
-  "buildIndexSha256": "9d5a9d1461512c05e96723ce8908655d897b7ae56988a5b9da9013e232e465be",
-  "scope": "Fictional read-only fixtures, all writes refused. Actual finance/content editors and consequence reviews; named keyboard tables, axe including contrast, no page overflow/errors/unexpected reads. No approval, ledger mutation, provider send, full current suite, physical device, human visual or full PRD acceptance claimed."
+  "index": "artifacts/browser/finance-content-current-review/index.html",
+  "scope": "Fictional read-only fixtures, all writes refused. Actual finance/content editors and consequence reviews; named keyboard tables, axe including contrast, no page overflow/errors/unexpected reads. No approval, ledger mutation, provider send, full current suite, physical device, human visual or full PRD acceptance claimed.",
+  "priorSavedInvocation": {
+    "raw": "artifacts/browser/finance-content-review/results.json",
+    "stats": {
+      "startTime": "2026-11-07T08:08:30.370Z",
+      "duration": 98653.605,
+      "expected": 78,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "savedCommit": "9ebb6a8",
+    "note": "Retained original captures include a now-corrected unsupported review-status fixture label. Product keyboard checks passed; current fixture is canonical pending, with a different submitting officer and matching count.",
+    "buildIndexSha256": "9d5a9d1461512c05e96723ce8908655d897b7ae56988a5b9da9013e232e465be"
+  },
+  "fixtureFidelityCorrected": true,
+  "artifactScope": "Refreshed canonical-pending fixture after CMS/private-link/response-table fixes and before the final additional library/media/editorial/answer-grid wrappers. Finance/content components unchanged; separate passing source/artifact checkpoint, not complete final-build browser execution."
 }

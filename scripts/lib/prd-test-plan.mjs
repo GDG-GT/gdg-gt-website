@@ -66,6 +66,8 @@ for (const [index, title] of [
       ...([12, 13, 16, 17].includes(index) ? ["tests/browser/publication-campaign-compositions.spec.ts"] : []),
       ...([19, 21].includes(index) ? ["tests/browser/form-review-compositions.spec.ts"] : []),
       ...([15, 17].includes(index) ? ["tests/browser/finance-content-compositions.spec.ts"] : []),
+      ...([16, 17, 19, 21].includes(index) ? ["tests/browser/remaining-table-compositions.spec.ts"] : []),
+      ...([12, 17, 18, 20].includes(index) ? ["tests/browser/inventory-keyboard.spec.ts"] : []),
       "scripts/summarize-visual-review.mjs",
     ],
     [
@@ -1619,6 +1621,8 @@ add(
     "tests/browser/publication-campaign-compositions.spec.ts",
     "tests/browser/form-review-compositions.spec.ts",
     "tests/browser/finance-content-compositions.spec.ts",
+    "tests/browser/remaining-table-compositions.spec.ts",
+    "tests/browser/inventory-keyboard.spec.ts",
     "tests/browser/workspace-smoke.spec.ts",
     "tests/client/admin-navigation-focus.test.tsx",
     "tests/browser/full-workspace-navigation.spec.ts",

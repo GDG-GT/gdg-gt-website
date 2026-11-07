@@ -1,5 +1,10 @@
 # Finance and content keyboard review — 2026-11-07
 
+Later continuation: complete current source coverage now passes all 2,722 tests
+after the remaining table/grid/mobile sizing fixes. The text below records the
+9ebb6a8 finance checkpoint. See REMAINING_TABLE_KEYBOARD_REVIEW.md for the newer
+132-case review scope, additional regressions and precise invocation boundaries.
+
 Finance requests, budget allocations and the two finance report tables now use
 the existing named, focusable ScrollableTable. Resource, sponsor, sponsorship-tier,
 verified-impact and public-team collections share the same correction. This

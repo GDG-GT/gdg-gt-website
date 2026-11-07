@@ -1,0 +1,200 @@
+{
+  "generatedAt": "2026-11-07T08:25:22.361Z",
+  "completed": true,
+  "scope": "inventory-keyboard-secondary",
+  "sourceCaptureDirectory": "artifacts/browser/inventory-keyboard-review",
+  "note": "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. These four keyboard inventory/grid states supplement the separately preserved primary and secondary reviews. Native form answer controls are also checked; no full acceptance is claimed.",
+  "stats": {
+    "startTime": "2026-11-07T08:23:42.404Z",
+    "duration": 40629.011999999995,
+    "expected": 24,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "projects": [
+    "chromium-1920",
+    "chromium-1440",
+    "chromium-mobile",
+    "firefox-1440",
+    "webkit-1440",
+    "webkit-mobile"
+  ],
+  "compositionChecks": 24,
+  "captureCount": 24,
+  "prompts": [
+    {
+      "id": "VIS-TEST-019",
+      "title": "Form library inventory",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "form library keyboard",
+          "project": "chromium-1920",
+          "test": "inventory form library keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-c7eb2-rolling-and-native-controls-chromium-1920/attachments/form-library-keyboard-41c11888acc00f621f69a8d3dbff4a62eaee0e98.png"
+        },
+        {
+          "name": "form library keyboard",
+          "project": "chromium-1440",
+          "test": "inventory form library keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-c7eb2-rolling-and-native-controls-chromium-1440/attachments/form-library-keyboard-0592cae787154d7209e794fb623cf0748060c072.png"
+        },
+        {
+          "name": "form library keyboard",
+          "project": "chromium-mobile",
+          "test": "inventory form library keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-c7eb2-rolling-and-native-controls-chromium-mobile/attachments/form-library-keyboard-99da157a0b46a3e98ec1971a53f7550563a796a1.png"
+        },
+        {
+          "name": "form library keyboard",
+          "project": "firefox-1440",
+          "test": "inventory form library keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-c7eb2-rolling-and-native-controls-firefox-1440/attachments/form-library-keyboard-53b620160c4a1dd0dd2bd86b3e0854f7a1111c65.png"
+        },
+        {
+          "name": "form library keyboard",
+          "project": "webkit-1440",
+          "test": "inventory form library keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-c7eb2-rolling-and-native-controls-webkit-1440/attachments/form-library-keyboard-43b4ced438e6ebc8c1ba5fd1a10165c3783c55d0.png"
+        },
+        {
+          "name": "form library keyboard",
+          "project": "webkit-mobile",
+          "test": "inventory form library keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-c7eb2-rolling-and-native-controls-webkit-mobile/attachments/form-library-keyboard-71c9e870fe6c98ce82c1005fac40ea96e271ac2c.png"
+        }
+      ]
+    },
+    {
+      "id": "VIS-TEST-018",
+      "title": "Media inventory",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "media inventory keyboard",
+          "project": "chromium-1920",
+          "test": "inventory media inventory keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-a9baf-rolling-and-native-controls-chromium-1920/attachments/media-inventory-keyboard-c05d588656c6c387aacb5dcc9d0879948027c2a9.png"
+        },
+        {
+          "name": "media inventory keyboard",
+          "project": "chromium-1440",
+          "test": "inventory media inventory keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-a9baf-rolling-and-native-controls-chromium-1440/attachments/media-inventory-keyboard-afd9cf2dad9d035f880ed66659533abad054c14a.png"
+        },
+        {
+          "name": "media inventory keyboard",
+          "project": "chromium-mobile",
+          "test": "inventory media inventory keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-a9baf-rolling-and-native-controls-chromium-mobile/attachments/media-inventory-keyboard-9c0f9699cfb23b7d8dc836afd9ac77e3f3c54974.png"
+        },
+        {
+          "name": "media inventory keyboard",
+          "project": "firefox-1440",
+          "test": "inventory media inventory keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-a9baf-rolling-and-native-controls-firefox-1440/attachments/media-inventory-keyboard-049837cde71456cfe5d361aac689fab292c791a0.png"
+        },
+        {
+          "name": "media inventory keyboard",
+          "project": "webkit-1440",
+          "test": "inventory media inventory keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-a9baf-rolling-and-native-controls-webkit-1440/attachments/media-inventory-keyboard-0737482b1cd4a0fec34d55b9936b24522c2363fa.png"
+        },
+        {
+          "name": "media inventory keyboard",
+          "project": "webkit-mobile",
+          "test": "inventory media inventory keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-a9baf-rolling-and-native-controls-webkit-mobile/attachments/media-inventory-keyboard-d870150f003b9d99b9b3fa980f828ae2fe301485.png"
+        }
+      ]
+    },
+    {
+      "id": "VIS-TEST-013",
+      "title": "Private editorial inventory",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "editorial inventory keyboard",
+          "project": "chromium-1920",
+          "test": "inventory editorial inventory keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-0ff9e-rolling-and-native-controls-chromium-1920/attachments/editorial-inventory-keyboard-e3113df36961f1404030fa4746d0485c5bffd787.png"
+        },
+        {
+          "name": "editorial inventory keyboard",
+          "project": "chromium-1440",
+          "test": "inventory editorial inventory keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-0ff9e-rolling-and-native-controls-chromium-1440/attachments/editorial-inventory-keyboard-c96db486eeb7d10e9ab335492e9c28b7daccceab.png"
+        },
+        {
+          "name": "editorial inventory keyboard",
+          "project": "chromium-mobile",
+          "test": "inventory editorial inventory keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-0ff9e-rolling-and-native-controls-chromium-mobile/attachments/editorial-inventory-keyboard-517c3fdb962568157f02777c7218bc4c63822d20.png"
+        },
+        {
+          "name": "editorial inventory keyboard",
+          "project": "firefox-1440",
+          "test": "inventory editorial inventory keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-0ff9e-rolling-and-native-controls-firefox-1440/attachments/editorial-inventory-keyboard-1e87fabf81dd9973cbff72a3fac7864463c2de6c.png"
+        },
+        {
+          "name": "editorial inventory keyboard",
+          "project": "webkit-1440",
+          "test": "inventory editorial inventory keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-0ff9e-rolling-and-native-controls-webkit-1440/attachments/editorial-inventory-keyboard-f66801b417ee1d7de37c789b8bd7cecc07f4d0fb.png"
+        },
+        {
+          "name": "editorial inventory keyboard",
+          "project": "webkit-mobile",
+          "test": "inventory editorial inventory keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-0ff9e-rolling-and-native-controls-webkit-mobile/attachments/editorial-inventory-keyboard-32ec155f24f2db881d4ee0dbcb5e81e713551ebf.png"
+        }
+      ]
+    },
+    {
+      "id": "VIS-TEST-021",
+      "title": "Native form answer grid",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "answer grid keyboard",
+          "project": "chromium-1920",
+          "test": "inventory answer grid keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-3b46b-rolling-and-native-controls-chromium-1920/attachments/answer-grid-keyboard-78a12ce25c190f74e00385765517ea0362af5297.png"
+        },
+        {
+          "name": "answer grid keyboard",
+          "project": "chromium-1440",
+          "test": "inventory answer grid keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-3b46b-rolling-and-native-controls-chromium-1440/attachments/answer-grid-keyboard-3d70e306a94b240b476228f113357c60c76e1691.png"
+        },
+        {
+          "name": "answer grid keyboard",
+          "project": "chromium-mobile",
+          "test": "inventory answer grid keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-3b46b-rolling-and-native-controls-chromium-mobile/attachments/answer-grid-keyboard-1ed630368a474118e07b445199dac5c2a5bc3a9a.png"
+        },
+        {
+          "name": "answer grid keyboard",
+          "project": "firefox-1440",
+          "test": "inventory answer grid keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-3b46b-rolling-and-native-controls-firefox-1440/attachments/answer-grid-keyboard-0357b4ec75d7efdef4e39d3a6f4d7f475f11fe0d.png"
+        },
+        {
+          "name": "answer grid keyboard",
+          "project": "webkit-1440",
+          "test": "inventory answer grid keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-3b46b-rolling-and-native-controls-webkit-1440/attachments/answer-grid-keyboard-6769e56f6bfb5e68fcbea5e7a9a229eed17cc671.png"
+        },
+        {
+          "name": "answer grid keyboard",
+          "project": "webkit-mobile",
+          "test": "inventory answer grid keyboard allows keyboard scrolling and native controls",
+          "file": "artifacts/browser/inventory-keyboard-review/captures/inventory-keyboard-invento-3b46b-rolling-and-native-controls-webkit-mobile/attachments/answer-grid-keyboard-2b7b72731f20eed988ec9145667e82c889b0f896.png"
+        }
+      ]
+    }
+  ],
+  "supplementalCaptures": []
+}

@@ -23,6 +23,7 @@ import { initialValues, string, type Values } from "./fields";
 import BlogMarkdown from "./BlogMarkdown";
 import { BlogFileUpload, BlogFileDownload } from "./BlogFiles";
 import EditorialOverview from "./EditorialOverview";
+import ScrollableTable from "../ScrollableTable";
 type Kind = "posts" | "categories" | "submissions" | "comments";
 type Row = Values & {
   id: string;
@@ -972,7 +973,10 @@ function BlogWorkspaceContent({
               current access and filters.
             </p>
             {listing.items.length ? (
-              <div className="gt-table-scroll">
+              <ScrollableTable
+                className="gt-table-scroll"
+                label={labels[kind] + " inventory"}
+              >
                 <table>
                   <caption>Authorized {labels[kind].toLowerCase()}</caption>
                   <thead>
@@ -1028,7 +1032,7 @@ function BlogWorkspaceContent({
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </ScrollableTable>
             ) : (
               <EmptyState
                 title="No editorial records in this view"

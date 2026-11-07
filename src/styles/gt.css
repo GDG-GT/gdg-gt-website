@@ -4934,6 +4934,9 @@ fieldset.gt-event-fields {
   overflow-y: auto;
   max-height: 85dvh;
 }
+.gt-builder-tool-dialog > [role="tabpanel"] {
+  min-width: 0;
+}
 .gt-builder-tool-dialog .gt-palette-group {
   margin-top: 18px;
 }

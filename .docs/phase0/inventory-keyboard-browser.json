@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-11-07T08:26:36.045874+00:00",
+  "completed": true,
+  "allPassed": true,
+  "stats": {
+    "startTime": "2026-11-07T08:23:42.404Z",
+    "duration": 40629.011999999995,
+    "expected": 24,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "states": 4,
+  "captures": 24,
+  "index": "artifacts/browser/inventory-keyboard-review/index.html",
+  "raw": "artifacts/browser/inventory-keyboard-review/results.json",
+  "initialFailure": {
+    "raw": "/tmp/gdg-inventory-keyboard-initial-browser.json",
+    "stats": {
+      "startTime": "2026-11-07T08:21:26.203Z",
+      "duration": 34646.560999999994,
+      "expected": 0,
+      "skipped": 0,
+      "unexpected": 4,
+      "flaky": 0
+    }
+  },
+  "scope": "Fictional read-only fixtures; application writes refused. Current focused six-profile axe/contrast/document width/keyboard overflow and native control checks. No human visual approval, physical device/assistive technology/field/hosted or full PRD acceptance."
+}

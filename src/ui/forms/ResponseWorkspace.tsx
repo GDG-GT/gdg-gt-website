@@ -24,6 +24,7 @@ import ResponseActionReview, {
 import PrivacyPanel from "./PrivacyPanel";
 import { responseFilterLocalTime } from "./response-filters";
 import { useNavigationSafety } from "@/hooks/useDraftGuard";
+import ScrollableTable from "../ScrollableTable";
 type Result = {
   items: FormResponse[];
   total: number;
@@ -826,12 +827,7 @@ function ResponseWorkspaceContent() {
               </fieldset>
             )}
             {data.items.length ? (
-              <div
-                className="gt-table-wrap"
-                role="region"
-                aria-label="Response inventory table"
-                tabIndex={0}
-              >
+              <ScrollableTable label="Response inventory table">
                 <table className="gt-data-table">
                   <thead>
                     <tr>
@@ -897,7 +893,7 @@ function ResponseWorkspaceContent() {
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </ScrollableTable>
             ) : (
               <EmptyState title="No responses match">
                 Responses appear only after an online server commit. Try

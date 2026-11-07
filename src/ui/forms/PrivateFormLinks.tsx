@@ -21,6 +21,7 @@ import {
   type LinkAction,
 } from "./form-link-api";
 import FormLinkWriteRecovery from "./FormLinkWriteRecovery";
+import ScrollableTable from "../ScrollableTable";
 type WorkState = { dirty: boolean; busy: boolean; uncertain: boolean };
 type Props = {
   form: PreviewForm;
@@ -414,12 +415,7 @@ export default function PrivateFormLinks(props: Props) {
         Refresh delivery status
       </Button>
       {rows.length ? (
-        <div
-          className="gt-table-wrap"
-          role="region"
-          aria-label="Private link delivery records"
-          tabIndex={0}
-        >
+        <ScrollableTable label="Private link delivery records">
           <table className="gt-data-table">
             <thead>
               <tr>
@@ -472,7 +468,7 @@ export default function PrivateFormLinks(props: Props) {
               ))}
             </tbody>
           </table>
-        </div>
+        </ScrollableTable>
       ) : ready ? (
         <p>No private links have been issued.</p>
       ) : null}

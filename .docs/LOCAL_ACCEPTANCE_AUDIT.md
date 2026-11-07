@@ -1,11 +1,14 @@
 # Local implementation and acceptance audit — 2026-11-07
 
-Current finance/content continuation:13states/78targeted browser checks and
-78unapproved captures pass;52focused units/types/build/bytes/catalog/scoped lint
-and rebuilt PWA15/update9/HTTPS46 pass. Main table wrappers changed after the
-saved full2722coverage/1540browser baseline; those complete results remain
-prior-source evidence. New separate index: artifacts/browser/finance-content-review.
-See FINANCE_CONTENT_KEYBOARD_REVIEW.md for precise scope. Full PRD remains open.
+Current table/grid continuation (2026-11-07): all 36 native tables now use the
+existing named keyboard-scrolling wrapper. A scoped sizing fix prevents populated
+private-link rows from clipping the mobile Form access dialog. Complete current
+source coverage passes 2,722 tests/222 files with unchanged gates. Separate
+finance/content 78, remaining-table 30, inventory/grid 24 and builder-tool 12
+browser scopes pass; their review captures remain unapproved. Types, build,
+byte limits and latest PWA15/update9/HTTPS46 pass. The 1,680-case inventory is
+list-only; the saved full 1,540-pass/eight-skip run remains prior-source evidence.
+See REMAINING_TABLE_KEYBOARD_REVIEW.md for exact scope. Full PRD remains open.
 
 The current local application includes canonical recovery migrations through 137,
 React Router 7.18.5, the scoped KaTeX 0.18.2 security patch, visible-label and

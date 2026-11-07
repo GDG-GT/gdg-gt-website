@@ -1,0 +1,248 @@
+{
+  "generatedAt": "2026-11-07T08:21:36.897Z",
+  "completed": true,
+  "scope": "remaining-table-secondary",
+  "sourceCaptureDirectory": "artifacts/browser/remaining-table-review",
+  "note": "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. These five additional CMS/newsletter/private-link/response states supplement the preserved primary and other secondary reviews. Mobile private-link dialogs also retain their lower-control views. No full acceptance is claimed.",
+  "stats": {
+    "startTime": "2026-11-07T08:19:50.761Z",
+    "duration": 40268.163,
+    "expected": 30,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "projects": [
+    "chromium-1920",
+    "chromium-1440",
+    "chromium-mobile",
+    "firefox-1440",
+    "webkit-1440",
+    "webkit-mobile"
+  ],
+  "compositionChecks": 30,
+  "captureCount": 32,
+  "prompts": [
+    {
+      "id": "VIS-TEST-018",
+      "title": "Managed public copy",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "CMS copy editor",
+          "project": "chromium-1920",
+          "test": "remaining-table CMS copy editor preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-65d43-tent-and-keyboard-scrolling-chromium-1920/attachments/CMS-copy-editor-75321dfb5a30970df3365a96d4d6ddad5c0cec2d.png"
+        },
+        {
+          "name": "CMS publication review",
+          "project": "chromium-1920",
+          "test": "remaining-table CMS publication review preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-fefdd-tent-and-keyboard-scrolling-chromium-1920/attachments/CMS-publication-review-059d7308816b7d5c548a9fac11b208dec436c1c2.png"
+        },
+        {
+          "name": "CMS copy editor",
+          "project": "chromium-1440",
+          "test": "remaining-table CMS copy editor preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-65d43-tent-and-keyboard-scrolling-chromium-1440/attachments/CMS-copy-editor-e83495214b426edda4464546f505cbb8a4320aea.png"
+        },
+        {
+          "name": "CMS publication review",
+          "project": "chromium-1440",
+          "test": "remaining-table CMS publication review preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-fefdd-tent-and-keyboard-scrolling-chromium-1440/attachments/CMS-publication-review-1ec32b52e762f44ec81911d19a55e3558abeae82.png"
+        },
+        {
+          "name": "CMS copy editor",
+          "project": "chromium-mobile",
+          "test": "remaining-table CMS copy editor preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-65d43-tent-and-keyboard-scrolling-chromium-mobile/attachments/CMS-copy-editor-755772d84248849aa8ec7a9eabe9c2ae6d6e30b9.png"
+        },
+        {
+          "name": "CMS publication review",
+          "project": "chromium-mobile",
+          "test": "remaining-table CMS publication review preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-fefdd-tent-and-keyboard-scrolling-chromium-mobile/attachments/CMS-publication-review-84d0f07ffd74389ac0ac74af3140558a45b9f296.png"
+        },
+        {
+          "name": "CMS copy editor",
+          "project": "firefox-1440",
+          "test": "remaining-table CMS copy editor preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-65d43-tent-and-keyboard-scrolling-firefox-1440/attachments/CMS-copy-editor-ac00bddb07e50b7360df082d57fdbfb9c7a24394.png"
+        },
+        {
+          "name": "CMS publication review",
+          "project": "firefox-1440",
+          "test": "remaining-table CMS publication review preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-fefdd-tent-and-keyboard-scrolling-firefox-1440/attachments/CMS-publication-review-e3bd6b840522298dc0b71574b441b37ee83df305.png"
+        },
+        {
+          "name": "CMS copy editor",
+          "project": "webkit-1440",
+          "test": "remaining-table CMS copy editor preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-65d43-tent-and-keyboard-scrolling-webkit-1440/attachments/CMS-copy-editor-861188a05bba8b40aa74c57d3c3f3fb8b513650c.png"
+        },
+        {
+          "name": "CMS publication review",
+          "project": "webkit-1440",
+          "test": "remaining-table CMS publication review preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-fefdd-tent-and-keyboard-scrolling-webkit-1440/attachments/CMS-publication-review-438c808619cb22dd21d1c0c0aac7f0cd66938ffc.png"
+        },
+        {
+          "name": "CMS copy editor",
+          "project": "webkit-mobile",
+          "test": "remaining-table CMS copy editor preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-65d43-tent-and-keyboard-scrolling-webkit-mobile/attachments/CMS-copy-editor-5f691bdc43a6c8ecc395ec97db4a7c0d90c4c4ef.png"
+        },
+        {
+          "name": "CMS publication review",
+          "project": "webkit-mobile",
+          "test": "remaining-table CMS publication review preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-fefdd-tent-and-keyboard-scrolling-webkit-mobile/attachments/CMS-publication-review-82c2d6668a047e78141130fd93cc897984cf307f.png"
+        }
+      ]
+    },
+    {
+      "id": "VIS-TEST-017",
+      "title": "Newsletter inventory",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "newsletter campaign table",
+          "project": "chromium-1920",
+          "test": "remaining-table newsletter campaign table preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-d95bb-tent-and-keyboard-scrolling-chromium-1920/attachments/newsletter-campaign-table-bc0461a02fe32e454d61b16d4826bed4e46073a9.png"
+        },
+        {
+          "name": "newsletter campaign table",
+          "project": "chromium-1440",
+          "test": "remaining-table newsletter campaign table preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-d95bb-tent-and-keyboard-scrolling-chromium-1440/attachments/newsletter-campaign-table-ef12dfe3e4d177f78cb1e9f860cbe160de113a3a.png"
+        },
+        {
+          "name": "newsletter campaign table",
+          "project": "chromium-mobile",
+          "test": "remaining-table newsletter campaign table preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-d95bb-tent-and-keyboard-scrolling-chromium-mobile/attachments/newsletter-campaign-table-f88c87f4bbe6e9a846939a5c085d42ed06ba81bc.png"
+        },
+        {
+          "name": "newsletter campaign table",
+          "project": "firefox-1440",
+          "test": "remaining-table newsletter campaign table preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-d95bb-tent-and-keyboard-scrolling-firefox-1440/attachments/newsletter-campaign-table-31c2a2b71f54d49a74c26d91ba87b990a4336d58.png"
+        },
+        {
+          "name": "newsletter campaign table",
+          "project": "webkit-1440",
+          "test": "remaining-table newsletter campaign table preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-d95bb-tent-and-keyboard-scrolling-webkit-1440/attachments/newsletter-campaign-table-5a4bbbe926da60dd3c1fbe5f888f5aa5c24b69e5.png"
+        },
+        {
+          "name": "newsletter campaign table",
+          "project": "webkit-mobile",
+          "test": "remaining-table newsletter campaign table preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-d95bb-tent-and-keyboard-scrolling-webkit-mobile/attachments/newsletter-campaign-table-70d89fad71acca7e4b716b37808ae507d0133c2e.png"
+        }
+      ]
+    },
+    {
+      "id": "VIS-TEST-020",
+      "title": "Private access-link delivery",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "private link delivery table",
+          "project": "chromium-1920",
+          "test": "remaining-table private link delivery table preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-c1232-tent-and-keyboard-scrolling-chromium-1920/attachments/private-link-delivery-table-c474fb12fefa48f58aa1c349528907ee21f211f3.png"
+        },
+        {
+          "name": "private link delivery table",
+          "project": "chromium-1440",
+          "test": "remaining-table private link delivery table preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-c1232-tent-and-keyboard-scrolling-chromium-1440/attachments/private-link-delivery-table-53bd0105398a1a877549b0f1ac81d821cce3d4bc.png"
+        },
+        {
+          "name": "private link delivery table lower controls",
+          "project": "chromium-mobile",
+          "test": "remaining-table private link delivery table preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-c1232-tent-and-keyboard-scrolling-chromium-mobile/attachments/private-link-delivery-table-lower-controls-b0df93f83e24ba46fd8614c6c88c9ba81c562dc1.png"
+        },
+        {
+          "name": "private link delivery table",
+          "project": "chromium-mobile",
+          "test": "remaining-table private link delivery table preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-c1232-tent-and-keyboard-scrolling-chromium-mobile/attachments/private-link-delivery-table-ab712059ffdb52d4916ad1f53b2ed7f09e20edef.png"
+        },
+        {
+          "name": "private link delivery table",
+          "project": "firefox-1440",
+          "test": "remaining-table private link delivery table preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-c1232-tent-and-keyboard-scrolling-firefox-1440/attachments/private-link-delivery-table-d039f6f2057d1ea7c5d2ef6f1cd1e2d0e40c5304.png"
+        },
+        {
+          "name": "private link delivery table",
+          "project": "webkit-1440",
+          "test": "remaining-table private link delivery table preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-c1232-tent-and-keyboard-scrolling-webkit-1440/attachments/private-link-delivery-table-ebf38095bf7b27ea6b0739afe4783714e8c57d47.png"
+        },
+        {
+          "name": "private link delivery table lower controls",
+          "project": "webkit-mobile",
+          "test": "remaining-table private link delivery table preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-c1232-tent-and-keyboard-scrolling-webkit-mobile/attachments/private-link-delivery-table-lower-controls-d09e188d3c897c08aaa88f05558d306e1b2412d3.png"
+        },
+        {
+          "name": "private link delivery table",
+          "project": "webkit-mobile",
+          "test": "remaining-table private link delivery table preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-c1232-tent-and-keyboard-scrolling-webkit-mobile/attachments/private-link-delivery-table-1b2b3d8d7c7fd1f4f51bacf45f06511f62051e46.png"
+        }
+      ]
+    },
+    {
+      "id": "VIS-TEST-022",
+      "title": "Response inventory",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "response inventory keyboard",
+          "project": "chromium-1920",
+          "test": "remaining-table response inventory keyboard preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-0150e-tent-and-keyboard-scrolling-chromium-1920/attachments/response-inventory-keyboard-c0ed6281ea686df4059b4bc33351cab93255ae6e.png"
+        },
+        {
+          "name": "response inventory keyboard",
+          "project": "chromium-1440",
+          "test": "remaining-table response inventory keyboard preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-0150e-tent-and-keyboard-scrolling-chromium-1440/attachments/response-inventory-keyboard-eb0aaf04635cc0e91ed2430c04a4bc5415eba462.png"
+        },
+        {
+          "name": "response inventory keyboard",
+          "project": "chromium-mobile",
+          "test": "remaining-table response inventory keyboard preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-0150e-tent-and-keyboard-scrolling-chromium-mobile/attachments/response-inventory-keyboard-a8c2d5f67dea24038b87af5991583a10a8e9742a.png"
+        },
+        {
+          "name": "response inventory keyboard",
+          "project": "firefox-1440",
+          "test": "remaining-table response inventory keyboard preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-0150e-tent-and-keyboard-scrolling-firefox-1440/attachments/response-inventory-keyboard-684a777d583992243726423d2811267dd301a194.png"
+        },
+        {
+          "name": "response inventory keyboard",
+          "project": "webkit-1440",
+          "test": "remaining-table response inventory keyboard preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-0150e-tent-and-keyboard-scrolling-webkit-1440/attachments/response-inventory-keyboard-647b944af41b39428f21ca84e9eaf17b5b19cf4e.png"
+        },
+        {
+          "name": "response inventory keyboard",
+          "project": "webkit-mobile",
+          "test": "remaining-table response inventory keyboard preserves readable content and keyboard scrolling",
+          "file": "artifacts/browser/remaining-table-review/captures/remaining-table-compositio-0150e-tent-and-keyboard-scrolling-webkit-mobile/attachments/response-inventory-keyboard-67ffa5651229cc56670e92426e83d0c7b1d4b29e.png"
+        }
+      ]
+    }
+  ],
+  "supplementalCaptures": []
+}

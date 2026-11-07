@@ -2,6 +2,7 @@ import type { Page } from "@playwright/test";
 import { test, expect } from "./public-fixture";
 import { financeFixture } from "./operations-records";
 import { captureSecondaryComposition as capture } from "./composition-capture";
+import { financeStates } from "../../shared/finances.mjs";
 
 const contentId = "fbbf0000-0000-4000-8000-000000000001";
 const recordName = "Fictional chapter record";
@@ -42,9 +43,16 @@ const contentRecord = {
 async function records(page: Page, decision: boolean) {
   const finance = financeFixture();
   if (decision) {
-    finance.record.status = "pending-admin-approval";
-    finance.record.actions = ["admin_approve", "reject", "note"];
+    Object.assign(finance.record, {
+      status: "pending",
+      createdBy: "f1560000-0000-4000-8000-000000000009",
+      submittedBy: "f1560000-0000-4000-8000-000000000009",
+      creatorName: "Fictional request submitter",
+      submittedAt: "2026-11-05T12:00:00Z",
+      actions: ["admin_approve", "reject", "note"],
+    });
   }
+  expect(financeStates).toContain(finance.record.status);
   const writes: string[] = [],
     errors: string[] = [],
     unexpected: string[] = [];
@@ -80,8 +88,24 @@ async function records(page: Page, decision: boolean) {
         ],
         note: "Fictional scoped report",
       });
-    if (p.startsWith("/admin/finances") || p.startsWith("/admin/budgets"))
-      return reply(finance.response(p + url.search));
+    if (p.startsWith("/admin/finances") || p.startsWith("/admin/budgets")) {
+      const data = finance.response(p + url.search);
+      return reply(
+        decision && p === "/admin/finances"
+          ? {
+              ...data,
+              stateCounts: { pending: 1 },
+              summary: {
+                completedIncome: "0.00",
+                completedExpenses: "0.00",
+                reservedExpenses: "0.00",
+                awaitingApproval: 1,
+                net: "0.00",
+              },
+            }
+          : data,
+      );
+    }
     if (p.startsWith("/admin/content-records/")) {
       if (p.endsWith("/capabilities"))
         return reply({ globalCreate: true, teams: [] });

@@ -2780,6 +2780,7 @@
       "automated": [
         "tests/browser/workspace-compositions.spec.ts",
         "tests/browser/publication-campaign-compositions.spec.ts",
+        "tests/browser/inventory-keyboard.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2864,6 +2865,7 @@
         "tests/browser/secondary-compositions.spec.ts",
         "tests/browser/task-message-compositions.spec.ts",
         "tests/browser/publication-campaign-compositions.spec.ts",
+        "tests/browser/remaining-table-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2886,6 +2888,8 @@
         "tests/browser/secondary-compositions.spec.ts",
         "tests/browser/publication-campaign-compositions.spec.ts",
         "tests/browser/finance-content-compositions.spec.ts",
+        "tests/browser/remaining-table-compositions.spec.ts",
+        "tests/browser/inventory-keyboard.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2905,6 +2909,7 @@
       "scope": "Forms library populated composition review candidates",
       "automated": [
         "tests/browser/workspace-compositions.spec.ts",
+        "tests/browser/inventory-keyboard.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2926,6 +2931,7 @@
         "tests/browser/workspace-compositions.spec.ts",
         "tests/browser/secondary-compositions.spec.ts",
         "tests/browser/form-review-compositions.spec.ts",
+        "tests/browser/remaining-table-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2945,6 +2951,7 @@
       "scope": "Public form populated composition review candidates",
       "automated": [
         "tests/browser/workspace-compositions.spec.ts",
+        "tests/browser/inventory-keyboard.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2966,6 +2973,7 @@
         "tests/browser/workspace-compositions.spec.ts",
         "tests/browser/secondary-compositions.spec.ts",
         "tests/browser/form-review-compositions.spec.ts",
+        "tests/browser/remaining-table-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -6136,6 +6144,8 @@
         "tests/browser/publication-campaign-compositions.spec.ts",
         "tests/browser/form-review-compositions.spec.ts",
         "tests/browser/finance-content-compositions.spec.ts",
+        "tests/browser/remaining-table-compositions.spec.ts",
+        "tests/browser/inventory-keyboard.spec.ts",
         "tests/browser/workspace-smoke.spec.ts",
         "tests/client/admin-navigation-focus.test.tsx",
         "tests/browser/full-workspace-navigation.spec.ts",
