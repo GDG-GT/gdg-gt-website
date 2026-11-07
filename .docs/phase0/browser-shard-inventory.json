@@ -1,21 +1,21 @@
 {
-  "generatedAt": "2026-11-07T06:27:53.735755+00:00",
+  "generatedAt": "2026-11-07T08:12:10.783052+00:00",
   "shards": [
     {
       "shard": 1,
-      "cases": 516
+      "cases": 542
     },
     {
       "shard": 2,
-      "cases": 516
+      "cases": 542
     },
     {
       "shard": 3,
-      "cases": 516
+      "cases": 542
     }
   ],
-  "total": 1548,
+  "total": 1626,
   "duplicates": 0,
-  "caseKeysSha256": "9b87974c5f0a16da197c46c84922bc8f82e1cf203ef9f0c091f50945834feae5",
-  "note": "List-only exact disjoint union: 44 secondary states; 1,548 unique cases, 516 per shard. This does not claim a complete execution, CI run or PRD acceptance."
+  "caseKeysSha256": "08a50f55d3e74d72d90dd930f6c087be4f2329b695633894d453264a2c3bbc9a",
+  "note": "List-only exact disjoint union: 1,626 unique cases, 542 per shard. Current finance/content13-state78-case run passes separately; prior complete1,548-case invocation preserved as saved-source evidence. No complete current/CI/PRD acceptance claim."
 }

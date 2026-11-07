@@ -1,0 +1,510 @@
+{
+  "generatedAt": "2026-11-07T08:10:22.826Z",
+  "completed": true,
+  "scope": "finance-content-secondary",
+  "sourceCaptureDirectory": "artifacts/browser/finance-content-review",
+  "note": "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. These thirteen finance/content states supplement the separately preserved primary and forty-four-state secondary reviews. Remaining surfaces and complete acceptance stay open.",
+  "stats": {
+    "startTime": "2026-11-07T08:08:30.370Z",
+    "duration": 98653.605,
+    "expected": 78,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "projects": [
+    "chromium-1920",
+    "chromium-1440",
+    "chromium-mobile",
+    "firefox-1440",
+    "webkit-1440",
+    "webkit-mobile"
+  ],
+  "compositionChecks": 78,
+  "captureCount": 78,
+  "prompts": [
+    {
+      "id": "VIS-TEST-016",
+      "title": "Finance editors and decisions",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "finance request table",
+          "project": "chromium-1920",
+          "test": "finance-content finance request table is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-89dd9-ble-and-keyboard-accessible-chromium-1920/attachments/finance-request-table-2b87b37ef247fd2ee6c34e214b2b3a72fe4b9fe3.png"
+        },
+        {
+          "name": "budget allocation table",
+          "project": "chromium-1920",
+          "test": "finance-content budget allocation table is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-bede5-ble-and-keyboard-accessible-chromium-1920/attachments/budget-allocation-table-627b768eb388928449bbb949b4662a553be2a96a.png"
+        },
+        {
+          "name": "finance draft editor",
+          "project": "chromium-1920",
+          "test": "finance-content finance draft editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-dbe97-ble-and-keyboard-accessible-chromium-1920/attachments/finance-draft-editor-51240519fff019c2934184bed3cf082eb7d37a2e.png"
+        },
+        {
+          "name": "budget draft editor",
+          "project": "chromium-1920",
+          "test": "finance-content budget draft editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-00fb0-ble-and-keyboard-accessible-chromium-1920/attachments/budget-draft-editor-1b6ca88271cdc26df223ec9ca499fbd6fd5b9fdd.png"
+        },
+        {
+          "name": "budget management",
+          "project": "chromium-1920",
+          "test": "finance-content budget management is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-51958-ble-and-keyboard-accessible-chromium-1920/attachments/budget-management-6a749596e2128c36119610ae150378d317ae314e.png"
+        },
+        {
+          "name": "finance approval review",
+          "project": "chromium-1920",
+          "test": "finance-content finance approval review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-529ae-ble-and-keyboard-accessible-chromium-1920/attachments/finance-approval-review-9141228cfe8baa4c789350072dbc36e655dbd9f7.png"
+        },
+        {
+          "name": "finance rejection review",
+          "project": "chromium-1920",
+          "test": "finance-content finance rejection review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-fc487-ble-and-keyboard-accessible-chromium-1920/attachments/finance-rejection-review-1b72d4ca8d34b468c94739d17d1f4a4ef0c0071f.png"
+        },
+        {
+          "name": "finance report tables",
+          "project": "chromium-1920",
+          "test": "finance-content finance report tables is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-241b2-ble-and-keyboard-accessible-chromium-1920/attachments/finance-report-tables-24db6a42309d835dfb33e45a7952e5b6a4a2a3da.png"
+        },
+        {
+          "name": "finance request table",
+          "project": "chromium-1440",
+          "test": "finance-content finance request table is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-89dd9-ble-and-keyboard-accessible-chromium-1440/attachments/finance-request-table-b99fdb737bfc98b32078913ca2b509ed05f8d22b.png"
+        },
+        {
+          "name": "budget allocation table",
+          "project": "chromium-1440",
+          "test": "finance-content budget allocation table is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-bede5-ble-and-keyboard-accessible-chromium-1440/attachments/budget-allocation-table-00e132fd1deb4267983688158cd104b0a0665108.png"
+        },
+        {
+          "name": "finance draft editor",
+          "project": "chromium-1440",
+          "test": "finance-content finance draft editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-dbe97-ble-and-keyboard-accessible-chromium-1440/attachments/finance-draft-editor-8f728d5fcf8f158fbb91f8d398be940871d5645f.png"
+        },
+        {
+          "name": "budget draft editor",
+          "project": "chromium-1440",
+          "test": "finance-content budget draft editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-00fb0-ble-and-keyboard-accessible-chromium-1440/attachments/budget-draft-editor-3bf319672dfb426466ac735b2ee60aba27455452.png"
+        },
+        {
+          "name": "budget management",
+          "project": "chromium-1440",
+          "test": "finance-content budget management is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-51958-ble-and-keyboard-accessible-chromium-1440/attachments/budget-management-f1bd9ef0555c16227b5e0db6c2c8701a6246d752.png"
+        },
+        {
+          "name": "finance approval review",
+          "project": "chromium-1440",
+          "test": "finance-content finance approval review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-529ae-ble-and-keyboard-accessible-chromium-1440/attachments/finance-approval-review-f4952f8366e76a9bda06a4fa5a60c967e9ba5519.png"
+        },
+        {
+          "name": "finance rejection review",
+          "project": "chromium-1440",
+          "test": "finance-content finance rejection review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-fc487-ble-and-keyboard-accessible-chromium-1440/attachments/finance-rejection-review-3c76930fa657e98a1d0798007db10749fac5a4c9.png"
+        },
+        {
+          "name": "finance report tables",
+          "project": "chromium-1440",
+          "test": "finance-content finance report tables is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-241b2-ble-and-keyboard-accessible-chromium-1440/attachments/finance-report-tables-e2a007f634977e280452c0395d9862142891c5b6.png"
+        },
+        {
+          "name": "finance request table",
+          "project": "chromium-mobile",
+          "test": "finance-content finance request table is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-89dd9-ble-and-keyboard-accessible-chromium-mobile/attachments/finance-request-table-050c9b0e8183c89886355f20ea871f414eca77a5.png"
+        },
+        {
+          "name": "budget allocation table",
+          "project": "chromium-mobile",
+          "test": "finance-content budget allocation table is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-bede5-ble-and-keyboard-accessible-chromium-mobile/attachments/budget-allocation-table-acdce1f52ba95ef1b7b7affbee7d6b06286f6acb.png"
+        },
+        {
+          "name": "finance draft editor",
+          "project": "chromium-mobile",
+          "test": "finance-content finance draft editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-dbe97-ble-and-keyboard-accessible-chromium-mobile/attachments/finance-draft-editor-4d8a21f07c46cc71da49443cb6c5379ae5deb934.png"
+        },
+        {
+          "name": "budget draft editor",
+          "project": "chromium-mobile",
+          "test": "finance-content budget draft editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-00fb0-ble-and-keyboard-accessible-chromium-mobile/attachments/budget-draft-editor-a16ec36ccd520a8332cc0f18ed2ed8d070eb7017.png"
+        },
+        {
+          "name": "budget management",
+          "project": "chromium-mobile",
+          "test": "finance-content budget management is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-51958-ble-and-keyboard-accessible-chromium-mobile/attachments/budget-management-51352de7baddaf3c9404ed4675460ecfd6f008fb.png"
+        },
+        {
+          "name": "finance approval review",
+          "project": "chromium-mobile",
+          "test": "finance-content finance approval review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-529ae-ble-and-keyboard-accessible-chromium-mobile/attachments/finance-approval-review-57534c0f17c3137ff28baf20b8389764bb5aa5cb.png"
+        },
+        {
+          "name": "finance rejection review",
+          "project": "chromium-mobile",
+          "test": "finance-content finance rejection review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-fc487-ble-and-keyboard-accessible-chromium-mobile/attachments/finance-rejection-review-d6678319f4cc3ef0d36d6e4c439ee1cae4698aea.png"
+        },
+        {
+          "name": "finance report tables",
+          "project": "chromium-mobile",
+          "test": "finance-content finance report tables is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-241b2-ble-and-keyboard-accessible-chromium-mobile/attachments/finance-report-tables-82b88f216cc688f8ab7a6361484a450c3e128fd9.png"
+        },
+        {
+          "name": "finance request table",
+          "project": "firefox-1440",
+          "test": "finance-content finance request table is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-89dd9-ble-and-keyboard-accessible-firefox-1440/attachments/finance-request-table-055e32be29f750c0351535905c12e4f02b1f085b.png"
+        },
+        {
+          "name": "budget allocation table",
+          "project": "firefox-1440",
+          "test": "finance-content budget allocation table is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-bede5-ble-and-keyboard-accessible-firefox-1440/attachments/budget-allocation-table-678670a3caa75cbb7e58ea4878dc8deb0e48ba43.png"
+        },
+        {
+          "name": "finance draft editor",
+          "project": "firefox-1440",
+          "test": "finance-content finance draft editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-dbe97-ble-and-keyboard-accessible-firefox-1440/attachments/finance-draft-editor-0d66efa7cbbf40a5b2cc4b064fa7eb8e749e3f36.png"
+        },
+        {
+          "name": "budget draft editor",
+          "project": "firefox-1440",
+          "test": "finance-content budget draft editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-00fb0-ble-and-keyboard-accessible-firefox-1440/attachments/budget-draft-editor-8dac32bb896eba57503caf3042db67255b30ec0a.png"
+        },
+        {
+          "name": "budget management",
+          "project": "firefox-1440",
+          "test": "finance-content budget management is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-51958-ble-and-keyboard-accessible-firefox-1440/attachments/budget-management-64c353f22ce6d424acfa2abea81b2bcb70a7828e.png"
+        },
+        {
+          "name": "finance approval review",
+          "project": "firefox-1440",
+          "test": "finance-content finance approval review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-529ae-ble-and-keyboard-accessible-firefox-1440/attachments/finance-approval-review-902787ee5c2f317e297b0c3ebc2c8860d17f4723.png"
+        },
+        {
+          "name": "finance rejection review",
+          "project": "firefox-1440",
+          "test": "finance-content finance rejection review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-fc487-ble-and-keyboard-accessible-firefox-1440/attachments/finance-rejection-review-de425f412dd0bba8bed1ad25379db33cf831c082.png"
+        },
+        {
+          "name": "finance report tables",
+          "project": "firefox-1440",
+          "test": "finance-content finance report tables is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-241b2-ble-and-keyboard-accessible-firefox-1440/attachments/finance-report-tables-3d0c9dd20bd9e27983e6c0f098c722640e7cde84.png"
+        },
+        {
+          "name": "finance request table",
+          "project": "webkit-1440",
+          "test": "finance-content finance request table is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-89dd9-ble-and-keyboard-accessible-webkit-1440/attachments/finance-request-table-b4857df02384c76302d8045818957181e1ba4cc1.png"
+        },
+        {
+          "name": "budget allocation table",
+          "project": "webkit-1440",
+          "test": "finance-content budget allocation table is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-bede5-ble-and-keyboard-accessible-webkit-1440/attachments/budget-allocation-table-28f4f6b161c3819338cbf03ab74b89b497a1d73c.png"
+        },
+        {
+          "name": "finance draft editor",
+          "project": "webkit-1440",
+          "test": "finance-content finance draft editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-dbe97-ble-and-keyboard-accessible-webkit-1440/attachments/finance-draft-editor-051f7fbca078422abf72cc32ae4091e1ffe8e6e5.png"
+        },
+        {
+          "name": "budget draft editor",
+          "project": "webkit-1440",
+          "test": "finance-content budget draft editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-00fb0-ble-and-keyboard-accessible-webkit-1440/attachments/budget-draft-editor-21e80314d1c7924191a4d71cb5f0823e70a24ef9.png"
+        },
+        {
+          "name": "budget management",
+          "project": "webkit-1440",
+          "test": "finance-content budget management is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-51958-ble-and-keyboard-accessible-webkit-1440/attachments/budget-management-f71005f6eafc93673ac1aaf1f83552f932fd90be.png"
+        },
+        {
+          "name": "finance approval review",
+          "project": "webkit-1440",
+          "test": "finance-content finance approval review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-529ae-ble-and-keyboard-accessible-webkit-1440/attachments/finance-approval-review-4bf64249902b9d23969b60a76a336fe938a18dc7.png"
+        },
+        {
+          "name": "finance rejection review",
+          "project": "webkit-1440",
+          "test": "finance-content finance rejection review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-fc487-ble-and-keyboard-accessible-webkit-1440/attachments/finance-rejection-review-42f46d95158141967df12e0b2c3b6d31b7dbc677.png"
+        },
+        {
+          "name": "finance report tables",
+          "project": "webkit-1440",
+          "test": "finance-content finance report tables is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-241b2-ble-and-keyboard-accessible-webkit-1440/attachments/finance-report-tables-f5d58443fb39c43d0989339496c1eb7c6a724882.png"
+        },
+        {
+          "name": "finance request table",
+          "project": "webkit-mobile",
+          "test": "finance-content finance request table is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-89dd9-ble-and-keyboard-accessible-webkit-mobile/attachments/finance-request-table-4b7eb8e4ee5a4a5343e15758e78fe4a96d558c42.png"
+        },
+        {
+          "name": "budget allocation table",
+          "project": "webkit-mobile",
+          "test": "finance-content budget allocation table is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-bede5-ble-and-keyboard-accessible-webkit-mobile/attachments/budget-allocation-table-b9fff2317ebd58942d839f5dee00444e651cc5bd.png"
+        },
+        {
+          "name": "finance draft editor",
+          "project": "webkit-mobile",
+          "test": "finance-content finance draft editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-dbe97-ble-and-keyboard-accessible-webkit-mobile/attachments/finance-draft-editor-6aef3a2840a7f86e0b5971e546c2cf001d3d6607.png"
+        },
+        {
+          "name": "budget draft editor",
+          "project": "webkit-mobile",
+          "test": "finance-content budget draft editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-00fb0-ble-and-keyboard-accessible-webkit-mobile/attachments/budget-draft-editor-e9ab65cd7ba73c03564fb2e68bac7aa3e749ef93.png"
+        },
+        {
+          "name": "budget management",
+          "project": "webkit-mobile",
+          "test": "finance-content budget management is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-51958-ble-and-keyboard-accessible-webkit-mobile/attachments/budget-management-989ab898a6bbb717583df0bb67907f7ee3ce39ee.png"
+        },
+        {
+          "name": "finance approval review",
+          "project": "webkit-mobile",
+          "test": "finance-content finance approval review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-529ae-ble-and-keyboard-accessible-webkit-mobile/attachments/finance-approval-review-691b4efd1316d671e70d17a7f347ad6cf535605c.png"
+        },
+        {
+          "name": "finance rejection review",
+          "project": "webkit-mobile",
+          "test": "finance-content finance rejection review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-fc487-ble-and-keyboard-accessible-webkit-mobile/attachments/finance-rejection-review-161745a1011aa170372df2f9ff3d90586f9af03f.png"
+        },
+        {
+          "name": "finance report tables",
+          "project": "webkit-mobile",
+          "test": "finance-content finance report tables is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-241b2-ble-and-keyboard-accessible-webkit-mobile/attachments/finance-report-tables-f9641d58ff4cc5b9064e64f39c2f901feaf8ad5c.png"
+        }
+      ]
+    },
+    {
+      "id": "VIS-TEST-018",
+      "title": "Content editors and visibility reviews",
+      "acceptance": "unverified",
+      "captures": [
+        {
+          "name": "resource editor",
+          "project": "chromium-1920",
+          "test": "finance-content resource editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-b55bf-ble-and-keyboard-accessible-chromium-1920/attachments/resource-editor-59334989b96a18ba763786d25839bfaffb35958d.png"
+        },
+        {
+          "name": "resource publication review",
+          "project": "chromium-1920",
+          "test": "finance-content resource publication review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-62691-ble-and-keyboard-accessible-chromium-1920/attachments/resource-publication-review-a5bf6534be2de93df03a3f7f6c0eeb7bf766d599.png"
+        },
+        {
+          "name": "sponsor editor",
+          "project": "chromium-1920",
+          "test": "finance-content sponsor editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-02160-ble-and-keyboard-accessible-chromium-1920/attachments/sponsor-editor-68186cac7ec1b165ed99ecc42ee6264208196383.png"
+        },
+        {
+          "name": "sponsor archive review",
+          "project": "chromium-1920",
+          "test": "finance-content sponsor archive review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-cfe27-ble-and-keyboard-accessible-chromium-1920/attachments/sponsor-archive-review-6733cd194db5bd69acfa40db1f97af705b70dbfe.png"
+        },
+        {
+          "name": "team profile editor",
+          "project": "chromium-1920",
+          "test": "finance-content team profile editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-e1a86-ble-and-keyboard-accessible-chromium-1920/attachments/team-profile-editor-fe43024bdfebad477f7638f0521d651bee2a8adf.png"
+        },
+        {
+          "name": "resource editor",
+          "project": "chromium-1440",
+          "test": "finance-content resource editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-b55bf-ble-and-keyboard-accessible-chromium-1440/attachments/resource-editor-1c60a2f563ca043103068b214d57db4a673e554f.png"
+        },
+        {
+          "name": "resource publication review",
+          "project": "chromium-1440",
+          "test": "finance-content resource publication review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-62691-ble-and-keyboard-accessible-chromium-1440/attachments/resource-publication-review-d65141cdd0e1c8dafd563049b9bc4c5cccfd0f69.png"
+        },
+        {
+          "name": "sponsor editor",
+          "project": "chromium-1440",
+          "test": "finance-content sponsor editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-02160-ble-and-keyboard-accessible-chromium-1440/attachments/sponsor-editor-c7054e530f62be2eb662f80d2f9a5bedb2453b1a.png"
+        },
+        {
+          "name": "sponsor archive review",
+          "project": "chromium-1440",
+          "test": "finance-content sponsor archive review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-cfe27-ble-and-keyboard-accessible-chromium-1440/attachments/sponsor-archive-review-1c81a13b824c9130d45a606ae9be8576c46a9446.png"
+        },
+        {
+          "name": "team profile editor",
+          "project": "chromium-1440",
+          "test": "finance-content team profile editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-e1a86-ble-and-keyboard-accessible-chromium-1440/attachments/team-profile-editor-40cba432f1fbba99d21294682cb62571b8c02cb7.png"
+        },
+        {
+          "name": "resource editor",
+          "project": "chromium-mobile",
+          "test": "finance-content resource editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-b55bf-ble-and-keyboard-accessible-chromium-mobile/attachments/resource-editor-86636fc23587f28ce544428518d51059277a305a.png"
+        },
+        {
+          "name": "resource publication review",
+          "project": "chromium-mobile",
+          "test": "finance-content resource publication review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-62691-ble-and-keyboard-accessible-chromium-mobile/attachments/resource-publication-review-297dfc6085fbeac82910e6de4e73ec4de5578144.png"
+        },
+        {
+          "name": "sponsor editor",
+          "project": "chromium-mobile",
+          "test": "finance-content sponsor editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-02160-ble-and-keyboard-accessible-chromium-mobile/attachments/sponsor-editor-f69d7f1c13d2b4c07f6d21bcc7273c4a6a3b0b91.png"
+        },
+        {
+          "name": "sponsor archive review",
+          "project": "chromium-mobile",
+          "test": "finance-content sponsor archive review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-cfe27-ble-and-keyboard-accessible-chromium-mobile/attachments/sponsor-archive-review-6370aeb7743de8b68e3a464e83b285a40eca3578.png"
+        },
+        {
+          "name": "team profile editor",
+          "project": "chromium-mobile",
+          "test": "finance-content team profile editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-e1a86-ble-and-keyboard-accessible-chromium-mobile/attachments/team-profile-editor-bcfae032f1c33763155ae69b510df8474611890f.png"
+        },
+        {
+          "name": "resource editor",
+          "project": "firefox-1440",
+          "test": "finance-content resource editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-b55bf-ble-and-keyboard-accessible-firefox-1440/attachments/resource-editor-283abe9b1ffcbf2ae1adcfd1e90be56a8d505bb2.png"
+        },
+        {
+          "name": "resource publication review",
+          "project": "firefox-1440",
+          "test": "finance-content resource publication review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-62691-ble-and-keyboard-accessible-firefox-1440/attachments/resource-publication-review-d5a9aeba3274f9a525f63e7d79bbde36bd2c6538.png"
+        },
+        {
+          "name": "sponsor editor",
+          "project": "firefox-1440",
+          "test": "finance-content sponsor editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-02160-ble-and-keyboard-accessible-firefox-1440/attachments/sponsor-editor-7b54954f46093d19d6fe47e0c6615b289a063d0a.png"
+        },
+        {
+          "name": "sponsor archive review",
+          "project": "firefox-1440",
+          "test": "finance-content sponsor archive review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-cfe27-ble-and-keyboard-accessible-firefox-1440/attachments/sponsor-archive-review-b21021ca2f3a9a5e1185655b6dbe35072aaf3c1d.png"
+        },
+        {
+          "name": "team profile editor",
+          "project": "firefox-1440",
+          "test": "finance-content team profile editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-e1a86-ble-and-keyboard-accessible-firefox-1440/attachments/team-profile-editor-7d199e0f715256f160e6445e91e6ed1f9fca3946.png"
+        },
+        {
+          "name": "resource editor",
+          "project": "webkit-1440",
+          "test": "finance-content resource editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-b55bf-ble-and-keyboard-accessible-webkit-1440/attachments/resource-editor-421834e914a8e37651924e89fd783033a5fc26e7.png"
+        },
+        {
+          "name": "resource publication review",
+          "project": "webkit-1440",
+          "test": "finance-content resource publication review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-62691-ble-and-keyboard-accessible-webkit-1440/attachments/resource-publication-review-3907efb8c5c6c19eacfea262cbab1c151912880f.png"
+        },
+        {
+          "name": "sponsor editor",
+          "project": "webkit-1440",
+          "test": "finance-content sponsor editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-02160-ble-and-keyboard-accessible-webkit-1440/attachments/sponsor-editor-e90e686ddda53867d8ab997bde2d059b968e921b.png"
+        },
+        {
+          "name": "sponsor archive review",
+          "project": "webkit-1440",
+          "test": "finance-content sponsor archive review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-cfe27-ble-and-keyboard-accessible-webkit-1440/attachments/sponsor-archive-review-a7c6c3c0c99a0e328f90fa203ea023835844b4c0.png"
+        },
+        {
+          "name": "team profile editor",
+          "project": "webkit-1440",
+          "test": "finance-content team profile editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-e1a86-ble-and-keyboard-accessible-webkit-1440/attachments/team-profile-editor-b851e4e7d0eb8d36a6ace6c1bfd4ae80ce6a47e3.png"
+        },
+        {
+          "name": "resource editor",
+          "project": "webkit-mobile",
+          "test": "finance-content resource editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-b55bf-ble-and-keyboard-accessible-webkit-mobile/attachments/resource-editor-445c5f181959fdd78a00f9fda37f0808bd71ed36.png"
+        },
+        {
+          "name": "resource publication review",
+          "project": "webkit-mobile",
+          "test": "finance-content resource publication review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-62691-ble-and-keyboard-accessible-webkit-mobile/attachments/resource-publication-review-37d34282b64b2efe101486e71948561df76ecc12.png"
+        },
+        {
+          "name": "sponsor editor",
+          "project": "webkit-mobile",
+          "test": "finance-content sponsor editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-02160-ble-and-keyboard-accessible-webkit-mobile/attachments/sponsor-editor-14234457fb0e1575946268d99413ae155c1af371.png"
+        },
+        {
+          "name": "sponsor archive review",
+          "project": "webkit-mobile",
+          "test": "finance-content sponsor archive review is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-cfe27-ble-and-keyboard-accessible-webkit-mobile/attachments/sponsor-archive-review-c04ccca5088955d1ce83ecbc15a87d2b3c4e40c2.png"
+        },
+        {
+          "name": "team profile editor",
+          "project": "webkit-mobile",
+          "test": "finance-content team profile editor is readable and keyboard accessible",
+          "file": "artifacts/browser/finance-content-review/captures/finance-content-compositio-e1a86-ble-and-keyboard-accessible-webkit-mobile/attachments/team-profile-editor-38917cd22f0e1ceeee7b31566451af4848e60866.png"
+        }
+      ]
+    }
+  ],
+  "supplementalCaptures": []
+}

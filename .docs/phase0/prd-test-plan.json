@@ -2841,6 +2841,7 @@
       "scope": "Finances populated composition review candidates",
       "automated": [
         "tests/browser/operations-compositions.spec.ts",
+        "tests/browser/finance-content-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -2884,6 +2885,7 @@
         "tests/browser/operations-compositions.spec.ts",
         "tests/browser/secondary-compositions.spec.ts",
         "tests/browser/publication-campaign-compositions.spec.ts",
+        "tests/browser/finance-content-compositions.spec.ts",
         "scripts/summarize-visual-review.mjs"
       ],
       "remaining": [
@@ -6133,6 +6135,7 @@
         "tests/client/keyboard-scroll.test.tsx",
         "tests/browser/publication-campaign-compositions.spec.ts",
         "tests/browser/form-review-compositions.spec.ts",
+        "tests/browser/finance-content-compositions.spec.ts",
         "tests/browser/workspace-smoke.spec.ts",
         "tests/client/admin-navigation-focus.test.tsx",
         "tests/browser/full-workspace-navigation.spec.ts",

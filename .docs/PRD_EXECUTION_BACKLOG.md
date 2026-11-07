@@ -1,5 +1,12 @@
 # Remaining PRD execution and acceptance
 
+Current finance/content continuation:13states/78targeted browser checks and
+78unapproved captures pass;52focused units/types/build/bytes/catalog/scoped lint
+and rebuilt PWA15/update9/HTTPS46 pass. Main table wrappers changed after the
+saved full2722coverage/1540browser baseline; those complete results remain
+prior-source evidence. New separate index: artifacts/browser/finance-content-review.
+See FINANCE_CONTENT_KEYBOARD_REVIEW.md for precise scope. Full PRD remains open.
+
 Reviewed against the complete v1.5 PRD on 2026-10-21, including normative sections
 21–33, not just numbered feature bullets. The chronological implementation tracker
 documents local evidence. Neither this checklist nor passing local tests closes

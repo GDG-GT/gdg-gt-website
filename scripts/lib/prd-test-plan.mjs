@@ -65,6 +65,7 @@ for (const [index, title] of [
       ...(index === 16 ? ["tests/browser/task-message-compositions.spec.ts"] : []),
       ...([12, 13, 16, 17].includes(index) ? ["tests/browser/publication-campaign-compositions.spec.ts"] : []),
       ...([19, 21].includes(index) ? ["tests/browser/form-review-compositions.spec.ts"] : []),
+      ...([15, 17].includes(index) ? ["tests/browser/finance-content-compositions.spec.ts"] : []),
       "scripts/summarize-visual-review.mjs",
     ],
     [
@@ -1617,6 +1618,7 @@ add(
     "tests/client/keyboard-scroll.test.tsx",
     "tests/browser/publication-campaign-compositions.spec.ts",
     "tests/browser/form-review-compositions.spec.ts",
+    "tests/browser/finance-content-compositions.spec.ts",
     "tests/browser/workspace-smoke.spec.ts",
     "tests/client/admin-navigation-focus.test.tsx",
     "tests/browser/full-workspace-navigation.spec.ts",

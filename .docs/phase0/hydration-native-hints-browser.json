@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-11-07T08:02:09.989919+00:00",
+  "completed": true,
+  "allPassed": true,
+  "sourceBaseline": "f163842",
+  "adopted": false,
+  "stats": {
+    "startTime": "2026-11-07T08:00:52.371Z",
+    "duration": 21307.761000000002,
+    "expected": 12,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "browserTypesPassed": true,
+  "initialHeadingExpectationFailure": {
+    "raw": "/tmp/gdg-hydration-native-hints-browser.json",
+    "failed": 12,
+    "cause": "Fixture expected nonexistent Events heading; corrected to actual rendered heading; no application or gate change."
+  },
+  "scope": "Detached worktree only. Twelve cases across six profiles, immediate/delayed live availability; native image hints, retained server hero identity, inert focus lock until live status, navigation away/back, mobile picture requests, axe, no hydration/page errors or writes. No performance/production delivery/full PRD claim."
+}

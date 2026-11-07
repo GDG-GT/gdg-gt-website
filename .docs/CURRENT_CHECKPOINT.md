@@ -24,7 +24,7 @@ Do not touch shared user browser tabs/zoom/preferences or kill user processes.
 
 ## Current source and completed verification
 
-Branch `feat/ui-local`; latest save **20b59e2**,44ownedpaths/noAItrailer; previous c9d73e1. Current fixes:
+Branch `feat/ui-local`; latest saved evidence **f163842**; source fixes **20b59e2**,44ownedpaths/noAItrailer; previous c9d73e1. Current fixes:
 
 - Campaign delivery and registration chart tables use named ScrollableTable.
 - Campaign recipient/message and event recipient panels support named focus and
@@ -125,6 +125,210 @@ proper matching server/client hydration in an isolated worktree if feasible;
 do not alter the verified main artifact speculatively. Existing runtime/permissions
 and three user-file exclusions remain. All full/source/probe runs completed;
 no need to repeat them for docs/index-only edits.
+
+## Isolated hydration investigation
+
+Verified evidence/index save is **f163842**,16ownedpaths/noAItrailer; source fixes
+remain20b59e2. Main source/dist still match full passing artifact; only three
+preserved user files were dirty after save. Complete tests/probes must not repeat
+for this documentation-only save.
+
+An isolated detached worktree has been created at
+`/Users/tejas/.cache/gdg-hydration-trial-7shvwpda/checkout`, based on f163842.
+Root pointer `/tmp/gdg-hydration-trial-path`; dependencies symlink to the same
+reviewed cache, no installs. Its ignored .env.local contains only public browser
+flags VITE_REAL_API=true/VITE_LOCAL_UI=false, no credentials. Prototype edits now exist only in that worktree: public-hydration helper/boundary,
+Home/Still initial picture source latch, explicit native inert attribute,
+App server-router injection/export and main explicit-marker hydrateRoot branch,
+plus src/ssr-entry.tsx with StaticRouterProvider hydrate=false. No main app edits.
+Typecheck33357 and client-then-server build14808 completed/reaped0, logs
+/tmp/gdg-hydration-prototype-{types,client-build,server-build}.log. Server build
+uses separate prototype-only config under trial/probe and outputs trial/server,
+not main dist. Trial root and checkout dependencies both link the same cache.
+New browser-types19219 and six-profile86323 completed/reaped0:6/6 pass,
+zero skips/failures/retries. Original hero DOM node retained; zero hydration
+errors; native inert focus lock before/after mount until live fixture; navigation
+away/back and no wrong desktop fallback requests on both mobile engines; axe/
+exceptions/fixture writes checks pass. Initial desktop86624 passed too.
+Owned fixture server16745 on4188 stopped/reaped0 before timing. Server render
+11912bytes/oneh1/native inert/zeroinline scripts/zerofetches; render log
+/tmp/gdg-hydration-prototype-render.log. Evidence
+phase0/hydration-render-browser-feasibility.json. Main source/dist untouched.
+
+Isolated Home-mobile hydration performance82324 completed/reaped1: LCP2669ms,
+performance97/a11y100/labels/CLS0, stillfails2500. One run does not prove field/
+causal improvement; proper production bootstrap/route integration unimplemented.
+Log
+/tmp/gdg-hydration-prototype-performance.log, probe trial/probe/performance.mjs,
+root trial/performance-dist, raw main artifacts/performance/hydration-prototype,
+evidence phase0/hydration-home-mobile-trial.json. Original default preset,
+threshold and read-only API allowlist retained. No current verification active. No production bootstrap/route/server integration
+yet. Do not recreate the worktree. Work only there for the hydration
+prototype; verified main UI8080/preview4173 and main dist remain untouched.
+
+Prototype first: same full initial React tree, router server provider with inline
+hydration script disabled, main hydrateRoot only on explicit public SSR marker,
+latched picture source on the initial SSR instance, native inertness and a safe
+online snapshot. Prove retained DOM identity/no hydration errors and actual
+interaction before isolated unchanged-presets timing. Then address authoritative
+public content bootstrap, per-route maintenance/cache/CSP/private boundaries and
+server bundle size before proposing integration. No warning suppression or changing
+approved design. No adoption or speed improvement is claimed yet. Official React
+hydration and v7 StaticRouterProvider docs read; current React docs show19.3, so
+use installed18.3.1 types/implementation for supported options. SSR7.18.5 types/
+implementation should be verified locally. Existing APIs are local-only.
+
+## Home stylesheet prototype continuation
+
+Font fraction-feature subset trial in trial/probe/font-feature retains230Unicode
+entries/full100–900 axis but saves only2996bytes; not adopted and no browser
+fidelity proof claimed. Original font bytes remain unchanged everywhere.
+Broader read-only CSSownership audit:76public modules/194tokens,881candidate
+rules, initial gzip estimate23591->11336; cascade/order safety unproved, no split
+adopted. Instead prototype duplicates a smaller Home subset first and retains
+complete original stylesheets untouched, awaiting them before any other lazy
+route renders. This avoids moving original rules into a different cascade order.
+
+Hydration-only source backup in trial/probe/hydration-only-source plus patch.
+New uncommitted worktree helper src/ui/public-route-styles.ts validates1–8 unique
+same-origin /assets/*.css URLs, appends full original styles in recorded order,
+and gates public lazy modules plus AdminShell. All9PublicPages and5otherpublic
+loaders plusAdminShell gated. First automated replacement asserted10publicimports
+but actualcount9; initialpartial build recorded separately. Corrected source,
+client/server build97536 and types44535 completed/reaped0. Render still11912bytes/
+oneh1/inert/zeroinline/zerofetches. No main app changes.
+
+trial/probe/home-css.mjs derives Home-reachable class tokens/dynamic prefixes
+and filters compiled CSS only when every selector requires a positive absent
+GT class. Non-GT/global styles remain; import/layer/scope rules are refused.
+Writes only worktree generated CSS and trial/probe/ssr-home-document.html with
+original ordered CSS URL metadata. Owned fixture server restarted on4188;
+six-profile hydration/route-style90564 passed6/6, then expanded18-case proof
+added explicit no-full-CSS-on-Home, original stylesheet order on Events, immediate
+availability and private Dashboard mounting gated on held CSS. Initial40031 and
+unintended unchanged81286 run each passed12/failed6: immediate case wrongly
+required inert after live response. First edit failed on relative backup-path
+parents[3]; no app/source edit occurred, second run was not corrected despite
+its filename. Original source saved to trial/probe/styles-proof-initial.spec.ts.
+Now corrected absolute-path edit and explicit tool exit guards succeeded: pre-JS
+lock required for both modes, post-mount lock only delayed, eventual unlock/DOM/
+image/network/order assertions retained. Actual final18-scope74950 active, log
+/tmp/gdg-hydration-styles-proof-final-browser.log, raw sameprefix.json.
+Browser types5265 passed. Wait/reap; do not repeat completed runs. Check full-style-before-render plus Home geometry,
+error states and pointer/menu before timing. Do not claim production adoption.
+
+## First-paint scheduling trial
+
+Final CSS-route proof74950 completed/reaped0:18/18 across6profiles, no failures/
+skips/retries. This includes delayed/immediate availability, no original CSS
+requests while Home visible, original CSS order before Events render, private
+Dashboard withheld while original stylesheet held, actual SSR hero identity,
+mobile picture guards, axe/noerror/no write checks. Browser-types5265 passed.
+Owned server16266 stopped/reaped0 before isolated CSS timing84843, completed/
+reaped1: LCP2714ms stillfails2500, a11y100/labels/CLS0. FCP779ms vs922ms hydration-
+only, but no LCP gain demonstrated. Main app/dist unchanged.
+
+Trace shows primary image loaded before recorded paint; test next gives the
+complete inert SSR composition a paint opportunity before React attaches.
+Isolated worktree adds src/ui/public-first-paint.ts, main SSR-only scheduler:
+foreground two animation frames,100ms fallback; hidden documents start immediately;
+start/cancel once. CSR path unchanged. Three meaningful units44103 passed and
+full types pass. Client/server build/render/HomeCSS34794 completed/reaped0.
+No source font or CSS changed. New units in tests/client/public-first-paint.test.ts.
+
+Owned fixture server restarted4188, scheduled18-scope63463 completed/reaped0,18/18 pass, log
+/tmp/gdg-hydration-scheduled-browser.log, raw/tmp/gdg-hydration-scheduled-browser.json.
+Owned fixture29123 stopped/reaped0 before isolated timing. No main source changes
+or production adoption. Existing18-pass nonscheduled scope remains separate.
+
+Scheduled Home-mobile performance76683 completed/reaped1: LCP2785ms stillfails
+2500, a11y100/labels/CLS0. No demonstrated LCP gain; scheduled/css variant rejected.
+Probe
+trial/probe/performance-scheduled.mjs, clone trial/performance-scheduled-dist,
+log/tmp/gdg-hydration-scheduled-performance.log, evidence
+phase0/hydration-home-mobile-scheduled-trial.json, raw
+artifacts/performance/hydration-scheduled. No competing verification until it
+completes. Main app/dist unchanged. Existing main1540-pass browser and all source/
+artifact proofs remain valid for the saved app, not the unadopted prototype.
+
+## Native Home hints trial
+
+Worktree restored exactly from probe/hydration-only-source (simple matching
+hydration, full original CSS, original font). Rejected scheduling and CSS-loader
+sources archived in probe/rejected-scheduled-source, including three scheduler
+units and18-case proof; not adopted or lost. Worktree public-route-styles and
+public-first-paint helpers/unit moved out of checkout. Main app still untouched.
+New client/server/render build active; logs
+/tmp/gdg-hydration-native-hints-{client-build,server-build,render}.log.
+
+Next isolated variant: SSR Home-only HTML supplies the same two media-specific
+high-priority atmosphere image hints natively, after viewport meta, and removes
+only the now-redundant public-entry helper script on that Home response. Other
+routes retain the original helper and full original CSS. No asset/font/appearance
+change, no new script. Prove DOM/hints/picture/noerror/native-lock behavior before
+unchanged timing. No production bootstrap or adoption claim.
+
+## Completed native-hint and priority trials
+
+Restored hydration-only client/server/render build finished successfully. Native
+Home image hints/no redundant helper: corrected12/12 six-profile cases pass70975;
+browser types62301 pass. Initial15926 failed12 solely due wrong Events heading;
+raw /tmp/gdg-hydration-native-hints-browser.json and probe/native-hints-heading-
+initial.spec.ts preserved. No app change for correction. Fixture79379 stopped0.
+Native performance61491 finished/reaped1: LCP2732ms, a11y100/labels/CLS0, stillfails.
+
+Home module script/modulepreload low-priority variant12/12 passes46363, fixture
+69847 stopped0 before timing. Performance90900 finished/reaped1: LCP2735ms,
+TBT5.5/TTI2803ms, a11y100/labels/CLS0, stillfails. No demonstrated improvement;
+DO NOT adopt these variants. Sources, compose scripts, immutable clones and
+raw reports retained in the existing isolated trial. No active probe/test/build
+process remains. Full first-paint findings in FIRST_PAINT_FEASIBILITY.md. Main
+source/dist unchanged, existing verified artifact still authoritative.
+
+Next: applicable populated content/finance secondary editor and consequence
+review states, read-only fictional browser fixtures only. Existing44-state
+secondary run/index preserved separately; do not overwrite its source evidence.
+
+## Finance/content secondary review in progress
+
+Main source NOW CHANGED: FinanceWorkspace requests/budgets/month/category tables
+and CollectionWorkspace table use existing named ScrollableTable keyboard helper.
+Initial WebKit-mobile two-case54099 failed exactly missing Finance requests/Budget
+allocations regions; raw /tmp/gdg-finance-content-initial-browser.json retained.
+New finance-content-compositions.spec.ts has13 fictional read-only states: request/
+budget/report table keyboard access, finance/budget draft and management, approval/
+rejection, resource/sponsor/team editors, publication/archive reviews. No writes,
+passwords, real receipts/provider sends. Build50309 passed. Desktop diagnostic14600
+and types/targeted units/bytes/mapping82860 active; inspect sessions before repeat.
+New review will use separate artifacts/browser/finance-content-review directory,
+not overwrite primary/full/44state secondary evidence. New strict --finance-content
+index requires78checks/78captures/13states/sixprofiles. Existing full1540pass and
+2722coverage are saved-source evidence, not a claim for this changed app. Final
+focused browser/source/artifact verification still required.
+
+## Finance/content verification complete
+
+Desktop13diagnostic14600 passed. Final13state/78case90976 finished/reaped0:
+78passes,0skips/failures/retries, raw artifacts/browser/finance-content-review/
+results.json and log /tmp/gdg-finance-content-final-browser.log. Strict separate
+--finance-content index generated0 with78unapproved captures; mobile editor and
+desktop report captures inspected. Primary/44state secondary/recovery unchanged.
+Types/52units/bytes/mapping82860, scoped lint13574, indexlint/4catalogunits63380
+all reaped0. Final artifact52753 reaped0:PWA15/update9/HTTPS46. Build50309 passed.
+Initialmissingregions54099 failure retained; full source/browser baseline remains
+prior-source evidence, not fresh complete current execution. Review docs and
+phase0/current-local-status now distinguish current targeted vs saved full proof.
+New list-only inventory71938/77325/82205/56257 were started; inspect/reap before
+repeat, then validate exact disjoint shards and save. No performance job active.
+Next confirmed source gaps: bare table wrappers remain in SiteContentWorkspace
+and NewsletterWorkspace; PrivateFormLinks/ResponseWorkspace focusable overflow
+regions lack shared key handling. Review applicable states before broad changes.
+
+Finance/content list-only inventory sessions71938/77325/82205/56257 all reaped0:
+1626unique cases, exact disjoint542case shards; not complete execution or CI.
+Final source/history scan36849 reaped0:155commits/1924files/0unreviewed. One new
+public case-ID digest exactline reviewed, no rule/path exclusions. Ready for local
+save; no pending verification process. Three user-file exclusions remain intact.
 
 ## Runtime and previous saved work
 

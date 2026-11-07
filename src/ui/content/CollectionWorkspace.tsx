@@ -6,6 +6,7 @@ import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
+import ScrollableTable from "../ScrollableTable";
 type Kind =
   | "resources"
   | "sponsors"
@@ -904,7 +905,7 @@ function CollectionEditor({ initialKind }: { initialKind: Kind }) {
           <span className="sr-only">Loading content…</span>
         </div>
       ) : data?.items.length ? (
-        <div className="gt-table-wrap">
+        <ScrollableTable label={spec.title + " records"}>
           <table className="gt-data-table">
             <caption className="sr-only">
               {spec.title} · {data.total} matching records
@@ -1023,7 +1024,7 @@ function CollectionEditor({ initialKind }: { initialKind: Kind }) {
               ))}
             </tbody>
           </table>
-        </div>
+        </ScrollableTable>
       ) : (
         !listRead.error && (
           <EmptyState

@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-11-07T08:04:52.690147+00:00",
+  "completed": true,
+  "allPassed": true,
+  "adopted": false,
+  "sourceBaseline": "f163842",
+  "stats": {
+    "startTime": "2026-11-07T08:02:19.441Z",
+    "duration": 21641.015000000003,
+    "expected": 12,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "scope": "Isolated Home document only, native image hints plus low-priority module script and modulepreload. Same twelve six-profile retained DOM/native lock/navigation/picture/axe/noerror/nowrite checks. Default performance trial still fails: no adoption or full PRD claim.",
+  "rawBrowserReport": "/tmp/gdg-hydration-native-priority-browser.json"
+}

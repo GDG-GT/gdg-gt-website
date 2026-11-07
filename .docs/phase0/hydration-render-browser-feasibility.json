@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2026-11-07T07:11:55.128610+00:00",
+  "completed": true,
+  "allPassed": true,
+  "sourceBaseline": "f163842",
+  "isolatedWorktree": "/Users/tejas/.cache/gdg-hydration-trial-7shvwpda/checkout",
+  "stats": {
+    "startTime": "2026-11-07T07:10:37.792Z",
+    "duration": 10635.552,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "render": {
+    "bytes": 11912,
+    "h1": 1,
+    "hero": true,
+    "nativeInert": true,
+    "inlineScripts": 0,
+    "fetches": 0
+  },
+  "scope": "Isolated prototype only. Main source/dist untouched. Client/server builds and types pass. New six-profile browser proof retains original SSR hero DOM node through hydration/content reads; native inertness blocks focus before and after mounting until fixture availability response; actual navigation away/back and mobile picture request guards pass, alongside axe/no hydration error/no page exception/no fixture write checks. No production bootstrap, server delivery, cache/CSP rollout, performance, field/hardware or full PRD acceptance claimed."
+}

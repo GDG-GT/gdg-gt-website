@@ -8,6 +8,22 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### Finance/content keyboard access and review — 2026-11-07
+
+- Finance requests, budgets, month/category reports and content collection tables
+  now use the existing named keyboard-scrollable table component. Initial actual
+  WebKit-mobile missing-region failures are preserved separately.
+- All78new browser checks pass across six profiles:13read-only fictional table,
+  editor and consequence-review states. Their78captures have a separate strict
+  index; primary/44-state secondary/recovery evidence is preserved. No writes,
+  financial decisions, publication or provider sends occur.
+- Types,52targeted units/5files,4catalog tests, scoped lint, build/bytes and rebuilt
+  PWA15/update9/HTTPS46 pass. Saved full2722coverage and1540browser/eight skips
+  remain prior-source evidence, not a fresh complete current run.
+- All isolated hydration/native-hint/priority performance trials still fail2500ms;
+  none is adopted. Full PRD/manual/device/visual/field/hosted gates remain open.
+  See FINANCE_CONTENT_KEYBOARD_REVIEW.md and FIRST_PAINT_FEASIBILITY.md.
+
 ### Keyboard access and complete browser verification — 2026-11-07
 
 - Long recipient lists, campaign previews and campaign/chart tables now support

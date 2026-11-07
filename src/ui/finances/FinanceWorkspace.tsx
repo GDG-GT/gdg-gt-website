@@ -24,6 +24,7 @@ import FinanceEditor from "./FinanceEditor";
 import BudgetEditor from "./BudgetEditor";
 import FinanceDetail from "./FinanceDetail";
 import FinanceCharts from "./FinanceCharts";
+import ScrollableTable from "../ScrollableTable";
 type Mode = "create" | "edit" | "budget_create" | "budget_edit" | null;
 export default function FinanceWorkspace() {
   const { currentAdmin } = useAdmin();
@@ -512,7 +513,7 @@ function FinanceWorkspaceContent() {
                   authorized records.
                 </p>
                 {list.items.length ? (
-                  <div className="gt-table-wrap">
+                  <ScrollableTable label="Finance requests">
                     <table className="gt-data-table gt-finance-table">
                       <caption className="sr-only">Finance requests</caption>
                       <thead>
@@ -570,7 +571,7 @@ function FinanceWorkspaceContent() {
                         ))}
                       </tbody>
                     </table>
-                  </div>
+                  </ScrollableTable>
                 ) : (
                   <EmptyState
                     headingLevel={2}
@@ -667,7 +668,7 @@ function FinanceWorkspaceContent() {
               Budget allocations are unavailable. Retry to check your scope.
             </p>
           ) : budgets?.items.length ? (
-            <div className="gt-table-wrap">
+            <ScrollableTable label="Budget allocations">
               <table className="gt-data-table">
                 <caption className="sr-only">
                   Budget allocations and exact utilization
@@ -716,7 +717,7 @@ function FinanceWorkspaceContent() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </ScrollableTable>
           ) : (
             <EmptyState
               headingLevel={3}
@@ -789,24 +790,26 @@ function FinanceWorkspaceContent() {
             <section className="gt-panel">
               <h3>Completed activity by month</h3>
               {report.months.length ? (
-                <table className="gt-data-table">
-                  <thead>
-                    <tr>
-                      <th>Month</th>
-                      <th>Income</th>
-                      <th>Expenses</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {report.months.map((m) => (
-                      <tr key={m.month}>
-                        <td>{m.month}</td>
-                        <td>{dollars(m.income)}</td>
-                        <td>{dollars(m.expenses)}</td>
+                <ScrollableTable label="Completed finance activity by month">
+                  <table className="gt-data-table">
+                    <thead>
+                      <tr>
+                        <th>Month</th>
+                        <th>Income</th>
+                        <th>Expenses</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {report.months.map((m) => (
+                        <tr key={m.month}>
+                          <td>{m.month}</td>
+                          <td>{dollars(m.income)}</td>
+                          <td>{dollars(m.expenses)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </ScrollableTable>
               ) : (
                 <p>No completed activity in this filter.</p>
               )}
@@ -814,24 +817,26 @@ function FinanceWorkspaceContent() {
             <section className="gt-panel">
               <h3>Completed totals by category</h3>
               {report.categories.length ? (
-                <table className="gt-data-table">
-                  <thead>
-                    <tr>
-                      <th>Category</th>
-                      <th>Type</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {report.categories.map((c) => (
-                      <tr key={c.transaction_type + c.category}>
-                        <td>{c.category}</td>
-                        <td>{human(c.transaction_type)}</td>
-                        <td>{dollars(c.amount)}</td>
+                <ScrollableTable label="Completed finance totals by category">
+                  <table className="gt-data-table">
+                    <thead>
+                      <tr>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Total</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {report.categories.map((c) => (
+                        <tr key={c.transaction_type + c.category}>
+                          <td>{c.category}</td>
+                          <td>{human(c.transaction_type)}</td>
+                          <td>{dollars(c.amount)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </ScrollableTable>
               ) : (
                 <p>Categories will appear after requests are completed.</p>
               )}

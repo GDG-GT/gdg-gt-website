@@ -1,0 +1,311 @@
+{
+  "generatedAt": "2026-11-07T08:11:51.314746+00:00",
+  "completed": true,
+  "buildIndexSha256": "9d5a9d1461512c05e96723ce8908655d897b7ae56988a5b9da9013e232e465be",
+  "probes": {
+    "production-pwa-boundaries.json": {
+      "generatedAt": "2026-11-07T08:09:45.179Z",
+      "completed": true,
+      "scope": "Owned loopback static production build with fictional API/fetch responses. Real worker/CacheStorage/offline routing and IndexedDB multi-tab/expiry/lost-reply/capacity/clear. Fresh isolated browser context closed, static server stopped, no real providers/production/application writes. Does not certify installed-device UI, multi-build update rollout, actual push permission/delivery or hosted cache headers.",
+      "tests": [
+        {
+          "name": "real service-worker CacheStorage contains only public enumerated assets",
+          "passed": true
+        },
+        {
+          "name": "standalone offline fallback is cached and probe code is not",
+          "passed": true
+        },
+        {
+          "name": "real offline public navigation loads truthful standalone fallback",
+          "passed": true
+        },
+        {
+          "name": "real worker refuses private admin navigation fallback",
+          "passed": true
+        },
+        {
+          "name": "real worker refuses private form/capability navigation fallback",
+          "passed": true
+        },
+        {
+          "name": "two real tabs serialize queue claims through IndexedDB and do not duplicate an in-flight request",
+          "passed": true
+        },
+        {
+          "name": "confirmed queue outcome removes stored personal payload",
+          "passed": true
+        },
+        {
+          "name": "real queue preserves original key and exact public endpoint without credentials",
+          "passed": true
+        },
+        {
+          "name": "real 48-hour IndexedDB expiry erases payload and prevents replay without waiting or changing system clock",
+          "passed": true
+        },
+        {
+          "name": "real event-capacity 409 permanently stops device replay and clears personal payload",
+          "passed": true
+        },
+        {
+          "name": "lost accepted queue reply remains unconfirmed rather than claiming success",
+          "passed": true
+        },
+        {
+          "name": "explicit lost-reply retry reuses the original persisted key",
+          "passed": true
+        },
+        {
+          "name": "cross-tab logout-style clear epoch prevents late network acknowledgement resurrecting private queue data",
+          "passed": true
+        },
+        {
+          "name": "real queue personal payload never enters localStorage or sessionStorage",
+          "passed": true
+        },
+        {
+          "name": "PWA/queue probe performs no provider or actual application mutations",
+          "passed": true
+        }
+      ]
+    },
+    "production-pwa-update.json": {
+      "generatedAt": "2026-11-07T08:09:47.808Z",
+      "completed": true,
+      "scope": "Owned loopback production build. Offline HTML bytes vary by an inert revision comment, and the production worker's exact precache entry receives the matching SHA-256 revision. Real waiting/activation/cache cleanup and actual production dirty-navigation UI used in two tabs. Isolated context closed and static server stopped. Does not certify real device install/push, hosted retention of old hashed JS assets or changed-deployment rollback.",
+      "tests": [
+        {
+          "name": "initial production worker serves its reviewed offline asset revision",
+          "passed": true
+        },
+        {
+          "name": "declining production worker update preserves dirty fields and waiting version",
+          "passed": true
+        },
+        {
+          "name": "waiting changed offline asset does not replace the active version before explicit approval",
+          "passed": true
+        },
+        {
+          "name": "approved production update reloads only the requesting dirty tab",
+          "passed": true
+        },
+        {
+          "name": "second dirty tab keeps its fields and document across another tab's worker activation",
+          "passed": true
+        },
+        {
+          "name": "explicit update activates the waiting worker without automatic fleet reload",
+          "passed": true
+        },
+        {
+          "name": "approved worker activates the newly revisioned offline asset",
+          "passed": true
+        },
+        {
+          "name": "activation removes the obsolete offline asset cache revision",
+          "passed": true
+        },
+        {
+          "name": "multi-tab update probe performs no actual application mutation or provider send",
+          "passed": true
+        }
+      ]
+    },
+    "production-security-headers.json": {
+      "generatedAt": "2026-11-07T08:09:49.988Z",
+      "completed": true,
+      "isolatedReports": 4,
+      "scope": "Isolated HTTPS loopback production build with the exact common CSP/security header values from vercel.json, including upgrade-insecure-requests. Ephemeral one-day self-signed loopback certificate is trusted only by this isolated context and removed afterward. Actual hosted TLS/certificate/header precedence, third-party frames, authenticated editors, WebGL, service workers and deployed caching remain separate acceptance. Anonymous allowlisted reads plus browser CSP reports terminated without inspecting/storing their bodies in this owned server; reports never reach the application API. All external requests and other non-read methods are refused. No credentials/application writes/provider sends.",
+      "tests": [
+        {
+          "name": "configured X-Content-Type-Options served on /",
+          "passed": true
+        },
+        {
+          "name": "configured X-Frame-Options served on /",
+          "passed": true
+        },
+        {
+          "name": "configured Referrer-Policy served on /",
+          "passed": true
+        },
+        {
+          "name": "configured Permissions-Policy served on /",
+          "passed": true
+        },
+        {
+          "name": "configured Strict-Transport-Security served on /",
+          "passed": true
+        },
+        {
+          "name": "configured Content-Security-Policy served on /",
+          "passed": true
+        },
+        {
+          "name": "production route renders without page exceptions under enforced CSP: /",
+          "passed": true
+        },
+        {
+          "name": "production route raises no policy violations: /",
+          "passed": true
+        },
+        {
+          "name": "inline executable probe is blocked: /",
+          "passed": true
+        },
+        {
+          "name": "configured X-Content-Type-Options served on /events",
+          "passed": true
+        },
+        {
+          "name": "configured X-Frame-Options served on /events",
+          "passed": true
+        },
+        {
+          "name": "configured Referrer-Policy served on /events",
+          "passed": true
+        },
+        {
+          "name": "configured Permissions-Policy served on /events",
+          "passed": true
+        },
+        {
+          "name": "configured Strict-Transport-Security served on /events",
+          "passed": true
+        },
+        {
+          "name": "configured Content-Security-Policy served on /events",
+          "passed": true
+        },
+        {
+          "name": "production route renders without page exceptions under enforced CSP: /events",
+          "passed": true
+        },
+        {
+          "name": "production route raises no policy violations: /events",
+          "passed": true
+        },
+        {
+          "name": "inline executable probe is blocked: /events",
+          "passed": true
+        },
+        {
+          "name": "configured X-Content-Type-Options served on /contact",
+          "passed": true
+        },
+        {
+          "name": "configured X-Frame-Options served on /contact",
+          "passed": true
+        },
+        {
+          "name": "configured Referrer-Policy served on /contact",
+          "passed": true
+        },
+        {
+          "name": "configured Permissions-Policy served on /contact",
+          "passed": true
+        },
+        {
+          "name": "configured Strict-Transport-Security served on /contact",
+          "passed": true
+        },
+        {
+          "name": "configured Content-Security-Policy served on /contact",
+          "passed": true
+        },
+        {
+          "name": "production route renders without page exceptions under enforced CSP: /contact",
+          "passed": true
+        },
+        {
+          "name": "production route raises no policy violations: /contact",
+          "passed": true
+        },
+        {
+          "name": "inline executable probe is blocked: /contact",
+          "passed": true
+        },
+        {
+          "name": "configured X-Content-Type-Options served on /privacy",
+          "passed": true
+        },
+        {
+          "name": "configured X-Frame-Options served on /privacy",
+          "passed": true
+        },
+        {
+          "name": "configured Referrer-Policy served on /privacy",
+          "passed": true
+        },
+        {
+          "name": "configured Permissions-Policy served on /privacy",
+          "passed": true
+        },
+        {
+          "name": "configured Strict-Transport-Security served on /privacy",
+          "passed": true
+        },
+        {
+          "name": "configured Content-Security-Policy served on /privacy",
+          "passed": true
+        },
+        {
+          "name": "production route renders without page exceptions under enforced CSP: /privacy",
+          "passed": true
+        },
+        {
+          "name": "production route raises no policy violations: /privacy",
+          "passed": true
+        },
+        {
+          "name": "inline executable probe is blocked: /privacy",
+          "passed": true
+        },
+        {
+          "name": "configured Cache-Control served on /sw.js",
+          "passed": true
+        },
+        {
+          "name": "configured Service-Worker-Allowed served on /sw.js",
+          "passed": true
+        },
+        {
+          "name": "configured Cache-Control served on /manifest.json",
+          "passed": true
+        },
+        {
+          "name": "configured Cache-Control served on /api/v1/site-status",
+          "passed": true
+        },
+        {
+          "name": "configured Pragma served on /api/v1/site-status",
+          "passed": true
+        },
+        {
+          "name": "hashed bundles and stable public artwork/fonts receive separate cache lifetimes: assets/main-PJxHS3-A.js",
+          "passed": true
+        },
+        {
+          "name": "hashed bundles and stable public artwork/fonts receive separate cache lifetimes: assets/hero-atmosphere-mobile.webp",
+          "passed": true
+        },
+        {
+          "name": "hashed bundles and stable public artwork/fonts receive separate cache lifetimes: assets/inter-latin.woff2",
+          "passed": true
+        },
+        {
+          "name": "hashed bundles and stable public artwork/fonts receive separate cache lifetimes: assets/public-entry.js",
+          "passed": true
+        },
+        {
+          "name": "TLS/CSP probe performs only allowlisted local reads and isolated CSP reports, with no application writes/provider sends",
+          "passed": true
+        }
+      ],
+      "unexpected": []
+    }
+  },
+  "scope": "Current rebuilt artifact, local fictional read-only probes; no deployed/provider/device acceptance."
+}

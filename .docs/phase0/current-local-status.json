@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-07T07:02:03.955326+00:00",
-  "buildIndexSha256": "9fbfa41f3f195ea7a5fbfbedb394793e2a478684f098258a3e852898da6ca658",
+  "generatedAt": "2026-11-07T08:11:51.314746+00:00",
+  "buildIndexSha256": "9d5a9d1461512c05e96723ce8908655d897b7ae56988a5b9da9013e232e465be",
   "quality": {
     "tests": {
       "files": 222,
@@ -15,9 +15,9 @@
     },
     "globalAndCriticalGatesPassed": true,
     "criticalModules": 21,
-    "currentBuildFullCoveragePassed": true,
+    "currentBuildFullCoveragePassed": false,
     "evidence": "phase0/communication-scroll-quality.json",
-    "scope": "Full instrumented application source passed before subsequent CSS-only contrast/target fixes; instrumented source unchanged. Four catalog tests pass separately after mapping additions."
+    "scope": "Saved source20b59e2 full coverage2722 passes. Current finance/content table wrappers pass52focused tests/5files, all types/build/byte/catalog/scoped lint checks; complete current coverage not repeated for these targeted changes."
   },
   "browser": {
     "initialCompleteV7": {
@@ -36,8 +36,8 @@
       "unexpected": 0,
       "flaky": 0
     },
-    "fullCurrentInventoryPassingInvocation": true,
-    "note": "Complete saved-build 1,548-case invocation passes 1,540 with eight expected profile-specific skips (four desktop mobile-menu skips and four unsupported desktop-motion skips), zero failures/retries. Exact listed inventory matched. Both original desktop motion cases pass. All six configured profiles; fictional local fixtures, no actual records/provider sends. Not physical-device, human fidelity, field or hosted acceptance.",
+    "fullCurrentInventoryPassingInvocation": false,
+    "note": "Saved baseline f163842 complete1540passes/eight skips retained. Current finance/content13state78case targeted scope passes, no skips/failures/retries. This does not claim a complete current inventory execution.",
     "initialPublicReader": {
       "startTime": "2026-11-07T00:15:21.145Z",
       "duration": 89800.388,
@@ -86,6 +86,14 @@
       "skipped": 8,
       "unexpected": 0,
       "flaky": 0
+    },
+    "financeContent": {
+      "startTime": "2026-11-07T08:08:30.370Z",
+      "duration": 98653.605,
+      "expected": 78,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
     }
   },
   "visual": {
@@ -102,7 +110,11 @@
     "recoveryIndex": "artifacts/browser/current-recovery-review/index.html",
     "recoveryStates": 18,
     "recoveryCaptures": 108,
-    "recoveryApproved": false
+    "recoveryApproved": false,
+    "financeContentStates": 13,
+    "financeContentChecks": 78,
+    "financeContentCaptures": 78,
+    "financeContentIndex": "artifacts/browser/finance-content-review/index.html"
   },
   "pwa": {
     "boundaries": 15,
@@ -143,7 +155,7 @@
     "scope": "List-only exact disjoint union: 44 secondary states; 1,548 unique cases, 516 per shard. This does not claim a complete execution, CI run or PRD acceptance."
   },
   "performance": {
-    "scope": "Isolated loopback static production build, gzip-negotiated HTML/JS/CSS/JSON/SVG, anonymous allowlisted reads to local API only; HTTPS requests blocked, no account or writes/provider sends. Lighthouse default simulated mobile and desktop presets; measurements must run without competing browser/build/coverage load. Compression models a required hosting delivery setting, not evidence that it is deployed. Lab LCP/CLS/TBT and accessibility only; TBT is not INP and these runs do not certify field p75 INP/LCP, representative 3D hardware or hosted latency. Raw reports in ignored artifacts/performance.",
+    "scope": "Saved baseline20b59e2 unchanged-threshold performance, not a new run for current wrappers. All isolated hydration/native-hint/priority trials still fail and were not adopted.",
     "routes": [
       "/",
       "/events",
@@ -609,14 +621,14 @@
   "scope": "Local only; no deployment, push, purchase, real provider send, production change, another timer or AI commit trailer.",
   "verificationScopeNote": "Complete source coverage2722 and browser1540/eight expectedskips pass, alongside final artifact/type/build/catalog/byte/audit checks. Captures remain unapproved; mobile LCP still fails. No full PRD/device/manual/field/hosted claim.",
   "delivery": {
-    "initialJsGzipBytes": 108166,
+    "initialJsGzipBytes": 108188,
     "copiedHelperGzipBytes": 585,
     "routeAwareHeroHints": true,
     "fontPreload": "retained",
     "cssGzipBytes": 29936,
     "fontBytes": 48432,
     "offlineInstallRawBytes": 493275,
-    "publicRouteJsGzipBytes": 148960
+    "publicRouteJsGzipBytes": 148987
   },
   "dependencies": {
     "router": "7.18.5",
@@ -632,8 +644,8 @@
     "remaining": "Fresh production audit has zero findings; KaTeX compatibility/regression evidence retained. Hosted launch review separate."
   },
   "activeVerification": {
-    "savedBaseline": "20b59e2",
-    "changes": "Keyboard-scrollable long reviews/tables; publication-summary contrast and history checkbox target fixes. Forty-four review states verified.",
-    "status": "Full browser1540/eight expectedskips and all indexes complete. Scratch real-component render passes zero-fetch; corrected naive static-replacement trial still fails LCP3063ms and is rejected. Main dist/source unchanged. Final evidence/index save next, then isolated proper hydration investigation."
+    "savedBaseline": "f163842",
+    "changes": "Named keyboard scrolling for finance requests/budgets/month/category reports and content collection tables; thirteen additional read-only review states.",
+    "status": "Current focused78browser/52unit/types/build/bytes/catalog/scoped lint and PWA15/update9/HTTPS46 all pass. Full1540browser and2722coverage retained as saved-source evidence. Prototype trials rejected, no production adoption. Human/device/field/hosted acceptance remains open."
   }
 }

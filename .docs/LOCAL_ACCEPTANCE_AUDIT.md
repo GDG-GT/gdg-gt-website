@@ -1,5 +1,12 @@
 # Local implementation and acceptance audit — 2026-11-07
 
+Current finance/content continuation:13states/78targeted browser checks and
+78unapproved captures pass;52focused units/types/build/bytes/catalog/scoped lint
+and rebuilt PWA15/update9/HTTPS46 pass. Main table wrappers changed after the
+saved full2722coverage/1540browser baseline; those complete results remain
+prior-source evidence. New separate index: artifacts/browser/finance-content-review.
+See FINANCE_CONTENT_KEYBOARD_REVIEW.md for precise scope. Full PRD remains open.
+
 The current local application includes canonical recovery migrations through 137,
 React Router 7.18.5, the scoped KaTeX 0.18.2 security patch, visible-label and
 native drawing-control fixes, keyboard scrolling for long reviews/tables, and

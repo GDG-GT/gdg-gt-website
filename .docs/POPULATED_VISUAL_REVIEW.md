@@ -1,5 +1,12 @@
 # Populated production-build review — 2026-11-06
 
+Current finance/content continuation:13states/78targeted browser checks and
+78unapproved captures pass;52focused units/types/build/bytes/catalog/scoped lint
+and rebuilt PWA15/update9/HTTPS46 pass. Main table wrappers changed after the
+saved full2722coverage/1540browser baseline; those complete results remain
+prior-source evidence. New separate index: artifacts/browser/finance-content-review.
+See FINANCE_CONTENT_KEYBOARD_REVIEW.md for precise scope. Full PRD remains open.
+
 ## Complete current-build invocation — 2026-11-07
 
 The full1,548-case production-browser invocation passes1,540 with eight expected

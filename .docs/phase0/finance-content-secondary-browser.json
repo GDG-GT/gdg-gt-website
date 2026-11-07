@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-11-07T08:11:51.314746+00:00",
+  "completed": true,
+  "allPassed": true,
+  "initialMissingRegions": {
+    "stats": {
+      "startTime": "2026-11-07T08:06:09.854Z",
+      "duration": 17633.586000000003,
+      "expected": 0,
+      "skipped": 0,
+      "unexpected": 2,
+      "flaky": 0
+    },
+    "raw": "/tmp/gdg-finance-content-initial-browser.json",
+    "cause": "Actual unnamed finance/budget overflow regions; corrected with existing ScrollableTable, preserving keys for nested controls and current styles."
+  },
+  "stats": {
+    "startTime": "2026-11-07T08:08:30.370Z",
+    "duration": 98653.605,
+    "expected": 78,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "raw": "artifacts/browser/finance-content-review/results.json",
+  "states": 13,
+  "captures": 78,
+  "typesPassed": true,
+  "targetedUnits": {
+    "files": 5,
+    "passed": 52
+  },
+  "catalogUnits": 4,
+  "scopedLintErrors": 0,
+  "buildPassed": true,
+  "bytesPassed": true,
+  "index": "artifacts/browser/finance-content-review/index.html",
+  "buildIndexSha256": "9d5a9d1461512c05e96723ce8908655d897b7ae56988a5b9da9013e232e465be",
+  "scope": "Fictional read-only fixtures, all writes refused. Actual finance/content editors and consequence reviews; named keyboard tables, axe including contrast, no page overflow/errors/unexpected reads. No approval, ledger mutation, provider send, full current suite, physical device, human visual or full PRD acceptance claimed."
+}

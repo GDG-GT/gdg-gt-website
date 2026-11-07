@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-07T06:31:12.433Z",
+  "generatedAt": "2026-11-07T08:09:45.179Z",
   "completed": true,
   "scope": "Owned loopback static production build with fictional API/fetch responses. Real worker/CacheStorage/offline routing and IndexedDB multi-tab/expiry/lost-reply/capacity/clear. Fresh isolated browser context closed, static server stopped, no real providers/production/application writes. Does not certify installed-device UI, multi-build update rollout, actual push permission/delivery or hosted cache headers.",
   "tests": [
