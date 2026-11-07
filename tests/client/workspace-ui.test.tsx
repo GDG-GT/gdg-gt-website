@@ -66,10 +66,7 @@ function RouteProbe() {
 }
 function mount(children: ReactNode, initial = "/admin") {
   return render(
-    <MemoryRouter
-      initialEntries={[initial]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <MemoryRouter initialEntries={[initial]}>
       {children}
       <RouteProbe />
     </MemoryRouter>,

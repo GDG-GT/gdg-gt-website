@@ -311,6 +311,16 @@ The dated audit/checkpoint entries above are historical. Current evidence is in
 
 ## Next implementation checkpoint
 
+React Router 7.18.5 migration is locally verified: final 2,684-test full coverage,
+all 108 rebuilt navigation cases and 15 PWA/nine update/46 header checks pass.
+The original complete browser invocation found the corrected drawer failure;
+it is retained, not relabeled as passing. Audit now has only four low KaTeX-chain
+package entries. Current mobile LCP remains about 3.1 seconds. Continue public
+schema/startup optimization, compatible KaTeX/Mermaid/whiteboard review and
+remaining secondary/confirmation/manual/device/hosted acceptance. Preserve the
+existing prototypes and all local-only boundaries; do not repeat migrations or
+owned completed writes.
+
 Latest route-aware preloads pass 76 public browser cases/eight expected skips,
 46 HTTPS/header checks and 13 targeted helper/traceability cases. The copied
 362-byte gzip helper is counted in the 114,943-byte initial JS total. All three

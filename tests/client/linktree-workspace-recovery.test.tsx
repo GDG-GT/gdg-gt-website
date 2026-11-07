@@ -86,7 +86,6 @@ function mount(selected = "") {
       initialEntries={[
         "/admin/linktree" + (selected ? "?profile=" + selected : ""),
       ]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <main id="workspace-content" tabIndex={-1}>
         <LinktreeWorkspace />
@@ -558,10 +557,7 @@ describe("Linktree mutation lifecycle", () => {
     fireEvent.submit((await editProfile()).closest("form")!);
     actor.id = "fictional-replacement";
     page.rerender(
-      <MemoryRouter
-        initialEntries={["/admin/linktree?profile=" + id]}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={["/admin/linktree?profile=" + id]}>
         <main id="workspace-content" tabIndex={-1}>
           <LinktreeWorkspace />
         </main>

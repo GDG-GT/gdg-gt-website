@@ -105,7 +105,6 @@ function mount(selected = true) {
       initialEntries={[
         "/admin/communications?tab=tasks" + (selected ? "&task=" + id : ""),
       ]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <main id="workspace-content" tabIndex={-1}>
         <TaskWorkspace personal />
@@ -569,10 +568,7 @@ describe("Task writes, comments and private lifecycle", () => {
     fireEvent.submit(input.closest("form")!);
     actor.id = commentId;
     page.rerender(
-      <MemoryRouter
-        initialEntries={["/admin/communications?task=" + id]}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={["/admin/communications?task=" + id]}>
         <main>
           <TaskWorkspace personal />
         </main>

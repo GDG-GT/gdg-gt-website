@@ -81,9 +81,7 @@ function pending() {
   return { promise, resolve };
 }
 const body = () => (
-  <MemoryRouter
-    future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-  >
+  <MemoryRouter>
     <main id="workspace-content" tabIndex={-1}>
       <AdminOverview />
     </main>

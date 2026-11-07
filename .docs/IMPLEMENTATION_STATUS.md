@@ -8,6 +8,30 @@ time; their pending-work and audit counts do not override the latest checkpoint.
 
 ## Current checkpoint
 
+### React Router security migration and drawer correction — 2026-11-06
+
+- Runtime and lockfile now use React Router 7.18.5. The production audit has
+  zero moderate/high/critical findings and four low package entries through the
+  existing KaTeX chain; raw audit still exits 1. No suppression or force sweep.
+- Final full coverage passes 2,684 tests/216 files and every unchanged global 70%
+  and 21 critical 90%-branch gate: lines 78.12%, statements 76.12%, branches 75.59%,
+  functions 70.81%. Types/build/byte gates pass; lint remains0 errors/10 warnings.
+- Complete initial browser invocation: 1,311 passes, eight expected skips, one
+  Chromium-mobile drawer Escape failure, no retries. Capture-phase Escape/IME
+  handling fixes repeated drawer dismissal; final rebuilt navigation scope passes
+  all 108 cases across six profiles. These are separate invocations. All original
+  test contracts remain preserved; two regression cases were added.
+- All 15 current PWA boundary, nine two-tab update and 46 HTTPS/header checks pass.
+  Initial gzip JS is 124,571 bytes, about 9.6 kB more than v6 and still under budget.
+  Current mobile LCP 3,122/3,168/3,164 ms still fails 2.5 s; desktop performance 100,
+  accessibility 100 and CLS 0. Current evidence hashes match the final build.
+- README now reflects Georgia Tech, the actual local startup/runtime, privacy/
+  offline boundaries and acceptance limits; old entrance instructions and template
+  claims are removed. Node engine matches installed Vite requirements.
+- Remaining compatible KaTeX review, public startup/performance work, secondary
+  visual states and manual/device/hosted/institutional approval remain open.
+  See `DEPENDENCY_SECURITY_REVIEW.md` and `CURRENT_CHECKPOINT.md`.
+
 ### Route-aware home artwork delivery — 2026-11-06
 
 - Other public pages no longer request the 37,624-byte mobile home atmosphere.

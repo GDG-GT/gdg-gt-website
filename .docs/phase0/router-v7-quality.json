@@ -1,0 +1,159 @@
+{
+  "generatedAt": "2026-11-07T00:06:28.062918+00:00",
+  "completed": true,
+  "runtime": "react-router-dom/react-router 7.18.5",
+  "tests": {
+    "files": 216,
+    "passed": 2684,
+    "failed": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 23127,
+      "covered": 18067,
+      "skipped": 0,
+      "pct": 78.12
+    },
+    "statements": {
+      "total": 25647,
+      "covered": 19524,
+      "skipped": 0,
+      "pct": 76.12
+    },
+    "functions": {
+      "total": 5872,
+      "covered": 4158,
+      "skipped": 0,
+      "pct": 70.81
+    },
+    "branches": {
+      "total": 27452,
+      "covered": 20753,
+      "skipped": 0,
+      "pct": 75.59
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "globalThreshold": 70,
+  "globalPassed": true,
+  "criticalThreshold": 90,
+  "critical": [
+    {
+      "file": "server/auth.mjs",
+      "branches": 98.52,
+      "passed": true
+    },
+    {
+      "file": "server/access.mjs",
+      "branches": 98.38,
+      "passed": true
+    },
+    {
+      "file": "server/users.mjs",
+      "branches": 98.78,
+      "passed": true
+    },
+    {
+      "file": "server/forms.mjs",
+      "branches": 98.54,
+      "passed": true
+    },
+    {
+      "file": "server/form-access.mjs",
+      "branches": 90,
+      "passed": true
+    },
+    {
+      "file": "server/form-links.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-collaborators.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-deletion.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-integrations.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/uploads.mjs",
+      "branches": 98.48,
+      "passed": true
+    },
+    {
+      "file": "server/finances.mjs",
+      "branches": 97.72,
+      "passed": true
+    },
+    {
+      "file": "server/person-privacy.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/security.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/authorization.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/http.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/encryption.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/validation.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/upload-content.mjs",
+      "branches": 98.86,
+      "passed": true
+    },
+    {
+      "file": "server/lib/scanner.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/realtime-token.mjs",
+      "branches": 91.48,
+      "passed": true
+    },
+    {
+      "file": "server/lib/object-storage.mjs",
+      "branches": 100,
+      "passed": true
+    }
+  ],
+  "allPassed": true,
+  "build": {
+    "index.html": "4146dcd4eb702c076940c9bebc39f0f4d24bef0c7a0bd7b86f746e8998ed3bf3",
+    ".vite/manifest.json": "548676a42863f326798e445015265e880ff53ba41064baf7fcee56c9c1b27748",
+    "assets/public-entry.js": "5ff218d7049b9a8dd39cb7ee8b488f7cfbc6a857a0459ebcffb3e2d0e2dbd3b8"
+  },
+  "scope": "Final v7 application with drawer Escape/IME correction and two added focused regression cases. Full suite passes all unchanged global/21 critical gates; initial full coverage and failed broad browser evidence are preserved separately. No assertion, exclusion, timeout or retry weakened."
+}

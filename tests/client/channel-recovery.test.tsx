@@ -118,7 +118,6 @@ function mount(selected = true) {
   return render(
     <MemoryRouter
       initialEntries={["/admin/channels" + (selected ? "?room=" + id : "")]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <main id="workspace-content" tabIndex={-1}>
         <ChannelWorkspace />
@@ -477,10 +476,7 @@ describe("Channel mutations and private lifecycle", () => {
     expect((password as HTMLInputElement).value).toBe("");
     actor.id = otherId;
     page.rerender(
-      <MemoryRouter
-        initialEntries={["/admin/channels?room=" + id]}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={["/admin/channels?room=" + id]}>
         <main>
           <ChannelWorkspace />
         </main>

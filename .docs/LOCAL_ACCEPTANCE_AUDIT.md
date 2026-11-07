@@ -7,6 +7,16 @@ numbered requirements and 307 logical acceptance cases remain unverified against
 the complete PRD definition; hosted/device/manual/approved-visual gates cannot
 be inferred from local tests.
 
+Newest local checkpoint uses React Router 7.18.5, with zero moderate/high/critical
+and four low audit package entries remaining. Final coverage passes 2,684 tests/
+216 files with all unchanged gates. The complete browser run found one drawer
+failure (1,311 passed/eight skipped); the final rebuilt 108-case scope verifies
+its correction across six profiles. All 15 PWA boundary/nine update/46 header
+checks pass. Current mobile LCP remains failing at 3,122/3,168/3,164 ms; current
+build hashes bind the evidence. These scopes supersede older current-count
+statements below while preserving their historical results. See
+`DEPENDENCY_SECURITY_REVIEW.md` and `phase0/current-local-status.json`.
+
 The route-aware preload continuation is the newest local checkpoint: final
 public smoke passes 76 cases/eight expected skips, 46 HTTPS/header checks and
 13 focused helper/traceability cases pass. Startup is 114,943 gzip JS bytes,

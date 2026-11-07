@@ -1,63 +1,40 @@
 {
-  "generatedAt": "2026-11-06T23:30:33.054660+00:00",
-  "buildIndexSha256": "8a6ca5fa993ae56063e531f87a2e1ce1cd28f31af3d7a9ad7a2e07ebd25970ea",
+  "generatedAt": "2026-11-07T00:09:26.314804+00:00",
+  "buildIndexSha256": "4146dcd4eb702c076940c9bebc39f0f4d24bef0c7a0bd7b86f746e8998ed3bf3",
   "quality": {
     "tests": {
-      "files": 215,
-      "passed": 2673,
+      "files": 216,
+      "passed": 2684,
       "failed": 0
     },
     "coverage": {
-      "lines": 78.11,
+      "lines": 78.12,
       "statements": 76.12,
-      "branches": 75.6,
-      "functions": 70.8
+      "branches": 75.59,
+      "functions": 70.81
     },
     "globalAndCriticalGatesPassed": true,
     "criticalModules": 21
   },
   "browser": {
-    "broadBaseline": {
-      "startTime": "2026-11-06T22:06:05.614Z",
-      "duration": 800052.445,
-      "expected": 1228,
+    "initialCompleteV7": {
+      "startTime": "2026-11-06T23:47:56.738Z",
+      "duration": 843609.137,
+      "expected": 1311,
       "skipped": 8,
-      "unexpected": 0,
+      "unexpected": 1,
       "flaky": 0
     },
-    "finalShellScope": {
-      "startTime": "2026-11-06T22:29:49.772Z",
-      "duration": 52985.818999999996,
-      "expected": 90,
+    "finalNavigationV7": {
+      "startTime": "2026-11-07T00:03:12.236Z",
+      "duration": 68454.96,
+      "expected": 108,
       "skipped": 0,
       "unexpected": 0,
       "flaky": 0
     },
-    "note": "Separate invocations: historical broad baseline and shell scope, secondary review, and final 162-case navigation/recovery scope. No single full current-inventory invocation is claimed.",
-    "secondaryScope": {
-      "startTime": "2026-11-06T22:50:56.362Z",
-      "duration": 31871.398,
-      "expected": 54,
-      "skipped": 0,
-      "unexpected": 0,
-      "flaky": 0
-    },
-    "navigationReviewScope": {
-      "startTime": "2026-11-06T23:04:11.752Z",
-      "duration": 115545.614,
-      "expected": 162,
-      "skipped": 0,
-      "unexpected": 0,
-      "flaky": 0
-    },
-    "routeHintsScope": {
-      "startTime": "2026-11-06T23:27:28.733Z",
-      "duration": 96690.993,
-      "expected": 76,
-      "skipped": 8,
-      "unexpected": 0,
-      "flaky": 0
-    }
+    "fullCurrentInventoryPassingInvocation": false,
+    "note": "Complete initial 1,320-case v7 invocation found one drawer Escape failure (1,311 passes/eight skips). Final rebuilt correction passes separate 108-case all-profile shell scope. This is not a single passing full invocation; all original assertions/timeouts/retries remain."
   },
   "visual": {
     "primaryPromptGroups": 22,
@@ -107,27 +84,27 @@
       {
         "route": "/",
         "preset": "mobile",
-        "score": 95,
+        "score": 94,
         "accessibility": 100,
-        "lcpMs": 3002.7645999999995,
+        "lcpMs": 3121.5738,
         "cls": 0,
         "passed": false
       },
       {
         "route": "/events",
         "preset": "mobile",
-        "score": 95,
+        "score": 93,
         "accessibility": 100,
-        "lcpMs": 3011.766599999999,
+        "lcpMs": 3168.1005999999998,
         "cls": 0,
         "passed": false
       },
       {
         "route": "/contact",
         "preset": "mobile",
-        "score": 95,
+        "score": 93,
         "accessibility": 100,
-        "lcpMs": 3006.868000000001,
+        "lcpMs": 3164.1538,
         "cls": 0,
         "passed": false
       },
@@ -136,7 +113,7 @@
         "preset": "desktop",
         "score": 100,
         "accessibility": 100,
-        "lcpMs": 666.5383999999999,
+        "lcpMs": 669.635,
         "cls": 0,
         "passed": true
       },
@@ -145,7 +122,7 @@
         "preset": "desktop",
         "score": 100,
         "accessibility": 100,
-        "lcpMs": 603.9062,
+        "lcpMs": 685.6084000000001,
         "cls": 0,
         "passed": true
       },
@@ -154,7 +131,7 @@
         "preset": "desktop",
         "score": 100,
         "accessibility": 100,
-        "lcpMs": 659.0935999999999,
+        "lcpMs": 684.8584000000001,
         "cls": 0,
         "passed": true
       }
@@ -162,7 +139,7 @@
     "mobileLcpPassed": false,
     "fieldP75Verified": false,
     "matchesCurrentBuild": true,
-    "note": "Current async helper is included in build digests; all three mobile LCP thresholds remain failing. No field p75/INP or causal timing improvement is inferred."
+    "note": "Current v7 lab metrics still fail all mobile LCP thresholds; desktop performance/accessibility are100 and CLS0. No field p75/INP or representative hardware certification."
   },
   "services": [
     {
@@ -183,18 +160,34 @@
     "Complete keyboard/assistive-technology/actual 200% zoom/forced-colors and physical Safari/device/install/push acceptance",
     "Actual GT staging/hosting/domains/secrets/provider configuration, report-only CSP rollout and hosted headers/cache/CI/scheduler/monitoring/alerts",
     "Hosted PITR/object restore with measured RPO-RTO, migration rehearsal, rollback and 48-hour observation",
-    "Institutional brand/privacy/retention/finance sign-off; inherited warning and moderate dependency review"
+    "Institutional brand/privacy/retention/finance sign-off; inherited warning remediation and compatible low-dependency review"
   ],
   "deferred": [
     "SSO/Google",
     "Bevy/Engage"
   ],
   "scope": "Local only; no deployment, push, purchase, real provider send, production change, another timer or AI commit trailer.",
-  "verificationScopeNote": "Full application-source coverage is the 49f49e6 baseline (2,673/215 with unchanged global/21 critical gates). Standalone helper/traceability adds 13 focused passes, not a new complete-run count. Latest same-build public browser scope passes 76 plus eight expected skips; all 46 HTTPS/header checks pass. Older 162 navigation cases and visual/PWA evidence remain separately dated. Types/build/byte gates pass; lint is zero errors/10 warnings.",
+  "verificationScopeNote": "Final full coverage2,684 tests/216 files passes all unchanged global/21 critical gates. Complete initial v7 browser run has one failure; final rebuilt108-case scope verifies the drawer correction. Current15 PWA boundary/nine update/46 HTTPS checks pass. Current build hashes bind quality/navigation/performance; complete manual/device/hosted/approved visual acceptance remains open. Types/build/budgets pass, lint0errors/10warnings.",
   "delivery": {
-    "initialJsGzipBytes": 114943,
+    "initialJsGzipBytes": 124571,
     "copiedHelperGzipBytes": 362,
     "routeAwareHeroHints": true,
-    "fontPreload": "retained"
+    "fontPreload": "retained",
+    "cssGzipBytes": 29899,
+    "fontBytes": 48432,
+    "offlineInstallRawBytes": 493028
+  },
+  "dependencies": {
+    "router": "7.18.5",
+    "productionAudit": {
+      "info": 0,
+      "low": 4,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 4
+    },
+    "rawAuditExit": 1,
+    "remaining": "Four low package entries through Excalidraw/Mermaid/KaTeX; no compatible live patch accepted yet"
   }
 }

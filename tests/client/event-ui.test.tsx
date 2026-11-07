@@ -96,14 +96,11 @@ function mount({ guard = true } = {}) {
     ],
     {
       initialEntries: ["/events/fictional"],
-      future: { v7_relativeSplatPath: true },
     },
   );
   routers.push(router);
   return {
-    ...render(
-      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-    ),
+    ...render(<RouterProvider router={router} />),
     router,
   };
 }
@@ -162,13 +159,10 @@ describe("EVT independent listing controls", () => {
       ],
       {
         initialEntries: [url],
-        future: { v7_relativeSplatPath: true },
       },
     );
     routers.push(router);
-    render(
-      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-    );
+    render(<RouterProvider router={router} />);
     return router;
   }
   function lastQuery() {

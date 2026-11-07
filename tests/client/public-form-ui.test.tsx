@@ -45,10 +45,7 @@ function fixture({
 function mount(query = "") {
   window.history.replaceState({}, "", "/forms/fictional" + query);
   return render(
-    <MemoryRouter
-      initialEntries={["/forms/fictional" + query]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <MemoryRouter initialEntries={["/forms/fictional" + query]}>
       <Routes>
         <Route
           path="/forms/:slug"

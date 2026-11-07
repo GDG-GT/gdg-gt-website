@@ -369,6 +369,19 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       <Dialog open={mobileOpen} onOpenChange={setMobileOpen}>
         <DialogContent
           className="gt-mobile-sidebar"
+          onEscapeKeyDown={(event) => {
+            if (event.isComposing) event.preventDefault();
+          }}
+          onKeyDownCapture={(event) => {
+            if (event.key !== "Escape") return;
+            // Reopened drawers must dismiss even when a focused child or
+            // another layer consumes Escape before the document listener.
+            event.stopPropagation();
+            if (!event.nativeEvent.isComposing) {
+              event.preventDefault();
+              setMobileOpen(false);
+            }
+          }}
           onCloseAutoFocus={(event) => {
             event.preventDefault();
             if (navigationSamePage.current)

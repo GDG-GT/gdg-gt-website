@@ -172,7 +172,7 @@
     "react-hook-form": "^7.61.1",
     "react-markdown": "^10.1.0",
     "react-resizable-panels": "^2.1.9",
-    "react-router-dom": "6.30.6",
+    "react-router-dom": "7.18.5",
     "recharts": "^2.15.4",
     "rehype-highlight": "^7.0.2",
     "rehype-raw": "^7.0.0",
@@ -226,5 +226,8 @@
     "vite-plugin-pwa": "2.0.0",
     "vitest": "4.1.12",
     "workbox-precaching": "7.4.1"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
   }
 }

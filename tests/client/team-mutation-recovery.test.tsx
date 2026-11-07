@@ -155,10 +155,7 @@ const pending = () => {
   return { resolve, promise };
 };
 const body = (initial = "/admin/team/" + team.id) => (
-  <MemoryRouter
-    initialEntries={[initial]}
-    future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-  >
+  <MemoryRouter initialEntries={[initial]}>
     <main id="workspace-content" tabIndex={-1}>
       <Routes>
         <Route path="/admin/team/:teamId" element={<TeamWorkspace />} />

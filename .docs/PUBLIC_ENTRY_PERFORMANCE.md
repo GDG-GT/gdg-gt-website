@@ -1,5 +1,22 @@
 # Public entry delivery and availability — 2026-11-06
 
+## Current v7 security migration
+
+The current router update increases startup JavaScript to 124,571 gzip bytes,
+including the copied 362-byte helper, versus 114,943 on v6. CSS 29,899 bytes and
+font 48,432 bytes remain unchanged. Offline raw install 493,028 bytes remains under
+its ceiling. All byte and dynamic-boundary gates pass; the security update's
+additional cost is retained explicitly.
+
+The isolated current Home/Events/Contact mobile scores are 94/93/93, accessibility
+100, CLS 0 and LCP 3,122/3,168/3,164 ms. All three mobile LCP thresholds still fail.
+All desktop performance scores are 100. `phase0/production-performance.json`
+binds the final drawer-corrected build and helper; the preceding v6 report is
+`phase0/production-performance-before-router-v7.json`. No competing verification
+was active during measurement. These lab results do not establish field p75/INP
+or hardware acceptance. Next evaluate removing the public schema-builder runtime
+from startup while preserving the full server contract and client read boundaries.
+
 ## Route-aware image hints
 
 The global HTML no longer preloads home artwork on other routes. A small classic

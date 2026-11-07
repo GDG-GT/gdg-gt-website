@@ -58,10 +58,7 @@ function LocationProbe() {
 }
 function mount(path = "/resources") {
   return render(
-    <MemoryRouter
-      initialEntries={[path]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <MemoryRouter initialEntries={[path]}>
       <main id="main-content" tabIndex={-1}>
         {path.startsWith("/sponsors") ? (
           <SponsorsPage />

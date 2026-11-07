@@ -79,12 +79,9 @@ function mount() {
     ],
     {
       initialEntries: ["/l/fictional"],
-      future: { v7_relativeSplatPath: true },
     },
   );
-  const page = render(
-    <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-  );
+  const page = render(<RouterProvider router={router} />);
   return { ...page, router };
 }
 beforeEach(() => {

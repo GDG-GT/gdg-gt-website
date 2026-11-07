@@ -102,7 +102,6 @@ function mount(selected = true) {
         "/admin/communications?tab=messages" +
           (selected ? "&thread=" + threadId : ""),
       ]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <main id="workspace-content" tabIndex={-1}>
         <DirectMessageWorkspace personal />
@@ -323,7 +322,6 @@ describe("Private conversation mutation lifecycle", () => {
     page.rerender(
       <MemoryRouter
         initialEntries={["/admin/communications?thread=" + threadId]}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
       >
         <main id="workspace-content">
           <DirectMessageWorkspace personal />

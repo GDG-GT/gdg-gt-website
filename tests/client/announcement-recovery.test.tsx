@@ -102,7 +102,6 @@ function mount(selected = true) {
         "/admin/communications?tab=announcements" +
           (selected ? "&announcement=" + id : ""),
       ]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <main id="workspace-content" tabIndex={-1}>
         <AnnouncementWorkspace />
@@ -533,7 +532,6 @@ describe("Announcement draft and publication lifecycle", () => {
     page.rerender(
       <MemoryRouter
         initialEntries={["/admin/communications?announcement=" + id]}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
       >
         <main>
           <AnnouncementWorkspace />

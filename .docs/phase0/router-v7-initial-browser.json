@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-11-07T00:02:29.012709+00:00",
+  "completed": true,
+  "stats": {
+    "startTime": "2026-11-06T23:47:56.738Z",
+    "duration": 843609.137,
+    "expected": 1311,
+    "skipped": 8,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "build": {
+    "index.html": "15540ac1715cd074abb8d551a65da416dd055b5b485077ccaff816e7d7cb2a75",
+    ".vite/manifest.json": "e1a8e6ecf27ed92911c221a081e50a1a49d64d5fe0cb322c58b091804aa58f46",
+    "assets/public-entry.js": "5ff218d7049b9a8dd39cb7ee8b488f7cfbc6a857a0459ebcffb3e2d0e2dbd3b8"
+  },
+  "scope": "Complete 1,320-case v7 production-browser invocation, three workers and zero retries. One Chromium-mobile reopened-drawer Escape failure, eight expected profile skips, 1,311 passes. Its failure is retained; final capture-phase correction requires a separate rebuilt-artifact scope. No complete passing full invocation is claimed.",
+  "failures": [
+    {
+      "name": "complete super-admin navigation stays keyboard reachable without losing the sign-out controls",
+      "project": "chromium-mobile",
+      "results": [
+        "failed"
+      ]
+    }
+  ]
+}

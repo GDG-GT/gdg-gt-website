@@ -1,5 +1,22 @@
 # Complete workspace navigation and focus
 
+## V7 correction verification
+
+The complete 1,320-case React Router 7.18.5 browser run passed 1,311 cases, skipped
+eight expected profile cases and found one real Chromium-mobile failure: after
+pointer reopening, Escape left the drawer open and hid the original opener from
+the accessibility tree. Original failure evidence is retained in
+`phase0/router-v7-initial-browser.json` and ignored local captures.
+
+The drawer now uses the same capture-phase Escape dismissal and native composition
+guard as command search. All 11 focus unit cases pass, including repeated reopening
+with a bubbling consumer and IME handling. The final rebuilt scope passes all 108
+cases across six profiles: complete navigation, lazy-shell entry/errors, footer
+entry, native availability, command search and eight workspace routes. See
+`phase0/router-v7-final-navigation.json`. Full final coverage passes 2,684 tests/
+216 files, including these cases. This is separate from the initial complete
+browser invocation; no fully passing new1,320-case run is claimed.
+
 ## Deferred navigation review
 
 The unsaved-work registry and router blocker remain synchronous, while the Radix

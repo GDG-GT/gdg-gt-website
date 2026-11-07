@@ -152,10 +152,7 @@ async function audit() {
 }
 function mountPublic(child: React.ReactNode, path = "/resources") {
   return render(
-    <MemoryRouter
-      initialEntries={[path]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <MemoryRouter initialEntries={[path]}>
       <ContentProvider>
         <SiteShell>{child}</SiteShell>
       </ContentProvider>
@@ -223,10 +220,7 @@ describe("A11Y structural axe checks (JSDOM; no contrast/visual certification)",
   );
   it("checks the full public form field structure and associated validation errors", async () => {
     render(
-      <MemoryRouter
-        initialEntries={["/forms/fictional-accessible"]}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={["/forms/fictional-accessible"]}>
         <Routes>
           <Route
             path="/forms/:slug"
@@ -396,10 +390,7 @@ describe("A11Y structural axe checks (JSDOM; no contrast/visual certification)",
         : original(path),
     );
     render(
-      <MemoryRouter
-        initialEntries={["/events/fictional"]}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={["/events/fictional"]}>
         <ContentProvider>
           <SiteShell>
             <Routes>
@@ -446,10 +437,7 @@ describe("A11Y structural axe checks (JSDOM; no contrast/visual certification)",
         : original(path),
     );
     render(
-      <MemoryRouter
-        initialEntries={["/events/fictional"]}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={["/events/fictional"]}>
         <ContentProvider>
           <SiteShell>
             <Routes>
@@ -467,10 +455,7 @@ describe("A11Y structural axe checks (JSDOM; no contrast/visual certification)",
   });
   it("checks the actual builder inspector and its selected tab panel", async () => {
     render(
-      <MemoryRouter
-        initialEntries={["/admin/forms/fictional/edit"]}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={["/admin/forms/fictional/edit"]}>
         <Routes>
           <Route
             path="/admin/forms/:formId/edit"
@@ -490,10 +475,7 @@ describe("A11Y structural axe checks (JSDOM; no contrast/visual certification)",
   });
   it("checks response filter controls, result tabs and the empty table state", async () => {
     render(
-      <MemoryRouter
-        initialEntries={["/admin/forms/fictional/responses"]}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={["/admin/forms/fictional/responses"]}>
         <Routes>
           <Route
             path="/admin/forms/:formId/responses"
@@ -533,9 +515,7 @@ describe("A11Y structural axe checks (JSDOM; no contrast/visual certification)",
         : original(path),
     );
     render(
-      <MemoryRouter
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter>
         <main>
           <h1>Fictional workspace</h1>
           <NotificationBell />

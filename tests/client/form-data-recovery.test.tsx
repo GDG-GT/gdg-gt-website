@@ -229,10 +229,7 @@ describe("Form builder initial read UI", () => {
       .mockReturnValueOnce(read.promise)
       .mockResolvedValue({ form: form("Recovered fictional form") });
     render(
-      <MemoryRouter
-        initialEntries={["/admin/forms/fictional/edit"]}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={["/admin/forms/fictional/edit"]}>
         <Routes>
           <Route
             path="/admin/forms/:formId/edit"
@@ -269,10 +266,7 @@ describe("Form builder initial read UI", () => {
 });
 function mountResponses(path = "/admin/forms/fictional/responses") {
   return render(
-    <MemoryRouter
-      initialEntries={[path]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <MemoryRouter initialEntries={[path]}>
       <Routes>
         <Route
           path="/admin/forms/:formId/responses"

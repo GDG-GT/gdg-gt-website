@@ -100,7 +100,6 @@ function mount(preview = false) {
       initialEntries={[
         "/admin/content" + (preview ? "?mode=preview&page=home" : ""),
       ]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <main id="workspace-content" tabIndex={-1}>
         <SiteContentWorkspace />

@@ -1,0 +1,9 @@
+{
+  "files": 29,
+  "originalAssertionCallContracts": 2460,
+  "currentAssertionCallContracts": 2470,
+  "originalTestCallContracts": 443,
+  "currentTestCallContracts": 445,
+  "allOriginalContractsPreservedInOrder": true,
+  "scope": "AST review of test names, matcher expressions and operands after obsolete opt-in removal plus two new drawer regression cases. Existing contracts remain an ordered subsequence; no original contract is removed/relaxed. This complements actual execution, not a replacement. Initial diagnostic callback-filter bug was corrected without source/assertion edits."
+}

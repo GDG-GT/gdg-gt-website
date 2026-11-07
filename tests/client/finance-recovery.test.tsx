@@ -161,7 +161,6 @@ function mount(selected = false, tab = "requests") {
       initialEntries={[
         "/admin/finances?tab=" + tab + (selected ? "&request=" + id : ""),
       ]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <main id="workspace-content" tabIndex={-1}>
         <FinanceWorkspace />

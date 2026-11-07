@@ -51,9 +51,7 @@ function pending<T>() {
 }
 function mount() {
   return render(
-    <MemoryRouter
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <MemoryRouter>
       <main>
         <h1>Fictional workspace</h1>
         <h2>Notifications</h2>
@@ -323,9 +321,7 @@ describe("Account notification read/dismiss and race recovery", () => {
   it("remounts private inbox state when the account changes instead of retaining an open dialog", async () => {
     apiMock.mockResolvedValue(inbox());
     const view = render(
-      <MemoryRouter
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter>
         <NotificationBell />
       </MemoryRouter>,
     );
@@ -333,9 +329,7 @@ describe("Account notification read/dismiss and race recovery", () => {
     await screen.findByRole("heading", { name: item.title });
     identity.id = "other-fictional-owner";
     view.rerender(
-      <MemoryRouter
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter>
         <NotificationBell />
       </MemoryRouter>,
     );

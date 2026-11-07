@@ -1,0 +1,776 @@
+{
+  "generatedAt": "2026-11-07T00:05:41.342137+00:00",
+  "completed": true,
+  "stats": {
+    "startTime": "2026-11-07T00:03:12.236Z",
+    "duration": 68454.96,
+    "expected": 108,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "build": {
+    "index.html": "4146dcd4eb702c076940c9bebc39f0f4d24bef0c7a0bd7b86f746e8998ed3bf3",
+    ".vite/manifest.json": "548676a42863f326798e445015265e880ff53ba41064baf7fcee56c9c1b27748",
+    "assets/public-entry.js": "5ff218d7049b9a8dd39cb7ee8b488f7cfbc6a857a0459ebcffb3e2d0e2dbd3b8"
+  },
+  "scope": "Final v7 production build with capture-phase drawer Escape/IME correction. All six profiles cover complete 26-link navigation, repeated keyboard/pointer reopening and focus return, accepted destinations, command search, route-lazy shell failures/focus, native availability inertness, footer entry and eight workspace routes. Separate from the complete 1,320-case initial invocation that found one drawer failure. No retries, timeout/assertion weakening or actual application/provider writes.",
+  "tests": [
+    {
+      "name": "complete super-admin navigation stays keyboard reachable without losing the sign-out controls",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "complete super-admin navigation stays keyboard reachable without losing the sign-out controls",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "complete super-admin navigation stays keyboard reachable without losing the sign-out controls",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "complete super-admin navigation stays keyboard reachable without losing the sign-out controls",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "complete super-admin navigation stays keyboard reachable without losing the sign-out controls",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "complete super-admin navigation stays keyboard reachable without losing the sign-out controls",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "a failed lazy shell shows the safe reload path without a developer error dump",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "keyboard workspace entry waits for its route-lazy content landmark",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "footer Enter loads sign-in after a fictional gate acknowledgement",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "footer Subscribe loads sign-in after a fictional gate acknowledgement",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "homepage renders early but keeps controls inert until live is confirmed",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "homepage renders early but keeps controls inert until maintenance is confirmed",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "a failed lazy shell shows the safe reload path without a developer error dump",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "keyboard workspace entry waits for its route-lazy content landmark",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "footer Enter loads sign-in after a fictional gate acknowledgement",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "footer Subscribe loads sign-in after a fictional gate acknowledgement",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "homepage renders early but keeps controls inert until live is confirmed",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "homepage renders early but keeps controls inert until maintenance is confirmed",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "a failed lazy shell shows the safe reload path without a developer error dump",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "keyboard workspace entry waits for its route-lazy content landmark",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "footer Enter loads sign-in after a fictional gate acknowledgement",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "footer Subscribe loads sign-in after a fictional gate acknowledgement",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "homepage renders early but keeps controls inert until live is confirmed",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "homepage renders early but keeps controls inert until maintenance is confirmed",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "a failed lazy shell shows the safe reload path without a developer error dump",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "keyboard workspace entry waits for its route-lazy content landmark",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "footer Enter loads sign-in after a fictional gate acknowledgement",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "footer Subscribe loads sign-in after a fictional gate acknowledgement",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "homepage renders early but keeps controls inert until live is confirmed",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "homepage renders early but keeps controls inert until maintenance is confirmed",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "a failed lazy shell shows the safe reload path without a developer error dump",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "keyboard workspace entry waits for its route-lazy content landmark",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "footer Enter loads sign-in after a fictional gate acknowledgement",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "footer Subscribe loads sign-in after a fictional gate acknowledgement",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "homepage renders early but keeps controls inert until live is confirmed",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "homepage renders early but keeps controls inert until maintenance is confirmed",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "a failed lazy shell shows the safe reload path without a developer error dump",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "keyboard workspace entry waits for its route-lazy content landmark",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "footer Enter loads sign-in after a fictional gate acknowledgement",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "footer Subscribe loads sign-in after a fictional gate acknowledgement",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "homepage renders early but keeps controls inert until live is confirmed",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "homepage renders early but keeps controls inert until maintenance is confirmed",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ordinary public browsing does not request the navigation review library",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review delayed loading preserves unsaved work and keyboard cancellation focus",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review load failure preserves unsaved work and keyboard cancellation focus",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ordinary public browsing does not request the navigation review library",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review delayed loading preserves unsaved work and keyboard cancellation focus",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review load failure preserves unsaved work and keyboard cancellation focus",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ordinary public browsing does not request the navigation review library",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review delayed loading preserves unsaved work and keyboard cancellation focus",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review load failure preserves unsaved work and keyboard cancellation focus",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ordinary public browsing does not request the navigation review library",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review delayed loading preserves unsaved work and keyboard cancellation focus",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review load failure preserves unsaved work and keyboard cancellation focus",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ordinary public browsing does not request the navigation review library",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review delayed loading preserves unsaved work and keyboard cancellation focus",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review load failure preserves unsaved work and keyboard cancellation focus",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "ordinary public browsing does not request the navigation review library",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review delayed loading preserves unsaved work and keyboard cancellation focus",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "navigation review load failure preserves unsaved work and keyboard cancellation focus",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/profile keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/forms keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/guide keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/events keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/audit-log keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/users keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "name": "workspace /admin/teams keeps shared labels and actions readable",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    }
+  ]
+}

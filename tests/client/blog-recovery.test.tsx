@@ -115,7 +115,6 @@ function mount(selected = true) {
   return render(
     <MemoryRouter
       initialEntries={["/admin/blog" + (selected ? "?record=" + id : "")]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <main id="workspace-content" tabIndex={-1}>
         <Navigator />

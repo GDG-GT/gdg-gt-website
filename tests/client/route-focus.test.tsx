@@ -89,12 +89,10 @@ function mount(initial = "/", options = {}) {
         ),
       },
     ],
-    { initialEntries: [initial], future: { v7_relativeSplatPath: true } },
+    { initialEntries: [initial] },
   );
   routers.push(router);
-  render(
-    <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-  );
+  render(<RouterProvider router={router} />);
   return router;
 }
 afterEach(() => {

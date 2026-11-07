@@ -1,0 +1,159 @@
+{
+  "generatedAt": "2026-11-06T23:48:19.296395+00:00",
+  "completed": true,
+  "runtime": "react-router-dom/react-router 7.18.5",
+  "tests": {
+    "files": 216,
+    "passed": 2682,
+    "failed": 0
+  },
+  "coverage": {
+    "lines": {
+      "total": 23121,
+      "covered": 18061,
+      "skipped": 0,
+      "pct": 78.11
+    },
+    "statements": {
+      "total": 25639,
+      "covered": 19517,
+      "skipped": 0,
+      "pct": 76.12
+    },
+    "functions": {
+      "total": 5870,
+      "covered": 4156,
+      "skipped": 0,
+      "pct": 70.8
+    },
+    "branches": {
+      "total": 27446,
+      "covered": 20750,
+      "skipped": 0,
+      "pct": 75.6
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "globalThreshold": 70,
+  "globalPassed": true,
+  "criticalThreshold": 90,
+  "critical": [
+    {
+      "file": "server/auth.mjs",
+      "branches": 98.52,
+      "passed": true
+    },
+    {
+      "file": "server/access.mjs",
+      "branches": 98.38,
+      "passed": true
+    },
+    {
+      "file": "server/users.mjs",
+      "branches": 98.78,
+      "passed": true
+    },
+    {
+      "file": "server/forms.mjs",
+      "branches": 98.54,
+      "passed": true
+    },
+    {
+      "file": "server/form-access.mjs",
+      "branches": 90,
+      "passed": true
+    },
+    {
+      "file": "server/form-links.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-collaborators.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-deletion.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/form-integrations.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/uploads.mjs",
+      "branches": 98.48,
+      "passed": true
+    },
+    {
+      "file": "server/finances.mjs",
+      "branches": 97.72,
+      "passed": true
+    },
+    {
+      "file": "server/person-privacy.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/security.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/authorization.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/http.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/encryption.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/validation.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/upload-content.mjs",
+      "branches": 98.86,
+      "passed": true
+    },
+    {
+      "file": "server/lib/scanner.mjs",
+      "branches": 100,
+      "passed": true
+    },
+    {
+      "file": "server/lib/realtime-token.mjs",
+      "branches": 91.48,
+      "passed": true
+    },
+    {
+      "file": "server/lib/object-storage.mjs",
+      "branches": 100,
+      "passed": true
+    }
+  ],
+  "allPassed": true,
+  "build": {
+    "index.html": "15540ac1715cd074abb8d551a65da416dd055b5b485077ccaff816e7d7cb2a75",
+    ".vite/manifest.json": "e1a8e6ecf27ed92911c221a081e50a1a49d64d5fe0cb322c58b091804aa58f46",
+    "assets/public-entry.js": "5ff218d7049b9a8dd39cb7ee8b488f7cfbc6a857a0459ebcffb3e2d0e2dbd3b8"
+  },
+  "scope": "Actual v7 library migration; only obsolete opt-in future props removed from application/test setup. No assertion, timeout, exclusion or coverage threshold changed. Full source suite includes the nine route-aware helper cases. Browser acceptance remains separate."
+}

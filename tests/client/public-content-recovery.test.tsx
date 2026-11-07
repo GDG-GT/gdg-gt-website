@@ -90,9 +90,7 @@ function pending<T>() {
 }
 function mount(children: ReactNode = <HomePage />) {
   return render(
-    <MemoryRouter
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <MemoryRouter>
       <ContentProvider>
         <SiteShell>{children}</SiteShell>
       </ContentProvider>

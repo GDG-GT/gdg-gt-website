@@ -62,12 +62,10 @@ function mount(url = "/contact", guard = true) {
         ),
       },
     ],
-    { initialEntries: [url], future: { v7_relativeSplatPath: true } },
+    { initialEntries: [url] },
   );
   routers.push(router);
-  render(
-    <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-  );
+  render(<RouterProvider router={router} />);
   return router;
 }
 const posts = () => apiMock.mock.calls.filter(([path]) => path === "/contact");

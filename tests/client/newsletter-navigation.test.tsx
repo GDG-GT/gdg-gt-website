@@ -49,11 +49,9 @@ function mount() {
         ),
       },
     ],
-    { future: { v7_relativeSplatPath: true } },
+    {},
   );
-  return render(
-    <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-  );
+  return render(<RouterProvider router={router} />);
 }
 afterEach(() => {
   cleanup();

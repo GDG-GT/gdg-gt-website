@@ -1,0 +1,98 @@
+{
+  "generatedAt": "2026-11-06T23:48:19.296395+00:00",
+  "runtimeChanged": true,
+  "declaration": "react-router-dom exactly 7.18.5",
+  "routerVersion": "7.18.5",
+  "removedDependency": "@remix-run/router@1.23.4",
+  "addedDependencies": {
+    "cookie": "1.1.1",
+    "set-cookie-parser": "2.7.3"
+  },
+  "changedResolvedLockEntries": [
+    "node_modules/react-router-dom",
+    "node_modules/react-router",
+    "node_modules/@remix-run/router",
+    "node_modules/cookie",
+    "node_modules/set-cookie-parser"
+  ],
+  "productionAudit": {
+    "info": 0,
+    "low": 4,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 4
+  },
+  "rawAuditExit": 1,
+  "note": "Zero moderate/high/critical advisories. Four low package entries trace to the existing KaTeX advisory; raw audit remains nonzero. No runtime acceptance or complete PRD claim is inferred before browser/device/hosted gates.",
+  "findings": [
+    {
+      "package": "@excalidraw/excalidraw",
+      "severity": "low",
+      "range": "0.5.0-a78d45417 || 0.17.1-08b13f9 - 0.17.1-6e5aeb1 || >=0.18.0-699826",
+      "via": [
+        "@excalidraw/mermaid-to-excalidraw"
+      ],
+      "fixAvailable": {
+        "name": "@excalidraw/excalidraw",
+        "version": "0.17.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "@excalidraw/mermaid-to-excalidraw",
+      "severity": "low",
+      "range": "0.3.0 - 2.3.0",
+      "via": [
+        "mermaid"
+      ],
+      "fixAvailable": {
+        "name": "@excalidraw/excalidraw",
+        "version": "0.17.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "katex",
+      "severity": "low",
+      "range": "0.11.0 - 0.18.1",
+      "via": [
+        {
+          "title": "KaTeX: Existing prototype pollution can bypass trust restrictions",
+          "url": "https://github.com/advisories/GHSA-238p-pmpm-9mq7",
+          "range": ">=0.11.0 <0.18.2"
+        }
+      ],
+      "fixAvailable": {
+        "name": "@excalidraw/excalidraw",
+        "version": "0.17.6",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "package": "mermaid",
+      "severity": "low",
+      "range": "10.9.0-rc.1 - 12.1.0",
+      "via": [
+        "katex"
+      ],
+      "fixAvailable": {
+        "name": "@excalidraw/excalidraw",
+        "version": "0.17.6",
+        "isSemVerMajor": true
+      }
+    }
+  ],
+  "build": {
+    "index.html": "15540ac1715cd074abb8d551a65da416dd055b5b485077ccaff816e7d7cb2a75",
+    ".vite/manifest.json": "e1a8e6ecf27ed92911c221a081e50a1a49d64d5fe0cb322c58b091804aa58f46",
+    "assets/public-entry.js": "5ff218d7049b9a8dd39cb7ee8b488f7cfbc6a857a0459ebcffb3e2d0e2dbd3b8"
+  },
+  "finalBuild": {
+    "index.html": "4146dcd4eb702c076940c9bebc39f0f4d24bef0c7a0bd7b86f746e8998ed3bf3",
+    ".vite/manifest.json": "548676a42863f326798e445015265e880ff53ba41064baf7fcee56c9c1b27748",
+    "assets/public-entry.js": "5ff218d7049b9a8dd39cb7ee8b488f7cfbc6a857a0459ebcffb3e2d0e2dbd3b8"
+  },
+  "dependencyVersionsUnchangedSinceAudit": true,
+  "verificationNote": "Dependency audit was performed after v7 installation; only an Escape-handler correction and runtime-engine metadata/docs changed afterward. No dependency versions changed. Final full coverage and focused browser correction verification are recorded independently."
+}

@@ -60,12 +60,10 @@ function mount() {
         ),
       },
     ],
-    { initialEntries: ["/admin"], future: { v7_relativeSplatPath: true } },
+    { initialEntries: ["/admin"] },
   );
   routers.push(router);
-  render(
-    <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-  );
+  render(<RouterProvider router={router} />);
   return router;
 }
 async function open() {
@@ -95,6 +93,34 @@ describe("workspace drawer focus return and accepted route focus", () => {
     fireEvent.click(
       within(dialog).getByRole("button", { name: "Close", exact: true }),
     );
+    await waitFor(() => expect(document.activeElement).toBe(opener));
+  });
+  it("repeated pointer reopening dismisses Escape even when its focused child consumes bubbling", async () => {
+    mount();
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const { opener, dialog } = await open();
+      const link = within(dialog).getByRole("link", {
+        name: "Dashboard",
+        exact: true,
+      });
+      link.focus();
+      link.addEventListener("keydown", (event) => event.stopPropagation(), {
+        once: true,
+      });
+      fireEvent.keyDown(link, { key: "Escape" });
+      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+      await waitFor(() => expect(document.activeElement).toBe(opener));
+    }
+  });
+  it("keeps the reopened drawer during Escape composition and dismisses it after composition ends", async () => {
+    mount();
+    const { opener, dialog } = await open();
+    fireEvent.keyDown(dialog, { key: "Escape", isComposing: true });
+    expect(screen.getByRole("dialog", { name: "Workspace navigation" })).toBe(
+      dialog,
+    );
+    fireEvent.keyDown(dialog, { key: "Escape" });
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     await waitFor(() => expect(document.activeElement).toBe(opener));
   });
   it("preserves destination content focus after choosing a different workspace route", async () => {

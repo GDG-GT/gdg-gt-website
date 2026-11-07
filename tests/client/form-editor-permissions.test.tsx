@@ -47,10 +47,7 @@ function mountBuilder(form: PreviewForm) {
     ),
   );
   return render(
-    <MemoryRouter
-      initialEntries={["/admin/forms/fictional/edit"]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <MemoryRouter initialEntries={["/admin/forms/fictional/edit"]}>
       <Routes>
         <Route
           path="/admin/forms/:formId/edit"
@@ -77,10 +74,7 @@ function mountLibrary(form: PreviewForm, canCreate = false) {
     canCreate,
   });
   return render(
-    <MemoryRouter
-      initialEntries={["/admin/forms"]}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <MemoryRouter initialEntries={["/admin/forms"]}>
       <FormsLibrary />
     </MemoryRouter>,
   );
@@ -219,10 +213,7 @@ describe("Action-aware form definition inspection", () => {
       ),
     );
     render(
-      <MemoryRouter
-        initialEntries={["/admin/forms/fictional/edit"]}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={["/admin/forms/fictional/edit"]}>
         <Routes>
           <Route path="/admin/forms/:formId/edit" element={<FormBuilder />} />
         </Routes>

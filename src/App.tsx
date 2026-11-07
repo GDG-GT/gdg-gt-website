@@ -271,16 +271,13 @@ function RoutedApplication() {
 }
 const router = createBrowserRouter(
   [{ path: "*", element: <RoutedApplication /> }],
-  { future: { v7_relativeSplatPath: true } },
+  {},
 );
 export default function App() {
   return (
     <AdminProvider>
       <ContentProvider>
-        <RouterProvider
-          router={router}
-          future={{ v7_startTransition: true }}
-        />
+        <RouterProvider router={router} />
       </ContentProvider>
     </AdminProvider>
   );

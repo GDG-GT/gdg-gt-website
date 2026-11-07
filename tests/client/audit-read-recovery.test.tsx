@@ -87,10 +87,7 @@ function EntryRoute() {
   );
 }
 const body = (initial = "/admin/audit-log") => (
-  <MemoryRouter
-    initialEntries={[initial]}
-    future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-  >
+  <MemoryRouter initialEntries={[initial]}>
     <main id="workspace-content" tabIndex={-1}>
       <AuditWorkspace />
     </main>
