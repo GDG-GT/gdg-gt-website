@@ -1,39 +1,46 @@
 # Local implementation and acceptance audit — 2026-11-07
 
-Current local source includes canonical recovery migrations through137, React
-Router7.18.5, the scoped KaTeX0.18.2 security patch, visible-label corrections and
-native drawing-control names. Production dependency audit exits0 with no current
-findings. That is not a full security or launch certificate.
+The current local application includes canonical recovery migrations through 137,
+React Router 7.18.5, the scoped KaTeX 0.18.2 security patch, visible-label and
+native drawing-control fixes, keyboard scrolling for long reviews/tables, and
+publication/history contrast and target-size corrections. Source fixes are saved
+in 20b59e2. No deployment, production change or provider send occurred.
 
-Complete source coverage passes **2,722 tests/222 files**, unchanged global70
-and21critical90 branch gates: lines78.16/statements76.17/functions70.77/
-branches75.63. It ran with one worker and no competing verification. The later
-publication/history corrections change CSS only; instrumented application source
-is unchanged. See `phase0/communication-scroll-quality.json`. Final build, types,
-byte and traceability checks pass; lint has0errors/10inherited warnings.
+Complete source coverage passes **2,722 tests in 222 files**, with the unchanged
+70% global and all 21 individual 90%-branch gates. Coverage is 78.16% lines,
+76.17% statements, 70.77% functions and 75.63% branches. Subsequent application
+changes were CSS only; instrumented source stayed unchanged. Build, strict types,
+byte and traceability checks pass. Lint has zero errors and ten inherited warnings.
+The fresh production dependency audit has zero findings; the final source/history
+scan has zero unreviewed findings. None of these is a launch certificate.
 
-Saved4ed0b55 full browser invocation passes1,372cases/eight expected skips.
-A later public/startup/lazy-shell scope passes130cases/eight expected skips,
-including both original desktop motion checks. Earlier WebKit harness and
-software-WebGL failures remain recorded separately. They are not relabeled as
-passing complete invocations.
+The **complete 1,548-case browser invocation passes 1,540 cases with eight
+expected profile-specific skips**, zero failures or retries, across six profiles.
+All case identities match the listed inventory. Both original desktop WebGL
+motion checks pass. Four skips are the mobile-menu test on desktop profiles;
+four are the desktop-motion test on unsupported profiles. Earlier failing
+invocations remain historical evidence. See
+`phase0/final-current-inventory-browser.json`.
 
-The keyboard review continuation passes37secondary states/222checks/270unapproved
-captures, with no skips/failures/retries. Seven additional form review states
-pass42checks across6profiles. They exposed and corrected real publication-summary
-contrast and history checkbox target-size findings. The earlier mobile delivery/
-recipient/message keyboard-scroll failures and initial test harness failures
-remain retained. Expanded44state combined review now passes all264checks with344unapproved
-captures; no failures/skips/retries. List-only inventory verifies1,548unique cases and
-three disjoint516case shards; no complete1,548case execution or remote CI claim.
-See `KEYBOARD_REVIEW_ACCESSIBILITY.md` and the dated evidence files.
+The primary index now has 138 checks and 162 unapproved captures from that same
+full invocation. The secondary index has 44 states, 264 passing checks and 344
+unapproved captures. A separate recovery index links 18 states and 108 original
+functional screenshots; their retained scroll positions differ from initial
+composition views. Some mobile account/member/privacy and desktop privacy
+captures were inspected. No human visual approval, approved golden baseline or
+physical-device acceptance is claimed.
 
-Final CSS artifact passes15PWA/nine update/46HTTPS checks. Its isolated mobile
-LCP3040/2859/3007ms still fails2500ms; desktop performance100, accessibility100,
-matching visible labels andCLS0 pass. Field/representative hardware acceptance
-remain open. Full PRD remains incomplete:
-all146requirements/307logical cases are source-mapped, with complete acceptance
-unverified. No local test or screenshot certifies the manual/device/hosted gates.
+The final artifact passes 15 PWA boundaries, nine update checks and 46 configured
+HTTPS/header checks. Isolated mobile LCP is **3,040 / 2,859 / 3,007ms** for
+Home/Events/Contact, still over 2,500ms. All three desktop performance scores and
+all accessibility scores are 100; explicit visible-label checks pass and CLS is
+zero. A scratch static-replacement first-paint trial still fails at 3,063ms and
+was rejected without changing the verified app. See `FIRST_PAINT_FEASIBILITY.md`.
+
+**The full PRD remains incomplete.** All 146 numbered requirements and 307 logical
+cases are source-mapped, with full acceptance unverified. Field/hardware,
+manual accessibility, approved visual/content, physical-device and hosted
+operations gates remain separate. The dated entries below are historical.
 
 ## Historical implementation evidence
 

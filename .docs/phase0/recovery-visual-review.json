@@ -1,0 +1,884 @@
+{
+  "generatedAt": "2026-11-07T06:55:29.211Z",
+  "completed": true,
+  "sourceInvocation": "artifacts/browser/final-current-inventory",
+  "sourceReportSha256": "b6ad6916756d5aed09bb3d13e8884b4ecb191460a50c66be280da91f9a1cf462",
+  "stats": {
+    "startTime": "2026-11-07T06:34:34.328Z",
+    "duration": 1235411.659,
+    "expected": 1540,
+    "skipped": 8,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "states": 18,
+  "captureCount": 108,
+  "approved": false,
+  "note": "Existing screenshots from fictional functional recovery fixtures. Some fixtures simulate accepted writes; none reach real application records or providers. These are unapproved review candidates, not formal composition captures, approved content, 1% goldens, manual accessibility, actual-device or full PRD acceptance. Functional captures retain the test's scroll position, including horizontally scrolled tables or sticky bars; full-page views can include background beyond a dialog viewport. Use the separate composition review for initial layout and modal top/lower-control geometry.",
+  "captures": [
+    {
+      "name": "Account recovery",
+      "source": "tests/browser/account-review.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/account-review-account-rev-15749-s-an-accepted-but-lost-save-chromium-1920/account-recovery-review.png",
+      "bytes": 189726,
+      "sha256": "ef6a0c06b29bf9fe0058226d2750dc7574c3e000aff46b34f9d4b33764cad6c8"
+    },
+    {
+      "name": "Account recovery",
+      "source": "tests/browser/account-review.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/account-review-account-rev-15749-s-an-accepted-but-lost-save-chromium-1440/account-recovery-review.png",
+      "bytes": 174040,
+      "sha256": "a98373ce42be38276f8715adb4c3cc661fa2c35e49052dc53c13712aaab26873"
+    },
+    {
+      "name": "Account recovery",
+      "source": "tests/browser/account-review.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/account-review-account-rev-15749-s-an-accepted-but-lost-save-chromium-mobile/account-recovery-review.png",
+      "bytes": 62629,
+      "sha256": "5a1c2d6bdfda94b1dfc779c73ec9e9d8403295ef5cea55bd1be8f939924322a4"
+    },
+    {
+      "name": "Account recovery",
+      "source": "tests/browser/account-review.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/account-review-account-rev-15749-s-an-accepted-but-lost-save-firefox-1440/account-recovery-review.png",
+      "bytes": 184156,
+      "sha256": "216168ca245946586b8d5d2045fd9adb4122e55fdd493ce8890105cb0f848065"
+    },
+    {
+      "name": "Account recovery",
+      "source": "tests/browser/account-review.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/account-review-account-rev-15749-s-an-accepted-but-lost-save-webkit-1440/account-recovery-review.png",
+      "bytes": 259843,
+      "sha256": "deb427ddb254a9b7ebd7d7a5742f20edbc2108bc626eb4376868cd9604fa59f3"
+    },
+    {
+      "name": "Account recovery",
+      "source": "tests/browser/account-review.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/account-review-account-rev-15749-s-an-accepted-but-lost-save-webkit-mobile/account-recovery-review.png",
+      "bytes": 68766,
+      "sha256": "04d22231dd3d791750fb0cf2098c56e5a5906a05d15349bb5687cfed3ff3a136"
+    },
+    {
+      "name": "Announcement recovery",
+      "source": "tests/browser/announcement-review.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/announcement-review-publis-a9973-t-without-a-second-mutation-chromium-1920/announcement-recovered.png",
+      "bytes": 256496,
+      "sha256": "e65d8a862b2c61c2bb8a7d04b65beeeb57b69f54724ffda661333d038dcf7f2e"
+    },
+    {
+      "name": "Announcement recovery",
+      "source": "tests/browser/announcement-review.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/announcement-review-publis-a9973-t-without-a-second-mutation-chromium-1440/announcement-recovered.png",
+      "bytes": 239413,
+      "sha256": "c192f6fb770ef1f18f796c28ad3d21104c530dfecc38b9314224b368be51ad36"
+    },
+    {
+      "name": "Announcement recovery",
+      "source": "tests/browser/announcement-review.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/announcement-review-publis-a9973-t-without-a-second-mutation-chromium-mobile/announcement-recovered.png",
+      "bytes": 126562,
+      "sha256": "420399011feec9f8f5e35516761158a151171a8eebc70be90a69fc059327e859"
+    },
+    {
+      "name": "Announcement recovery",
+      "source": "tests/browser/announcement-review.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/announcement-review-publis-a9973-t-without-a-second-mutation-firefox-1440/announcement-recovered.png",
+      "bytes": 263095,
+      "sha256": "d2c84c9d3b5366c3f10b7cc9b7426dc1176d27b45f0c89109803df9e0acf422f"
+    },
+    {
+      "name": "Announcement recovery",
+      "source": "tests/browser/announcement-review.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/announcement-review-publis-a9973-t-without-a-second-mutation-webkit-1440/announcement-recovered.png",
+      "bytes": 324181,
+      "sha256": "31b211b316369071c25a7314b72e09cdeadb167e7f6378900d84cb8c6047b220"
+    },
+    {
+      "name": "Announcement recovery",
+      "source": "tests/browser/announcement-review.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/announcement-review-publis-a9973-t-without-a-second-mutation-webkit-mobile/announcement-recovered.png",
+      "bytes": 167680,
+      "sha256": "aa91fdea153ce7c3da6532fb8d617f224473539dbf14494bb042b08fc1c0cd14"
+    },
+    {
+      "name": "Invitation recovery",
+      "source": "tests/browser/invitation-review.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/invitation-review-reviewed-0af7c-ipt-once-and-restores-focus-chromium-1920/invitation-recovered.png",
+      "bytes": 241973,
+      "sha256": "3d8cf557c3113d5a5128b0299f094a28a15648d13a7e4aa36b20e3c0398cf30b"
+    },
+    {
+      "name": "Invitation recovery",
+      "source": "tests/browser/invitation-review.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/invitation-review-reviewed-0af7c-ipt-once-and-restores-focus-chromium-1440/invitation-recovered.png",
+      "bytes": 214313,
+      "sha256": "54f99f0149f533170e021715ca1e9e627126a56d4016bb6290f60223a4b3b867"
+    },
+    {
+      "name": "Invitation recovery",
+      "source": "tests/browser/invitation-review.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/invitation-review-reviewed-0af7c-ipt-once-and-restores-focus-chromium-mobile/invitation-recovered.png",
+      "bytes": 114336,
+      "sha256": "24250c5a3fca393e47ced1c04a7751906a245cb977dec5958057a0ef930f6035"
+    },
+    {
+      "name": "Invitation recovery",
+      "source": "tests/browser/invitation-review.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/invitation-review-reviewed-0af7c-ipt-once-and-restores-focus-firefox-1440/invitation-recovered.png",
+      "bytes": 235063,
+      "sha256": "c7da5a5ec836c2ab929d4502be6a90f5de83bfa056f77db8534ecff888399651"
+    },
+    {
+      "name": "Invitation recovery",
+      "source": "tests/browser/invitation-review.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/invitation-review-reviewed-0af7c-ipt-once-and-restores-focus-webkit-1440/invitation-recovered.png",
+      "bytes": 318826,
+      "sha256": "419121f15da93ce680626a9848760411c6731495f4af104ce225ea24ee75e9b2"
+    },
+    {
+      "name": "Invitation recovery",
+      "source": "tests/browser/invitation-review.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/invitation-review-reviewed-0af7c-ipt-once-and-restores-focus-webkit-mobile/invitation-recovered.png",
+      "bytes": 145053,
+      "sha256": "b849d3944480c3452c6dcab974afc5c21eeb6a8af659dd071a5832d5371be70d"
+    },
+    {
+      "name": "Team reconciliation",
+      "source": "tests/browser/team-review.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/team-review-team-consequen-b331d--and-reconciles-a-lost-save-chromium-1920/team-reconciled.png",
+      "bytes": 177926,
+      "sha256": "f5651498da1f36e55e7700b8dd37323047956c3b97f02caa26c257e90d6890cd"
+    },
+    {
+      "name": "Team reconciliation",
+      "source": "tests/browser/team-review.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/team-review-team-consequen-b331d--and-reconciles-a-lost-save-chromium-1440/team-reconciled.png",
+      "bytes": 161157,
+      "sha256": "940f9e28fd168dc690ef532d8f6834fa4a73851a9bb6794378f836f5cc1ade70"
+    },
+    {
+      "name": "Team reconciliation",
+      "source": "tests/browser/team-review.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/team-review-team-consequen-b331d--and-reconciles-a-lost-save-chromium-mobile/team-reconciled.png",
+      "bytes": 58442,
+      "sha256": "731cd9cbba865caf69b0b57add682c59db3f58d97c46b66a10d0d8600a21d686"
+    },
+    {
+      "name": "Team reconciliation",
+      "source": "tests/browser/team-review.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/team-review-team-consequen-b331d--and-reconciles-a-lost-save-firefox-1440/team-reconciled.png",
+      "bytes": 173134,
+      "sha256": "5c0e2a0c5520c128756562aff2515592d2a864ba60da1ec0e0589198c8b79112"
+    },
+    {
+      "name": "Team reconciliation",
+      "source": "tests/browser/team-review.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/team-review-team-consequen-b331d--and-reconciles-a-lost-save-webkit-1440/team-reconciled.png",
+      "bytes": 249909,
+      "sha256": "af9a8b5ccd57a5bc73ccd474b1e761a5c913cf75be113b2da2acb8144dcf9d04"
+    },
+    {
+      "name": "Team reconciliation",
+      "source": "tests/browser/team-review.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/team-review-team-consequen-b331d--and-reconciles-a-lost-save-webkit-mobile/team-reconciled.png",
+      "bytes": 69540,
+      "sha256": "60af78c0dafb1dd764b5d88e415b0d73d4b0b00f1d21ec48f15cb866b1673154"
+    },
+    {
+      "name": "Team grant review",
+      "source": "tests/browser/team-review.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/team-review-long-team-gran-635fc-ined-and-keyboard-reachable-chromium-1920/team-grants-review.png",
+      "bytes": 333120,
+      "sha256": "f8326efdbebdeace38e05153e6ab2b4d0c69f6ed42e660fec52ec5f6caaaeb34"
+    },
+    {
+      "name": "Team grant review",
+      "source": "tests/browser/team-review.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/team-review-long-team-gran-635fc-ined-and-keyboard-reachable-chromium-1440/team-grants-review.png",
+      "bytes": 253705,
+      "sha256": "03d1d8c72fa60720c85075864f50065986590ba2748d0d2af4ff86fbae623af5"
+    },
+    {
+      "name": "Team grant review",
+      "source": "tests/browser/team-review.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/team-review-long-team-gran-635fc-ined-and-keyboard-reachable-chromium-mobile/team-grants-review.png",
+      "bytes": 66397,
+      "sha256": "0a20de343248a9e3ed779b7caed888ab66043df45dabaef1d89a0563ad79f04e"
+    },
+    {
+      "name": "Team grant review",
+      "source": "tests/browser/team-review.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/team-review-long-team-gran-635fc-ined-and-keyboard-reachable-firefox-1440/team-grants-review.png",
+      "bytes": 299079,
+      "sha256": "1909cdc2b2987eb3059602c2522e07631430ca6ee223ada7caf1f5be362d3af1"
+    },
+    {
+      "name": "Team grant review",
+      "source": "tests/browser/team-review.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/team-review-long-team-gran-635fc-ined-and-keyboard-reachable-webkit-1440/team-grants-review.png",
+      "bytes": 315327,
+      "sha256": "0429dd8479aa222b5db43767033d09f27090f456e4b525fcb6d7349d9a182252"
+    },
+    {
+      "name": "Team grant review",
+      "source": "tests/browser/team-review.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/team-review-long-team-gran-635fc-ined-and-keyboard-reachable-webkit-mobile/team-grants-review.png",
+      "bytes": 86336,
+      "sha256": "74ee3a21dd917b654745d7c93b50b337edc091b31a8a77e391b15fa9bfa94fd9"
+    },
+    {
+      "name": "Member create recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-3e6b6-l-fields-scope-revision-key-chromium-1920/member-original-create.png",
+      "bytes": 288404,
+      "sha256": "085cd7bb786dd7f08fed4540ec59d8d100c5915006a871174f6a81a297bd6fea"
+    },
+    {
+      "name": "Member create recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-3e6b6-l-fields-scope-revision-key-chromium-1440/member-original-create.png",
+      "bytes": 268535,
+      "sha256": "f276320dddb70e2c3dff58567e02b25a8e7bc07aa5810dd0d9e695be1a1eb726"
+    },
+    {
+      "name": "Member create recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-3e6b6-l-fields-scope-revision-key-chromium-mobile/member-original-create.png",
+      "bytes": 161839,
+      "sha256": "8f66bc326fc539f386be8c98a3324f6bc7f97612ab01a6770e95f1969a393b33"
+    },
+    {
+      "name": "Member create recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-3e6b6-l-fields-scope-revision-key-firefox-1440/member-original-create.png",
+      "bytes": 303498,
+      "sha256": "2570b4f0f23ef9573db710f9e5c3ed19150a61d36aca72664c5d464ce1925d4c"
+    },
+    {
+      "name": "Member create recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-3e6b6-l-fields-scope-revision-key-webkit-1440/member-original-create.png",
+      "bytes": 389209,
+      "sha256": "1ebf14f65569f41eac9eb04f135fd8e2bb94badc0db5e1ae87a2d8cd11e628c9"
+    },
+    {
+      "name": "Member create recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-3e6b6-l-fields-scope-revision-key-webkit-mobile/member-original-create.png",
+      "bytes": 215871,
+      "sha256": "f341745720e85dc37dd210eb5f7756efdd48e92003f06b8c18bbf7e834fa59e4"
+    },
+    {
+      "name": "Member update recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-544b2-l-fields-scope-revision-key-chromium-1920/member-original-update.png",
+      "bytes": 284237,
+      "sha256": "7771e7428f8a5e8633458843e4f1e96df188e92b86f0710c1bc86713ac0d390c"
+    },
+    {
+      "name": "Member update recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-544b2-l-fields-scope-revision-key-chromium-1440/member-original-update.png",
+      "bytes": 264546,
+      "sha256": "1ab44562b7bf9420275b517c88d76c0568d4af8f5855af38d7b6d0a42936e010"
+    },
+    {
+      "name": "Member update recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-544b2-l-fields-scope-revision-key-chromium-mobile/member-original-update.png",
+      "bytes": 155136,
+      "sha256": "6902097152dc2be8096e8aae02b453fd9f06bb0897c51bdaf1d2ab85b864d81f"
+    },
+    {
+      "name": "Member update recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-544b2-l-fields-scope-revision-key-firefox-1440/member-original-update.png",
+      "bytes": 297492,
+      "sha256": "216ddd3e09a4e44d2750259e6154338c1d6261cd48e0ef414e3c0245a0ac3242"
+    },
+    {
+      "name": "Member update recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-544b2-l-fields-scope-revision-key-webkit-1440/member-original-update.png",
+      "bytes": 386311,
+      "sha256": "0978e777cf2d7a014fd65d329fb782e67cee05012cb6d6f8f497972ea36b854d"
+    },
+    {
+      "name": "Member update recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-544b2-l-fields-scope-revision-key-webkit-mobile/member-original-update.png",
+      "bytes": 201664,
+      "sha256": "161aab1ac0797c9bd749474e7e2e5c95a4b2db479e1da4bc563de276017a1a8a"
+    },
+    {
+      "name": "Member archive recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-a3744-l-fields-scope-revision-key-chromium-1920/member-original-archive.png",
+      "bytes": 248304,
+      "sha256": "ee1f5d66215a5bb7710fe40024201dcac7fc61b34a9c49cdb9bd2c86b56d748a"
+    },
+    {
+      "name": "Member archive recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-a3744-l-fields-scope-revision-key-chromium-1440/member-original-archive.png",
+      "bytes": 229412,
+      "sha256": "7c3f4d9030c0b8e4c4cc3342c0faf8ff48a0fd65d2035d8cd308341178782070"
+    },
+    {
+      "name": "Member archive recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-a3744-l-fields-scope-revision-key-chromium-mobile/member-original-archive.png",
+      "bytes": 120243,
+      "sha256": "c14d3b0e53a7c95c9bd9f20a89ec6d4239776d4a37b808ff20dd268f632f781d"
+    },
+    {
+      "name": "Member archive recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-a3744-l-fields-scope-revision-key-firefox-1440/member-original-archive.png",
+      "bytes": 253756,
+      "sha256": "5071550d9b86cdfd4a2fa1b0b137916e300e57c76382e8404e7f0fb14d2e349c"
+    },
+    {
+      "name": "Member archive recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-a3744-l-fields-scope-revision-key-webkit-1440/member-original-archive.png",
+      "bytes": 326913,
+      "sha256": "fb6418a3a77e0db412417022531a44eba76a64434961c50d288043436ea2bd68"
+    },
+    {
+      "name": "Member archive recovery",
+      "source": "tests/browser/member-write-recovery.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/member-write-recovery-memb-a3744-l-fields-scope-revision-key-webkit-mobile/member-original-archive.png",
+      "bytes": 160778,
+      "sha256": "050ffbd1cd5640c3a761e5d8a6e57c973a398666ccd8b1d49d13d2ee32fb5897"
+    },
+    {
+      "name": "Complete merge picker",
+      "source": "tests/browser/member-merge-reads.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/member-merge-reads-merge-c-f7b13-ependent-off-page-selection-chromium-1920/complete-merge-picker.png",
+      "bytes": 256597,
+      "sha256": "cecf3b7d06b1af4f8cebacdf6579689e86f0f5b85e0fdd849ec330f04c8614d6"
+    },
+    {
+      "name": "Complete merge picker",
+      "source": "tests/browser/member-merge-reads.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/member-merge-reads-merge-c-f7b13-ependent-off-page-selection-chromium-1440/complete-merge-picker.png",
+      "bytes": 238120,
+      "sha256": "2b4f0db6ae714f827b9cb0d59c3a2a5988b4428f7bf655a2e7d4b8cbaa54b1a4"
+    },
+    {
+      "name": "Complete merge picker",
+      "source": "tests/browser/member-merge-reads.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/member-merge-reads-merge-c-f7b13-ependent-off-page-selection-chromium-mobile/complete-merge-picker.png",
+      "bytes": 135437,
+      "sha256": "7519713fae6e54a7ac1f0bd9458a8ea175553962176b043bcac9d0d8c415e7e8"
+    },
+    {
+      "name": "Complete merge picker",
+      "source": "tests/browser/member-merge-reads.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/member-merge-reads-merge-c-f7b13-ependent-off-page-selection-firefox-1440/complete-merge-picker.png",
+      "bytes": 265864,
+      "sha256": "d5f25295267135748a3fb6e3743fd6fc5946b62ce587ac5684f61c6193725833"
+    },
+    {
+      "name": "Complete merge picker",
+      "source": "tests/browser/member-merge-reads.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/member-merge-reads-merge-c-f7b13-ependent-off-page-selection-webkit-1440/complete-merge-picker.png",
+      "bytes": 334475,
+      "sha256": "df118bc10cdc92a992fb19cf9db31a8c4b6bd3276157f7d772e2dc90a629b4bb"
+    },
+    {
+      "name": "Complete merge picker",
+      "source": "tests/browser/member-merge-reads.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/member-merge-reads-merge-c-f7b13-ependent-off-page-selection-webkit-mobile/complete-merge-picker.png",
+      "bytes": 173317,
+      "sha256": "01b82e82d37617d0ccfc3e3fc503fce1ac73a936a40fa36eda00f5cafa5d67b4"
+    },
+    {
+      "name": "Retained merge comparison",
+      "source": "tests/browser/member-merge-reads.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/member-merge-reads-merge-r-79655-val-until-independent-retry-chromium-1920/retained-merge-comparison.png",
+      "bytes": 360100,
+      "sha256": "ed118ab09bb412d3054db81417c84cc7e003fc89ef1eeab085b90fdfa07fa18e"
+    },
+    {
+      "name": "Retained merge comparison",
+      "source": "tests/browser/member-merge-reads.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/member-merge-reads-merge-r-79655-val-until-independent-retry-chromium-1440/retained-merge-comparison.png",
+      "bytes": 338238,
+      "sha256": "15a77a9faf39dec362f4ff141cf91471ddb0c786b746979789278fd01a3fea2c"
+    },
+    {
+      "name": "Retained merge comparison",
+      "source": "tests/browser/member-merge-reads.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/member-merge-reads-merge-r-79655-val-until-independent-retry-chromium-mobile/retained-merge-comparison.png",
+      "bytes": 218544,
+      "sha256": "c6aa585849a6b833846aa66af923c11d0598d7bc9f4e0eb33a9ff3b59ffaf2b2"
+    },
+    {
+      "name": "Retained merge comparison",
+      "source": "tests/browser/member-merge-reads.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/member-merge-reads-merge-r-79655-val-until-independent-retry-firefox-1440/retained-merge-comparison.png",
+      "bytes": 394972,
+      "sha256": "7ed5b03455a1f3ef200fd9b6b66b59796dac3e30701e364606e2ba6049ef1b33"
+    },
+    {
+      "name": "Retained merge comparison",
+      "source": "tests/browser/member-merge-reads.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/member-merge-reads-merge-r-79655-val-until-independent-retry-webkit-1440/retained-merge-comparison.png",
+      "bytes": 493384,
+      "sha256": "128c3d61952119d9a9e89a1bf7f2d92c319188464520efbd4d06d34e738074e6"
+    },
+    {
+      "name": "Retained merge comparison",
+      "source": "tests/browser/member-merge-reads.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/member-merge-reads-merge-r-79655-val-until-independent-retry-webkit-mobile/retained-merge-comparison.png",
+      "bytes": 283649,
+      "sha256": "e29391fd45408c2796c769bfc531f64d55d9aaeef6017ddc3575e548c5349c32"
+    },
+    {
+      "name": "Merge preview recovery",
+      "source": "tests/browser/member-merge-writes.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/member-merge-writes-origin-fde44-explicit-identical-recovery-chromium-1920/unknown-merge-preview.png",
+      "bytes": 296660,
+      "sha256": "7266c1c811edf79458b47f593a635f33d1946fa0c63e47f3fc4ec4d5a5edac6b"
+    },
+    {
+      "name": "Merge preview recovery",
+      "source": "tests/browser/member-merge-writes.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/member-merge-writes-origin-fde44-explicit-identical-recovery-chromium-1440/unknown-merge-preview.png",
+      "bytes": 276923,
+      "sha256": "87766fe3f7e4efba48e3ef2b39656ab360d836368d5d523b4809c16d2b421a66"
+    },
+    {
+      "name": "Merge preview recovery",
+      "source": "tests/browser/member-merge-writes.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/member-merge-writes-origin-fde44-explicit-identical-recovery-chromium-mobile/unknown-merge-preview.png",
+      "bytes": 164300,
+      "sha256": "58046426da4f04034de1d95850b74db960a22dcf05cd1d60f1662c6c4636320b"
+    },
+    {
+      "name": "Merge preview recovery",
+      "source": "tests/browser/member-merge-writes.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/member-merge-writes-origin-fde44-explicit-identical-recovery-firefox-1440/unknown-merge-preview.png",
+      "bytes": 312148,
+      "sha256": "3e1de87379c3030d8a3c6dcf4d055e1b68b796e29239b46d2c6818057143e445"
+    },
+    {
+      "name": "Merge preview recovery",
+      "source": "tests/browser/member-merge-writes.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/member-merge-writes-origin-fde44-explicit-identical-recovery-webkit-1440/unknown-merge-preview.png",
+      "bytes": 393253,
+      "sha256": "f1ddc1ba7255b4a8bb3b6bec2279832ba2e046a4a417fd76d564b791f7d9fb16"
+    },
+    {
+      "name": "Merge preview recovery",
+      "source": "tests/browser/member-merge-writes.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/member-merge-writes-origin-fde44-explicit-identical-recovery-webkit-mobile/unknown-merge-preview.png",
+      "bytes": 215074,
+      "sha256": "15be5194eded1916a24113cbc62355ede3412bf6db498835ddf384e572f22167"
+    },
+    {
+      "name": "Merge commit recovery",
+      "source": "tests/browser/member-merge-writes.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/member-merge-writes-origin-49b3a-explicit-identical-recovery-chromium-1920/unknown-merge-commit.png",
+      "bytes": 388683,
+      "sha256": "657c446bb4a3d07fc12b01448451f4b42fb3f548e95ff39c5415459a9e3c3ec0"
+    },
+    {
+      "name": "Merge commit recovery",
+      "source": "tests/browser/member-merge-writes.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/member-merge-writes-origin-49b3a-explicit-identical-recovery-chromium-1440/unknown-merge-commit.png",
+      "bytes": 349415,
+      "sha256": "a492422fa84d03ddc9daaa139cd9c04dcf670a93b69737122f07418ab8943047"
+    },
+    {
+      "name": "Merge commit recovery",
+      "source": "tests/browser/member-merge-writes.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/member-merge-writes-origin-49b3a-explicit-identical-recovery-chromium-mobile/unknown-merge-commit.png",
+      "bytes": 242556,
+      "sha256": "3c37afa3cd7018314d0dc6cd314522fabe698b49e799656168da4006e5583923"
+    },
+    {
+      "name": "Merge commit recovery",
+      "source": "tests/browser/member-merge-writes.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/member-merge-writes-origin-49b3a-explicit-identical-recovery-firefox-1440/unknown-merge-commit.png",
+      "bytes": 408392,
+      "sha256": "a245a885d4fa94eb36c42e35458bfb783dd5742a1d28c8a216859d1134499bb1"
+    },
+    {
+      "name": "Merge commit recovery",
+      "source": "tests/browser/member-merge-writes.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/member-merge-writes-origin-49b3a-explicit-identical-recovery-webkit-1440/unknown-merge-commit.png",
+      "bytes": 508811,
+      "sha256": "0280ce5bd91bd35b9407a02ea1179c04e996dd63a413a9b78b630740bd24ba1f"
+    },
+    {
+      "name": "Merge commit recovery",
+      "source": "tests/browser/member-merge-writes.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/member-merge-writes-origin-49b3a-explicit-identical-recovery-webkit-mobile/unknown-merge-commit.png",
+      "bytes": 310872,
+      "sha256": "4ade11280f0c19823f03103af3c99e36e7bc3b59dff7fbf21e2271ddc6b2a475"
+    },
+    {
+      "name": "Inquiry status recovery",
+      "source": "tests/browser/contact-write-recovery.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/contact-write-recovery-inq-9c684-l-fields-scope-revision-key-chromium-1920/inquiry-original-status.png",
+      "bytes": 220781,
+      "sha256": "bdcea1be23fd802016248258c921ef829c4fe1f4b0de872d6da946ffd58c54b5"
+    },
+    {
+      "name": "Inquiry status recovery",
+      "source": "tests/browser/contact-write-recovery.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/contact-write-recovery-inq-9c684-l-fields-scope-revision-key-chromium-1440/inquiry-original-status.png",
+      "bytes": 203520,
+      "sha256": "8eb345088725169703724e980a246db784b5b0e9a685d1971d025117e7f615d1"
+    },
+    {
+      "name": "Inquiry status recovery",
+      "source": "tests/browser/contact-write-recovery.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/contact-write-recovery-inq-9c684-l-fields-scope-revision-key-chromium-mobile/inquiry-original-status.png",
+      "bytes": 90164,
+      "sha256": "117e34efc2894b55e6fe87bc6e7bc8670d83f94e078f9a10d39a61b11d024761"
+    },
+    {
+      "name": "Inquiry status recovery",
+      "source": "tests/browser/contact-write-recovery.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/contact-write-recovery-inq-9c684-l-fields-scope-revision-key-firefox-1440/inquiry-original-status.png",
+      "bytes": 220658,
+      "sha256": "aa3e9f764ce801a00e4088d1487317c87e1700bca51405070659bad07801764c"
+    },
+    {
+      "name": "Inquiry status recovery",
+      "source": "tests/browser/contact-write-recovery.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/contact-write-recovery-inq-9c684-l-fields-scope-revision-key-webkit-1440/inquiry-original-status.png",
+      "bytes": 314041,
+      "sha256": "d3277a0023049f6958217eaa7c28a41e609369eb284e0e0f6eb252a7e8e550fd"
+    },
+    {
+      "name": "Inquiry status recovery",
+      "source": "tests/browser/contact-write-recovery.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/contact-write-recovery-inq-9c684-l-fields-scope-revision-key-webkit-mobile/inquiry-original-status.png",
+      "bytes": 114049,
+      "sha256": "92e626485224ddfbbaef8ffc8f160f4ea14cbebd81f46abf6b90d99fa0cbf798"
+    },
+    {
+      "name": "Inquiry hold recovery",
+      "source": "tests/browser/contact-write-recovery.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/contact-write-recovery-inq-d6c20-l-fields-scope-revision-key-chromium-1920/inquiry-original-hold.png",
+      "bytes": 248567,
+      "sha256": "5b092ab595f24ac032ce2598c3a4bd3870a3e8bff3db4fbb6dc88467d5edde4f"
+    },
+    {
+      "name": "Inquiry hold recovery",
+      "source": "tests/browser/contact-write-recovery.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/contact-write-recovery-inq-d6c20-l-fields-scope-revision-key-chromium-1440/inquiry-original-hold.png",
+      "bytes": 235567,
+      "sha256": "ad69f280cdb18850c30dc3fc065396154ec3dea9942d7fc3380f69b1705f403a"
+    },
+    {
+      "name": "Inquiry hold recovery",
+      "source": "tests/browser/contact-write-recovery.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/contact-write-recovery-inq-d6c20-l-fields-scope-revision-key-chromium-mobile/inquiry-original-hold.png",
+      "bytes": 117384,
+      "sha256": "e9d95729c07b9a9a916b80cab023f80c480204afa0fb7b9b0d1ce1b8c7698814"
+    },
+    {
+      "name": "Inquiry hold recovery",
+      "source": "tests/browser/contact-write-recovery.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/contact-write-recovery-inq-d6c20-l-fields-scope-revision-key-firefox-1440/inquiry-original-hold.png",
+      "bytes": 258924,
+      "sha256": "a75eee551f836f41b74731b7980d7d0dbc66379ce03dc627a5ba23e70ba682ae"
+    },
+    {
+      "name": "Inquiry hold recovery",
+      "source": "tests/browser/contact-write-recovery.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/contact-write-recovery-inq-d6c20-l-fields-scope-revision-key-webkit-1440/inquiry-original-hold.png",
+      "bytes": 358858,
+      "sha256": "5f3b1817ad70cc27a1c913ff10340dd77d7d8216a2235f113ba3fee3f6ab4fbf"
+    },
+    {
+      "name": "Inquiry hold recovery",
+      "source": "tests/browser/contact-write-recovery.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/contact-write-recovery-inq-d6c20-l-fields-scope-revision-key-webkit-mobile/inquiry-original-hold.png",
+      "bytes": 159146,
+      "sha256": "e5c90a35f02dfc3e8203229d6ec39385c97b333bfbacab809eb9a1f0a68e3812"
+    },
+    {
+      "name": "Retained privacy scope",
+      "source": "tests/browser/privacy-read-recovery.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/privacy-read-recovery-priv-78632-cope-through-a-later-outage-chromium-1920/retained-privacy-scope.png",
+      "bytes": 263774,
+      "sha256": "6a2ec35cd279a2872d31caf062e4ce7a0095993e73a2178150af1389672ab65f"
+    },
+    {
+      "name": "Retained privacy scope",
+      "source": "tests/browser/privacy-read-recovery.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/privacy-read-recovery-priv-78632-cope-through-a-later-outage-chromium-1440/retained-privacy-scope.png",
+      "bytes": 272031,
+      "sha256": "932751e2ceed3399f1539c7b5b28447014f831a9107d7fd2828d03c3eaf551cb"
+    },
+    {
+      "name": "Retained privacy scope",
+      "source": "tests/browser/privacy-read-recovery.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/privacy-read-recovery-priv-78632-cope-through-a-later-outage-chromium-mobile/retained-privacy-scope.png",
+      "bytes": 157599,
+      "sha256": "70491884b4d6fdb3d22c1cbf6ceb59cfa657fdbe853328dbc6d15ecca27ac4fe"
+    },
+    {
+      "name": "Retained privacy scope",
+      "source": "tests/browser/privacy-read-recovery.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/privacy-read-recovery-priv-78632-cope-through-a-later-outage-firefox-1440/retained-privacy-scope.png",
+      "bytes": 293345,
+      "sha256": "7016994038efdc1e7a4226c82720e6e79344666811860eb78b0b14209fe4a29a"
+    },
+    {
+      "name": "Retained privacy scope",
+      "source": "tests/browser/privacy-read-recovery.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/privacy-read-recovery-priv-78632-cope-through-a-later-outage-webkit-1440/retained-privacy-scope.png",
+      "bytes": 397990,
+      "sha256": "05794df61d416f94aec8983e5680b7d9e419d20e846b9f2fb1cba3a25af3cf38"
+    },
+    {
+      "name": "Retained privacy scope",
+      "source": "tests/browser/privacy-read-recovery.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/privacy-read-recovery-priv-78632-cope-through-a-later-outage-webkit-mobile/retained-privacy-scope.png",
+      "bytes": 190511,
+      "sha256": "1e913d339d6566f6034b12bbdbe23c46dc10ae8c56f225bff2fe7e32106ae80e"
+    },
+    {
+      "name": "Retained privacy review",
+      "source": "tests/browser/privacy-read-recovery.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/privacy-read-recovery-priv-178a6-s-navigation-and-comparison-chromium-1920/retained-privacy-review.png",
+      "bytes": 346165,
+      "sha256": "562dfec13ce220982f59a06651f5a024d107733ae60244c5e9396737fab79424"
+    },
+    {
+      "name": "Retained privacy review",
+      "source": "tests/browser/privacy-read-recovery.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/privacy-read-recovery-priv-178a6-s-navigation-and-comparison-chromium-1440/retained-privacy-review.png",
+      "bytes": 326381,
+      "sha256": "f8059c039bfecdb0c5804d23b29b1d394ca2cdf874627329fadc754b7d97099a"
+    },
+    {
+      "name": "Retained privacy review",
+      "source": "tests/browser/privacy-read-recovery.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/privacy-read-recovery-priv-178a6-s-navigation-and-comparison-chromium-mobile/retained-privacy-review.png",
+      "bytes": 212783,
+      "sha256": "e13d547b8139edbcff2217854e5d97da2904cd07462e6e47f16d35ece8c99b0d"
+    },
+    {
+      "name": "Retained privacy review",
+      "source": "tests/browser/privacy-read-recovery.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/privacy-read-recovery-priv-178a6-s-navigation-and-comparison-firefox-1440/retained-privacy-review.png",
+      "bytes": 358080,
+      "sha256": "c324425323a69f44c881805e6652fc8420fa0b37c376d4d7b77676fc4c242c50"
+    },
+    {
+      "name": "Retained privacy review",
+      "source": "tests/browser/privacy-read-recovery.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/privacy-read-recovery-priv-178a6-s-navigation-and-comparison-webkit-1440/retained-privacy-review.png",
+      "bytes": 478575,
+      "sha256": "9fba16219d93d8400d83081bff58d044c5d747b7cc91af72c7b6020047b11875"
+    },
+    {
+      "name": "Retained privacy review",
+      "source": "tests/browser/privacy-read-recovery.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/privacy-read-recovery-priv-178a6-s-navigation-and-comparison-webkit-mobile/retained-privacy-review.png",
+      "bytes": 262056,
+      "sha256": "44f96f394ec78a040a8b88223158cc493bd96ac5bf1c2e36147b5c97e149185a"
+    },
+    {
+      "name": "Privacy review recovery",
+      "source": "tests/browser/privacy-write-recovery.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/privacy-write-recovery-pri-c2d63-scope-and-fresh-proof-retry-chromium-1920/unknown-privacy-review.png",
+      "bytes": 296074,
+      "sha256": "fece5898d909159d650ff0c9d9e0399f6f31aea34404d360766fbb51f7087505"
+    },
+    {
+      "name": "Privacy review recovery",
+      "source": "tests/browser/privacy-write-recovery.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/privacy-write-recovery-pri-c2d63-scope-and-fresh-proof-retry-chromium-1440/unknown-privacy-review.png",
+      "bytes": 268783,
+      "sha256": "be13b36ce31daca647d744866c0947d436d660bb848cccfe896c93bfa6c66f52"
+    },
+    {
+      "name": "Privacy review recovery",
+      "source": "tests/browser/privacy-write-recovery.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/privacy-write-recovery-pri-c2d63-scope-and-fresh-proof-retry-chromium-mobile/unknown-privacy-review.png",
+      "bytes": 164658,
+      "sha256": "451fea0cecdfe1ea1da67bb430eae9d4c75d2a02156913ab534e769ca05c6c88"
+    },
+    {
+      "name": "Privacy review recovery",
+      "source": "tests/browser/privacy-write-recovery.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/privacy-write-recovery-pri-c2d63-scope-and-fresh-proof-retry-firefox-1440/unknown-privacy-review.png",
+      "bytes": 304331,
+      "sha256": "a34c7a39a8a6aff7c0fe8f97e15a38bd610faf95a92b11b001a9e4920c0c2f52"
+    },
+    {
+      "name": "Privacy review recovery",
+      "source": "tests/browser/privacy-write-recovery.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/privacy-write-recovery-pri-c2d63-scope-and-fresh-proof-retry-webkit-1440/unknown-privacy-review.png",
+      "bytes": 404727,
+      "sha256": "e6fcb20cde3f9f02227412ba339de76b9de4e14d172c992fbad29ba00e7f0824"
+    },
+    {
+      "name": "Privacy review recovery",
+      "source": "tests/browser/privacy-write-recovery.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/privacy-write-recovery-pri-c2d63-scope-and-fresh-proof-retry-webkit-mobile/unknown-privacy-review.png",
+      "bytes": 204430,
+      "sha256": "8efa72369361f4177a9df6fa6ea351e42458a76d731d9656db5e6abc89de8337"
+    },
+    {
+      "name": "Privacy commit recovery",
+      "source": "tests/browser/privacy-write-recovery.spec.ts",
+      "project": "chromium-1920",
+      "file": "artifacts/browser/final-current-inventory/privacy-write-recovery-pri-d821c-scope-and-fresh-proof-retry-chromium-1920/unknown-privacy-commit.png",
+      "bytes": 351569,
+      "sha256": "3a3317d16974b3ea733173c998abd73de8b37bda909b5e0d2e9ebfc0849dcb0c"
+    },
+    {
+      "name": "Privacy commit recovery",
+      "source": "tests/browser/privacy-write-recovery.spec.ts",
+      "project": "chromium-1440",
+      "file": "artifacts/browser/final-current-inventory/privacy-write-recovery-pri-d821c-scope-and-fresh-proof-retry-chromium-1440/unknown-privacy-commit.png",
+      "bytes": 336219,
+      "sha256": "0a13495d0a85c4c435e153cbd8df437f6ee17f3b43dbbc6e7a265c6cb33ad661"
+    },
+    {
+      "name": "Privacy commit recovery",
+      "source": "tests/browser/privacy-write-recovery.spec.ts",
+      "project": "chromium-mobile",
+      "file": "artifacts/browser/final-current-inventory/privacy-write-recovery-pri-d821c-scope-and-fresh-proof-retry-chromium-mobile/unknown-privacy-commit.png",
+      "bytes": 217140,
+      "sha256": "e6db7e3aa411dff71121c84aa310459556fe6c2482a6b71ccb47e429438f8077"
+    },
+    {
+      "name": "Privacy commit recovery",
+      "source": "tests/browser/privacy-write-recovery.spec.ts",
+      "project": "firefox-1440",
+      "file": "artifacts/browser/final-current-inventory/privacy-write-recovery-pri-d821c-scope-and-fresh-proof-retry-firefox-1440/unknown-privacy-commit.png",
+      "bytes": 369471,
+      "sha256": "b5aafe526e00325c2da067d30ea4f27e67e8b47bb0628b0b0af292d368a69414"
+    },
+    {
+      "name": "Privacy commit recovery",
+      "source": "tests/browser/privacy-write-recovery.spec.ts",
+      "project": "webkit-1440",
+      "file": "artifacts/browser/final-current-inventory/privacy-write-recovery-pri-d821c-scope-and-fresh-proof-retry-webkit-1440/unknown-privacy-commit.png",
+      "bytes": 491163,
+      "sha256": "c55fb79657748384350613161ab55bf91bc62a4ff34d81f1ecb3e195bb4fecb4"
+    },
+    {
+      "name": "Privacy commit recovery",
+      "source": "tests/browser/privacy-write-recovery.spec.ts",
+      "project": "webkit-mobile",
+      "file": "artifacts/browser/final-current-inventory/privacy-write-recovery-pri-d821c-scope-and-fresh-proof-retry-webkit-mobile/unknown-privacy-commit.png",
+      "bytes": 262348,
+      "sha256": "84ee08d1170383da26675dd59ead6ae04929502e3a542216111b961e794001d0"
+    }
+  ]
+}

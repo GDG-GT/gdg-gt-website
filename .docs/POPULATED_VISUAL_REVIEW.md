@@ -1,5 +1,24 @@
 # Populated production-build review — 2026-11-06
 
+## Complete current-build invocation — 2026-11-07
+
+The full1,548-case production-browser invocation passes1,540 with eight expected
+profile-specific skips, zero failures/retries. All case identities match the
+listed inventory exactly. Both original desktop WebGL motion checks pass. The
+same build now supplies the primary22prompt/138check/162capture index; its older
+index and original images are preserved. The passing44state secondary index
+remains intact. Evidence: `phase0/final-current-inventory-browser.json`.
+
+A separate index makes18existing account/team/member/inbox/privacy recovery
+states/108original captures browsable at
+`artifacts/browser/current-recovery-review/index.html`. It requires the passing
+complete invocation, exact per-profile captures, owned realpaths and valid PNGs.
+These functional screenshots retain test scroll positions, horizontal table
+positions and sticky bars; they do not replace composition/modal geometry.
+Mobile account/member/privacy and desktop privacy captures were inspected.
+No approved content, human fidelity, manual accessibility or actual-device claim.
+See `phase0/recovery-visual-review.json`.
+
 ## Current keyboard and form review — 2026-11-07
 
 The strict secondary index now has **44 states, 264 passing checks across six
@@ -22,9 +41,9 @@ profiles where access is a dialog; desktop access is inline. Missing/duplicate
 or unexpected captures still fail. These are unapproved review candidates.
 See `KEYBOARD_REVIEW_ACCESSIBILITY.md` and
 `phase0/expanded-form-secondary-browser.json`. Earlier diagnostic/accessibility
-failures and passing narrower scopes remain separate. The primary index retains
-its original successful full invocation. A list-only1,548case inventory does not
-establish full execution, human approval, actual devices or complete PRD acceptance.
+failures and passing narrower scopes remain separate. The primary index has now been refreshed from the complete passing current
+invocation. Neither local execution nor review captures establish human approval,
+actual devices or complete PRD acceptance.
 The dated entries below are historical.
 
 ## Actual drawing-editor continuation

@@ -1,0 +1,16 @@
+{
+  "completed": true,
+  "bytes": 11707,
+  "fetchAttempts": 0,
+  "hero": true,
+  "headingCount": 1,
+  "offlineText": false,
+  "imagesWithoutSrc": 2,
+  "scope": "Scratch-only render of real public components with static router and existing providers, no fetch/credentials/source/build changes. Feasibility only; not hydration, fidelity or performance proof.",
+  "generatedAt": "2026-11-07T06:58:00.182942+00:00",
+  "cleanRunExit": 0,
+  "sourceCommit": "20b59e2",
+  "markupSha256": "7a75a7fbf61a6fe9ba9f75510bb99f94d7a0a34fc303d3e6cbeae24dbec4e8ec",
+  "initialRun": "Render succeeded with zero fetches, but a default Vite dependency discovery scan continued into shutdown and emitted stale-request errors; React development render also warned about fetchPriority. Original log retained /tmp/gdg-first-paint-feasibility.log. Separate clean run uses noDiscovery/empty entries and production React; zero warnings/errors.",
+  "remaining": "Two hero images depend on commit-time src assignment. This is a feasibility render only; hydration, maintenance/bootstrap, private-route handling, approved dynamic copy and actual speed remain unproven. No app/source/build/dependency mutation."
+}

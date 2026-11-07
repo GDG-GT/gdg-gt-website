@@ -3,11 +3,15 @@ import path from "node:path";
 const args = process.argv.slice(2);
 if (
   args.length &&
-  (args.length !== 1 || !["--secondary", "--current-primary"].includes(args[0]))
+  (args.length !== 1 ||
+    !["--secondary", "--current-primary", "--final-primary"].includes(args[0]))
 )
-  throw Error("Optional review scope: --secondary or --current-primary");
+  throw Error(
+    "Optional review scope: --secondary, --current-primary or --final-primary",
+  );
+const finalPrimary = args[0] === "--final-primary";
 const secondary = args[0] === "--secondary",
-  currentPrimary = args[0] === "--current-primary";
+  currentPrimary = args[0] === "--current-primary" || finalPrimary;
 const root = path.resolve("."),
   output = path.resolve(
     currentPrimary
@@ -18,13 +22,22 @@ const root = path.resolve("."),
   ),
   // The last full primary invocation is preserved before the secondary-only
   // expansion; never infer primary captures from a secondary-only run.
-  captureRoot = currentPrimary
-    ? path.resolve(
-        "artifacts/browser/secondary-review-before-collaboration-20261107",
-      )
-    : output,
+  captureRoot = finalPrimary
+    ? path.resolve("artifacts/browser/final-current-inventory")
+    : currentPrimary
+      ? path.resolve(
+          "artifacts/browser/secondary-review-before-collaboration-20261107",
+        )
+      : output,
   report = JSON.parse(
     await readFile(path.join(captureRoot, "results.json"), "utf8"),
+  );
+if (
+  finalPrimary &&
+  (report.stats.expected !== 1540 || report.stats.skipped !== 8)
+)
+  throw Error(
+    "Final primary review requires the complete 1,548-case invocation with eight expected skips.",
   );
 const primaryPrompts = [
   ["Homepage", ["public /"]],
@@ -179,6 +192,7 @@ async function visit(suites) {
             ),
             file =
               currentPrimary &&
+              !finalPrimary &&
               recordedFile.startsWith(originalCaptureRoot + path.sep)
                 ? path.resolve(
                     captureRoot,
@@ -230,8 +244,11 @@ const rows = prompts.map(([id, title, names]) => {
       // lower-control captures only where that modal actually exists, and
       // reject any unexpected desktop counterpart rather than inventing one.
       const expected =
-        secondary && name === "builder access lower controls" &&
-        !project.endsWith("-mobile") ? 0 : 1;
+        secondary &&
+        name === "builder access lower controls" &&
+        !project.endsWith("-mobile")
+          ? 0
+          : 1;
       if (
         matches.filter((c) => c.name === name && c.project === project)
           .length !== expected
@@ -257,6 +274,10 @@ if (secondary && (compositionChecks !== 264 || captures.length !== 344))
   throw Error(
     "The secondary review requires all forty-four named states across all six profiles.",
   );
+if (!secondary && (compositionChecks !== 138 || captures.length !== 162))
+  throw Error(
+    "The primary review requires 138 composition checks and 162 named captures across all six profiles.",
+  );
 const note =
   "Fictional fixtures and illustrative assets only. These are review candidates, not approved content, golden baselines, 1% visual comparisons or full prompt fidelity acceptance. Six emulated browser/viewport profiles do not certify physical devices, Safari or assistive technology. " +
   (secondary
@@ -267,7 +288,7 @@ const summary = {
   completed: true,
   scope: secondary ? "secondary" : "primary",
   sourceCaptureDirectory: path.relative(root, captureRoot),
-  ...(currentPrimary
+  ...(currentPrimary && !finalPrimary
     ? {
         captureRelocation:
           "Original attachment paths resolved relative to the preserved invocation directory; image bytes and original report retained unchanged.",

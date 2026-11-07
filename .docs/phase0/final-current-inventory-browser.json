@@ -1,0 +1,71 @@
+{
+  "generatedAt": "2026-11-07T06:55:28.641371+00:00",
+  "completed": true,
+  "allExecutedPassed": true,
+  "sourceCommit": "20b59e2",
+  "stats": {
+    "startTime": "2026-11-07T06:34:34.328Z",
+    "duration": 1235411.659,
+    "expected": 1540,
+    "skipped": 8,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "cases": 1548,
+  "exactListedInventoryMatched": true,
+  "skipped": [
+    {
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "chromium-1920"
+    },
+    {
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "chromium-1440"
+    },
+    {
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "chromium-mobile"
+    },
+    {
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "firefox-1440"
+    },
+    {
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "firefox-1440"
+    },
+    {
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "webkit-1440"
+    },
+    {
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "webkit-1440"
+    },
+    {
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "webkit-mobile"
+    }
+  ],
+  "originalDesktopMotionChecks": [
+    {
+      "project": "chromium-1920",
+      "statuses": [
+        "passed"
+      ]
+    },
+    {
+      "project": "chromium-1440",
+      "statuses": [
+        "passed"
+      ]
+    }
+  ],
+  "reportSha256": "b6ad6916756d5aed09bb3d13e8884b4ecb191460a50c66be280da91f9a1cf462",
+  "build": {
+    "index.html": "9fbfa41f3f195ea7a5fbfbedb394793e2a478684f098258a3e852898da6ca658",
+    ".vite/manifest.json": "0a4ebd3da0af976bc71ed74a86c1bd81121e3ae384e12d6d707d66c8869cee16",
+    "assets/public-entry.js": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+  },
+  "scope": "Complete current 1,548-case production-browser invocation: 1,540 passes, eight expected profile-specific skips (four desktop mobile-menu skips and four unsupported desktop-motion skips), zero failures/retries. All six configured profiles. Every case matches the saved list-only inventory exactly. App source/build unchanged throughout. Fictional local API fixtures only; no real records/provider sends/deployment. Software WebGL motion passes both original desktop Chromium cases. Not field/hardware/Safari/physical-device/assistive-technology, approved fidelity or full PRD acceptance."
+}

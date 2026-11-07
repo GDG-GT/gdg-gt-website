@@ -5,15 +5,19 @@ Reviewed against the complete v1.5 PRD on 2026-10-21, including normative sectio
 documents local evidence. Neither this checklist nor passing local tests closes
 the PRD's staging, security, performance, accessibility or visual approval gates.
 
-Current local verification update (2026-11-07): complete one-worker source
-coverage passes2719tests/221files and unchanged global/critical gates. Scoped
-KaTeX0.18.2 patch gives a zero-finding production dependency audit; installed
-regression/compatibility and all12actual-editor browser cases pass. Current
-software-WebGL screenshot checks still fail with unchanged limits; current-build
-secondary162/PWA15/update9/HTTPS46 pass. MobileLCP3025/3008/3007ms remains failing.
-Saved full-browser pass belongs to4ed0b55, not the current artifact. Latest
-functional recovery remains `PERSON_PRIVACY_WRITE_RECOVERY.md`, migrations136/137.
-All146requirements/307mandatory IDs are source-mapped, acceptance unverified.
+Current local verification update (2026-11-07): saved source20b59e2 includes
+keyboard access for long reviews/tables, publication-summary contrast and
+history-checkbox target fixes. Complete source coverage passes2,722tests/222files,
+with unchanged global/critical gates. Forty-four secondary states pass264checks
+across6profiles, with344unapproved captures. Final PWA15/update9/HTTPS46,
+build/types/catalog/byte gates pass; lint0errors/10inheritedwarnings. Fresh
+production dependency audit0findings and source/history scan0unreviewed.
+MobileLCP3040/2859/3007ms still fails2500ms; desktop100/a11y100/labels/CLS0 pass.
+The previous software-WebGL failures are historical: both original motion checks
+passed later public scopes. The complete1,548case invocation now passes1,540/eight expected profile skips
+(four desktop mobile-menu/four unsupported desktop-motion), no failures/retries. Latest functional recovery remains
+`PERSON_PRIVACY_WRITE_RECOVERY.md`, migrations136/137. All146requirements/
+307mandatory IDs are source-mapped, full acceptance unverified.
 See `CURRENT_CHECKPOINT.md` and `LOCAL_ACCEPTANCE_AUDIT.md` for current evidence.
 
 ## Deferred by Tejas

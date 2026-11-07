@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-07T06:33:58.981972+00:00",
+  "generatedAt": "2026-11-07T07:02:03.955326+00:00",
   "buildIndexSha256": "9fbfa41f3f195ea7a5fbfbedb394793e2a478684f098258a3e852898da6ca658",
   "quality": {
     "tests": {
@@ -36,8 +36,8 @@
       "unexpected": 0,
       "flaky": 0
     },
-    "fullCurrentInventoryPassingInvocation": false,
-    "note": "Current complete secondary invocation: 264 passes, no skips/failures/retries, six profiles. Saved full 1,380-case invocation and public/startup 130-pass/eight-skip scope remain historical; complete 1,548-case current inventory not yet executed.",
+    "fullCurrentInventoryPassingInvocation": true,
+    "note": "Complete saved-build 1,548-case invocation passes 1,540 with eight expected profile-specific skips (four desktop mobile-menu skips and four unsupported desktop-motion skips), zero failures/retries. Exact listed inventory matched. Both original desktop motion cases pass. All six configured profiles; fictional local fixtures, no actual records/provider sends. Not physical-device, human fidelity, field or hosted acceptance.",
     "initialPublicReader": {
       "startTime": "2026-11-07T00:15:21.145Z",
       "duration": 89800.388,
@@ -78,7 +78,15 @@
       "unexpected": 0,
       "flaky": 0
     },
-    "currentDesktopMotionPassingScope": "phase0/public-route-hints-final-browser.json"
+    "currentDesktopMotionPassingScope": "phase0/public-route-hints-final-browser.json",
+    "finalCurrentInventory": {
+      "startTime": "2026-11-07T06:34:34.328Z",
+      "duration": 1235411.659,
+      "expected": 1540,
+      "skipped": 8,
+      "unexpected": 0,
+      "flaky": 0
+    }
   },
   "visual": {
     "primaryPromptGroups": 22,
@@ -90,7 +98,11 @@
     "secondaryCaptures": 344,
     "primaryIndex": "artifacts/browser/current-primary-review/index.html",
     "secondaryIndex": "artifacts/browser/secondary-review/index.html",
-    "primaryNote": "Saved4ed0b55 full invocation preserved; attachment paths resolved to moved original directory without changing images/report."
+    "primaryNote": "Refreshed from the complete passing20b59e2 invocation; previous primary index and original captures preserved.",
+    "recoveryIndex": "artifacts/browser/current-recovery-review/index.html",
+    "recoveryStates": 18,
+    "recoveryCaptures": 108,
+    "recoveryApproved": false
   },
   "pwa": {
     "boundaries": 15,
@@ -595,7 +607,7 @@
     "Bevy/Engage"
   ],
   "scope": "Local only; no deployment, push, purchase, real provider send, production change, another timer or AI commit trailer.",
-  "verificationScopeNote": "Current secondary 44 states/264 checks/344 unapproved captures passes. No fixture review POST reaches real server. Complete source coverage unchanged after CSS-only fixes; final artifact probes pass. No full 1548-case execution, human/device/hosted/full PRD acceptance claimed.",
+  "verificationScopeNote": "Complete source coverage2722 and browser1540/eight expectedskips pass, alongside final artifact/type/build/catalog/byte/audit checks. Captures remain unapproved; mobile LCP still fails. No full PRD/device/manual/field/hosted claim.",
   "delivery": {
     "initialJsGzipBytes": 108166,
     "copiedHelperGzipBytes": 585,
@@ -620,8 +632,8 @@
     "remaining": "Fresh production audit has zero findings; KaTeX compatibility/regression evidence retained. Hosted launch review separate."
   },
   "activeVerification": {
-    "savedBaseline": "c9d73e1",
+    "savedBaseline": "20b59e2",
     "changes": "Keyboard-scrollable long reviews/tables; publication-summary contrast and history checkbox target fixes. Forty-four review states verified.",
-    "status": "264 secondary checks, 2722 source tests and all final PWA/header/build/types/catalog/byte/audit checks pass. Final isolated performance completes but all three mobile LCP gates fail. Local save then full1548-case browser execution next."
+    "status": "Full browser1540/eight expectedskips and all indexes complete. Scratch real-component render passes zero-fetch; corrected naive static-replacement trial still fails LCP3063ms and is rejected. Main dist/source unchanged. Final evidence/index save next, then isolated proper hydration investigation."
   }
 }
