@@ -1,17 +1,17 @@
 {
-  "generatedAt": "2026-11-07T00:09:26.314804+00:00",
-  "buildIndexSha256": "4146dcd4eb702c076940c9bebc39f0f4d24bef0c7a0bd7b86f746e8998ed3bf3",
+  "generatedAt": "2026-11-07T00:23:33.570565+00:00",
+  "buildIndexSha256": "e2c6312484c93fc7d0e97438072cbad240ff5bd11c6ff5bb7c45b685f88f0088",
   "quality": {
     "tests": {
-      "files": 216,
-      "passed": 2684,
+      "files": 217,
+      "passed": 2687,
       "failed": 0
     },
     "coverage": {
-      "lines": 78.12,
-      "statements": 76.12,
-      "branches": 75.59,
-      "functions": 70.81
+      "lines": 78.14,
+      "statements": 76.15,
+      "functions": 70.82,
+      "branches": 75.63
     },
     "globalAndCriticalGatesPassed": true,
     "criticalModules": 21
@@ -34,7 +34,23 @@
       "flaky": 0
     },
     "fullCurrentInventoryPassingInvocation": false,
-    "note": "Complete initial 1,320-case v7 invocation found one drawer Escape failure (1,311 passes/eight skips). Final rebuilt correction passes separate 108-case all-profile shell scope. This is not a single passing full invocation; all original assertions/timeouts/retries remain."
+    "note": "Complete initial 1,320-case v7 invocation found one drawer Escape failure (1,311 passes/eight skips). Final rebuilt correction passes separate 108-case all-profile shell scope. This is not a single passing full invocation; all original assertions/timeouts/retries remain. Public-reader initial scope:111 passes/eight skips/one WebKit automation fill-while-inert failure. Delayed diagnostic confirms missing input events/empty DOM; final tests explicitly wait for native unlock and add focus/value assertions. Final all-profile120-case scope:112 passes/eight skips/zero failures/retries. Separate invocations; no full current-inventory passing run claimed.",
+    "initialPublicReader": {
+      "startTime": "2026-11-07T00:15:21.145Z",
+      "duration": 89800.388,
+      "expected": 111,
+      "skipped": 8,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "finalPublicReader": {
+      "startTime": "2026-11-07T00:20:43.291Z",
+      "duration": 93874.298,
+      "expected": 112,
+      "skipped": 8,
+      "unexpected": 0,
+      "flaky": 0
+    }
   },
   "visual": {
     "primaryPromptGroups": 22,
@@ -84,62 +100,62 @@
       {
         "route": "/",
         "preset": "mobile",
-        "score": 94,
         "accessibility": 100,
-        "lcpMs": 3121.5738,
+        "lcpMs": 2977.1908,
         "cls": 0,
-        "passed": false
+        "passed": false,
+        "score": 95
       },
       {
         "route": "/events",
         "preset": "mobile",
-        "score": 93,
         "accessibility": 100,
-        "lcpMs": 3168.1005999999998,
+        "lcpMs": 3157.3466000000008,
         "cls": 0,
-        "passed": false
+        "passed": false,
+        "score": 94
       },
       {
         "route": "/contact",
         "preset": "mobile",
-        "score": 93,
         "accessibility": 100,
-        "lcpMs": 3164.1538,
+        "lcpMs": 3154.2687999999994,
         "cls": 0,
-        "passed": false
+        "passed": false,
+        "score": 94
       },
       {
         "route": "/",
         "preset": "desktop",
-        "score": 100,
         "accessibility": 100,
-        "lcpMs": 669.635,
+        "lcpMs": 647.2235999999999,
         "cls": 0,
-        "passed": true
+        "passed": true,
+        "score": 100
       },
       {
         "route": "/events",
         "preset": "desktop",
-        "score": 100,
         "accessibility": 100,
-        "lcpMs": 685.6084000000001,
+        "lcpMs": 683.4266,
         "cls": 0,
-        "passed": true
+        "passed": true,
+        "score": 100
       },
       {
         "route": "/contact",
         "preset": "desktop",
-        "score": 100,
         "accessibility": 100,
-        "lcpMs": 684.8584000000001,
+        "lcpMs": 644.7528,
         "cls": 0,
-        "passed": true
+        "passed": true,
+        "score": 100
       }
     ],
     "mobileLcpPassed": false,
     "fieldP75Verified": false,
     "matchesCurrentBuild": true,
-    "note": "Current v7 lab metrics still fail all mobile LCP thresholds; desktop performance/accessibility are100 and CLS0. No field p75/INP or representative hardware certification."
+    "note": "All three mobile LCP gates still fail (2,977/3,157/3,154ms); desktop performance/accessibility100 and CLS0. Lighthouse also records a brand-link visible-label/accessible-name mismatch, despite its aggregate accessibility100. That concrete WCAG2.5.3 finding remains open until corrected. Expected anonymous401 is retained in best-practices console evidence."
   },
   "services": [
     {
@@ -155,6 +171,7 @@
   ],
   "prdComplete": false,
   "remaining": [
+    "Correct the observed brand-link visible-label/accessible-name mismatch (WCAG2.5.3), then verify the enabled rule across compositions",
     "Mobile LCP and representative hardware/load/field p75 LCP-INP-CLS",
     "Complete secondary visual prompt surfaces, approved chapter assets/content, blocking human fidelity approval and approved 1% screenshot baselines",
     "Complete keyboard/assistive-technology/actual 200% zoom/forced-colors and physical Safari/device/install/push acceptance",
@@ -167,9 +184,9 @@
     "Bevy/Engage"
   ],
   "scope": "Local only; no deployment, push, purchase, real provider send, production change, another timer or AI commit trailer.",
-  "verificationScopeNote": "Final full coverage2,684 tests/216 files passes all unchanged global/21 critical gates. Complete initial v7 browser run has one failure; final rebuilt108-case scope verifies the drawer correction. Current15 PWA boundary/nine update/46 HTTPS checks pass. Current build hashes bind quality/navigation/performance; complete manual/device/hosted/approved visual acceptance remains open. Types/build/budgets pass, lint0errors/10warnings.",
+  "verificationScopeNote": "Full source coverage2,687 tests/217 files passes unchanged global/21 critical gates. Final six-profile public/availability scope112 passes/eight expected skips; original failed scopes retained. Current15 PWA boundary/nine update/46 HTTPS checks pass. Build digests bind quality/public-browser/performance. Types/build/byte gates pass, lint0errors/10inherited warnings. Complete PRD/manual/device/hosted/approved-visual acceptance remains open.",
   "delivery": {
-    "initialJsGzipBytes": 124571,
+    "initialJsGzipBytes": 107948,
     "copiedHelperGzipBytes": 362,
     "routeAwareHeroHints": true,
     "fontPreload": "retained",

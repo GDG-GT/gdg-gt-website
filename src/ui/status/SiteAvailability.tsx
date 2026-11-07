@@ -6,7 +6,7 @@ import {
   useSiteAvailability,
   type SiteState,
 } from "@/contexts/SiteAvailabilityContext";
-import { publicSiteStatus } from "../../../shared/public-site-status.mjs";
+import { readPublicSiteStatus } from "../../../shared/public-site-status-read.mjs";
 import { maintenanceExemptPath } from "../../../shared/site-status-policy.mjs";
 const storageKey = "gdg:public-availability:v1";
 function offlineSnapshot(): SiteState | undefined {
@@ -19,8 +19,7 @@ function offlineSnapshot(): SiteState | undefined {
       saved.at > Date.now() + 60000
     )
       return;
-    const v = publicSiteStatus.safeParse(saved.status);
-    if (v.success) return v.data;
+    return readPublicSiteStatus(saved.status);
   } catch {
     /* Public snapshot is optional; no credentials or private state are stored. */
   }
@@ -44,15 +43,15 @@ export default function SiteAvailability({
     }, 5000);
     api<SiteState>("/site-status", { signal: c.signal })
       .then((raw) => {
-        const safe = publicSiteStatus.safeParse(raw);
-        if (!safe.success) throw Error("Invalid public status");
+        const safe = readPublicSiteStatus(raw);
+        if (!safe) throw Error("Invalid public status");
         if (c.signal.aborted) return;
-        setStatus(safe.data);
+        setStatus(safe);
         setUnavailable(false);
         try {
           localStorage.setItem(
             storageKey,
-            JSON.stringify({ at: Date.now(), status: safe.data }),
+            JSON.stringify({ at: Date.now(), status: safe }),
           );
         } catch {
           /* Storage may be disabled. */

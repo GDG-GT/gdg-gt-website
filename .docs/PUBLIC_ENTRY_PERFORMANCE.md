@@ -1,5 +1,50 @@
 # Public entry delivery and availability — 2026-11-06
 
+## Lightweight public availability reader
+
+The browser now reads the exact six-field public JSON projection without loading
+Zod at startup. The independent authoritative server schema is unchanged in
+behavior; parity cases compare types, required/extra fields, string normalization,
+bounds, live/maintenance combinations and redirect restrictions. Malformed
+snapshots fail closed; successful reads return fresh primitive-only objects.
+Availability polling, expiry, native inertness and redirects are unchanged.
+
+Initial JavaScript is **107,948 gzip bytes**, down 16,623 bytes from the v7
+baseline (13.3%). CSS 29,899 bytes, font 48,432 and offline install 493,028 remain
+unchanged. Strict types, build and byte gates pass. All 2,687 tests/217 files pass
+full source coverage, including all unchanged global 70% and 21 critical 90%
+branch gates; lines 78.14%, statements 76.15%, branches 75.63%, functions 70.82%.
+Evidence: `phase0/public-reader-quality.json`.
+
+The isolated six-route Lighthouse run records mobile Home/Events/Contact LCP
+2,977/3,157/3,154 ms, performance 95/94/94, accessibility 100 and CLS zero.
+Desktop performance/accessibility are 100 throughout. All three mobile LCP
+thresholds **still fail**. `phase0/production-performance.json` binds this build;
+the prior v7 results are retained in
+`phase0/production-performance-before-public-reader.json`. A single run does not
+establish a causal timing gain or field p75/INP/hardware acceptance.
+
+Individual Lighthouse audits additionally identify a visible-label/accessibility-
+name mismatch on the shared brand links (WCAG2.5.3), despite aggregate
+accessibility100. That explicit finding is open for the next correction. The
+best-practices console finding is the probe's expected anonymous session401;
+neither finding is hidden or converted into a clean overall acceptance claim.
+
+The initial 120-case public/lazy-shell browser invocation has 111 passes, eight
+expected skips and one WebKit footer Subscribe failure. Isolated original
+Subscribe cases pass ten times; delaying availability reproduces the failure
+three times. A further diagnostic confirms WebKit automation reported `fill`
+complete while the field was still inert, leaving its value empty and emitting
+no input/change events. Clicking after unlock therefore submitted an empty value.
+No real API writes/sends occurred: the fixture refused that unexpected transport.
+The production input handler was not changed. Footer tests now explicitly await
+native unlock and assert the entered value before submission; availability cases
+also assert newsletter focus refusal while inert and successful entry after live
+confirmation. Original assertions/timeouts/retries remain. The corrected full
+scope passes **112 cases/eight expected skips**, no failures or retries across
+all six profiles (`phase0/public-reader-final-browser.json`). This is separate
+from the initial failed invocation; it is not a new complete 1,320-case run.
+
 ## Current v7 security migration
 
 The current router update increases startup JavaScript to 124,571 gzip bytes,

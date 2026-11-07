@@ -1,7 +1,8 @@
 import * as z from "zod/mini";
 import { isMaintenanceDestination } from "./site-status-policy.mjs";
 // Keep the public projection independent of admin write/password schemas and
-// the full schema-builder runtime. Server and browser consume this same parser.
+// the full schema-builder runtime. The browser uses a small JSON reader whose
+// parity tests compare it independently with this authoritative server schema.
 export const publicSiteStatus = z
   .strictObject({
     revision: z.number().check(z.int(), z.minimum(1)),

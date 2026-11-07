@@ -77,8 +77,16 @@ for (const submit of ["Enter", "Subscribe"] as const)
       return route.fulfill({ json: { data: { gateValid: true } } });
     });
     await page.goto("/");
+    // The real page deliberately refuses interaction until availability is
+    // confirmed. WebKit's automation fill can change an inert input's DOM value
+    // without firing input/change; wait for the same prerequisite as a user.
+    await expect(page.locator(".gt-availability-frame")).toHaveJSProperty(
+      "inert",
+      false,
+    );
     const input = page.locator("#newsletter-email");
     await input.fill("fictional-gate@example.test");
+    await expect(input).toHaveValue("fictional-gate@example.test");
     if (submit === "Enter") await input.press("Enter");
     else
       await page
@@ -131,6 +139,10 @@ for (const maintenance of [false, true])
       const action = hero.locator(".gt-hero-actions a").first();
       await action.focus();
       await expect(action).not.toBeFocused();
+      const newsletter = page.locator("#newsletter-email");
+      await newsletter.focus();
+      await expect(newsletter).not.toBeFocused();
+      await expect(newsletter).toHaveValue("");
       await page.locator("#main-content").evaluate((element) => {
         element.setAttribute("data-owned-mount", "original");
       });
@@ -153,6 +165,10 @@ for (const maintenance of [false, true])
         );
         await action.focus();
         await expect(action).toBeFocused();
+        await newsletter.fill("fictional-after-availability@example.test");
+        await expect(newsletter).toHaveValue(
+          "fictional-after-availability@example.test",
+        );
       }
       expect(fixture.unexpected).toEqual([]);
     } finally {

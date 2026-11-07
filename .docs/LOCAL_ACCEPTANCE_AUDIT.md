@@ -43,6 +43,19 @@ remain open. See `POPULATED_VISUAL_REVIEW.md` for the exact limits.
 
 ## Confirmed local work
 
+Public-reader continuation: exact six-field browser projection removes the Zod
+startup dependency while keeping the independent authoritative server schema.
+Initial JS107,948 gzip bytes (16,623 less than v7 baseline). Full coverage2,687
+tests/217files and unchanged gates pass. Final public/lazy-shell scope112passes/
+eight expected skips across six profiles; the initial111/eight/one WebKit
+automation-fill-while-inert failure is retained separately. Explicit native-unlock
+test preconditions and added field focus/value assertions address the fixture
+race without changing production footer logic. All15PWA/nine update/46HTTPS checks
+pass. MobileLCP2,977/3,157/3,154ms still fails2.5s. Inspecting individual Lighthouse
+audits also exposed a concrete brand-link visible-label/accessible-name mismatch
+(WCAG2.5.3), despite aggregate accessibility100; correction/explicit-rule review
+is the next local action. See `PUBLIC_ENTRY_PERFORMANCE.md` and current evidence.
+
 1. Community directory: parent permission/inventory/detail/activity reads are
    implemented and verified locally (`MEMBER_READ_RECOVERY.md`). Complete eligible
    merge candidate paging, current source-bound independent selected-target reads

@@ -5159,6 +5159,9 @@
       "automated": [
         "tests/server/site-status.test.mjs",
         "tests/server/public-site-status.test.mjs",
+        "tests/server/public-site-status-read.test.mjs",
+        "tests/client/site-availability-loading.test.tsx",
+        "tests/browser/lazy-shell-focus.spec.ts",
         "database/tests/057_site_status_control.sql",
         "scripts/test-local-site-status.mjs"
       ],

@@ -21,8 +21,8 @@ recovery probes and cleanup are already complete; do not repeat their writes.
 
 ## Saved local work
 
-Branch `feat/ui-local`. Last committed baseline: `2c215c9` (router declaration/
-audit review). Earlier saved corrections:
+Branch `feat/ui-local`. Last committed baseline: `1439a91` (verified router v7
+security migration and guarded workspace navigation). Earlier saved corrections:
 
 - `422970e`: public startup, complete PRD catalog, full navigation focus, primary
   visual review, HTTPS/cache/security and PWA acceptance probes.
@@ -38,6 +38,60 @@ audit review). Earlier saved corrections:
   upgrade was falsely claimed; old audit findings retained in dedicated evidence.
 
 All are local commits without AI trailers. User edits remain preserved.
+
+## Active lightweight public availability reader
+
+The v7 migration below is saved in `1439a91`; do not repeat installs or its
+completed verification. New uncommitted code: `shared/public-site-status-read.mjs`,
+its independent canonical-schema parity tests, and the SiteAvailability import/
+projection switch. Server validation stays authoritative and unchanged in
+behavior. The reader accepts exactly the six public fields, normalizes strings,
+preserves destination/maintenance restrictions and returns a fresh projection.
+Malformed/non-JSON snapshots fail closed. No private values or credential logic
+are added. Only the canonical-schema comment changed afterward.
+
+Focused tests completed: 10 passes/three files. Strict types and production build
+pass. Build budget: initial JS 107,948 gzip versus 124,571 before the reader;
+CSS 29,899, font 48,432 and offline install 493,028 bytes unchanged. Logs:
+`/tmp/gdg-public-reader-{unit,types,build,budgets}.log`.
+
+All reader jobs are completed/reaped. Isolated six-route Lighthouse exits1 for
+the unchanged mobile LCP thresholds: 2,977/3,157/3,154 ms, accessibility100/CLS0;
+desktop performance/accessibility100. Log `/tmp/gdg-public-reader-performance.log`.
+Previous v7 report is preserved in
+`phase0/production-performance-before-public-reader.json`. Current performance,
+quality and browser evidence bind identical index/manifest/helper digests.
+
+Full source coverage: 2,687 tests/217 files, unchanged global70/21critical90%
+branch gates pass; lines78.14, statements76.15, branches75.63, functions70.82.
+Log `/tmp/gdg-public-reader-coverage.log`, raw ignored
+`artifacts/quality/public-reader-coverage.json`, summary
+`phase0/public-reader-quality.json`.
+
+Initial120-case public/lazy-shell scope:111passes/eight expected skips/one
+WebKit footer Subscribe failure. Ten isolated original cases pass; delaying
+availability reproduces three failures. A final instrumented case confirms
+WebKit fill completes while native inert is true with empty DOM/no input/change
+events. No product footer logic changed. Tests now wait for native unlock, assert
+entered value and add newsletter focus refusal/entry checks before/after live.
+No original assertions/timeouts/retries weakened. Final same120-case scope:
+112passes/eight expected skips/zero failures or retries across all six profiles.
+Evidence `phase0/public-reader-{initial,final}-browser.json`; raw/log
+`/tmp/gdg-public-reader-{final-browser.json,final-browser.log}`. Failed diagnostic
+logs retained in `/tmp/gdg-public-reader-footer-{diagnostic,delayed,confirm}.log`;
+temporary diagnostic source moved to `/tmp/gdg-public-entry-diagnostic.spec.ts`
+and removed from repo. These are separate invocations, not one passing full1320.
+
+All15PWA boundary/nine changed-asset two-tab update/46HTTPS header checks pass,
+logs `/tmp/gdg-public-reader-{pwa-boundaries,pwa-update,headers}.log`; owned probe
+listeners closed. Types/build/budgets/traceability pass; lint0errors/10inherited
+warnings. Latest secret scan149commits/1846currentfiles,0unreviewed; its session
+59963 completed/reaped0. Current consolidated status describes the reader.
+Save this checkpoint locally excluding preserved user files, then continue the
+remaining secondary visual surfaces and compatible low-dependency review.
+Inspecting individual Lighthouse audits exposed a concrete brand-link
+visible-label/accessible-name mismatch (WCAG2.5.3), despite aggregate a11y100.
+Next fix that label and explicitly enable its axe rule before extending review.
 
 ## Active actual React Router v7 migration
 

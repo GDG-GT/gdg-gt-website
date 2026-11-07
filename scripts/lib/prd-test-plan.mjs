@@ -1099,7 +1099,7 @@ add(
   "CONTENT-TEST-009",
   "STATUS-001 STATUS-002 STATUS-003",
   "Authorized maintenance, escape paths, health and safe redirects",
-  [unit("site-status"), unit("public-site-status"), sql("057_site_status_control"), local("site-status")],
+  [unit("site-status"), unit("public-site-status"), unit("public-site-status-read"), "tests/client/site-availability-loading.test.tsx", "tests/browser/lazy-shell-focus.spec.ts", sql("057_site_status_control"), local("site-status")],
   ["Actual offline/device maintenance behavior"],
 );
 add(
