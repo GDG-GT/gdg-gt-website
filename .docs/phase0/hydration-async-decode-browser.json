@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-11-07T08:42:39.903247+00:00",
+  "completed": true,
+  "allPassed": true,
+  "adopted": false,
+  "sourceBaseline": "f163842",
+  "stats": {
+    "startTime": "2026-11-07T08:41:27.080Z",
+    "duration": 24051.62,
+    "expected": 12,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "raw": "/tmp/gdg-hydration-async-decode-browser.json",
+  "scope": "Isolated simple matching Home hydration. Only primary image gains decoding=async; secondary image already async and unchanged. Full original CSS/font/artwork/helper, source dimensions and unscheduled module loading unchanged. Twelve immediate/delayed availability cases across six profiles preserve actual hero DOM, native inert focus lock, navigation, mobile picture requests and axe/noerrors/nowrites. No authoritative public data bootstrap, main source/artifact change, performance or full PRD acceptance claim."
+}

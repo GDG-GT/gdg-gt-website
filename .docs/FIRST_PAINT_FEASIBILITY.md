@@ -75,3 +75,45 @@ results do not replace the current main Home/Events/Contact measurements or
 certify field/device/hosted acceptance. No experimental application source was
 adopted. Results: `phase0/hydration-*-trial.json`, `phase0/hydration-*-browser.json`;
 raw reports are under ignored `artifacts/performance/hydration-*`.
+
+## Scheduling the module download
+
+A distinct HTML-only trial replaces the initial main script/modulepreload with
+a 383-byte external bootstrap. The bootstrap starts the actual React import
+after two animation frames, with a 100ms fallback and immediate initialization
+when hidden. The matching inert server tree, full CSS, font, imagery and other
+route documents remain unchanged. Twelve immediate/delayed availability checks
+pass across all six profiles, preserving the actual hero DOM, native lock, image
+selection, navigation, accessibility and zero application writes/errors.
+
+The unchanged isolated Lighthouse mobile run measures **LCP2,884ms**, FCP1,064ms,
+TTI2,948ms, performance95, accessibility100 andCLS0. The main graph starts loading
+at about125ms in the raw trace. This still fails2,500ms and does not demonstrate
+a gain over the simpler matching hydration version. It is rejected. The
+prototype is archived, its plain hydration fixture restored, and the verified
+main app/artifact remains untouched. Source/evidence: existing isolated
+probe/paint-first-* and performance-paint-first-dist;
+phase0/hydration-paint-first-browser.json,
+phase0/hydration-home-mobile-paint-first-trial.json and ignored raw
+artifacts/performance/hydration-paint-first. This is not production SSR delivery
+or complete PRD acceptance.
+
+## Primary-image decoding hint
+
+A final separate trial adds only decoding=async to the primary hero image. The
+secondary campus image already used that hint and remains unchanged. Matching
+server/client builds render 11,929 bytes with one h1, native inertness, no inline
+scripts and no render-time fetch. All twelve immediate/delayed availability cases
+pass across six profiles, including DOM identity, native focus lock, navigation,
+mobile image selection, axe and zero page/hydration errors or writes.
+
+The unchanged isolated mobile measurement is **LCP2,808ms**, FCP972ms, TTI2,889ms,
+TBT34.5ms, performance96, accessibility100 andCLS0. This still fails2,500ms and
+does not demonstrate an improvement over simple matching hydration. It is
+rejected. Source/test variants and the immutable build/raw measurement are
+archived; the isolated source is restored. Its generated dist/server document
+still contains the last async trial until a new baseline build, and no fixture
+server remains running. Main source/dist remains the verified aeb6fca artifact.
+See phase0/hydration-async-decode-browser.json and
+phase0/hydration-home-mobile-async-decode-trial.json, with raw reports under
+ignored artifacts/performance/hydration-async-decode.

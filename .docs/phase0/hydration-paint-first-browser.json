@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-11-07T08:35:55.122004+00:00",
+  "completed": true,
+  "allPassed": true,
+  "adopted": false,
+  "sourceBaseline": "f163842",
+  "stats": {
+    "startTime": "2026-11-07T08:34:13.403Z",
+    "duration": 23576.608,
+    "expected": 12,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "raw": "/tmp/gdg-hydration-paint-first-browser.json",
+  "scope": "Isolated matching inert Home SSR with original full CSS/font/artwork, native media image hints and tiny external bootstrap scheduling actual main import after two frames/100ms fallback, hidden documents immediately. Twelve immediate/delayed availability cases across six profiles preserve original hero DOM identity/native lock/navigation/picture selection/axe/nohydrationerror/nopageexception/nowrite checks. No main application change, authoritative public bootstrap, production delivery or full PRD claim."
+}

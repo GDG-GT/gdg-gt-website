@@ -24,10 +24,11 @@
       "unchangedWarningBudget": true
     },
     "secretScan": {
-      "commits": 156,
-      "files": 1935,
+      "commits": 157,
+      "files": 1940,
       "unreviewed": 0,
-      "evidence": "phase0/secret-scan.json"
+      "evidence": "phase0/secret-scan.json",
+      "scope": "Final pre-documentation-commit source/history scan; exact non-secret checksum reviews only."
     }
   },
   "browser": {
@@ -688,8 +689,8 @@
     "remaining": "Fresh production audit has zero findings; KaTeX compatibility/regression evidence retained. Hosted launch review separate."
   },
   "activeVerification": {
-    "savedBaseline": "9ebb6a8",
+    "savedBaseline": "aeb6fca",
     "changes": "All36native tables use named keyboard wrapper. Populated private-link Form access dialog fits viewport via scoped grid sizing. Native nested radio/checkbox controls preserved. Finance review fixture corrected to canonical pending/different submitter.",
-    "status": "Complete current source coverage2722passes. New132browser checks plus12existing tool regressions pass in separate invocations/source checkpoints. Types/targetedunits/byte/build and latest PWA15/update9/HTTPS46 pass. Full lint0errors/10inheritedwarnings and source/history scan0unreviewed. Full current1680browser inventory not re-executed. Ready for local save; full PRD human/device/field/hosted acceptance remains open."
+    "status": "Table/grid/mobile fixes savedaeb6fca with complete current source coverage2722passes, separate new132browser checks and12tool regressions, types/build/bytes/lint/artifact gates. Full current1680browser execution not claimed. Subsequent isolated paint-first-download and primary-async-decode trials pass12browser cases each but still fail mobileLCP2884/2808ms; neither adopted. Main source/dist unchanged. Full PRD human/device/performance/field/hosted acceptance remains open."
   }
 }
