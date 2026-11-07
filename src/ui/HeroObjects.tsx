@@ -8,7 +8,6 @@ import {
   type ReactNode,
 } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Environment, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
 import { donutSprinkleCount, populateDonutSprinkles } from "./hero-sprinkles";
 
@@ -32,7 +31,7 @@ function DonutSprinkles() {
   return (
     <instancedMesh ref={mesh} args={[undefined, undefined, donutSprinkleCount]}>
       <capsuleGeometry args={[0.025, 0.105, 3, 5]} />
-      <meshStandardMaterial roughness={0.3} />
+      <meshPhongMaterial shininess={65} />
     </instancedMesh>
   );
 }
@@ -110,14 +109,13 @@ function FrostedDonut() {
     <group>
       <mesh>
         <torusGeometry args={[1, 0.385, 24, 80]} />
-        <meshStandardMaterial color="#e2a563" roughness={0.45} />
+        <meshPhongMaterial color="#e2a563" shininess={28} />
       </mesh>
       <mesh geometry={frosting}>
-        <meshPhysicalMaterial
+        <meshPhongMaterial
           color="#ff93ad"
-          roughness={0.17}
-          clearcoat={1}
-          clearcoatRoughness={0.08}
+          shininess={100}
+          specular="#ffe8ef"
           side={THREE.DoubleSide}
         />
       </mesh>
@@ -149,11 +147,10 @@ function Star() {
   useEffect(() => () => geometry.dispose(), [geometry]);
   return (
     <mesh geometry={geometry}>
-      <meshPhysicalMaterial
+      <meshPhongMaterial
         color="#f980a9"
-        metalness={0.2}
-        roughness={0.13}
-        clearcoat={1}
+        shininess={95}
+        specular="#ffe8ef"
       />
     </mesh>
   );
@@ -178,14 +175,12 @@ function Jelly() {
   useEffect(() => () => geometry.dispose(), [geometry]);
   return (
     <mesh geometry={geometry}>
-      <meshPhysicalMaterial
+      <meshPhongMaterial
         color="#ff8caa"
-        roughness={0.08}
-        transmission={0.64}
-        thickness={1.5}
-        ior={1.35}
-        clearcoat={1}
-        metalness={0.06}
+        shininess={110}
+        specular="#fff2e1"
+        transparent
+        opacity={0.78}
       />
     </mesh>
   );
@@ -250,14 +245,11 @@ function MovingObject({
       ) : (
         <mesh>
           <icosahedronGeometry args={[1, 0]} />
-          <meshPhysicalMaterial
+          <meshPhongMaterial
             color="#ffba81"
-            metalness={0.15}
-            roughness={0.16}
-            transmission={0.25}
-            thickness={0.8}
+            shininess={85}
+            specular="#fff2e1"
             flatShading
-            clearcoat={1}
           />
         </mesh>
       )}
@@ -301,10 +293,9 @@ function Confetti({
             ) : (
               <capsuleGeometry args={[0.034, 0.12, 4, 8]} />
             )}
-            <meshStandardMaterial
+            <meshPhongMaterial
               color={colors[index % 4]}
-              roughness={0.2}
-              metalness={0.08}
+              shininess={80}
             />
           </mesh>
         );
@@ -356,25 +347,9 @@ export default function HeroObjects() {
             intensity={2.8}
             color="#fff2e1"
           />
-          <Environment resolution={128}>
-            <Lightformer
-              intensity={4}
-              position={[0, 5, 3]}
-              scale={[10, 8, 1]}
-            />
-            <Lightformer
-              intensity={2}
-              position={[-5, 0, 1]}
-              scale={[4, 8, 1]}
-              color="#ffe0e3"
-            />
-            <Lightformer
-              intensity={1.8}
-              position={[5, -3, 2]}
-              scale={[6, 6, 1]}
-              color="#ffd19e"
-            />
-          </Environment>
+          <hemisphereLight args={["#fff2e1", "#dd927e", 1.7]} />
+          <directionalLight position={[-5, 0, 3]} intensity={1.3} color="#ffe0e3" />
+          <directionalLight position={[5, -3, 2]} intensity={1.1} color="#ffd19e" />
           <MovingObject
             kind="donut"
             base={[0.77, 0.67]}

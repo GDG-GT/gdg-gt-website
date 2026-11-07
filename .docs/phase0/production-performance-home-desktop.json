@@ -1,0 +1,125 @@
+{
+  "generatedAt": "2026-11-07T23:21:08.001Z",
+  "completed": true,
+  "lighthouseVersion": "13.6.0",
+  "build": {
+    "index.html": {
+      "bytes": 2215,
+      "sha256": "c9a938257d4ac2ec37e2456eafb8d5d9e1330f17ea198f33a6d4edb54d0b705d"
+    },
+    ".vite/manifest.json": {
+      "bytes": 115565,
+      "sha256": "52b246fadd2c7a12b5acccfcd553326ede68b37e00ec9ddcc9b1c5dedd559a76"
+    },
+    "assets/hero-atmosphere-mobile.webp": {
+      "bytes": 37624,
+      "sha256": "d46fa6b9bfe5d234b9f6a2e2e20b0f4ca0cf16ae484f4f1e4865fca003dde738"
+    },
+    "assets/hero-campus-mobile.webp": {
+      "bytes": 21932,
+      "sha256": "39aed7e7d2a6a02da4734fd07c6500a35257caf618a460b7a9516d3481744db6"
+    },
+    "assets/public-entry.js": {
+      "bytes": 1099,
+      "sha256": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+    },
+    "assets/public-hydrate.js": {
+      "bytes": 1237,
+      "sha256": "9947345597aedb5588afc920c8e2a30231a06d523bf1415f70e2142b27fa65fc"
+    },
+    ".build/ssr/entry.mjs": {
+      "bytes": 138390,
+      "sha256": "375e15705050a12c019c85435b946ad0318b9218f8125609e229739a16d5a09e"
+    },
+    "api/site.mjs": {
+      "bytes": 5238,
+      "sha256": "7243f31d00ace46c7c26035b5fb3ff9b259386004c08a2b0c84985ca74e081a9"
+    },
+    "server/public-bootstrap.mjs": {
+      "bytes": 445,
+      "sha256": "57a5d3e1802af7f8e5a6c9f8d4f5504c655925351e47354bc7b622f54fe91596"
+    }
+  },
+  "presets": [
+    "desktop"
+  ],
+  "routes": [
+    "/"
+  ],
+  "scope": "Isolated loopback production build using the actual per-request public React renderer and current public-only database projections, gzip-negotiated HTML/JS/CSS/JSON/SVG, anonymous allowlisted reads to local API only; HTTPS requests blocked, no account or writes/provider sends. Lighthouse default simulated mobile and desktop presets; measurements must run without competing browser/build/coverage load. Compression models a required hosting delivery setting, not evidence that it is deployed. Lab LCP/CLS/TBT and accessibility only; TBT is not INP and these runs do not certify field p75 INP/LCP, representative 3D hardware or hosted latency. Raw reports in ignored artifacts/performance.",
+  "tests": [
+    {
+      "route": "/",
+      "preset": "desktop",
+      "performance": 98,
+      "accessibility": 100,
+      "visibleLabelsMatchNames": true,
+      "bestPractices": 96,
+      "seo": 100,
+      "lcpMs": 652.3362500000001,
+      "cls": 0,
+      "tbtMs": 132.5,
+      "failedAudits": [
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "score": 0.99,
+          "display": "0.7 s"
+        },
+        {
+          "id": "total-blocking-time",
+          "title": "Total Blocking Time",
+          "score": 0.93,
+          "display": "130 ms"
+        },
+        {
+          "id": "max-potential-fid",
+          "title": "Max Potential First Input Delay",
+          "score": 0.32,
+          "display": "320 ms"
+        },
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0
+        },
+        {
+          "id": "valid-source-maps",
+          "title": "Missing source maps for large first-party JavaScript",
+          "score": 0
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "display": "Est savings of 146 KiB"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "display": "2 failure reasons"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0,
+          "display": "Est savings of 125 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "display": "Est savings of 40 ms"
+        }
+      ],
+      "runtimeError": null,
+      "passed": true
+    }
+  ]
+}

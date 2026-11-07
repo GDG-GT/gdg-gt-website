@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-11-07T22:37:31.000Z",
+  "generatedAt": "2026-11-07T23:18:18.989Z",
   "completed": true,
   "lighthouseVersion": "13.6.0",
   "build": {
     "index.html": {
       "bytes": 2215,
-      "sha256": "6711368fcf416cde571fec628c991c9134113ddaa2671a2aeecdbb92f201767e"
+      "sha256": "45640d038d4b1c9ea054b4854991ae0aadc2bd4dd98e54710f17768c522d1323"
     },
     ".vite/manifest.json": {
       "bytes": 117372,
-      "sha256": "e9ceb31080c490a54cbf524c8e9d0d226ea8f0d477963311b7ebd28fed79319a"
+      "sha256": "e77b60b2ad88a050b064b8db8f600d1c936f9bf53c1c94fb6c502eb3cd478113"
     },
     "assets/hero-atmosphere-mobile.webp": {
       "bytes": 37624,
@@ -28,12 +28,12 @@
       "sha256": "9947345597aedb5588afc920c8e2a30231a06d523bf1415f70e2142b27fa65fc"
     },
     ".build/ssr/entry.mjs": {
-      "bytes": 139481,
-      "sha256": "4e5dac71cfe31e447645a4f2641fc07e666fa2070a2ebe644b4b6cfd35294c0b"
+      "bytes": 138390,
+      "sha256": "0f85dcefe4c41de628de256fd5764f9d6413ea4e954083b2113b818607805c8a"
     },
     "api/site.mjs": {
-      "bytes": 3225,
-      "sha256": "83b4599d3d1d1872ee8fb0ea33cf9d5f153c5876c92657418db0a730b81892ee"
+      "bytes": 5238,
+      "sha256": "7243f31d00ace46c7c26035b5fb3ff9b259386004c08a2b0c84985ca74e081a9"
     },
     "server/public-bootstrap.mjs": {
       "bytes": 445,
@@ -59,7 +59,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 1953.6333,
+      "lcpMs": 1953.0726,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -107,7 +107,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 230 ms"
+          "display": "Est savings of 210 ms"
         }
       ],
       "runtimeError": null,
@@ -121,7 +121,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 904.1335999999999,
+      "lcpMs": 902.8981000000001,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -157,7 +157,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 290 ms"
+          "display": "Est savings of 300 ms"
         }
       ],
       "runtimeError": null,
@@ -171,7 +171,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 901.5108,
+      "lcpMs": 901.4630999999999,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -216,14 +216,14 @@
     {
       "route": "/",
       "preset": "desktop",
-      "performance": 100,
+      "performance": 70,
       "accessibility": 100,
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 643.09775,
+      "lcpMs": 644.127,
       "cls": 0,
-      "tbtMs": 0,
+      "tbtMs": 1562.5873000000001,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
@@ -232,15 +232,50 @@
           "display": "0.6 s"
         },
         {
+          "id": "total-blocking-time",
+          "title": "Total Blocking Time",
+          "score": 0.01,
+          "display": "1,560 ms"
+        },
+        {
+          "id": "max-potential-fid",
+          "title": "Max Potential First Input Delay",
+          "score": 0,
+          "display": "1,670 ms"
+        },
+        {
           "id": "errors-in-console",
           "title": "Browser errors were logged to the console",
+          "score": 0
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "score": 0.84,
+          "display": "2.8 s"
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "score": 0,
+          "display": "2.2 s"
+        },
+        {
+          "id": "bootup-time",
+          "title": "Reduce JavaScript execution time",
+          "score": 0,
+          "display": "2.0 s"
+        },
+        {
+          "id": "valid-source-maps",
+          "title": "Missing source maps for large first-party JavaScript",
           "score": 0
         },
         {
           "id": "unused-javascript",
           "title": "Reduce unused JavaScript",
           "score": 0,
-          "display": "Est savings of 40 KiB"
+          "display": "Est savings of 149 KiB"
         },
         {
           "id": "bf-cache",
@@ -267,7 +302,7 @@
         }
       ],
       "runtimeError": null,
-      "passed": true
+      "passed": false
     },
     {
       "route": "/events",
@@ -277,7 +312,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 251.4549,
+      "lcpMs": 252.47629999999998,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -327,7 +362,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 250.25080000000003,
+      "lcpMs": 251.1927,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -335,6 +370,12 @@
           "id": "errors-in-console",
           "title": "Browser errors were logged to the console",
           "score": 0
+        },
+        {
+          "id": "unused-css-rules",
+          "title": "Reduce unused CSS",
+          "score": 0.5,
+          "display": "Est savings of 10 KiB"
         },
         {
           "id": "unused-javascript",

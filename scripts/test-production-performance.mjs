@@ -36,12 +36,12 @@ for (const file of [".build/ssr/entry.mjs", "api/site.mjs", "server/public-boots
   build[file] = { bytes: bytes.length, sha256: createHash("sha256").update(bytes).digest("hex") };
 }
 const args = process.argv.slice(2);
-if (args.length && (args.length !== 1 || args[0] !== "--home-mobile"))
-  throw Error("Optional diagnostic argument: --home-mobile");
-const presets = args.length ? ["mobile"] : ["mobile", "desktop"],
+if (args.length && (args.length !== 1 || !["--home-mobile", "--home-desktop"].includes(args[0])))
+  throw Error("Optional diagnostic argument: --home-mobile or --home-desktop");
+const presets = args.length ? [args[0].slice("--home-".length)] : ["mobile", "desktop"],
   routes = args.length ? ["/"] : ["/", "/events", "/contact"],
   evidence = args.length
-    ? "production-performance-home-mobile.json"
+    ? `production-performance-home-${presets[0]}.json`
     : "production-performance.json";
 const cli = process.env.GDG_LIGHTHOUSE_CLI;
 if (

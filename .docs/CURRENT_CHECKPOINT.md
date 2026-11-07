@@ -1,3 +1,28 @@
+# Immediate checkpoint — 2026-11-07 23:23 UTC
+
+8e1d19c auto-Git production dpl_Cb8pfEbtzNKaDZVv1WYmKDJryHos READY. Direct hero
+startup deployed. Runtime diagnostics CONFIRM SSR load MODULE_NOT_FOUND dependency
+react-router, exact previous fingerprint. Current source SSR bundles ONLY
+react-router-dom/react-router to avoid module-sync runtime tracing omission. Local
+SSR26 checks and budgets pass, types/scopedlint pass. Need deploy/actualSSRverify.
+
+Immediate3D exposed real desktop TBT failure (1562ms, score70); failure retained in
+production-direct-start-performance-before-materials.json. Removed runtime generated
+environment + costly transmission materials, preserves actual moving3D/glossylook
+using Phong lights/materials. Isolated desktop performance now98/accessibility100,
+LCP652ms/CLS0 (production-performance-home-desktop.json). Full6 performance after
+coverage/browserload finishes. Actual livehero6checks pass + screenshot inspected.
+Current build final material/browser8pass4skip in progress. Full coverage3317active
+raw /tmp/gdg-production-hero-final-coverage.log; need reap. Node pinned24.x in both
+packageJSON/lock to matchCI+production configuredruntime (Vercelotherwise silently
+selected26). No reinstallorlocalruntimechange. Privateprovider79985ACTIVE.
+
+Need natural sourcecommit/push (noAItrailers) and Git auto deployment, watchactualSSR
++ canonicalhero/browser. Owneridentity/workerhost/capacityinputs stillpending.
+No duplicateDNS/keys/migrations.CUAclean. Preserve3userfiles.
+
+Earlier checkpoint history (superseded state):
+
 # Immediate checkpoint — 2026-11-07 23:25 UTC
 
 Latest user requests hero no poster-to-3D swap. Implemented immediate eligible scene

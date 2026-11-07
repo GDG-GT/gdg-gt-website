@@ -1,0 +1,414 @@
+{
+  "generatedAt": "2026-11-07T23:18:18.989Z",
+  "completed": true,
+  "lighthouseVersion": "13.6.0",
+  "build": {
+    "index.html": {
+      "bytes": 2215,
+      "sha256": "45640d038d4b1c9ea054b4854991ae0aadc2bd4dd98e54710f17768c522d1323"
+    },
+    ".vite/manifest.json": {
+      "bytes": 117372,
+      "sha256": "e77b60b2ad88a050b064b8db8f600d1c936f9bf53c1c94fb6c502eb3cd478113"
+    },
+    "assets/hero-atmosphere-mobile.webp": {
+      "bytes": 37624,
+      "sha256": "d46fa6b9bfe5d234b9f6a2e2e20b0f4ca0cf16ae484f4f1e4865fca003dde738"
+    },
+    "assets/hero-campus-mobile.webp": {
+      "bytes": 21932,
+      "sha256": "39aed7e7d2a6a02da4734fd07c6500a35257caf618a460b7a9516d3481744db6"
+    },
+    "assets/public-entry.js": {
+      "bytes": 1099,
+      "sha256": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+    },
+    "assets/public-hydrate.js": {
+      "bytes": 1237,
+      "sha256": "9947345597aedb5588afc920c8e2a30231a06d523bf1415f70e2142b27fa65fc"
+    },
+    ".build/ssr/entry.mjs": {
+      "bytes": 138390,
+      "sha256": "0f85dcefe4c41de628de256fd5764f9d6413ea4e954083b2113b818607805c8a"
+    },
+    "api/site.mjs": {
+      "bytes": 5238,
+      "sha256": "7243f31d00ace46c7c26035b5fb3ff9b259386004c08a2b0c84985ca74e081a9"
+    },
+    "server/public-bootstrap.mjs": {
+      "bytes": 445,
+      "sha256": "57a5d3e1802af7f8e5a6c9f8d4f5504c655925351e47354bc7b622f54fe91596"
+    }
+  },
+  "presets": [
+    "mobile",
+    "desktop"
+  ],
+  "routes": [
+    "/",
+    "/events",
+    "/contact"
+  ],
+  "scope": "Isolated loopback production build using the actual per-request public React renderer and current public-only database projections, gzip-negotiated HTML/JS/CSS/JSON/SVG, anonymous allowlisted reads to local API only; HTTPS requests blocked, no account or writes/provider sends. Lighthouse default simulated mobile and desktop presets; measurements must run without competing browser/build/coverage load. Compression models a required hosting delivery setting, not evidence that it is deployed. Lab LCP/CLS/TBT and accessibility only; TBT is not INP and these runs do not certify field p75 INP/LCP, representative 3D hardware or hosted latency. Raw reports in ignored artifacts/performance.",
+  "tests": [
+    {
+      "route": "/",
+      "preset": "mobile",
+      "performance": 99,
+      "accessibility": 100,
+      "visibleLabelsMatchNames": true,
+      "bestPractices": 96,
+      "seo": 100,
+      "lcpMs": 1953.0726,
+      "cls": 0,
+      "tbtMs": 0,
+      "failedAudits": [
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "score": 0.97,
+          "display": "2.0 s"
+        },
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "score": 0.99,
+          "display": "2.0 s"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "display": "Est savings of 40 KiB"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "display": "2 failure reasons"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0,
+          "display": "Est savings of 107 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "display": "Est savings of 210 ms"
+        }
+      ],
+      "runtimeError": null,
+      "passed": true
+    },
+    {
+      "route": "/events",
+      "preset": "mobile",
+      "performance": 100,
+      "accessibility": 100,
+      "visibleLabelsMatchNames": true,
+      "bestPractices": 96,
+      "seo": 100,
+      "lcpMs": 902.8981000000001,
+      "cls": 0,
+      "tbtMs": 0,
+      "failedAudits": [
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "display": "Est savings of 39 KiB"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "display": "2 failure reasons"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0.5,
+          "display": "Est savings of 7 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "display": "Est savings of 300 ms"
+        }
+      ],
+      "runtimeError": null,
+      "passed": true
+    },
+    {
+      "route": "/contact",
+      "preset": "mobile",
+      "performance": 100,
+      "accessibility": 100,
+      "visibleLabelsMatchNames": true,
+      "bestPractices": 96,
+      "seo": 100,
+      "lcpMs": 901.4630999999999,
+      "cls": 0,
+      "tbtMs": 0,
+      "failedAudits": [
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "display": "Est savings of 40 KiB"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "display": "2 failure reasons"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0.5,
+          "display": "Est savings of 7 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "display": "Est savings of 290 ms"
+        }
+      ],
+      "runtimeError": null,
+      "passed": true
+    },
+    {
+      "route": "/",
+      "preset": "desktop",
+      "performance": 70,
+      "accessibility": 100,
+      "visibleLabelsMatchNames": true,
+      "bestPractices": 96,
+      "seo": 100,
+      "lcpMs": 644.127,
+      "cls": 0,
+      "tbtMs": 1562.5873000000001,
+      "failedAudits": [
+        {
+          "id": "largest-contentful-paint",
+          "title": "Largest Contentful Paint",
+          "score": 0.99,
+          "display": "0.6 s"
+        },
+        {
+          "id": "total-blocking-time",
+          "title": "Total Blocking Time",
+          "score": 0.01,
+          "display": "1,560 ms"
+        },
+        {
+          "id": "max-potential-fid",
+          "title": "Max Potential First Input Delay",
+          "score": 0,
+          "display": "1,670 ms"
+        },
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0
+        },
+        {
+          "id": "interactive",
+          "title": "Time to Interactive",
+          "score": 0.84,
+          "display": "2.8 s"
+        },
+        {
+          "id": "mainthread-work-breakdown",
+          "title": "Minimize main-thread work",
+          "score": 0,
+          "display": "2.2 s"
+        },
+        {
+          "id": "bootup-time",
+          "title": "Reduce JavaScript execution time",
+          "score": 0,
+          "display": "2.0 s"
+        },
+        {
+          "id": "valid-source-maps",
+          "title": "Missing source maps for large first-party JavaScript",
+          "score": 0
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0,
+          "display": "Est savings of 149 KiB"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "display": "2 failure reasons"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0,
+          "display": "Est savings of 125 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "display": "Est savings of 40 ms"
+        }
+      ],
+      "runtimeError": null,
+      "passed": false
+    },
+    {
+      "route": "/events",
+      "preset": "desktop",
+      "performance": 100,
+      "accessibility": 100,
+      "visibleLabelsMatchNames": true,
+      "bestPractices": 96,
+      "seo": 100,
+      "lcpMs": 252.47629999999998,
+      "cls": 0,
+      "tbtMs": 0,
+      "failedAudits": [
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "display": "Est savings of 39 KiB"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "display": "2 failure reasons"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0.5,
+          "display": "Est savings of 7 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "display": "Est savings of 40 ms"
+        }
+      ],
+      "runtimeError": null,
+      "passed": true
+    },
+    {
+      "route": "/contact",
+      "preset": "desktop",
+      "performance": 100,
+      "accessibility": 100,
+      "visibleLabelsMatchNames": true,
+      "bestPractices": 96,
+      "seo": 100,
+      "lcpMs": 251.1927,
+      "cls": 0,
+      "tbtMs": 0,
+      "failedAudits": [
+        {
+          "id": "errors-in-console",
+          "title": "Browser errors were logged to the console",
+          "score": 0
+        },
+        {
+          "id": "unused-css-rules",
+          "title": "Reduce unused CSS",
+          "score": 0.5,
+          "display": "Est savings of 10 KiB"
+        },
+        {
+          "id": "unused-javascript",
+          "title": "Reduce unused JavaScript",
+          "score": 0.5,
+          "display": "Est savings of 40 KiB"
+        },
+        {
+          "id": "bf-cache",
+          "title": "Page prevented back/forward cache restoration",
+          "score": 0,
+          "display": "2 failure reasons"
+        },
+        {
+          "id": "image-delivery-insight",
+          "title": "Improve image delivery",
+          "score": 0.5,
+          "display": "Est savings of 7 KiB"
+        },
+        {
+          "id": "network-dependency-tree-insight",
+          "title": "Network dependency tree",
+          "score": 0
+        },
+        {
+          "id": "render-blocking-insight",
+          "title": "Render-blocking requests",
+          "score": 0,
+          "display": "Est savings of 40 ms"
+        }
+      ],
+      "runtimeError": null,
+      "passed": true
+    }
+  ]
+}
