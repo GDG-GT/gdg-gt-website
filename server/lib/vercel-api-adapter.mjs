@@ -15,8 +15,15 @@ export function vercelApiAdapter(handler) {
       !route ||
       !/^[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_-]+)*$/.test(route) ||
       (original !== null && original !== route) ||
-      (original === null && url.pathname !== "/api/v1")
+      (original === null && !["/api/v1", "/api/v1.mjs"].includes(url.pathname))
     ) {
+      console.error(JSON.stringify({
+        event: "versioned_api_invalid_dispatch",
+        destinationPath: url.pathname === "/api/v1" || url.pathname === "/api/v1.mjs",
+        originalPath: original !== null,
+        routeCount: routes.length,
+        routeHasPatternSuffix: typeof route === "string" && /[:*+]/.test(route),
+      }));
       response.statusCode = 400;
       response.setHeader("Cache-Control", "no-store");
       response.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -24,6 +31,7 @@ export function vercelApiAdapter(handler) {
       return;
     }
     url.searchParams.delete("__gdg_api_route");
+    if (url.searchParams.get("path") === route) url.searchParams.delete("path");
     request.url = "/api/v1/" + route + url.search;
     return handler(request, response);
   };

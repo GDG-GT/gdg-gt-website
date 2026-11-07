@@ -1,3 +1,96 @@
+# Immediate latest state — 2026-11-07 22:54 UTC
+
+UserAPPROVEDS3creation; successfullycreatedONCE. Supabase keynamegdg-gt-production-storage.
+One-timecredentials readONLYinsideCUAprivatevars, neverprinted. Bothvaluesenteredvia
+nativeVercelUIasSecret(productiononly). APIverifiedtype:sensitive,keynamesS3_ACCESS_KEY_ID,
+S3_SECRET_ACCESS_KEY. Reportproduction-s3-credentials.json. One-timeSupabase modalDone,
+all3ownedtemporarybrowserTabsclosed, originaldomainTabrestored. CUAv2completion_summary
+"Configured private storage credentials" SUBMITTED. No pendingCUA/approval/secrettransfer.
+AllCUAsecretvarsdiscarded; privateNode79985doesNOTholdS3plaintextandcannotdecryptsensitive.
+RuntimeVercelhasS3secretssaved; nextdeploymentwillincludethem. DoNOTregenerateS3keys.
+
+Currentdeployed6ade31b(dpl_FJgf...)READYbutHOSTEDREADINESSFAILS. RawfirstHTTPprobe
+phase0/hosted-readiness-before-static-packaging.json. Rootstillstatic2215bytes;
+events/contact200fallbackmetadataHTMLbutnotfullSSR; direct/api/site?__route=/503;
+versionedAPIs400INVALID_ROUTE. No500modulefailureanymore. Actualhostedbootstrapdata
+andlocalcompiledrendererreadproductiondataSUCCESS; noDBfault. Neverclaimusableyet.
+NewcorrectionsUNCOMMITTED:
+- api/site loadRenderer nowliteralimport('../.build/ssr/entry.mjs') soVercelNFTtraces
+  rendererReactdependencies; computedURLincludeFilescopiesalonewerenotenough.
+- publicSSRqueryguardconsumesmatchingnamedroutecapture (hostaddsroute=events).
+- APIstandard:path*rewrite(insteadof:path+) +adapterallowdestination/api/v1.mjs;
+  removeonlymatchinghostpathcaptureforjobsqueryguard. 13targetedtestspass.
+- scripts/prepare-vercel-static.mjs creates.build/publicfromdistEXCEPTindex.html;
+  dist/index.html remainsserverprivateinclude. Vercelstaticfilesystemrootindexhad
+  priorityoverrewrites. verceloutputDirectory.build/public,buildCommandnpmrunbuild&&
+  nodehelper. APIprojectsettingsUPDATEDtosameandverified. Nootherstatic/privatefiles
+  copiedintopublic: onlydistassets. Localdist/Vitepreviewunchanged.
+- genericstructurederrorcodes addedforsafehostdispatch/renderdiagnosis,nosecretURLdata.
+- scripts/test-hosted-readiness.mjs newactualcanonicalHTTPSread-onlyprobe,0writes/sends.
+
+Recentfullsource4130finished0:2769/229unchangedgates, rawartifacts/quality/
+hosted-packaging-source-tests.json, coverage/hosted-packaging-20261107. Onefurther
+APIcapturecasemakes2770expectedbutfullnotrerunyet;13targetedpassed99558reaped0.
+SSRartifactnow26checks(pass89403), staticpackhelpertested/scopedlint0errors.
+Nofrontendchangesafter60browserrecovery+6perf/PWA15/update9/HTTPS52passed.
+Needfinalcoverageafteronecapturelineandfullmetadata/source/historysecrets scan.
+
+Nextsave/pushcurrenthostfixes,manualpinnednewdeploy(modgdg-redeploy-current-commit
+inprivateNode79985checksrecentdeployforcurrentSHAfirst). Don'trepeatolddeployments.
+VercelGitautomaticlinkHobby409orgrepo; noautodeploy. NewCI42421681074from6ade31bactive,
+source/DB/coverage/deps/secretpassed,3browserjobsactive; willbesupersededonmainpush.
+No fullgreenCIclaim. InitialCI42420145658cancelledwithknown2realmobilefocusfailures
+fixedin6ade andFirefoxcontainerlaunchfailurefixedbyUbuntu+Playwrightinstall, noHOMEsetting.
+
+ProductionCFDNSalreadyverified/resolvesgdggt.dev; CFemailresolvedfromsignedinUI.
+Hosted140migrations121tablesRLS0owners noAuthusers; no localreset/seedimport.
+Resenddedicatedkey/webhook,ES256signing,serversecrets,S3alreadyconfiguredencrypted.
+UPLOADS/EMAIL/PUSHremainfalse. Needfirstowneremail/displayname andworker/scannerhost,
+filecapacity50MBfreevs64MBexports/250MBmedia decision. No paidpurchaseauthorized.
+No realsends/ownerbootstrapyet. UserquestionspendingexceptCFemailandS3approvalRESOLVED.
+PrivateNode79985ACTIVEholdsallotherproductionenv/credentialsmemory; neverdump/envlog.
+
+Preserve3unrelatedfiles, noAItrailers/newtimers; SSO/Google/Bevy/Engagedeferred.
+NootherCUAworkneeded. Continuehostedverification/fixesbeforedeclaringready.
+
+Earlierdetails(supersededwhereabove):
+
+# Most recent state — 2026-11-07 22:42 UTC
+
+Commit6ade31b pushedmain; allactualruntime/Contact/CI fixes saved. Firstbroken
+prodsource376f9a2 retaineddiagnostic. Newproductiondeployment dpl_FJgfR6JFwDFfX7LgVJPvU7aQqDEN
+isBUILDING from6ade31b. privateState.deployment inACTIVEprivateNode session79985 is
+thisnewid; don'tcreatemoredeployments. Moduledgd-production-deployment-status typo:
+correctname gdg-production-deployment-status, invoke79985JSONactionmodule.
+NewCIrun42421681074queued; initial42420145658supersededcancelledafter source/DB/
+coverage/deps/secrets passed andbrowser2knownfailuresrecorded. Neednewresults.
+Noappchangeafterbuild/test/commit. Onlynewscript scripts/test-hosted-readiness.mjs
+isUNCOMMITTED/scopedlintpassed; read-onlycanonicalhostprobe, runAFTERnewREADY.
+Noactualhostacceptanceyet. domainDNSalreadycreatedandresolves216.198.79.65/
+64.29.17.65; Vercelcertificateprovisioning mayneedshortpropagation.
+
+Alllatestlocalgatescomplete:2768/229 unchangedcoveragepass,35targetedunits,60browser,
+build/types/lint/SSR25/bytes, perf6pass, PWA15/update9/HTTPS52pass. Lastsecretsscan
+161commits2025files0unreviewed before6ade31b. NoAItrailers. No realsends/ownerbootstrap.
+HostedSupabasesecurityadvisor129INFO(deny-by-defaultRLSno-policytables),0WARN/ERROR.
+
+CUApendingS3keyapproval remainsNOTANSWERED, formnamefillednotcreated. Don'tclickCreate
+withoutactiontimeconfirmation. CurrentCUAsetupBrowserVivaldi binding nativeAX. No
+completion_summaryyetbecausependingapprovalhandoffnotended. NeedfreshAXbeforeindices.
+Createkeysecuritysensitiveallbucketserveraccess; exactreasonexplainedtouser. Mayalso
+needhandoffsecurekeytransfer ifCUAcannotpasssecretswithoutoutput. Don'tinventapis.
+Supabase dashboardshowsFREE50MBfixed; no paidupgradeauthorized. Persistentworkerhost
+andfirstowneremail/name questionsstillpending. CloudflareemailquestionRESOLVED viaUI.
+
+ActiveprivateNode79985retainsenv/credentials/cloudflareconfigmemory, runtimeallkeys
+alreadyencryptedVercel; neverdump. No localsecretfileswritten. Upload/email/pushstill
+false. PreserveexistinglocalUI/API and3unrelateduserfiles. Hostedmigrations140already
+appliedandverified, don'trepeat/reset. Existingmetadata .docs/phase0/production-*.
+Next: waitnewdeploythenrealHTTPSsmoke; fixobservedfailures. NewCIbrowsers maytake20min.
+Canpreparedeadlinefree read-onlyhostchecksanddocs, don'tneedlesslyrepeatlocaltests.
+
+Earlierdetailedstate:
+
 # Latest saved progress — 2026-11-07 22:40 UTC
 
 Privateproduction session79985 ACTIVE; memoryenv+credentials neverprint/regenerate.

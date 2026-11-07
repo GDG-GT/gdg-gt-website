@@ -7,7 +7,8 @@ import { renderSiteDocument } from "../shared/site-document.mjs";
 export function createSiteDocumentHandler({
   configFactory = serverConfig,
   databaseFactory = serverDatabase,
-  loadRenderer = () => import(/* @vite-ignore */ new URL("../.build/ssr/entry.mjs", import.meta.url).href),
+  // A literal import lets the host trace the renderer's runtime dependencies.
+  loadRenderer = () => import("../.build/ssr/entry.mjs"),
   loadBootstrap = readPublicBootstrap,
   loadTemplate = () =>
     readFile(new URL("../dist/index.html", import.meta.url), "utf8"),
@@ -47,7 +48,12 @@ export function createSiteDocumentHandler({
         return;
       }
       let rendered;
-      if (["/", "/events", "/contact"].includes(pathname) && [...url.searchParams.keys()].every((key) => key === "__route")) {
+      const publicQuery = new URLSearchParams(url.searchParams);
+      publicQuery.delete("__route");
+      // Vercel forwards its named rewrite capture as a query argument too.
+      if (publicQuery.get("route") === pathname.replace(/^\//, ""))
+        publicQuery.delete("route");
+      if (["/", "/events", "/contact"].includes(pathname) && !publicQuery.size) {
         rendererReady ||= loadRenderer();
         const renderer = await rendererReady;
         if (renderer) {
@@ -71,7 +77,12 @@ export function createSiteDocumentHandler({
           ? undefined
           : renderSiteDocument(template, doc, rendered),
       );
-    } catch {
+    } catch (error) {
+      console.error(JSON.stringify({
+        event: "public_document_unavailable",
+        errorType: error?.name || "Error",
+        dependencyCode: ["ERR_MODULE_NOT_FOUND", "ENOENT", "ERR_UNKNOWN_FILE_EXTENSION"].includes(error?.code) ? error.code : "UNAVAILABLE",
+      }));
       response.statusCode = 503;
       response.setHeader("Retry-After", "30");
       response.setHeader("Content-Type", "text/plain; charset=utf-8");

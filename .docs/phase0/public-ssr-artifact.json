@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-07T22:35:26.123Z",
+  "generatedAt": "2026-11-07T22:47:27.034Z",
   "scope": "Production-mode compiled React renderer with fictional public snapshots, no network, database writes or provider calls. Not browser hydration or hosted acceptance.",
   "rendererSha256": "4e5dac71cfe31e447645a4f2641fc07e666fa2070a2ebe644b4b6cfd35294c0b",
   "tests": [
@@ -77,6 +77,10 @@
     },
     {
       "name": "production handler renders fresh public HTML without shared caching",
+      "passed": true
+    },
+    {
+      "name": "host-provided named rewrite capture retains complete public rendering",
       "passed": true
     },
     {

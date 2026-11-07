@@ -42,6 +42,7 @@ try {
     await handler({ url, method, headers: { host: "untrusted.example.test" } }, response); return response;
   }
   let r = await call("/"); check(r.statusCode === 200 && r.body.includes('data-gdg-ssr="/"') && r.headers.get("cache-control") === "no-store", "production handler renders fresh public HTML without shared caching");
+  r = await call("/events?__route=/events&route=events"); check(r.statusCode === 200 && r.body.includes('data-gdg-ssr="/events"'), "host-provided named rewrite capture retains complete public rendering");
   const before = reads;
   for (const path of ["/admin", "/forms/fictional", "/contact?type=membership"]) { r = await call(path); check(r.statusCode === 200 && !r.body.includes("gdg-public-bootstrap") && reads === before, path + " preserves its ordinary client/private boundary"); }
   const renderedBeforeHead = renders; r = await call("/", "HEAD"); check(r.body === undefined && renders === renderedBeforeHead, "HEAD checks availability without rendering an HTML body");

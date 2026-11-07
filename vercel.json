@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
+  "buildCommand": "npm run build && node scripts/prepare-vercel-static.mjs",
+  "outputDirectory": ".build/public",
   "devCommand": "npm run dev",
   "framework": "vite",
   "headers": [
@@ -108,8 +108,8 @@
   "rewrites": [
     { "source": "/", "destination": "/api/site?__route=/" },
     {
-      "source": "/api/v1/:path+",
-      "destination": "/api/v1?__gdg_api_route=:path+"
+      "source": "/api/v1/:path*",
+      "destination": "/api/v1?__gdg_api_route=:path*"
     },
     { "source": "/index.html", "destination": "/api/site?__route=/" },
     { "source": "/robots.txt", "destination": "/api/robots" },

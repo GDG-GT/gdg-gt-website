@@ -7,6 +7,8 @@ describe("hosted Vercel API dispatch", () => {
   it.each([
     ["/api/v1/auth/session", "/api/v1/auth/session"],
     ["/api/v1?__gdg_api_route=auth%2Fsession", "/api/v1/auth/session"],
+    ["/api/v1.mjs?__gdg_api_route=auth%2Fsession", "/api/v1/auth/session"],
+    ["/api/v1?__gdg_api_route=jobs%2Fdelivery&path=jobs%2Fdelivery", "/api/v1/jobs/delivery"],
     ["/api/v1/forms/example?__gdg_api_route=forms%2Fexample&page=2&q=a%2Bb", "/api/v1/forms/example?page=2&q=a%2Bb"],
   ])("preserves the canonical route and ordinary query: %s", async (url, expected) => {
     const handler = vi.fn(), request = { url, headers: {}, method: "GET" };
@@ -42,7 +44,8 @@ describe("hosted Vercel API dispatch", () => {
   it("packages TypeScript imports and explicitly routes the homepage and nested API", async () => {
     const config = JSON.parse(await readFile(new URL("../../vercel.json", import.meta.url), "utf8"));
     expect(config.rewrites).toContainEqual({ source: "/", destination: "/api/site?__route=/" });
-    expect(config.rewrites).toContainEqual({ source: "/api/v1/:path+", destination: "/api/v1?__gdg_api_route=:path+" });
+    expect(config.rewrites).toContainEqual({ source: "/api/v1/:path*", destination: "/api/v1?__gdg_api_route=:path*" });
+    expect(config.outputDirectory).toBe(".build/public");
     expect(config.functions["api/site.mjs"].includeFiles).toContain("shared/**");
     expect(config.functions["api/v1.mjs"].includeFiles).toBe("shared/**");
     const entry = await import("../../api/v1.mjs");
