@@ -6,6 +6,7 @@ import { VitePWA } from "vite-plugin-pwa";
 import { readFile } from "node:fs/promises";
 import { offlinePrecacheAssets } from "./scripts/lib/build-graph.mjs";
 import { siteDocuments } from "./scripts/site-document-plugin";
+import { publicRouteHints } from "./scripts/public-route-hints";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -60,6 +61,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   plugins: [
+    publicRouteHints(),
     ...(loadEnv(mode, process.cwd(), "").VITE_REAL_API === "true"
       ? [siteDocuments()]
       : []),

@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-11-07T05:26:31.380080+00:00",
+  "completed": true,
+  "allPassed": true,
+  "stats": {
+    "startTime": "2026-11-07T05:26:07.334Z",
+    "duration": 3161.674,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "scope": "Three actual Chromium startup-boundary cases. Mainmodule held at network while independent helper loads; emptyReactroot asserted, public Events/Contact requests observed, privateAdminForms no publicroutehint/request. Then release and verify heading/anonymousredirect. No actualAPI writes; not broad/fullPRD acceptance."
+}

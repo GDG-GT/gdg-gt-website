@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-11-07T05:20:53.793Z",
+  "generatedAt": "2026-11-07T05:34:04.676Z",
   "completed": true,
   "lighthouseVersion": "13.6.0",
   "build": {
     "index.html": {
-      "bytes": 1745,
-      "sha256": "b7a5dbfba5762037bd393ae42fd4cb4046470f9ea382a2b87d808ce23f0e6a03"
+      "bytes": 2206,
+      "sha256": "65b7bc88104bbc6797e6a281207d10008e4f278caa4072307a5719545a0f90d5"
     },
     ".vite/manifest.json": {
       "bytes": 115928,
@@ -20,8 +20,8 @@
       "sha256": "39aed7e7d2a6a02da4734fd07c6500a35257caf618a460b7a9516d3481744db6"
     },
     "assets/public-entry.js": {
-      "bytes": 592,
-      "sha256": "5ff218d7049b9a8dd39cb7ee8b488f7cfbc6a857a0459ebcffb3e2d0e2dbd3b8"
+      "bytes": 1099,
+      "sha256": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
     }
   },
   "presets": [
@@ -38,26 +38,26 @@
     {
       "route": "/",
       "preset": "mobile",
-      "performance": 96,
+      "performance": 94,
       "accessibility": 100,
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 2841.1805999999997,
+      "lcpMs": 3024.6628,
       "cls": 0,
-      "tbtMs": 38,
+      "tbtMs": 11,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
-          "score": 0.82,
-          "display": "2.8 s"
+          "score": 0.77,
+          "display": "3.0 s"
         },
         {
           "id": "max-potential-fid",
           "title": "Max Potential First Input Delay",
-          "score": 0.91,
-          "display": "130 ms"
+          "score": 0.99,
+          "display": "70 ms"
         },
         {
           "id": "errors-in-console",
@@ -67,8 +67,8 @@
         {
           "id": "interactive",
           "title": "Time to Interactive",
-          "score": 0.96,
-          "display": "2.9 s"
+          "score": 0.95,
+          "display": "3.1 s"
         },
         {
           "id": "unused-css-rules",
@@ -91,7 +91,7 @@
         {
           "id": "image-delivery-insight",
           "title": "Improve image delivery",
-          "score": 0.5,
+          "score": 0,
           "display": "Est savings of 115 KiB"
         },
         {
@@ -103,7 +103,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 220 ms"
+          "display": "Est savings of 270 ms"
         }
       ],
       "runtimeError": null,
@@ -112,20 +112,20 @@
     {
       "route": "/events",
       "preset": "mobile",
-      "performance": 93,
+      "performance": 95,
       "accessibility": 100,
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 3160.9116000000004,
+      "lcpMs": 3008.4274000000014,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
-          "score": 0.73,
-          "display": "3.2 s"
+          "score": 0.78,
+          "display": "3.0 s"
         },
         {
           "id": "errors-in-console",
@@ -135,8 +135,8 @@
         {
           "id": "interactive",
           "title": "Time to Interactive",
-          "score": 0.95,
-          "display": "3.2 s"
+          "score": 0.96,
+          "display": "3.0 s"
         },
         {
           "id": "unused-css-rules",
@@ -159,7 +159,7 @@
         {
           "id": "image-delivery-insight",
           "title": "Improve image delivery",
-          "score": 0.5,
+          "score": 0,
           "display": "Est savings of 12 KiB"
         },
         {
@@ -180,20 +180,20 @@
     {
       "route": "/contact",
       "preset": "mobile",
-      "performance": 94,
+      "performance": 95,
       "accessibility": 100,
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 3155.5568000000007,
+      "lcpMs": 3007.3582000000006,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
-          "score": 0.74,
-          "display": "3.2 s"
+          "score": 0.78,
+          "display": "3.0 s"
         },
         {
           "id": "errors-in-console",
@@ -203,8 +203,8 @@
         {
           "id": "interactive",
           "title": "Time to Interactive",
-          "score": 0.95,
-          "display": "3.2 s"
+          "score": 0.96,
+          "display": "3.0 s"
         },
         {
           "id": "unused-css-rules",
@@ -227,7 +227,7 @@
         {
           "id": "image-delivery-insight",
           "title": "Improve image delivery",
-          "score": 0.5,
+          "score": 0,
           "display": "Est savings of 12 KiB"
         },
         {
@@ -253,7 +253,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 651.12,
+      "lcpMs": 644.4757999999999,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -261,7 +261,7 @@
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
           "score": 0.99,
-          "display": "0.7 s"
+          "display": "0.6 s"
         },
         {
           "id": "errors-in-console",
@@ -301,7 +301,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 40 ms"
+          "display": "Est savings of 80 ms"
         }
       ],
       "runtimeError": null,
@@ -315,7 +315,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 686.2826,
+      "lcpMs": 686.3996,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -333,7 +333,7 @@
         {
           "id": "unused-css-rules",
           "title": "Reduce unused CSS",
-          "score": 0.5,
+          "score": 0,
           "display": "Est savings of 25 KiB"
         },
         {
@@ -363,7 +363,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 80 ms"
+          "display": "Est savings of 40 ms"
         }
       ],
       "runtimeError": null,
@@ -377,7 +377,7 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 644.6168,
+      "lcpMs": 683.8144,
       "cls": 0,
       "tbtMs": 0,
       "failedAudits": [
@@ -385,7 +385,7 @@
           "id": "largest-contentful-paint",
           "title": "Largest Contentful Paint",
           "score": 0.99,
-          "display": "0.6 s"
+          "display": "0.7 s"
         },
         {
           "id": "errors-in-console",
@@ -395,7 +395,7 @@
         {
           "id": "unused-css-rules",
           "title": "Reduce unused CSS",
-          "score": 0.5,
+          "score": 0,
           "display": "Est savings of 25 KiB"
         },
         {

@@ -5,26 +5,30 @@ Router7.18.5, the scoped KaTeX0.18.2 security patch, visible-label corrections a
 native drawing-control names. Production dependency audit exits0 with no current
 findings. That is not a full security or launch certificate.
 
-Complete source coverage passes **2696tests/220files**, unchanged global70 and
-21critical90 branch gates: lines78.16/statements76.16/functions70.80/branches75.62.
+Complete source coverage passes **2719tests/221files**, unchanged global70 and
+21critical90 branch gates: lines78.16/statements76.16/functions70.80/branches75.61.
 It ran with one worker and no competing verification. Earlier failed coverage
 invocations remain recorded separately. Build/types/byte/traceability gates pass;
-lint has0errors/10inherited warnings. See `phase0/katex-instancing-quality.json`.
+lint has0errors/10inherited warnings. See `phase0/public-route-hints-quality.json`.
 
 Saved4ed0b55 complete browser invocation passes1372cases/eight expected skips.
-Current KaTeX/editor/public/navigation scope passes92/eight expected skips/two
+Earlier KaTeX/editor/public/navigation scope passed92/eight expected skips/two
 software-WebGL failures, while all12actual editor and6navigation cases pass.
-Original two desktop motion cases still time out during screenshot readback
-after same-geometry sprinkle instancing; thresholds/assertions/retries unchanged.
+That earlier two-case motion isolation timed out during screenshot readback
+after same-geometry sprinkle instancing. Both original desktop cases pass in
+two later public scopes; thresholds/assertions/retries remain unchanged.
 These are separate builds and scopes, not a passing full current inventory.
 
 The expanded secondary review passes27states/162checks, with210unapproved
 captures and no skips/failures/retries. Six new task/message states passed their corrected desktop diagnostic.
-The first diagnostic's four bare-label locator errors are retained. List-only
-inventory verifies1428unique cases in three disjoint476-case shards. No remote
+The first diagnostic's four bare-label locator errors are retained. Current public/startup/lazy-shell scope passes130cases/eight expected skips,
+including the unchanged original desktop motion checks. Failed earlier scopes
+remain historical. List-only inventory verifies1446unique cases in three disjoint
+482-case shards. Eight more publication/campaign states are prepared and under
+diagnostic; no full1494-case inventory or execution is claimed yet. No remote
 CI, approved goldens, human fidelity approval or physical-device claim follows.
 
-Current isolated mobile labLCP2841/3161/3156ms still fails2500ms; desktop100,
+Current isolated mobile labLCP3025/3008/3007ms still fails2500ms; desktop100,
 accessibility100, explicit visible-label names pass andCLS0. Current-artifact
 15PWA/nine update/46HTTPS checks pass. Full
 PRD remains incomplete: all146requirements/307logical cases are source-mapped,

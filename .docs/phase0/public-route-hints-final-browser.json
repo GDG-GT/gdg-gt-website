@@ -1,0 +1,1125 @@
+{
+  "generatedAt": "2026-11-07T05:33:37.257966+00:00",
+  "completed": true,
+  "allPassed": true,
+  "stats": {
+    "startTime": "2026-11-07T05:31:12.290Z",
+    "duration": 105078.888,
+    "expected": 130,
+    "skipped": 8,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "build": {
+    "index.html": "65b7bc88104bbc6797e6a281207d10008e4f278caa4072307a5719545a0f90d5",
+    ".vite/manifest.json": "554aabaca5c459737d4ed22bef5aae6c55f65396a7ce497d628b7647fae3cc6e",
+    "assets/public-entry.js": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+  },
+  "tests": [
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "a failed lazy shell shows the safe reload path without a developer error dump",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "keyboard workspace entry waits for its route-lazy content landmark",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "footer Enter loads sign-in after a fictional gate acknowledgement",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "footer Subscribe loads sign-in after a fictional gate acknowledgement",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "homepage renders early but keeps controls inert until live is confirmed",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "homepage renders early but keeps controls inert until maintenance is confirmed",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "a failed lazy shell shows the safe reload path without a developer error dump",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "keyboard workspace entry waits for its route-lazy content landmark",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "footer Enter loads sign-in after a fictional gate acknowledgement",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "footer Subscribe loads sign-in after a fictional gate acknowledgement",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "homepage renders early but keeps controls inert until live is confirmed",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "homepage renders early but keeps controls inert until maintenance is confirmed",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "a failed lazy shell shows the safe reload path without a developer error dump",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "keyboard workspace entry waits for its route-lazy content landmark",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "footer Enter loads sign-in after a fictional gate acknowledgement",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "footer Subscribe loads sign-in after a fictional gate acknowledgement",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "homepage renders early but keeps controls inert until live is confirmed",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "homepage renders early but keeps controls inert until maintenance is confirmed",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "a failed lazy shell shows the safe reload path without a developer error dump",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "keyboard workspace entry waits for its route-lazy content landmark",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "footer Enter loads sign-in after a fictional gate acknowledgement",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "footer Subscribe loads sign-in after a fictional gate acknowledgement",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "homepage renders early but keeps controls inert until live is confirmed",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "homepage renders early but keeps controls inert until maintenance is confirmed",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "a failed lazy shell shows the safe reload path without a developer error dump",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "keyboard workspace entry waits for its route-lazy content landmark",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "footer Enter loads sign-in after a fictional gate acknowledgement",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "footer Subscribe loads sign-in after a fictional gate acknowledgement",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "homepage renders early but keeps controls inert until live is confirmed",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "homepage renders early but keeps controls inert until maintenance is confirmed",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "a failed lazy shell shows the safe reload path without a developer error dump",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "keyboard workspace entry waits for its route-lazy content landmark",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "footer Enter loads sign-in after a fictional gate acknowledgement",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "footer Subscribe loads sign-in after a fictional gate acknowledgement",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "homepage renders early but keeps controls inert until live is confirmed",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "lazy-shell-focus.spec.ts",
+      "name": "homepage renders early but keeps controls inert until maintenance is confirmed",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "chromium-1920",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "chromium-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "chromium-mobile",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "firefox-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "firefox-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "webkit-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "webkit-1440",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public / remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /events remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /team remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /resources remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /sponsors remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /gallery remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "public /contact remains readable, scrollable and accessible",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "mobile navigation stays at the top and returns keyboard focus on escape",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "home artwork still loads when its optional early hint fails",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "event read failure offers an explicit retry without a mutation",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "unrecognized public routes keep a usable return path",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "anonymous administration never renders a private form inventory",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "reduced motion keeps an accessible static hero without WebGL downloads",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-smoke.spec.ts",
+      "name": "capable desktop hero renders moving WebGL frames and restores reduced-motion fallback",
+      "project": "webkit-mobile",
+      "results": [
+        "skipped"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /events",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /contact",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /admin/forms",
+      "project": "chromium-1920",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /events",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /contact",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /admin/forms",
+      "project": "chromium-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /events",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /contact",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /admin/forms",
+      "project": "chromium-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /events",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /contact",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /admin/forms",
+      "project": "firefox-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /events",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /contact",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /admin/forms",
+      "project": "webkit-1440",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /events",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /contact",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    },
+    {
+      "file": "public-startup-hints.spec.ts",
+      "name": "early public route hints preserve the startup boundary on /admin/forms",
+      "project": "webkit-mobile",
+      "results": [
+        "passed"
+      ]
+    }
+  ],
+  "scope": "Corrected original138case public/startup/lazy-shell scope,130passes/eight expected skips/zero failures/retries, sixprofiles. All18new startup-boundary cases and both original capable-desktop motion cases pass. Test-only ESM execution barrier preserves original main body while allowing network completion; original assertions/limits retained. First failed124/eight/six scope andWebKit transportdiagnostic retained separately. No actualAPI/provider writes, full1446execution, field/hardware/physical/manual/hosted/fullPRD acceptance inferred."
+}

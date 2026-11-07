@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-11-07T05:46:17.632555+00:00",
+  "completed": true,
+  "allPassed": true,
+  "files": 221,
+  "passed": 2719,
+  "failed": 0,
+  "coverage": {
+    "lines": 78.16,
+    "statements": 76.16,
+    "functions": 70.8,
+    "branches": 75.61
+  },
+  "globalAndCriticalGatesPassed": true,
+  "criticalModules": 21,
+  "workers": 1,
+  "build": {
+    "index.html": "65b7bc88104bbc6797e6a281207d10008e4f278caa4072307a5719545a0f90d5",
+    ".vite/manifest.json": "554aabaca5c459737d4ed22bef5aae6c55f65396a7ce497d628b7647fae3cc6e",
+    "assets/public-entry.js": "32b43fcf86cc287022e4277d9e96950d24d2213b0b03fc665ab521a7e71e4e80"
+  },
+  "scope": "Complete application-source coverage on public-route hint trial; no concurrent browser/build/types/performance. All unchanged global70/21critical90 branch gates pass. Raw artifacts/quality/public-route-hints-coverage.json; log/tmp/gdg-public-route-coverage.log. No assertion/timeout/retry/exclusion changes. Fullbrowser/field/hosted/manual/fullPRD acceptance separate."
+}

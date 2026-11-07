@@ -1,6 +1,40 @@
 # Public entry delivery and availability — 2026-11-06
 
-## Current artifact verification — 2026-11-07
+## Early public-route downloads — 2026-11-07
+
+The existing independent async helper now starts the exact emitted static
+PublicPages module graph on its known nonhome public routes. Build-only metadata
+comes from the actual output bundle through the [versioned Vite7 HTML hook](https://raw.githubusercontent.com/vitejs/vite/v7.3.7/docs/guide/api-plugin.md).
+No inline script, new dependency, page/layout/API/schema change or private/Form
+prefetch is introduced. Home still receives only its existing responsive artwork
+hints. All application module/CSS hashes and offline assets match3072698.
+
+Ordinary entryJS108174gzip bytes includes the585gzip/1099raw helper. Public routes
+additionally start40824gzip bytes from their already-used graph, for148998total;
+the byte gate checks that exact union under the unchanged250k ceiling and retains
+the1500raw helper limit. CSS29899,font48432,offline493073 remain unchanged.
+
+All32helper/plugin cases and4catalog cases pass. Complete source coverage passes
+2719tests/221files and unchanged global/critical gates. Corrected real-browser
+public/startup/lazy-shell scope passes130cases/eight expected skips, zero failures
+or retries. Both original desktop moving-frame/reduced-motion checks and18new
+startup checks pass. The first124/eight/six scope failed a new WebKit harness:
+holding main at network left unrelated resources incomplete. A test-only ESM
+execution barrier now lets all downloads finish while original main body stays
+paused; all existing proof, label, value, visibility and limit assertions remain.
+The failed scope/diagnostic are retained; no production workaround was needed.
+Current15PWA/nine update/46HTTPS probes also pass on this artifact.
+
+The isolated six-route trial remains **failing mobileLCP**: Home3025, Events3008,
+Contact3007ms. Compared with saved2841/3161/3156, public routes measured lower and
+Home higher. One invocation does not establish causality, uniform improvement or
+fieldp75 benefit. Desktopperformance100/accessibility100, explicit visible-label
+names andCLS0 pass throughout. Earlier-download behavior is proven; full mobile
+performance is not. Current report is `phase0/production-performance.json`, with
+the preceding artifact preserved in `phase0/production-performance-before-public-route-hints.json`.
+
+
+## KaTeX/editor baseline — 2026-11-07
 
 The current KaTeX/editor/instancing artifact has initialJS107951gzip bytes,
 CSS29899,font48432 andoffline493073 raw bytes. All byte/dynamic-boundary gates

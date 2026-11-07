@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-11-07T05:21:31.667344+00:00",
-  "buildIndexSha256": "b7a5dbfba5762037bd393ae42fd4cb4046470f9ea382a2b87d808ce23f0e6a03",
+  "generatedAt": "2026-11-07T05:39:35.004257+00:00",
+  "buildIndexSha256": "65b7bc88104bbc6797e6a281207d10008e4f278caa4072307a5719545a0f90d5",
   "quality": {
     "tests": {
-      "files": 220,
-      "passed": 2696,
+      "files": 221,
+      "passed": 2719,
       "failed": 0
     },
     "coverage": {
       "lines": 78.16,
       "statements": 76.16,
       "functions": 70.8,
-      "branches": 75.62
+      "branches": 75.61
     },
     "globalAndCriticalGatesPassed": true,
     "criticalModules": 21,
     "currentBuildFullCoveragePassed": true,
-    "evidence": "phase0/katex-instancing-quality.json"
+    "evidence": "phase0/public-route-hints-quality.json"
   },
   "browser": {
     "initialCompleteV7": {
@@ -36,7 +36,7 @@
       "flaky": 0
     },
     "fullCurrentInventoryPassingInvocation": false,
-    "note": "Saved 4ed0b55 complete1380-case invocation passed1372/eight expected skips. Current KaTeX/whiteboard102-case scope passes92/eight expected skips/two WebGL failures. All12whiteboard and6navigation checks pass. Later instanced-hero two-case isolation fails both screenshot readbacks with unchanged limits. These are separate scopes/builds; current full1392-case inventory has not passed. Expanded27-state secondary invocation passesall162, no skips/failures/retries on current artifact.",
+    "note": "Saved4ed0b55 full1380 pass remains historical. Currenttrial public/startup/lazyshell scope130passes/eight expectedskips; bothoriginaldesktopmotion checks pass. Prior softwareGPU andnewWebKit harness failures retained. Secondary162passes on same emittedappmodule/CSSgraph beforeHTML/helper trial. No full1446case execution claimed.",
     "initialPublicReader": {
       "startTime": "2026-11-07T00:15:21.145Z",
       "duration": 89800.388,
@@ -68,7 +68,16 @@
       "skipped": 0,
       "unexpected": 0,
       "flaky": 0
-    }
+    },
+    "publicRouteHints": {
+      "startTime": "2026-11-07T05:31:12.290Z",
+      "duration": 105078.888,
+      "expected": 130,
+      "skipped": 8,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "currentDesktopMotionPassingScope": "phase0/public-route-hints-final-browser.json"
   },
   "visual": {
     "primaryPromptGroups": 22,
@@ -100,23 +109,23 @@
     "scope": "Read-only all-local-ref history plus current tracked/nonignored untracked file snapshot. Default rules, decoded text depth 5, no baseline/rule/path exclusions or inline suppression. Ignored local credentials/dependencies/caches, archive contents and image OCR are outside the source scan. Findings are redacted; only exact reviewed source-line hashes may pass as non-secrets. Not proof that no secret could exist."
   },
   "shards": {
-    "total": 1428,
+    "total": 1446,
     "shards": [
       {
         "shard": 1,
-        "cases": 476
+        "cases": 482
       },
       {
         "shard": 2,
-        "cases": 476
+        "cases": 482
       },
       {
         "shard": 3,
-        "cases": 476
+        "cases": 482
       }
     ],
     "duplicates": 0,
-    "scope": "List-only exact partition; full1428-case execution not claimed."
+    "scope": "List-only exact disjoint partition; not full execution."
   },
   "performance": {
     "scope": "Isolated loopback static production build, gzip-negotiated HTML/JS/CSS/JSON/SVG, anonymous allowlisted reads to local API only; HTTPS requests blocked, no account or writes/provider sends. Lighthouse default simulated mobile and desktop presets; measurements must run without competing browser/build/coverage load. Compression models a required hosting delivery setting, not evidence that it is deployed. Lab LCP/CLS/TBT and accessibility only; TBT is not INP and these runs do not certify field p75 INP/LCP, representative 3D hardware or hosted latency. Raw reports in ignored artifacts/performance.",
@@ -126,37 +135,37 @@
         "preset": "mobile",
         "accessibility": 100,
         "visibleLabelsMatchNames": true,
-        "lcpMs": 2841.1805999999997,
+        "lcpMs": 3024.6628,
         "cls": 0,
         "passed": false,
-        "score": 96
+        "score": 94
       },
       {
         "route": "/events",
         "preset": "mobile",
         "accessibility": 100,
         "visibleLabelsMatchNames": true,
-        "lcpMs": 3160.9116000000004,
+        "lcpMs": 3008.4274000000014,
         "cls": 0,
         "passed": false,
-        "score": 93
+        "score": 95
       },
       {
         "route": "/contact",
         "preset": "mobile",
         "accessibility": 100,
         "visibleLabelsMatchNames": true,
-        "lcpMs": 3155.5568000000007,
+        "lcpMs": 3007.3582000000006,
         "cls": 0,
         "passed": false,
-        "score": 94
+        "score": 95
       },
       {
         "route": "/",
         "preset": "desktop",
         "accessibility": 100,
         "visibleLabelsMatchNames": true,
-        "lcpMs": 651.12,
+        "lcpMs": 644.4757999999999,
         "cls": 0,
         "passed": true,
         "score": 100
@@ -166,7 +175,7 @@
         "preset": "desktop",
         "accessibility": 100,
         "visibleLabelsMatchNames": true,
-        "lcpMs": 686.2826,
+        "lcpMs": 686.3996,
         "cls": 0,
         "passed": true,
         "score": 100
@@ -176,7 +185,7 @@
         "preset": "desktop",
         "accessibility": 100,
         "visibleLabelsMatchNames": true,
-        "lcpMs": 644.6168,
+        "lcpMs": 683.8144,
         "cls": 0,
         "passed": true,
         "score": 100
@@ -185,7 +194,7 @@
     "mobileLcpPassed": false,
     "fieldP75Verified": false,
     "matchesCurrentBuild": true,
-    "note": "Isolated current six-route probe complete: mobileLCP2841/3161/3156ms fails2500; desktop100, accessibility100, visible labels match andCLS0 throughout. No competing verification, thresholds/presets unchanged. Not fieldp75/INP/hardware acceptance."
+    "note": "Isolated public-route hint trial: mobileHome3025/Events3008/Contact3007ms still fails2500. Compared with saved2841/3161/3156, publicroutes lower andHome higher; one run does not establish causality or field benefit. Desktop100/a11y100/explicitlabels/CLS0 pass. No competingchecks or preset/threshold changes."
   },
   "services": [
     {
@@ -201,7 +210,7 @@
   ],
   "prdComplete": false,
   "remaining": [
-    "Resolve desktop software-WebGL screenshot verification and mobile LCP2841/3161/3156ms; representative hardware/field acceptance remains",
+    "MobileLCP3025/3008/3007ms remains over2500ms; representativehardware/field acceptance remains",
     "Mobile LCP and representative hardware/load/field p75 LCP-INP-CLS",
     "Complete secondary visual prompt surfaces, approved chapter assets/content, blocking human fidelity approval and approved 1% screenshot baselines",
     "Complete keyboard/assistive-technology/actual 200% zoom/forced-colors and physical Safari/device/install/push acceptance",
@@ -214,15 +223,16 @@
     "Bevy/Engage"
   ],
   "scope": "Local only; no deployment, push, purchase, real provider send, production change, another timer or AI commit trailer.",
-  "verificationScopeNote": "Current completecoverage2696/220, expandedsecondary162, PWA15/update9/HTTPS46 pass. MobileLCP and original desktopmotion checks fail with unchanged gates; desktopperf/accessibility/visiblelabels/CLS pass. Full1428case execution not claimed; manual/device/hosted/approvedvisual/fullPRD remain incomplete.",
+  "verificationScopeNote": "Current completecoverage2719/221, public/startup/lazyshell130/eightexpectedskips and PWA15/update9/HTTPS46 pass. Bothoriginaldesktopmotion checks pass, earlierfailures retained. Secondary162 from same emittedappmodule/CSSgraph is preHTML/helperchange. MobileLCPstillfails; no full1446execution/human/device/hosted/fullPRD claim. New8publication/campaign states not yetverified.",
   "delivery": {
-    "initialJsGzipBytes": 107951,
-    "copiedHelperGzipBytes": 362,
+    "initialJsGzipBytes": 108174,
+    "copiedHelperGzipBytes": 585,
     "routeAwareHeroHints": true,
     "fontPreload": "retained",
     "cssGzipBytes": 29899,
     "fontBytes": 48432,
-    "offlineInstallRawBytes": 493073
+    "offlineInstallRawBytes": 493073,
+    "publicRouteJsGzipBytes": 148998
   },
   "dependencies": {
     "router": "7.18.5",
@@ -238,8 +248,8 @@
     "remaining": "Scoped KaTeX0.18.2 override installed; compatibility/regression passed, final artifact acceptance still open."
   },
   "activeVerification": {
-    "savedBaseline": "4ed0b55",
-    "changes": "KaTeX0.18.2 scoped security patch; native drawing-control accessible names; twelve actual editor browser cases; same-geometry hero sprinkle instancing",
-    "status": "Current coverage2696/220, secondary162, PWA15/update9/HTTPS46 pass; six-route performance complete with failing mobileLCP and passing explicit visible-label/accessibility gates. Motion screenshot failures remain. Ready to save controlled local checkpoint after secret scan."
+    "savedBaseline": "3072698",
+    "changes": "Early public-route static module hints; no page/layout/API/SQL changes",
+    "status": "Finalcompletecoverage2719/221, publicscope130/eightexpectedskips, PWA15/update9/HTTPS46 pass. MobileLCP3025/3008/3007 remainsfailing; desktop/a11y/labels/CLS pass. Newpublication/campaign8state diagnostic inprogress, no productsource change."
   }
 }

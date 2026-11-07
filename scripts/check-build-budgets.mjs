@@ -20,7 +20,7 @@ const privateValues = [...new Set(Object.entries({ ...process.env, ...serverEnv 
   .map(([, value]) => value))];
 for (const entry of ['index.html', 'offline.html']) {
   const assets = [...entryAssets(manifest, entry)];
-  let js = 0, css = 0, fonts = 0;
+  let js = 0, css = 0, fonts = 0, publicRouteJs;
   for (const file of assets) {
     const contents = await readFile(path.join(directory, file));
     if (file.endsWith('.js')) js += gzipSync(contents).length;
@@ -36,6 +36,17 @@ for (const entry of ['index.html', 'offline.html']) {
     const helper = await readFile(path.join(directory, 'assets/public-entry.js'));
     limit('Route-aware public preload helper (raw)', helper.length, 1500);
     js += gzipSync(helper).length;
+    const hints = html.match(/data-public-modules="([^"]+)"/g) || [];
+    const expectedModules = [...entryAssets(manifest, 'src/ui/PublicPages.tsx')]
+      .filter((file) => file.endsWith('.js')).map((file) => '/' + file).sort();
+    const listedModules = hints.length === 1
+      ? hints[0].slice('data-public-modules="'.length, -1).split(' ').sort() : [];
+    if (JSON.stringify(listedModules) !== JSON.stringify(expectedModules))
+      failures.push('Early public route modules must exactly match their built static graph');
+    publicRouteJs = gzipSync(helper).length;
+    for (const file of new Set([...assets.filter((file) => file.endsWith('.js')), ...expectedModules.map((file) => file.slice(1))]))
+      publicRouteJs += gzipSync(await readFile(path.join(directory, file))).length;
+    limit('Public route initial/preloaded gzip JS', publicRouteJs, 250_000);
   }
   // The self-hosted variable Inter face is referenced by an absolute CSS URL.
   const inter = 'assets/inter-latin.woff2';
@@ -43,7 +54,8 @@ for (const entry of ['index.html', 'offline.html']) {
   limit(`${entry} initial gzip JS`, js, 250_000);
   limit(`${entry} initial gzip CSS`, css, 60_000);
   limit(`${entry} initial fonts`, fonts, 120_000);
-  report[entry] = { jsGzipBytes: js, cssGzipBytes: css, fontBytes: fonts };
+  report[entry] = { jsGzipBytes: js, cssGzipBytes: css, fontBytes: fonts,
+    ...(publicRouteJs !== undefined ? { publicRouteJsGzipBytes: publicRouteJs } : {}) };
 }
 for (const image of ['hero-atmosphere.webp', 'hero-campus.webp', 'google-wordmark.png'])
   limit(`Above-fold ${image}`, (await stat(path.join(directory, 'assets', image))).size, 250_000);

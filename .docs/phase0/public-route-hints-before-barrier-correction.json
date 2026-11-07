@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-11-07T05:31:12.169088+00:00",
+  "completed": true,
+  "allPassed": false,
+  "stats": {
+    "startTime": "2026-11-07T05:26:31.014Z",
+    "duration": 174155.27300000002,
+    "expected": 124,
+    "skipped": 8,
+    "unexpected": 6,
+    "flaky": 0
+  },
+  "scope": "First138case public/startup/lazy-shell scope:124pass/eight expectedskips/sixWebKit failures in new loadmarker proof. Originaltwo desktop motion cases pass. WebKit diagnostic observed heldmaininterception with unrelated requests uncompleted/resourcesempty and no helperexecution; raw/tmp/gdg-public-route-webkit-diagnostic.log retained. Replacement testexecution barrier fulfills original main bytes with test-only top-levelawait prefix, allowing all network to finish while originalbody stays paused. Same loadmarker/emptyroot/publicrequest/private-nohint/heading/noexception/no-write assertions and limits retained; all3WebKit cases pass. Corrected same138case scope pending. No productsource change for harness correction; earlierfailedresults retained."
+}

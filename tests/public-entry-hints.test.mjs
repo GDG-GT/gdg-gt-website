@@ -5,11 +5,12 @@ const source = readFileSync(
   new URL("../public/assets/public-entry.js", import.meta.url),
   "utf8",
 );
-function run(pathname) {
+function run(pathname, publicModules = "") {
   const hints = [];
   const context = {
     location: { pathname },
     document: {
+      currentScript: { dataset: { publicModules } },
       createElement: (tag) => {
         expect(tag).toBe("link");
         return {};
@@ -52,5 +53,69 @@ describe("Route-aware public image hints", () => {
       },
     ]);
     expect(globals.sort()).toEqual(["document", "location"]);
+  });
+  it.each([
+    "/events",
+    "/events/fictional-event",
+    "/team",
+    "/resources",
+    "/sponsors",
+    "/gallery",
+    "/contact",
+    "/privacy",
+    "/accessibility",
+    "/offline",
+  ])(
+    "starts only the built public modules on %s without home artwork",
+    (pathname) => {
+      expect(
+        run(
+          pathname,
+          "/assets/PublicPages-fixture.js /assets/public-shared-fixture.js",
+        ).hints,
+      ).toEqual([
+        {
+          rel: "modulepreload",
+          href: "/assets/PublicPages-fixture.js",
+          crossOrigin: "anonymous",
+        },
+        {
+          rel: "modulepreload",
+          href: "/assets/public-shared-fixture.js",
+          crossOrigin: "anonymous",
+        },
+      ]);
+    },
+  );
+  it.each([
+    "/admin",
+    "/admin/events",
+    "/forms/fictional",
+    "/maintenance",
+    "/l/fictional",
+    "/events-not-a-route",
+    "/contact/extra",
+    "/missing",
+  ])(
+    "does not prefetch public route modules from %s even with valid build metadata",
+    (pathname) =>
+      expect(run(pathname, "/assets/PublicPages-fixture.js").hints).toEqual([]),
+  );
+  it("refuses external, private endpoint, query and traversal module targets", () => {
+    const targets = [
+      "https://outside.example.test/script.js",
+      "//outside.example.test/script.js",
+      "/api/v1/admin/me",
+      "/assets/../private.js",
+      "/assets/chunk.js?key=fictional",
+      "/assets/PublicPages-fixture.js",
+    ];
+    expect(run("/events", targets.join(" ")).hints).toEqual([
+      {
+        rel: "modulepreload",
+        href: "/assets/PublicPages-fixture.js",
+        crossOrigin: "anonymous",
+      },
+    ]);
   });
 });

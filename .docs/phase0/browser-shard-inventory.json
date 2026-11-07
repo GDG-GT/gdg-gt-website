@@ -1,21 +1,21 @@
 {
-  "generatedAt": "2026-11-07T05:15:05.246351+00:00",
+  "generatedAt": "2026-11-07T05:31:12.192877+00:00",
   "shards": [
     {
       "shard": 1,
-      "cases": 476
+      "cases": 482
     },
     {
       "shard": 2,
-      "cases": 476
+      "cases": 482
     },
     {
       "shard": 3,
-      "cases": 476
+      "cases": 482
     }
   ],
-  "total": 1428,
+  "total": 1446,
   "duplicates": 0,
-  "caseKeysSha256": "eab1bfc0cbc46ee9d08ceb66dc956552566ae7872a4d71a2bf3bce8101b7c29b",
-  "note": "List-only exact disjoint union:27secondary states,476cases per shard. No execution/CI/acceptance inferred. No test limits/assertions/retries weakened."
+  "caseKeysSha256": "1069927b5c768cd1776286a4d53b321de7fb562d070f2f613a59131fd52c1be0",
+  "note": "List-only exact disjoint union:27secondary states plus18public startup proof cases,482per shard. No full execution/CI/acceptance inferred. Unchanged test limits/assertions/retries."
 }

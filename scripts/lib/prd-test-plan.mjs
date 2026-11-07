@@ -1593,6 +1593,8 @@ add(
     "tests/browser/public-smoke.spec.ts",
     "tests/browser/public-fixture.ts",
     "tests/public-entry-hints.test.mjs",
+    "tests/public-route-hints.test.ts",
+    "tests/browser/public-startup-hints.spec.ts",
     "scripts/check-build-budgets.mjs",
     "scripts/test-production-performance.mjs",
     local("public-browser"),
