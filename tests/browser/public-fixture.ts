@@ -159,9 +159,13 @@ const fictionalUser = {
   revision: 1,
   created_at: "2026-11-04T12:00:00Z",
 };
-export const test = base.extend<{ fixture: PublicFixture }>({
+export const test = base.extend<{
+  fixture: PublicFixture;
+  frontendHost: string;
+}>({
+  frontendHost: ["", { option: true }],
   fixture: [
-    async ({ page, baseURL }, use) => {
+    async ({ page, baseURL, frontendHost }, use) => {
       const state: PublicFixture = {
         authenticated: false,
         failEvents: false,
@@ -303,12 +307,25 @@ export const test = base.extend<{ fixture: PublicFixture }>({
       await page.route("**/*", async (route) => {
         const request = route.request(),
           url = new URL(request.url());
-        if (url.origin !== new URL(baseURL!).origin) {
+        const frontendOrigin = frontendHost
+          ? "https://" + frontendHost
+          : new URL(baseURL!).origin;
+        if (url.origin !== frontendOrigin) {
           state.unexpected.push("External request: " + url.origin);
           await route.abort("blockedbyclient");
           return;
         }
         if (!url.pathname.startsWith("/api/v1/")) {
+          if (frontendHost) {
+            // Exercise real host-based routing while assets stay on loopback.
+            await route.fulfill({
+              response: await route.fetch({
+                url: new URL(url.pathname + url.search, baseURL!).href,
+                headers: { ...request.headers(), host: new URL(baseURL!).host },
+              }),
+            });
+            return;
+          }
           await route.continue();
           return;
         }
@@ -1192,7 +1209,14 @@ export async function accessibility(page: Page) {
     const result = await engine.run(document, {
       runOnly: {
         type: "tag",
-        values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22a", "wcag22aa"],
+        values: [
+          "wcag2a",
+          "wcag2aa",
+          "wcag21a",
+          "wcag21aa",
+          "wcag22a",
+          "wcag22aa",
+        ],
       },
     });
     return result.violations.map((item) => ({

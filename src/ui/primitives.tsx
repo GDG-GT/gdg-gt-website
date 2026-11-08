@@ -10,21 +10,24 @@ export function Brand({
   inverse = false,
   compact = false,
   destination = "/",
+  ariaLabel,
 }: {
   inverse?: boolean;
   compact?: boolean;
   destination?: string;
+  ariaLabel?: string;
 }) {
   return (
     <Link
       to={destination}
       className={`gt-brand ${inverse ? "gt-brand-inverse" : ""}`}
       aria-label={
-        destination === "/leaderboard"
+        ariaLabel ||
+        (destination === "/leaderboard"
           ? "GDG@GT member leaderboard"
           : compact
             ? "GDG@GT · Georgia Tech home"
-            : "GDG@GT on campus · Georgia Tech home"
+            : "GDG@GT on campus · Georgia Tech home")
       }
     >
       <img src="/logo.webp" alt="" width="38" height="24" />

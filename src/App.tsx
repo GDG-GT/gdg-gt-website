@@ -1,4 +1,7 @@
-import { PublicBootstrapContext, type PublicBootstrap } from "@/contexts/PublicBootstrapContext";
+import {
+  PublicBootstrapContext,
+  type PublicBootstrap,
+} from "@/contexts/PublicBootstrapContext";
 import { lazy, Suspense, type ReactNode } from "react";
 import {
   createBrowserRouter,
@@ -21,9 +24,10 @@ import { PwaUpdateNotice } from "@/pwa/PwaControls";
 import { QueueRuntime } from "@/pwa/SubmissionQueue";
 import { MaintenancePage } from "@/ui/status/SiteAvailability";
 import { HomePage } from "@/ui/HomePage";
+import { rewardsPagePaths } from "../shared/rewards-pages.mjs";
 
-const Leaderboard = lazy(() => import('@/ui/rewards/Leaderboard'));
-const TapHandoff = lazy(() => import('@/ui/rewards/TapHandoff'));
+const Leaderboard = lazy(() => import("@/ui/rewards/Leaderboard"));
+const TapHandoff = lazy(() => import("@/ui/rewards/TapHandoff"));
 const AdminShell = lazy(() => import("@/ui/AdminShell"));
 const loadPublicPages = () => import("@/ui/PublicPages");
 // Start the selected public route while availability is checked, instead of
@@ -169,6 +173,9 @@ function protectedPage(children: ReactNode) {
   return <PageAccessGuard>{children}</PageAccessGuard>;
 }
 export function RoutedApplication() {
+  const rewardsPages = rewardsPagePaths(
+    typeof window === "undefined" ? "" : window.location.hostname,
+  );
   return (
     <NavigationSafety>
       <RouteFocus />
@@ -178,7 +185,12 @@ export function RoutedApplication() {
         <Frame>
           <Suspense fallback={<LoadingPage />}>
             <Routes>
-              <Route path="/" element={<HomePage />} />
+              <Route
+                path="/"
+                element={
+                  rewardsPages?.home === "/" ? <Leaderboard /> : <HomePage />
+                }
+              />
               <Route path="/events" element={<EventsPage />} />
               <Route
                 path="/events/:slug"
@@ -197,8 +209,26 @@ export function RoutedApplication() {
                   </CapabilityBoundary>
                 }
               />
-              <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/leaderboard/member" element={<Leaderboard />} />
+              {rewardsPages && (
+                <>
+                  {rewardsPages.home !== "/" && (
+                    <Route path={rewardsPages.home} element={<Leaderboard />} />
+                  )}
+                  <Route path={rewardsPages.member} element={<Leaderboard />} />
+                  {rewardsPages.home === "/" && (
+                    <>
+                      <Route
+                        path="/leaderboard"
+                        element={<Navigate to="/" replace />}
+                      />
+                      <Route
+                        path="/leaderboard/member"
+                        element={<Navigate to="/member" replace />}
+                      />
+                    </>
+                  )}
+                </>
+              )}
               <Route path="/tap" element={<TapHandoff />} />
               <Route path="/resources" element={<ResourcesPage />} />
               <Route path="/sponsors" element={<SponsorsPage />} />
@@ -239,7 +269,10 @@ export function RoutedApplication() {
               <Route path="/offline" element={<InfoPage kind="offline" />} />
               <Route path="/maintenance" element={<MaintenancePage />} />
               <Route path="/admin" element={protectedPage(<Overview />)} />
-              <Route path="/admin/team" element={<Navigate to="/admin/content/team" replace />} />
+              <Route
+                path="/admin/team"
+                element={<Navigate to="/admin/content/team" replace />}
+              />
               {adminRoutes.map(([path, Component]) => (
                 <Route
                   key={path}
@@ -271,19 +304,25 @@ export function RoutedApplication() {
     </NavigationSafety>
   );
 }
-const router = import.meta.env.SSR ? null : createBrowserRouter(
-  [{ path: "*", element: <RoutedApplication /> }],
-  {},
-);
-export default function App({ routerView, bootstrap }: { routerView?: ReactNode; bootstrap?: PublicBootstrap }) {
+const router = import.meta.env.SSR
+  ? null
+  : createBrowserRouter([{ path: "*", element: <RoutedApplication /> }], {});
+export default function App({
+  routerView,
+  bootstrap,
+}: {
+  routerView?: ReactNode;
+  bootstrap?: PublicBootstrap;
+}) {
   return (
     <PublicBootstrapContext.Provider value={bootstrap}>
       <AdminProvider deferSession={!!bootstrap}>
         <ContentProvider initial={bootstrap?.home}>
-          {routerView || (router && (
-            // Show the destination's loading state as soon as the URL changes.
-            <RouterProvider router={router} useTransitions={false} />
-          ))}
+          {routerView ||
+            (router && (
+              // Show the destination's loading state as soon as the URL changes.
+              <RouterProvider router={router} useTransitions={false} />
+            ))}
         </ContentProvider>
       </AdminProvider>
     </PublicBootstrapContext.Provider>

@@ -274,7 +274,7 @@ export default function RewardsWorkspace() {
         </div>
         <a
           className="gt-button gt-button-secondary"
-          href="/leaderboard"
+          href="https://leaderboards.gdggt.dev/"
           target="_blank"
           rel="noopener noreferrer"
         >

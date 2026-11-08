@@ -8,7 +8,13 @@ import {
   type FormEvent,
   type ReactNode,
 } from "react";
-import { Link, NavLink, matchPath, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  NavLink,
+  matchPath,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -30,9 +36,10 @@ import { newsletterEntryIntent } from "./newsletter-entry";
 import { MaintenanceBanner } from "./status/SiteAvailability";
 import { useSiteAvailability } from "@/contexts/SiteAvailabilityContext";
 import { InstallApp } from "@/pwa/PwaControls";
+import { rewardsPagePaths } from "../../shared/rewards-pages.mjs";
 const AdminLoginModal = lazy(() => import("@/components/AdminLoginModal"));
 const standaloneRoutes = [
-  "/leaderboard", "/leaderboard/member", "/tap",
+  "/tap",
   "/links",
   "/l/:username",
   "/forms/:slug",
@@ -53,9 +60,13 @@ export default function SiteShell({ children }: { children: ReactNode }) {
   const { login, isLoading, error, isAuthenticated } = useAdmin();
   const navigate = useNavigate();
   const location = useLocation();
-  const standalone = standaloneRoutes.some((path) =>
-    matchPath(path, location.pathname),
+  const rewardsPages = rewardsPagePaths(
+    typeof window === "undefined" ? "" : window.location.hostname,
   );
+  const standalone =
+    (!!rewardsPages &&
+      [rewardsPages.home, rewardsPages.member].includes(location.pathname)) ||
+    standaloneRoutes.some((path) => matchPath(path, location.pathname));
   const {
     navigationItems,
     socialLinks,
@@ -150,7 +161,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
         const result = response.ok ? await response.json() : null;
         if (result?.data?.gateValid) {
           window.dispatchEvent(new Event("gdg:auth-needed"));
-      setLoginOpen(true);
+          setLoginOpen(true);
           setEmail("");
         } else setNotice("We couldn’t process that entry. Please try again.");
       } catch {
@@ -175,7 +186,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
         );
         if (result.gateValid) {
           window.dispatchEvent(new Event("gdg:auth-needed"));
-      setLoginOpen(true);
+          setLoginOpen(true);
           setEmail("");
           return;
         }
@@ -422,7 +433,11 @@ export default function SiteShell({ children }: { children: ReactNode }) {
                   footerNewsletter.description ||
                   "Events, workshops, and new opportunities. A little inspiration for your inbox."}
               </p>
-              <HydratedForm onSubmit={subscribe} className="gt-newsletter" noValidate>
+              <HydratedForm
+                onSubmit={subscribe}
+                className="gt-newsletter"
+                noValidate
+              >
                 <label htmlFor="newsletter-email" className="sr-only">
                   Email address
                 </label>

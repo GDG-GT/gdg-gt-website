@@ -119,7 +119,7 @@ test("super-admin awards require review and retry uses the same write key", asyn
   await page.goto("/admin/rewards");
   await expect(
     page.getByRole("link", { name: "Public leaderboard", exact: false }),
-  ).toHaveAttribute("href", "/leaderboard");
+  ).toHaveAttribute("href", "https://leaderboards.gdggt.dev/");
   await expect(
     page.getByRole("heading", { name: "Member points & cards", exact: true }),
   ).toBeVisible();

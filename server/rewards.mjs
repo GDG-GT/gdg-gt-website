@@ -1,4 +1,5 @@
 import { walletConfiguration, generateMemberPass } from "./rewards-wallet.mjs";
+import { rewardsPagePaths } from "../shared/rewards-pages.mjs";
 import { z } from "zod";
 import { requireSession, requireCsrf } from "./auth.mjs";
 import { ApiError, allowMethod, jsonBody, sendJson } from "./lib/http.mjs";
@@ -371,7 +372,11 @@ export async function rewardsRoutes(
       }),
     );
     response.statusCode = 303;
-    response.setHeader("Location", "/leaderboard/member");
+    response.setHeader(
+      "Location",
+      rewardsPagePaths(new URL(rewardsOrigin(request, config)).hostname)
+        ?.member || "/member",
+    );
     response.end();
     return true;
   }

@@ -5,17 +5,46 @@ import { serverConfig } from "../server/config.mjs";
 import { serverDatabase } from "../server/db/client.mjs";
 import { siteDocument } from "../server/site-document.mjs";
 import { renderSiteDocument } from "../shared/site-document.mjs";
+import {
+  publicRewardsOrigin,
+  rewardsPagePaths,
+} from "../shared/rewards-pages.mjs";
 function documentFailure(error, phase) {
-  console.error(JSON.stringify({
-    event: "public_document_unavailable",
-    phase,
-    errorType: error?.name || "Error",
-    dependencyCode: ["ERR_MODULE_NOT_FOUND", "MODULE_NOT_FOUND", "ENOENT", "ERR_UNKNOWN_FILE_EXTENSION", "ERR_PACKAGE_PATH_NOT_EXPORTED", "ERR_REQUIRE_ESM", "ERR_REQUIRE_ASYNC_MODULE", "ERR_UNSUPPORTED_DIR_IMPORT"].includes(error?.code) ? error.code : "UNAVAILABLE",
-    // Report only known dependency names, never arbitrary exception text/paths.
-    dependency: ["react-dom", "react-router", "lucide-react", "react", "entry.mjs"].find(name =>
-      new RegExp(`(?:[\\/\\"']|^)${name.replaceAll(".", "\\.")}(?:[\\/\\"']|$)`).test(String(error?.message || ""))) || "UNAVAILABLE",
-    fingerprint: createHash("sha256").update(String(error?.message || "")).digest("hex"),
-  }));
+  console.error(
+    JSON.stringify({
+      event: "public_document_unavailable",
+      phase,
+      errorType: error?.name || "Error",
+      dependencyCode: [
+        "ERR_MODULE_NOT_FOUND",
+        "MODULE_NOT_FOUND",
+        "ENOENT",
+        "ERR_UNKNOWN_FILE_EXTENSION",
+        "ERR_PACKAGE_PATH_NOT_EXPORTED",
+        "ERR_REQUIRE_ESM",
+        "ERR_REQUIRE_ASYNC_MODULE",
+        "ERR_UNSUPPORTED_DIR_IMPORT",
+      ].includes(error?.code)
+        ? error.code
+        : "UNAVAILABLE",
+      // Report only known dependency names, never arbitrary exception text/paths.
+      dependency:
+        [
+          "react-dom",
+          "react-router",
+          "lucide-react",
+          "react",
+          "entry.mjs",
+        ].find((name) =>
+          new RegExp(
+            `(?:[\\/\\"']|^)${name.replaceAll(".", "\\.")}(?:[\\/\\"']|$)`,
+          ).test(String(error?.message || "")),
+        ) || "UNAVAILABLE",
+      fingerprint: createHash("sha256")
+        .update(String(error?.message || ""))
+        .digest("hex"),
+    }),
+  );
 }
 export function createSiteDocumentHandler({
   configFactory = serverConfig,
@@ -49,15 +78,18 @@ export function createSiteDocumentHandler({
       }
       const pathname =
         url.pathname === "/api/site" ? paths[0] || "/" : url.pathname;
-      if (pathname==='/' && config.rewardsOrigin && request.headers.host===new URL(config.rewardsOrigin).host && config.rewardsOrigin!==config.origin) {
-        response.statusCode=302;response.setHeader('Location','/leaderboard');response.end();return;
-      }
+      const hostname =
+        request.headers.host === new URL(publicRewardsOrigin).host
+          ? new URL(publicRewardsOrigin).hostname
+          : new URL(config.origin).hostname;
+      const rewardsPages = rewardsPagePaths(hostname);
       const db = databaseFactory();
       phase = "metadata";
       const doc = await siteDocument({
         db,
         config,
         pathname,
+        hostname,
       });
       response.statusCode = doc.status;
       if (doc.redirect) {
@@ -71,8 +103,13 @@ export function createSiteDocumentHandler({
       // Vercel forwards its named rewrite capture as a query argument too.
       if (publicQuery.get("route") === pathname.replace(/^\//, ""))
         publicQuery.delete("route");
-      if (["/", "/events", "/contact"].includes(pathname) && !publicQuery.size) {
-        let renderer, unavailable = false;
+      if (
+        ["/", "/events", "/contact"].includes(pathname) &&
+        !publicQuery.size &&
+        !(rewardsPages?.home === "/" && pathname === "/")
+      ) {
+        let renderer,
+          unavailable = false;
         phase = "renderer-load";
         try {
           rendererReady ||= loadRenderer();
@@ -87,13 +124,22 @@ export function createSiteDocumentHandler({
           const bootstrap = await loadBootstrap(db);
           if (!bootstrap.status.is_live) {
             response.statusCode = 302;
-            response.setHeader("Location", bootstrap.status.auto_redirect ? bootstrap.status.redirect_url : "/maintenance");
-            response.end(); return;
+            response.setHeader(
+              "Location",
+              bootstrap.status.auto_redirect
+                ? bootstrap.status.redirect_url
+                : "/maintenance",
+            );
+            response.end();
+            return;
           }
           if (renderer && request.method !== "HEAD") {
             phase = "public-render";
             try {
-              rendered = { ...await renderer.renderPublicPage(pathname, bootstrap), path: pathname };
+              rendered = {
+                ...(await renderer.renderPublicPage(pathname, bootstrap)),
+                path: pathname,
+              };
             } catch (error) {
               // Fresh availability remains authoritative. A rendering failure
               // can use the existing client boundary without exposing partial

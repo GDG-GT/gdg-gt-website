@@ -1,6 +1,6 @@
 # Member points and cards
 
-Admin: `/admin/rewards` (Super Admin only). Public board: `/leaderboard` on the chapter domain and on `leaderboards.gdggt.dev`. The subdomain root redirects to `/leaderboard` before rendering the homepage.
+Admin: `/admin/rewards` (Super Admin only). Public board: `https://leaderboards.gdggt.dev/`. Member account: `https://leaderboards.gdggt.dev/member`. The main chapter website has no leaderboard or member page; `/leaderboard`, `/leaderboard/member` and `/member` return 404 there. The former subdomain paths redirect to its root and `/member`. Loopback previews retain `/leaderboard` and `/leaderboard/member`.
 
 ## Initial setup
 
@@ -34,7 +34,6 @@ Private screens show the latest 100 ledger/credential records; the immutable dat
 IAM approval is still an external input. Configure a Supabase custom OIDC provider `custom:gatech`, with verified email and immutable subject, then set `GT_MEMBER_SSO_ENABLED=true` and `GT_MEMBER_SSO_PROVIDER=custom:gatech`. Register the exact callback(s):
 
 - `https://leaderboards.gdggt.dev/api/v1/rewards/callback`
-- `https://gdggt.dev/api/v1/rewards/callback`
 
 The GT application's provider callback itself is the Supabase callback displayed in its provider configuration. These are separate hops. Application PKCE verifier and browser binding are held in a short-lived encrypted server flow. The browser never supplies a member ID or arbitrary access token to sign in. No Google or password fallback is offered for member rewards.
 
@@ -48,4 +47,4 @@ Set both `APPLE_WALLET_NFC_ENABLED` and `APPLE_WALLET_READER_VERIFIED` only afte
 
 The X100 is not verified for VAS, NDEF programming or SDK integration. No unknown desktop driver or copying utility was installed. Phone-to-phone Wallet tapping is not available from an iPhone PWA; it requires native ProximityReader/approved reader integration. See NFC_POINTS_RESEARCH.md for primary sources.
 
-Domain configured and verified on 2026-11-08: Cloudflare DNS-only CNAME points to the existing Vercel project. HTTPS root redirects to `/leaderboard`; the page and public rewards API return 200.
+Domain configured and verified on 2026-11-08: Cloudflare DNS-only CNAME points to the existing Vercel project. The HTTPS root serves the leaderboard directly with status 200. Its member page is `/member`. The main website returns 404 for leaderboard/member pages.

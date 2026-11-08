@@ -5,6 +5,7 @@ import {
 } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { ApiError } from "./lib/http.mjs";
+import { rewardsPagePaths } from "../shared/rewards-pages.mjs";
 const unavailable = () =>
   new ApiError(
     503,
@@ -143,7 +144,10 @@ export async function generateMemberPass({
     {
       key: "account",
       label: "Your live balance and perks",
-      value: new URL("/leaderboard/member", origin).href,
+      value: new URL(
+        rewardsPagePaths(new URL(origin).hostname)?.member || "/member",
+        origin,
+      ).href,
     },
     {
       key: "lost",

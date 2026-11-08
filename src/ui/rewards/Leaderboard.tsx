@@ -4,6 +4,7 @@ import { api, ApiFailure } from "@/lib/api";
 import { Brand, Button, Field } from "../primitives";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
 import "./rewards.css";
+import { rewardsPagePaths } from "../../../shared/rewards-pages.mjs";
 type Perk = {
   id: string;
   title: string;
@@ -50,8 +51,9 @@ async function memberWrite(
   return r.data;
 }
 export default function Leaderboard() {
+  const paths = rewardsPagePaths(window.location.hostname)!;
   const location = useLocation(),
-    privateView = location.pathname.endsWith("/member");
+    privateView = location.pathname === paths.member;
   const [data, setData] = useState<Board>(),
     [me, setMe] = useState<Me>(),
     [error, setError] = useState(""),
@@ -129,7 +131,7 @@ export default function Leaderboard() {
       setNotice("Saved.");
       if (a.path === "logout") {
         setMe(undefined);
-        window.location.assign("/leaderboard");
+        window.location.assign(paths.home);
       } else await load();
     } catch (e) {
       setError(
@@ -151,16 +153,20 @@ export default function Leaderboard() {
   return (
     <div className="rewards-public">
       <header className="rewards-public-header">
-        <Brand compact destination="/leaderboard" />
+        <Brand
+          compact
+          destination={paths.home}
+          ariaLabel="GDG@GT member leaderboard"
+        />
         <nav aria-label="Member rewards">
           <Link
-            to="/leaderboard"
+            to={paths.home}
             aria-current={!privateView ? "page" : undefined}
           >
             Leaderboard
           </Link>
           <Link
-            to="/leaderboard/member"
+            to={paths.member}
             aria-current={privateView ? "page" : undefined}
           >
             My membership
@@ -225,7 +231,7 @@ export default function Leaderboard() {
                 <p>No rankings yet.</p>
                 <Link
                   className="gt-button gt-button-secondary"
-                  to="/leaderboard/member"
+                  to={paths.member}
                 >
                   Open member sign-in
                 </Link>

@@ -88,6 +88,9 @@ describe("Wallet server packaging boundary (fictional certificates, not Apple ac
     expect(pass.sharingProhibited).toBe(true);
     expect(pass.barcodes[0].message).toBe(credential);
     expect(pass.generic.primaryFields[0].value).toBe("Fictional Member");
+    expect(
+      pass.generic.backFields.find((field) => field.key === "account").value,
+    ).toBe("https://leaderboards.gdggt.dev/member");
     expect(pass).not.toHaveProperty("balance");
     expect(archive.signature.byteLength).toBeGreaterThan(100);
     expect(archive["icon@3x.png"].byteLength).toBeGreaterThan(100);
