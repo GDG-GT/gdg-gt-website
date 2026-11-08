@@ -1,3 +1,4 @@
+import {downloadPinnedArtifact} from './lib/pinned-download.mjs';
 import { createHash } from "node:crypto";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
@@ -19,10 +20,10 @@ export async function prepareServerlessMedia() {
     if (manifest.sourceSha256 !== source.sha256 || manifest.binarySha256 !== createHash("sha256").update(await readFile(binary)).digest("hex")) manifest = undefined;
   } catch { /* Build a missing or invalid private cache from verified source. */ }
   if (!manifest) {
-    const response = await fetch("https://ffmpeg.org/releases/ffmpeg-" + source.version + ".tar.xz", { signal: AbortSignal.timeout(90000) });
-    if (!response.ok || Number(response.headers.get("content-length") || 0) > 20 * 1024 * 1024) throw Error("Media source download unavailable.");
-    const bytes = Buffer.from(await response.arrayBuffer());
-    if (createHash("sha256").update(bytes).digest("hex") !== source.sha256) throw Error("Media publisher checksum mismatch.");
+    const bytes=await downloadPinnedArtifact({
+      urls:["https://ffmpeg.org/releases/ffmpeg-"+source.version+".tar.xz","https://distfiles.macports.org/ffmpeg/ffmpeg-"+source.version+".tar.xz","https://mirrors.omnios.org/ffmpeg/ffmpeg-"+source.version+".tar.xz"],
+      sha256:source.sha256,maxBytes:20*1024*1024
+    });
     const archive = path.join(cache, "source.tar.xz"), build = path.join(cache, "source");
     await writeFile(archive, bytes); await rm(build, { recursive: true, force: true }); await mkdir(build, { recursive: true });
     await execute("tar", ["-xJf", archive, "--strip-components=1", "-C", build], { timeout: 60000 });
