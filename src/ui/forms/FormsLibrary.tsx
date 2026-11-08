@@ -814,12 +814,12 @@ function FormsLibraryWorkspace() {
                                 ? "Restore draft"
                                 : "Archive form"}
                             </DropdownMenuItem>
-                            {isSuperAdmin && form.status === "Archived" && (
+                            {isSuperAdmin && (
                               <DropdownMenuItem
                                 disabled={busy || paused}
                                 onClick={() => setDeletion(form)}
                               >
-                                Review permanent deletion…
+                                Delete form…
                               </DropdownMenuItem>
                             )}
                           </DropdownMenuContent>

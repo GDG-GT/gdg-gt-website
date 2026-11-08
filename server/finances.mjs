@@ -167,24 +167,10 @@ export async function financeRoutes(
       globalAdmin,
       canCreate: true,
       teams,
-      fundingReferences: globalAdmin
-        ? [
-            { source: "Hackathon", amount: "450.00", state: "Approved" },
-            {
-              source: "Workshop",
-              amount: "1200.00",
-              state: "Requested · Pending",
-            },
-            {
-              source: "Chapter Foundation",
-              amount: "600.00",
-              state: "Approved",
-            },
-            { source: "SGA", amount: "0.00", state: "Available" },
-          ]
-        : [],
-      fundingNotice:
-        "PRD planning references, not live ledger balances or authority to spend. No personal spending. Funding sources remain separate.",
+      // Keep the legacy response shape harmless for tabs opened before this
+      // release. All financial figures come from the authorized ledger.
+      fundingReferences: [],
+      fundingNotice: "",
     });
   }
   if (!budget && ["report", "export"].includes(match[2]) && !suffix) {

@@ -1,3 +1,4 @@
+import { routes as serverAdminRoutes } from "../../server/lib/authorization.mjs";
 import { test as base, expect, type Page } from "@playwright/test";
 import { createRequire } from "node:module";
 import { teamGrantOptions } from "../../shared/teams";
@@ -792,14 +793,7 @@ export const test = base.extend<{ fixture: PublicFixture }>({
             await reply(200, {
               allowed: true,
               accessibleRoutes: [
-                "/admin",
-                "/admin/profile",
-                "/admin/forms",
-                "/admin/guide",
-                "/admin/events",
-                "/admin/audit-log",
-                "/admin/users",
-                "/admin/teams",
+                ...Object.keys(serverAdminRoutes),
                 ...(state.teamReview
                   ? ["/admin/team/" + fictionalTeam.id]
                   : []),

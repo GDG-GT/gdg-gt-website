@@ -1,4 +1,5 @@
 import type { Answer } from "./store";
+import { otherChoiceText } from "../../../shared/form-choice";
 
 // Respondent review never turns a private file ID into a visible answer or URL.
 export function reviewAnswer(
@@ -7,6 +8,8 @@ export function reviewAnswer(
   files: Record<string, string>,
 ) {
   if (value == null || value === "") return "Not answered";
+  const other = otherChoiceText(value);
+  if (other !== undefined) return other;
   if (Array.isArray(value))
     return value.length
       ? value

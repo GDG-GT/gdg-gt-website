@@ -1,10 +1,12 @@
 import { strToU8, zipSync } from "fflate";
+import { otherChoiceText } from "./form-choice.ts";
 
 export function safeCell(value: unknown): string {
   const text =
-    typeof value === "object" && value !== null
+    otherChoiceText(value) ??
+    (typeof value === "object" && value !== null
       ? JSON.stringify(value)
-      : String(value ?? "");
+      : String(value ?? ""));
   return /^[=+\-@\t\r]/.test(text) ? `'${text}` : text;
 }
 export function responseCsv(rows: Record<string, unknown>[]): string {

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { otherChoiceText } from "../../../shared/form-choice";
 import { useAdmin } from "@/contexts/AdminContext";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
@@ -369,9 +370,10 @@ function RevisionWorkspace({
                     ? "Not answered"
                     : field.type === "file" && Array.isArray(field.value)
                       ? `${field.value.length} retained attachment reference(s). Use the current response's authorized download controls.`
-                      : typeof field.value === "object"
-                        ? JSON.stringify(field.value)
-                        : String(field.value ?? "Not answered")}
+                      : (otherChoiceText(field.value) ??
+                        (typeof field.value === "object"
+                          ? JSON.stringify(field.value)
+                          : String(field.value ?? "Not answered")))}
               </p>
             </div>
           ))}

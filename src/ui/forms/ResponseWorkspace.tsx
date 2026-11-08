@@ -1,3 +1,4 @@
+import { otherChoiceText } from "../../../shared/form-choice";
 import { useEffect, useRef, useState } from "react";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
@@ -873,9 +874,10 @@ function ResponseWorkspaceContent() {
                           <td key={f.id}>
                             {f.sensitive && !row.answers[f.id]
                               ? "Hidden"
-                              : typeof row.answers[f.id] === "object"
-                                ? JSON.stringify(row.answers[f.id])
-                                : String(row.answers[f.id] ?? "—")}
+                              : (otherChoiceText(row.answers[f.id]) ??
+                                (typeof row.answers[f.id] === "object"
+                                  ? JSON.stringify(row.answers[f.id])
+                                  : String(row.answers[f.id] ?? "—")))}
                           </td>
                         ))}
                         <td>
@@ -1010,12 +1012,16 @@ function ResponseWorkspaceContent() {
                                 field.id,
                               )
                                 ? "Hidden by default"
-                                : typeof selected.answers[field.id] === "object"
-                                  ? JSON.stringify(selected.answers[field.id])
-                                  : String(
-                                      selected.answers[field.id] ??
-                                        "Not answered",
-                                    )}
+                                : (otherChoiceText(
+                                    selected.answers[field.id],
+                                  ) ??
+                                  (typeof selected.answers[field.id] ===
+                                  "object"
+                                    ? JSON.stringify(selected.answers[field.id])
+                                    : String(
+                                        selected.answers[field.id] ??
+                                          "Not answered",
+                                      )))}
                             </p>
                           )}
                         </div>

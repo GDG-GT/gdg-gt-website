@@ -1,3 +1,9 @@
+import {
+  choiceSelection,
+  isOtherChoiceAnswer,
+  isOtherOption,
+} from "./form-choice.ts";
+
 export const fieldTypes = [
   ["short", "Short text", "Text"],
   ["long", "Long text", "Text"],
@@ -407,18 +413,17 @@ export function visibleFields(
     const show =
       !field.condition ||
       (visible.has(field.condition.fieldId) &&
-        (Array.isArray(answers[field.condition.fieldId])
-          ? (answers[field.condition.fieldId] as string[]).includes(
-              field.condition.value,
-            )
-          : answers[field.condition.fieldId] === field.condition.value));
+        answerMatches(answers[field.condition.fieldId], field.condition.value));
     if (show) visible.add(field.id);
     return show;
   });
 }
 const choiceTypes = ["radio", "checkbox", "dropdown", "scale", "rating"];
 function answerMatches(answer: Answer | undefined, value: string) {
-  return Array.isArray(answer) ? answer.includes(value) : answer === value;
+  const selected = choiceSelection(answer);
+  return Array.isArray(selected)
+    ? selected.includes(value)
+    : selected === value;
 }
 export function conditionValues(field: FormField): string[] {
   if (["scale", "rating"].includes(field.type)) {
@@ -755,9 +760,50 @@ export function formTemporalValue(
 export function validateAnswer(
   field: FormField,
   value: Answer | undefined,
+  partial = false,
 ): string | null {
   if (["divider", "title", "description", "image"].includes(field.type))
     return null;
+  if (isOtherChoiceAnswer(value)) {
+    const detail = value;
+    if (
+      !["radio", "checkbox"].includes(field.type) ||
+      (field.type === "radio"
+        ? typeof detail.selected !== "string"
+        : !Array.isArray(detail.selected))
+    )
+      return "Choose the expected answer format.";
+    const selected = Array.isArray(detail.selected)
+      ? detail.selected
+      : [detail.selected];
+    if (
+      !selected.some(
+        (option) => field.options.includes(option) && isOtherOption(option),
+      )
+    )
+      return "Select Other before adding a written answer.";
+    if ((!partial && !detail.other.trim()) || detail.other.length > 300)
+      return "Please specify your Other answer using 1 to 300 characters.";
+    if (
+      [...detail.other].some(
+        (char) =>
+          char.codePointAt(0)! < 32 && !["\n", "\r", "\t"].includes(char),
+      )
+    )
+      return "Remove unsupported control characters.";
+    value = detail.selected;
+  } else if (["radio", "checkbox"].includes(field.type) && !partial) {
+    const selected = Array.isArray(value) ? value : [value];
+    if (
+      selected.some(
+        (option) =>
+          typeof option === "string" &&
+          field.options.includes(option) &&
+          isOtherOption(option),
+      )
+    )
+      return "Please specify your Other answer using 1 to 300 characters.";
+  }
   const text = typeof value === "string" ? value.trim() : "";
   const empty =
     value == null ||
@@ -1180,6 +1226,7 @@ export function validateSubmission(
     const error = validateAnswer(
       partial ? { ...field, required: false } : field,
       answers[field.id],
+      partial,
     );
     if (error) errors[field.id] = error;
   }

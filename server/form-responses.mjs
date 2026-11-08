@@ -1,3 +1,4 @@
+import { choiceSelection } from "../shared/form-choice.ts";
 import { z } from "zod";
 import { requireSession, requireCsrf } from "./auth.mjs";
 import { ApiError, allowMethod, jsonBody, sendJson } from "./lib/http.mjs";
@@ -99,8 +100,10 @@ export function summarizeResponses(items, versions) {
           counts[value] = (counts[value] || 0) + 1;
       };
       if (["radio", "dropdown", "checkbox", "consent"].includes(field.type))
-        for (const value of values)
-          for (const v of Array.isArray(value) ? value : [value]) add(v);
+        for (const value of values) {
+          const selected = choiceSelection(value);
+          for (const v of Array.isArray(selected) ? selected : [selected]) add(v);
+        }
       const numbers = ["number", "rating", "scale"].includes(field.type)
         ? values.map(Number).filter(Number.isFinite)
         : [];

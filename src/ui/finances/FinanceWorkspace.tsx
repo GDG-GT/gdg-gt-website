@@ -263,24 +263,7 @@ function FinanceWorkspaceContent() {
           </Button>
         </div>
       </header>
-      {cap && cap.fundingReferences.length > 0 && (
-        <section aria-label="Separate funding references">
-          <div className="gt-finance-funding">
-            {cap.fundingReferences.map((f) => (
-              <div key={f.source}>
-                <span>{f.source}</span>
-                <strong>{dollars(f.amount)}</strong>
-                <Badge
-                  tone={f.state.includes("Pending") ? "warning" : "neutral"}
-                >
-                  {f.state}
-                </Badge>
-              </div>
-            ))}
-          </div>
-          <p className="gt-helper">{cap.fundingNotice}</p>
-        </section>
-      )}
+
       <nav className="gt-team-tabs" aria-label="Finance sections">
         {["requests", "budgets", "reports"].map((t) => (
           <Button
@@ -294,7 +277,7 @@ function FinanceWorkspaceContent() {
         ))}
       </nav>
       {tab === "requests" && !selected && !mode && (
-        <FinanceCharts capabilities={cap} listing={list} />
+        <FinanceCharts listing={list} />
       )}
       {!isOnline && (
         <p role="status" className="gt-data-note">

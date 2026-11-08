@@ -133,7 +133,7 @@ async function open(page: Page, title: string) {
     .getByRole("button", { name: "Actions for " + title, exact: true })
     .click();
   await page
-    .getByRole("menuitem", { name: "Review permanent deletion…", exact: true })
+    .getByRole("menuitem", { name: "Delete form…", exact: true })
     .click();
   const dialog = page.getByRole("dialog", {
     name: "Permanent form deletion",
@@ -302,7 +302,7 @@ test("deletion capability outage requires explicit eligibility recheck before an
     .getByRole("button", { name: "Actions for " + form.title, exact: true })
     .click();
   await page
-    .getByRole("menuitem", { name: "Review permanent deletion…", exact: true })
+    .getByRole("menuitem", { name: "Delete form…", exact: true })
     .click();
   const dialog = page.getByRole("dialog", {
     name: "Permanent form deletion",

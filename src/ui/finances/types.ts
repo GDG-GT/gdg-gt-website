@@ -66,8 +66,6 @@ export type Capabilities = {
   globalAdmin: boolean;
   canCreate: boolean;
   teams: { id: string; name: string }[];
-  fundingReferences: { source: string; amount: string; state: string }[];
-  fundingNotice: string;
 };
 export type Listing = {
   stateCounts: Record<string, number>;

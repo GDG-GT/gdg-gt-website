@@ -34,6 +34,11 @@ const draftSchema = z
   })
   .strict();
 const answer = z.union([
+  z.object({
+    kind: z.literal("choice_other"),
+    selected: z.union([z.string().max(300), z.array(z.string().max(300)).max(100)]),
+    other: z.string().max(300),
+  }).strict(),
   z.string().max(20000),
   z.array(z.string().max(300)).max(100),
   z.record(

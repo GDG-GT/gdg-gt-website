@@ -3,6 +3,11 @@ import type { ReactNode } from "react";
 import { conditionValues, type Answer, type FormField } from "./store";
 import FormImage from "./FormImage";
 import ScrollableTable from "../ScrollableTable";
+import {
+  choiceSelection,
+  isOtherChoiceAnswer,
+  isOtherOption,
+} from "../../../shared/form-choice";
 
 export default function FieldRenderer({
   field,
@@ -20,10 +25,28 @@ export default function FieldRenderer({
   fileControl?: ReactNode;
 }) {
   const inputId = `field-${field.id}`;
-  const text = typeof value === "string" ? value : "";
-  const choices = Array.isArray(value) ? value : [];
-  const toggle = (option: string) =>
+  const selected = ["radio", "checkbox"].includes(field.type)
+    ? choiceSelection(value)
+    : value;
+  const text = typeof selected === "string" ? selected : "";
+  const choices: string[] = Array.isArray(selected) ? selected : [];
+  const otherOption = field.options.find(isOtherOption);
+  const otherSelected =
+    !!otherOption &&
+    (field.type === "radio"
+      ? text === otherOption
+      : choices.includes(otherOption));
+  const other = isOtherChoiceAnswer(value) ? value.other : "";
+  const choose = (next: string | string[]) => {
+    const includesOther =
+      !!otherOption &&
+      (Array.isArray(next) ? next.includes(otherOption) : next === otherOption);
     onChange(
+      includesOther ? { kind: "choice_other", selected: next, other } : next,
+    );
+  };
+  const toggle = (option: string) =>
+    choose(
       choices.includes(option)
         ? choices.filter((item) => item !== option)
         : [...choices, option],
@@ -126,12 +149,35 @@ export default function FieldRenderer({
                     field.type === "radio" && field.required && !preview
                   }
                   onChange={() =>
-                    field.type === "radio" ? onChange(option) : toggle(option)
+                    field.type === "radio" ? choose(option) : toggle(option)
                   }
                 />
                 <span>{option}</span>
               </label>
             ))}
+            {otherSelected && (
+              <div className="gt-choice-other">
+                <label htmlFor={`${inputId}-other`}>Please specify</label>
+                <input
+                  id={`${inputId}-other`}
+                  type="text"
+                  aria-label={`${field.label}: Other answer`}
+                  aria-describedby={shared["aria-describedby"]}
+                  aria-invalid={!!error}
+                  value={other}
+                  maxLength={300}
+                  required={!preview}
+                  disabled={preview}
+                  onChange={(event) =>
+                    onChange({
+                      kind: "choice_other",
+                      selected: field.type === "radio" ? text : choices,
+                      other: event.target.value,
+                    })
+                  }
+                />
+              </div>
+            )}
           </div>
         )}
         {["scale", "rating"].includes(field.type) && (

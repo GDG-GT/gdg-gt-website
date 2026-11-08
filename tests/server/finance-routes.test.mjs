@@ -176,8 +176,8 @@ describe("FIN scoped finance reads, decisions, budgets and CSV dispatch", () => 
     f.user.role = "admin";
     r = await f.call("/admin/finances/capabilities");
     expect(r.body.data.globalAdmin).toBe(true);
-    expect(r.body.data.fundingReferences).toHaveLength(4);
-    expect(r.body.data.fundingNotice).toContain("not live ledger balances");
+    expect(r.body.data.fundingReferences).toEqual([]);
+    expect(r.body.data.fundingNotice).toBe("");
     expect(f.queries[0]).toEqual({
       table: "admin_teams",
       steps: [

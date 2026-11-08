@@ -909,6 +909,9 @@
   min-width: 0;
   overflow-x: auto;
 }
+.gt-finance-report-grid > section:only-child {
+  grid-column: 1 / -1;
+}
 .gt-finance-bars {
   margin: 24px 0 0;
 }
@@ -3020,7 +3023,8 @@ fieldset.gt-event-fields {
 .gt-field textarea,
 .gt-rendered-field > input,
 .gt-rendered-field > select,
-.gt-rendered-field > textarea {
+.gt-rendered-field > textarea,
+.gt-choice-other > input {
   min-height: 44px;
   border: 1px solid #d9cfc7;
   background: var(--surface);
@@ -5073,7 +5077,7 @@ fieldset.gt-event-fields {
   border: 0;
   min-width: 0;
 }
-.gt-rendered-field > label,
+.gt-rendered-field > label:not(.gt-check),
 .gt-rendered-field legend {
   display: block;
   font-weight: 600;
@@ -5106,6 +5110,27 @@ fieldset.gt-event-fields {
   width: 17px;
   height: 17px;
   flex-shrink: 0;
+}
+.gt-rendered-field > .gt-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.gt-rendered-field > .gt-check input {
+  margin-inline: 0;
+}
+.gt-choice-other {
+  margin: 0 0 8px 27px;
+}
+.gt-choice-other > label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+}
+.gt-choice-list .gt-choice-other > input {
+  width: 100%;
+  height: auto;
+  min-height: 44px;
 }
 .gt-scale {
   display: flex;
@@ -6057,7 +6082,8 @@ fieldset.gt-event-fields {
   .gt-field select,
   .gt-rendered-field > input,
   .gt-rendered-field > select,
-  .gt-rendered-field > textarea {
+  .gt-rendered-field > textarea,
+  .gt-choice-other > input {
     font-size: 1rem;
   }
   .gt-check {
