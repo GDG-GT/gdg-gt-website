@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-11-07T23:26:24.974Z",
+  "generatedAt": "2026-11-08T01:06:59.626Z",
   "completed": true,
   "lighthouseVersion": "13.6.0",
   "build": {
     "index.html": {
       "bytes": 2215,
-      "sha256": "c9a938257d4ac2ec37e2456eafb8d5d9e1330f17ea198f33a6d4edb54d0b705d"
+      "sha256": "693abd17a5ea220c9d7918913d3c62be9ed27b357ac9f1ceda7736508d4909b8"
     },
     ".vite/manifest.json": {
-      "bytes": 115565,
-      "sha256": "52b246fadd2c7a12b5acccfcd553326ede68b37e00ec9ddcc9b1c5dedd559a76"
+      "bytes": 115616,
+      "sha256": "f5eec5a4e009c8b88b39917e5c6254872d482010d29fbaf615857602079f8ab0"
     },
     "assets/hero-atmosphere-mobile.webp": {
       "bytes": 32484,
@@ -28,8 +28,8 @@
       "sha256": "9947345597aedb5588afc920c8e2a30231a06d523bf1415f70e2142b27fa65fc"
     },
     ".build/ssr/entry.mjs": {
-      "bytes": 626131,
-      "sha256": "dffb8d34870e2149799813966b8ba75efbd5beb6445e06331e6e6b4ffa233b8a"
+      "bytes": 626396,
+      "sha256": "2afb6a7483e6458dfc5f533ff46dbb201e01438b771a20ab29428e983af29e46"
     },
     "api/site.mjs": {
       "bytes": 5238,
@@ -56,9 +56,9 @@
       "visibleLabelsMatchNames": true,
       "bestPractices": 96,
       "seo": 100,
-      "lcpMs": 1952.4103,
+      "lcpMs": 1955.2239,
       "cls": 0,
-      "tbtMs": 1,
+      "tbtMs": 7,
       "failedAudits": [
         {
           "id": "largest-contentful-paint",
@@ -81,7 +81,7 @@
           "id": "unused-javascript",
           "title": "Reduce unused JavaScript",
           "score": 0.5,
-          "display": "Est savings of 40 KiB"
+          "display": "Est savings of 44 KiB"
         },
         {
           "id": "bf-cache",
@@ -104,7 +104,7 @@
           "id": "render-blocking-insight",
           "title": "Render-blocking requests",
           "score": 0,
-          "display": "Est savings of 270 ms"
+          "display": "Est savings of 290 ms"
         }
       ],
       "runtimeError": null,

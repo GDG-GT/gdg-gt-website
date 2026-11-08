@@ -1,0 +1,16 @@
+{
+  "completed": true,
+  "checks": [
+    {
+      "name": "Required accuracy and recruitment consent present",
+      "passed": true
+    },
+    {
+      "name": "Optional exact response copy available on final step",
+      "passed": true
+    }
+  ],
+  "submitted": false,
+  "blockedWrites": [],
+  "scope": "Actual canonical four-section application filled in an ephemeral isolated browser only. All business writes blocked; no response, draft, upload or email submitted. Final optional email-copy and required consent reviewed."
+}

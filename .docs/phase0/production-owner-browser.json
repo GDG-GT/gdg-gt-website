@@ -65,7 +65,7 @@
   "pageErrorCount": 0,
   "blockedWrites": [],
   "authorizationPostCount": 12,
-  "securityReportCount": 6,
+  "securityReportCount": 0,
   "scope": "Actual authenticated corrected first-owner Super Admin canonical desktop browser route reads, with business mutations blocked; scoped Realtime authorization POSTs and normal security-policy reports remain allowed. No fixture records/business mutations, private UI snapshots, response bodies, cookies, passwords or email retained. Setup completion by account holder remains separate.",
-  "generatedAt": "2026-11-08T00:09:35.719Z"
+  "generatedAt": "2026-11-08T00:58:38.000Z"
 }

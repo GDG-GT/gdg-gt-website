@@ -1,3 +1,115 @@
+# Final audit record — 2026-11-08 01:13 UTC
+
+Complete35eca74CI green:2808source tests/231files,1808browserpasses/10expectedprofile
+skips across1818cases,0failures, alloriginalcoverage/securitygatesunchanged. Final
+reportsallpassandnegative/timingfirstfailuresretained. SeePRODUCTION_LAUNCH_STATUS.md
+andCHAPTER_CONTENT_HANDOFF.md. No runtime source change afterverified35eca74.
+Final documentation-only checkpoint willbecommitted/pushedwithskipCI(toavoid
+rerunningthealreadygreencompletecodechecksforreports). IfVercelcreatesadocs-only
+build, cancelonlythatnewunpromotedbuildafterverifyingallchangedpathsare.docs;
+keepverified35eca74live. Thisisnotaruntimecodecheckbypass. Anyunexpectedruntime
+changeinthatcommitmuststoptheoptimizationandgetordinaryfullverification.
+Thenexitprivateprovider79985withoutdumpingcredentials;owner sessionalreadyrevoked.
+Do notresetowner/setupemail/account. Preserve3unrelateduserfilesandhistorical
+uncommittedbrowserdiagnostics. No furtherbusinessmutationisqueued.
+
+# Completed release checkpoint — 2026-11-08 01:12 UTC
+
+ActualfullCI42431411815SUCCESS for35eca74: all3browser shards, sourceDB, coverage,
+depsandsecretsPASS. Savedphase0/production-ci-final.json + originalfullconsolelog
+/tmp/gdg-ci-35eca74-final.log. Livecanonical35eca74VercelREADY/PROMOTED andallreal
+hostedpublic/admin/upload/malware/export/copyreview/hero/linktree/formchecksPASS.
+Finalisolatedsixroute/deviceperformancePASS (home mobileLCP1955msdesktop645ms),
+a11y100all,CLS0. FirstfullperformanceinvocationmobileLCP2717failedretained
+phase0/production-performance-release-first.json; diagnosticthencompleteisolated
+rerunpasswithoutsource/gate/timeout/throttlingchanges. Firstbenchmark1643vs1969
+isolated; do nothidefailureorclaimfield/deviceperformancefromlab.
+
+Allrequestednewcontentlive: /links and/l/gdg-gt9active, /forms/executive-board-application
+Open4sections13fields+nativename/email, optionalPDF10MiB, consent, review, exactcopy.
+No responsesubmittedinbrowserchecks. Realownedexportcancelled+artifactpurged1/1;
+2ownedprivatefilechecksarchivednormally. User setupemailuntouched; assistantowner
+verificationcookieactuallyrevoked andtemporarypassword/CSRF/bindingcleared.
+MainpublicsourcehasnoAItrailers; allkeysserveronly/dedicated. No newaccount/purchase/
+assistanttimer.13application schedulesactive, nativeAVdailyrefreshVaultconfigured.
+Full141localbackuprestore+PWA15/update9/HTTPS52/bytes/SSRchecksPASSfinalsource.
+
+Onlyremainingacceptance: physicaldevicepush/install, humanATacceptance, actual
+hostedrecovery/rollbackdrilland48hobservation. SSO/Google+Bevy/Engagedeferredbyuser.
+No confirmedfeatureimplementationgapremains. Do notclaim100%PRDacceptance.
+
+Finishing sanitized documentation/evidence commit; sourceoutside.docs unchanged
+since35eca74. Useonly.docs explicitstaging; preservethreeunrelateduserfiles.
+Privateprovider79985holdsread-onlysetupmemorybutownerfieldsaregone; afterfinal
+Git/evidence verificationexitthatprivateprocess, neverdumpcredentials. Runtime
+keysinVercel/Vaultremainvalidindependentlyofmanagementtokens. No queuedmutations.
+
+# Cleanup update — 2026-11-08 01:02 UTC
+
+Verification owner session has now been actually logged out, old cookie returns401,
+and temporary ownerBootstrapPassword/ownerHttpCookie/ownerCsrf/ownerSessionBinding
+were deleted from privateState. Do NOT recreate/reset account or consume setup link.
+Private process79985 still contains management/runtime credentials and read-only
+metadata, but cannot do owner HTTP mutations now. No business mutation is pending.
+
+Complete isolated backup/restore141 PASSED, log/tmp/gdg-release-141-backup-restore.log,
+phase0/local-backup-restore.json updated, two owned containers removed. It is not
+hosted disaster recovery. Public actual18checks/launch10/hero7/axe4/admin12 allPASS.
+Realqueueclean/EICAR/export/download/cancel/automaticpurgePASS. App13schedulesactive.
+LatestmainCI42431411815 sourceDB/coverage/deps/secretsPASS; all3browser shardshavebeen
+running since00:48:24UTC. Await actual completion; do NOT push docs andcancelthisrun.
+Need savefinalCIevidence then ordinarydocscommitwithoutAItrailer; avoidneedlessnew
+fullCI fordocs-only maybeworkflowpathfilterdoesnotignore? inspectbeforepushing.
+Currentlive35eca74 includesallactualsource/UIchanges. No confirmedfeaturegapremains;
+physicaldevice/AT/hostrecovery/rollback/48hobservation acceptance are unproved.
+CurrentSTATUSdocsuncommittedneedreflectthese outcomesandlinkexactpublicURLs.
+
+# Current verified release — 2026-11-08 01:00 UTC
+
+LIVE35eca74deploymentdpl_A7HBgFUpdwxVft78robX9qh5Vt1H READY/PROMOTED. Navbarcenter
+fixed, /links alias+footerlinklive, chapterprofilegdg-gt9active andboardapplication
+OpenpublishedactualAPIs. SourceCI42431411815gates(secret,deps,sourceDB,coverage)PASS,
+3browser shardsstillrunning. Do notpushdocs-onlywhileCIpendingandcancelthefullrun.
+65targetedtests+types/lint/build/bytes+SSRchecksPASS. Fullworker2807testreportprior
+source; latestCIincludesadditionalcontenttest. Needrecordactualfinalrunresult.
+
+ActualproductionqueuedworkflowproofsPASS, notjustselftests:
+- cleanmediaintentb6220a43-ac23-4c30-a6c3-c59967a5350e -> clean
+- EICARintent01b0e83e-0bc8-4ab9-9afa-c7d16f56d767 -> rejected/MALWARE_DETECTED
+- exactprivatecleandownloadPASS; twoownedmediarecordsarchivedthroughtheownerAPI.
+  Theirprivatebytesarekeptbyordinaryretention(30dcleantrash/24hrejected),nobypass.
+- emptyapplicationexportac1a7a80-6cf5-4fec-b521-c230ba867131ready/download/cancelPASS,
+  automaticartifactpurge1/1CONFIRMED. No syntheticparticipantresponseinserted.
+- twoexistingmailCronjobsactivatedafterrealproviderproofandgdg@gatech.educonfirmed.
+- canonicalS3CORSpreflightPASS, realpublicbrowser18checksPASS,newlaunch10PASS,
+  fourrenderedaxeWCAGA/AAincludingcontrastPASS, nativeapplicationall4sections/review/
+  optionalexactcopy+requiredconsentPASSwithoutbusinesswrite. Initialtestlocator
+  mislabeledreviewstep/consentlabel; sourceunchanged, fixedharnessonly,finalproofsaved.
+- latestactualowner12pagesPASS,0errors,0businesswrites,0CSPreports. Thatbrowser
+  rotatedownerCSRF; nextmutationmustsyncsession. Privateprocessstillholdsbootstrap
+  pw/cookies; cleanupmodule/tmp/gdg-production-owner-session-close.mjs refreshesCSRF,
+  logsoutONLYverificationcookie,checks401,andclearsits4temporaryprivatefields.
+- latesthero7checksPASSnointeraction/posterflash/3movingframes; reduced/mobilefallback.
+
+Privateprocess79985active; doNOTdump/terminatebeforefinalruntimeevidence+sessioncleanup.
+Queuedfinalruntimeevidencewascalled; reapitsresult. AllfeatureflagsnoweffectiveLIVE,
+VAPID/Resend/S3keysindependent encryptedenv. DailydefinitionsCron09:17UTC13totalapp
+schedulesexpectallactive. API net tables406PGRST106 boundaryverified, SQLextension
+PUBLICgrantsmanagedbySupabase; no falseclaimofrevocation. No newaccount/purchase/
+assistanttimer. Preserve3unrelateduserfiles. No historicalmigrationreplay/reset.
+
+Currentownedlocalbackup/restore141testjuststarted, log/tmp/gdg-release-141-backup-restore.log;
+reapitsunifiedexecsessionfromtooloutputandverifyowncontainersremovedonpass. Thisis
+localrestoreonly, NOT hostbackup/PITR or48hacceptance. Existingprodstatusdocsupdated
+uncommittedwithactualevidence. NeedfinalrecordofCI+sourcepolishandordinarycommitwithout
+AItraileraftermainCIcomplete; pushingdocsfirstwouldcancelanunfinishedCIrun.
+
+Remainingnonfabricatableacceptance: physicaldevicespush/install, manualscreenreader,
+hostedbackup/recovery/rollbackandactual48hobservation. UserdeferredSSO/GoogleandBevy/
+Engage. No confirmedfeatureimplementationgapapartfromnewactualfailureifCIrevealsit.
+Do notclaim100%PRDacceptanceorpretend48hpassed. Finishallcurrentauthorizedchecksand
+returnshortself-containedstatuswithliveURLsandhonestremaininggates.
+
 # Immediate update — 2026-11-08 00:50 UTC
 
 Latest user explicitly added navbar centering, a dedicated proper chapter Linktree

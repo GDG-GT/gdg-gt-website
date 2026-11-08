@@ -1,0 +1,8 @@
+{
+  "completed": true,
+  "transactionalDeliveryScheduleActive": true,
+  "newsletterCampaignScheduleActive": true,
+  "providerCallbacksVerified": true,
+  "scope": "Activated only the two existing previously deferred database mail schedules after real Resend delivery/callback acceptance and user-confirmed chapter inbox. Scheduler respects approved campaign/specific recipients and existing queue leases. No extra test or campaign send created by this action.",
+  "generatedAt": "2026-11-08T00:56:05.529Z"
+}

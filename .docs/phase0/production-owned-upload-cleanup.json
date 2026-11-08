@@ -1,0 +1,19 @@
+{
+  "completed": true,
+  "checks": [
+    {
+      "id": "93eb65d6-d122-446a-b3d7-f4e4b118a054",
+      "archived": true,
+      "scanState": "clean",
+      "uploadCleanupMarked": false
+    },
+    {
+      "id": "a65a7a54-0201-4d43-971f-3e74eb34beb0",
+      "archived": true,
+      "scanState": "rejected",
+      "uploadCleanupMarked": false
+    }
+  ],
+  "scope": "Only the two exact owned release-verification media files archived through the normal owner API. Neither was public. Existing retention/cleanup workers own private byte deletion; this does not claim an immediate retention bypass.",
+  "generatedAt": "2026-11-08T00:56:38.657Z"
+}

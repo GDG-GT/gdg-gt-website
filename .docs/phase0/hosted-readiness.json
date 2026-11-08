@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-07T23:25:50.925Z",
+  "generatedAt": "2026-11-08T00:53:35.116Z",
   "origin": "https://gdggt.dev",
   "completed": true,
   "checks": [
@@ -76,7 +76,7 @@
       "passed": true
     },
     {
-      "name": "/admin/ preserves the ordinary private/query client boundary",
+      "name": "/admin preserves the ordinary private/query client boundary",
       "passed": true
     },
     {

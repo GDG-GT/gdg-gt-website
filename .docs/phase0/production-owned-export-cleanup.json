@@ -1,0 +1,7 @@
+{
+  "completed": true,
+  "artifactCount": 1,
+  "purgedCount": 1,
+  "scope": "Read-only actual state for the one owned empty export. Cancellation is followed by automatic private artifact deletion; no clock manipulation or direct completion writes.",
+  "generatedAt": "2026-11-08T00:57:15.843Z"
+}

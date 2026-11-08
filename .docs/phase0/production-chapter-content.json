@@ -3,7 +3,7 @@
   "form": {
     "id": "1bd59899-7ef8-4003-987a-ecd0e1de0388",
     "slug": "executive-board-application",
-    "state": "Draft",
+    "state": "Open",
     "fieldCount": 13,
     "sectionCount": 4,
     "requiredIdentity": true,
@@ -14,15 +14,15 @@
   "profile": {
     "id": "0b2f9aab-4f4b-4fa9-bd16-b6c03920c5a8",
     "username": "gdg-gt",
-    "active": false,
+    "active": true,
     "linkCount": 9,
-    "activeLinkCount": 0
+    "activeLinkCount": 9
   },
   "paths": {
     "links": "/links",
     "profile": "/l/gdg-gt",
     "application": "/forms/executive-board-application"
   },
-  "scope": "User-requested real chapter content created through existing authenticated owner APIs. Existing matching records inspected and retained on resume. No invented social invitations, role openings, deadline, participant responses or provider send. Publication is separately authorized after feature-ready deployment.",
-  "generatedAt": "2026-11-08T00:47:24.023Z"
+  "scope": "User-requested real chapter content created and published through normal authenticated owner APIs, on the verified feature-ready deployment. Matching existing records preserved; all nine chapter links active. No invented social invitations, role openings, deadline, participant response or provider send.",
+  "generatedAt": "2026-11-08T00:53:49.982Z"
 }

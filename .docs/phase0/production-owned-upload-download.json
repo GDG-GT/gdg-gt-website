@@ -1,0 +1,6 @@
+{
+  "completed": true,
+  "exactBytesVerified": true,
+  "scope": "Actual authenticated normal download endpoint followed by private expiring S3 download of the exact owned clean text produced by the queue-driven scanner. No signed URL or file content retained.",
+  "generatedAt": "2026-11-08T00:56:24.827Z"
+}

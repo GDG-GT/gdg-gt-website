@@ -1,3 +1,34 @@
+# Final verified production source — November 8, 2026
+
+35eca74 is live and its complete CI run 42431411815 is green across all three
+browser shards and every source/database/coverage/secret/dependency gate. Actual
+private upload scan/promotion/malware rejection/download, automatic export /
+private download / cancellation / cleanup, signed Resend delivery, operating
+schedules, public/admin browser reads and requested chapter content are verified.
+Final six performance gates, PWA/update, HTTPS, 141-migration backup/restore and
+rendered new-page accessibility checks pass. First timing failures remain recorded.
+
+The navbar, /links chapter hub and executive-board application are published.
+See CHAPTER_CONTENT_HANDOFF.md and PRODUCTION_LAUNCH_STATUS.md. Physical-device,
+human assistive-technology, hosted recovery/rollback and elapsed observation
+acceptance remain unproved. SSO/Google and Bevy/Engage are explicitly deferred.
+This is feature/runtime evidence, not a claim that all human launch gates passed.
+
+# Latest production continuation — November 8, 2026
+
+Use PRODUCTION_LAUNCH_STATUS.md and CURRENT_CHECKPOINT.md for current hosted
+state. This file's dated local evidence below remains historical. Since that
+checkpoint, live SSR, raw signed Resend callbacks, canonical admin access and
+immediate desktop 3D startup were fixed and actually checked. The complete
+ca70c3e CI invocation is green across all browser shards. Free hosted native
+scanner/media/storage runtime checks pass. New worker source passes 2,807 tests
+and every unchanged coverage gate; canonical database tests include forward141.
+Six private buckets now fit the owner's explicit free-only 50 MiB adjustment.
+The newest user request adds centered navigation, a chapter link hub and a proper
+executive-board application; final publication and end-to-end hosted queue proofs
+are tracked in the production reports. Physical-device/AT/recovery/elapsed-window
+acceptance remains distinct; do not label it passed from implementation coverage.
+
 # Remaining PRD execution and acceptance
 
 Latest functional continuation — 2026-11-07:

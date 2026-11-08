@@ -1,0 +1,30 @@
+{
+  "completed": true,
+  "checks": [
+    {
+      "width": 1440,
+      "path": "/links",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "path": "/forms/executive-board-application",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "width": 375,
+      "path": "/links",
+      "passed": true,
+      "violations": []
+    },
+    {
+      "width": 375,
+      "path": "/forms/executive-board-application",
+      "passed": true,
+      "violations": []
+    }
+  ],
+  "scope": "Actual canonical rendered desktop/mobile link hub and application first section with axe WCAG A/AA including contrast. Native screen-reader and physical-device acceptance remain separate."
+}

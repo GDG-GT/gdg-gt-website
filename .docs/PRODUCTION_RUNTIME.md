@@ -24,9 +24,11 @@ original bytes. Ordinary JSON routes already implement bounded stream parsing. A
 `api/v1.mjs` function handles nested API routes through the reviewed versioned
 rewrite; the root homepage also has an explicit SSR rewrite so the static index
 cannot take precedence. Its adapter retains the original webhook byte stream.
-The existing Vercel adapter is optional; workers require a persistent supervised
-runtime or a host that supports their full invocation duration. Keep the scanner
-private. Do not run scans/exports in a 30-second browser request.
+The current free deployment uses separate authenticated 300-second Vercel worker
+and native-scanner functions. See FREE_BACKGROUND_RUNTIME.md for exact build,
+private artifacts, leased-object transport, free file caps and hosted evidence.
+A persistent supervised runtime remains an alternative. Keep the scanner private;
+do not run scans/exports in a 30-second browser request.
 
 ## Review before keys are available
 
@@ -80,9 +82,10 @@ Uploads and media need private S3 + clamd connectivity; exports need private S3.
 The delivery scheduled job handles transactional mail; the newsletter group
 handles approved campaigns. The event-push scheduled job runs its push worker.
 
-Resend is already integrated. Set the verified sender/reply-to and webhook
-signing secret, route `/api/v1/webhooks/resend`, and enable email only for the
-explicit launch smoke test. Keep `EMAIL_SEND_ENABLED=false` before that. Browser
+Resend is integrated and the live verified sender/reply-to/signature configuration
+has passed real delivery and signed webhook checks. Transactional/campaign
+schedules are active after the owner confirmed the chapter inbox. In a new
+unverified environment, keep `EMAIL_SEND_ENABLED=false` until its own acceptance. Browser
 push uses VAPID separately and requires an actual-device smoke test. Configure
 an independent uptime/watchdog service: an unavailable API cannot alert through
 its own database monitor.

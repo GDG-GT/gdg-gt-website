@@ -1,17 +1,18 @@
 {
-  "id": "dpl_FAByNjcSU6cwwtWWcGNpksgDhizL",
-  "url": "gdg-gt-website-k6eaqce27-gdggt.vercel.app",
+  "id": "dpl_A7HBgFUpdwxVft78robX9qh5Vt1H",
+  "url": "gdg-gt-website-rjs3ffkru-gdggt.vercel.app",
   "readyState": "READY",
   "readySubstate": "PROMOTED",
   "target": "production",
   "projectId": "prj_p6dWtmkiB6rk0C4fsKX4upEKxQNQ",
+  "commit": "35eca7441be89e6f2c29653a4df5466cc41b63d1",
   "alias": [
     "gdggt.dev",
     "gdg-gt-website.vercel.app",
     "gdg-gt-website-gdggt.vercel.app",
     "gdg-gt-website-git-main-gdggt.vercel.app"
   ],
-  "createdAt": 1794093759944,
+  "createdAt": 1794098886805,
   "scope": "Actual Vercel deployment status; custom-domain DNS and application acceptance are separate checks.",
-  "generatedAt": "2026-11-07T23:25:33.607Z"
+  "generatedAt": "2026-11-08T01:03:01.587Z"
 }

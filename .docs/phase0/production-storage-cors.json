@@ -1,0 +1,8 @@
+{
+  "completed": true,
+  "status": 200,
+  "canonicalOriginAllowed": true,
+  "putAllowed": true,
+  "scope": "Actual preflight against the already-owned private signed S3 upload path using the canonical website origin and its browser-settable upload headers. No new object, key, credentials or signed URL logged.",
+  "generatedAt": "2026-11-08T00:59:17.744Z"
+}

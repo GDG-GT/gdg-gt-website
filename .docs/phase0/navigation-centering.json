@@ -8,6 +8,8 @@
   ],
   "checks": 4,
   "tolerancePx": 1,
-  "scope": "Actual loopback browser geometry: navbar and navigation links centers within 1px of page center. Screenshots visually inspected; mobile navigation verified separately.",
-  "generatedAt": "2026-11-08T00:47:43.626939+00:00"
+  "scope": "Actual loopback Chromium/Firefox/WebKit geometry: navigation and bar centers within 1px. Two real mobile top-menu/focus checks pass; six inapplicable profile cases skipped as designed. Final canonical desktop/mobile geometry also passes in production-launch-browser.json.",
+  "generatedAt": "2026-11-08T00:47:43.626939+00:00",
+  "mobileMenuChecks": 2,
+  "expectedProfileSkips": 6
 }

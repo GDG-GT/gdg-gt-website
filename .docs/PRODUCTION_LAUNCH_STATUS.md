@@ -1,3 +1,88 @@
+# Current production launch status — November 8, 2026
+
+Canonical site: https://gdggt.dev. Source: https://github.com/GDG-GT/gdg-gt-website.
+The owner explicitly authorized production deployment, real chapter content and
+free-only configuration. The repository is public by the owner's choice.
+
+Configured and actually verified:
+
+- Vercel Hobby / Node 24 / Fluid compute, linked GDG-GT main, own Cloudflare domain.
+- Supabase Free: 141 forward canonical migrations; six private buckets; existing
+  table RLS and explicit service privileges. No sample content imported or DB reset.
+- Corrected first Super Admin created exactly once, all privileges; setup email
+  delivered with real signed provider callbacks. The user owns the setup link.
+  Actual authenticated reads passed all 12 checked admin screens.
+- Resend sender/domain and exact raw-byte webhook verified with real delivery and
+  signed email.sent/email.delivered callbacks. User-confirmed contact/reply inbox:
+  gdg@gatech.edu. No random human or participant test sends.
+- Isolated hosted native ClamAV accepts clean content and rejects EICAR; private
+  media metadata reader and both S3 bucket round trips pass on gdggt.dev. All
+  owned technical objects from those runtime checks were removed.
+- Queue-driven private upload/media/export dispatcher installed with minute recovery;
+  it avoids HTTP when no work is due. Daily encrypted deployment hook refreshes
+  signed antivirus definitions; stale signatures fail closed.
+- Owner explicitly accepted 50 MiB video/export limit to stay completely free.
+  Smaller purpose/category limits remain. Free quotas still apply.
+- The deployed ca70c3e CI run passed every source/database, dependency, coverage,
+  secret and all three browser shards. New worker source passes 2,807 full tests
+  with all original coverage gates. Latest content/navigation CI remains separate.
+
+Latest deployed release: 35eca74 (Vercel READY/PROMOTED).
+
+- Navbar links and bar are centered. Local 4-browser geometry and mobile menu
+  checks pass; actual canonical desktop/mobile geometry also passes.
+- Chapter links are published at https://gdggt.dev/links and /l/gdg-gt: 9 active
+  factual chapter links, with executive-board application featured first.
+- https://gdggt.dev/forms/executive-board-application is Open: four sections,
+  13 questions, required name/email and accuracy consent, optional 10 MiB PDF,
+  180-day private retention, review step and optional exact response copy.
+  No deadline or specific role vacancy was invented. No test application submitted.
+- Actual queued clean upload -> remote native scan -> fenced promotion -> exact
+  private download passes. Standard EICAR is rejected MALWARE_DETECTED. The two
+  owned private test files were archived normally; retention governs their bytes.
+- Actual empty application export -> automatic worker -> private signed download
+  -> cancellation -> automatic artifact deletion passes. No fake answers inserted.
+- Both existing transactional/campaign mail schedules are now active. Push is
+  configured with dedicated VAPID; actual physical-device notification acceptance
+  remains separate. The owner-confirmed inbox/reply-to is gdg@gatech.edu.
+- Actual public browser sweep: 18 checks across nine routes, zero page errors.
+  New home/links/application desktop/mobile sweep: 10 checks, zero page errors,
+  business writes or CSP reports. Four rendered link/application WCAG A/AA checks
+  including contrast pass. Actual authenticated sweep: 12 admin pages, zero page
+  errors, business mutations or CSP reports. The temporary verification session
+  was then revoked and its in-memory password/cookies cleared. Hero: 7 real checks pass, including
+  immediate WebGL, no static poster flash and three distinct moving frames.
+- Complete CI run 42431411815 for deployed source 35eca74 is SUCCESS. All three
+  broad browser shards and source/database/coverage/dependency/secret gates pass.
+  The run passes 2,808 source tests / 231 files and 1,808 browser checks, with
+  10 expected profile skips. See phase0/production-ci-final.json.
+
+The complete local backup/restore rehearsal also passes at 141 migrations,
+including all retained-data fingerprints and security catalog/permissions. Its two
+owned disposable databases were removed. This is not a hosted recovery claim.
+
+Final isolated lab performance passes the mobile homepage at about 1.95 seconds
+LCP (99 performance, 100 accessibility) and the desktop homepage at about 0.65
+seconds (100/100). The earlier mobile 2.72-second miss is retained separately in
+phase0/production-performance-release-first.json; its slower machine benchmark
+and server timing prompted the isolated diagnostic and full rerun. No gate,
+assertion, throttling setting or source code was changed to obtain the rerun.
+
+Remaining acceptance is specific: physical-device
+install/push; manual screen-reader acceptance; hosted recovery/rollback drill;
+and the elapsed 48-hour observation window. These are not established by local
+unit tests or a Vercel Ready badge. SSO/Google and Bevy/Engage remain deferred.
+No paid service or new account was needed for the live worker architecture.
+
+The Supabase-owned net extension retains its managed SQL grants, but actual
+anonymous Data API reads reject both request queue/response tables with
+406/PGRST106 because net is excluded. Never expose net or Vault to the Data API.
+Temporary management tokens are not runtime dependencies. Keep dedicated sender,
+S3, VAPID and signing credentials when expiring setup access. No new hosting
+account or paid service was required.
+
+--- Historical launch findings follow; newer evidence above supersedes them. ---
+
 # Production launch status
 
 The owner authorized GDG-GT GitHub push and production deployment on November 7,

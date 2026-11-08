@@ -1,0 +1,58 @@
+{
+  "completed": true,
+  "commit": "35eca7441be89e6f2c29653a4df5466cc41b63d1",
+  "url": "https://github.com/GDG-GT/gdg-gt-website/actions/runs/42431411815",
+  "jobs": [
+    {
+      "name": "secret-gate",
+      "conclusion": "success"
+    },
+    {
+      "name": "coverage-gate",
+      "conclusion": "success"
+    },
+    {
+      "name": "code-and-database",
+      "conclusion": "success"
+    },
+    {
+      "name": "browser-smoke (2)",
+      "conclusion": "success"
+    },
+    {
+      "name": "browser-smoke (3)",
+      "conclusion": "success"
+    },
+    {
+      "name": "browser-smoke (1)",
+      "conclusion": "success"
+    },
+    {
+      "name": "dependency-gate",
+      "conclusion": "success"
+    }
+  ],
+  "scope": "Actual complete GitHub Actions run for deployed runtime source, including all three full browser shards and source/database/coverage/dependency/secret gates. No selective rerun or assertion weakening. Documentation-only later audit commits do not change this runtime source.",
+  "generatedAt": "2026-11-08T01:12:50.251102+00:00",
+  "browserShards": [
+    {
+      "shard": 1,
+      "passed": 604,
+      "skipped": 2
+    },
+    {
+      "shard": 2,
+      "passed": 602,
+      "skipped": 4
+    },
+    {
+      "shard": 3,
+      "passed": 602,
+      "skipped": 4
+    }
+  ],
+  "browserPassed": 1808,
+  "browserExpectedSkips": 10,
+  "sourceTestsPassed": 2808,
+  "sourceTestFilesPassed": 231
+}

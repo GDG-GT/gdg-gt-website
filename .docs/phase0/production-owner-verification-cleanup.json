@@ -1,0 +1,7 @@
+{
+  "completed": true,
+  "verificationSessionRevoked": true,
+  "temporaryVerificationCredentialsCleared": true,
+  "scope": "Only the assistant-owned verification session was signed out, old cookie rejected, in-memory bootstrap/password/CSRF/binding removed. User account/password/setup token and any other sessions untouched. Setup email remains for the account holder.",
+  "generatedAt": "2026-11-08T01:01:10.371Z"
+}

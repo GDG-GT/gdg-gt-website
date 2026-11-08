@@ -1,0 +1,70 @@
+{
+  "completed": true,
+  "checks": [
+    {
+      "label": "desktop",
+      "path": "/",
+      "kind": "render-scroll-and-navigation",
+      "passed": true
+    },
+    {
+      "label": "desktop",
+      "path": "/links",
+      "kind": "all-nine-chapter-links",
+      "passed": true
+    },
+    {
+      "label": "desktop",
+      "path": "/links",
+      "kind": "render-scroll-and-navigation",
+      "passed": true
+    },
+    {
+      "label": "desktop",
+      "path": "/forms/executive-board-application",
+      "kind": "required-name-and-email",
+      "passed": true
+    },
+    {
+      "label": "desktop",
+      "path": "/forms/executive-board-application",
+      "kind": "render-scroll-and-navigation",
+      "passed": true
+    },
+    {
+      "label": "mobile",
+      "path": "/",
+      "kind": "render-scroll-and-navigation",
+      "passed": true
+    },
+    {
+      "label": "mobile",
+      "path": "/links",
+      "kind": "all-nine-chapter-links",
+      "passed": true
+    },
+    {
+      "label": "mobile",
+      "path": "/links",
+      "kind": "render-scroll-and-navigation",
+      "passed": true
+    },
+    {
+      "label": "mobile",
+      "path": "/forms/executive-board-application",
+      "kind": "required-name-and-email",
+      "passed": true
+    },
+    {
+      "label": "mobile",
+      "path": "/forms/executive-board-application",
+      "kind": "render-scroll-and-navigation",
+      "passed": true
+    }
+  ],
+  "pageErrors": 0,
+  "blockedBusinessWrites": [],
+  "securityPolicyReports": 0,
+  "scope": "Actual canonical desktop/mobile public home, dedicated chapter links and executive application screens, geometry/overflow/identity checks and screenshots. No application submission, private session, fake content interception or participant fixtures.",
+  "generatedAt": "2026-11-08T00:54:22.072Z"
+}

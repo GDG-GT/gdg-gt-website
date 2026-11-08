@@ -1,0 +1,21 @@
+{
+  "completed": true,
+  "checks": [
+    {
+      "kind": "clean",
+      "id": "b6220a43-ac23-4c30-a6c3-c59967a5350e",
+      "state": "clean",
+      "error_code": null,
+      "passed": true
+    },
+    {
+      "kind": "antivirus-test",
+      "id": "01b0e83e-0bc8-4ab9-9afa-c7d16f56d767",
+      "state": "rejected",
+      "error_code": "MALWARE_DETECTED",
+      "passed": true
+    }
+  ],
+  "scope": "Actual private signed upload -> durable queue -> hosted metadata-only scanner -> fenced normalization/rejection. Owned clean text must be clean; standard EICAR must be rejected. No direct database completion or simulated scanner verdict.",
+  "generatedAt": "2026-11-08T00:55:53.667Z"
+}

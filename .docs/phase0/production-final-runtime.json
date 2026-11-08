@@ -1,0 +1,119 @@
+{
+  "schedules": [
+    {
+      "jobname": "gdg-gt-announcements",
+      "active": true,
+      "schedule": "*/5 * * * *",
+      "latest_scheduler_status": "succeeded"
+    },
+    {
+      "jobname": "gdg-gt-delivery",
+      "active": true,
+      "schedule": "* * * * *",
+      "latest_scheduler_status": "succeeded"
+    },
+    {
+      "jobname": "gdg-gt-event-push",
+      "active": true,
+      "schedule": "*/5 * * * *",
+      "latest_scheduler_status": "succeeded"
+    },
+    {
+      "jobname": "gdg-gt-form-cleanup",
+      "active": true,
+      "schedule": "7 * * * *",
+      "latest_scheduler_status": "succeeded"
+    },
+    {
+      "jobname": "gdg-gt-form-schedules",
+      "active": true,
+      "schedule": "*/5 * * * *",
+      "latest_scheduler_status": "succeeded"
+    },
+    {
+      "jobname": "gdg-gt-newsletter-campaigns",
+      "active": true,
+      "schedule": "*/5 * * * *",
+      "latest_scheduler_status": null
+    },
+    {
+      "jobname": "gdg-gt-notification-cleanup",
+      "active": true,
+      "schedule": "23 3 * * *",
+      "latest_scheduler_status": null
+    },
+    {
+      "jobname": "gdg-gt-operations-monitor",
+      "active": true,
+      "schedule": "*/5 * * * *",
+      "latest_scheduler_status": "succeeded"
+    },
+    {
+      "jobname": "gdg-gt-private-workers",
+      "active": true,
+      "schedule": "* * * * *",
+      "latest_scheduler_status": "succeeded"
+    },
+    {
+      "jobname": "gdg-gt-report-cache-cleanup",
+      "active": true,
+      "schedule": "37 3 * * *",
+      "latest_scheduler_status": null
+    },
+    {
+      "jobname": "gdg-gt-scanner-definitions",
+      "active": true,
+      "schedule": "17 9 * * *",
+      "latest_scheduler_status": null
+    },
+    {
+      "jobname": "gdg-gt-session-cleanup",
+      "active": true,
+      "schedule": "11 3 * * *",
+      "latest_scheduler_status": null
+    },
+    {
+      "jobname": "gdg-gt-task-overdue",
+      "active": true,
+      "schedule": "*/15 * * * *",
+      "latest_scheduler_status": "succeeded"
+    }
+  ],
+  "privateQueues": [
+    {
+      "worker_group": "exports",
+      "enabled": true,
+      "latest_http_status": 200
+    },
+    {
+      "worker_group": "media",
+      "enabled": true,
+      "latest_http_status": 200
+    },
+    {
+      "worker_group": "uploads",
+      "enabled": true,
+      "latest_http_status": null
+    }
+  ],
+  "technicalJobStates": [
+    {
+      "kind": "account_access",
+      "state": "completed",
+      "count": 1
+    },
+    {
+      "kind": "media_upload_scan",
+      "state": "completed",
+      "count": 2
+    }
+  ],
+  "publicTableProtection": [
+    {
+      "public_tables": 120,
+      "without_rls": 0
+    }
+  ],
+  "scope": "Actual hosted operating schedule names/active state and most recent scheduler execution, private worker HTTP status, bounded technical job state counts and public RLS inventory. A cron SQL success does not itself prove downstream HTTP; queue HTTP and actual application flow proofs are recorded independently. No bearer commands, HTTP bodies or participant records retained.",
+  "generatedAt": "2026-11-08T00:59:41.958Z"
+}
