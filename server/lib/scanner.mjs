@@ -102,9 +102,13 @@ export async function scannerHealth(env = process.env) {
     signatureVersion: String(version).split("/")[1],
   };
 }
-export async function scanBuffer(bytes, env = process.env) {
-  if (!Buffer.isBuffer(bytes) || !bytes.length || bytes.length > 262144000)
+export async function scanBuffer(bytes, env = process.env, context) {
+  if (!Buffer.isBuffer(bytes) || !bytes.length || bytes.length > 52428800)
     throw new ApiError(400, "INVALID_UPLOAD", "This file cannot be scanned.");
+  if (env.SCANNER_TRANSPORT === "job-http") {
+    const { scanQueuedObject } = await import("./remote-scanner.mjs");
+    return scanQueuedObject(bytes, env, context);
+  }
   await scannerHealth(env);
   const reply = await command("INSTREAM", bytes, env);
   if (reply === "stream: OK") return { clean: true };
