@@ -24,6 +24,7 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.gdggt.scanner
+        TARGETED_DEVICE_FAMILY: '1'
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: Info.plist
         CODE_SIGN_ENTITLEMENTS: Scanner.entitlements

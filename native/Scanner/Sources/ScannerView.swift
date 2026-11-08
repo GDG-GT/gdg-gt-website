@@ -42,6 +42,13 @@ final class ScannerModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
     private var nfc: CardSession?
     private weak var confirmation: UIAlertController?
     private var downloads: [ObjectIdentifier: URL] = [:]
+    private let shareDirectory = FileManager.default.temporaryDirectory.appendingPathComponent("GDGPassShares", isDirectory: true)
+    override init() {
+        super.init()
+        // Remove only this app's abandoned pass-share files after a crash/relaunch.
+        try? FileManager.default.removeItem(at: shareDirectory)
+        try? FileManager.default.createDirectory(at: shareDirectory, withIntermediateDirectories: true, attributes: [.protectionKey: FileProtectionType.complete])
+    }
     private var pendingID: String?
     private var pendingDocument: URL?
     private var documentGeneration = 0
@@ -144,7 +151,7 @@ final class ScannerModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
     func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) { download.delegate = self }
     func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
         guard ScannerPolicy.trusted(response.url), response.mimeType == "application/vnd.apple.pkpass" else { completionHandler(nil); return }
-        let destination = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".pkpass")
+        let destination = shareDirectory.appendingPathComponent(UUID().uuidString + ".pkpass")
         downloads[ObjectIdentifier(download)] = destination
         completionHandler(destination)
     }
@@ -155,6 +162,8 @@ final class ScannerModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
         let share = UIActivityViewController(activityItems: [file], applicationActivities: nil)
         share.completionWithItemsHandler = { _,_,_,_ in try? FileManager.default.removeItem(at: file) }
         guard let presenter = webView.window?.rootViewController else { try? FileManager.default.removeItem(at: file); return }
+        share.popoverPresentationController?.sourceView = webView
+        share.popoverPresentationController?.sourceRect = CGRect(x: webView.bounds.midX, y: webView.bounds.midY, width: 1, height: 1)
         presenter.present(share, animated: true)
     }
     private func cleanup(_ download: WKDownload) {
