@@ -72,7 +72,6 @@ const groups: { title: string; links: Destination[] }[] = [
   {
     title: "Community",
     links: [
-      { label: "Public team", href: "/admin/team", icon: Users },
       { label: "Members", href: "/admin/members", icon: Users },
       { label: "Teams & permissions", href: "/admin/teams", icon: Shield },
       {

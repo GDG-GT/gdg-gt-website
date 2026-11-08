@@ -3,7 +3,7 @@ import { ApiError } from './http.mjs';
 export const routes={
   '/admin':'dashboard', '/admin/profile':'profile', '/admin/guide':'guide',
   '/admin/users':'users', '/admin/content':'content', '/admin/events':'events',
-  '/admin/team':'team_profiles', '/admin/members':'members', '/admin/resources':'resources',
+  '/admin/team':'team_profiles', '/admin/content/team':'team_profiles', '/admin/members':'members', '/admin/resources':'resources',
   '/admin/newsletter':'newsletter', '/admin/blog':'blog', '/admin/projects':'projects',
   '/admin/sponsors':'sponsors', '/admin/communications':'communications',
   '/admin/channels':'channels', '/admin/whiteboard':'whiteboards', '/admin/gallery':'gallery',

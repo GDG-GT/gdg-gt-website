@@ -160,7 +160,7 @@ for (const loss of ["before", "after"] as const)
       .check();
     await dialog
       .getByLabel("Deletion confirmation", { exact: false })
-      .fill("DELETE FORM " + form.id);
+      .fill(form.title);
     await dialog
       .getByLabel("Current password", { exact: true })
       .fill("fictional-original-proof");
@@ -244,7 +244,7 @@ for (const denied of [false, true])
       .check();
     await dialog
       .getByLabel("Deletion confirmation", { exact: false })
-      .fill("DELETE FORM " + form.id);
+      .fill(form.title);
     await dialog
       .getByLabel("Current password", { exact: true })
       .fill("fictional-proof");

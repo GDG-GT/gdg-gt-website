@@ -223,7 +223,7 @@ function DeletionWorkspace(props: Props) {
       expired ||
       changed ||
       !ack ||
-      confirmation !== `DELETE FORM ${props.formId}` ||
+      confirmation !== props.title ||
       !password
     )
       return;
@@ -480,7 +480,7 @@ function DeletionWorkspace(props: Props) {
                           </label>
                           <Field
                             label="Deletion confirmation"
-                            hint={`Type DELETE FORM ${props.formId}`}
+                            hint={`Type the form name exactly: ${props.title}`}
                           >
                             <input
                               required
@@ -510,7 +510,7 @@ function DeletionWorkspace(props: Props) {
                                 expired ||
                                 !ack ||
                                 !password ||
-                                confirmation !== `DELETE FORM ${props.formId}`
+                                confirmation !== props.title
                               }
                             >
                               Permanently delete this form

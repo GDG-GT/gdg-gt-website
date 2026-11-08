@@ -3,7 +3,6 @@ const routes = [
   "/admin",
   "/admin/events",
   "/admin/forms",
-  "/admin/team",
   "/admin/members",
   "/admin/teams",
   "/admin/communications",

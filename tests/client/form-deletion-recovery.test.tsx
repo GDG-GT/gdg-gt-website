@@ -109,7 +109,7 @@ function fill() {
   fireEvent.click(screen.getByRole("checkbox"));
   fireEvent.change(
     screen.getByLabelText("Deletion confirmation", { exact: false }),
-    { target: { value: "DELETE FORM " + formId } },
+    { target: { value: "Fictional private form" } },
   );
   fireEvent.change(screen.getByLabelText("Current password", { exact: true }), {
     target: { value: "fictional-password" },
@@ -335,7 +335,7 @@ describe("Irreversible deletion intent recovery", () => {
     readFailure = Error("Fictional retained eligibility outage");
     click("Recheck eligibility");
     await screen.findByText("Fictional retained eligibility outage");
-    expect(screen.getByDisplayValue("DELETE FORM " + formId)).toBeTruthy();
+    expect(screen.getByDisplayValue("Fictional private form")).toBeTruthy();
     expect(
       (
         screen.getByRole("button", {
@@ -639,6 +639,6 @@ describe("Deletion authority, expiry and dispatch fences", () => {
       resolve({ formId, reviewId: review.reviewId, deleted: true }),
     );
     expect(handlers.onDeleted).not.toHaveBeenCalled();
-    expect(screen.queryByDisplayValue("DELETE FORM " + formId)).toBeNull();
+    expect(screen.queryByDisplayValue("Fictional private form")).toBeNull();
   });
 });

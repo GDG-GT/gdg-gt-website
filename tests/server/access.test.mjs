@@ -470,3 +470,14 @@ describe("AUTH/TEAM protected access and own-profile route contract", () => {
       expect((await f.call("/admin/access" + query)).statusCode).toBe(400);
   });
 });
+
+describe('nested public team access', () => {
+  it('preserves existing team-profile grants without granting general site settings', async () => {
+    const f = fixture();
+    f.store.authorization.mockResolvedValue({ memberships: [], grants: [{ resource: 'team_profiles', route: '/admin/team', page_access: true, actions: ['view'] }] });
+    const inventory = await f.call('/admin/access');
+    expect(inventory.body.data.accessibleRoutes).toContain('/admin/content/team');
+    expect(inventory.body.data.accessibleRoutes).not.toContain('/admin/content');
+    expect((await f.call('/admin/access?route=%2Fadmin%2Fcontent%2Fteam')).body.data.allowed).toBe(true);
+  });
+});

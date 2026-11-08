@@ -74,15 +74,8 @@ const AccountSetup = lazy(() => import("@/ui/users/AccountSetup"));
 // Preserve every existing workflow and load heavy editors only on their routes.
 const adminRoutes = [
   ["content", lazy(() => import("@/ui/content/SiteContentWorkspace"))],
+  ["content/team", lazy(() => import("@/ui/content/SiteContentWorkspace"))],
   ["events", lazy(() => import("@/ui/EventWorkspace"))],
-  [
-    "team",
-    lazy(() =>
-      import("@/ui/content/CollectionWorkspace").then((module) => ({
-        default: module.PublicTeamWorkspace,
-      })),
-    ),
-  ],
   ["projects", lazy(() => import("@/pages/admin/AdminProjects"))],
   ["members", lazy(() => import("@/pages/admin/AdminMembers"))],
   [
@@ -240,6 +233,7 @@ export function RoutedApplication() {
               <Route path="/offline" element={<InfoPage kind="offline" />} />
               <Route path="/maintenance" element={<MaintenancePage />} />
               <Route path="/admin" element={protectedPage(<Overview />)} />
+              <Route path="/admin/team" element={<Navigate to="/admin/content/team" replace />} />
               {adminRoutes.map(([path, Component]) => (
                 <Route
                   key={path}

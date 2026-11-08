@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
-import { useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { PublicTeamWorkspace } from "./CollectionWorkspace";
 import SiteCompositionPreview from "./SiteCompositionPreview";
 import { api, ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -75,11 +76,16 @@ export default function SiteContentWorkspace() {
 }
 function SiteContentView() {
   const [params] = useSearchParams();
-  return params.get("mode") === "preview" ? (
-    <SiteCompositionPreview />
-  ) : (
-    <ContentEditor />
-  );
+  const { pathname } = useLocation();
+  const team = pathname === "/admin/content/team";
+  if (params.get("mode") === "preview") return <SiteCompositionPreview />;
+  return <>
+    <nav className="gt-team-tabs" aria-label="Site content sections">
+      <Link className="gt-button gt-button-ghost" to="/admin/content" aria-current={!team ? "page" : undefined}>Page content &amp; settings</Link>
+      <Link className="gt-button gt-button-ghost" to="/admin/content/team" aria-current={team ? "page" : undefined}>Public team</Link>
+    </nav>
+    {team ? <PublicTeamWorkspace /> : <ContentEditor />}
+  </>;
 }
 function ContentEditor() {
   const [kind, setKind] = useState<Kind>("pages"),

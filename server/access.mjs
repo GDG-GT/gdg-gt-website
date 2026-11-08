@@ -140,7 +140,7 @@ export async function accessRoutes(
   const context = { user: session.user, memberships, grants };
   const accessibleRoutes = Object.entries(routes)
     .filter(([route, resource]) =>
-      isAuthorized({ ...context, route, resource, action: "view" }),
+      isAuthorized({ ...context, route: route === "/admin/content/team" ? "/admin/team" : route, resource, action: "view" }),
     )
     .map(([route]) => route);
   if (
