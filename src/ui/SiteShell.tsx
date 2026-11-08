@@ -386,6 +386,9 @@ export default function SiteShell({ children }: { children: ReactNode }) {
                   {label}
                 </Link>
               ))}
+              {!navigation.some(([, href]) => href === "/links") && (
+                <Link to="/links">Chapter links</Link>
+              )}
               {localPreviewEnabled && (
                 <button onClick={previewWorkspace}>Preview workspace</button>
               )}

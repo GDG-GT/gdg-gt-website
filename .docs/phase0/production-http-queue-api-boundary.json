@@ -1,0 +1,20 @@
+{
+  "completed": true,
+  "checks": [
+    {
+      "table": "http_request_queue",
+      "status": 406,
+      "code": "PGRST106",
+      "passed": true
+    },
+    {
+      "table": "_http_response",
+      "status": 406,
+      "code": "PGRST106",
+      "passed": true
+    }
+  ],
+  "extensionPublicSqlGrant": true,
+  "scope": "Actual anonymous Data API requests cannot select pg_net queue/response tables because net schema is not exposed. Supabase-owned extension defaults grant SQL privileges; managed postgres cannot revoke owner grants. This is an API-boundary check, not a SQL-role privilege revocation. No private header/body returned or logged.",
+  "generatedAt": "2026-11-08T00:45:04.300Z"
+}

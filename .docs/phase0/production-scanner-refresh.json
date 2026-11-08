@@ -1,0 +1,9 @@
+{
+  "configured": true,
+  "refreshScheduleUtc": "17 9 * * *",
+  "hookCredentialEncrypted": true,
+  "ordinaryApiQueueAccess": false,
+  "extensionPublicSqlGrant": true,
+  "scope": "One daily production rebuild refreshes vendor-signed ClamAV definitions using the existing free Vercel build cache. Deploy-hook secret exists only in encrypted Vault/private process, not source or cron command. No additional account, paid plan or assistant timer.",
+  "generatedAt": "2026-11-08T00:45:49.054Z"
+}

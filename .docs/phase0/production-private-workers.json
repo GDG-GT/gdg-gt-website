@@ -1,0 +1,46 @@
+{
+  "completed": true,
+  "checks": [
+    {
+      "path": "/api/scanner",
+      "kind": "unauthorized",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "path": "/api/scanner",
+      "kind": "actual-engine-and-private-runtime",
+      "passed": true,
+      "status": 200,
+      "elapsedMs": 16213,
+      "data": {
+        "verified": true,
+        "cleanAccepted": true,
+        "antivirusTestRejected": true,
+        "signatureVersion": "28176"
+      }
+    },
+    {
+      "path": "/api/worker",
+      "kind": "unauthorized",
+      "passed": true,
+      "status": 401
+    },
+    {
+      "path": "/api/worker",
+      "kind": "actual-engine-and-private-runtime",
+      "passed": true,
+      "status": 200,
+      "elapsedMs": 1847,
+      "data": {
+        "verified": true,
+        "mediaProbeVerified": true,
+        "privateStorageBuckets": 2,
+        "exactRoundTrips": 2,
+        "ownedTemporaryObjectsRemoved": true
+      }
+    }
+  ],
+  "scope": "Actual canonical HTTPS private workers, authenticated vendor-engine EICAR/clean check and owned generated WAV+CSV private storage round trips. Public uploads remain independently disabled until acceptance. No participant data or customer email used.",
+  "generatedAt": "2026-11-08T00:38:24.789Z"
+}

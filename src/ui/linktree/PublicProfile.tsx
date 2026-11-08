@@ -33,7 +33,7 @@ const icons = {
   mail: Mail,
 };
 export default function PublicProfile() {
-  const { username } = useParams();
+  const { username = "gdg-gt" } = useParams();
   const [profile, setProfile] = useState<PublicProfileRecord>(),
     [loading, setLoading] = useState(true),
     [missing, setMissing] = useState(false),

@@ -1,0 +1,12 @@
+{
+  "completed": true,
+  "groups": [
+    "uploads",
+    "media",
+    "exports"
+  ],
+  "recoverySchedule": "* * * * *",
+  "coalesceSeconds": 10,
+  "scope": "Hosted private queue triggers and a single deduplicated database recovery schedule. No HTTP when queues are empty. Existing encrypted Vault secret referenced at dispatch time; no secrets in SQL source or cron command. No assistant auto-resume timer.",
+  "generatedAt": "2026-11-08T00:39:24.034Z"
+}

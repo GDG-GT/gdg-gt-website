@@ -63,3 +63,19 @@ was excluded after its November 6 incident update reported an ongoing credential
 compromise investigation. No Northflank signup, OAuth grant or secret transmission
 was performed. The owned research tabs were closed and the original private
 Vivaldi tabs restored.
+
+## Actual hosted acceptance, November 8
+
+Deployment 29b193e passed real canonical scanner clean/EICAR verification in
+16.2 seconds and private WAV/CSV S3 round trips in 1.8 seconds. Both endpoints
+reject unauthenticated calls. The private dispatcher is installed with one-minute
+recovery and immediate coalesced wakeups. The official media-source build also
+completed on Vercel's ordinary free build machine.
+
+Supabase's managed `net` extension retains broad SQL grants on its own tables;
+the project `postgres` role cannot revoke the extension owner's grants. Actual
+anonymous Data API requests for both queue/response tables return 406/PGRST106
+because `net` is not exposed. This verifies the API boundary, not SQL-role
+revocation. Keep `net` and `vault` outside Data API exposed schemas and direct
+SQL credentials private. A daily encrypted deploy hook refreshes definitions;
+the hook and bearer values must never be included in source or reports.

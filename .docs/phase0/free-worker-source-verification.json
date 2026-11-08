@@ -1,7 +1,7 @@
 {
   "completed": true,
   "tests": 2807,
-  "testFiles": 503,
+  "testFiles": 230,
   "failed": 0,
   "coverageGates": "Original global 70% and 22 security module 90% branch gates passed, unchanged.",
   "sourceReport": "artifacts/quality/free-workers-final-tests.json",

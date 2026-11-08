@@ -215,6 +215,7 @@ export function RoutedApplication() {
                 }
               />
               <Route path="/l/:username" element={<Linktree />} />
+              <Route path="/links" element={<Linktree />} />
               <Route
                 path="/newsletter/confirm"
                 element={

@@ -1,3 +1,6 @@
+-- The Supabase-owned net schema must remain excluded from the Data API. Its
+-- extension SQL grants are managed by Supabase; ordinary website users have no
+-- direct SQL login. Do not expose net or Vault through PostgREST.
 -- Install only in the hosted Supabase project after authenticated worker
 -- acceptance. Requires pg_net, pg_cron and the existing encrypted Vault
 -- gdg_gt_cron_secret. No bearer value is stored in source or cron commands.

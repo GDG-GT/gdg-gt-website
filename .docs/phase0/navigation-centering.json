@@ -1,0 +1,13 @@
+{
+  "completed": true,
+  "desktopBrowsers": [
+    "Chromium 1920",
+    "Chromium 1440",
+    "Firefox 1440",
+    "WebKit 1440"
+  ],
+  "checks": 4,
+  "tolerancePx": 1,
+  "scope": "Actual loopback browser geometry: navbar and navigation links centers within 1px of page center. Screenshots visually inspected; mobile navigation verified separately.",
+  "generatedAt": "2026-11-08T00:47:43.626939+00:00"
+}

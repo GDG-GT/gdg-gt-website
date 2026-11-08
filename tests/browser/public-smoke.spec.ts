@@ -265,3 +265,16 @@ test("capable desktop hero starts WebGL directly without a poster flash and rest
   await expect(canvas).toHaveCount(0);
   await expect(page.locator(".gt-hero-static-objects")).toBeVisible();
 });
+
+
+test("desktop navigation and its bar share the page center", async ({ page }, info) => {
+  test.skip(info.project.name.includes("mobile"), "Desktop centering; mobile uses the compact top menu.");
+  await page.goto("/events");
+  await page.evaluate(() => document.fonts.ready);
+  const measured = await page.locator(".gt-nav").evaluate((nav) => {
+    const bar = nav.getBoundingClientRect(), links = nav.querySelector(".gt-nav-links")!.getBoundingClientRect();
+    return { barCenter: bar.x + bar.width / 2, linkCenter: links.x + links.width / 2, pageCenter: document.documentElement.clientWidth / 2 };
+  });
+  expect(Math.abs(measured.barCenter - measured.pageCenter)).toBeLessThanOrEqual(1);
+  expect(Math.abs(measured.linkCenter - measured.barCenter)).toBeLessThanOrEqual(1);
+});

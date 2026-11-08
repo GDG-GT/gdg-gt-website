@@ -1907,17 +1907,19 @@ img {
   width: min(1240px, calc(100% - 64px));
   margin-inline: auto;
   height: 70px;
-  padding: 0 18px 0 24px;
+  padding: 0 24px;
   background: #fff8f2d9;
   backdrop-filter: blur(18px);
   border: 1px solid #fff8f2e6;
   border-radius: 18px;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   gap: 26px;
   align-items: center;
   pointer-events: auto;
 }
 .gt-nav-links {
+  grid-column: 2;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1947,6 +1949,8 @@ img {
   border-radius: 2px;
 }
 .gt-nav-login {
+  grid-column: 3;
+  justify-self: end;
   min-height: 40px;
   padding: 9px 20px;
 }
@@ -5581,6 +5585,7 @@ fieldset.gt-event-fields {
     width: calc(100% - 48px);
   }
   .gt-nav {
+    display: flex;
     width: calc(100% - 40px);
   }
   .gt-nav-links {

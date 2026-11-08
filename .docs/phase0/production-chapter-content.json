@@ -1,0 +1,28 @@
+{
+  "created": true,
+  "form": {
+    "id": "1bd59899-7ef8-4003-987a-ecd0e1de0388",
+    "slug": "executive-board-application",
+    "state": "Draft",
+    "fieldCount": 13,
+    "sectionCount": 4,
+    "requiredIdentity": true,
+    "optionalExactResponseCopy": true,
+    "optionalPdfLimitBytes": 10485760,
+    "retentionDays": 180
+  },
+  "profile": {
+    "id": "0b2f9aab-4f4b-4fa9-bd16-b6c03920c5a8",
+    "username": "gdg-gt",
+    "active": false,
+    "linkCount": 9,
+    "activeLinkCount": 0
+  },
+  "paths": {
+    "links": "/links",
+    "profile": "/l/gdg-gt",
+    "application": "/forms/executive-board-application"
+  },
+  "scope": "User-requested real chapter content created through existing authenticated owner APIs. Existing matching records inspected and retained on resume. No invented social invitations, role openings, deadline, participant responses or provider send. Publication is separately authorized after feature-ready deployment.",
+  "generatedAt": "2026-11-08T00:47:24.023Z"
+}

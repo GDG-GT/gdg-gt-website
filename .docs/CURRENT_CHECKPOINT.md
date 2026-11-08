@@ -1,3 +1,55 @@
+# Immediate update — 2026-11-08 00:50 UTC
+
+Latest user explicitly added navbar centering, a dedicated proper chapter Linktree
+and executive-board application. UI fix grid balances left/right nav columns;
+4 browser desktop center checks pass; mobile followup running session70407.
+Source /links alias uses chapter profile gdg-gt, footer link added. Chapter content
+builder scripts/lib/chapter-launch-content.mjs validates 4 sections/13 questions,
+optional10MiB PDF, required consent/name/email, private180d retention, optional exact
+respondent copy (separate from verified admin receipts). No invented deadline or
+role titles; six contribution areas. No SSO/Google requirement. Content mutation
+module /tmp/gdg-production-chapter-content.mjs inspects existing records then resumes.
+Real form created ONCE id1bd59899-7ef8-4003-987a-ecd0e1de0388 Draft. First query to
+profile list400 unsupportedpageSize fixed; no profile existed then. Current module
+is creating profile+9links, not yet published. GETauth/session withoutcsrf rotates
+it; /tmp/gdg-production-owner-session-sync.mjs refreshes private fields, do not run
+owner browser concurrently with mutations.
+
+Live worker 29b193e deployment READY, real canonical scanner clean/EICAR PASS16.2s,
+media probe/private S3 media+exportroundtripsPASS1.8s, owned objects removed, no extra
+account/paidhost. Private dispatchinstalled andactive / minuteonlywhenqueued.
+Forward141 hosted/localdone6privatebuckets. Feature config (uploads/email/push)
+NOWenabled in encrypted Vercel env, effective nextbuild. User chosegdg@gatech.edu.
+VAPIDgeneratedonce, neverprint/rotatekeys. No actualdevicepushclaim.
+
+IMPORTANT discovered staging omission: worker scanner transport changes were left
+out of29b193e though fullsource suite2807passed againstworkingtree. Corrective
+ordinarycommit a4c8b32 nowpushedmain includesactualjob-http branch/50MBcap. Do not
+claim29b193equeued uploads work untilthiscorrectivecommitlive. Bothnative selftests
+passed but didnotexerciseparentqueue path; needactualowneduploadworkflowafterfix.
+Transport tests44pass. NextUIcommitwillalsoincludecorrectiveancestry. AutoGitdeploy
+active; inspectdedupmodulebeforeexternaldeployment. DailydeployhookcreatedONCE
+namegdg-gt-scanner-definitions, main; encryptedVaultsecretnamegdg_gt_definition_deploy_hook
+anddailyCron09:17UTCconfigured. Firsthooktriggeralreadyissued; do notrepeatblindly.
+
+pg_netprivacyaudit: extensionownerSupabase_admin grantsPUBLICtableaccess; attempted
+REVOKEaspostgresdidnotchangegrants (no falseclaim). ActualanonymousDataAPI406PGRST106
+bothnettablesconfirmsnetnotexposed. Privategrantmetadatareportdocumentsboundary.
+Keepnet/vaultunexposed,SQLcredentialsprivate. DefinitionhookstorefollowedactualAPI
+boundaryproof; privateURLneverlogged. privateState.definitionDeployHookonlymemory.
+
+Providerprivateprocess79985active, preservesallruntime credentials/owner session.
+Do notdump. Need logout verification session and clear tempbootstrap/cookie fields
+ONLYafterrealcontentpublish+acceptance; noownerreset/duplicateaccount/setupconsume.
+
+Currenttypes/scopedlintpass; UIbuildpass; newcontenttestpass; existingfull2807pass.
+Historicalsourceauditwasunnecessarilyrunagainstoldsupabase/migrationsandfailed
+expected42704; reportpreserved/tmp/gdg-free-worker-historical-source-audit.json,
+restoredhistoricaltrackedreport; ownedstoppedcontainerremoved. NoexistingDBchanged.
+No timer/account/purchase created. NextcommitUI/content/accurateevidenceexplicitly,
+neverstage3unrelateduserfiles. Nextcanonicalacceptance+featurequeuechecks+emailjobs,
+thenpublishrequestedrealchaptercontentandvisualcheckpublicmobile/desktop.
+
 # Verified update — 2026-11-08 00:32 UTC
 
 Full isolated source+coverage run now PASSED: 2807 tests / 230 files, every original
