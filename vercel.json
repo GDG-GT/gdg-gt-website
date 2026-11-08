@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build && node scripts/prepare-vercel-static.mjs",
+  "buildCommand": "npm run build:vercel",
   "outputDirectory": ".build/public",
   "devCommand": "npm run dev",
   "framework": "vite",
@@ -12,12 +12,20 @@
           "key": "Cache-Control",
           "value": "no-cache, no-store, must-revalidate"
         },
-        { "key": "Service-Worker-Allowed", "value": "/" }
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
       ]
     },
     {
       "source": "/manifest.json",
-      "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
     },
     {
       "source": "/(.*)",
@@ -107,13 +115,22 @@
     }
   ],
   "rewrites": [
-    { "source": "/", "destination": "/api/site?__route=/" },
+    {
+      "source": "/",
+      "destination": "/api/site?__route=/"
+    },
     {
       "source": "/api/v1/:path*",
       "destination": "/api/v1?__gdg_api_route=:path*"
     },
-    { "source": "/index.html", "destination": "/api/site?__route=/" },
-    { "source": "/robots.txt", "destination": "/api/robots" },
+    {
+      "source": "/index.html",
+      "destination": "/api/site?__route=/"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/api/robots"
+    },
     {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
@@ -132,10 +149,21 @@
     }
   ],
   "functions": {
-    "api/site.mjs": { "maxDuration": 30, "includeFiles": "{dist/index.html,.build/ssr/**,shared/**}" },
+    "api/site.mjs": {
+      "maxDuration": 30,
+      "includeFiles": "{dist/index.html,.build/ssr/**,shared/**}"
+    },
     "api/v1.mjs": {
       "maxDuration": 60,
       "includeFiles": "shared/**"
+    },
+    "api/scanner.mjs": {
+      "maxDuration": 300,
+      "includeFiles": "{.build/scanner/runtime/**,shared/**}"
+    },
+    "api/worker.mjs": {
+      "maxDuration": 300,
+      "includeFiles": "{.build/media-runtime/**,shared/**}"
     }
   }
 }

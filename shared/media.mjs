@@ -17,8 +17,8 @@ export const mediaTypes = {
   "image/png": { extensions: ["png"], kind: "image", limit: 20971520 },
   "image/jpeg": { extensions: ["jpg", "jpeg"], kind: "image", limit: 20971520 },
   "image/webp": { extensions: ["webp"], kind: "image", limit: 20971520 },
-  "video/mp4": { extensions: ["mp4"], kind: "video", limit: 262144000 },
-  "video/webm": { extensions: ["webm"], kind: "video", limit: 262144000 },
+  "video/mp4": { extensions: ["mp4"], kind: "video", limit: 52428800 },
+  "video/webm": { extensions: ["webm"], kind: "video", limit: 52428800 },
   "audio/mpeg": { extensions: ["mp3"], kind: "audio", limit: 52428800 },
   "audio/wav": { extensions: ["wav"], kind: "audio", limit: 52428800 },
   "audio/ogg": { extensions: ["ogg", "oga"], kind: "audio", limit: 52428800 },
@@ -42,7 +42,7 @@ export const mediaUploadIntent = z
     folderId: uuid.nullable(),
     filename: z.string().trim().min(1).max(180),
     mime: z.string().refine((v) => Object.hasOwn(mediaTypes, v)),
-    bytes: z.number().int().min(1).max(262144000),
+    bytes: z.number().int().min(1).max(52428800),
     sha256: z.string().regex(/^[a-f0-9]{64}$/),
   })
   .strict();

@@ -1,0 +1,37 @@
+{
+  "migration": "202611070141_free_storage_limits",
+  "buckets": [
+    {
+      "id": "form-uploads",
+      "public": false,
+      "fileSizeLimit": 26214400
+    },
+    {
+      "id": "contact-attachments",
+      "public": false,
+      "fileSizeLimit": 10485760
+    },
+    {
+      "id": "finance-attachments",
+      "public": false,
+      "fileSizeLimit": 10485760
+    },
+    {
+      "id": "blog-submissions",
+      "public": false,
+      "fileSizeLimit": 20971520
+    },
+    {
+      "id": "media",
+      "public": false,
+      "fileSizeLimit": 52428800
+    },
+    {
+      "id": "form-exports",
+      "public": false,
+      "fileSizeLimit": 52428800
+    }
+  ],
+  "scope": "User-approved 50 MiB free file ceiling; only additive migration and missing private media/export buckets; no replay, resets, public grants or purchases.",
+  "generatedAt": "2026-11-08T00:25:28.319Z"
+}

@@ -1,0 +1,71 @@
+{
+  "completed": true,
+  "checks": [
+    {
+      "route": "/admin/",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "route": "/admin/forms",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "route": "/admin/members",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "route": "/admin/users",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "route": "/admin/finances",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "route": "/admin/media",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "route": "/admin/events",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "route": "/admin/projects",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "route": "/admin/content",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "route": "/admin/operations",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "route": "/admin/privacy",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "route": "/admin/profile",
+      "passed": true,
+      "status": 200
+    }
+  ],
+  "pageErrorCount": 0,
+  "blockedWrites": [],
+  "authorizationPostCount": 12,
+  "securityReportCount": 6,
+  "scope": "Actual authenticated corrected first-owner Super Admin canonical desktop browser route reads, with business mutations blocked; scoped Realtime authorization POSTs and normal security-policy reports remain allowed. No fixture records/business mutations, private UI snapshots, response bodies, cookies, passwords or email retained. Setup completion by account holder remains separate.",
+  "generatedAt": "2026-11-08T00:09:35.719Z"
+}

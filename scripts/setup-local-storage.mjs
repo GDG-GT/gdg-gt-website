@@ -5,11 +5,11 @@ const { db, env } = await localHttp();
 await scannerHealth(env);
 for (const [id, max] of [
   ["form-uploads", 26214400],
-  ["form-exports", 67108864],
+  ["form-exports", 52428800],
   ["contact-attachments", 10485760],
   ["finance-attachments", 10485760],
   ["blog-submissions", 20971520],
-  ["media", 262144000],
+  ["media", 52428800],
 ]) {
   const found = await db.storage.getBucket(id);
   if (found.error) {

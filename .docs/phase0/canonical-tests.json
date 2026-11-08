@@ -141,7 +141,8 @@
     "202611060137_privacy_retry_fingerprint.sql",
     "202611070138_account_security.sql",
     "202611070139_media_cursor.sql",
-    "202611070140_initial_owner_bootstrap.sql"
+    "202611070140_initial_owner_bootstrap.sql",
+    "202611070141_free_storage_limits.sql"
   ],
   "tests": [
     {
@@ -709,6 +710,10 @@
       "passed": true
     },
     {
+      "name": "202611070141_free_storage_limits.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -1146,6 +1151,10 @@
     },
     {
       "name": "140_initial_owner_bootstrap.sql",
+      "passed": true
+    },
+    {
+      "name": "141_free_storage_limits.sql",
       "passed": true
     },
     {

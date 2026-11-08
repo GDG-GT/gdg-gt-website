@@ -1,3 +1,4 @@
+import "../lib/validation-runtime";
 import { createRoot } from "react-dom/client";
 import SubmissionQueue, { QueueRuntime } from "./SubmissionQueue";
 import "../index.css";

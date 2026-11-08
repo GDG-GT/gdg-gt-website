@@ -1,0 +1,15 @@
+{
+  "completed": true,
+  "tests": 2807,
+  "testFiles": 503,
+  "failed": 0,
+  "coverageGates": "Original global 70% and 22 security module 90% branch gates passed, unchanged.",
+  "sourceReport": "artifacts/quality/free-workers-final-tests.json",
+  "isolatedWorkers": 2,
+  "database": "All 141 canonical migrations and assertions, both 100-client concurrency cases passed; isolated disposable database removed. Forward 141 applied once locally and hosted.",
+  "typecheckPassed": true,
+  "scopedLintPassed": true,
+  "targetedTestsPassed": 61,
+  "earlierParallelRun": "13 timeout/cascade failures retained in artifacts/quality/free-workers-tests.json; subsequent complete isolated run passes every test without changing assertions or timeouts.",
+  "generatedAt": "2026-11-08T00:31:49.246860+00:00"
+}

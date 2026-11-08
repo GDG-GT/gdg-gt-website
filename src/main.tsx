@@ -1,3 +1,4 @@
+import "./lib/validation-runtime";
 import { readPublicBootstrap } from "./ui/public-hydration";
 import { PublicHydrationBoundary } from "./ui/PublicHydrationBoundary";
 import { createRoot, hydrateRoot } from "react-dom/client";

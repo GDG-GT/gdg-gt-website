@@ -1,5 +1,5 @@
+import { authorizeJob } from "./lib/job-authorization.mjs";
 import { ApiError, allowMethod, sendJson } from "./lib/http.mjs";
-import { tokenHash, equalHashes } from "./lib/security.mjs";
 import { databaseResult as checked } from "./lib/validation.mjs";
 import { cleanupUploads } from "./upload-cleanup.mjs";
 import { cleanupMedia } from "./media-cleanup.mjs";
@@ -8,37 +8,7 @@ import { runNewsletterWorker } from "./newsletter-worker.mjs";
 import { runPushWorker } from "./push-worker.mjs";
 import { pushConfig } from "./lib/push-transport.mjs";
 import { drainOperationalRetention } from "./lib/retention-worker.mjs";
-export function authorizeJob(request, env = process.env) {
-  if (
-    request.headers.origin ||
-    request.headers.cookie ||
-    (request.headers["sec-fetch-site"] &&
-      request.headers["sec-fetch-site"] !== "none")
-  )
-    throw new ApiError(
-      403,
-      "FORBIDDEN",
-      "Scheduled jobs do not accept browser requests.",
-    );
-  if (!env.CRON_SECRET || env.CRON_SECRET.length < 32)
-    throw new ApiError(
-      503,
-      "JOBS_NOT_CONFIGURED",
-      "Scheduled jobs are not configured.",
-    );
-  const authorization = request.headers.authorization;
-  if (
-    typeof authorization !== "string" ||
-    !authorization.startsWith("Bearer ") ||
-    authorization.length > 1024 ||
-    !equalHashes(tokenHash(authorization.slice(7)), tokenHash(env.CRON_SECRET))
-  )
-    throw new ApiError(
-      401,
-      "UNAUTHORIZED",
-      "Valid job authorization is required.",
-    );
-}
+export { authorizeJob } from "./lib/job-authorization.mjs";
 export async function jobRoutes(request, response, { db, config, requestId }) {
   const url = new URL(request.url, config.origin),
     match = url.pathname.match(/^\/api\/v1\/jobs\/([a-z-]+)$/);

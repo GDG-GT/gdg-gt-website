@@ -22,7 +22,7 @@ export function createExportBytes(format, rows) {
   const content = format === "xlsx" ? responseXlsx(rows)
     : format === "json" ? JSON.stringify(rows, null, 2) : "\uFEFF" + responseCsv(rows);
   const bytes = Buffer.from(content);
-  if (bytes.length > 64 * 1024 * 1024)
+  if (bytes.length > 50 * 1024 * 1024)
     throw new ApiError(413, "EXPORT_TOO_LARGE", "Narrow the export filters.");
   return bytes;
 }

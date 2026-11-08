@@ -120,7 +120,8 @@
     "test:public-ssr": "NODE_ENV=production node scripts/test-public-ssr.mjs",
     "pretest": "node scripts/prepare-public-styles.mjs",
     "pretest:coverage": "node scripts/prepare-public-styles.mjs",
-    "pretest:ui": "node scripts/prepare-public-styles.mjs"
+    "pretest:ui": "node scripts/prepare-public-styles.mjs",
+    "build:vercel": "node scripts/prepare-serverless-scanner.mjs && node scripts/prepare-serverless-media.mjs && npm run build && node scripts/prepare-vercel-static.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.1153.0",

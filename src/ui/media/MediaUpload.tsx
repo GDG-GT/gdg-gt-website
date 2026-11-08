@@ -166,7 +166,7 @@ export default function MediaUpload({
         Upload to this folder
       </h2>
       <p className="gt-helper">
-        Images 20 MiB · video 250 MiB · audio 50 MiB · documents/ZIP 25 MiB.
+        Images 20 MiB · video/audio 50 MiB · documents/ZIP 25 MiB.
         Files stay private until scanning passes. Publishing is a separate
         approval.
       </p>

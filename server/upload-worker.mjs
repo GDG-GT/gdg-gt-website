@@ -84,7 +84,7 @@ export async function runUploadWorker({
             "CHECKSUM_MISMATCH",
             "File checksum mismatch.",
           );
-        const scan = await scanBuffer(bytes, env);
+        const scan = await scanBuffer(bytes, env, { jobId: job.id, leaseToken: job.lease_token });
         if (!scan.clean)
           throw new ApiError(
             400,

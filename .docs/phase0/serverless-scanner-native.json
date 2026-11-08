@@ -1,0 +1,16 @@
+{
+  "completed": true,
+  "engine": "ClamAV 1.5.4",
+  "signatureVersion": "28176",
+  "signedDefinitionsVerifiedDuringBuild": true,
+  "runtimeBytes": 135227708,
+  "memoryLimitBytes": 2147483648,
+  "oomKilled": false,
+  "cleanAccepted": true,
+  "eicarRejected": true,
+  "scannedFiles": 2,
+  "infectedFiles": 1,
+  "elapsedMs": 226425,
+  "scope": "Actual Linux x64 engine in an isolated no-network 2 GiB container on an ARM development Mac (emulated timing). Fresh vendor-signed definitions. Expected ClamAV exit 1 indicates EICAR detection. This does not substitute for Vercel hosted verification.",
+  "generatedAt": "2026-11-08T00:20:39Z"
+}

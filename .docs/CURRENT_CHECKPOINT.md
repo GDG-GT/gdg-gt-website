@@ -1,3 +1,87 @@
+# Verified update — 2026-11-08 00:32 UTC
+
+Full isolated source+coverage run now PASSED: 2807 tests / 230 files, every original
+coverage gate unchanged. Report artifacts/quality/free-workers-final-tests.json;
+/tmp/gdg-free-workers-final-coverage.log. Scoped lint/types/secret scan pass.
+User explicitly chose gdg@gatech.edu for contact inbox/replies; configuring both
+server env values now. EMAIL_SEND_ENABLED remains false until activation step.
+Regular UI/SSR build+bundle+SSR checks running /tmp/gdg-free-worker-app-build.log.
+Next explicit worker commit/push, actual Vercel builder/native acceptance, then
+private dispatch activation and public upload enablement after real workflow checks.
+No new account, purchase or assistant timer was created.
+
+# Immediate checkpoint — 2026-11-08 00:30 UTC
+
+Current user goal: finish the PRD and production launch autonomously, using only
+free resources. No purchases, SSO/Google or Bevy/Engage; no additional assistant
+timers; no AI commit trailers. Correct first owner address has no `37` and was
+created once, with its setup email delivered and signed callbacks confirmed.
+Do not recreate/reset the owner or consume the user's private setup link.
+
+Production remains live at commit ca70c3e, deployment dpl_44RGQNsCr5ZiHcqu72MdW3vsfLS6.
+Its full CI run 42428058038 is SUCCESS, all three browser shards green. Actual
+owner browser reads now pass all 12 checked admin pages. The previous canonical
+admin redirect and disabled-tab contrast defects are fixed. Historical failures
+below are retained, not current claims.
+
+New uncommitted free worker implementation:
+- api/scanner.mjs: authenticated isolated native ClamAV; leased private-object/hash
+  fences, no direct promotion. Fresh vendor-signed definitions bundled privately.
+- api/worker.mjs: one bounded uploads/media/exports job per invocation, remote
+  metadata-only scan call; owned technical WAV+CSV/storage verification mode.
+- Linux scanner builder actually PASSED, runtime 135,227,708 bytes. Actual 2 GiB
+  isolated no-network Linux x64 clean/EICAR check PASSED, no OOM. ARM-emulated
+  engine initialization took 226425 ms; this is NOT a Vercel timing result.
+- FFprobe builder compiles checksum-pinned official signed FFmpeg 9.0.2 source;
+  no short-lived third-party release links or app secrets passed to compiler.
+- vercel.json adds separate 300-second private functions, private artifact includes;
+  build:vercel prepares native tools, then existing UI/SSR/static build.
+- Production project verified Fluid compute true; buildCommand now build:vercel.
+  No paid settings or feature flags changed. UPLOADS_ENABLED remains false.
+- Forward canonical migration 141 actually applied once locally AND hosted.
+  Two missing private media/form-exports buckets now exist at 50 MiB. Four existing
+  private buckets untouched. Shared validation/UI/export worker reflect free cap.
+- infra/production/private-workers.sql is rollback-only syntax-tested locally;
+  NOT installed/activated hosted yet. Coalesced queue triggers + one DB cron,
+  no Vercel HTTP calls when queues empty. Requires real hosted worker proof first.
+- Frontend Zod jitless config prevents CSP eval capability probing; needs actual
+  browser verification after the next build, without weakening CSP.
+
+Verification so far: targeted 61 tests pass; types pass; scoped ESLint fixed then
+rerun; secret scan clean. Full canonical isolated DB suite passes with migration141
+and all assertions, including both 100-client concurrency cases; owned disposable
+DB removed. First unrestricted-parallel full coverage run had 13 timeout/cascade
+failures while competing tasks ran (2788 passed,2 skipped); raw JSON retained at
+artifacts/quality/free-workers-tests.json. Isolated --maxWorkers=2 full coverage
+rerun session56501 is running, /tmp/gdg-free-workers-final-coverage.log. Do not
+claim it passed until inspecting the result. No tests/timeouts/assertions weakened.
+
+Private provider session79985 remains active; only it holds management secrets,
+runtime env and owner temporary verification password/cookies. Never print/dump
+privateState or .env.server.local. After final owned production workflow checks,
+log out/revoke its verification session and clear temporary bootstrap/cookie/CSRF
+fields. No plaintext S3 credential exists there; actual Vercel sensitive env has it.
+
+Prepared private modules:
+/tmp/gdg-production-private-worker-check.mjs actual authenticated hosted self-tests;
+/tmp/gdg-production-install-private-dispatch.mjs refuses activation without that
+proof; /tmp/gdg-production-forward-storage.mjs inspect-before-apply (141 done);
+/tmp/gdg-production-worker-build-config.mjs build config already updated.
+
+Next: finish source checks, commit/push explicit source + sanitized evidence to
+GDG-GT/main (no AI trailers), await auto Vercel build. Verify native hosted clean/
+EICAR, WAV and private storage round trips. Fix real failures before uploads enable.
+Then verify actual owned upload/export workflow and queue recovery, configure fresh
+signature rebuild schedule without exposing deploy hook, and complete remaining
+production acceptance. No additional free account needed if existing stack works;
+Northflank was ruled out due its ongoing security incident before signup/secrets.
+
+Preserve unrelated files: supabase/.temp/cli-latest, PageAccessGuard 2.tsx,
+src/ui/linktree/useLinktreeRead 2.ts. No historical migration replay or DB reset.
+No owned prototype containers remain; original local DB and scanner untouched.
+
+--- Historical checkpoints below ---
+
 # Immediate checkpoint — 2026-11-08 00:01 UTC
 
 NEW CONFIRMED PROD GAP ownerbrowser /admin/ shows restriction(noH1)becauseVercel

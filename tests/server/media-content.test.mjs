@@ -9,11 +9,12 @@ import { mediaFileMutation, mediaUploadIntent } from "../../shared/media.mjs";
 const id = "a7500000-0000-4000-8000-000000000001";
 describe("General media policy", () => {
   it("uses category-specific limits, extensions and strict input schemas", () => {
-    expect(validateMediaFile("fixture.mp4", "video/mp4", 262144000).kind).toBe(
+    expect(validateMediaFile("fixture.mp4", "video/mp4", 52428800).kind).toBe(
       "video",
     );
     for (const values of [
       ["fixture.png", "image/png", 20971521],
+      ["fixture.mp4", "video/mp4", 52428801],
       ["../x.txt", "text/plain", 10],
       ["x.svg", "image/svg+xml", 10],
       ["x.mp4", "image/png", 10],
