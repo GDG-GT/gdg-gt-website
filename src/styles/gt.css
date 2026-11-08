@@ -4917,6 +4917,11 @@ fieldset.gt-event-fields {
   font-size: 0.69rem;
   color: var(--text-secondary);
 }
+.gt-tabs > button:disabled {
+  opacity: 1;
+  color: var(--text-secondary);
+  -webkit-text-fill-color: currentColor;
+}
 .gt-tabs > button[aria-selected="true"] {
   color: var(--coral);
   font-weight: 650;

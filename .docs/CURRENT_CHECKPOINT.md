@@ -1,3 +1,166 @@
+# Immediate checkpoint — 2026-11-08 00:01 UTC
+
+NEW CONFIRMED PROD GAP ownerbrowser /admin/ shows restriction(noH1)becauseVercel
+redirectedcanonical/admin -> /admin/ butAPIpermissionmappingexact/admin. CURRENT
+UNCOMMITTED fix verceltrailingSlashfalse/removebadredirect;readinessusescanonical/admin;
+regressiontestassertsconfig. CI42425720495(3d6585c)FINISHEDFAILURE: source/DB/coverage/
+secrets/deps+browser1/2PASS, browser3had2WebKitMobile a11ycolorcontrast failures on
+disabled#dialog-builder-tab-Field/Logic/Settings under revokedaccess; original log
+/tmp/gdg-ci-3d6585c-failed.log retained. CURRENT CSS .gt-tabs>button:disabled nowopacity1,
+textsecondary,-webkit-text-fill-colorcurrentColor. Build6311finishedPASS; target12browser
+blocksrevokednowrunning /tmp/gdg-disabled-tabs-browser.log; targeted26 testsrerun
+isolated /tmp/gdg-canonical-isolated-tests.log (firsttestattempttimedout5swhile
+build+emulatedAVcompeted; no timeout/assertionweakening). Needreap lint65329 ifstillactive.
+Aftertestscommit/push ONLYuifix+knownmetadata+checkpoint, autoGitdeploy, actualowner
+browserverifycanonical/admin (not/admin/). No newworker codeyet.
+
+Ownerbootstrap/access/deliveryallCONFIRMED. Setupemailcorrectaddresssentandprovider
+delivered + real signed callbacks. DoNOT recreate/resetowner orconsumeSetuptoken.
+Privateprovider79985ACTIVEpw/cookiesONLYmemory; ownerbrowserdiagnostic h0 because
+restricteddashboardalias, notinvalidsession. Afteruifixverifyall12ownerpages+logout
+theneraseprivateState.ownerBootstrapPassword/cookies/CSRF etc. NeedkeepownerEmail/id
+metadataforreadchecks; norealemail inpublicGitreport. Usernotifiedsetupdelivered.
+
+FreeworkerexistingVercelapproachstillRESEARCH/prototype, NOTIMPLEMENTED. Official
+ClamAV1.5.4LinuxRPMruntime21MBlib+smallbin works --version insideowned2GB Linux
+node:24-bookworm-slim@sha256:01d566e8d94d8c619591d78652babfccd3c6992a3dffa9ed5ab39e11cf6c70e9
+AMD64image newlypulled.Noexistinguserimagestagchanged. localpostgres17wasARM despite
+requestedplatform (earlierprototypefailedELFldloader), notbinaryfailure. Nodefs.cp
+defaultabsolutizessymlinks,useverbatimSymlinkstrue to keepvendorrelativeSOlinks.
+/tmp/gdg-test-serverless-scanner.mjs versionPASS,cleanupdone.No prodscanneracceptance.
+
+Fullclean/EICARscan prototype /tmp/gdg-test-native-full-scan.mjs created Docker
+gdg-full-scanner-probe-1794095901844 with2GB memory, networknone. Runtime+defs+certs
+fromverifiedcurrentlocaldaemoncopiedto/tmp/gdg-scanner-runtime-probe (~209MB).
+It loaded~679MiB andused1CPUbutwasINTENTIONALLYinterruptedafter2min tofree resources
+forurgentownerbuild/tests; notcompleted/notpassed. Stopcall27344 mayneedreap;parent
+76902 mayneedreap andfinallyremovescontainer. /tmp/gdg-test-native-full-scan.log retains
+interruption. Rerunisolatedlater(no parallelbuild/browser)ifneedactualAVproof. Local
+MacARMemulationwalltimeisn'thostnativebenchmark. Vendorbinaryversionworksnative
+ELF underAMD64Node24. ClamAVlocalstandarddaemonactual981MiB/3GB.
+
+Nativepackagingresearchfindings: OfficialDEB /tmp/gdg-clamav-1.5.4-linux.deb105819396bytes
+SHA28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886 verified. Nodecan
+readstandardar60byteheaders(noexternalar needed), data.tar.gz105813612 bytes extracted
+/tmp/gdg-clamav-deb-data.tar.gz. Pathsusr/local/bin/{clamscan,freshclam},sbin/clamd,
+lib/libclamav*.so*/libclammspack/unrar/freshclam;etc/certs/clamav.crt. Buildtoolsexclude
+Ruststaticarchive63MB,clambc/sigtool16MB,libfreshclam18MBfromruntime;runtimecore22MB.
+MainCVD84.9MB + dailyCLD82.3MB + bytecode.27;enableFreshclamCompressLocalDatabaseyes
+forcompressed~25MBdaily tosavebundle. BuildbundleClamAV+defs~130MBpossiblewithin250MB.
+VercelHobby2GB+300sFluidcompute latestofficialdocs (mustverifyactualproject).
+
+PROPOSED cleanarchitecture (NOTadopted/sourceyet): separate authenticated background
+api/worker (uploads/media/exports bounded1) and api/scanner (nativeClamAV, official
+signeddefsprivatebundle). WorkerusesexistingS3encryptedenvs,scannergetsjobid+lease+
+expectedhashthroughCRONauthsameoriginHTTPS (no raw50MBbodyVercel4.5MBlimit), verifies
+DBlease/purpose/objectbyteshash thenAVscans. Parentseparatelyvalidates/normalizes/
+promotes withexistingfences. Couldremotescannerhttp signatureaddoptionaljobcontext
+to scanBuffer;localCLAMDunchanged. Dedicatedbackgroundscannerisnotlatency-sensitive
+publicrequest, alignsPRD26.7 queueworker requirement. DoNOTfakeAVorremoveguards.
+MediaworkeralsoneedsFFPROBEbinary (currentlylocalonly);canbundlepinnedofficialendorsed
+staticbinaryinparentfunction separatelyfromAVbundle tofit250MB. Needresearchcurrent
+trustedstaticFFprobe orbuildminimalvendorffmpeg withallowedformats. Noextrapaidhost.
+
+Buildscannerfuturepreparesverifiedofficialbinaries+freshdefs, nativehelperincludeFiles
+private.build scannerfolder; dailyVerceldeployhookstoredinVault/pg_cron couldrefresh
+bundleddefs(don'truntime-download168MBfromSupabaseeverycoldstart/freeegress). No hook
+createdyet. Per-defectsignaturefreshness72hfailclosed unchanged. Need actualhosttest
+clean/EICAR/lease/hash/expiry beforeUPLOADenabled. Needcapmedia/export50MB per latest
+userfreeonly instruction, DBforwardmigration141 (no replay140), UI/APIvalidation+
+privatebucketscreate. Stillno capsourcechangesmade.
+
+CUAfreeproviderresearchCOMPLETED: nativeVivaldiPRIVATEalreadyexistingwindow;read
+Northflankpricing+actualongoingcredentialcompromiseincident,ruledout.Bothownedtabs
+closed,originalhome restored,completion_summary' Reviewed free hosting' submitted.
+NO account/OAuth/secretscreated. LatestuserallowsfreealternativesbutnoCC/purchases.
+IfnewCUAaccountcreationrequired, termsacceptance/securitygrantneedactiontimeconfirmation
+evenpreapproval;prepareconcretestepthenaskandexplainCUApolicy,continueindependentwork.
+No new assistanttimers, SSO/Google/BevyEngagedeferred. Preserve3unrelateduserfiles.
+No AI trailers. Continue autonomously.
+
+Earlier checkpoint history (superseded):
+
+# Immediate checkpoint — 2026-11-07 23:49 UTC
+
+LATEST USER resolved inputs: corrected owner email WITHOUT37: tejas.singhal@gatech.edu,
+SuperAdminallprivileges, displayname inferredTejasSinghal. User explicitly FREEonly,
+SupabaseFree50MBcapacceptable; ifneedanotherfreeprovider research/create viaGitHub
+logininVivaldiincognito, usergoingtosleepcontinue. No purchases/paidplans/CC.
+
+PROD OWNER CREATED ONCE successful atomic bootstrap+24haccountsetupqueue. ID
+7f01fe27-d394-4bc8-a5c3-c296eacf16ef. Corrected-away37addressNEVERcreated. Reports
+production-owner-bootstrap/access/setup-delivery. ActualHTTPSgate/login/session+
+adminusers/members/forms all200 androleSuperAdmin. One setupemail throughscoped
+account_accessqueueDELIVERED(transportconfirmed); actualproviderdeliveryquerypending
+privateprovider79985 modulegdg-production-owner-delivery-status. Usernotifiedsetup
+emailatcorrectaddress. RandombootstrapPW+authenticatedcookiesONLYprivateState79985,
+neverprinted; needlogout/revoke/clearafterprivateUIchecks. Usermustchooseownpassword
+fromsingle-useemail; doNOTconsumetheirtoken. Privatesessionfields ownerBootstrapPassword,
+ownerEmail,ownerId,ownerHttpCookie,ownerCsrf,ownerSessionBinding,ownerSetupJob.
+
+CURRENT LIVE source3d6585c dpl_GwQUJrEqVBFexQij2ECYQkTPuMeP READY/PROMOTED. Actual
+SSR34/34PASS, hostedhero7PASSdirect3Dnoposterflash, public18checks9routesdesktop/mobile
+PASS. NewhostedwebhookFIXrealVercelprojectNODEJS_HELPERS=0(builderflagnotNextconfig)
+works: invalidsignature401, signedwhitespacevalid200ignoredtechnicaltype nofakeevents.
+Actual2ndResendsimulator01a1b85e-8620-725f-9480-ce2ae6b50430 delivered+REALSIGNED
+email.sent/email.delivered callbacksDBconfirmed. Firstsimulatorbeforefix01a1b856-e1a4-7d08-a72a-6043cf538aef
+wasproviderdeliveredbutcallbacksfailedRAW_BODY_REQUIRED; originalfailurepreserved.
+GlobalEMAIL/PUSH/UPLOADflagsstillfalse. Cron11defined9active2mailinactive; 5actual
+scheduledHTTPSexecutions200notimeouts. Vaultsecretmatchesruntime,noplainbearersinSQL.
+
+Finalsource2772tests229files PASS unchangedcoverage78.35lines76.29statements71.04functions
+75.72branches. Fullpublicsmoke76PASS8expectedskips (all6profiles); sixoptimizedperfPASS
+homeMobile99LCP1954ms desktop100LCP643ms,a11y100CLS0. PWA15/update9/HTTPS52PASS.
+Traceability146/307mapped,overallhumanacceptancenotclaimed. CurrentremoteCI42425720495
+3d6585c stillinprogress atlastcheck; needcheck/fixactualremote failures,avoidpointless
+docpushcancelling. Docs/evidenceuncommittedafterlastsourcepush, preserve. Threeunrelated
+userfilesneverstage(cli-latest,PageAccessGuard2,useLinktreeRead2).
+
+FREE WORKER RESEARCH ongoing. SupabaseEdge256MB/2sCPU150s doesn'tfitClamAV(~981MiB
+actualdaemon). GHActionspublicstandardfreebuttermsdiscouragehostingserverlessapp,
+NOTadopted. RenderFree512MBtoosmall. HuggingFaceCPUnewGradioDockerrequirespaidplan2026,
+notfree. Northflankfree$20/monthlooksviableBUTactualwebsiteNov6stillinvestigatingOct30
+secretsdecryptionincident,ruledout. CUAusedVivaldialreadyprivatewindow(readonlypricing/
+incident),twocreatedtabsclosed,originalhome restored,completion_summarysubmitted,NO
+accountcreated/login/newOAuth/secretschanged. NoCUApendingapproval/cleanup. Forfuture
+newaccountterms/OAuthsecurityaccess requiresactiontimeconfirmationunderCUApolicy;
+dootherauthorizedworkfirst. No new assistant auto-resumetimers.
+
+CURRENT PROPOSED freeapproach (NOTIMPLEMENTED): existingVercelHobby2GB functions can
+runboundedClamAV jobs, up to300s Fluidcompute latestofficialdocs (verifyprojectsetting).
+ClamAVofficial1.5.4RPM downloaded/tmp/gdg-clamav-1.5.4-linux.rpm SHA
+1f4d381226b3cb5f4b1897253a496cf774a975fa1934e8610d7899f614f144dc verifiedofficialGitHub.
+Extracted /tmp/gdg-clamav-rpm-extract viaMacbsdtar. Runtimeonlyneedsclamscan/clamd
+(~0.3MB)+libclamav.so21MB/libunrar/libclammspack(~1MB);excludeRuststaticarchive63MB,
+clambc16MB,sigtool16MB,libfreshclam18MB(buildonly). LocalcurrentofficialClamAVdefs
+167.5MB(main84.9MB,daily82.3MB,bytecode.27MB)soTOTALruntimebinary+defs~190MB +
+SDK/sharp20-30MB MAYFIT Vercel250MBuncompressed. Need actualhostproof beforeraising
+uploadflag. NewdisposableDockerprototypecommandrunning unifiedsession? SEE toolresult
+next: tests RPMbinaryunderexistingofficialpostgres17glibc Linux (noDB,networknone).
+Commandhastwocasesldd/version, tempvendorfilesreadonly. LocalclamavdaemonusesAlpine
+frompinnedimage+72hsignaturehealth, notnewnativeRPMproof.
+
+OfficialDEBalsoDOWNLOADrunningunified29024 /tmp/gdg-clamav-1.5.4-linux.deb, expected
+SHA28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886. SimplerLinux
+buildextractdebwithstandardar/tar(xz) vsRPMneedsbsdtar/cpio. Vercelneedsbuildscript
+fetchvendorbinary+verifySHA+freshclamupdate(buildtoolsoutsidefunction),bundleONLY
+runtime20MB+officialdefs168MB. No script/sourceworkerchangesyet. Potentialdaily
+VerceldeployhookviaSupabaseCron+Vault updatesbundledsigneddefs, avoids168MBdownload
+perfunctioncoldstart/Supabase1GBegress. Stillnotadopted; testbudgets/signaturefreshness
+first. NeedinvestigateCVDCertsDirectory officialcerts;local /etc/clamav/certs/clamav.crt
+exists. OfficialpinnedOCIimageinspect /tmp/gdg-inspect-clamav-oci.mjs worksifneeded.
+No newhostingprovider account needed IF existingVercelfits; userinformedtestingthis.
+
+Need change media/export limits64/250to50MBbylatestuserauthorization acrossshared/API/
+UI/DB(migration141 additive, don'treplay140)+privatebucketscreate. Needactualworker
+exports/media/scans deployment/acceptance, enablemail afterconfiguration andproper
+chaptercontact/inboxchoice(notgiven;ownerpersonalemailnotautomaticallychapterinbox).
+FinishownerprivateUIreadtests+logout/clearpw, preserveuserSetuplink. No resetanyaccounts.
+No fakeproductionfixturedata unlessboundedownedtest withcleanup explicitlydocumented.
+SSO/Google/Bevy/Engagedeferred. Continueautonomously,notfinalbeforemeaningfulworkdone.
+
+Earlier history (superseded):
+
 # Immediate checkpoint — 2026-11-07 23:32 UTC
 
 Current live9dd95a6 dpl_FAByNjcSU6cwwtWWcGNpksgDhizL READY/PROMOTED. Router SSR

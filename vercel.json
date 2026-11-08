@@ -3,6 +3,7 @@
   "outputDirectory": ".build/public",
   "devCommand": "npm run dev",
   "framework": "vite",
+  "trailingSlash": false,
   "headers": [
     {
       "source": "/sw.js",
@@ -128,13 +129,6 @@
     {
       "source": "/:route((?!api|assets|icons|_next|sw.js|offline.html|manifest.json|logo.png|logo.webp|favicon.png|favicon.ico|sitemap.xml|rss.xml|robots.txt|humans.txt).*)",
       "destination": "/api/site?__route=/:route"
-    }
-  ],
-  "redirects": [
-    {
-      "source": "/admin",
-      "destination": "/admin/",
-      "permanent": true
     }
   ],
   "functions": {

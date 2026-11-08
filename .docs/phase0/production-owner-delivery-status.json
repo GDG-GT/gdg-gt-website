@@ -1,0 +1,10 @@
+{
+  "queueState": "completed",
+  "providerLastEvent": "delivered",
+  "receivedSignedEvents": [
+    "email.sent",
+    "email.delivered"
+  ],
+  "scope": "Actual corrected first-owner account-setup delivery status only; no private setup link, email body, recipient, password or token retained.",
+  "generatedAt": "2026-11-07T23:50:23.335Z"
+}

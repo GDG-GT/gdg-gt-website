@@ -1,0 +1,11 @@
+{
+  "created": true,
+  "accountId": "7f01fe27-d394-4bc8-a5c3-c296eacf16ef",
+  "role": "super_admin",
+  "active": true,
+  "emailSha256": "67c873e447d39228c005d9038e586c9323053447c6bf5f049ccd03a02ba6dad7",
+  "setupEmailQueued": true,
+  "temporaryPasswordDisclosed": false,
+  "scope": "User-authorized first production Super Admin for the corrected address. Atomic empty-database bootstrap plus single-use 24h encrypted account-setup delivery. Corrected-away address was never provisioned. No password/token/cookie or raw email in this public-repository report.",
+  "generatedAt": "2026-11-07T23:44:38.073Z"
+}

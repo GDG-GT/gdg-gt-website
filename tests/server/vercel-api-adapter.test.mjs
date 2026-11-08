@@ -46,6 +46,8 @@ describe("hosted Vercel API dispatch", () => {
     expect(config.rewrites).toContainEqual({ source: "/", destination: "/api/site?__route=/" });
     expect(config.rewrites).toContainEqual({ source: "/api/v1/:path*", destination: "/api/v1?__gdg_api_route=:path*" });
     expect(config.outputDirectory).toBe(".build/public");
+    expect(config.trailingSlash).toBe(false);
+    expect(config.redirects || []).not.toContainEqual({ source: "/admin", destination: "/admin/", permanent: true });
     expect(config.functions["api/site.mjs"].includeFiles).toContain("shared/**");
     expect(config.functions["api/v1.mjs"].includeFiles).toBe("shared/**");
     const entry = await import("../../api/v1.mjs");

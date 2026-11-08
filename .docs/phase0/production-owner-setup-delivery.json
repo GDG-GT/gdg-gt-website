@@ -1,0 +1,13 @@
+{
+  "completed": true,
+  "counts": {
+    "claimed": 1,
+    "completed": 1,
+    "retried": 0,
+    "lostLease": 0
+  },
+  "deliveryState": "completed",
+  "errorCode": null,
+  "scope": "The user explicitly requested this corrected-address Super Admin account. Its existing single-use account-setup email was sent through the real scoped account-access queue and Resend transport. Only the first owner account exists; no other message kinds claimed. No private link, credential or raw email retained in this report.",
+  "generatedAt": "2026-11-07T23:46:44.022Z"
+}

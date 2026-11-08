@@ -1,0 +1,9 @@
+{
+  "completed": true,
+  "invalidStatus": 401,
+  "invalidCode": "INVALID_WEBHOOK",
+  "validStatus": 200,
+  "validAccepted": true,
+  "scope": "Actual canonical handler rejects a wrong signature and accepts exact whitespace-bearing correctly signed bytes. Deliberately unrecognized technical event type is acknowledged/ignored, never recorded as a provider delivery. No email send or fabricated delivered event.",
+  "generatedAt": "2026-11-07T23:35:35.245Z"
+}

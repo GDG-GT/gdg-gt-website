@@ -1,0 +1,37 @@
+{
+  "completed": true,
+  "results": [
+    {
+      "name": "Actual canonical gate accepts the existing configured code",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Corrected owner authenticates as active Super Admin",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Owner can read /auth/session",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Owner can read /admin/users",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Owner can read /admin/members",
+      "passed": true,
+      "status": 200
+    },
+    {
+      "name": "Owner can read /admin/forms",
+      "passed": true,
+      "status": 200
+    }
+  ],
+  "scope": "Actual canonical HTTPS gate/login/session and authorized account/member/form reads for the user-requested corrected first Super Admin. No response bodies, email/passwords/cookies/tokens retained in this report. Setup completion by account holder remains separate.",
+  "generatedAt": "2026-11-07T23:46:08.027Z"
+}

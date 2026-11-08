@@ -31,7 +31,7 @@ try {
     check(csp.includes("script-src 'self'") && !csp.includes("'unsafe-eval'") && r.headers.get("x-content-type-options") === "nosniff", path + " retains the executable-content and MIME policy");
     check(body.includes('href="https://gdggt.dev' + (path === "/" ? "/" : path) + '"'), path + " advertises the owner's canonical domain");
   }
-  for (const path of ["/admin/", "/forms/not-a-real-hosted-form", "/contact?type=membership"]) {
+  for (const path of ["/admin", "/forms/not-a-real-hosted-form", "/contact?type=membership"]) {
     const { response: r, body } = await get(path);
     check(r.status === 200 && !body.includes("gdg-public-bootstrap") && r.headers.get("cache-control")?.includes("no-store"), path + " preserves the ordinary private/query client boundary");
   }

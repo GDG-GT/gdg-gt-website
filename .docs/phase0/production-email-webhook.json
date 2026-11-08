@@ -1,8 +1,19 @@
 {
-  "providerMessageId": "01a1b856-e1a4-7d08-a72a-6043cf538aef",
+  "providerMessageId": "01a1b85e-8620-725f-9480-ce2ae6b50430",
   "providerLastEvent": "delivered",
-  "verifiedSignatureEvents": [],
-  "deliveredWebhookVerified": false,
+  "verifiedSignatureEvents": [
+    {
+      "event_type": "email.sent",
+      "state": "pending",
+      "occurred_at": "2026-11-07 23:36:05.184+00"
+    },
+    {
+      "event_type": "email.delivered",
+      "state": "pending",
+      "occurred_at": "2026-11-07 23:36:05.6+00"
+    }
+  ],
+  "deliveredWebhookVerified": true,
   "scope": "Read-only actual provider status plus event records accepted by deployed signature-checking handler. Simulator only; no resend/new email or participant data.",
-  "generatedAt": "2026-11-07T23:29:27.003Z"
+  "generatedAt": "2026-11-07T23:36:23.381Z"
 }
