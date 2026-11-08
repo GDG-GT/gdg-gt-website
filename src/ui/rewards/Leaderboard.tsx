@@ -151,7 +151,7 @@ export default function Leaderboard() {
   return (
     <div className="rewards-public">
       <header className="rewards-public-header">
-        <Brand compact />
+        <Brand compact destination="/leaderboard" />
         <nav aria-label="Member rewards">
           <Link
             to="/leaderboard"
@@ -204,10 +204,7 @@ export default function Leaderboard() {
         {privateView && !me && (
           <section className="rewards-signin">
             <h2>Member sign-in</h2>
-            <p>
-              Use the Georgia Tech account listed in the chapter’s community
-              member directory.
-            </p>
+            <p>Sign in with your Georgia Tech account.</p>
             <Button
               disabled={!data?.ssoAvailable || busy}
               onClick={() => void login()}
@@ -215,32 +212,17 @@ export default function Leaderboard() {
               {busy ? "Opening campus sign-in…" : "Sign in with Georgia Tech"}
             </Button>
             {data && !data.ssoAvailable && (
-              <p>
-                Campus sign-in is awaiting Georgia Tech configuration. Existing
-                chapter members will be able to open their accounts here once it
-                is connected.
-              </p>
+              <p>Georgia Tech sign-in is coming soon.</p>
             )}
           </section>
         )}
         {!privateView && (
           <section aria-label="Chapter leaderboard">
-            <div className="rewards-section-heading">
-              <h2>Chapter leaderboard</h2>
-              <span>All-time points</span>
-            </div>
-            <p>
-              Members choose whether to appear and which name to display. Points
-              recognise participation and contributions.
-            </p>
+            <h2>Leaderboard</h2>
             {!data && !error && <p role="status">Loading leaderboard…</p>}
             {data && data.items.length === 0 && (
               <div className="rewards-empty">
-                <h3>The next contribution starts here.</h3>
-                <p>
-                  Member rankings will appear as points are awarded and members
-                  choose to join the public board.
-                </p>
+                <p>No rankings yet.</p>
                 <Link
                   className="gt-button gt-button-secondary"
                   to="/leaderboard/member"
@@ -293,10 +275,7 @@ export default function Leaderboard() {
               <p className="rewards-balance">
                 {me.points.toLocaleString()} <span>points</span>
               </p>
-              <p>
-                Your card, future Wallet pass and QR credentials all connect to
-                this balance. To replace a lost card, contact a chapter officer.
-              </p>
+
               <Button
                 variant="ghost"
                 disabled={busy}
@@ -325,10 +304,7 @@ export default function Leaderboard() {
                 ))}
               <h2>Your public profile</h2>
               <form className="rewards-profile-form" onSubmit={submit}>
-                <Field
-                  label="Display name"
-                  hint="Use a nickname if you prefer. Your email is never shown on the public board."
-                >
+                <Field label="Display name" hint="Your email stays private.">
                   <input
                     value={alias}
                     onChange={(e) => {
@@ -356,10 +332,7 @@ export default function Leaderboard() {
             <section>
               <h2>Your contributions</h2>
               {me.ledger.length === 0 ? (
-                <p>
-                  Your first points will appear after a chapter officer confirms
-                  your contribution.
-                </p>
+                <p>No contributions yet.</p>
               ) : (
                 <ul className="rewards-history">
                   {me.ledger.map((e) => (
@@ -378,30 +351,16 @@ export default function Leaderboard() {
                   ))}
                 </ul>
               )}
-              <p className="rewards-fine-print">
-                Showing your latest 100 entries. Contact the chapter if a
-                contribution is missing or incorrect.
-              </p>
+              {me.ledger.length === 100 && (
+                <p className="rewards-fine-print">Latest 100 entries</p>
+              )}
             </section>
           </>
         )}
         <section>
-          <div className="rewards-section-heading">
-            <h2>Chapter perks</h2>
-            <span>Keep contributing</span>
-          </div>
-          <p>
-            Reach a points threshold to request an available perk. Requests do
-            not spend points. Offers depend on availability and chapter
-            approval.
-          </p>
-          {data?.perks.length === 0 && (
-            <p>
-              Perks will appear here when the chapter opens them. Planned
-              options include merch, earlier event registration and travel
-              consideration.
-            </p>
-          )}
+          <h2>Perks</h2>
+          {!!data?.perks.length && <p>Requests don’t spend points.</p>}
+          {data?.perks.length === 0 && <p>No perks available right now.</p>}
           <div className="rewards-perks">
             {data?.perks.map((p) => {
               const claim = me?.claims.find((c) => c.perkId === p.id);
@@ -451,10 +410,6 @@ export default function Leaderboard() {
             })}
           </div>
         </section>
-        <p className="rewards-fine-print">
-          Travel priority means consideration for available opportunities. It
-          does not guarantee selection, funding or travel approval.
-        </p>
       </div>
     </div>
   );

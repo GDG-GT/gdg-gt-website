@@ -1,6 +1,6 @@
 # Member points and cards
 
-Admin: `/admin/rewards` (Super Admin only). Public board: `/leaderboard` on the chapter domain and on `leaderboards.gdggt.dev` once DNS is configured. The subdomain root redirects to `/leaderboard` before rendering the homepage.
+Admin: `/admin/rewards` (Super Admin only). Public board: `/leaderboard` on the chapter domain and on `leaderboards.gdggt.dev`. The subdomain root redirects to `/leaderboard` before rendering the homepage.
 
 ## Initial setup
 
@@ -27,7 +27,7 @@ Perks use the current points threshold and do not spend points. A pending reques
 
 Directory inactivation, removal, merge or email changes revoke credentials and member sessions. Merges involving existing reward or claim history are deliberately blocked for reconciliation; neither ledger is silently discarded or combined. Existing identity and history remain retained. This restriction is visible as REWARD_MERGE_REVIEW_REQUIRED.
 
-Private screens show the latest 100 ledger/credential records; the immutable database ledger retains earlier entries. No offline points awards or private response caching.
+Private screens show the latest 100 ledger/credential records; the immutable database ledger retains earlier entries. No offline points awards or private response caching. Camera permission is requested only when the officer chooses QR scanning. The document policy permits the same-origin camera across SPA entry routes, so entering from the homepage does not permanently block the scanner.
 
 ## Campus sign-in
 
@@ -47,3 +47,5 @@ The server generator is implemented, but issuance remains unavailable until all 
 Set both `APPLE_WALLET_NFC_ENABLED` and `APPLE_WALLET_READER_VERIFIED` only after real Apple pass acceptance and reader testing. Super Admins can then issue Wallet credentials linked to the same member account. Members download their own signed .pkpass after GT sign-in. Passes contain the compact credential and a QR fallback, never an authoritative points balance. The website is the live balance source. Server revocation is immediate; Wallet UI does not receive automatic push updates in this release.
 
 The X100 is not verified for VAS, NDEF programming or SDK integration. No unknown desktop driver or copying utility was installed. Phone-to-phone Wallet tapping is not available from an iPhone PWA; it requires native ProximityReader/approved reader integration. See NFC_POINTS_RESEARCH.md for primary sources.
+
+Domain configured and verified on 2026-11-08: Cloudflare DNS-only CNAME points to the existing Vercel project. HTTPS root redirects to `/leaderboard`; the page and public rewards API return 200.

@@ -121,10 +121,10 @@ export default function PublicGallery() {
             {illustrative
               ? "Illustrative local preview"
               : collection.loading
-                ? "Loading approved photos…"
+                ? "Loading photos…"
                 : listing
-                  ? `${listing.total} approved photo${listing.total === 1 ? "" : "s"}`
-                  : "Only approved chapter images appear here."}
+                  ? `${listing.total} photo${listing.total === 1 ? "" : "s"}`
+                  : ""}
           </p>
         </div>
         <PublicCollectionNotice {...collection} />
@@ -154,7 +154,9 @@ export default function PublicGallery() {
                   <span>
                     <span>{p.event_title || "Chapter community"}</span>{" "}
                     <strong>{p.description || p.alt_text}</strong>{" "}
-                    <span>View photo <span aria-hidden="true">↗</span></span>
+                    <span>
+                      View photo <span aria-hidden="true">↗</span>
+                    </span>
                   </span>
                 </button>
               ))}
@@ -168,9 +170,7 @@ export default function PublicGallery() {
           </>
         ) : !collection.loading && !collection.error ? (
           <EmptyState headingLevel={2} title="More moments are on the way">
-            {event
-              ? "No approved photos are currently available for this event."
-              : "Chapter event photography will appear here once it is approved."}
+            {event ? "No photos for this event yet." : "No photos yet."}
           </EmptyState>
         ) : null}
         {listing && !illustrative && (

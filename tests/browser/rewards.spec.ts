@@ -9,8 +9,8 @@ const activity = {
   id: "b2100000-0000-4000-8000-000000000004",
   title: "Fictional workshop",
   points: 10,
-  opens_at: new Date(Date.now() - 3600000).toISOString(),
-  closes_at: new Date(Date.now() + 3600000).toISOString(),
+  opens_at: "2026-11-05T11:00:00Z",
+  closes_at: "2026-11-05T13:00:00Z",
   revision: 1,
 };
 const inventory = {
@@ -84,7 +84,7 @@ test("public leaderboard is standalone, private by default and usable without SS
     }),
   ).toBeDisabled();
   await expect(
-    page.getByText(/awaiting Georgia Tech configuration/),
+    page.getByText(/Georgia Tech sign-in is coming soon/),
   ).toBeVisible();
   expect(fixture.writes).toEqual([]);
 });
@@ -117,6 +117,9 @@ test("super-admin awards require review and retry uses the same write key", asyn
     });
   });
   await page.goto("/admin/rewards");
+  await expect(
+    page.getByRole("link", { name: "Public leaderboard", exact: false }),
+  ).toHaveAttribute("href", "/leaderboard");
   await expect(
     page.getByRole("heading", { name: "Member points & cards", exact: true }),
   ).toBeVisible();
@@ -358,10 +361,14 @@ test("changing a point rule does not rewrite existing activity values", async ({
     .fill("15");
   await page.getByRole("button", { name: "Save rule", exact: true }).click();
   await expect(
-    page.getByRole("listitem").getByText("Fictional attendance · 15 points", { exact: true }),
+    page
+      .getByRole("listitem")
+      .getByText("Fictional attendance · 15 points", { exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("listitem").filter({hasText:"Fictional workshop · 10 points"}),
+    page
+      .getByRole("listitem")
+      .filter({ hasText: "Fictional workshop · 10 points" }),
   ).toBeVisible();
   expect(writes).toEqual([
     { id: rule.id, revision: 1, title: rule.title, points: 15, active: true },

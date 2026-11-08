@@ -6988,3 +6988,9 @@ fieldset.gt-event-fields {
 .gt-security-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 20px 24px; }
 .gt-security-metrics dt { color: var(--text-secondary); font-size: 0.75rem; line-height: 1.5; }
 .gt-security-metrics dd { margin: 6px 0 0; font-weight: 600; overflow-wrap: anywhere; }
+/* Read-only form controls retain readable labels after access changes. */
+.gt-add-question:disabled {
+  opacity: 1;
+  color: var(--text-secondary);
+  -webkit-text-fill-color: currentColor;
+}

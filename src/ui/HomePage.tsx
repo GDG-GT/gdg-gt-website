@@ -117,7 +117,7 @@ export function HomePage() {
       {!localPreviewEnabled && chapterMetrics.length > 0 && (
         <section
           className="gt-container gt-community-stats"
-          aria-label="Chapter-approved impact"
+          aria-label="Chapter impact"
         >
           {chapterMetrics.map((metric) => (
             <div className="gt-stat" key={metric.id}>

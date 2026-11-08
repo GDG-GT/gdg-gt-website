@@ -76,7 +76,14 @@ import {
 } from "./public-collections";
 import type { PageCopy } from "../../shared/site-content";
 
-import { isPast, slugFor, levelLabel, safePublicUrl, usePageTitle, type SiteEvent } from "./public-events";
+import {
+  isPast,
+  slugFor,
+  levelLabel,
+  safePublicUrl,
+  usePageTitle,
+  type SiteEvent,
+} from "./public-events";
 export { EventTile } from "./EventTile";
 export { HomePage } from "./HomePage";
 
@@ -1262,7 +1269,7 @@ export function ResourcesPage() {
       <PageHeader
         title="Resources for"
         accent="builders."
-        description="A good starting point for your next idea. Guides, tools, and learning paths for curious minds."
+        description="Guides, tools and courses for your next project."
       />
       <section className="gt-container gt-section">
         <div className="gt-filter-row">
@@ -1527,10 +1534,7 @@ export function SponsorsPage() {
         )}
         <PublicCollectionNotice {...tiers} />
         {packages.length > 0 && (
-          <section
-            className="gt-section"
-            aria-label="Approved sponsorship packages"
-          >
+          <section className="gt-section" aria-label="Sponsorship options">
             <h2>Ways to support the chapter</h2>
             <div className="gt-content-columns">
               {packages.map((tier) => (
@@ -1556,8 +1560,8 @@ export function SponsorsPage() {
         )}
         <PublicCollectionNotice {...metrics} />
         {chapterMetrics.length > 0 && (
-          <section className="gt-section" aria-label="Chapter-approved impact">
-            <h2>Impact, with context</h2>
+          <section className="gt-section" aria-label="Chapter impact">
+            <h2>Our impact</h2>
             <dl className="gt-content-columns">
               {chapterMetrics.map((metric) => (
                 <div key={metric.id}>
@@ -2061,7 +2065,7 @@ function ContactPageContent({ initialType }: { initialType: string }) {
               </Field>
               <Field
                 label="Interests (optional)"
-                hint="Separate interests with commas. Up to 20; avoid private or sensitive details."
+                hint="Separate interests with commas."
               >
                 <input
                   name="interests"
@@ -2087,7 +2091,7 @@ function ContactPageContent({ initialType }: { initialType: string }) {
               </Field>
               <Field
                 label="Attachment (optional)"
-                hint="PDF, PNG, JPEG, or WebP · Up to 10 MB. Uploaded privately and checked before the message is accepted."
+                hint="PDF, PNG, JPEG or WebP · Up to 10 MB"
               >
                 <input
                   name="attachment"
@@ -2118,12 +2122,7 @@ function ContactPageContent({ initialType }: { initialType: string }) {
                   </small>
                 )}
               </Field>
-              {file && (
-                <small>
-                  {file.name} · Selected locally. It stays private after
-                  submission.
-                </small>
-              )}
+              {file && <small>{file.name}</small>}
               {file && (
                 <Button
                   type="button"
@@ -2195,9 +2194,9 @@ export function InfoPage({
   const copy = {
     privacy: [
       "Your information, handled with care.",
-      "Development privacy notice",
-      "Submitted test data can be stored in this installation’s database and private file storage, not only in your browser. Please use fictional information during local development.",
-      "Registrations, newsletter signups, contact requests, Forms answers and uploads have separate access and retention controls. Forms require name and email; entered details alone are not verified. If you request an email copy, your own questions and answers (including sensitive answers) are sent directly to the address you enter, without separate confirmation. Check that address carefully. File contents and private download links are not emailed; delivered copies cannot be recalled. A final chapter privacy notice and institutional review are still required before collecting real participant data.",
+      "Privacy",
+      "We use the details you submit to handle event registrations, chapter forms, messages and newsletter subscriptions. Access to responses and uploads is limited to authorized chapter reviewers.",
+      "If you request a copy of a form response, we send your questions and answers to the email address you enter. Check the address before submitting. Uploaded files are listed by name and are not attached to that email. Contact the chapter with questions about your data or to request deletion.",
     ],
     accessibility: [
       "A community everyone can take part in.",
@@ -2208,8 +2207,8 @@ export function InfoPage({
     offline: [
       "Connection and pending submissions.",
       "Offline help",
-      "Once offline assets are ready, the public app assets and this help page are available without a connection. Current event information, private workspace data and native forms are not cached.",
-      "Event registrations and newsletter signups saved to the device queue remain pending until the server accepts them. Final native Forms responses are never background queued.",
+      "You’re offline. Reconnect to load current events, forms and your workspace.",
+      "Saved registrations and newsletter signups stay pending until they are sent. Check their status below before submitting again.",
     ],
     maintenance: [
       "A little work behind the scenes.",

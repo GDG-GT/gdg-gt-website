@@ -260,9 +260,7 @@ export default function PublicProfile() {
           })}
         </nav>
         {!profile.links.length && (
-          <p className="gt-linktree-empty">
-            New chapter links will appear here when they are ready.
-          </p>
+          <p className="gt-linktree-empty">No links yet.</p>
         )}
         {embed && source && (
           <section className="gt-linktree-embed">
@@ -277,10 +275,9 @@ export default function PublicProfile() {
             {!embedLoaded ? (
               <>
                 <p>
-                  This preview loads content from{" "}
-                  {embed.embedType === "youtube" ? "YouTube" : "Google Forms"}.
-                  Their privacy practices apply. No third-party frame loads
-                  until you choose to continue.
+                  Loading this preview connects to{" "}
+                  {embed.embedType === "youtube" ? "YouTube" : "Google Forms"},
+                  whose privacy policy applies.
                 </p>
                 <div className="gt-button-row">
                   <Button
@@ -308,11 +305,9 @@ export default function PublicProfile() {
               </>
             ) : (
               <>
-                <p>
-                  External content may be blocked by browser privacy settings.
-                  This website cannot save or verify answers in an external
-                  form.
-                </p>
+                {embed.embedType !== "youtube" && (
+                  <p>Responses go directly to Google Forms.</p>
+                )}
                 <iframe
                   className={
                     embed.embedType === "youtube"

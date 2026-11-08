@@ -2,8 +2,8 @@
   "checkedAt": "2026-11-08T17:53:59.241Z",
   "scope": "NFC/member rewards implementation, not an assertion of all prior PRD production acceptance",
   "sourceTests": {
-    "files": 237,
-    "passed": 2857
+    "files": 239,
+    "passed": 2868
   },
   "database": {
     "canonicalMigrations": 142,
@@ -48,7 +48,6 @@
     "unpublishedPerks": 3
   },
   "externalAcceptanceGates": [
-    "Cloudflare DNS authentication and leaderboards.gdggt.dev CNAME",
     "GT IAM and Supabase OIDC provider configuration plus real sign-in test",
     "Apple enhanced NFC issuer certificate/private key and verified VAS-compatible reader",
     "Physical X100/card/iPhone acceptance tests"
@@ -64,9 +63,48 @@
     "server/rewards.mjs": "716ee8fbbea22d3beb3b8d24311a4f7680886ce5591737ec6734b4f6b9759a34",
     "server/rewards-wallet.mjs": "a4b803c7b4c3392c3007639dba0a53a6ed5d49f7d3d22b02110f541bb6f04e2e",
     "shared/rewards.mjs": "903ca9eb9049d6408d9ee5f227f61d96898a0d9e8e950fe11d41939b12f0bcfb",
-    "src/ui/rewards/RewardsWorkspace.tsx": "de0730f9b30c0c91446ad337a145f9ed087d1ff2c3873c5d30bb665b04771cbc",
-    "src/ui/rewards/Leaderboard.tsx": "1948b029cc9d6957386ff6cebde2dc255f8e8f77c49d141445a09ab3fb2a0f89",
+    "src/ui/rewards/RewardsWorkspace.tsx": "be683aa576281591b7651045a5916a501db7c85aad5ba8e4721a5c1cfb1b15ab",
+    "src/ui/rewards/Leaderboard.tsx": "101d2d9c767fdc0c309938a5f7b0b8ce6c93149b3a36f3a69001bc81c0165d34",
     "src/ui/rewards/TapHandoff.tsx": "f6236129f00944ae02eaf7d42d2514608b930924b58710b5dd9e1c9fc8f49431",
     "src/ui/rewards/NfcControls.tsx": "9abb43adfa818128a9f4a04392c1349698e3b25625123a642efb8e665cc4993f"
+  },
+  "updatedAt": "2026-11-08T18:21:40.944Z",
+  "coverage": {
+    "statements": 75.92,
+    "branches": 75.53,
+    "functions": 70.47,
+    "lines": 77.96,
+    "thresholdsUnchanged": true
+  },
+  "publicCopyChecks": {
+    "rewardsCasesPassed": 30,
+    "publicAndRevokedAccessCasesPassed": 40,
+    "standaloneCasesPassed": 20,
+    "reviewedSurfaces": [
+      "main public pages",
+      "leaderboard and member account",
+      "gallery",
+      "contact",
+      "privacy and offline pages",
+      "Linktree previews"
+    ]
+  },
+  "productionDependencyAudit": {
+    "high": 0,
+    "critical": 0,
+    "reportedVulnerabilities": 0,
+    "joiOverride": "17.13.9"
+  },
+  "domain": {
+    "name": "leaderboards.gdggt.dev",
+    "dns": "CNAME",
+    "target": "f7f426679df0b3fc.vercel-dns-017.com",
+    "proxy": false,
+    "vercelMisconfigured": false,
+    "httpsVerified": true,
+    "rootStatus": 302,
+    "rootDestination": "/leaderboard",
+    "pageStatus": 200,
+    "apiStatus": 200
   }
 }
