@@ -1,6 +1,6 @@
 {
   "checkedAt": "2026-11-08T22:15:56.734521+00:00",
-  "scope": "QR-only Apple Wallet software support; fictional signing certificates and member fixtures, local real schema query, no production credentials or member records created",
+  "scope": "QR-only Apple Wallet software support and real Apple issuer signing verification; no production member records or check-ins created",
   "sourceTests": {
     "files": 244,
     "passed": 2943,
@@ -32,20 +32,49 @@
   "appleSetup": {
     "passTypeId": "pass.dev.gdggt.membership",
     "registration": "verified",
-    "csr": "prepared and self-signature verified outside repository",
-    "certificate": "pending upload and issuance; browser connection unavailable",
-    "productionSigningConfiguration": "not changed"
+    "csr": "existing CSR used by owner to obtain provided certificate",
+    "certificate": "owner-provided certificate matches existing private key, pass type and team; valid until 2027-12-08T22:18:39Z",
+    "productionSigningConfiguration": "nine production-only sensitive/write-only Vercel variables saved; NFC disabled; deployment activation pending",
+    "chain": "signer verified through official Apple WWDR G4 to Apple Root CA",
+    "realSignedPass": "generated locally and manifest hashes plus detached CMS signature verified against official Apple Root CA; test credential not registered in production"
   },
   "remaining": [
-    "Issue/download Apple signing certificate using existing CSR",
-    "Verify real certificate identity, key and official WWDR chain",
-    "Configure encrypted server signing environment and enable QR on existing Vercel project",
-    "Install on real iPhone, scan with iPhone PWA, check duplicate and revoked credential behavior"
+    "Activate new production deployment with configured issuer",
+    "Verify runtime Wallet availability",
+    "Install actual member pass on a real iPhone and check PWA scanning, duplicate handling and revocation"
   ],
   "limitations": [
     "No real Apple Wallet installation acceptance claimed",
     "No NFC/Apple VAS enablement",
     "GT member self-service login remains awaiting GT SSO",
     "No automatic Wallet updates or pushes"
-  ]
+  ],
+  "softwarePublication": {
+    "commit": "9aa67cb192f5ec3d91a80b5eb508a940c263e0a8",
+    "github": "pushed to GDG-GT main",
+    "vercel": "READY: dpl_GrrSy5pobcHBiiV9wNCRTJi5H2PU",
+    "liveAssetMatchesTestedBuild": true,
+    "readOnlyChecks": [
+      {
+        "url": "https://gdggt.dev/",
+        "status": 200
+      },
+      {
+        "url": "https://gdggt.dev/events",
+        "status": 200
+      },
+      {
+        "url": "https://leaderboards.gdggt.dev/",
+        "status": 200
+      },
+      {
+        "url": "https://gdggt.dev/leaderboard",
+        "status": 404
+      },
+      {
+        "url": "https://gdggt.dev/api/v1/admin/rewards/wallet/00000000-0000-4000-8000-000000000000",
+        "status": 401
+      }
+    ]
+  }
 }
