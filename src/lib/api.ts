@@ -15,6 +15,7 @@ let refresh: Promise<void> | undefined;
 let binding: string | undefined;
 let epoch = 0;
 let sessionRequests = new AbortController();
+export const API_READ_TIMEOUT_MS = 8000;
 export const clearApiSession = ({
   announce = true,
 }: { announce?: boolean } = {}) => {
@@ -95,15 +96,23 @@ async function execute<T>(
       );
   }
   let response: Response;
+  // A lost GET must not leave every page waiting indefinitely. Writes retain
+  // their existing outcome/recovery protocol and are never replayed on timeout.
+  const deadline = !mutation
+    ? AbortSignal.timeout(API_READ_TIMEOUT_MS)
+    : undefined;
+  const signals = [
+    options.signal,
+    scoped ? sessionRequests.signal : undefined,
+    deadline,
+  ].filter((signal): signal is AbortSignal => !!signal);
+  const signal = signals.length ? AbortSignal.any(signals) : undefined;
+  let result;
   try {
     response = await fetch("/api/v1" + path, {
       method,
       credentials: "same-origin",
-      signal: scoped
-        ? options.signal
-          ? AbortSignal.any([options.signal, sessionRequests.signal])
-          : sessionRequests.signal
-        : options.signal,
+      signal,
       headers: {
         ...(options.body !== undefined
           ? { "Content-Type": "application/json" }
@@ -121,13 +130,26 @@ async function execute<T>(
         ? { body: JSON.stringify(options.body) }
         : {}),
     });
+    // Keep the deadline through the response body, not only the headers.
+    result =
+      response.status === 204
+        ? null
+        : await response.json().catch((error) => {
+            if (signal?.aborted) throw error;
+            return null;
+          });
   } catch (error) {
     if (scoped) assertEpoch(expectedEpoch);
+    if (deadline?.aborted && !options.signal?.aborted)
+      throw new ApiFailure(
+        504,
+        "READ_TIMEOUT",
+        "This information is taking too long to load. Try again.",
+      );
     throw error;
   }
   if (scoped) assertEpoch(expectedEpoch);
   if (response.status === 204) return undefined as T;
-  const result = await response.json().catch(() => null);
   if (scoped) assertEpoch(expectedEpoch);
   if (scoped && result?.error?.code === "SESSION_CHANGED") {
     clearApiSession();

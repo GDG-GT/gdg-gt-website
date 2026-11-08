@@ -92,3 +92,47 @@ describe("browser API session transport", () => {
     );
   });
 });
+
+describe('bounded navigation reads', () => {
+  it('turns a stalled read into a retryable failure without retrying or clearing the session', async () => {
+    const deadline = new AbortController();
+    const timeout = vi.spyOn(AbortSignal, 'timeout').mockReturnValue(deadline.signal);
+    const fetcher = vi.fn((_url, options) => new Promise((_resolve, reject) => {
+      options.signal.addEventListener('abort', () => reject(options.signal.reason), { once:true });
+    }));
+    vi.stubGlobal('fetch', fetcher);
+    const { api, API_READ_TIMEOUT_MS } = await import('../../src/lib/api.ts');
+    const pending = api('/admin/forms');
+    const rejected = expect(pending).rejects.toMatchObject({ status:504,code:'READ_TIMEOUT' });
+    deadline.abort(new DOMException('Read deadline', 'TimeoutError'));
+    await rejected;
+    expect(timeout).toHaveBeenCalledWith(API_READ_TIMEOUT_MS);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    timeout.mockRestore();
+  });
+  it('keeps the read deadline active until the body finishes', async () => {
+    const deadline = new AbortController();
+    const timeout = vi.spyOn(AbortSignal,'timeout').mockReturnValue(deadline.signal);
+    vi.stubGlobal('fetch', vi.fn(async (_url,options) => ({ status:200,ok:true,json:() => new Promise((_resolve,reject) => {
+      options.signal.addEventListener('abort',() => reject(options.signal.reason),{once:true});
+    }) })));
+    const {api} = await import('../../src/lib/api.ts');
+    const pending=api('/events');
+    const rejected=expect(pending).rejects.toMatchObject({code:'READ_TIMEOUT'});
+    await Promise.resolve();
+    deadline.abort(new DOMException('Read deadline','TimeoutError'));
+    await rejected;
+    timeout.mockRestore();
+  });
+  it('keeps explicit navigation cancellation distinct from a timeout', async () => {
+    const controller=new AbortController();
+    vi.stubGlobal('fetch',vi.fn((_url,options) => new Promise((_resolve,reject) => {
+      options.signal.addEventListener('abort',() => reject(options.signal.reason),{once:true});
+    })));
+    const {api}=await import('../../src/lib/api.ts');
+    const pending=api('/events',{signal:controller.signal});
+    const rejected=expect(pending).rejects.toMatchObject({name:'AbortError'});
+    controller.abort();
+    await rejected;
+  });
+});

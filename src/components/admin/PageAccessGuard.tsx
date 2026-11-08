@@ -27,7 +27,12 @@ export default function PageAccessGuard({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!currentAdmin) return;
     let active = true;
-    PermissionsService.canAccessPage(currentAdmin, location.pathname)
+    const controller = new AbortController();
+    PermissionsService.canAccessPage(
+      currentAdmin,
+      location.pathname,
+      controller.signal,
+    )
       .then((allowed) => {
         if (active) setDecision({ key, allowed });
       })
@@ -41,6 +46,7 @@ export default function PageAccessGuard({ children }: { children: ReactNode }) {
       });
     return () => {
       active = false;
+      controller.abort();
     };
   }, [currentAdmin, location.pathname, key, refresh]);
   if (isLoading)

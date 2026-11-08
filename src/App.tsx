@@ -154,7 +154,7 @@ function Frame({ children }: { children: ReactNode }) {
     return <RouteErrorBoundary>{children}</RouteErrorBoundary>;
   return pathname.startsWith("/admin") &&
     !pathname.startsWith("/admin/invite/") ? (
-    <RouteErrorBoundary key={pathname}>
+    <RouteErrorBoundary key="workspace">
       <Suspense fallback={<LoadingPage />}>
         <AdminShell>
           <RouteErrorBoundary key={pathname}>{children}</RouteErrorBoundary>
@@ -162,7 +162,7 @@ function Frame({ children }: { children: ReactNode }) {
       </Suspense>
     </RouteErrorBoundary>
   ) : (
-    <RouteErrorBoundary key={pathname}>
+    <RouteErrorBoundary key="public">
       <SiteShell>
         <RouteErrorBoundary key={pathname}>{children}</RouteErrorBoundary>
       </SiteShell>
@@ -280,7 +280,10 @@ export default function App({ routerView, bootstrap }: { routerView?: ReactNode;
     <PublicBootstrapContext.Provider value={bootstrap}>
       <AdminProvider deferSession={!!bootstrap}>
         <ContentProvider initial={bootstrap?.home}>
-          {routerView || (router && <RouterProvider router={router} />)}
+          {routerView || (router && (
+            // Show the destination's loading state as soon as the URL changes.
+            <RouterProvider router={router} useTransitions={false} />
+          ))}
         </ContentProvider>
       </AdminProvider>
     </PublicBootstrapContext.Provider>

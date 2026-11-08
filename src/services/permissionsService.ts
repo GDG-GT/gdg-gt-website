@@ -84,17 +84,25 @@ export class PermissionsService {
       return false;
     }
   }
-  static async canAccessPage(user: AdminUser | null, path: string) {
+  static async canAccessPage(
+    user: AdminUser | null,
+    path: string,
+    signal?: AbortSignal,
+  ) {
     if (!user) return false;
     return (
       await api<{ allowed: boolean }>(
         "/admin/access?route=" + encodeURIComponent(path),
+        { signal },
       )
     ).allowed;
   }
-  static async getAccessiblePages(user: AdminUser | null) {
+  static async getAccessiblePages(
+    user: AdminUser | null,
+    signal?: AbortSignal,
+  ) {
     if (!user) return [];
-    return (await api<{ accessibleRoutes: string[] }>("/admin/access"))
+    return (await api<{ accessibleRoutes: string[] }>("/admin/access", { signal }))
       .accessibleRoutes;
   }
   static canManageUser(actor: AdminUser | null, target: AdminUser) {

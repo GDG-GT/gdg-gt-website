@@ -163,7 +163,8 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!currentAdmin) return;
     let cancelled = false;
-    PermissionsService.getAccessiblePages(currentAdmin)
+    const controller = new AbortController();
+    PermissionsService.getAccessiblePages(currentAdmin, controller.signal)
       .then((routes) => {
         if (!cancelled) {
           setAllowed(
@@ -185,6 +186,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       });
     return () => {
       cancelled = true;
+      controller.abort();
     };
   }, [currentAdmin, navRetry, location.pathname]);
   useEffect(() => {
