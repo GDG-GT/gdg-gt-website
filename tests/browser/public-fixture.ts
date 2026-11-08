@@ -330,6 +330,14 @@ export const test = base.extend<{
           return;
         }
         const path = url.pathname.slice("/api/v1".length);
+        if (path === "/admin/reward-events" && request.method() === "GET") {
+          await route.fulfill({ json: { data: { events: [], checkins: [] } } });
+          return;
+        }
+        if (path === "/rewards/event-links" && request.method() === "GET") {
+          await route.fulfill({ json: { data: { events: [], links: [] } } });
+          return;
+        }
         const reply = async (status: number, data: unknown) =>
           route.fulfill({
             status,

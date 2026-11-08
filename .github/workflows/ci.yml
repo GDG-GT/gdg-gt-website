@@ -38,6 +38,8 @@ jobs:
       - run: npm run test:traceability
       - name: Rebuild the canonical schema, security policies and capacity tests
         run: npm run test:db
+      - name: Verify the separate event schema and concurrent NFC check-ins
+        run: npm run test:event-membership
       - name: Recheck migrations with legacy Supabase automatic API grants
         run: npm run test:db:legacy-grants
       - name: Restore an isolated fictional backup and recheck data/security invariants

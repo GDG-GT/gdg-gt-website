@@ -265,6 +265,8 @@ test("members can opt into an alias and request a qualifying perk without admin 
   };
   await page.route("**/api/v1/rewards/**", (r) => {
     const path = new URL(r.request().url()).pathname.split("/").pop()!;
+    if (path === "event-links")
+      return r.fulfill({ json: { data: { events: [], links: [] } } });
     if (path === "leaderboard")
       return r.fulfill({
         json: {

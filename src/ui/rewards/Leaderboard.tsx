@@ -4,6 +4,7 @@ import { api, ApiFailure } from "@/lib/api";
 import { Brand, Button, Field } from "../primitives";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
 import "./rewards.css";
+import MemberEventLinks from "./MemberEventLinks";
 import { rewardsPagePaths } from "../../../shared/rewards-pages.mjs";
 type Perk = {
   id: string;
@@ -296,6 +297,7 @@ export default function Leaderboard() {
                 Sign out
               </Button>
             </section>
+            <MemberEventLinks csrf={me.csrf} />
             <section>
               {me.walletAvailable &&
                 me.walletCredentials?.map((c) => (

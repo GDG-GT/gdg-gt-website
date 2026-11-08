@@ -5,7 +5,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", "coverage/**", "artifacts/browser/**", "node_modules.offloaded-backup/**", "excalidraw.offloaded-backup/**"] },
+  { ignores: [".build/**", "dist", "coverage/**", "artifacts/browser/**", "node_modules.offloaded-backup/**", "excalidraw.offloaded-backup/**"] },
   {
     files: ["server/**/*.mjs", "tests/server/**/*.mjs", "api/**/*.mjs"],
     ...js.configs.recommended,

@@ -27,6 +27,7 @@
     "audit:phase0": "node scripts/phase0-inventory.mjs --write",
     "audit:db:source": "node scripts/source-db-audit.mjs",
     "test:db": "node scripts/test-database.mjs",
+    "test:event-membership": "node scripts/test-event-membership.mjs",
     "test:db:legacy-grants": "node scripts/test-database.mjs --legacy-defaults",
     "db:prepare": "node scripts/prepare-local-db.mjs",
     "setup:local-auth": "node scripts/setup-local-auth.mjs",

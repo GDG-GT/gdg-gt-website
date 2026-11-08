@@ -1,0 +1,73 @@
+{
+  "checkedAt": "2026-11-08T20:21:05.488162+00:00",
+  "scope": "Cross-project event membership and NFC check-in integration. Future event websites and GT identity-provider setup are separate configuration.",
+  "chapterMigration": {
+    "canonical": "202611080143_reward_event_connections",
+    "sha256": "96adf67bae95c39e5dac8d58b802fb99163d1dce51651f3dba5755f6cd0455e0",
+    "localApplied": true,
+    "productionVersion": "20261108201706",
+    "productionTables": 6,
+    "rlsEnabled": true,
+    "anonymousRead": false,
+    "authenticatedWrite": false,
+    "serviceRoleRead": true,
+    "productionCounts": {
+      "events": 0,
+      "checkins": 0,
+      "cards": 0,
+      "ledger": 0
+    }
+  },
+  "verification": {
+    "fullCoverageRun": {
+      "files": 243,
+      "testsPassed": 2928,
+      "statementsPercent": 76,
+      "branchesPercent": 75.44,
+      "functionsPercent": 70.45,
+      "linesPercent": 78.02,
+      "note": "Before final unsaved-form preservation refinement; final affected suite passed 59 tests."
+    },
+    "finalAffectedTestsPassed": 59,
+    "browserCasesPassed": 54,
+    "browserProfiles": [
+      "chromium-1920",
+      "chromium-1440",
+      "chromium-mobile",
+      "firefox-1440",
+      "webkit-1440",
+      "webkit-mobile"
+    ],
+    "database": [
+      "canonical PostgreSQL17 all migrations and SQL regressions",
+      "legacy automatic grants regression",
+      "100-client existing event capacity",
+      "100-client existing form capacity",
+      "separate event registration and cancellation states",
+      "50 concurrent duplicate event taps produce one attendance record",
+      "event Auth deletion cascades integration registrations and attendance"
+    ],
+    "visualInspection": [
+      "desktop event connections",
+      "mobile event connections"
+    ],
+    "security": [
+      "scoped per-event hashed credentials",
+      "current GT member session and CSRF linking",
+      "server-verified event auth account",
+      "cross-event reference and code isolation",
+      "live membership/card/link revocation",
+      "DNS pinned public HTTPS callback without redirects",
+      "one attendance record per event/member",
+      "expiry-limited review with recovery-only reconciliation",
+      "no automatic chapter points",
+      "Super Admin only chapter point writes"
+    ],
+    "liveDeployment": "Pending Git push and post-deploy read-only probes"
+  },
+  "remainingExternalSetup": [
+    "GT member SSO provider approval/configuration",
+    "connect each future event website and its separate Supabase project using integrations/event-membership",
+    "physical NFC device testing and Apple Wallet certificate/reader prerequisites remain as documented"
+  ]
+}

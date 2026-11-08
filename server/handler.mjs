@@ -1,14 +1,11 @@
-import { rewardsRoutes, rewardsOrigin } from './rewards.mjs';
+import { rewardsRoutes, rewardsOrigin } from "./rewards.mjs";
+import { rewardEventRoutes } from "./reward-events.mjs";
 import { accountSecurityRoutes } from "./account-security.mjs";
 import { createAuthHandler } from "./auth.mjs";
 import { serverConfig } from "./config.mjs";
 import { serverDatabase } from "./db/client.mjs";
 import { SecurityStore } from "./db/security-store.mjs";
-import {
-  ApiError,
-  apiBoundary,
-  checkOrigin,
-} from "./lib/http.mjs";
+import { ApiError, apiBoundary, checkOrigin } from "./lib/http.mjs";
 import { eventRoutes } from "./events.mjs";
 import { publicContentRoutes } from "./public-content.mjs";
 import { accessRoutes } from "./access.mjs";
@@ -106,13 +103,55 @@ export function applicationHandler({
           })
         )
           return;
-        if (pathname === '/api/v1/rewards/callback') {
-          if (await rewardsRoutes(request,response,{db,store,config,requestId})) return;
+        if (pathname === "/api/v1/rewards/callback") {
+          if (
+            await rewardsRoutes(request, response, {
+              db,
+              store,
+              config,
+              requestId,
+            })
+          )
+            return;
         }
-        checkOrigin(request, pathname.startsWith('/api/v1/rewards/') ? rewardsOrigin(request,config) : config.origin, {
-          mutation: !["GET", "HEAD"].includes(request.method),
-        });
-        if (await rewardsRoutes(request,response,{db,store,config,requestId})) return;
+        if (pathname.startsWith("/api/v1/integrations/membership/")) {
+          if (
+            await rewardEventRoutes(request, response, {
+              db,
+              store,
+              config,
+              requestId,
+            })
+          )
+            return;
+        }
+        checkOrigin(
+          request,
+          pathname.startsWith("/api/v1/rewards/")
+            ? rewardsOrigin(request, config)
+            : config.origin,
+          {
+            mutation: !["GET", "HEAD"].includes(request.method),
+          },
+        );
+        if (
+          await rewardEventRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
+        if (
+          await rewardsRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
         if (await seoRoutes(request, response, { db, config, requestId }))
           return;
         if (
@@ -500,7 +539,15 @@ export function applicationHandler({
           await formRoutes(request, response, { db, store, config, requestId })
         )
           return;
-        if (await accountSecurityRoutes(request, response, { db, store, config, requestId })) return;
+        if (
+          await accountSecurityRoutes(request, response, {
+            db,
+            store,
+            config,
+            requestId,
+          })
+        )
+          return;
         throw new ApiError(404, "NOT_FOUND", "This endpoint was not found.");
       },
       { log },

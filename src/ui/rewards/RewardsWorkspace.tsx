@@ -1,3 +1,4 @@
+import EventConnections from "./EventConnections";
 import {
   useCallback,
   useEffect,
@@ -287,6 +288,7 @@ export default function RewardsWorkspace() {
           ["scanner", "Check-in scanner"],
           ["activities", "Activities & rules"],
           ["perks", "Perks & requests"],
+          ["events", "Event connections"],
         ].map(([id, label]) => (
           <Button
             variant="ghost"
@@ -356,6 +358,12 @@ export default function RewardsWorkspace() {
           </Button>
         </section>
       )}
+      <div hidden={tab !== "events"}>
+        <EventConnections
+          active={tab === "events"}
+          activities={data?.activities || []}
+        />
+      </div>
       {tab === "scanner" && (
         <>
           <h2>Ready for check-in</h2>
