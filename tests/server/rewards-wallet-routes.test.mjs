@@ -36,20 +36,16 @@ function fixture(role = "super_admin") {
   };
   const db = {
     from: vi.fn(() => query),
-    rpc: vi
-      .fn()
-      .mockResolvedValue({
-        data: { id: memberId, csrfHash: tokenHash(csrf) },
-        error: null,
-      }),
+    rpc: vi.fn().mockResolvedValue({
+      data: { id: memberId, csrfHash: tokenHash(csrf) },
+      error: null,
+    }),
   };
   const store = {
-    validateSession: vi
-      .fn()
-      .mockResolvedValue({
-        user: { id, role, is_active: true },
-        sessionId: id,
-      }),
+    validateSession: vi.fn().mockResolvedValue({
+      user: { id, role, is_active: true },
+      sessionId: id,
+    }),
     rateLimit: vi.fn().mockResolvedValue({ allowed: true }),
   };
   const request = {
@@ -199,5 +195,49 @@ describe("Private Wallet pass downloads", () => {
     await expect(run(f)).rejects.toMatchObject({ status: 404 });
     expect(f.query.eq).toHaveBeenCalledWith("member_id", memberId);
     expect(generateMemberPass).not.toHaveBeenCalled();
+  });
+});
+
+describe("Existing physical card programming", () => {
+  it("retrieves the existing active credential with live database authorization and no new issuance", async () => {
+    const f = fixture();
+    f.request.url = "/api/v1/admin/rewards/card/" + id;
+    expect(await run(f)).toBe(true);
+    expect(f.db.rpc).toHaveBeenCalledWith("reward_resolve", {
+      p_actor: id,
+      p_session: id,
+      p_hash: tokenHash(f.credential),
+    });
+    expect(f.query.eq).toHaveBeenCalledWith("kind", "card");
+    expect(f.query.is).toHaveBeenCalledWith("revoked_at", null);
+    const body = JSON.parse(f.response.end.mock.calls[0][0]);
+    expect(body.data).toEqual({
+      id,
+      kind: "card",
+      credential: f.credential,
+      url: "https://gdggt.dev/tap#card=" + f.credential,
+    });
+    expect(f.response.headers["Cache-Control"]).toBe("no-store");
+    expect(
+      f.db.rpc.mock.calls.some(([name]) => name === "reward_admin_mutate"),
+    ).toBe(false);
+  });
+  it("does not return missing cards, inactive membership or a revoked session", async () => {
+    const f = fixture();
+    f.request.url = "/api/v1/admin/rewards/card/" + id;
+    f.query.maybeSingle.mockResolvedValueOnce({ data: null, error: null });
+    await expect(run(f)).rejects.toMatchObject({ status: 404 });
+    f.db.rpc.mockResolvedValueOnce({
+      data: null,
+      error: { message: "FORBIDDEN", code: "42501" },
+    });
+    await expect(run(f)).rejects.toMatchObject({ status: 403 });
+    expect(f.response.end).not.toHaveBeenCalled();
+  });
+  it("rejects a regular Admin before reading encrypted card material", async () => {
+    const f = fixture("admin");
+    f.request.url = "/api/v1/admin/rewards/card/" + id;
+    await expect(run(f)).rejects.toMatchObject({ status: 403 });
+    expect(f.db.from).not.toHaveBeenCalled();
   });
 });

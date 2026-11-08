@@ -1,6 +1,6 @@
 # Member cards, points and rewards
 
-Research begun 2026-11-08 17:00:08 UTC. Scope: existing PWA, iPhone first, Android supported, one member identity, super-admin controlled awards. Research is still in progress; implementation has not begun.
+Initial research began 2026-11-08 17:00:08 UTC. Scope: existing PWA, iPhone first, Android supported, one member identity, super-admin controlled awards. Rewards, event integration and QR Wallet signing are now implemented; see the current checkpoint for production verification. The initial acceptance notes below describe their original research state. The latest scanner/provider decision is recorded at the end of this document.
 
 ## Confirmed decisions
 
@@ -91,3 +91,46 @@ Real GT SSO sign-in awaits IAM configuration. Real Apple Wallet signing awaits a
 8. Real device/certificate/provider checks remain external acceptance gates and must never be marked passed using mocks.
 
 Research synthesis completed after the requested research window. The practical initial release is physical NDEF cards plus Android Web NFC and iPhone URL handoff. Wallet NFC is an integration gate, not a capability we can add to Safari with JavaScript. No second native app or unverified hardware bridge will be installed. The system will preserve one directory member identity while using separately revocable credentials and a server-owned points ledger.
+
+## Existing iPhone scanner investigation — 2026-11-08
+
+Owner correction: **free only, no scanner-service subscriptions**. The existing paid Apple Developer membership is already owned. No additional purchase, trial subscription, provider signup, certificate disclosure or provider send is authorized by this research. The owner subsequently approved an owned native scanner/writer; the latest implementation decision is below.
+
+The requested combination is an existing iPhone app that reads our self-issued Apple Wallet NFC passes and connects to the chapter backend without an additional paid service. No option satisfying that full combination was verified. This is a search result, not a claim that no such app can exist.
+
+| Candidate | Verified capability | Why it does not currently satisfy the free route |
+| --- | --- | --- |
+| [PassEntry](https://docs.passentry.com/documentation/guides/passentry-reader-app/guide) | iPhone NFC/QR app and [third-party validation](https://docs.passentry.com/documentation/guides/validation-options/guide) with configurable HTTPS endpoint and Bearer token | [Published pilot price](https://passentry.com/pricing) starts at GBP199/month. NFC is approval-gated after a live plan. Compatibility/provisioning for our own issuer and encryption keys still needs provider confirmation. Rejected under the owner's free-only requirement. |
+| [PassLite](https://passlite.io/pricing) | Free tier advertises up to100 loyalty passes and scanning | API/webhooks and custom signing certificates are Pro features. Its [current App Store description](https://apps.apple.com/gb/app/passlite/id6764145478) describes QR scanning against a PassLite account; direct Wallet NFC support for our issuer is unverified. |
+| [Walletap](https://www.walletap.com/) | Free25-card tier and a [mobile scanner](https://www.walletap.com/apps/mobile) | Published API/integration access is in paid plans. No free custom validation path for our self-issued passes was verified. The App Store description establishes camera scanning, not acceptance of our own VAS keys. |
+| [Passcreator Smart Scan](https://www.passcreator.com/en/docs/wallets/nfc/scanning-nfc) | Wallet NFC via a supported USB VAS reader connected to iOS | Requires external reader hardware, account NFC enablement and matching pass templates. Not a verified free iPhone-to-iPhone reader. |
+| [CodeREADr](https://www.codereadr.com/changelog/) | Apple VAS/Google Smart Tap validation using certified Zebra or VTAP hardware | Hardware-mediated scanning, not a verified free iPhone-native VAS reader for this setup. |
+| [NFC.cool](https://nfc.cool/) | Free ordinary tag reading and camera scanning | Its documented free features do not establish Apple Wallet VAS reading. Webhooks are a Platinum feature. Ordinary NDEF tag support is not Wallet NFC compatibility. |
+| [PassSource](https://www.passsource.com/info/) | Optical pass scanning and a custom API | Provider FAQ says NFC passes are unsupported; API access requires a paid account. |
+| [Android Universal Reader](https://github.com/kormax/android-universal-reader) | Public demonstration of configurable Apple VAS reading | Android-only, and the author explicitly disclaims certification. It does not meet the officer team's iPhone-only requirement. |
+
+The PassEntry contract was reviewed before any implementation. Its documented request is `scan.scanValue`, `scan.readerId` and `scan.scanType` (`nfc` or `barcode`), with optional loyalty fields; its response is `validationResponse` with `successful`/`failed` status and optional reader message. That is a concrete potential integration, but no paid-provider connector was added after the free-only correction. A free download or a trial does not establish free NFC service or free integration access.
+
+### Apple requirements that still apply
+
+- [NFCVASReaderSession](https://developer.apple.com/documentation/corenfc/nfcvasreadersession) requires an Apple-granted reader entitlement. Standard NDEF/tag-reading permission is insufficient evidence of VAS permission.
+- Apple lists the separate NFC PassKit certificate request on its [Wallet resources page](https://developer.apple.com/wallet/resources/). The current QR signing certificate does not by itself establish NFC approval.
+- A native scanner could reuse the existing backend and Super Admin confirmation flow, avoiding a scanner-service subscription. It still adds native signing, distribution and updates, and actual NFC remains conditional on Apple's approval and device testing. No promise of approval or fee-free special contractual terms is made.
+- A PWA wrapper alone does not provide the native NFC framework or its entitlement. No browser preference, unsigned profile or generic NFC app will be treated as an approved workaround.
+
+### Draft Apple enquiry — not sent
+
+This is for GDG at Georgia Tech. We want members to tap an Apple Wallet membership pass on an officer's iPhone for event check-in. Our website already issues QR passes under `pass.dev.gdggt.membership`, and our existing Apple Developer team is `7THP95SRTV`. Which approvals do we need for NFC passes and an iPhone scanner using NFCVASReaderSession, and is our existing developer team eligible?
+
+Confirm the responsible entity, expected pass volume, distribution route and reader implementation before submitting an application. Do not invent those details or accept provider terms while they remain undecided. No request was submitted and no email was sent.
+
+### Pending owner choice
+
+The owner has been asked whether to build a small native scanner, continue looking for a free existing app, or retain the current PWA QR path. Until answered, keep live QR issuance working and contactless flags off. No scanner database migration, API, app shell or production feature flag was changed during this investigation.
+
+
+## Owned scanner implementation — 2026-11-08
+
+The owner chose an owned iPhone scanner rather than a recurring scanner subscription and delegated implementation/distribution choices. The SwiftUI app uses the existing trusted HTTPS workspace with native NFC operations, the existing QR camera and native pass sharing. Standard cards use the modern TAG entitlement and Core NFC NDEF operations; Wallet uses a separate VAS build and remains approval-gated. No separate directory, point authority or private key is installed on the phone. The website keeps all current Super Admin authorization and external event flows.
+
+Finished-card recommendation: start with ten [GoToTags NTAG215 PVC cards](https://store.gototags.com/nfc-pvc-card-ntag215/) (listed $0.48 each at quantity10, before shipping/tax), then the [200-pack](https://store.gototags.com/nfc-pvc-card-ntag215-200-pack/) after hardware acceptance. See [the operating guide](../operations/IPHONE_SCANNER.md) for specifications, writing/recovery steps, builds, approvals, protocol sources and actual acceptance limits. No order was placed.

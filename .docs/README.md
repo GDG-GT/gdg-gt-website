@@ -6,6 +6,7 @@ Start with the maintained guides below. Current release state and owner decision
 | --- | --- |
 | Connect a future event website to member cards and registration checks | [Detailed event integration guide](operations/EVENT_MEMBERSHIP_INTEGRATION.md) |
 | Issue cards, manage points/perks, configure member sign-in or Wallet | [Member rewards operations](operations/MEMBER_REWARDS_OPERATIONS.md) |
+| Install the iPhone scanner, write physical cards and prepare Wallet NFC | [iPhone scanner and card writer](operations/IPHONE_SCANNER.md) |
 | Resume the current work safely | [Current checkpoint](CURRENT_CHECKPOINT.md) |
 | See what is deployed and which external setup remains | [Production status](PRODUCTION_LAUNCH_STATUS.md) |
 | Separate implementation from acceptance/configuration | [Implementation status](IMPLEMENTATION_STATUS.md) |

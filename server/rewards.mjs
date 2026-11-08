@@ -1,3 +1,4 @@
+import { walletReaderRoute } from "./rewards-wallet-reader.mjs";
 import { walletConfiguration, generateMemberPass } from "./rewards-wallet.mjs";
 import { rewardsPagePaths } from "../shared/rewards-pages.mjs";
 import { z } from "zod";
@@ -188,6 +189,39 @@ export async function rewardsRoutes(
       );
     await quota(store, request, response, config, "rewards.admin", 120);
     const route = path.slice("/api/v1/admin/rewards".length);
+    const existingCard = route.match(/^\/card\/([0-9a-f-]{36})$/);
+    if (existingCard) {
+      allowMethod(request, response, ["GET"]);
+      const id = uuid.parse(existingCard[1]);
+      const row = checked(
+        await db
+          .from("reward_credentials")
+          .select("encrypted_token")
+          .eq("id", id)
+          .eq("kind", "card")
+          .is("revoked_at", null)
+          .maybeSingle(),
+      );
+      if (!row)
+        throw new ApiError(404, "NOT_FOUND", "This card is not available.");
+      const { credential } = decryptPayload(
+        row.encrypted_token,
+        config.encryptionSecret,
+      );
+      checked(
+        await db.rpc("reward_resolve", {
+          p_actor: session.user.id,
+          p_session: session.sessionId,
+          p_hash: tokenHash(credential),
+        }),
+      );
+      return reply({
+        id,
+        kind: "card",
+        credential,
+        url: cardUrl(config.origin, credential),
+      });
+    }
     const walletDownload = route.match(/^\/wallet\/([0-9a-f-]{36})$/);
     if (walletDownload) {
       allowMethod(request, response, ["GET"]);
@@ -226,6 +260,20 @@ export async function rewardsRoutes(
         ...inventory,
         walletAvailable: !!wallet,
         walletNfcAvailable: !!wallet?.nfcEnabled,
+      });
+    }
+    if (
+      ["/wallet-reader", "/wallet-challenge", "/wallet-read"].includes(route)
+    ) {
+      if (route !== "/wallet-reader")
+        await requireCsrf(request, session, store);
+      return walletReaderRoute(route, request, {
+        session,
+        config,
+        db,
+        env,
+        reply,
+        response,
       });
     }
     allowMethod(request, response, ["POST"]);

@@ -27,6 +27,7 @@ Current runtime and feature procedures. Start with the event integration, member
 - [Typed respondent fields, focus and pending-operation safety](FORM_RUNTIME_OPERATIONS.md)
 - [Forms validation controls — local checkpoint, 2026-10-24](FORM_VALIDATION_SETTINGS_OPERATIONS.md)
 - [Free background processing](FREE_BACKGROUND_RUNTIME.md)
+- [iPhone scanner, physical cards and Wallet NFC](IPHONE_SCANNER.md)
 - [Linktree implementation and local verification](LINKTREE_OPERATIONS.md)
 - [Dedicated local runtime](LOCAL_RUNTIME.md)
 - [Private media and gallery — local implementation](MEDIA_OPERATIONS.md)

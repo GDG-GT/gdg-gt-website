@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { api } from "@/lib/api";
+import { nativeScanner, scanNative } from "./nativeScanner";
 import { Button, Field } from "../primitives";
 import { parseCardPayload } from "../../../shared/rewards.mjs";
 type NfcRecord = { recordType: string; data: DataView };
@@ -24,6 +26,8 @@ export default function NfcControls({
   const [status, setStatus] = useState(""),
     [active, setActive] = useState(false),
     [supported, setSupported] = useState(false),
+    [native, setNative] = useState(false),
+    [walletReady, setWalletReady] = useState(false),
     [camera, setCamera] = useState(false),
     [manual, setManual] = useState("");
   const controller = useRef<AbortController>(),
@@ -41,7 +45,19 @@ export default function NfcControls({
     setActive(false);
   };
   useEffect(() => {
-    setSupported(!!nfc());
+    setSupported(!!nfc() || !!nativeScanner());
+    setNative(!!nativeScanner());
+    if (nativeScanner()?.wallet && onReadRef.current) {
+      const capability = new AbortController();
+      void api<{ available: boolean }>("/admin/rewards/wallet-reader", {
+        signal: capability.signal,
+      })
+        .then((r) => {
+          if (!capability.signal.aborted) setWalletReady(r.available);
+        })
+        .catch(() => {});
+      controller.current = capability;
+    }
     const hidden = () => {
       if (document.hidden) {
         controller.current?.abort();
@@ -70,6 +86,13 @@ export default function NfcControls({
   const scan = async () => {
     try {
       stop();
+      if (nativeScanner()) {
+        controller.current = new AbortController();
+        setActive(true);
+        setStatus("Hold the member card near the top of your iPhone.");
+        accept(await scanNative("readCard", {}, controller.current.signal));
+        return;
+      }
       const C = nfc();
       if (!C) throw Error();
       const reader = new C();
@@ -89,13 +112,30 @@ export default function NfcControls({
     } catch (e) {
       if ((e as Error).name !== "AbortError")
         setStatus(
-          "NFC is unavailable or permission was denied. Check NFC settings and try again.",
+          nativeScanner()
+            ? (e as Error).message
+            : "NFC is unavailable or permission was denied. Check NFC settings and try again.",
         );
+    } finally {
+      if (nativeScanner()) setActive(false);
     }
   };
   const write = async () => {
     try {
       stop();
+      if (nativeScanner() && writeUrl) {
+        controller.current = new AbortController();
+        setActive(true);
+        setStatus("Hold a blank card near the top of your iPhone.");
+        await scanNative(
+          "writeCard",
+          { url: writeUrl },
+          controller.current.signal,
+        );
+        setStatus("Card written and verified. It is ready for the member.");
+        setActive(false);
+        return;
+      }
       const C = nfc();
       if (!C || !writeUrl) throw Error();
       controller.current = new AbortController();
@@ -112,8 +152,46 @@ export default function NfcControls({
     } catch (e) {
       if ((e as Error).name !== "AbortError")
         setStatus(
-          "Card was not written. Use a blank, compatible NDEF card and allow NFC access.",
+          nativeScanner()
+            ? (e as Error).message
+            : "Card was not written. Use a blank, compatible NDEF card and allow NFC access.",
         );
+      setActive(false);
+    }
+  };
+  const walletScan = async () => {
+    stop();
+    controller.current = new AbortController();
+    const signal = controller.current.signal;
+    setActive(true);
+    setStatus("Hold the member’s Wallet pass near your iPhone.");
+    try {
+      const challenge = await api<{
+        challenge: string;
+        passTypeIdentifier: string;
+      }>("/admin/rewards/wallet-challenge", {
+        method: "POST",
+        body: {},
+        signal,
+      });
+      const data = await scanNative(
+        "readWallet",
+        { passTypeIdentifier: challenge.passTypeIdentifier },
+        signal,
+      );
+      if (signal.aborted) return;
+      const result = await api<{ credential: string }>(
+        "/admin/rewards/wallet-read",
+        {
+          method: "POST",
+          body: { challenge: challenge.challenge, data },
+          signal,
+        },
+      );
+      if (!signal.aborted) accept(result.credential);
+    } catch (e) {
+      if ((e as Error).name !== "AbortError") setStatus((e as Error).message);
+    } finally {
       setActive(false);
     }
   };
@@ -169,9 +247,18 @@ export default function NfcControls({
       ) : (
         <p>
           On iPhone, tap a physical NFC card near the top of the phone and open
-          its notification. Sign in to this website in Safari first. Direct NFC
-          scanning within the PWA requires a supported Android browser.
+          its notification. Sign in to this website in Safari first. Use the GDG
+          Scanner iPhone app for direct NFC reading and writing.
         </p>
+      )}
+      {native && walletReady && onRead && (
+        <Button
+          variant="secondary"
+          disabled={active}
+          onClick={() => void walletScan()}
+        >
+          Scan Apple Wallet NFC
+        </Button>
       )}
       {onRead && (
         <>

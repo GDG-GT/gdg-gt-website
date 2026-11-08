@@ -451,3 +451,64 @@ test("changing a point rule does not rewrite existing activity values", async ({
     { id: rule.id, revision: 1, title: rule.title, points: 15, active: true },
   ]);
 });
+
+test("owned iPhone scanner resolves a card through the existing reviewed award flow", async ({
+  page,
+  fixture,
+}) => {
+  fixture.authenticated = true;
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "gdgScanner", {
+      value: { version: 1, wallet: false },
+    });
+    Object.defineProperty(window, "webkit", {
+      value: {
+        messageHandlers: {
+          gdgScanner: {
+            postMessage: (message: { id: string; action: string }) => {
+              if (message.action === "readCard")
+                setTimeout(
+                  () =>
+                    window.dispatchEvent(
+                      new CustomEvent("gdg:scanner-result", {
+                        detail: { id: message.id, value: "R".repeat(43) },
+                      }),
+                    ),
+                  20,
+                );
+            },
+          },
+        },
+      },
+    });
+  });
+  const writes: string[] = [];
+  await page.route("**/api/v1/admin/rewards**", async (r) => {
+    const path = new URL(r.request().url()).pathname;
+    if (r.request().method() === "GET")
+      return r.fulfill({ json: { data: inventory } });
+    writes.push(path);
+    expect(path).toBe("/api/v1/admin/rewards/resolve");
+    expect(r.request().postDataJSON()).toEqual({ credential: "R".repeat(43) });
+    return r.fulfill({
+      json: {
+        data: {
+          ...member,
+          credentialId: "b2100000-0000-4000-8000-000000000005",
+          label: "Blue card",
+        },
+      },
+    });
+  });
+  await page.goto("/admin/rewards");
+  await page.getByRole("button", { name: "Check-in scanner" }).click();
+  await page.getByRole("button", { name: "Start NFC scanning" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Fictional Member", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /Fictional Member fictional-member/ }),
+  ).toBeVisible();
+  expect(writes).toEqual(["/api/v1/admin/rewards/resolve"]);
+  await accessibility(page);
+});

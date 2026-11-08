@@ -666,6 +666,30 @@ export default function RewardsWorkspace() {
                             Download Wallet pass
                           </a>
                         )}
+                      {!c.revoked_at && c.kind === "card" && (
+                        <Button
+                          variant="secondary"
+                          disabled={busy}
+                          aria-label={"Program card for " + c.label}
+                          onClick={() => {
+                            setBusy(true);
+                            const g = generation.current;
+                            void api<{
+                              id: string;
+                              kind: string;
+                              url: string;
+                              credential: string;
+                            }>("/admin/rewards/card/" + c.id)
+                              .then((r) => {
+                                if (g === generation.current) setIssued(r);
+                              })
+                              .catch((e) => setError(e.message))
+                              .finally(() => setBusy(false));
+                          }}
+                        >
+                          Program card
+                        </Button>
+                      )}
                       {!c.revoked_at && (
                         <Button
                           variant="danger"

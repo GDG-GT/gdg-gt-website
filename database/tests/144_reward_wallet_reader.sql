@@ -1,0 +1,25 @@
+BEGIN;
+DO $$ DECLARE a uuid;s uuid;m uuid;c uuid;ordinary uuid;os uuid;r jsonb;BEGIN
+ INSERT INTO public.admin_users(email,password_hash,role,is_active) VALUES('wallet-reader-super@example.test','fictional','super_admin',true) RETURNING id INTO a;
+ INSERT INTO public.admin_users(email,password_hash,role,is_active) VALUES('wallet-reader-admin@example.test','fictional','admin',true) RETURNING id INTO ordinary;
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(a,repeat('91',32)) RETURNING id INTO s;
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(ordinary,repeat('92',32)) RETURNING id INTO os;
+ INSERT INTO public.members(name,email) VALUES('Fictional Wallet Member','wallet-reader-member@gatech.edu') RETURNING id INTO m;
+ INSERT INTO public.reward_credentials(member_id,kind,label,token_hash,encrypted_token) VALUES(m,'wallet','Fictional Wallet',repeat('93',32),'fictional') RETURNING id INTO c;
+ BEGIN PERFORM public.reward_wallet_read(ordinary,os,repeat('94',32),repeat('95',32),repeat('93',32));RAISE EXCEPTION 'Ordinary admin read Wallet';EXCEPTION WHEN insufficient_privilege THEN NULL;END;
+ r:=public.reward_wallet_read(a,s,repeat('94',32),repeat('95',32),repeat('93',32));
+ IF r->>'verified'<>'true' THEN RAISE EXCEPTION 'Wallet scan not recorded';END IF;
+ PERFORM public.reward_wallet_read(a,s,repeat('94',32),repeat('95',32),repeat('93',32));
+ IF(SELECT count(*) FROM public.reward_wallet_reads WHERE actor_id=a)<>1 THEN RAISE EXCEPTION 'Retry duplicated receipt';END IF;
+ BEGIN PERFORM public.reward_wallet_read(a,s,repeat('94',32),repeat('96',32),repeat('93',32));RAISE EXCEPTION 'Cryptogram replay accepted';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ BEGIN PERFORM public.reward_wallet_read(a,s,repeat('97',32),repeat('95',32),repeat('93',32));RAISE EXCEPTION 'Challenge reused';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
+ BEGIN PERFORM public.reward_wallet_read(a,s,'invalid',repeat('98',32),repeat('93',32));RAISE EXCEPTION 'Invalid hash accepted';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'VALIDATION_ERROR' THEN RAISE;END IF;END;
+ UPDATE public.reward_credentials SET revoked_at=now() WHERE id=c;
+ BEGIN PERFORM public.reward_wallet_read(a,s,repeat('94',32),repeat('95',32),repeat('93',32));RAISE EXCEPTION 'Retry bypassed revocation';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ UPDATE public.reward_credentials SET revoked_at=NULL WHERE id=c;
+ UPDATE public.admin_sessions SET revoked_at=now() WHERE id=s;
+ BEGIN PERFORM public.reward_wallet_read(a,s,repeat('94',32),repeat('95',32),repeat('93',32));RAISE EXCEPTION 'Revoked session worked';EXCEPTION WHEN insufficient_privilege THEN NULL;END;
+ IF EXISTS(SELECT 1 FROM public.reward_ledger WHERE member_id=m) THEN RAISE EXCEPTION 'Wallet read awarded points';END IF;
+ IF has_table_privilege('anon','public.reward_wallet_reads','SELECT') OR has_table_privilege('authenticated','public.reward_wallet_reads','SELECT') OR has_function_privilege('authenticated','public.reward_wallet_read(uuid,uuid,text,text,text)','EXECUTE') THEN RAISE EXCEPTION 'Wallet replay records exposed';END IF;
+END $$;
+ROLLBACK;

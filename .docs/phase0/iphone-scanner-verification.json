@@ -1,0 +1,56 @@
+{
+  "verifiedAt": "2026-11-08T23:53:24.961263+00:00",
+  "software": {
+    "native": "SwiftUI/WKWebView; current TAG entitlement for physical NDEF, optional VAS build",
+    "web": "trusted-origin bridge, existing member/points/events authorization, existing-card programming recovery",
+    "wallet": "server-only P256 ECDH/X9.63 SHA256/AES256GCM, encrypted session challenge, freshness and atomic replay protection"
+  },
+  "checks": {
+    "sourceFiles": 246,
+    "sourceTests": 2964,
+    "coverage": {
+      "statements": 76.44,
+      "branches": 75.72,
+      "functions": 70.86,
+      "lines": 78.48,
+      "gatesPassed": true
+    },
+    "database": "all canonical migrations/tests including 144; 100-client event and form capacity checks passed",
+    "browser": "60 existing rewards/event cases plus 6 native bridge cases across six profiles passed",
+    "swiftPolicyTests": 2,
+    "deviceBuildsUnsigned": [
+      "Release",
+      "Wallet"
+    ],
+    "unsignedArchive": "native/Scanner/build/GDGScanner.xcarchive",
+    "typecheck": "passed",
+    "lint": "passed; eight inherited warnings",
+    "webBuild": "passed",
+    "bundleBudgets": "passed",
+    "compiledPublicSSR": "passed",
+    "secretScan": "zero unreviewed findings"
+  },
+  "production": {
+    "migrationName": "202611080144_reward_wallet_reader",
+    "hostedVersion": "20261108235031",
+    "rls": true,
+    "anonAndAuthenticatedReads": false,
+    "authenticatedRpcExecute": false,
+    "replayRecords": 0,
+    "pointRecords": 0,
+    "release": "publication pending"
+  },
+  "privateMaterial": "separate matching encrypted VAS key pair prepared outside Git, not uploaded or enabled",
+  "limits": [
+    "Unsigned compilation/archive is not signed installation or TestFlight availability",
+    "Xcode component installation needs local administrator authentication; simulator version mismatch",
+    "No local provisioning profiles; no new app identifier/certificate/profile created",
+    "Wallet issuer and VAS reader approvals and real device/card/Wallet acceptance remain pending",
+    "Existing QR issuer stays live; NFC remains disabled",
+    "No production member, credential, point, event or provider-send fixtures created; no purchases or subscriptions"
+  ],
+  "notes": [
+    "An unrelated form test timed out during the first concurrent coverage run; standalone retry and a complete lower-concurrency coverage run passed.",
+    "The new browser case initially used an ambiguous text locator; corrected to scoped roles and passed all six profiles."
+  ]
+}

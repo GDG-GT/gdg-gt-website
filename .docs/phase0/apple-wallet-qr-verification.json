@@ -34,14 +34,13 @@
     "registration": "verified",
     "csr": "existing CSR used by owner to obtain provided certificate",
     "certificate": "owner-provided certificate matches existing private key, pass type and team; valid until 2027-12-08T22:18:39Z",
-    "productionSigningConfiguration": "nine production-only sensitive/write-only Vercel variables saved; NFC disabled; deployment activation pending",
+    "productionSigningConfiguration": "nine production-only sensitive/write-only Vercel variables active; authenticated production API visibly confirms walletAvailable=true and walletNfcAvailable=false",
     "chain": "signer verified through official Apple WWDR G4 to Apple Root CA",
     "realSignedPass": "generated locally and manifest hashes plus detached CMS signature verified against official Apple Root CA; test credential not registered in production"
   },
   "remaining": [
-    "Activate new production deployment with configured issuer",
-    "Verify runtime Wallet availability",
-    "Install actual member pass on a real iPhone and check PWA scanning, duplicate handling and revocation"
+    "Add an actual community member and issue their Wallet credential through the Super Admin workspace",
+    "Install that pass on a real iPhone and check PWA scanning, duplicate handling and revocation"
   ],
   "limitations": [
     "No real Apple Wallet installation acceptance claimed",
@@ -75,6 +74,12 @@
         "url": "https://gdggt.dev/api/v1/admin/rewards/wallet/00000000-0000-4000-8000-000000000000",
         "status": 401
       }
-    ]
+    ],
+    "issuerActivationCommit": "865ef400868845f8e011d81c102341cb548ed4f9",
+    "issuerActivationDeployment": "dpl_9ydjbZkorBkB6YF3ub8VWDUJMdkL",
+    "issuerActivationState": "READY",
+    "liveAuthenticatedWalletAvailable": true,
+    "liveAuthenticatedWalletNfcAvailable": false,
+    "verifiedAt": "2026-11-08T22:39:45.247720+00:00"
   }
 }

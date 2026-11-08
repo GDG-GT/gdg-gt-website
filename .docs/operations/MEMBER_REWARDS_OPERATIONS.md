@@ -11,7 +11,7 @@ Only active, nondeleted, nonmerged directory members are eligible. Issuing a car
 ## Physical NFC cards
 
 1. Find the member in Points & cards. Issue a labelled NFC card credential.
-2. Write the generated HTTPS URL as the first NDEF URL record. Supported Android browsers can program blank NDEF cards from the page; an external writer must support NDEF URL records, not just copy UIDs.
+2. In the owned GDG Scanner iPhone app, choose Write blank NFC card and confirm. It refuses populated cards and reads the URL back before success. See the [iPhone scanner guide](IPHONE_SCANNER.md) for app installation, finished card purchase links and acceptance. Alternatively, write the generated HTTPS URL as the first NDEF URL record. Supported Android browsers can program blank NDEF cards from the page; an external writer must support NDEF URL records, not just copy UIDs.
 3. Scan the card and verify the resolved member before handing it over. The displayed QR uses the same credential as this physical card.
 4. On iPhone XS or later, tap the card near the top of an unlocked phone, open the OS notification, and use the signed-in Safari session. Installed PWA and Safari storage may differ. A URL handoff is not direct in-app NFC scanning.
 5. Choose an open activity and confirm the award. Repeated taps cannot create a second award for that member/activity. Corrections require a reason; reversals append a compensating entry.
@@ -49,6 +49,6 @@ Members can also download their own existing Wallet credentials after GT member 
 
 NFC additionally needs Apple's enhanced/contactless approval, an ECDH P-256 VAS public key and a compatible reader. Set `APPLE_WALLET_NFC_ENABLED` and `APPLE_WALLET_READER_VERIFIED` only after that setup and real reader testing. A request for NFC with missing reader/key settings fails closed even when the QR flag is on. A paid Apple Developer account alone does not enable contactless passes.
 
-The X100 is not verified for VAS, NDEF programming or SDK integration. No unknown desktop driver or copying utility was installed. Phone-to-phone Wallet tapping is not available from an iPhone PWA; it requires native ProximityReader/approved reader integration. See ../planning/NFC_POINTS_RESEARCH.md for primary sources.
+The X100 is not verified for VAS, NDEF programming or SDK integration. No unknown desktop driver or copying utility was installed. Phone-to-phone Wallet tapping is not available from an iPhone PWA. The owned native scanner now includes an approval-gated Core NFC VAS path with server decryption and replay checks; it remains disabled pending issuer/reader approval and device acceptance. See ../planning/NFC_POINTS_RESEARCH.md for primary sources.
 
 Domain configured and verified on 2026-11-08: Cloudflare DNS-only CNAME points to the existing Vercel project. The HTTPS root serves the leaderboard directly with status 200. Its member page is `/member`. The main website returns 404 for leaderboard/member pages.

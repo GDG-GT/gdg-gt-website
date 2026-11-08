@@ -57,3 +57,13 @@ public/assets/google-wordmark.webp
 
 # Public stylesheet derives from canonical CSS and the public module closure.
 src/styles/public.generated.css
+
+# Native scanner generated build products and per-user signing state.
+native/Scanner/*.xcodeproj/
+native/Scanner/build/
+native/Scanner/DerivedData/
+*.xcarchive/
+*.xcuserstate
+
+native/Scanner/.build/
+native/Scanner/.swiftpm/

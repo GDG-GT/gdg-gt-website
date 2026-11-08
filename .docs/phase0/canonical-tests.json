@@ -144,7 +144,8 @@
     "202611070140_initial_owner_bootstrap.sql",
     "202611070141_free_storage_limits.sql",
     "202611080142_member_rewards.sql",
-    "202611080143_reward_event_connections.sql"
+    "202611080143_reward_event_connections.sql",
+    "202611080144_reward_wallet_reader.sql"
   ],
   "tests": [
     {
@@ -724,6 +725,10 @@
       "passed": true
     },
     {
+      "name": "202611080144_reward_wallet_reader.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -1173,6 +1178,10 @@
     },
     {
       "name": "143_reward_event_connections.sql",
+      "passed": true
+    },
+    {
+      "name": "144_reward_wallet_reader.sql",
       "passed": true
     },
     {
