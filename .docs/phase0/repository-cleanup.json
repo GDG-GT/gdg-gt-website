@@ -49,5 +49,12 @@
     "compiledPublicRenderer": "passed",
     "traceability": "mapping check passed; requirement acceptance states unchanged",
     "secretScan": "passed, 0 unreviewed findings"
+  },
+  "publication": {
+    "repository": "GDG-GT/gdg-gt-website",
+    "cleanupCommit": "e098520",
+    "branch": "main",
+    "guideUrl": "https://github.com/GDG-GT/gdg-gt-website/blob/main/.docs/operations/EVENT_MEMBERSHIP_INTEGRATION.md",
+    "runtimeChanges": false
   }
 }
