@@ -1,3 +1,4 @@
+import { rewardsRoutes, rewardsOrigin } from './rewards.mjs';
 import { accountSecurityRoutes } from "./account-security.mjs";
 import { createAuthHandler } from "./auth.mjs";
 import { serverConfig } from "./config.mjs";
@@ -105,9 +106,13 @@ export function applicationHandler({
           })
         )
           return;
-        checkOrigin(request, config.origin, {
+        if (pathname === '/api/v1/rewards/callback') {
+          if (await rewardsRoutes(request,response,{db,store,config,requestId})) return;
+        }
+        checkOrigin(request, pathname.startsWith('/api/v1/rewards/') ? rewardsOrigin(request,config) : config.origin, {
           mutation: !["GET", "HEAD"].includes(request.method),
         });
+        if (await rewardsRoutes(request,response,{db,store,config,requestId})) return;
         if (await seoRoutes(request, response, { db, config, requestId }))
           return;
         if (

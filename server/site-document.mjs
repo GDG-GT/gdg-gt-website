@@ -50,6 +50,9 @@ export async function siteDocument({ db, config, pathname }) {
     Array.from(pathname).some((char) => char.codePointAt(0) <= 32)
   )
     throw new ApiError(400, "VALIDATION_ERROR", "Invalid document path.");
+  if (['/leaderboard','/leaderboard/member','/tap'].includes(pathname)) return {
+    status:200,index:pathname==='/leaderboard',title:'Member points · GDG at Georgia Tech',heading:'Member points',description:'Contributions, chapter perks and the GDG at Georgia Tech member leaderboard.',canonical:(config.rewardsOrigin||config.origin)+pathname,image:config.origin+'/logo.png',links:[{href:'/leaderboard',label:'Leaderboard'}]
+  };
   const path = publicMetadataPath(pathname),
     known = publicIndexPaths.includes(path),
     privatePage = protectedPaths.test(path),

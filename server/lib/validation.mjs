@@ -86,6 +86,7 @@ export function idempotency(request) {
 export function databaseResult({ data, error }) {
   if (!error) return data;
   const codes = {
+    REWARD_MERGE_REVIEW_REQUIRED: [409, "These members have points or perk history. Reconcile their rewards before merging them; no balances were changed."],
     FORBIDDEN: [403, "This action is not allowed."],
     NOT_FOUND: [404, "This record was not found."],
     DUPLICATE: [409, "This record already exists."],

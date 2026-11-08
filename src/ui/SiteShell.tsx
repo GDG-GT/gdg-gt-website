@@ -32,6 +32,7 @@ import { useSiteAvailability } from "@/contexts/SiteAvailabilityContext";
 import { InstallApp } from "@/pwa/PwaControls";
 const AdminLoginModal = lazy(() => import("@/components/AdminLoginModal"));
 const standaloneRoutes = [
+  "/leaderboard", "/leaderboard/member", "/tap",
   "/links",
   "/l/:username",
   "/forms/:slug",

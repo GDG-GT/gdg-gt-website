@@ -38,8 +38,33 @@ export function serverConfig(env = process.env) {
       "TEMPORARILY_UNAVAILABLE",
       "Server configuration is incomplete.",
     );
+  let rewardsOrigin;
+  try {
+    const candidate = new URL(
+      env.REWARDS_ORIGIN ||
+        (origin.hostname === "gdggt.dev"
+          ? "https://leaderboards.gdggt.dev"
+          : origin.origin),
+    );
+    if (
+      candidate.href !== candidate.origin + "/" ||
+      candidate.username ||
+      candidate.password ||
+      (candidate.protocol !== "https:" &&
+        !(local && candidate.origin === origin.origin))
+    )
+      throw new Error();
+    rewardsOrigin = candidate.origin;
+  } catch {
+    throw new ApiError(
+      503,
+      "TEMPORARILY_UNAVAILABLE",
+      "Server configuration is incomplete.",
+    );
+  }
   return {
     origin: origin.origin,
+    rewardsOrigin,
     riskSecret: env.RISK_HASH_SECRET,
     initialGateHash: env.ADMIN_GATE_SECRET_HASH,
     encryptionSecret: env.DATA_ENCRYPTION_KEY,

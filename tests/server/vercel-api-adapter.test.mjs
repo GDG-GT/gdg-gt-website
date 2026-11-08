@@ -49,7 +49,7 @@ describe("hosted Vercel API dispatch", () => {
     expect(config.trailingSlash).toBe(false);
     expect(config.redirects || []).not.toContainEqual({ source: "/admin", destination: "/admin/", permanent: true });
     expect(config.functions["api/site.mjs"].includeFiles).toContain("shared/**");
-    expect(config.functions["api/v1.mjs"].includeFiles).toBe("shared/**");
+    expect(config.functions["api/v1.mjs"].includeFiles).toBe("{shared/**,public/logo.png}");
     const entry = await import("../../api/v1.mjs");
     expect(entry.config.api.bodyParser).toBe(false);
   });

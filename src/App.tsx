@@ -22,6 +22,8 @@ import { QueueRuntime } from "@/pwa/SubmissionQueue";
 import { MaintenancePage } from "@/ui/status/SiteAvailability";
 import { HomePage } from "@/ui/HomePage";
 
+const Leaderboard = lazy(() => import('@/ui/rewards/Leaderboard'));
+const TapHandoff = lazy(() => import('@/ui/rewards/TapHandoff'));
 const AdminShell = lazy(() => import("@/ui/AdminShell"));
 const loadPublicPages = () => import("@/ui/PublicPages");
 // Start the selected public route while availability is checked, instead of
@@ -73,6 +75,7 @@ const AccountSetup = lazy(() => import("@/ui/users/AccountSetup"));
 
 // Preserve every existing workflow and load heavy editors only on their routes.
 const adminRoutes = [
+  ["rewards", lazy(() => import("@/ui/rewards/RewardsWorkspace"))],
   ["content", lazy(() => import("@/ui/content/SiteContentWorkspace"))],
   ["content/team", lazy(() => import("@/ui/content/SiteContentWorkspace"))],
   ["events", lazy(() => import("@/ui/EventWorkspace"))],
@@ -194,6 +197,9 @@ export function RoutedApplication() {
                   </CapabilityBoundary>
                 }
               />
+              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/leaderboard/member" element={<Leaderboard />} />
+              <Route path="/tap" element={<TapHandoff />} />
               <Route path="/resources" element={<ResourcesPage />} />
               <Route path="/sponsors" element={<SponsorsPage />} />
               <Route path="/gallery" element={<GalleryPage />} />

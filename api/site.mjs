@@ -49,6 +49,9 @@ export function createSiteDocumentHandler({
       }
       const pathname =
         url.pathname === "/api/site" ? paths[0] || "/" : url.pathname;
+      if (pathname==='/' && config.rewardsOrigin && request.headers.host===new URL(config.rewardsOrigin).host && config.rewardsOrigin!==config.origin) {
+        response.statusCode=302;response.setHeader('Location','/leaderboard');response.end();return;
+      }
       const db = databaseFactory();
       phase = "metadata";
       const doc = await siteDocument({

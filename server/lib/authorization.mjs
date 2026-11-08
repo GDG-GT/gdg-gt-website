@@ -1,7 +1,7 @@
 import { ApiError } from './http.mjs';
 
 export const routes={
-  '/admin':'dashboard', '/admin/profile':'profile', '/admin/guide':'guide',
+  '/admin/rewards':'rewards', '/admin':'dashboard', '/admin/profile':'profile', '/admin/guide':'guide',
   '/admin/users':'users', '/admin/content':'content', '/admin/events':'events',
   '/admin/team':'team_profiles', '/admin/content/team':'team_profiles', '/admin/members':'members', '/admin/resources':'resources',
   '/admin/newsletter':'newsletter', '/admin/blog':'blog', '/admin/projects':'projects',
@@ -25,7 +25,7 @@ export function isAuthorized({user,resource,action='view',route,teamId,ownerId,g
   if (!resources.has(resource) || !actions.has(action)) return false;
   if (resource==='audit' && !['view','list','read','export'].includes(action)) return false;
   if (user.role==='super_admin') return true;
-  if (resource==='users' || resource==='security' || resource==='privacy' || resource==='operations') return false;
+  if (resource==='users' || resource==='security' || resource==='privacy' || resource==='operations' || resource==='rewards') return false;
   if (user.role==='admin') return true;
   if (resource==='teams' && ['view','list','read'].includes(action) && memberships.some(m=>m.is_active && m.team?.is_active)) return true;
   if (user.role==='blog_editor') {
