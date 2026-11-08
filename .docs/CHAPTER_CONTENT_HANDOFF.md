@@ -8,6 +8,12 @@ published on the verified 35eca74 production release.
 | Chapter links | https://gdggt.dev/links (also /l/gdg-gt) | /admin/linktree |
 | Executive board application | https://gdggt.dev/forms/executive-board-application | /admin/forms |
 
+Public link profiles and respondent forms use a standalone layout without the
+website navbar, newsletter signup or footer. The same layout applies to account
+setup, team invitations and newsletter confirmation/unsubscription pages. Desktop
+and mobile spacing starts at the page content, without the old navbar clearance.
+The form's own progress, response controls and privacy notice remain available.
+
 The chapter profile has nine active links: the board application, events,
 membership contact, learning resources, team, gallery, sponsorships, GDG-GT
 GitHub and contact. It contains no invented invite link or unconfirmed social

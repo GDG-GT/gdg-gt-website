@@ -15,8 +15,8 @@ export default function AccountSetup() {
     document.title = "Account setup · GDG at Georgia Tech";
   }, []);
   return (
-    <div className="gt-container gt-contact-grid">
-      <section className="gt-panel gt-event-editor">
+    <section className="gt-token-page">
+      <div className="gt-token-sheet">
         <h1>
           {done ? "Your account is ready" : "Choose your account password"}
         </h1>
@@ -115,7 +115,7 @@ export default function AccountSetup() {
             </Button>
           </form>
         )}
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }

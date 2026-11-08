@@ -286,19 +286,6 @@
 .gt-linktree-form {
   min-height: 650px;
 }
-.gt-linktree-footer {
-  text-align: center;
-  margin-top: 32px;
-  font-size: 0.85rem;
-  line-height: 1.65;
-}
-.gt-linktree-footer > span {
-  margin: 0 12px;
-}
-.gt-linktree-footer p {
-  font-size: 0.8rem;
-  margin-top: 16px;
-}
 .gt-linktree-management > .gt-button-row {
   margin: 24px 0;
 }
@@ -1896,6 +1883,24 @@ img {
 .gt-site main:focus,
 .gt-admin-body:focus {
   outline: 0;
+}
+.gt-site-standalone {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+.gt-site-standalone > main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.gt-site-standalone > main > :is(.gt-linktree-public, .gt-public-form-page, .gt-token-page) {
+  flex: 1;
+  min-height: 0;
+  padding-block: clamp(24px, 4vw, 56px);
+}
+.gt-site-standalone :is(.gt-linktree-loading, .gt-route-loading) {
+  padding-block: clamp(24px, 4vw, 56px);
 }
 .gt-nav-wrap {
   position: absolute;

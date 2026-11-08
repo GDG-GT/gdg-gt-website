@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   CalendarDays,
   Code2,
@@ -341,15 +341,6 @@ export default function PublicProfile() {
             )}
           </section>
         )}
-        <footer className="gt-linktree-footer">
-          <Link to="/">GDG at Georgia Tech</Link>
-          <span>·</span>
-          <Link to="/privacy">Privacy</Link>
-          <p>
-            Click counts are approximate and stored as daily totals, without
-            visitor IPs, user agents or referrer URLs.
-          </p>
-        </footer>
       </div>
     </section>
   );
