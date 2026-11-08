@@ -1,0 +1,212 @@
+{
+  "generatedAt": "2026-11-08T16:44:51.879080+00:00",
+  "commit": "9322588817d792d4d4352c56c0f012124212bce9",
+  "deployment": {
+    "id": "dpl_F1S8syiA9Uc2Z9R9iSd3wPZbd8tt",
+    "state": "READY",
+    "substate": "PROMOTED",
+    "aliases": [
+      "gdggt.dev"
+    ]
+  },
+  "publicForm": {
+    "generatedAt": "2026-11-08T16:39:14.817Z",
+    "scope": "Actual published board form, read-only. All non-read requests blocked. Synthetic text remained only in isolated browser memory and was not submitted.",
+    "results": [
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        },
+        "otherVisible": true,
+        "required": true,
+        "matchingInputStyle": true,
+        "formSubmissions": 0
+      },
+      {
+        "viewport": {
+          "width": 375,
+          "height": 812
+        },
+        "otherVisible": true,
+        "required": true,
+        "matchingInputStyle": true,
+        "formSubmissions": 0
+      }
+    ]
+  },
+  "publicNavigation": {
+    "generatedAt": "2026-11-08T16:39:15.932Z",
+    "origin": "https://gdggt.dev",
+    "scope": "Fresh isolated production sessions. Read-only navigation with non-read requests blocked. Does not certify the existing owner authenticated session.",
+    "results": [
+      {
+        "profile": "desktop-motion",
+        "path": "/events",
+        "elapsedMs": 142,
+        "heading": "Make room for what\u2019s next."
+      },
+      {
+        "profile": "desktop-motion",
+        "path": "/team",
+        "elapsedMs": 57,
+        "heading": "Meet the team."
+      },
+      {
+        "profile": "desktop-motion",
+        "path": "/resources",
+        "elapsedMs": 64,
+        "heading": "Resources for builders."
+      },
+      {
+        "profile": "desktop-motion",
+        "path": "/sponsors",
+        "elapsedMs": 67,
+        "heading": "Partners who power student builders."
+      },
+      {
+        "profile": "desktop-motion",
+        "path": "/gallery",
+        "elapsedMs": 65,
+        "heading": "Community in motion."
+      },
+      {
+        "profile": "desktop-motion",
+        "path": "/contact",
+        "elapsedMs": 64,
+        "heading": "Let\u2019s build\nsomething together."
+      },
+      {
+        "profile": "desktop-motion",
+        "path": "/",
+        "elapsedMs": 42,
+        "heading": "Developer\nGroups"
+      },
+      {
+        "profile": "desktop-motion",
+        "path": "/events",
+        "elapsedMs": 32,
+        "heading": "Make room for what\u2019s next."
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/events",
+        "elapsedMs": 127,
+        "heading": "Make room for what\u2019s next."
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/team",
+        "elapsedMs": 55,
+        "heading": "Meet the team."
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/resources",
+        "elapsedMs": 63,
+        "heading": "Resources for builders."
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/sponsors",
+        "elapsedMs": 49,
+        "heading": "Partners who power student builders."
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/gallery",
+        "elapsedMs": 48,
+        "heading": "Community in motion."
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/contact",
+        "elapsedMs": 50,
+        "heading": "Let\u2019s build\nsomething together."
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/",
+        "elapsedMs": 41,
+        "heading": "Developer\nGroups"
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/events",
+        "elapsedMs": 32,
+        "heading": "Make room for what\u2019s next."
+      },
+      {
+        "profile": "mobile",
+        "path": "/events",
+        "elapsedMs": 141,
+        "heading": "Make room for what\u2019s next."
+      },
+      {
+        "profile": "mobile",
+        "path": "/team",
+        "elapsedMs": 72,
+        "heading": "Meet the team."
+      },
+      {
+        "profile": "mobile",
+        "path": "/resources",
+        "elapsedMs": 100,
+        "heading": "Resources for builders."
+      },
+      {
+        "profile": "mobile",
+        "path": "/sponsors",
+        "elapsedMs": 98,
+        "heading": "Partners who power student builders."
+      },
+      {
+        "profile": "mobile",
+        "path": "/gallery",
+        "elapsedMs": 81,
+        "heading": "Community in motion."
+      },
+      {
+        "profile": "mobile",
+        "path": "/contact",
+        "elapsedMs": 85,
+        "heading": "Let\u2019s build\nsomething together."
+      },
+      {
+        "profile": "mobile",
+        "path": "/",
+        "elapsedMs": 77,
+        "heading": "Developer Groups"
+      },
+      {
+        "profile": "mobile",
+        "path": "/events",
+        "elapsedMs": 66,
+        "heading": "Make room for what\u2019s next."
+      }
+    ]
+  },
+  "ownerFinance": {
+    "verified": true,
+    "method": "Existing authenticated Vivaldi session, dedicated verification tab. Read-only finance UI showed Requests by state and no finance requests. Separate funding cards and Approved planning funding section were absent.",
+    "mutations": 0
+  },
+  "ownerDeleteMenu": {
+    "liveInspection": "Could not complete because native AX snapshots stopped exposing the page body. No deletion was attempted.",
+    "isolatedVerification": "Delete menu visibility, Super Admin-only access and archive blockers passed in Chromium/Firefox/WebKit desktop/mobile fixtures."
+  },
+  "ci": {
+    "runId": 42500435656,
+    "passedJobs": [
+      "code-and-database",
+      "coverage-gate",
+      "secret-gate",
+      "dependency-gate"
+    ],
+    "runningJobs": [
+      "browser-smoke (1)",
+      "browser-smoke (2)",
+      "browser-smoke (3)"
+    ]
+  }
+}

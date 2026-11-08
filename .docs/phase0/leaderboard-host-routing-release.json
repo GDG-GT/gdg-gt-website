@@ -1,0 +1,87 @@
+{
+  "checkedAt": "2026-11-08T19:01:39.173Z",
+  "checks": [
+    {
+      "url": "https://leaderboards.gdggt.dev/",
+      "status": 200,
+      "location": null
+    },
+    {
+      "url": "https://leaderboards.gdggt.dev/member",
+      "status": 200,
+      "location": null
+    },
+    {
+      "url": "https://leaderboards.gdggt.dev/leaderboard",
+      "status": 308,
+      "location": "/"
+    },
+    {
+      "url": "https://leaderboards.gdggt.dev/leaderboard/member",
+      "status": 308,
+      "location": "/member"
+    },
+    {
+      "url": "https://gdggt.dev/leaderboard",
+      "status": 404,
+      "location": null
+    },
+    {
+      "url": "https://gdggt.dev/leaderboard/member",
+      "status": 404,
+      "location": null
+    },
+    {
+      "url": "https://gdggt.dev/member",
+      "status": 404,
+      "location": null
+    },
+    {
+      "profile": "desktop",
+      "rootBoard": true,
+      "memberPath": true,
+      "main404": true,
+      "chapterHomepage": true,
+      "pageErrors": []
+    },
+    {
+      "profile": "mobile",
+      "rootBoard": true,
+      "memberPath": true,
+      "main404": true,
+      "chapterHomepage": true,
+      "pageErrors": []
+    }
+  ],
+  "commit": "99a44fa8e23b37198a7919fd90a8d6977afcc35d",
+  "deployment": {
+    "id": "FBnLjKMxeiGWFkEMB6cavdwCX7Fd",
+    "state": "success"
+  },
+  "localChecks": {
+    "sourceFilesPassed": 240,
+    "sourceTestsPassed": 2877,
+    "targetedBrowserCasesPassed": 40,
+    "typecheck": true,
+    "scopedLint": true,
+    "build": true,
+    "bundles": true,
+    "publicSsr": true,
+    "secretScanUnreviewed": 0
+  },
+  "ci": {
+    "run": 42512419756,
+    "status": "in_progress",
+    "passed": [
+      "code-and-database",
+      "coverage-gate",
+      "secret-gate",
+      "dependency-gate"
+    ],
+    "pending": [
+      "browser-smoke (1)",
+      "browser-smoke (2)",
+      "browser-smoke (3)"
+    ]
+  }
+}

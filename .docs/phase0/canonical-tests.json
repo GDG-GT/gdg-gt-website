@@ -142,7 +142,9 @@
     "202611070138_account_security.sql",
     "202611070139_media_cursor.sql",
     "202611070140_initial_owner_bootstrap.sql",
-    "202611070141_free_storage_limits.sql"
+    "202611070141_free_storage_limits.sql",
+    "202611080142_member_rewards.sql",
+    "202611080143_reward_event_connections.sql"
   ],
   "tests": [
     {
@@ -714,6 +716,14 @@
       "passed": true
     },
     {
+      "name": "202611080142_member_rewards.sql",
+      "passed": true
+    },
+    {
+      "name": "202611080143_reward_event_connections.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -1155,6 +1165,14 @@
     },
     {
       "name": "141_free_storage_limits.sql",
+      "passed": true
+    },
+    {
+      "name": "142_member_rewards.sql",
+      "passed": true
+    },
+    {
+      "name": "143_reward_event_connections.sql",
       "passed": true
     },
     {

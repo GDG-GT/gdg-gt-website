@@ -1,0 +1,272 @@
+# Public entry delivery and availability — 2026-11-06
+
+## Review accessibility artifact — 2026-11-07
+
+The final keyboard-review plus scoped contrast/target CSS artifact passes byte
+ceilings: initialJS108166gzip, public-route union148960, CSS29936,font48432 and
+offline493275raw. Its isolated six-route measurement records mobile
+Home3040/Events2859/Contact3007ms; all three LCP gates still fail2500ms. All
+three desktop performance scores are100, all accessibility scores100, explicit
+visible-label matching passes andCLS0. No competing verification or changed
+preset/threshold, and no causal, fieldp75 or hardware improvement is inferred.
+The preceding report is retained in
+`../phase0/production-performance-before-review-accessibility.json`. Current report
+is `../phase0/production-performance.json`;15PWA/nine update/46HTTPS checks pass on
+that artifact. The older entries below are historical.
+
+
+## Early public-route downloads — 2026-11-07
+
+The existing independent async helper now starts the exact emitted static
+PublicPages module graph on its known nonhome public routes. Build-only metadata
+comes from the actual output bundle through the [versioned Vite7 HTML hook](https://raw.githubusercontent.com/vitejs/vite/v7.3.7/docs/guide/api-plugin.md).
+No inline script, new dependency, page/layout/API/schema change or private/Form
+prefetch is introduced. Home still receives only its existing responsive artwork
+hints. All application module/CSS hashes and offline assets match3072698.
+
+Ordinary entryJS108174gzip bytes includes the585gzip/1099raw helper. Public routes
+additionally start40824gzip bytes from their already-used graph, for148998total;
+the byte gate checks that exact union under the unchanged250k ceiling and retains
+the1500raw helper limit. CSS29899,font48432,offline493073 remain unchanged.
+
+All32helper/plugin cases and4catalog cases pass. Complete source coverage passes
+2719tests/221files and unchanged global/critical gates. Corrected real-browser
+public/startup/lazy-shell scope passes130cases/eight expected skips, zero failures
+or retries. Both original desktop moving-frame/reduced-motion checks and18new
+startup checks pass. The first124/eight/six scope failed a new WebKit harness:
+holding main at network left unrelated resources incomplete. A test-only ESM
+execution barrier now lets all downloads finish while original main body stays
+paused; all existing proof, label, value, visibility and limit assertions remain.
+The failed scope/diagnostic are retained; no production workaround was needed.
+Current15PWA/nine update/46HTTPS probes also pass on this artifact.
+
+The isolated six-route trial remains **failing mobileLCP**: Home3025, Events3008,
+Contact3007ms. Compared with saved2841/3161/3156, public routes measured lower and
+Home higher. One invocation does not establish causality, uniform improvement or
+fieldp75 benefit. Desktopperformance100/accessibility100, explicit visible-label
+names andCLS0 pass throughout. Earlier-download behavior is proven; full mobile
+performance is not. Current report is `../phase0/production-performance.json`, with
+the preceding artifact preserved in `../phase0/production-performance-before-public-route-hints.json`.
+
+
+## KaTeX/editor baseline — 2026-11-07
+
+The current KaTeX/editor/instancing artifact has initialJS107951gzip bytes,
+CSS29899,font48432 andoffline493073 raw bytes. All byte/dynamic-boundary gates
+pass. The isolated six-route Lighthouse run records mobileHome/Events/Contact
+LCP2841/3161/3156ms, performance96/93/94, accessibility100, matching visible labels
+andCLS0. All three mobileLCP thresholds still fail2500ms. Desktopperformance/
+accessibility100, labels/CLS pass. No competing verification or threshold changes.
+`../phase0/production-performance.json` binds current hashes; priorreader baseline is
+preserved in `../phase0/production-performance-before-katex-instancing.json`.
+
+Fullsourcecoverage2696/220, expandedsecondary162 andPWA15/update9/HTTPS46 checks
+pass on this artifact. Original software-WebGL screenshot checks fail with the
+same limits after same-geometry sprinkle instancing; no motion/performance fix
+is claimed from that draw-call reduction. See `../phase0/hero-instancing-motion.json`.
+Further public-route delivery optimization should be evaluated in isolation;
+these laboratory results cannot certify fieldp75/INP, actualdevices or3Dhardware.
+
+
+## Rejected isolated font-axis trial
+
+The original Inter file covers weights100–900, while the existing CSS face
+declares400–800. An isolated FontTools4.57.0/Brotli1.1.0 trial restricted only
+that axis, retaining all230Unicode mappings and518glyphs. It reduces48,432bytes
+to37,116bytes, but changes fractional advance widths and up to0.983font units in
+outline coordinates. The153native canvas comparisons across Chromium/Firefox/
+WebKit and17weights/three sizes find up to0.45px sample-width difference and
+12.6%strong alpha differences among ink pixels. This is rejected as a fidelity
+tradeoff. The production font bytes, face range, existing preload and license
+remain unchanged. Evidence: `../phase0/font-axis-trial-rejected.json`; tooling and
+candidate exist only in the owned scratch cache. No application package changed.
+
+## Lightweight public availability reader
+
+The browser now reads the exact six-field public JSON projection without loading
+Zod at startup. The independent authoritative server schema is unchanged in
+behavior; parity cases compare types, required/extra fields, string normalization,
+bounds, live/maintenance combinations and redirect restrictions. Malformed
+snapshots fail closed; successful reads return fresh primitive-only objects.
+Availability polling, expiry, native inertness and redirects are unchanged.
+
+Initial JavaScript is **107,948 gzip bytes**, down 16,623 bytes from the v7
+baseline (13.3%). CSS 29,899 bytes, font 48,432 and offline install 493,028 remain
+unchanged. Strict types, build and byte gates pass. All 2,687 tests/217 files pass
+full source coverage, including all unchanged global 70% and 21 critical 90%
+branch gates; lines 78.14%, statements 76.15%, branches 75.63%, functions 70.82%.
+Evidence: `../phase0/public-reader-quality.json`.
+
+The isolated six-route Lighthouse run records mobile Home/Events/Contact LCP
+2,977/3,157/3,154 ms, performance 95/94/94, accessibility 100 and CLS zero.
+Desktop performance/accessibility are 100 throughout. All three mobile LCP
+thresholds **still fail**. `../phase0/production-performance.json` binds this build;
+the prior v7 results are retained in
+`../phase0/production-performance-before-public-reader.json`. A single run does not
+establish a causal timing gain or field p75/INP/hardware acceptance.
+
+Individual Lighthouse audits additionally identify a visible-label/accessibility-
+name mismatch on the shared brand links (WCAG2.5.3), despite aggregate
+accessibility100. That explicit finding is open for the next correction. The
+best-practices console finding is the probe's expected anonymous session401;
+neither finding is hidden or converted into a clean overall acceptance claim.
+
+The initial 120-case public/lazy-shell browser invocation has 111 passes, eight
+expected skips and one WebKit footer Subscribe failure. Isolated original
+Subscribe cases pass ten times; delaying availability reproduces the failure
+three times. A further diagnostic confirms WebKit automation reported `fill`
+complete while the field was still inert, leaving its value empty and emitting
+no input/change events. Clicking after unlock therefore submitted an empty value.
+No real API writes/sends occurred: the fixture refused that unexpected transport.
+The production input handler was not changed. Footer tests now explicitly await
+native unlock and assert the entered value before submission; availability cases
+also assert newsletter focus refusal while inert and successful entry after live
+confirmation. Original assertions/timeouts/retries remain. The corrected full
+scope passes **112 cases/eight expected skips**, no failures or retries across
+all six profiles (`../phase0/public-reader-final-browser.json`). This is separate
+from the initial failed invocation; it is not a new complete 1,320-case run.
+
+## Current v7 security migration
+
+The current router update increases startup JavaScript to 124,571 gzip bytes,
+including the copied 362-byte helper, versus 114,943 on v6. CSS 29,899 bytes and
+font 48,432 bytes remain unchanged. Offline raw install 493,028 bytes remains under
+its ceiling. All byte and dynamic-boundary gates pass; the security update's
+additional cost is retained explicitly.
+
+The isolated current Home/Events/Contact mobile scores are 94/93/93, accessibility
+100, CLS 0 and LCP 3,122/3,168/3,164 ms. All three mobile LCP thresholds still fail.
+All desktop performance scores are 100. `../phase0/production-performance.json`
+binds the final drawer-corrected build and helper; the preceding v6 report is
+`../phase0/production-performance-before-router-v7.json`. No competing verification
+was active during measurement. These lab results do not establish field p75/INP
+or hardware acceptance. Next evaluate removing the public schema-builder runtime
+from startup while preserving the full server contract and client read boundaries.
+
+## Route-aware image hints
+
+The global HTML no longer preloads home artwork on other routes. A small classic
+asynchronous helper adds the same media-specific, high-priority atmosphere hints
+only on `/`, independently of the React graph and stylesheet execution. React
+still loads both real pictures if the optional helper fails. The copied helper
+has an explicit 1,500-byte raw ceiling and contributes 362 gzip bytes to the
+initial JavaScript budget; current total is 114,943 gzip bytes. It is included
+in performance build hashes, and its stable URL revalidates rather than receiving
+an immutable lifetime. No private routes or capabilities are prefetched.
+
+The complete isolated async-helper run records mobile Home/Events/Contact
+performance 95/95/95, accessibility 100, CLS zero and LCP 3,003/3,012/3,007 ms.
+Desktop performance is 100 throughout. All three mobile LCP gates remain failing;
+no field p75 or causal timing improvement is inferred from these lab runs.
+The previous navigation baseline is retained in
+`../phase0/production-performance-before-route-hints.json`; the intermediate
+deferred-helper measurements are in
+`../phase0/production-performance-deferred-route-hints.json`. Async execution avoids
+waiting for stylesheets before starting the optional hint.
+
+Removing the font preload was separately measured and rejected: Home mobile LCP
+2,891 ms and CLS 0.031. The original font preload is fully restored; the face and
+swap policy are unchanged. Evidence is retained in
+`../phase0/production-performance-no-font-preload.json`. The initial premature
+measurement exited on missing build output before starting Lighthouse; no result
+from that ENOENT attempt is used.
+
+Nine standalone helper cases and four traceability cases pass in a focused
+invocation. The preceding deferred-helper six-profile public smoke passed 76
+cases with eight expected skips. One earlier parallel software-WebGL comparison
+sampled before rendering warmed up; its isolated original case passed. The final
+test now observes motion before retaining both original consecutive-frame
+assertions. The existing test/polling limits and 250-ms frame interval are
+unchanged. Software rendering does not certify hardware FPS. The final async
+scope passes 76 cases with eight expected skips and no failures/retries, and all
+46 current HTTPS/header checks pass. Types/build/byte gates pass; lint remains
+zero errors/10 inherited warnings. Evidence is in `../phase0/route-hints-browser.json`
+and `../phase0/route-hints-quality.json`.
+
+## Deferred navigation-review continuation
+
+The guarded navigation registry and router blocker stay synchronous. Only the
+Radix review dialog is deferred; an accessible native modal keeps navigation
+paused and offers Stay during loading or failure. Cancellation and accepted
+destination focus, including delayed and failed chunks, pass the final 162-case
+six-profile browser scope. Full coverage passes 2,673 tests/215 files with all
+unchanged gates. See `WORKSPACE_NAVIGATION_CHECKS.md`.
+
+Current initial JavaScript is 114,581 gzip bytes versus 126,485 immediately before
+this extraction. CSS is 29,899 gzip bytes and the font remains 48,432 bytes. The
+build gate requires the new dialog boundary. No dependency was upgraded.
+
+The new isolated six-route measurements match the current build hashes:
+Home/Events/Contact mobile scores 96/93/92, accessibility 100, CLS zero and LCP
+2,858/3,161/3,305 ms. All mobile LCP gates still fail; all desktop scores are 100.
+The earlier report is retained as
+`../phase0/production-performance-before-navigation-review.json`. Single runs and
+timing variation do not justify claiming a causal LCP improvement from the byte
+change. No score, threshold, browser flag or network preset was weakened.
+
+The current waterfall identifies another concrete delivery inefficiency: Events
+and Contact each request the 37,624-byte mobile home atmosphere despite never
+rendering it. The global index preload triggers that request. All three routes
+also preload the 48,432-byte font at high priority. Next work should measure
+route-appropriate resource hints and font contention before a larger rendering
+change. Public/private availability and cache boundaries must remain intact.
+
+## Previous public-entry baseline
+
+The initial production JavaScript graph is now approximately 126 kB gzip, CSS
+30 kB gzip and the self-hosted font 48 kB. Admin shell, sign-in, other public-page
+implementations, 3D objects, Forms builder and responses stay outside the home
+static import graph; the build gate checks those boundaries explicitly. A query
+provider, two toast renderers and a tooltip provider with no source consumers
+were removed from startup. Installed dependencies were not changed. Active
+application notifications and inline feedback remain in their own components.
+Homepage and event-card helpers were separated without changing their
+public re-exports or data contracts.
+
+Public availability validation now uses a small canonical parser shared by the
+server and browser. The write/password schema stays outside public startup. The
+new tests compare strict fields, normalization, bounds, live/maintenance rules,
+control characters and redirect policy with the previous public contract.
+The URL predicate and exempt-route policy have a single shared implementation.
+
+The homepage paints its existing public identity while availability is checked.
+Native `inert` blocks its controls until the result arrives. Live confirmation
+unlocks the same mounted content; maintenance still redirects. Other nonexempt
+routes retain initial blocking. Unit and actual browser checks cover retained
+DOM, native focus refusal before confirmation and live/maintenance destinations.
+Cold route-lazy workspace focus waits for its landmark and cancels if another
+focus choice or route takes precedence. Shell load failures use the safe reload
+message, without claiming an interrupted save could not have committed.
+
+Narrow phones use crops derived from the existing artwork, with the same CSS
+focus points and sufficient crop width to retain the original cover window.
+`scripts/prepare-hero-assets.mjs` runs before development and production builds;
+outputs are ignored, reproducible WebP files capped at 50 kB each. They total
+59,556 bytes versus 202,776 bytes for the original pair. Wider screens retain
+the originals. Matching media preload hints and picture sources avoid redundant
+transfers. An actual WebKit mobile run exposed premature fallback downloads
+during React picture construction; setting the fallback at DOM commit corrected
+it. All six browser profiles then requested exactly the selected pair. The
+decorative poster has low fetch priority and asynchronous decoding. Narrow
+layouts retain their translucent colors while avoiding large backdrop blurs.
+
+`scripts/test-production-performance.mjs` uses pinned Lighthouse 13.6.0 from a
+separate temporary installation, a read-only loopback production server and
+allowlisted anonymous local API reads. Gzip models an explicit hosting delivery
+requirement; it is not deployed evidence. Default Chrome rendering and default
+Lighthouse simulated mobile/desktop profiles are retained. The optional
+`--home-mobile` argument writes a separately named diagnostic. Final evidence
+records build/crop hashes, all scores and failing audits. A missed performance,
+accessibility, LCP or CLS threshold produces a nonzero exit status.
+
+Initial diagnostic phases used uncompressed delivery and then a forced
+software-rendering flag. Their evidence is preserved separately and must not be
+presented as the final default-renderer measurements. The final six-route
+candidate scores 94/94/95 mobile and 100 desktop, with accessibility 100 and
+CLS zero throughout. Mobile lab LCP is 3,021/3,147/2,899 ms, still above
+2.5 seconds. `../phase0/production-performance.json` records the exact current
+build hashes; its nonzero gate result is retained. Passing Lighthouse scores
+do not close that LCP finding.
+Single lab runs and TBT do not establish field p75 LCP/INP/CLS. Actual supported
+devices, hosted latency/compression, representative 3D hardware and field p75
+remain separate acceptance requirements.

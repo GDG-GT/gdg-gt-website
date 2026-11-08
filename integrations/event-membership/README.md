@@ -1,5 +1,7 @@
 # Separate event sites and member cards
 
+For the complete walkthrough, registration SQL, linking-screen example, API contract and troubleshooting, read the [detailed integration guide](../../.docs/operations/EVENT_MEMBERSHIP_INTEGRATION.md). An [online copy](https://github.com/GDG-GT/gdg-gt-website/blob/main/.docs/operations/EVENT_MEMBERSHIP_INTEGRATION.md) is available when this directory is copied into another event repository. This directory remains the portable backend/schema bundle.
+
 A chapter card stays the same across events. The chapter owns membership and points. Each event owns its registration status and attendance in its own Supabase project. Nothing here creates a new event website or copies its registrations into the chapter database.
 
 ## Connect an event

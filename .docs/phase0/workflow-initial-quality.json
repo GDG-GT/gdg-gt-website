@@ -1,7 +1,0 @@
-{
-  "generatedAt": "2026-11-06T19:49:02.489Z",
-  "passed": 2645,
-  "failed": 1,
-  "files": 210,
-  "note": "Initial seven-question and all-settings builder test exceeded existing five-second per-test limit under full instrumentation. Split into independent exact document assertions (text/number, domain/choice, date/grid, file/settings), all assertions preserved, gates/timeouts unchanged. Final complete run recorded separately."
-}

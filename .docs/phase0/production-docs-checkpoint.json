@@ -1,0 +1,10 @@
+{
+  "completed": true,
+  "runtimeSource": "35eca7441be89e6f2c29653a4df5466cc41b63d1",
+  "documentationCommit": "2d1ea309e15d7e50d5a2622457408df40b7100a4",
+  "documentationOnly": true,
+  "documentationBuildState": "CANCELED",
+  "liveState": "READY",
+  "scope": "Final read-only confirmation: documentation-only automatic build actually cancelled; fully CI-green verified runtime remains Ready and owns canonical gdggt.dev. No runtime source/checks, user session or operating schedule disabled.",
+  "generatedAt": "2026-11-08T01:14:36.924Z"
+}

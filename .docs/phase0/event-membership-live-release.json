@@ -1,0 +1,100 @@
+{
+  "checkedAt": "2026-11-08T20:29:28.085Z",
+  "commit": "933a70f13f6c1f2913c41b89ec16c698c10dbc8f",
+  "deployment": "JBjLwxDeRTGfbipFfoLDwX1C6qGq",
+  "scope": "Fresh anonymous production sessions and access-denial requests only; no configured events, registrations, cards, points or provider sends created",
+  "checks": [
+    {
+      "origin": "https://gdggt.dev",
+      "path": "/api/v1/admin/reward-events",
+      "status": 401
+    },
+    {
+      "origin": "https://leaderboards.gdggt.dev",
+      "path": "/api/v1/rewards/event-links",
+      "status": 401
+    },
+    {
+      "origin": "https://leaderboards.gdggt.dev",
+      "path": "/api/v1/rewards/leaderboard",
+      "status": 200
+    },
+    {
+      "origin": "https://gdggt.dev",
+      "path": "/leaderboard",
+      "status": 404
+    },
+    {
+      "origin": "https://gdggt.dev",
+      "path": "/leaderboard/member",
+      "status": 404
+    },
+    {
+      "origin": "https://gdggt.dev",
+      "path": "/member",
+      "status": 404
+    },
+    {
+      "origin": "https://leaderboards.gdggt.dev",
+      "path": "/leaderboard",
+      "status": 308
+    },
+    {
+      "path": "/api/v1/integrations/membership/verify",
+      "test": "missing server key denied",
+      "status": 401
+    },
+    {
+      "path": "/api/v1/integrations/membership/verify",
+      "test": "browser denied",
+      "status": 403
+    },
+    {
+      "profile": "desktop",
+      "leaderboardRoot": true,
+      "memberNavigation": true,
+      "ssoStillGated": true,
+      "tapRequiresSuperAdmin": true,
+      "noConsoleErrors": true
+    },
+    {
+      "profile": "mobile",
+      "leaderboardRoot": true,
+      "memberNavigation": true,
+      "ssoStillGated": true,
+      "tapRequiresSuperAdmin": true,
+      "noConsoleErrors": true
+    }
+  ],
+  "signedInAdminCheck": {
+    "checkedAt": "2026-11-08T20:34:56.003427+00:00",
+    "browser": "Existing Vivaldi session, newly opened owned tab",
+    "role": "Existing Super Admin",
+    "path": "https://gdggt.dev/admin/rewards",
+    "section": "Event connections",
+    "verified": [
+      "connection form",
+      "event selection",
+      "recent attendance heading",
+      "empty inventory"
+    ],
+    "writes": "No form submitted, no keys created, no settings changed; existing tabs preserved"
+  },
+  "ci": {
+    "run": "https://github.com/GDG-GT/gdg-gt-website/actions/runs/42519848592",
+    "conclusion": "success",
+    "jobsPassed": 7,
+    "sourceFilesPassed": 243,
+    "sourceTestsPassed": 2929,
+    "browserPassed": 2012,
+    "browserSkipped": 10,
+    "newFeatureTargetedBrowserPassed": 54,
+    "coverage": {
+      "statements": 76.19,
+      "branches": 75.58,
+      "functions": 70.64,
+      "lines": 78.21
+    },
+    "browserSkipReason": "Existing viewport-specific navigation cases and WebGL capability cases on unsupported profiles; no new event integration tests skipped."
+  }
+}

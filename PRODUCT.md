@@ -1,5 +1,10 @@
 # Product
 
+Latest owner decision, 2026-11-08: do not add Google sign-in. The Google GDG
+community chapter at gdg.community.dev and GT Engage are separate content/event
+integration targets now under investigation. GT SSO remains pending institutional
+registration. See .docs/planning/GDG_ENGAGE_INTEGRATION_RESEARCH.md for verified options.
+
 ## Register
 
 brand
@@ -22,11 +27,10 @@ Public pages use the brand register. Authenticated admin pages use the product r
 
 Deployment decision (Tejas, 2026-11-07): use the owner's chosen hosting and own
 domain. Do not require Georgia Tech institutional hosting. Resend is the email
-provider; live service keys and final production settings will be supplied at
-launch. Missing live keys are launch inputs, not unfinished local features or a
-reason to stop local implementation. Browser push uses Web Push/VAPID separately.
-All current work remains local; this decision does not authorize deployment or
-real provider sends. SSO/Google and Bevy/Engage remain deferred.
+provider. Production was subsequently authorized and deployed to gdggt.dev;
+server credentials are held in private runtime configuration. Browser push uses
+Web Push/VAPID separately. GT SSO awaits institutional/provider activation,
+Google sign-in is excluded, and GDG community/GT Engage integration remains research.
 
 Create the public identity and operating system for Google Developer Group on Campus at Georgia Institute of Technology. The site must make the chapter feel credible, energetic, technical, and specific to Georgia Tech while giving the chapter a secure way to run its work without direct database administration.
 

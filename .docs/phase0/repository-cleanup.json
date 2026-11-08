@@ -1,0 +1,53 @@
+{
+  "checkedAt": "2026-11-08T21:09:02.009673+00:00",
+  "scope": "Documentation and generated-clutter cleanup; no runtime feature, configuration, migration or dependency changes.",
+  "baselineFeatureCommit": "933a70f13f6c1f2913c41b89ec16c698c10dbc8f",
+  "guide": ".docs/operations/EVENT_MEMBERSHIP_INTEGRATION.md",
+  "documentation": {
+    "movedToMaintainedSections": 150,
+    "obsoleteGuidesRemoved": 14,
+    "unusedSnapshotsRemoved": 116,
+    "unreferencedReviewImagesRemoved": 134,
+    "markdownFilesChecked": 169,
+    "localLinksChecked": 232,
+    "brokenLinks": [],
+    "normativeDocumentsUnchanged": 5
+  },
+  "cleanup": {
+    "generatedAllocatedGiBRemoved": 5.81,
+    "generatedPathsRemoved": 300,
+    "unimportedSourceCopiesRemoved": [
+      "src/components/admin/PageAccessGuard 2.tsx",
+      "src/ui/linktree/useLinktreeRead 2.ts"
+    ],
+    "emptyDocumentRemoved": "SECURITY_FIXES.md",
+    "currentBrowserReportPreserved": true,
+    "activeNodeModulesPreserved": true,
+    "privateLocalStateAndDatabasesPreserved": true,
+    "privateRecoveryCopy": "Outside workspace under ~/Library/Caches/gdg-gt-website-cleanup/20261108T205530Z"
+  },
+  "identityVerification": {
+    "trackedRuntimeAndConfigurationFiles": 820,
+    "baselineAggregateSha256": "bf934b2725a2234b8f367a1bc4f40ed80493069c65839d4fb03e7a029b7df942",
+    "runtimeFilesChanged": [],
+    "runtimeFilesMissing": [],
+    "rebuiltServerRendererFilesIdentical": 331,
+    "productionStylesChecked": 2,
+    "productionStylesIdentical": true,
+    "productionEntryScriptsChecked": 16,
+    "productionEntryScriptsIdentical": true,
+    "localClientHashNote": "The prior local build included unused Tailwind selectors from untracked conflict copies. Removing those changed local client content hashes; rebuilt entry scripts and styles now match the existing production release byte-for-byte. Server renderer output was already identical."
+  },
+  "checks": {
+    "sourceFilesPassed": 243,
+    "sourceTestsPassed": 2929,
+    "coverageGates": "passed unchanged thresholds",
+    "typecheck": "passed",
+    "lint": "passed, 8 inherited warnings below existing budget of 10",
+    "build": "passed",
+    "bundles": "passed",
+    "compiledPublicRenderer": "passed",
+    "traceability": "mapping check passed; requirement acceptance states unchanged",
+    "secretScan": "passed, 0 unreviewed findings"
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "generatedAt": "2026-11-08T15:55:55.530Z",
+  "origin": "https://gdggt.dev",
+  "scope": "Fresh isolated production sessions. Read-only navigation with non-read requests blocked. Does not certify the existing owner authenticated session.",
+  "results": [
+    {
+      "profile": "desktop-motion",
+      "path": "/events",
+      "elapsedMs": 245,
+      "heading": "Make room for what\u2019s next."
+    },
+    {
+      "profile": "desktop-motion",
+      "path": "/team",
+      "elapsedMs": 57,
+      "heading": "Meet the team."
+    },
+    {
+      "profile": "desktop-motion",
+      "path": "/resources",
+      "elapsedMs": 64,
+      "heading": "Resources for builders."
+    },
+    {
+      "profile": "desktop-motion",
+      "path": "/sponsors",
+      "elapsedMs": 64,
+      "heading": "Partners who power student builders."
+    },
+    {
+      "profile": "desktop-motion",
+      "path": "/gallery",
+      "elapsedMs": 67,
+      "heading": "Community in motion."
+    },
+    {
+      "profile": "desktop-motion",
+      "path": "/contact",
+      "elapsedMs": 62,
+      "heading": "Let\u2019s build\nsomething together."
+    },
+    {
+      "profile": "desktop-motion",
+      "path": "/",
+      "elapsedMs": 42,
+      "heading": "Developer\nGroups"
+    },
+    {
+      "profile": "desktop-motion",
+      "path": "/events",
+      "elapsedMs": 32,
+      "heading": "Make room for what\u2019s next."
+    },
+    {
+      "profile": "desktop-reduced",
+      "path": "/events",
+      "elapsedMs": 242,
+      "heading": "Make room for what\u2019s next."
+    },
+    {
+      "profile": "desktop-reduced",
+      "path": "/team",
+      "elapsedMs": 53,
+      "heading": "Meet the team."
+    },
+    {
+      "profile": "desktop-reduced",
+      "path": "/resources",
+      "elapsedMs": 61,
+      "heading": "Resources for builders."
+    },
+    {
+      "profile": "desktop-reduced",
+      "path": "/sponsors",
+      "elapsedMs": 65,
+      "heading": "Partners who power student builders."
+    },
+    {
+      "profile": "desktop-reduced",
+      "path": "/gallery",
+      "elapsedMs": 67,
+      "heading": "Community in motion."
+    },
+    {
+      "profile": "desktop-reduced",
+      "path": "/contact",
+      "elapsedMs": 64,
+      "heading": "Let\u2019s build\nsomething together."
+    },
+    {
+      "profile": "desktop-reduced",
+      "path": "/",
+      "elapsedMs": 42,
+      "heading": "Developer\nGroups"
+    },
+    {
+      "profile": "desktop-reduced",
+      "path": "/events",
+      "elapsedMs": 32,
+      "heading": "Make room for what\u2019s next."
+    },
+    {
+      "profile": "mobile",
+      "path": "/events",
+      "elapsedMs": 264,
+      "heading": "Make room for what\u2019s next."
+    },
+    {
+      "profile": "mobile",
+      "path": "/team",
+      "elapsedMs": 91,
+      "heading": "Meet the team."
+    },
+    {
+      "profile": "mobile",
+      "path": "/resources",
+      "elapsedMs": 96,
+      "heading": "Resources for builders."
+    },
+    {
+      "profile": "mobile",
+      "path": "/sponsors",
+      "elapsedMs": 96,
+      "heading": "Partners who power student builders."
+    },
+    {
+      "profile": "mobile",
+      "path": "/gallery",
+      "elapsedMs": 100,
+      "heading": "Community in motion."
+    },
+    {
+      "profile": "mobile",
+      "path": "/contact",
+      "elapsedMs": 101,
+      "heading": "Let\u2019s build\nsomething together."
+    },
+    {
+      "profile": "mobile",
+      "path": "/",
+      "elapsedMs": 77,
+      "heading": "Developer Groups"
+    },
+    {
+      "profile": "mobile",
+      "path": "/events",
+      "elapsedMs": 65,
+      "heading": "Make room for what\u2019s next."
+    }
+  ],
+  "commit": "3206b3d8b7b5e1e8b2de3689147b90bcf5813351",
+  "deployment": {
+    "id": "dpl_217P2nB2mEfSDARWoTNhQoo5E3vv",
+    "state": "READY",
+    "substate": "PROMOTED",
+    "domain": "gdggt.dev"
+  },
+  "backNavigationChecks": 3,
+  "authenticatedBrowser": "Existing owner session loaded the production dashboard. Owner actively editing in another tab; do not disrupt their editor. Repeated owner-session navigation awaits their review.",
+  "ci": {
+    "runId": 42496689529,
+    "passedJobs": [
+      "code-and-database",
+      "coverage-gate",
+      "dependency-gate",
+      "secret-gate"
+    ],
+    "pendingJobs": [
+      "browser-smoke (1)",
+      "browser-smoke (2)",
+      "browser-smoke (3)"
+    ]
+  }
+}

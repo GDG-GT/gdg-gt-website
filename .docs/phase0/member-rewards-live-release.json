@@ -1,0 +1,309 @@
+{
+  "checkedAt": "2026-11-08T18:28:23.861Z",
+  "commit": "6cc49de3f77a251e19412e6d399d8a5985d03aa4",
+  "scope": "Fresh public production browser sessions; non-read requests blocked; no member or provider writes",
+  "results": [
+    {
+      "profile": "desktop",
+      "origin": "https://gdggt.dev",
+      "board": true,
+      "copy": true,
+      "memberNavigation": true,
+      "cameraPolicy": true
+    },
+    {
+      "profile": "desktop",
+      "origin": "https://leaderboards.gdggt.dev",
+      "board": true,
+      "copy": true,
+      "memberNavigation": true,
+      "cameraPolicy": true
+    },
+    {
+      "profile": "desktop",
+      "path": "/gallery",
+      "loaded": true
+    },
+    {
+      "profile": "desktop",
+      "path": "/resources",
+      "loaded": true
+    },
+    {
+      "profile": "desktop",
+      "path": "/contact",
+      "loaded": true
+    },
+    {
+      "profile": "desktop",
+      "path": "/privacy",
+      "loaded": true
+    },
+    {
+      "profile": "mobile",
+      "origin": "https://gdggt.dev",
+      "board": true,
+      "copy": true,
+      "memberNavigation": true,
+      "cameraPolicy": true
+    },
+    {
+      "profile": "mobile",
+      "origin": "https://leaderboards.gdggt.dev",
+      "board": true,
+      "copy": true,
+      "memberNavigation": true,
+      "cameraPolicy": true
+    },
+    {
+      "profile": "mobile",
+      "path": "/gallery",
+      "loaded": true
+    },
+    {
+      "profile": "mobile",
+      "path": "/resources",
+      "loaded": true
+    },
+    {
+      "profile": "mobile",
+      "path": "/contact",
+      "loaded": true
+    },
+    {
+      "profile": "mobile",
+      "path": "/privacy",
+      "loaded": true
+    }
+  ],
+  "apiChecks": [
+    {
+      "origin": "https://gdggt.dev",
+      "path": "/api/v1/admin/rewards",
+      "status": 401
+    },
+    {
+      "origin": "https://leaderboards.gdggt.dev",
+      "path": "/api/v1/rewards/me",
+      "status": 401
+    },
+    {
+      "origin": "https://leaderboards.gdggt.dev",
+      "path": "/api/v1/rewards/leaderboard",
+      "status": 200,
+      "items": 0,
+      "total": 0
+    },
+    {
+      "origin": "https://gdggt.dev",
+      "path": "/api/v1/resources",
+      "status": 200,
+      "items": 8,
+      "total": 8
+    },
+    {
+      "origin": "https://gdggt.dev",
+      "path": "/api/v1/sponsors/tiers",
+      "status": 200,
+      "items": 3
+    },
+    {
+      "origin": "https://gdggt.dev",
+      "path": "/api/v1/sponsors",
+      "status": 200,
+      "items": 0,
+      "total": 0
+    }
+  ],
+  "deployment": {
+    "id": "dpl_AUxbVoyZzQ4zhiS7fJ3bWhUW4PVR",
+    "state": "READY",
+    "gitSha": "6cc49de3f77a251e19412e6d399d8a5985d03aa4",
+    "domains": [
+      "gdggt.dev",
+      "leaderboards.gdggt.dev"
+    ]
+  },
+  "visualReview": {
+    "desktop": true,
+    "mobile": true,
+    "screenshots": [
+      "/tmp/gdg-live-desktop-leaderboards.png",
+      "/tmp/gdg-live-mobile-leaderboards.png"
+    ]
+  },
+  "ci": {
+    "run": 42509686867,
+    "status": "completed",
+    "conclusion": "success",
+    "passed": [
+      "code-and-database",
+      "coverage-gate",
+      "dependency-gate",
+      "secret-gate",
+      "browser-smoke (1)",
+      "browser-smoke (2)",
+      "browser-smoke (3)"
+    ],
+    "pending": [],
+    "sourceTestsPassed": 2868,
+    "browserCasesPassed": 1982,
+    "browserExpectedSkips": 10,
+    "browserFailures": 0
+  },
+  "navigation": {
+    "generatedAt": "2026-11-08T18:30:45.345Z",
+    "origin": "https://gdggt.dev",
+    "scope": "Fresh isolated production sessions. Read-only navigation with non-read requests blocked. Does not certify the existing owner authenticated session.",
+    "results": [
+      {
+        "profile": "desktop-motion",
+        "path": "/events",
+        "elapsedMs": 177,
+        "heading": "Make room for what\u2019s next."
+      },
+      {
+        "profile": "desktop-motion",
+        "path": "/team",
+        "elapsedMs": 65,
+        "heading": "Meet the team."
+      },
+      {
+        "profile": "desktop-motion",
+        "path": "/resources",
+        "elapsedMs": 66,
+        "heading": "Resources for builders."
+      },
+      {
+        "profile": "desktop-motion",
+        "path": "/sponsors",
+        "elapsedMs": 64,
+        "heading": "Partners who power student builders."
+      },
+      {
+        "profile": "desktop-motion",
+        "path": "/gallery",
+        "elapsedMs": 78,
+        "heading": "Community in motion."
+      },
+      {
+        "profile": "desktop-motion",
+        "path": "/contact",
+        "elapsedMs": 72,
+        "heading": "Let\u2019s build\nsomething together."
+      },
+      {
+        "profile": "desktop-motion",
+        "path": "/",
+        "elapsedMs": 33,
+        "heading": "Developer\nGroups"
+      },
+      {
+        "profile": "desktop-motion",
+        "path": "/events",
+        "elapsedMs": 32,
+        "heading": "Make room for what\u2019s next."
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/events",
+        "elapsedMs": 151,
+        "heading": "Make room for what\u2019s next."
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/team",
+        "elapsedMs": 74,
+        "heading": "Meet the team."
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/resources",
+        "elapsedMs": 66,
+        "heading": "Resources for builders."
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/sponsors",
+        "elapsedMs": 66,
+        "heading": "Partners who power student builders."
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/gallery",
+        "elapsedMs": 68,
+        "heading": "Community in motion."
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/contact",
+        "elapsedMs": 66,
+        "heading": "Let\u2019s build\nsomething together."
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/",
+        "elapsedMs": 35,
+        "heading": "Developer\nGroups"
+      },
+      {
+        "profile": "desktop-reduced",
+        "path": "/events",
+        "elapsedMs": 31,
+        "heading": "Make room for what\u2019s next."
+      },
+      {
+        "profile": "mobile",
+        "path": "/events",
+        "elapsedMs": 269,
+        "heading": "Make room for what\u2019s next."
+      },
+      {
+        "profile": "mobile",
+        "path": "/team",
+        "elapsedMs": 96,
+        "heading": "Meet the team."
+      },
+      {
+        "profile": "mobile",
+        "path": "/resources",
+        "elapsedMs": 98,
+        "heading": "Resources for builders."
+      },
+      {
+        "profile": "mobile",
+        "path": "/sponsors",
+        "elapsedMs": 99,
+        "heading": "Partners who power student builders."
+      },
+      {
+        "profile": "mobile",
+        "path": "/gallery",
+        "elapsedMs": 98,
+        "heading": "Community in motion."
+      },
+      {
+        "profile": "mobile",
+        "path": "/contact",
+        "elapsedMs": 98,
+        "heading": "Let\u2019s build\nsomething together."
+      },
+      {
+        "profile": "mobile",
+        "path": "/",
+        "elapsedMs": 77,
+        "heading": "Developer Groups"
+      },
+      {
+        "profile": "mobile",
+        "path": "/events",
+        "elapsedMs": 65,
+        "heading": "Make room for what\u2019s next."
+      }
+    ]
+  },
+  "localServices": {
+    "ui": 200,
+    "api": 200
+  }
+}
