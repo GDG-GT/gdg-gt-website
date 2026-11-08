@@ -21,7 +21,7 @@ const sections = [
     title: "Build a form",
     href: "/admin/forms",
     description:
-      "Start from a template or an empty form. Add questions and sections, set required fields, and preview the experience. Publishing creates a versioned snapshot; later edits stay in your draft until you publish again. All new submissions require a name and email; entered details are unverified unless an existing access method verifies the email. SSO and Google sign-in are deferred. Respondents can opt in to email their exact questions and answers only to their entered address, without another confirmation step. Files are listed by name, not attached. Chapter notifications require a separate recipient review.",
+      "Start from a template or an empty form. Add questions and sections, set required fields, and preview the experience. Publishing creates a versioned snapshot; later edits stay in your draft until you publish again. All new submissions require a name and email; entered details are unverified unless an existing access method verifies the email. Georgia Tech SSO is pending campus configuration. Respondents can opt in to email their exact questions and answers only to their entered address, without another confirmation step. Files are listed by name, not attached. Chapter notifications require a separate recipient review.",
   },
   {
     title: "Review responses",

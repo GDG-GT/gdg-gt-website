@@ -22,7 +22,7 @@ export default function GeorgiaTechSsoOption({
       </Button>
       <p id={descriptionId} className="text-sm text-muted-foreground">
         {purpose === "login"
-          ? "Campus SSO is not connected yet. Use your chapter email and password for now. SSO will not automatically grant admin access."
+          ? "Campus SSO is not connected yet. Use your chapter email and password for now."
           : "Campus SSO verification is planned but not connected. Existing access links and email verification remain unchanged."}
       </p>
     </div>

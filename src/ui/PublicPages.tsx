@@ -1589,15 +1589,15 @@ export function SponsorsPage() {
           {[
             [
               "Support hands-on learning",
-              "Help make workshops, learning resources, and shared experiences possible.",
+              "Support a workshop with mentors, technical speakers, project feedback or tools students can use.",
             ],
             [
               "Meet the next generation",
-              "Connect with students who are curious about the tools and ideas shaping technology.",
+              "Meet student builders through a chapter event, a project demo or a career conversation.",
             ],
             [
               "Build lasting community",
-              "Be part of an environment where students learn from one another.",
+              "Help with event space, food, hardware or learning materials. We can discuss a one-off event or a longer partnership.",
             ],
           ].map(([title, text]) => (
             <div key={title}>

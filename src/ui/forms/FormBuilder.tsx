@@ -988,8 +988,7 @@ function FormBuilderContent() {
               <p className="gt-helper">
                 Every respondent must enter a name and email. Entered details
                 are unverified unless an existing access method verifies them.
-                Georgia Tech SSO (preferred) and Google sign-in are planned, not
-                connected.
+                Georgia Tech SSO is planned but not connected yet.
               </p>
               <Field
                 label="Form theme"
