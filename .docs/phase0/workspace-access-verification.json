@@ -1,0 +1,42 @@
+{
+  "generatedAt": "2026-11-08T16:07:24.701451+00:00",
+  "scope": "Follow-up to owner-confirmed recovery: remove repeated blocking access message during ordinary admin navigation.",
+  "behavior": [
+    "Share the shell route inventory with static page guards.",
+    "Refresh inventory on navigation, focus and visibility restoration.",
+    "Bind in-memory snapshot to the exact current actor object.",
+    "Keep record-specific form/team checks separate.",
+    "Apply a successful revocation immediately; preserve a mounted draft across transport failure.",
+    "All resource reads and mutations retain server authorization."
+  ],
+  "tests": {
+    "source": {
+      "files": 232,
+      "passed": 2818
+    },
+    "targetedBrowsers": {
+      "passed": 80,
+      "failed": 0,
+      "profiles": [
+        "chromium-1440",
+        "chromium-mobile",
+        "firefox-1440",
+        "webkit-1440",
+        "webkit-mobile"
+      ]
+    },
+    "accessAndNavigationUnits": {
+      "passed": 18
+    },
+    "build": "passed",
+    "typecheck": "passed",
+    "lint": {
+      "errors": 0,
+      "inheritedWarnings": 8,
+      "excludes": "Generated .build and preserved pre-existing untracked duplicates."
+    },
+    "publicSsr": "passed 26 checks",
+    "bundleBudgets": "passed"
+  },
+  "production": "Pending automatic deployment of this commit. Initial navigation fix 3206b3d is already live and user confirmed navigation works."
+}

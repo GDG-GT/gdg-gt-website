@@ -52,6 +52,10 @@ import {
 import NotificationBell from "@/components/admin/NotificationBell";
 import { useAdmin } from "@/contexts/AdminContext";
 import { PermissionsService } from "@/services/permissionsService";
+import {
+  WorkspaceAccessContext,
+  type WorkspaceAccessSnapshot,
+} from "@/contexts/WorkspaceAccessContext";
 import { Brand, Button, SearchBox } from "./primitives";
 import { localPreviewEnabled } from "./preview-data";
 
@@ -148,6 +152,16 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   const [allowed, setAllowed] = useState<string[]>([]),
     [navFailed, setNavFailed] = useState(false),
     [navRetry, setNavRetry] = useState(0);
+  const [accessSnapshot, setAccessSnapshot] = useState<WorkspaceAccessSnapshot>();
+  const retryAccess = useCallback(() => setNavRetry((value) => value + 1), []);
+  const access = useMemo(
+    () => ({
+      snapshot: accessSnapshot,
+      failed: navFailed,
+      retry: retryAccess,
+    }),
+    [accessSnapshot, navFailed, retryAccess],
+  );
   const openSearch = useCallback((invoker?: HTMLElement) => {
     const focused = document.activeElement;
     searchPrevious.current =
@@ -167,6 +181,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
     PermissionsService.getAccessiblePages(currentAdmin, controller.signal)
       .then((routes) => {
         if (!cancelled) {
+          setAccessSnapshot({ actor: currentAdmin, routes });
           setAllowed(
             routes.filter(
               (route) =>
@@ -189,6 +204,17 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       controller.abort();
     };
   }, [currentAdmin, navRetry, location.pathname]);
+  useEffect(() => {
+    window.addEventListener("focus", retryAccess);
+    const visible = () => {
+      if (document.visibilityState === "visible") retryAccess();
+    };
+    document.addEventListener("visibilitychange", visible);
+    return () => {
+      window.removeEventListener("focus", retryAccess);
+      document.removeEventListener("visibilitychange", visible);
+    };
+  }, [retryAccess]);
   useEffect(() => {
     setMobileOpen(false);
     window.scrollTo(0, 0);
@@ -374,7 +400,9 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           </div>
         )}
         <main id="workspace-content" className="gt-admin-body" tabIndex={-1}>
-          {children}
+          <WorkspaceAccessContext.Provider value={access}>
+            {children}
+          </WorkspaceAccessContext.Provider>
         </main>
       </div>
       <Dialog open={mobileOpen} onOpenChange={setMobileOpen}>

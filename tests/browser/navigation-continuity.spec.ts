@@ -109,11 +109,9 @@ test("a stalled destination read offers retry and loads without a document refre
     await openWorkspacePage(page, "Forms");
     await expect(page.locator("#workspace-content h1")).toHaveText("Forms");
     await expect(
-      page
-        .getByRole("alert")
-        .filter({
-          hasText: "This information is taking too long to load. Try again.",
-        }),
+      page.getByRole("alert").filter({
+        hasText: "This information is taking too long to load. Try again.",
+      }),
     ).toBeVisible({ timeout: 12000 });
     release();
     await page
@@ -130,30 +128,55 @@ test("a stalled destination read offers retry and loads without a document refre
   }
 });
 
-test("public links keep the site shell mounted and render each destination", async ({ page, fixture }) => {
+test("public links keep the site shell mounted and render each destination", async ({
+  page,
+  fixture,
+}) => {
   await page.goto("/events");
   await expect(page.locator("h1")).toHaveCount(1);
   const originalShell = await page.getByRole("contentinfo").elementHandle();
-  for (const [name, path] of [["Team", "/team"], ["Resources", "/resources"], ["Sponsors", "/sponsors"], ["Gallery", "/gallery"], ["Contact", "/contact"], ["Events", "/events"]]) {
+  for (const [name, path] of [
+    ["Team", "/team"],
+    ["Resources", "/resources"],
+    ["Sponsors", "/sponsors"],
+    ["Gallery", "/gallery"],
+    ["Contact", "/contact"],
+    ["Events", "/events"],
+  ]) {
     const before = await page.locator("h1").textContent();
-    const opener = page.getByRole("button", { name: "Open navigation", exact: true });
+    const opener = page.getByRole("button", {
+      name: "Open navigation",
+      exact: true,
+    });
     const mobile = await opener.isVisible();
     if (mobile) await opener.click();
-    await page.getByRole("navigation", { name: mobile ? "Mobile navigation" : "Main navigation", exact: true })
-      .getByRole("link", { name, exact: true }).click();
+    await page
+      .getByRole("navigation", {
+        name: mobile ? "Mobile navigation" : "Main navigation",
+        exact: true,
+      })
+      .getByRole("link", { name, exact: true })
+      .click();
     await expect(page).toHaveURL(new RegExp(path + "$"));
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("h1")).not.toHaveText(before || "");
-    expect(await originalShell!.evaluate(node => node.isConnected)).toBe(true);
+    expect(await originalShell!.evaluate((node) => node.isConnected)).toBe(
+      true,
+    );
   }
   expect(fixture.writes).toEqual([]);
   expect(fixture.unexpected).toEqual([]);
 });
 
-test("a delayed public route replaces home with a loading state before the chunk arrives", async ({ page, fixture }) => {
+test("a delayed public route replaces home with a loading state before the chunk arrives", async ({
+  page,
+  fixture,
+}) => {
   let release!: () => void;
-  const pending = new Promise<void>(resolve => { release = resolve; });
-  await page.route("**/assets/PublicPages-*.js", async route => {
+  const pending = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route("**/assets/PublicPages-*.js", async (route) => {
     await pending;
     await route.continue();
   });
@@ -161,14 +184,75 @@ test("a delayed public route replaces home with a loading state before the chunk
     await page.goto("/");
     await expect(page.locator("h1")).toBeVisible();
     const home = await page.locator("h1").elementHandle();
-    await page.getByRole("link", { name: "Upcoming Events", exact: true }).click();
+    await page
+      .getByRole("link", { name: "Upcoming Events", exact: true })
+      .click();
     await expect(page).toHaveURL(/\/events$/);
-    await expect(page.getByRole("status", { name: "Loading page", exact: true })).toBeVisible({ timeout: 1000 });
-    expect(await home!.evaluate(node => node.isConnected)).toBe(false);
+    await expect(
+      page.getByRole("status", { name: "Loading page", exact: true }),
+    ).toBeVisible({ timeout: 1000 });
+    expect(await home!.evaluate((node) => node.isConnected)).toBe(false);
     release();
     await expect(page.locator("h1")).toHaveCount(1);
-    await expect(page.getByRole("status", { name: "Loading page", exact: true })).toHaveCount(0);
+    await expect(
+      page.getByRole("status", { name: "Loading page", exact: true }),
+    ).toHaveCount(0);
     expect(fixture.writes).toEqual([]);
     expect(fixture.unexpected).toEqual([]);
-  } finally { release(); }
+  } finally {
+    release();
+  }
+});
+
+test("workspace navigation reuses known access while a fresh inventory can still revoke it", async ({
+  page,
+  fixture,
+}) => {
+  fixture.authenticated = true;
+  await page.goto("/admin");
+  await expect(page.locator("#workspace-content h1")).toContainText(
+    "Welcome back",
+  );
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  let requested = false;
+  const duplicateChecks: string[] = [];
+  page.on("request", (request) => {
+    const url = new URL(request.url());
+    if (
+      url.pathname === "/api/v1/admin/access" &&
+      url.searchParams.has("route")
+    )
+      duplicateChecks.push(url.search);
+  });
+  await page.route("**/api/v1/admin/access", async (route) => {
+    requested = true;
+    await held;
+    await route.fulfill({
+      json: { data: { accessibleRoutes: ["/admin"], grants: [] } },
+    });
+  });
+  try {
+    await openWorkspacePage(page, "Forms");
+    await expect.poll(() => requested).toBe(true);
+    await expect(page.locator("#workspace-content h1")).toHaveText("Forms");
+    await expect(
+      page.getByText("Checking access…", { exact: true }),
+    ).toHaveCount(0);
+    await expect(
+      page.getByText("Current authorized inventory loaded.", { exact: false }),
+    ).toBeVisible();
+    expect(duplicateChecks).toEqual([]);
+    release();
+    await expect(
+      page.getByText("This workspace is restricted", { exact: true }),
+    ).toBeVisible();
+    await expect(page.locator("#workspace-content h1")).toHaveCount(0);
+    expect(fixture.writes).toEqual([]);
+    expect(fixture.unexpected).toEqual([]);
+  } finally {
+    release();
+  }
 });

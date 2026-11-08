@@ -1,8 +1,9 @@
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, useEffect, useContext, type ReactNode } from "react";
 import { Navigate, useLocation, Link } from "react-router-dom";
 import { useAdmin } from "@/contexts/AdminContext";
 import { PermissionsService } from "@/services/permissionsService";
 import { Button, EmptyState } from "@/ui/primitives";
+import { WorkspaceAccessContext } from "@/contexts/WorkspaceAccessContext";
 export default function PageAccessGuard({ children }: { children: ReactNode }) {
   const {
       currentAdmin,
@@ -12,6 +13,11 @@ export default function PageAccessGuard({ children }: { children: ReactNode }) {
       retrySession,
     } = useAdmin(),
     location = useLocation();
+  const workspaceAccess = useContext(WorkspaceAccessContext);
+  // The shell already refreshes this exact route inventory on navigation.
+  // Record-specific routes retain their separate server permission checks.
+  const sharedRoute =
+    !!workspaceAccess && /^\/admin(?:\/[^/]+)?$/.test(location.pathname);
   const [refresh, setRefresh] = useState(0),
     [decision, setDecision] = useState<{
       key: string;
@@ -25,7 +31,7 @@ export default function PageAccessGuard({ children }: { children: ReactNode }) {
     ":" +
     currentAdmin?.role;
   useEffect(() => {
-    if (!currentAdmin) return;
+    if (!currentAdmin || sharedRoute) return;
     let active = true;
     const controller = new AbortController();
     PermissionsService.canAccessPage(
@@ -48,7 +54,19 @@ export default function PageAccessGuard({ children }: { children: ReactNode }) {
       active = false;
       controller.abort();
     };
-  }, [currentAdmin, location.pathname, key, refresh]);
+  }, [currentAdmin, location.pathname, key, refresh, sharedRoute]);
+  const snapshot = workspaceAccess?.snapshot;
+  const resolved = sharedRoute
+    ? snapshot && snapshot.actor === currentAdmin
+      ? { key, allowed: snapshot.routes.includes(location.pathname) }
+      : workspaceAccess.failed
+        ? {
+            key,
+            error:
+              "Access could not be checked. Your saved work has not been changed.",
+          }
+        : undefined
+    : decision;
   if (isLoading)
     return (
       <div className="gt-admin-page" role="status">
@@ -69,26 +87,32 @@ export default function PageAccessGuard({ children }: { children: ReactNode }) {
       </div>
     );
   if (!isAuthenticated) return <Navigate to="/" replace />;
-  if (decision?.key !== key)
+  if (resolved?.key !== key)
     return (
       <div className="gt-admin-page" role="status">
         Checking access…
       </div>
     );
-  if (decision.error)
+  if (resolved.error)
     return (
       <div className="gt-admin-page">
         <EmptyState
           title="Could not check access"
           action={
-            <Button onClick={() => setRefresh((v) => v + 1)}>Try again</Button>
+            <Button
+              onClick={() =>
+                sharedRoute ? workspaceAccess.retry() : setRefresh((v) => v + 1)
+              }
+            >
+              Try again
+            </Button>
           }
         >
-          {decision.error}
+          {resolved.error}
         </EmptyState>
       </div>
     );
-  if (!decision.allowed)
+  if (!resolved.allowed)
     return (
       <div className="gt-admin-page">
         <EmptyState
