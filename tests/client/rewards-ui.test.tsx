@@ -62,6 +62,85 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 describe("Member rewards interactions and recovery", () => {
+  it("offers QR Wallet downloads only for active Wallet credentials", async () => {
+    const wallet = {
+      id: member.id,
+      label: "iPhone membership",
+      kind: "wallet",
+      revoked_at: null,
+    };
+    apiMock.mockResolvedValue({
+      ...inventory,
+      walletAvailable: true,
+      walletNfcAvailable: false,
+      credentials: [
+        wallet,
+        {
+          ...wallet,
+          id: activity.id,
+          label: "Old pass",
+          revoked_at: "2026-01-01",
+        },
+      ],
+    });
+    mount(<RewardsWorkspace />, "/admin/rewards");
+    fireEvent.click(
+      await screen.findByRole("button", { name: /Fictional Member.*25 pts/ }),
+    );
+    expect(
+      await screen.findByRole("option", { name: "Apple Wallet QR" }),
+    ).toHaveProperty("disabled", false);
+    expect(
+      screen
+        .getByRole("link", {
+          name: "Download Wallet pass for iPhone membership",
+        })
+        .getAttribute("href"),
+    ).toBe("/api/v1/admin/rewards/wallet/" + member.id);
+    expect(
+      screen.queryByRole("link", { name: "Download Wallet pass for Old pass" }),
+    ).toBeNull();
+    expect(screen.queryByText(/Your X100/)).toBeNull();
+  });
+  it("shows a direct pass download after Wallet issuance instead of NFC programming", async () => {
+    apiMock.mockImplementation((path) =>
+      Promise.resolve(
+        path === "/admin/rewards/credential"
+          ? {
+              id: activity.id,
+              credential: "W".repeat(43),
+              url: "https://gdggt.dev/tap#card=" + "W".repeat(43),
+            }
+          : { ...inventory, walletAvailable: true },
+      ),
+    );
+    mount(<RewardsWorkspace />, "/admin/rewards");
+    fireEvent.click(
+      await screen.findByRole("button", { name: /Fictional Member.*25 pts/ }),
+    );
+    fireEvent.change(
+      await screen.findByRole("textbox", { name: "Credential label" }),
+      { target: { value: "iPhone pass" } },
+    );
+    fireEvent.change(
+      screen.getByRole("combobox", { name: "Credential type" }),
+      { target: { value: "wallet" } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Issue credential" }));
+    await screen.findByRole("heading", { name: "Wallet pass ready" });
+    expect(
+      screen
+        .getByRole("link", { name: "Download Wallet pass" })
+        .getAttribute("href"),
+    ).toBe("/api/v1/admin/rewards/wallet/" + activity.id);
+    expect(screen.queryByRole("button", { name: "Copy NFC URL" })).toBeNull();
+    expect(apiMock).toHaveBeenCalledWith(
+      "/admin/rewards/credential",
+      expect.objectContaining({
+        body: { memberId: member.id, kind: "wallet", label: "iPhone pass" },
+      }),
+    );
+  });
   it("keeps public rankings concise and campus sign-in unavailable until configured", async () => {
     mount(<Leaderboard />, "/leaderboard/member");
     expect(

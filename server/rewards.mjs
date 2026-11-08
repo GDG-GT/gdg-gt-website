@@ -106,6 +106,62 @@ async function quota(store, request, response, config, scope, limit = 120) {
     throw new ApiError(429, "RATE_LIMITED", "Please wait before trying again.");
   }
 }
+async function downloadMemberPass({
+  id,
+  memberId,
+  db,
+  config,
+  request,
+  response,
+  env,
+}) {
+  const lookup = () => {
+    let query = db
+      .from("reward_credentials")
+      .select("id,encrypted_token,members!inner(name)")
+      .eq("id", id)
+      .eq("kind", "wallet")
+      .is("revoked_at", null)
+      .eq("members.is_active", true)
+      .is("members.deleted_at", null)
+      .is("members.merged_into_id", null);
+    if (memberId) query = query.eq("member_id", memberId);
+    return query.maybeSingle();
+  };
+  const credential = checked(await lookup());
+  if (!credential)
+    throw new ApiError(
+      404,
+      "NOT_FOUND",
+      "This Wallet credential is not available.",
+    );
+  const payload = decryptPayload(
+    credential.encrypted_token,
+    config.encryptionSecret,
+  );
+  const bytes = await generateMemberPass({
+    credential: payload.credential,
+    id: credential.id,
+    name: credential.members.name,
+    origin: rewardsOrigin(request, config),
+    env,
+  });
+  if (!checked(await lookup()))
+    throw new ApiError(
+      404,
+      "NOT_FOUND",
+      "This Wallet credential is not available.",
+    );
+  response.statusCode = 200;
+  response.setHeader("Content-Type", "application/vnd.apple.pkpass");
+  response.setHeader(
+    "Content-Disposition",
+    'attachment; filename="gdg-member.pkpass"',
+  );
+  response.setHeader("Cache-Control", "no-store");
+  response.end(bytes);
+  return true;
+}
 export async function rewardsRoutes(
   request,
   response,
@@ -132,6 +188,18 @@ export async function rewardsRoutes(
       );
     await quota(store, request, response, config, "rewards.admin", 120);
     const route = path.slice("/api/v1/admin/rewards".length);
+    const walletDownload = route.match(/^\/wallet\/([0-9a-f-]{36})$/);
+    if (walletDownload) {
+      allowMethod(request, response, ["GET"]);
+      return downloadMemberPass({
+        id: uuid.parse(walletDownload[1]),
+        db,
+        config,
+        request,
+        response,
+        env,
+      });
+    }
     if (route === "") {
       allowMethod(request, response, ["GET"]);
       const q = queryValues(
@@ -153,9 +221,11 @@ export async function rewardsRoutes(
           p_member: q.member || null,
         }),
       );
+      const wallet = walletConfiguration(env);
       return reply({
         ...inventory,
-        walletAvailable: !!walletConfiguration(env),
+        walletAvailable: !!wallet,
+        walletNfcAvailable: !!wallet?.nfcEnabled,
       });
     }
     allowMethod(request, response, ["POST"]);
@@ -403,52 +473,15 @@ export async function rewardsRoutes(
   );
   if (walletMatch) {
     allowMethod(request, response, ["GET"]);
-    const credential = checked(
-      await db
-        .from("reward_credentials")
-        .select("id,encrypted_token")
-        .eq("id", walletMatch[1])
-        .eq("member_id", member.id)
-        .eq("kind", "wallet")
-        .is("revoked_at", null)
-        .maybeSingle(),
-    );
-    if (!credential)
-      throw new ApiError(
-        404,
-        "NOT_FOUND",
-        "This Wallet credential is not available.",
-      );
-    const payload = decryptPayload(
-      credential.encrypted_token,
-      config.encryptionSecret,
-    );
-    const bytes = await generateMemberPass({
-      credential: payload.credential,
-      id: credential.id,
-      name: member.name,
-      origin: rewardsOrigin(request, config),
+    return downloadMemberPass({
+      id: uuid.parse(walletMatch[1]),
+      memberId: member.id,
+      db,
+      config,
+      request,
+      response,
       env,
     });
-    const current = checked(
-      await db
-        .from("reward_credentials")
-        .select("id")
-        .eq("id", credential.id)
-        .is("revoked_at", null)
-        .maybeSingle(),
-    );
-    if (!current)
-      throw new ApiError(404, "NOT_FOUND", "This credential was revoked.");
-    response.statusCode = 200;
-    response.setHeader("Content-Type", "application/vnd.apple.pkpass");
-    response.setHeader(
-      "Content-Disposition",
-      'attachment; filename="gdg-member.pkpass"',
-    );
-    response.setHeader("Cache-Control", "no-store");
-    response.end(bytes);
-    return true;
   }
   if (path === "/api/v1/rewards/me") {
     allowMethod(request, response, ["GET"]);

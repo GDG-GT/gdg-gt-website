@@ -10,16 +10,15 @@ const unavailable = () =>
   new ApiError(
     503,
     "WALLET_UNAVAILABLE",
-    "Apple Wallet NFC is awaiting issuer certificate and reader configuration.",
+    "Apple Wallet is awaiting issuer certificate configuration.",
   );
 const pem = (value) =>
   typeof value === "string" ? value.replaceAll("\\n", "\n") : "";
 export function walletConfiguration(env = process.env) {
-  if (
-    env.APPLE_WALLET_NFC_ENABLED !== "true" ||
-    env.APPLE_WALLET_READER_VERIFIED !== "true"
-  )
-    return null;
+  const nfcEnabled = env.APPLE_WALLET_NFC_ENABLED === "true";
+  if (env.APPLE_WALLET_QR_ENABLED !== "true" && !nfcEnabled) return null;
+  // An explicitly requested contactless pass must never silently lose NFC.
+  if (nfcEnabled && env.APPLE_WALLET_READER_VERIFIED !== "true") return null;
   try {
     if (
       !/^pass\.[a-zA-Z0-9.-]{3,150}$/.test(
@@ -36,8 +35,11 @@ export function walletConfiguration(env = process.env) {
     });
     if (
       !signerCert.checkPrivateKey(signerKey) ||
+      !signerCert.checkIssued(wwdr) ||
+      !signerCert.verify(wwdr.publicKey) ||
       Date.parse(signerCert.validFrom) > Date.now() ||
       Date.parse(signerCert.validTo) <= Date.now() ||
+      Date.parse(wwdr.validFrom) > Date.now() ||
       Date.parse(wwdr.validTo) <= Date.now()
     )
       return null;
@@ -50,16 +52,22 @@ export function walletConfiguration(env = process.env) {
         .some((line) => line === "OU=" + env.APPLE_WALLET_TEAM_ID)
     )
       return null;
-    const publicKey = createPublicKey({
-      key: Buffer.from(env.APPLE_WALLET_NFC_PUBLIC_KEY || "", "base64"),
-      type: "spki",
-      format: "der",
-    });
-    if (
-      publicKey.asymmetricKeyType !== "ec" ||
-      publicKey.asymmetricKeyDetails?.namedCurve !== "prime256v1"
-    )
-      return null;
+    let encryptionPublicKey;
+    if (nfcEnabled) {
+      const publicKey = createPublicKey({
+        key: Buffer.from(env.APPLE_WALLET_NFC_PUBLIC_KEY || "", "base64"),
+        type: "spki",
+        format: "der",
+      });
+      if (
+        publicKey.asymmetricKeyType !== "ec" ||
+        publicKey.asymmetricKeyDetails?.namedCurve !== "prime256v1"
+      )
+        return null;
+      encryptionPublicKey = publicKey
+        .export({ type: "spki", format: "der" })
+        .toString("base64");
+    }
     return {
       passTypeIdentifier: env.APPLE_WALLET_PASS_TYPE_ID,
       teamIdentifier: env.APPLE_WALLET_TEAM_ID,
@@ -67,9 +75,8 @@ export function walletConfiguration(env = process.env) {
       signerCert: pem(env.APPLE_WALLET_SIGNER_CERT),
       signerKey: pem(env.APPLE_WALLET_SIGNER_KEY),
       signerKeyPassphrase: env.APPLE_WALLET_KEY_PASSPHRASE,
-      encryptionPublicKey: publicKey
-        .export({ type: "spki", format: "der" })
-        .toString("base64"),
+      nfcEnabled,
+      encryptionPublicKey,
     };
   } catch {
     return null;
@@ -125,11 +132,12 @@ export async function generateMemberPass({
     },
   );
   pass.type = "generic";
-  pass.setNFC({
-    message: credential,
-    encryptionPublicKey: config.encryptionPublicKey,
-    requiresAuthentication: true,
-  });
+  if (config.nfcEnabled)
+    pass.setNFC({
+      message: credential,
+      encryptionPublicKey: config.encryptionPublicKey,
+      requiresAuthentication: true,
+    });
   pass.primaryFields.push({
     key: "member",
     label: "CHAPTER MEMBER",

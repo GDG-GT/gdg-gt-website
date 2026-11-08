@@ -39,11 +39,15 @@ The GT application's provider callback itself is the Supabase callback displayed
 
 Before enabling, test the real GT provider's verified email, subject, last-sign-in data, membership matching, return flow, rejection, sign-out and both browser/PWA storage contexts. A mock test does not establish institutional SSO acceptance.
 
-## Apple Wallet NFC
+## Apple Wallet QR and NFC
 
-The server generator is implemented, but issuance remains unavailable until all issuer settings and NFC reader verification are present. Use the `.env.example` APPLE_WALLET_* fields. Pass signing certificate/key and WWDR certificate remain server-only; confirm Pass Type ID, Team ID, key pair and expiry. NFC needs the enhanced entitlement and an ECDH P-256 VAS public key. A paid Apple Developer account alone does not enable contactless passes.
+QR-only Wallet passes use `APPLE_WALLET_QR_ENABLED=true`, with `APPLE_WALLET_NFC_ENABLED=false`. Configure the Pass Type ID, Team ID, Apple-issued signing certificate, matching private key, optional key passphrase and the matching WWDR intermediate using the server-only `.env.example` fields. The server checks issuer identity, certificate/key matching, validity and the signing certificate's WWDR signature. QR does not require a contactless entitlement, VAS key or external reader. Officers scan the Wallet QR using the existing PWA camera scanner.
 
-Set both `APPLE_WALLET_NFC_ENABLED` and `APPLE_WALLET_READER_VERIFIED` only after real Apple pass acceptance and reader testing. Super Admins can then issue Wallet credentials linked to the same member account. Members download their own signed .pkpass after GT sign-in. Passes contain the compact credential and a QR fallback, never an authoritative points balance. The website is the live balance source. Server revocation is immediate; Wallet UI does not receive automatic push updates in this release.
+In **Member points & cards**, select an active community member, choose **Apple Wallet QR**, give it a label and issue it. Use **Download Wallet pass** to download the signed `.pkpass`, then transfer it privately to that member and open it on their iPhone. Downloads require the existing Super Admin session and are not public sharing links. They recheck the credential and active membership after signing. Issuing an additional credential still counts toward the five-active-credentials limit. No member records or credentials are automatically created during configuration.
+
+Members can also download their own existing Wallet credentials after GT member sign-in is enabled. Passes contain the compact credential and a QR code, never an authoritative points balance. The website is the live balance source. Server revocation immediately prevents check-in; an already installed pass is not automatically removed or updated in Wallet. No Wallet push updates or self-service pass issuance are included. Test installation on a real iPhone, PWA camera scanning, duplicate check-in and revocation before treating device acceptance as complete.
+
+NFC additionally needs Apple's enhanced/contactless approval, an ECDH P-256 VAS public key and a compatible reader. Set `APPLE_WALLET_NFC_ENABLED` and `APPLE_WALLET_READER_VERIFIED` only after that setup and real reader testing. A request for NFC with missing reader/key settings fails closed even when the QR flag is on. A paid Apple Developer account alone does not enable contactless passes.
 
 The X100 is not verified for VAS, NDEF programming or SDK integration. No unknown desktop driver or copying utility was installed. Phone-to-phone Wallet tapping is not available from an iPhone PWA; it requires native ProximityReader/approved reader integration. See ../planning/NFC_POINTS_RESEARCH.md for primary sources.
 

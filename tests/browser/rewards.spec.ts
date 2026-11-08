@@ -24,6 +24,81 @@ const inventory = {
   claims: [],
   walletAvailable: false,
 };
+test("QR Wallet issuance downloads a private pass without NFC programming", async ({
+  page,
+  fixture,
+}, info) => {
+  fixture.authenticated = true;
+  const id = "b2100000-0000-4000-8000-000000000005";
+  await page.route("**/api/v1/admin/rewards**", (r) => {
+    const path = new URL(r.request().url()).pathname;
+    if (path.endsWith("/wallet/" + id))
+      return r.fulfill({
+        contentType: "application/vnd.apple.pkpass",
+        headers: {
+          "Content-Disposition": 'attachment; filename="gdg-member.pkpass"',
+          "Cache-Control": "no-store",
+        },
+        body: "fictional-download-body-not-an-Apple-pass",
+      });
+    if (r.request().method() === "GET")
+      return r.fulfill({
+        json: {
+          data: {
+            ...inventory,
+            walletAvailable: true,
+            walletNfcAvailable: false,
+          },
+        },
+      });
+    expect(r.request().postDataJSON()).toEqual({
+      memberId: member.id,
+      kind: "wallet",
+      label: "iPhone membership",
+    });
+    return r.fulfill({
+      json: {
+        data: {
+          id,
+          credential: "W".repeat(43),
+          url: "https://gdggt.dev/tap#card=" + "W".repeat(43),
+        },
+      },
+    });
+  });
+  await page.goto("/admin/rewards");
+  await page.getByRole("button", { name: /Fictional Member.*25 pts/ }).click();
+  await page
+    .getByRole("textbox", { name: "Credential label", exact: true })
+    .fill("iPhone membership");
+  await page
+    .getByRole("combobox", { name: "Credential type", exact: true })
+    .selectOption("wallet");
+  await page
+    .getByRole("button", { name: "Issue credential", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Wallet pass ready" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Copy NFC URL", exact: true }),
+  ).toHaveCount(0);
+  expect(await accessibility(page)).toEqual([]);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: info.outputPath("wallet-qr-issuance.png"),
+    fullPage: true,
+  });
+  const download = page.waitForEvent("download");
+  await page
+    .getByRole("link", { name: "Download Wallet pass", exact: true })
+    .click();
+  expect((await download).suggestedFilename()).toBe("gdg-member.pkpass");
+});
 test("public leaderboard is standalone, private by default and usable without SSO", async ({
   page,
   fixture,

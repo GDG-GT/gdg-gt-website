@@ -1,0 +1,51 @@
+{
+  "checkedAt": "2026-11-08T22:15:56.734521+00:00",
+  "scope": "QR-only Apple Wallet software support; fictional signing certificates and member fixtures, local real schema query, no production credentials or member records created",
+  "sourceTests": {
+    "files": 244,
+    "passed": 2943,
+    "coverageGates": "passed"
+  },
+  "browserTests": {
+    "passed": 60,
+    "profiles": [
+      "chromium-1920",
+      "chromium-1440",
+      "chromium-mobile",
+      "firefox-1440",
+      "webkit-1440",
+      "webkit-mobile"
+    ],
+    "scope": "Rewards and external event flows, including QR Wallet issuance/download and accessibility"
+  },
+  "checks": {
+    "typecheck": "passed",
+    "lint": "passed with 8 inherited warnings",
+    "productionBuild": "passed",
+    "bundleBudgets": "passed",
+    "publicCompiledSSR": "passed",
+    "secretScan": "0 unreviewed findings",
+    "localWalletPostgrestJoin": "HTTP 200, limit=0, no data changed"
+  },
+  "cryptography": "Encrypted private-key pass generation, manifest file hashes and detached CMS signature verified using fictional test certificate; NFC absent in QR-only archive",
+  "webkitRegression": "Pass download initially triggered navigation protection; explicit download attribute fixes desktop and mobile WebKit without disabling draft protection",
+  "appleSetup": {
+    "passTypeId": "pass.dev.gdggt.membership",
+    "registration": "verified",
+    "csr": "prepared and self-signature verified outside repository",
+    "certificate": "pending upload and issuance; browser connection unavailable",
+    "productionSigningConfiguration": "not changed"
+  },
+  "remaining": [
+    "Issue/download Apple signing certificate using existing CSR",
+    "Verify real certificate identity, key and official WWDR chain",
+    "Configure encrypted server signing environment and enable QR on existing Vercel project",
+    "Install on real iPhone, scan with iPhone PWA, check duplicate and revoked credential behavior"
+  ],
+  "limitations": [
+    "No real Apple Wallet installation acceptance claimed",
+    "No NFC/Apple VAS enablement",
+    "GT member self-service login remains awaiting GT SSO",
+    "No automatic Wallet updates or pushes"
+  ]
+}

@@ -1,5 +1,17 @@
 # Current checkpoint
 
+## Apple Wallet QR setup in progress
+
+The registered Apple Pass Type ID is `pass.dev.gdggt.membership` under the owner's existing team `7THP95SRTV`. The description is GDG Georgia Tech Membership. Do not register it again. An encrypted RSA signing key, its passphrase and a verified public CSR are saved outside the repository in the owner's private GDG GT Wallet Issuer folder. Do not regenerate or publish them. Public CSR copies are in Downloads as `GDGMembership.certSigningRequest` and `gdg-membership.csr`.
+
+The Apple certificate wizard was prepared with the name GDG Georgia Tech Membership QR. The file picker would not enable Open; subsequent browser control lost its window connection and returned a blank capture. No certificate issuance or download was verified. No production signing environment was changed. On resumption inspect Apple Certificates and local certificate downloads before repeating an action. Reuse the existing CSR/key pair. Issuing a signing certificate through the browser requires action-time confirmation under the computer-use policy.
+
+The app now supports explicitly enabled QR-only passes without an NFC entitlement or reader, retains the contactless setup gate, and verifies the signing certificate against its WWDR issuer. Super Admins can download existing active-member Wallet credentials from the rewards workspace; members retain their own GT-session download path. Downloads check active membership and revocation again after signing and are private/non-cacheable. QR passes are scanned with the existing iPhone PWA camera. No member login fallback, fixture production member, automatic provider send or Wallet push service was added.
+
+Software verification passed: 2,943 source tests and all coverage gates, 60 rewards/event browser cases across six profiles, types, lint with eight inherited warnings, build, bundles, compiled public SSR and secret scan. A read-only local PostgREST query verified the active-member credential join against the real schema. Evidence: [phase0/apple-wallet-qr-verification.json](phase0/apple-wallet-qr-verification.json). Desktop/mobile WebKit pass downloads are verified after adding the explicit download attribute.
+
+Finish certificate issuance/download, verify the downloaded certificate matches the existing private key and Apple team/pass identity, obtain and validate its official WWDR intermediate, configure only encrypted server environment values on the existing Vercel project, then enable QR issuance. Keep contactless flags off. A real iPhone Add to Wallet and check-in/revocation test remains necessary; fictional-certificate cryptographic tests do not establish Apple acceptance.
+
 ## Completed maintenance task
 
 Owner request: create detailed documentation for separate-event NFC/membership integration; clean obsolete docs, other repository clutter and proven dead files without changing functionality.

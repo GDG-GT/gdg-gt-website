@@ -73,6 +73,7 @@ type Claim = {
 };
 type Inventory = {
   walletAvailable?: boolean;
+  walletNfcAvailable?: boolean;
   selectedMember?: Member | null;
   members: Member[];
   total: number;
@@ -99,7 +100,12 @@ export default function RewardsWorkspace() {
     [search, setSearch] = useState(""),
     [page, setPage] = useState(1),
     [member, setMember] = useState<Member>(),
-    [issued, setIssued] = useState<{ url: string; credential: string }>(),
+    [issued, setIssued] = useState<{
+      id: string;
+      kind: string;
+      url: string;
+      credential: string;
+    }>(),
     [qr, setQr] = useState(""),
     [review, setReview] = useState<{
       action: string;
@@ -203,7 +209,7 @@ export default function RewardsWorkspace() {
     setError("");
     setNotice("");
     try {
-      const result = await api<{ url: string; credential: string }>(
+      const result = await api<{ id: string; url: string; credential: string }>(
         "/admin/rewards/" + action,
         { method: "POST", body: document, idempotencyKey: pending.current.key },
       );
@@ -211,7 +217,8 @@ export default function RewardsWorkspace() {
       setUncertain(undefined);
       setReview(undefined);
       setDirty(false);
-      if (action === "credential") setIssued(result);
+      if (action === "credential")
+        setIssued({ ...result, kind: String(document.kind) });
       if (action === "rule") setEditRule(undefined);
       if (action === "perk") setEditPerk(undefined);
       setNotice("Saved. The current records are shown below.");
@@ -572,7 +579,8 @@ export default function RewardsWorkspace() {
                       <option value="card">NFC card</option>
                       <option value="qr">QR fallback</option>
                       <option value="wallet" disabled={!data?.walletAvailable}>
-                        Apple Wallet NFC
+                        Apple Wallet{" "}
+                        {data?.walletNfcAvailable ? "NFC + QR" : "QR"}
                         {!data?.walletAvailable ? " · Setup required" : ""}
                       </option>
                     </select>
@@ -581,32 +589,48 @@ export default function RewardsWorkspace() {
                 </RewardForm>
                 {issued && (
                   <section className="rewards-issued">
-                    <h3>Program this credential</h3>
-                    <p>
-                      Write this URL as the first NDEF URL record. Keep the link
-                      private; it identifies this member.
-                    </p>
-                    <textarea
-                      aria-label="Issued NFC URL"
-                      readOnly
-                      value={issued.url}
-                    />
-                    <Button
-                      variant="secondary"
-                      onClick={() =>
-                        void navigator.clipboard
-                          .writeText(issued.url)
-                          .then(() => setNotice("Credential URL copied."))
-                          .catch(() =>
-                            setError(
-                              "Clipboard unavailable. Select and copy the credential URL.",
-                            ),
-                          )
-                      }
-                    >
-                      Copy NFC URL
-                    </Button>
-                    <NfcControls writeUrl={issued.url} />
+                    <h3>
+                      {issued.kind === "wallet"
+                        ? "Wallet pass ready"
+                        : "Program this credential"}
+                    </h3>
+                    {issued.kind === "wallet" ? (
+                      <a
+                        className="gt-button gt-button-secondary"
+                        href={"/api/v1/admin/rewards/wallet/" + issued.id}
+                        download="gdg-member.pkpass"
+                      >
+                        Download Wallet pass
+                      </a>
+                    ) : (
+                      <>
+                        <p>
+                          Write this URL as the first NDEF URL record. Keep the
+                          link private; it identifies this member.
+                        </p>
+                        <textarea
+                          aria-label="Issued NFC URL"
+                          readOnly
+                          value={issued.url}
+                        />
+                        <Button
+                          variant="secondary"
+                          onClick={() =>
+                            void navigator.clipboard
+                              .writeText(issued.url)
+                              .then(() => setNotice("Credential URL copied."))
+                              .catch(() =>
+                                setError(
+                                  "Clipboard unavailable. Select and copy the credential URL.",
+                                ),
+                              )
+                          }
+                        >
+                          Copy NFC URL
+                        </Button>
+                        <NfcControls writeUrl={issued.url} />
+                      </>
+                    )}
                     {qr && (
                       <img
                         src={qr}
@@ -619,7 +643,7 @@ export default function RewardsWorkspace() {
                       variant="ghost"
                       onClick={() => setIssued(undefined)}
                     >
-                      Done programming
+                      {issued.kind === "wallet" ? "Done" : "Done programming"}
                     </Button>
                   </section>
                 )}
@@ -630,6 +654,18 @@ export default function RewardsWorkspace() {
                         {c.label} · {c.kind}
                         {c.revoked_at ? " · Revoked" : ""}
                       </span>
+                      {!c.revoked_at &&
+                        c.kind === "wallet" &&
+                        data.walletAvailable && (
+                          <a
+                            className="gt-button gt-button-secondary"
+                            href={"/api/v1/admin/rewards/wallet/" + c.id}
+                            download="gdg-member.pkpass"
+                            aria-label={"Download Wallet pass for " + c.label}
+                          >
+                            Download Wallet pass
+                          </a>
+                        )}
                       {!c.revoked_at && (
                         <Button
                           variant="danger"
@@ -649,10 +685,6 @@ export default function RewardsWorkspace() {
                     </li>
                   ))}
                 </ul>
-                <p>
-                  Apple Wallet NFC requires an enhanced pass certificate and a
-                  compatible reader. Your X100 has not been verified for Wallet.
-                </p>
                 <h3>Points history</h3>
                 <p>
                   The latest 100 entries. Corrections are recorded as new

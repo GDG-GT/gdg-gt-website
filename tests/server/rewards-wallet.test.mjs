@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
-import { generateKeyPairSync } from "node:crypto";
+import { createHash, createPrivateKey, generateKeyPairSync } from "node:crypto";
 import { unzipSync, strFromU8 } from "fflate";
 import {
   walletConfiguration,
@@ -71,6 +71,90 @@ describe("Wallet server packaging boundary (fictional certificates, not Apple ac
     expect(
       walletConfiguration({ ...env, APPLE_WALLET_NFC_PUBLIC_KEY: "invalid" }),
     ).toBeNull();
+  });
+  it("enables QR-only passes without NFC entitlement or reader settings", () => {
+    const qr = {
+      ...env,
+      APPLE_WALLET_QR_ENABLED: "true",
+      APPLE_WALLET_NFC_ENABLED: "false",
+      APPLE_WALLET_READER_VERIFIED: "false",
+      APPLE_WALLET_NFC_PUBLIC_KEY: "",
+    };
+    expect(walletConfiguration(qr)).toMatchObject({ nfcEnabled: false });
+    expect(walletConfiguration(qr).encryptionPublicKey).toBeUndefined();
+    expect(
+      walletConfiguration({ ...qr, APPLE_WALLET_NFC_ENABLED: "true" }),
+    ).toBeNull();
+    expect(
+      walletConfiguration({
+        ...qr,
+        APPLE_WALLET_PASS_TYPE_ID: "pass.wrong.issuer",
+      }),
+    ).toBeNull();
+    expect(
+      walletConfiguration({ ...qr, APPLE_WALLET_TEAM_ID: "XXXXXXXXXX" }),
+    ).toBeNull();
+    expect(
+      walletConfiguration({ ...qr, APPLE_WALLET_SIGNER_KEY: "invalid" }),
+    ).toBeNull();
+  });
+  it("packages and cryptographically verifies a QR-only pass with an encrypted signing key", async () => {
+    const passphrase = "fictional-test-key-password";
+    const encryptedKey = createPrivateKey(env.APPLE_WALLET_SIGNER_KEY)
+      .export({
+        format: "pem",
+        type: "pkcs8",
+        cipher: "aes-256-cbc",
+        passphrase,
+      })
+      .toString();
+    const qr = {
+      ...env,
+      APPLE_WALLET_QR_ENABLED: "true",
+      APPLE_WALLET_NFC_ENABLED: "false",
+      APPLE_WALLET_SIGNER_KEY: encryptedKey,
+      APPLE_WALLET_KEY_PASSPHRASE: passphrase,
+      APPLE_WALLET_NFC_PUBLIC_KEY: "",
+    };
+    expect(
+      walletConfiguration({ ...qr, APPLE_WALLET_KEY_PASSPHRASE: "wrong" }),
+    ).toBeNull();
+    const bytes = await generateMemberPass({
+      credential: "Q".repeat(43),
+      id: "fictional-qr-pass",
+      name: "Fictional QR Member",
+      origin: "https://leaderboards.gdggt.dev",
+      env: qr,
+    });
+    const archive = unzipSync(bytes);
+    const pass = JSON.parse(strFromU8(archive["pass.json"]));
+    expect(pass).not.toHaveProperty("nfc");
+    expect(pass.barcodes[0]).toMatchObject({
+      format: "PKBarcodeFormatQR",
+      message: "Q".repeat(43),
+    });
+    expect(pass.generic.primaryFields[0].value).toBe("Fictional QR Member");
+    const manifest = JSON.parse(strFromU8(archive["manifest.json"]));
+    for (const [file, hash] of Object.entries(manifest))
+      expect(createHash("sha1").update(archive[file]).digest("hex")).toBe(hash);
+    const { writeFile } = await import("node:fs/promises");
+    await writeFile(join(folder, "signature.der"), archive.signature);
+    await writeFile(join(folder, "manifest.json"), archive["manifest.json"]);
+    const verified = spawnSync("openssl", [
+      "smime",
+      "-verify",
+      "-inform",
+      "DER",
+      "-in",
+      join(folder, "signature.der"),
+      "-content",
+      join(folder, "manifest.json"),
+      "-noverify",
+    ]);
+    expect(verified.status).toBe(0);
+    expect(verified.stdout.equals(Buffer.from(archive["manifest.json"]))).toBe(
+      true,
+    );
   });
   it("packages signed NFC and QR payloads that resolve to the same opaque credential", async () => {
     const credential = "F".repeat(43),
