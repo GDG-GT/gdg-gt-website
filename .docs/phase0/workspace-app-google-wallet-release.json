@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-11-09T04:29:04.929340+00:00",
+  "verifiedAt": "2026-11-09T04:37:00.597953+00:00",
   "native": {
     "appId": "6832381059",
     "bundleId": "dev.gdggt.scanner",
@@ -58,10 +58,13 @@
     "newBillingAccountsOrPaidResources": false
   },
   "production": {
-    "functionalCommit": "6f1abd78e171b29a37860bc6b13e4cc9236c5a07",
-    "deployment": "dpl_8DEXSupvj73UWNprXTUxncDsT8eU",
+    "functionalCommit": "151d0a17110d5a6e88a034d4c1c1fbc2a865039f",
+    "deployment": "dpl_5JoUGUkpLxMm6nYmkQRwZ6m3foQW",
     "state": "READY",
     "refinedChromePending": false,
-    "ci": "success"
+    "ci": "code/database, coverage, secret and dependency gates passed; browser shards running",
+    "scannerAssetMatchesLocal": true,
+    "public200Private401": true,
+    "ciRun": 42562283603
   }
 }
