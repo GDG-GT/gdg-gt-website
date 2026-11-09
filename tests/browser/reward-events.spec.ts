@@ -238,9 +238,12 @@ test("signed-in members create private event link codes and can disconnect their
   await expect(
     page.getByText("Event account linked.", { exact: true }),
   ).toBeVisible();
-  page.once("dialog", (d) => d.accept());
   await page
     .getByRole("button", { name: "Disconnect Fictional DevFest", exact: true })
+    .click();
+  await page
+    .getByRole("dialog", { name: "Disconnect event?" })
+    .getByRole("button", { name: "Disconnect event", exact: true })
     .click();
   await expect(
     page.getByRole("button", {

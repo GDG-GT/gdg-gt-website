@@ -87,5 +87,18 @@
     "secretGate": "passed",
     "codeDatabase": "Initial attempt stopped on GitHub scanner archive HTTP504 before test execution; source download changed to bounded verified retry and tested separately.",
     "availabilityFollowup": "Both scanner publishers returned gateway failures on direct GitHub release URLs. Added official GitHub asset API fallback, pinned asset IDs, same SHA-256 and streamed size limits. Linux Gitleaks8.30.1 and ClamAV1.5.4 downloads were independently verified against existing pins.19 focused infrastructure tests pass; no scanner execution or validation is bypassed."
+  },
+  "finalSectionRegression": {
+    "problem": "Scanner leave guard also prompted for a still-mounted event server credential",
+    "fix": "Consult the scanner guard only while scanner work is unfinished; keep event credential mounted across sections",
+    "eventCasesAcrossSixBrowserProfiles": 18,
+    "emailDialogCases": 12,
+    "unitFiles": 253,
+    "unitTests": 3004,
+    "typecheck": true,
+    "lintWarnings": 8,
+    "build": true,
+    "ssr": true,
+    "budgets": true
   }
 }

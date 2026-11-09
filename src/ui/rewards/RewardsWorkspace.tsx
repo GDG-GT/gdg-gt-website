@@ -146,6 +146,7 @@ export default function RewardsWorkspace() {
     key: string;
   }>();
   const [dirty, setDirty] = useState(false);
+  const [scannerDraft, setScannerDraft] = useState(false);
   useEffect(() => {
     if (new URLSearchParams(location.search).get("view") === "scanner")
       setTab("scanner");
@@ -357,12 +358,15 @@ export default function RewardsWorkspace() {
                 setIssued(undefined);
                 setReview(undefined);
               };
-              if (navigationSafety) {
+              if (navigationSafety && tab === "scanner" && scannerDraft) {
                 navigationSafety.request(changeSection);
                 return;
               }
               if (
-                (dirty || issued || review) &&
+                (dirty ||
+                  issued ||
+                  review ||
+                  (tab === "scanner" && scannerDraft)) &&
                 !(await confirmAction(
                   "Switch sections and discard the current unsaved entries?",
                 ))
@@ -447,6 +451,7 @@ export default function RewardsWorkspace() {
           rules={data?.rules || []}
           refresh={load}
           manual={resolve}
+          onDraftChange={setScannerDraft}
         />
       )}
       {tab === "members" && (

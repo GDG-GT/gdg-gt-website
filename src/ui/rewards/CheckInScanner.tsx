@@ -32,11 +32,13 @@ export default function CheckInScanner({
   rules,
   refresh,
   manual,
+  onDraftChange,
 }: {
   activities: Activity[];
   rules: Rule[];
   refresh: () => Promise<void>;
   manual: (token: string) => Promise<void>;
+  onDraftChange?: (dirty: boolean) => void;
 }) {
   const { currentAdmin } = useAdmin();
   const storageKey =
@@ -72,6 +74,10 @@ export default function CheckInScanner({
     busy,
     label: "Check-in session or activity",
   });
+  useEffect(() => {
+    onDraftChange?.(dirty || busy || !!uncertain || !!creation.current);
+  }, [dirty, busy, uncertain, onDraftChange]);
+  useEffect(() => () => onDraftChange?.(false), [onDraftChange]);
   useEffect(() => {
     alive.current = true;
     const scannerSession = session;

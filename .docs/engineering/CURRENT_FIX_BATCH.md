@@ -43,3 +43,7 @@ Owner's existing credential was emailed through the UI after deployment and Rese
 App build6 TestFlight assignment is confirmed done. Android signed APK was delivered earlier; no native binary source changed in this batch. Google Wallet publishing, Smart Tap certification and Apple VAS approvals remain external gates. No direct Samsung integration or Google website login.
 
 Preserve unrelated `supabase/.temp/cli-latest`. No AI commit trailers, purchases, tester invites or additional timers. Push/deploy to GDG-GT remains authorized. Provider credentials are in private files outside Git and must never be printed.
+
+## Final section-switching regression check
+
+The expanded event tests found that the new scanner navigation safeguard was too broad: it also prompted when switching sections with an event server credential open. Event connections intentionally stay mounted across sections, so their credential must remain available until acknowledged. The parent now consults the scanner guard only when that scanner has unfinished work. External page navigation still checks all registered private drafts. The old event-disconnect browser expectation was also updated to the new in-app dialog. All18 event-connection cases across six browser profiles and12 email/dialog cases passed after the correction. Full253-file /3004-test suite, typecheck, inherited-warning lint budget, build, SSR and bundles pass again. This correction creates no production data or email.
