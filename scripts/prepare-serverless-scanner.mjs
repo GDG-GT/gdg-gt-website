@@ -6,6 +6,7 @@ import { readFile, writeFile, mkdir, rm, cp, readdir, stat, chmod } from "node:f
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { rootCertificates } from "node:tls";
+import { downloadPinnedArtifact } from "./lib/pinned-download.mjs";
 
 const execute = promisify(execFile);
 const vendor = {
@@ -43,9 +44,13 @@ export async function prepareServerlessScanner() {
   let bytes;
   try { bytes = await readFile(archive); } catch (error) { if (error.code !== "ENOENT") throw error; }
   if (!bytes || bytes.length !== vendor.bytes || digest(bytes) !== vendor.sha256) {
-    const response = await fetch(vendor.url, { signal: AbortSignal.timeout(120000) });
-    if (!response.ok || Number(response.headers.get("content-length") || 0) > vendor.bytes) throw Error("Verified scanner download unavailable.");
-    bytes = Buffer.from(await response.arrayBuffer());
+    bytes = await downloadPinnedArtifact({
+      urls: [vendor.url, "https://api.github.com/repos/Cisco-Talos/clamav/releases/assets/505242399"],
+      sha256: vendor.sha256,
+      maxBytes: vendor.bytes,
+      timeoutMs: 120000,
+      headers: { Accept: "application/octet-stream" },
+    });
     if (bytes.length !== vendor.bytes || digest(bytes) !== vendor.sha256) throw Error("Scanner publisher checksum mismatch.");
     await writeFile(archive, bytes);
   }

@@ -17,6 +17,7 @@ import { fileURLToPath } from "node:url";
 import {
   secretScanVersion,
   secretScanArchives,
+  secretScanAssetIds,
   sha256,
   safeScanPath,
   reviewSecretFindings,
@@ -37,10 +38,12 @@ try {
   const archive = await downloadPinnedArtifact({
     urls: [
       `https://github.com/gitleaks/gitleaks/releases/download/v${secretScanVersion}/${asset}`,
+      `https://api.github.com/repos/gitleaks/gitleaks/releases/assets/${secretScanAssetIds[archiveKey]}`,
     ],
     sha256: expected,
     maxBytes: 30 * 1024 * 1024,
     timeoutMs: 60000,
+    headers: { Accept: "application/octet-stream" },
   });
   const archivePath = path.join(scratch, "scanner.tar.gz");
   await writeFile(archivePath, archive, { mode: 0o600 });

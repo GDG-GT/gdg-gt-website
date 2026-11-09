@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 export class ArtifactIntegrityError extends Error {}
 /** Retry availability failures; never relax a publisher checksum or size cap. */
 export async function downloadPinnedArtifact(
-  { urls, sha256, maxBytes, timeoutMs = 30000 },
+  { urls, sha256, maxBytes, timeoutMs = 30000, headers },
   fetchImpl = fetch,
 ) {
   for (const url of urls) {
@@ -10,6 +10,7 @@ export async function downloadPinnedArtifact(
       try {
         const response = await fetchImpl(url, {
           signal: AbortSignal.timeout(timeoutMs),
+          ...(headers ? { headers } : {}),
         });
         if (!response.ok) {
           await response.body?.cancel();

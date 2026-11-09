@@ -15,6 +15,21 @@ const options = {
   maxBytes: 100,
 };
 describe("Checksum-pinned build dependency availability", () => {
+  it("uses the official asset API media type on a fallback and still requires the pinned digest", async () => {
+    const headers = { Accept: "application/octet-stream" };
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValueOnce(new Response(null, { status: 504 }))
+      .mockResolvedValueOnce(new Response(null, { status: 504 }))
+      .mockResolvedValueOnce(new Response(bytes));
+    expect(
+      await downloadPinnedArtifact({ ...options, headers }, fetchImpl),
+    ).toEqual(bytes);
+    expect(fetchImpl.mock.calls[2]).toEqual([
+      options.urls[1],
+      { signal: expect.any(AbortSignal), headers },
+    ]);
+  });
   it("retries a gateway failure at the same official source before accepting its verified bytes", async () => {
     const fetchImpl = vi
       .fn()

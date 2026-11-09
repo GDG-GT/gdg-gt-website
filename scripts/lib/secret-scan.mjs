@@ -2,6 +2,13 @@ import { createHash } from "node:crypto";
 import path from "node:path";
 
 export const secretScanVersion = "8.30.1";
+// Official GitHub release asset IDs for the exact checksum-pinned archives.
+export const secretScanAssetIds = {
+  darwin_arm64: 378332059,
+  darwin_x64: 378332053,
+  linux_arm64: 378332057,
+  linux_x64: 378332058,
+};
 // Official release SHA-256 values, verified against both its checksum asset and
 // GitHub release metadata. A version bump requires reviewing these pins too.
 export const secretScanArchives = {
