@@ -512,3 +512,77 @@ test("owned iPhone scanner resolves a card through the existing reviewed award f
   expect(writes).toEqual(["/api/v1/admin/rewards/resolve"]);
   await accessibility(page);
 });
+
+test("fresh scanner sign-in keeps the gate and opens check-in without the public homepage", async ({
+  page,
+  fixture,
+}, info) => {
+  fixture.authenticated = false;
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "gdgScanner", {
+      value: { version: 1, wallet: false },
+    });
+    Object.defineProperty(window, "webkit", {
+      value: { messageHandlers: { gdgScanner: { postMessage: () => {} } } },
+    });
+  });
+  let gateAccepted = false;
+  await page.route("**/api/v1/auth/gate", async (r) => {
+    expect(r.request().postDataJSON()).toEqual({ code: "fictional-gate" });
+    gateAccepted = true;
+    return r.fulfill({ json: { data: { gateValid: true } } });
+  });
+  await page.route("**/api/v1/auth/login", async (r) => {
+    expect(gateAccepted).toBe(true);
+    expect(r.request().postDataJSON()).toEqual({
+      email: "officer@example.test",
+      password: "fictional-password",
+    });
+    fixture.authenticated = true;
+    return r.fulfill({
+      json: {
+        data: {
+          user: {
+            id: "fbbb0000-0000-4000-8000-000000000001",
+            role: "super_admin",
+          },
+          csrfToken: "fictional-browser-csrf",
+          sessionBinding: "b".repeat(64),
+        },
+      },
+    });
+  });
+  await page.route("**/api/v1/admin/rewards**", (r) =>
+    r.fulfill({ json: { data: inventory } }),
+  );
+  await page.goto("/admin/scanner");
+  await expect(
+    page.getByRole("heading", { name: "Scanner sign-in" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("textbox", { name: "Email", exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("navigation", { name: "Main navigation" }),
+  ).toHaveCount(0);
+  await accessibility(page);
+  await page.screenshot({
+    path: info.outputPath("scanner-sign-in.png"),
+    fullPage: true,
+  });
+  await page.getByLabel("Access code", { exact: true }).fill("fictional-gate");
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page
+    .getByRole("textbox", { name: "Email", exact: true })
+    .fill("officer@example.test");
+  await page.getByLabel("Password", { exact: true }).fill("fictional-password");
+  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await expect(page).toHaveURL(/\/admin\/rewards$/);
+  await expect(
+    page.getByRole("button", { name: "Check-in scanner" }),
+  ).toBeVisible();
+  await page.screenshot({
+    path: info.outputPath("scanner-signed-in.png"),
+    fullPage: true,
+  });
+});

@@ -6,17 +6,17 @@
     "wallet": "server-only P256 ECDH/X9.63 SHA256/AES256GCM, encrypted session challenge, freshness and atomic replay protection"
   },
   "checks": {
-    "sourceFiles": 246,
-    "sourceTests": 2964,
+    "sourceFiles": 247,
+    "sourceTests": 2969,
     "coverage": {
-      "statements": 76.44,
+      "statements": 76.47,
       "branches": 75.72,
-      "functions": 70.86,
-      "lines": 78.48,
+      "functions": 70.89,
+      "lines": 78.52,
       "gatesPassed": true
     },
     "database": "all canonical migrations/tests including 144; 100-client event and form capacity checks passed",
-    "browser": "60 existing rewards/event cases plus 6 native bridge cases across six profiles passed",
+    "browser": "72 targeted rewards/event/native-first-launch cases across six profiles passed; desktop/mobile sign-in captures reviewed",
     "swiftPolicyTests": 2,
     "deviceBuildsUnsigned": [
       "Release",
@@ -78,5 +78,21 @@
     "signatureVerification": "passed; FinderInfo added by local file provider removed from disposable extracted verification copy only",
     "externalBetaReviewSubmitted": false,
     "publicAppStoreReleaseSubmitted": false
+  },
+  "followUpBuild2": {
+    "purpose": "dedicated /admin/scanner sign-in using existing server gate and account checks; native-only expired-session/sign-out redirects",
+    "artifact": {
+      "version": "1.0.0",
+      "build": "2",
+      "signatureVerified": true,
+      "debuggable": false,
+      "nfcFormats": [
+        "TAG"
+      ],
+      "sha256": "d435d05689d92fc40bf13d2f821768f4ab787eaa4333d467a577168477dda81a"
+    },
+    "archive": "native/Scanner/build/GDGScanner-Build2.xcarchive",
+    "ipa": "native/Scanner/build/TestFlight2/GDGScanner.ipa",
+    "upload": "not started; publish and verify website first"
   }
 }

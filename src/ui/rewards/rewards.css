@@ -337,4 +337,31 @@
 .rewards-form-fields > .gt-button {
   align-self: flex-start;
 }
-.rewards-threshold,.rewards-perks .gt-button-ghost{color:#a63627}
+.rewards-threshold,
+.rewards-perks .gt-button-ghost {
+  color: #a63627;
+}
+.scanner-entry {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 32px 24px;
+  background: var(--surface, #faf7f2);
+  color: var(--ink, #302c29);
+}
+.scanner-entry-content {
+  width: min(100%, 400px);
+}
+.scanner-entry h1 {
+  margin: 36px 0 28px;
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+}
+.scanner-entry .gt-form {
+  display: grid;
+  gap: 22px;
+}
+.scanner-entry [role="alert"] {
+  margin-top: 24px;
+  color: var(--coral, #b84030);
+}

@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext, type ReactNode } from "react";
 import { Navigate, useLocation, Link } from "react-router-dom";
+import { nativeScanner } from "@/ui/rewards/nativeScanner";
 import { useAdmin } from "@/contexts/AdminContext";
 import { PermissionsService } from "@/services/permissionsService";
 import { Button, EmptyState } from "@/ui/primitives";
@@ -86,7 +87,8 @@ export default function PageAccessGuard({ children }: { children: ReactNode }) {
         </EmptyState>
       </div>
     );
-  if (!isAuthenticated) return <Navigate to="/" replace />;
+  if (!isAuthenticated)
+    return <Navigate to={nativeScanner() ? "/admin/scanner" : "/"} replace />;
   if (resolved?.key !== key)
     return (
       <div className="gt-admin-page" role="status">

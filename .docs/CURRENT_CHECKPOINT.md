@@ -18,6 +18,12 @@ Artifacts are ignored: signed archive `native/Scanner/build/GDGScanner-Signed.xc
 
 A separate matching encrypted P-256 VAS key pair is prepared outside Git in the private Wallet Issuer folder, not uploaded or activated. QR signing stays live and all production NFC flags stay off. No production member, credential, award, chapter email/push fixture send, purchase, new timer or paid scanner account was created. The owner's internal TestFlight invitation was enabled; no other tester was invited. Management API helper `scannerMgmt` is temporarily in NodeREPL memory for release verification; clear it after release work. Preserve previous edits and credentials.
 
+## Follow-up: dedicated first-launch sign-in
+
+Build1 is distributed and owner invited. A dedicated `/admin/scanner` entry now replaces the public-homepage/footer detour on fresh app sessions. It uses the existing server gate and account login, with no public navigation/footer and no backend auth bypass. Native-only redirects after expiration/sign-out return here. Native initial URL is now this entry, build number2.
+
+247 test files /2,969 source tests with coverage gates pass;72 targeted rewards/event/browser cases pass across6profiles, including first-launch login. Desktop and mobile sign-in captures were visually reviewed. Types, lint(8inherited warnings), build, bundle/SSR and secret checks pass. Signed archive build2 and distribution export succeeded: `native/Scanner/build/GDGScanner-Build2.xcarchive` and `native/Scanner/build/TestFlight2/GDGScanner.ipa`. Its signature, build2, TAG-only entitlement and non-debuggable distribution settings are verified. New source must be published and the web route verified before build2 upload. BUILD2 IS NOT UPLOADED yet. Do not duplicate build1 or recreate the Apple app/group. Previous source1896f2e passed all7GitHub jobs in run42537448132. Preserve unrelated CLI marker.
+
 ## Apple Wallet QR production setup complete; device acceptance pending
 
 The registered Apple Pass Type ID is `pass.dev.gdggt.membership` under the owner's existing team `7THP95SRTV`. The description is GDG Georgia Tech Membership. Do not register it again. An encrypted RSA signing key, its passphrase and a verified public CSR are saved outside the repository in the owner's private GDG GT Wallet Issuer folder. Do not regenerate or publish them. Public CSR copies are in Downloads as `GDGMembership.certSigningRequest` and `gdg-membership.csr`.

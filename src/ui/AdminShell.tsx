@@ -50,6 +50,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import NotificationBell from "@/components/admin/NotificationBell";
+import { nativeScanner } from "./rewards/nativeScanner";
 import { useAdmin } from "@/contexts/AdminContext";
 import { PermissionsService } from "@/services/permissionsService";
 import {
@@ -130,7 +131,9 @@ const groups: { title: string; links: Destination[] }[] = [
 const workspaceDestinations = groups.flatMap((group) => group.links);
 
 export default function AdminShell({ children }: { children: ReactNode }) {
-  useEffect(() => { window.dispatchEvent(new Event("gdg:auth-needed")); }, []);
+  useEffect(() => {
+    window.dispatchEvent(new Event("gdg:auth-needed"));
+  }, []);
   const { currentAdmin, logout, isAuthenticated } = useAdmin();
   const navigationSafety = useNavigationSafety();
   const location = useLocation(),
@@ -152,7 +155,8 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   const [allowed, setAllowed] = useState<string[]>([]),
     [navFailed, setNavFailed] = useState(false),
     [navRetry, setNavRetry] = useState(0);
-  const [accessSnapshot, setAccessSnapshot] = useState<WorkspaceAccessSnapshot>();
+  const [accessSnapshot, setAccessSnapshot] =
+    useState<WorkspaceAccessSnapshot>();
   const retryAccess = useCallback(() => setNavRetry((value) => value + 1), []);
   const access = useMemo(
     () => ({
@@ -316,7 +320,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
           onClick={() => {
             const leave = async () => {
               await logout();
-              navigate("/");
+              navigate(nativeScanner() ? "/admin/scanner" : "/");
             };
             if (navigationSafety)
               navigationSafety.request(() => {

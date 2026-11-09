@@ -27,6 +27,7 @@ import { HomePage } from "@/ui/HomePage";
 import { rewardsPagePaths } from "../shared/rewards-pages.mjs";
 
 const Leaderboard = lazy(() => import("@/ui/rewards/Leaderboard"));
+const ScannerEntry = lazy(() => import("@/ui/rewards/ScannerEntry"));
 const TapHandoff = lazy(() => import("@/ui/rewards/TapHandoff"));
 const AdminShell = lazy(() => import("@/ui/AdminShell"));
 const loadPublicPages = () => import("@/ui/PublicPages");
@@ -268,6 +269,7 @@ export function RoutedApplication() {
               />
               <Route path="/offline" element={<InfoPage kind="offline" />} />
               <Route path="/maintenance" element={<MaintenancePage />} />
+              <Route path="/admin/scanner" element={<ScannerEntry />} />
               <Route path="/admin" element={protectedPage(<Overview />)} />
               <Route
                 path="/admin/team"

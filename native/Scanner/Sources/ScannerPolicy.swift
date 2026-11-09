@@ -3,7 +3,7 @@ import Foundation
 /// Keep the native hardware surface limited to the chapter's first-party workspace.
 enum ScannerPolicy {
     static let origin = "https://gdggt.dev"
-    static let startURL = URL(string: origin + "/admin/rewards")!
+    static let startURL = URL(string: origin + "/admin/scanner")!
     static let passTypeIdentifier = "pass.dev.gdggt.membership"
     static func trusted(_ url: URL?) -> Bool {
         guard let url else { return false }
