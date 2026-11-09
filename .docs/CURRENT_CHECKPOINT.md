@@ -1,3 +1,9 @@
+## Google Wallet publishing approval — 2026-11-09
+
+Owner supplied two Google approval emails on2026-11-09; the automated approval from `no-reply-support@google.com` was also visible in the signed-in Gmail UI. Existing business`BCR2DN6DWL3IRBQG` and issuer`3388000000023239310` match. Existing service-account OAuth and issuer GET returned200. The console dashboard still displayed an older In review label during verification; the dedicated issuer page did not render in Vivaldi. No second publishing request, new key, new issuer or new permission was created.
+
+Updated only the existing production `GOOGLE_WALLET_PUBLISHING_APPROVED` variable fromfalse totrue, retaining sensitive production-only storage, and the private issuer runtime file outsideGit. Redeployment and live existing-pass acceptance are in progress.19 focused Google/Apple/email pass tests passed; application source is unchanged. Google website login remains excluded; Google sign-in is used only by Google's Wallet save page. Smart Tap reader approval/certification and Apple VAS are separate and remain gated. Do not reissue the owner's credential or send a duplicate membership email merely to test this flag.
+
 ## Latest release — member delivery and workspace improvements
 
 2026-11-09: feature commit `4c4377fc5d514add4bd441ecfc877c67fcbb8279` is pushed to GDG-GT/main and Vercel deployment `dpl_7KMpFQKSzgdG5MCSjKD1fTRJrKL6` is **READY** on both custom domains. The RewardsWorkspace asset matches the tested local build byte-for-byte. Migrations145–147 are applied, and delivery Cron job3 is restored active and verified. No scheduler remains paused.

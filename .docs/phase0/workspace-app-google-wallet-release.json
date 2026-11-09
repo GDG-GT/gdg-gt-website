@@ -45,9 +45,19 @@
     "oauthVerified": true,
     "classAndPreviewObjectVerified": true,
     "previewIsChapterMember": false,
-    "publishing": "In review",
-    "publishingApproved": false,
-    "serverEnvironmentConfigured": true
+    "publishing": "Approved by Google support email2026-11-09",
+    "publishingApproved": true,
+    "serverEnvironmentConfigured": true,
+    "publishingApprovalVerification": {
+      "businessMatches": true,
+      "issuerMatches": true,
+      "emailVisibleFrom": "no-reply-support@google.com",
+      "issuerApiStatus": 200,
+      "dashboardAtCheck": "Older In review label still visible",
+      "productionFlagUpdated": true,
+      "redeployment": "pending",
+      "noNewCredentialsOrPermissions": true
+    }
   },
   "samsung": {
     "directIntegration": "excluded by owner",
