@@ -120,7 +120,7 @@ final class ScannerModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
     func navigateBack() { requestNavigation("back") }
     func requestNavigation(_ target: String) {
         guard unlocked, ScannerPolicy.admin(webView.url),
-              ["back", "reload", "signOut"].contains(target) || destinations.contains(where: { $0.path == target }) else { return }
+              ["back", "reload", "signOut", "notifications", "search"].contains(target) || destinations.contains(where: { $0.path == target }) else { return }
         webView.callAsyncJavaScript("window.dispatchEvent(new CustomEvent('gdg:native-navigation',{detail:target}));", arguments: ["target": target], in: nil, in: .page, completionHandler: { _ in })
     }
     func reload() {
@@ -153,7 +153,7 @@ final class ScannerModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
                ScannerPolicy.admin(URL(string: ScannerPolicy.origin + currentPath)), currentPath.hasPrefix("/admin"),
                let title = body["title"] as? String, title.count <= 100,
                let rows = body["destinations"] as? [[String: String]], rows.count <= 60 {
-                path = currentPath; pageTitle = title; canGoBack = webView.canGoBack
+                path = currentPath; pageTitle = title; canGoBack = (body["canGoBack"] as? Bool) ?? webView.canGoBack
                 destinations = rows.compactMap { row in
                     guard let path = row["path"], path.hasPrefix("/admin"), !path.contains("?"), !path.contains("#"),
                           ScannerPolicy.admin(URL(string: ScannerPolicy.origin + path)),

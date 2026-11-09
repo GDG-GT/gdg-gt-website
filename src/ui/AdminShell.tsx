@@ -267,6 +267,9 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       action: "state",
       path: location.pathname,
       title,
+      canGoBack:
+        typeof window.history.state?.idx === "number" &&
+        window.history.state.idx > 0,
       destinations: workspaceDestinations
         .filter((item) => allowed.includes(item.href))
         .map((item) => ({ path: item.href, title: item.label })),
@@ -291,6 +294,9 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       else if (target === "reload")
         navigationSafety.request(() => window.location.reload());
       else if (target === "back") navigate(-1);
+      else if (target === "notifications")
+        window.dispatchEvent(new Event("gdg:native-notifications"));
+      else if (target === "search") openSearch();
       else if (allowed.includes(target)) navigate(target);
     };
     const expired = () => postNativeWorkspace({ action: "authRequired" });
@@ -300,7 +306,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       window.removeEventListener("gdg:native-navigation", receive);
       window.removeEventListener("gdg:session-cleared", expired);
     };
-  }, [inNativeApp, allowed, navigate, navigationSafety, logout]);
+  }, [inNativeApp, allowed, navigate, navigationSafety, logout, openSearch]);
   if (!isAuthenticated) return <>{children}</>;
   const sidebar = (
     <>
@@ -389,65 +395,56 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       </a>
       {!inNativeApp && <aside className="gt-sidebar">{sidebar}</aside>}
       <div className="gt-workspace">
-        {inNativeApp && (
-          <div className="gt-native-actions">
+        {inNativeApp && <NotificationBell native />}
+        {!inNativeApp && (
+          <header className="gt-workspace-topbar">
             <button
-              className="gt-button gt-button-ghost"
+              className="gt-icon-button gt-admin-menu"
+              ref={navigationOpener}
+              onClick={() => {
+                navigationOrigin.current = location.pathname;
+                restoreNavigationFocus.current = true;
+                navigationSamePage.current = false;
+                setMobileOpen(true);
+              }}
+              aria-label="Open workspace navigation"
+            >
+              <Menu size={21} />
+            </button>
+            <div className="gt-workspace-breadcrumb">
+              <span>Workspace</span>
+              <ChevronRight size={13} />
+              <strong>{title}</strong>
+            </div>
+            <button
+              className="gt-command-trigger"
+              aria-label="Search the workspace · ⌘ K"
+              aria-keyshortcuts="Meta+K Control+K"
+              ref={searchOpener}
               onClick={(event) => openSearch(event.currentTarget)}
             >
-              <Search size={18} />
-              Find a tool
+              <Search size={16} />
+              <span>Search the workspace</span>
+              <kbd aria-hidden="true">⌘ K</kbd>
             </button>
-            <NotificationBell />
-          </div>
+            <div className="gt-workspace-account">
+              <NotificationBell />
+              <Link to="/admin/profile" className="gt-profile-button">
+                <span className="gt-avatar">
+                  {(currentAdmin?.display_name || "Local Preview")
+                    .split(" ")
+                    .map((part) => part[0])
+                    .slice(0, 2)
+                    .join("")}
+                </span>
+                <span>
+                  {currentAdmin?.display_name || "Chapter officer"}
+                  <small>{currentAdmin?.role.replace(/_/g, " ")}</small>
+                </span>
+              </Link>
+            </div>
+          </header>
         )}
-        <header className="gt-workspace-topbar" hidden={!!inNativeApp}>
-          <button
-            className="gt-icon-button gt-admin-menu"
-            ref={navigationOpener}
-            onClick={() => {
-              navigationOrigin.current = location.pathname;
-              restoreNavigationFocus.current = true;
-              navigationSamePage.current = false;
-              setMobileOpen(true);
-            }}
-            aria-label="Open workspace navigation"
-          >
-            <Menu size={21} />
-          </button>
-          <div className="gt-workspace-breadcrumb">
-            <span>Workspace</span>
-            <ChevronRight size={13} />
-            <strong>{title}</strong>
-          </div>
-          <button
-            className="gt-command-trigger"
-            aria-label="Search the workspace · ⌘ K"
-            aria-keyshortcuts="Meta+K Control+K"
-            ref={searchOpener}
-            onClick={(event) => openSearch(event.currentTarget)}
-          >
-            <Search size={16} />
-            <span>Search the workspace</span>
-            <kbd aria-hidden="true">⌘ K</kbd>
-          </button>
-          <div className="gt-workspace-account">
-            <NotificationBell />
-            <Link to="/admin/profile" className="gt-profile-button">
-              <span className="gt-avatar">
-                {(currentAdmin?.display_name || "Local Preview")
-                  .split(" ")
-                  .map((part) => part[0])
-                  .slice(0, 2)
-                  .join("")}
-              </span>
-              <span>
-                {currentAdmin?.display_name || "Chapter officer"}
-                <small>{currentAdmin?.role.replace(/_/g, " ")}</small>
-              </span>
-            </Link>
-          </div>
-        </header>
         {localPreviewEnabled && (
           <div className="gt-workspace-preview">
             <span className="gt-status-dot" />

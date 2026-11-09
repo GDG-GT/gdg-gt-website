@@ -367,3 +367,15 @@ describe("Account notification read/dismiss and race recovery", () => {
     await act(async () => reading.resolve(inbox({ unread: 9 })));
   });
 });
+
+describe("Native notification toolbar", () => {
+  it("opens one shared inbox from the native bell without a duplicate web trigger", async () => {
+    apiMock.mockResolvedValue(inbox());
+    render(<MemoryRouter><NotificationBell native /></MemoryRouter>);
+    expect(screen.queryByRole("button", { name: /^Notifications/ })).toBeNull();
+    fireEvent(window, new Event("gdg:native-notifications"));
+    await screen.findByRole("dialog", { name: "Notifications" });
+    await screen.findByRole("heading", { name: "Fictional team update" });
+    expect(screen.getAllByRole("dialog")).toHaveLength(1);
+  });
+});

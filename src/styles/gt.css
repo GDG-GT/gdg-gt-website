@@ -7001,8 +7001,6 @@ fieldset.gt-event-fields {
 .gt-native-workspace .gt-workspace-topbar { display: none; }
 .gt-native-workspace .gt-admin-body { padding: 16px; min-height: 0; }
 .gt-native-workspace input, .gt-native-workspace select, .gt-native-workspace textarea { font-size: max(16px, 1rem); }
-.gt-native-actions { display: flex; justify-content: space-between; align-items: center; padding: 4px 16px 0; }
-.gt-native-actions > button { min-height: 44px; }
 .gt-native-workspace .gt-panel-heading { flex-wrap: wrap; justify-content: flex-start; align-items: center; }
 .gt-native-workspace .gt-panel-heading > h2 { flex: 1 0 100%; }
 .gt-native-workspace .gt-panel-heading > .gt-button { flex: 1 1 140px; min-width: 0; }

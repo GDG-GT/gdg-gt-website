@@ -316,19 +316,34 @@ export function NotificationInbox({
     </div>
   );
 }
-export default function NotificationBell() {
+export default function NotificationBell({
+  native = false,
+}: { native?: boolean } = {}) {
   const { currentAdmin } = useAdmin();
   return (
     <NotificationBellWorkspace
       key={`${currentAdmin?.id}:${currentAdmin?.role}`}
       accountId={currentAdmin?.id}
+      native={native}
     />
   );
 }
-function NotificationBellWorkspace({ accountId }: { accountId?: string }) {
+function NotificationBellWorkspace({
+  accountId,
+  native = false,
+}: {
+  accountId?: string;
+  native?: boolean;
+}) {
   const [open, setOpen] = useState(false),
     [count, setCount] = useState(0),
     [revision, setRevision] = useState(0);
+  useEffect(() => {
+    if (!native || !accountId) return;
+    const show = () => setOpen(true);
+    window.addEventListener("gdg:native-notifications", show);
+    return () => window.removeEventListener("gdg:native-notifications", show);
+  }, [native, accountId]);
   useScopedRealtime(
     { kind: "notifications" },
     () => {
@@ -372,19 +387,21 @@ function NotificationBellWorkspace({ accountId }: { accountId?: string }) {
   }, [accountId, revision]);
   return (
     <>
-      <button
-        type="button"
-        className="gt-icon-button"
-        aria-label={`Notifications${count ? `, ${count} unread` : ""}`}
-        onClick={() => setOpen(true)}
-      >
-        <Bell size={20} />
-        {count > 0 && (
-          <span className="gt-notification-count">
-            {count > 99 ? "99+" : count}
-          </span>
-        )}
-      </button>
+      {!native && (
+        <button
+          type="button"
+          className="gt-icon-button"
+          aria-label={`Notifications${count ? `, ${count} unread` : ""}`}
+          onClick={() => setOpen(true)}
+        >
+          <Bell size={20} />
+          {count > 0 && (
+            <span className="gt-notification-count">
+              {count > 99 ? "99+" : count}
+            </span>
+          )}
+        </button>
+      )}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="gt-notification-dialog">
           <DialogTitle>Notifications</DialogTitle>

@@ -23,6 +23,37 @@ test("native workspace uses permitted app destinations and keeps all admin tools
       },
     });
   });
+  await page.route("**/api/v1/admin/members**", (route) =>
+    route.fulfill({
+      json: {
+        data: route.request().url().includes("/capabilities")
+          ? { globalCreate: true, merge: true, teams: [] }
+          : {
+              items: [],
+              total: 0,
+              pageSize: 30,
+              stats: { active: 0, core: 0, categories: {} },
+            },
+      },
+    }),
+  );
+  await page.route("**/api/v1/admin/rewards**", (route) =>
+    route.fulfill({
+      json: {
+        data: {
+          members: [],
+          total: 0,
+          rules: [],
+          activities: [],
+          perks: [],
+          credentials: [],
+          ledger: [],
+          claims: [],
+          walletAvailable: false,
+        },
+      },
+    }),
+  );
   await page.goto("/admin");
   await expect(page.locator(".gt-native-workspace")).toBeVisible();
   await expect(page.locator(".gt-sidebar")).toHaveCount(0);
@@ -45,6 +76,24 @@ test("native workspace uses permitted app destinations and keeps all admin tools
       ),
     )
     .toBeTruthy();
+  for (const path of ["/admin/events", "/admin/rewards", "/admin/members"]) {
+    await page.evaluate(
+      (path) =>
+        window.dispatchEvent(
+          new CustomEvent("gdg:native-navigation", { detail: path }),
+        ),
+      path,
+    );
+    await expect(page).toHaveURL(new RegExp(path + "$"));
+    await expect(page.locator("#workspace-content h1")).toBeVisible();
+    await expect(page.locator(".gt-workspace-topbar")).toBeHidden();
+  }
+  await page.evaluate(() =>
+    window.dispatchEvent(
+      new CustomEvent("gdg:native-navigation", { detail: "back" }),
+    ),
+  );
+  await expect(page).toHaveURL(/\/admin\/rewards$/);
   await page.evaluate(() =>
     window.dispatchEvent(
       new CustomEvent("gdg:native-navigation", { detail: "/admin/forms" }),
@@ -52,7 +101,14 @@ test("native workspace uses permitted app destinations and keeps all admin tools
   );
   await expect(page).toHaveURL(/\/admin\/forms$/);
   await expect(page.locator("#workspace-content")).toBeVisible();
-  await page.getByRole("button", { name: "Find a tool", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Open workspace navigation" }),
+  ).toHaveCount(0);
+  await page.evaluate(() =>
+    window.dispatchEvent(
+      new CustomEvent("gdg:native-navigation", { detail: "search" }),
+    ),
+  );
   await expect(
     page.getByRole("dialog", { name: "Go to a workspace" }),
   ).toBeVisible();

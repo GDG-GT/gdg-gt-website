@@ -32,11 +32,17 @@ struct OfficerAppView: View {
                         .navigationTitle(model.pageTitle)
                         .navigationBarTitleDisplayMode(.inline)
                         .toolbar {
-                            ToolbarItem(placement: .topBarLeading) {
-                                Button { model.navigateBack() } label: { Image(systemName: "chevron.left") }.disabled(!model.canGoBack).accessibilityLabel("Back")
+                            if model.canGoBack && !model.destinations.contains(where: { $0.path == model.path }) {
+                                ToolbarItem(placement: .topBarLeading) {
+                                    Button { model.navigateBack() } label: { Label("Back", systemImage: "chevron.left") }
+                                }
+                            }
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button { model.requestNavigation("notifications") } label: { Image(systemName: "bell") }.accessibilityLabel("Notifications")
                             }
                             ToolbarItem(placement: .topBarTrailing) {
                                 Menu {
+                                    Button("Find a tool", systemImage: "magnifyingglass") { model.requestNavigation("search") }
                                     Button("Reload", systemImage: "arrow.clockwise") { model.requestNavigation("reload") }
                                     Button("Lock app", systemImage: "lock") { model.lock() }
                                     Button("Sign out and forget account", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive) { model.requestNavigation("signOut") }
