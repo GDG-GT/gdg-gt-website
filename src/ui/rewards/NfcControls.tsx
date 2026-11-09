@@ -3,6 +3,7 @@ import { api } from "@/lib/api";
 import { nativeScanner, scanNative } from "./nativeScanner";
 import { Button, Field } from "../primitives";
 import { parseCardPayload } from "../../../shared/rewards.mjs";
+import { qrFocus } from "./qrFocus";
 type NfcRecord = { recordType: string; data: DataView };
 type NfcReader = {
   scan: (options: { signal: AbortSignal }) => Promise<void>;
@@ -29,14 +30,21 @@ export default function NfcControls({
     [native, setNative] = useState(false),
     [walletReady, setWalletReady] = useState(false),
     [camera, setCamera] = useState(false),
+    [focus, setFocus] = useState<ReturnType<typeof qrFocus> | null>(null),
     [manual, setManual] = useState("");
   const controller = useRef<AbortController>(),
     video = useRef<HTMLVideoElement>(null),
+    frozen = useRef<HTMLCanvasElement>(null),
+    confirmation = useRef<ReturnType<typeof setTimeout>>(),
+    detected = useRef(false),
     scanner = useRef<{ stop: () => void; destroy: () => void }>();
   const onReadRef = useRef(onRead);
   onReadRef.current = onRead;
   const acceptRef = useRef<(value: string) => void>(() => {});
   const stop = () => {
+    clearTimeout(confirmation.current);
+    detected.current = false;
+    setFocus(null);
     controller.current?.abort();
     scanner.current?.stop();
     scanner.current?.destroy();
@@ -60,16 +68,23 @@ export default function NfcControls({
     }
     const hidden = () => {
       if (document.hidden) {
+        clearTimeout(confirmation.current);
+        detected.current = false;
+        setFocus(null);
+        setCamera(false);
         controller.current?.abort();
         scanner.current?.stop();
         setActive(false);
       }
     };
     document.addEventListener("visibilitychange", hidden);
+    window.addEventListener("gdg:session-cleared", stop);
     return () => {
       controller.current?.abort();
+      clearTimeout(confirmation.current);
       scanner.current?.destroy();
       document.removeEventListener("visibilitychange", hidden);
+      window.removeEventListener("gdg:session-cleared", stop);
     };
   }, []);
   const accept = (value: string) => {
@@ -89,7 +104,7 @@ export default function NfcControls({
       if (nativeScanner()) {
         controller.current = new AbortController();
         setActive(true);
-        setStatus("Hold the member card near the top of your iPhone.");
+        setStatus("Hold the member card near your phone’s NFC reader.");
         accept(await scanNative("readCard", {}, controller.current.signal));
         return;
       }
@@ -126,7 +141,7 @@ export default function NfcControls({
       if (nativeScanner() && writeUrl) {
         controller.current = new AbortController();
         setActive(true);
-        setStatus("Hold a blank card near the top of your iPhone.");
+        setStatus("Hold a blank card near your phone’s NFC reader.");
         await scanNative(
           "writeCard",
           { url: writeUrl },
@@ -202,32 +217,81 @@ export default function NfcControls({
   };
   useEffect(() => {
     if (!camera || !video.current) return;
-    let gone = false;
-    void import("qr-scanner").then(async ({ default: QrScanner }) => {
-      if (gone || !video.current) return;
-      const instance = new QrScanner(
-        video.current,
-        (r) => acceptRef.current(r.data),
-        {
-          returnDetailedScanResult: true,
-          highlightScanRegion: true,
-        },
-      );
-      scanner.current = instance;
-      try {
-        await instance.start();
-        if (gone) instance.destroy();
-        else setStatus("Point the camera at the member QR code.");
-      } catch {
-        instance.destroy();
-        setCamera(false);
-        setStatus(
-          "Camera could not start. Allow camera access or use an NFC card.",
-        );
-      }
+    video.current.parentElement?.scrollIntoView?.({
+      block: "center",
+      behavior: "auto",
     });
+    let gone = false;
+    void import("qr-scanner")
+      .then(async ({ default: QrScanner }) => {
+        if (gone || !video.current) return;
+        const instance = new QrScanner(
+          video.current,
+          (r) => {
+            if (gone || detected.current || !video.current) return;
+            if (!parseCardPayload(r.data, window.location.origin)) {
+              setStatus("This is not a GDG member credential.");
+              return;
+            }
+            detected.current = true;
+            const source = video.current,
+              canvas = frozen.current;
+            if (canvas && source.videoWidth > 0) {
+              canvas.width = Math.min(1280, source.videoWidth);
+              canvas.height = Math.round(
+                (canvas.width * source.videoHeight) / source.videoWidth,
+              );
+              canvas
+                .getContext("2d")
+                ?.drawImage(source, 0, 0, canvas.width, canvas.height);
+            }
+            setFocus(
+              qrFocus(
+                r.cornerPoints || [],
+                source.videoWidth,
+                source.videoHeight,
+              ),
+            );
+            instance.stop();
+            setStatus("QR detected. Finding member…");
+            const reduced = window.matchMedia?.(
+              "(prefers-reduced-motion: reduce)",
+            ).matches;
+            confirmation.current = setTimeout(
+              () => {
+                if (!gone && detected.current) acceptRef.current(r.data);
+              },
+              reduced ? 100 : 520,
+            );
+          },
+          {
+            returnDetailedScanResult: true,
+            highlightScanRegion: false,
+          },
+        );
+        scanner.current = instance;
+        try {
+          await instance.start();
+          if (gone) instance.destroy();
+          else setStatus("Point the camera at the member QR code.");
+        } catch {
+          instance.destroy();
+          setCamera(false);
+          setStatus(
+            "Camera could not start. Allow camera access or use an NFC card.",
+          );
+        }
+      })
+      .catch(() => {
+        if (!gone) {
+          setCamera(false);
+          setStatus("Camera could not start. Try again or use an NFC card.");
+        }
+      });
     return () => {
       gone = true;
+      clearTimeout(confirmation.current);
+      detected.current = false;
       scanner.current?.destroy();
       scanner.current = undefined;
     };
@@ -270,12 +334,39 @@ export default function NfcControls({
             Use QR instead
           </Button>
           {camera && (
-            <video
-              ref={video}
-              muted
-              playsInline
-              aria-label="Member QR camera"
-            />
+            <div className={`rewards-qr-camera${focus ? " is-detected" : ""}`}>
+              <video
+                ref={video}
+                muted
+                playsInline
+                aria-label="Member QR camera"
+              />
+              <canvas
+                ref={frozen}
+                aria-hidden="true"
+                style={
+                  focus
+                    ? {
+                        transformOrigin: `${focus.left + focus.width / 2}% ${focus.top + focus.height / 2}%`,
+                      }
+                    : undefined
+                }
+              />
+              <div
+                className="rewards-qr-focus"
+                aria-hidden="true"
+                style={
+                  focus
+                    ? {
+                        left: `${focus.left}%`,
+                        top: `${focus.top}%`,
+                        width: `${focus.width}%`,
+                        height: `${focus.height}%`,
+                      }
+                    : undefined
+                }
+              />
+            </div>
           )}
           <Field
             label="Credential link or code"

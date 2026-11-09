@@ -3,6 +3,7 @@ import { generateKeyPairSync, verify } from "node:crypto";
 import {
   googleWalletConfiguration,
   generateGoogleMemberPass,
+  googleSmartTapConfiguration,
 } from "../../server/rewards-google-wallet.mjs";
 const { privateKey, publicKey } = generateKeyPairSync("rsa", {
   modulusLength: 2048,
@@ -40,6 +41,66 @@ beforeEach(() => {
   });
 });
 describe("Google Wallet member passes", () => {
+  it("keeps Google NFC off without a ready Smart Tap reader and redemption issuer", () => {
+    expect(googleSmartTapConfiguration(env)).toBeNull();
+    const smart = {
+      ...env,
+      GOOGLE_WALLET_SMART_TAP_ENABLED: "true",
+      GOOGLE_WALLET_REDEMPTION_ISSUER_IDS: env.GOOGLE_WALLET_ISSUER_ID,
+    };
+    expect(googleSmartTapConfiguration(smart)).toBeNull();
+    expect(
+      googleSmartTapConfiguration({
+        ...smart,
+        GOOGLE_WALLET_SMART_TAP_READER_READY: "true",
+      }),
+    ).toEqual({ redemptionIssuers: [env.GOOGLE_WALLET_ISSUER_ID] });
+    for (const id of ["", "https://evil.test", "9999999999999999999"])
+      expect(
+        googleSmartTapConfiguration({
+          ...smart,
+          GOOGLE_WALLET_SMART_TAP_READER_READY: "true",
+          GOOGLE_WALLET_REDEMPTION_ISSUER_IDS: id,
+        }),
+      ).toBeNull();
+  });
+  it("configures a ready Smart Tap class and sends the same credential over NFC and QR", async () => {
+    await generateGoogleMemberPass({
+      ...record,
+      fetchImpl,
+      env: {
+        ...env,
+        GOOGLE_WALLET_SMART_TAP_ENABLED: "true",
+        GOOGLE_WALLET_SMART_TAP_READER_READY: "true",
+        GOOGLE_WALLET_REDEMPTION_ISSUER_IDS: env.GOOGLE_WALLET_ISSUER_ID,
+      },
+    });
+    const patch = JSON.parse(calls.find((c) => c.method === "PATCH").body);
+    expect(patch).toEqual({
+      enableSmartTap: true,
+      redemptionIssuers: [env.GOOGLE_WALLET_ISSUER_ID],
+    });
+    const object = JSON.parse(calls.find((c) => c.method === "PUT").body);
+    expect(object.smartTapRedemptionValue).toBe(object.barcode.value);
+  });
+  it("does not issue an NFC-enabled save link when Google rejects the Smart Tap class", async () => {
+    const provider = fetchImpl;
+    await expect(
+      generateGoogleMemberPass({
+        ...record,
+        env: {
+          ...env,
+          GOOGLE_WALLET_SMART_TAP_ENABLED: "true",
+          GOOGLE_WALLET_SMART_TAP_READER_READY: "true",
+          GOOGLE_WALLET_REDEMPTION_ISSUER_IDS: env.GOOGLE_WALLET_ISSUER_ID,
+        },
+        fetchImpl: (url, options) =>
+          options.method === "PATCH"
+            ? Promise.resolve(new Response("{}", { status: 403 }))
+            : provider(url, options),
+      }),
+    ).rejects.toMatchObject({ code: "GOOGLE_WALLET_UNAVAILABLE" });
+  });
   it("is disabled until complete RSA issuer configuration exists", () => {
     expect(googleWalletConfiguration({})).toBeNull();
     expect(
@@ -84,6 +145,7 @@ describe("Google Wallet member passes", () => {
     const object = JSON.parse(calls.find((c) => c.method === "PUT").body);
     expect(object.barcode.value).toBe(record.credential);
     expect(object.header.defaultValue.value).toBe(record.name);
+    expect(object.smartTapRedemptionValue).toBeUndefined();
     expect(calls.every((c) => c.redirect === "error" && c.signal)).toBe(true);
     expect(url).not.toContain("PRIVATE");
   });

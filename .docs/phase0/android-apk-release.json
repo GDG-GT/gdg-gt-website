@@ -1,0 +1,22 @@
+{
+  "verifiedAt": "2026-11-09T04:30:28.227436+00:00",
+  "package": "dev.gdggt.workspace",
+  "version": "1.0.0",
+  "build": 1,
+  "apk": "artifacts/android/GDG-Workspace-1.0.0.apk",
+  "bytes": 10169349,
+  "sha256": "206ffa3e493721147e48fcd60c8c3f99acf44399719c4e550df79a0e90c35c08",
+  "certificateSha256": "e30462ed37d71ab77b28e514987a44c29f7abc781b78591784979aad3c72f4ca",
+  "signatureVerified": true,
+  "debuggable": false,
+  "releaseCompile": true,
+  "releaseLint": true,
+  "unitTests": 6,
+  "android15EmulatorLaunchTest": true,
+  "physicalNfcAcceptance": false,
+  "biometricPhysicalAcceptance": false,
+  "googleSmartTapReader": false,
+  "playStoreUpload": false,
+  "paidResources": false,
+  "signedApkAndroid15InstallAndColdLaunch": true
+}

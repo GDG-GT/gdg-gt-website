@@ -1,0 +1,7 @@
+plugins { id 'com.android.application' version '8.9.2' apply false }
+
+// Desktop is iCloud-synced on the owner's Mac. Keep generated class/APK files
+// outside that tree so sync conflict copies cannot become duplicate DEX types.
+def outputRoot = System.getenv('GDG_ANDROID_BUILD_DIR') ?: "${System.getProperty('user.home')}/Library/Caches/GDG GT/Android"
+layout.buildDirectory.set(file("${outputRoot}/root"))
+subprojects { layout.buildDirectory.set(file("${outputRoot}/${project.name}")) }

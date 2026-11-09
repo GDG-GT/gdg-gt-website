@@ -67,3 +67,12 @@ native/Scanner/DerivedData/
 
 native/Scanner/.build/
 native/Scanner/.swiftpm/
+
+# Android generated output and private signing material.
+native/Android/.gradle/
+native/Android/**/build/
+native/Android/local.properties
+*.jks
+*.keystore
+*.apk
+artifacts/android/

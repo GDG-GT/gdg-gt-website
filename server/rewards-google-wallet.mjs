@@ -33,10 +33,28 @@ export function googleWalletConfiguration(env = process.env) {
       email,
       key,
       approved: env.GOOGLE_WALLET_PUBLISHING_APPROVED === "true",
+      smartTap: googleSmartTapConfiguration(env),
     };
   } catch {
     return null;
   }
+}
+
+/** Smart Tap is separate from Apple VAS and is never enabled by QR configuration. */
+export function googleSmartTapConfiguration(env = process.env) {
+  if (env.GOOGLE_WALLET_SMART_TAP_ENABLED !== "true") return null;
+  const issuers = (env.GOOGLE_WALLET_REDEMPTION_ISSUER_IDS || "")
+    .split(",")
+    .map((v) => v.trim());
+  if (
+    env.GOOGLE_WALLET_SMART_TAP_READER_READY !== "true" ||
+    issuers.length > 10 ||
+    issuers.some(
+      (id) => !/^[0-9]{6,19}$/.test(id) || BigInt(id) > 9223372036854775807n,
+    )
+  )
+    return null;
+  return { redemptionIssuers: [...new Set(issuers)] };
 }
 
 /** Google signs in only to save a pass. Chapter membership authentication is unchanged. */
@@ -76,7 +94,17 @@ export async function generateGoogleMemberPass({
     iat: Math.floor(now / 1000),
     origins: ["https://gdggt.dev", "https://leaderboards.gdggt.dev"],
     payload: {
-      genericClasses: [{ id: classId }],
+      genericClasses: [
+        {
+          id: classId,
+          ...(config.smartTap
+            ? {
+                enableSmartTap: true,
+                redemptionIssuers: config.smartTap.redemptionIssuers,
+              }
+            : {}),
+        },
+      ],
       genericObjects: [
         {
           id: config.issuer + ".member_" + id.replaceAll("-", ""),
@@ -96,6 +124,7 @@ export async function generateGoogleMemberPass({
             value: credential,
             alternateText: "GDG chapter membership",
           },
+          ...(config.smartTap ? { smartTapRedemptionValue: credential } : {}),
           linksModuleData: {
             uris: [
               {
@@ -123,6 +152,30 @@ export async function generateGoogleMemberPass({
     access,
     fetchImpl,
   );
+  if (config.smartTap) {
+    const enabled = await providerRequest(
+      "https://walletobjects.googleapis.com/walletobjects/v1/genericClass/" +
+        encodeURIComponent(classId),
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: "Bearer " + access,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          enableSmartTap: true,
+          redemptionIssuers: config.smartTap.redemptionIssuers,
+        }),
+      },
+      fetchImpl,
+    );
+    if (enabled.status !== 200)
+      throw new ApiError(
+        503,
+        "GOOGLE_WALLET_UNAVAILABLE",
+        "Google Wallet NFC could not be configured. Contact the chapter.",
+      );
+  }
   await upsert(
     "genericObject",
     payload.payload.genericObjects[0],

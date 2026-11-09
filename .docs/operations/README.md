@@ -28,6 +28,7 @@ Current runtime and feature procedures. Start with the event integration, member
 - [Forms validation controls — local checkpoint, 2026-10-24](FORM_VALIDATION_SETTINGS_OPERATIONS.md)
 - [Free background processing](FREE_BACKGROUND_RUNTIME.md)
 - [iPhone workspace, Face ID, physical cards and Wallet NFC](IPHONE_SCANNER.md)
+- [Android workspace APK, biometrics, cards and direct installation](ANDROID_WORKSPACE.md)
 - [Google Wallet issuer setup and Samsung-phone support](GOOGLE_SAMSUNG_WALLET.md)
 - [Linktree implementation and local verification](LINKTREE_OPERATIONS.md)
 - [Dedicated local runtime](LOCAL_RUNTIME.md)

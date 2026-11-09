@@ -1,5 +1,7 @@
 # Production status
 
+Latest continuation adds the signed Android sideload APK, QR detection focus animation and disabled Google Smart Tap pass configuration. See [current checkpoint](CURRENT_CHECKPOINT.md), [Android release record](phase0/android-apk-release.json) and [Android operating guide](operations/ANDROID_WORKSPACE.md). Physical NFC/biometric acceptance and Wallet provider approvals remain external gates. The older release records below are historical, not the latest build number.
+
 Latest scanner feature source: `951937ba8cccf99712e4aeda37f64f178a90b61b`, November 8, 2026. Vercel `dpl_CQUJgc4sEkhqBd8dB4Sio9buSHLY` is READY. The rewards workspace asset matches the tested local build; authenticated Wallet reader availability is false as intended, public routes return 200 and private unauthenticated routes return 401. The earlier event release remains recorded below. See [scanner verification](phase0/iphone-scanner-verification.json) and [current checkpoint](CURRENT_CHECKPOINT.md) for native distribution and pending acceptance.
 
 Owned iPhone app **GDG GT Scanner 1.0.0 (2)** is signed, processed by Apple and assigned to the private **GDG Officers** TestFlight group. The existing owner Apple account is invited. Physical NDEF reading/writing and QR reuse the chapter workspace; Wallet VAS code is gated pending Apple approval and device tests. No public App Store release, external tester invitation, new paid scanner service or production fixture member/point was created.

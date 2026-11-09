@@ -1,5 +1,21 @@
 # Android membership passes
 
+## Google Wallet NFC and Smart Tap
+
+Google Wallet NFC uses Smart Tap. It is separate from Apple VAS and ordinary physical NDEF tags. A QR-enabled membership pass does not become NFC-readable automatically. Google requires a Smart Tap-capable certified terminal, its reader authentication key, a Redemption Issuer/Collector ID and the matching pass configuration. Google directs prospective terminal providers to contact support for the protocol/certification documentation. The current iPhone reader and new Android APK do not have that certification or a Google Smart Tap reader implementation. No subscription, terminal purchase or unsupported phone-to-phone promise has been added.
+
+The server now prepares the documented pass configuration behind three **disabled by default** settings:
+
+- `GOOGLE_WALLET_SMART_TAP_ENABLED=true`
+- `GOOGLE_WALLET_SMART_TAP_READER_READY=true` only after the actual certified reader is configured and tested
+- `GOOGLE_WALLET_REDEMPTION_ISSUER_IDS` as a comma-separated list of numeric Redemption Issuer IDs
+
+When fully configured, issuance sets the class `enableSmartTap` and `redemptionIssuers`, and the object `smartTapRedemptionValue` to the same opaque credential used by QR. It patches existing classes as well as creating missing ones. Missing/invalid reader settings keep NFC data off and leave QR available. Google errors do not produce a purported NFC-enabled save link. Production has none of these Smart Tap flags enabled, and no terminal authentication key/Collector ID was created without an actual reader. Disabling configuration stops writing NFC redemption data to newly updated objects; if retiring a previously enabled live deployment, also disable the class in Google and revoke affected credentials as appropriate.
+
+Next steps are to choose a certified terminal provider, or obtain Google's terminal-provider documentation and complete certification for an owned reader; register that reader's public authentication key/version on the redemption issuer; obtain/configure the Collector ID; enable the class/object settings; and test on a real Android Wallet phone. Reader output must go through the existing authenticated member/event check-in APIs and server-side revocation checks. The APK's normal NDEF mode cannot substitute for that protocol. Google publishing review also remains separate and pending.
+
+Primary references: [Smart Tap overview and terminal certification](https://developers.google.com/wallet/smart-tap/introduction/overview), [issuer/key and Collector ID setup](https://developers.google.com/wallet/smart-tap/introduction/issuer-configuration), [class/object configuration](https://developers.google.com/wallet/smart-tap/introduction/pass-configuration). Direct Samsung Wallet integration remains excluded by the owner; supported Samsung phones use Google Wallet.
+
 Google Wallet support uses the same `kind=wallet` chapter credential as Apple Wallet. It does not introduce Google sign-in to the chapter website. Saving to Google Wallet requires the recipient's Google account at Google's site.
 
 ## Google issuer setup

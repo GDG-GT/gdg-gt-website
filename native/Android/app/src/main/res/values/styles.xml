@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.GDG" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">#B83F30</item><item name="colorPrimaryVariant">#953326</item>
+        <item name="colorOnPrimary">#FFF4EC</item><item name="colorSecondary">#B83F30</item>
+        <item name="android:colorAccent">#B83F30</item><item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowBackground">#F7F7F5</item><item name="android:statusBarColor">#F7F7F5</item>
+        <item name="android:navigationBarColor">#F7F7F5</item><item name="android:windowLightNavigationBar">true</item>
+    </style>
+</resources>

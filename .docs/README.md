@@ -7,6 +7,7 @@ Start with the maintained guides below. Current release state and owner decision
 | Connect a future event website to member cards and registration checks | [Detailed event integration guide](operations/EVENT_MEMBERSHIP_INTEGRATION.md) |
 | Issue cards, manage points/perks, configure member sign-in or Wallet | [Member rewards operations](operations/MEMBER_REWARDS_OPERATIONS.md) |
 | Install the iPhone scanner, write physical cards and prepare Wallet NFC | [iPhone scanner and card writer](operations/IPHONE_SCANNER.md) |
+| Install or rebuild the signed Android APK | [Android workspace APK](operations/ANDROID_WORKSPACE.md) |
 | Configure Google Wallet and understand Android/Samsung support | [Android Wallet operations](operations/GOOGLE_SAMSUNG_WALLET.md) |
 | Resume the current work safely | [Current checkpoint](CURRENT_CHECKPOINT.md) |
 | See what is deployed and which external setup remains | [Production status](PRODUCTION_LAUNCH_STATUS.md) |
