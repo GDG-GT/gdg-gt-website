@@ -18,12 +18,15 @@
   "readerCertified": false,
   "physicalAcceptance": false,
   "documentationRequest": {
-    "status": "prepared; awaiting owner approval to submit",
+    "status": "submitted by owner",
     "contact": "tejas.singhal@gatech.edu",
     "allowlist": [
       "tejas.singhal@gatech.edu"
     ],
-    "type": "Terminal provider access to Smart Tap protocol developer documentation"
+    "type": "Terminal provider access to Smart Tap protocol developer documentation",
+    "submissionVerification": "Owner confirmed submission in conversation",
+    "ownerConfirmationRecordedAt": "2026-11-09T18:50:35.725096+00:00",
+    "doNotResubmit": true
   },
   "productionMemberOrCredentialCreated": false,
   "providerMemberPassChanged": false,
