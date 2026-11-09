@@ -39,11 +39,11 @@
     "realSignedPass": "generated locally and manifest hashes plus detached CMS signature verified against official Apple Root CA; test credential not registered in production"
   },
   "remaining": [
-    "Add an actual community member and issue their Wallet credential through the Super Admin workspace",
-    "Install that pass on a real iPhone and check PWA scanning, duplicate handling and revocation"
+    "Device acceptance of duplicate handling and revocation is not covered by the owner confirmation",
+    "Apple Wallet NFC / VAS approval and device acceptance remain separate"
   ],
   "limitations": [
-    "No real Apple Wallet installation acceptance claimed",
+    "Owner confirmed Apple Wallet installation and GDG Workspace QR scanning; this does not cover NFC, biometrics or other device workflows",
     "No NFC/Apple VAS enablement",
     "GT member self-service login remains awaiting GT SSO",
     "No automatic Wallet updates or pushes"
@@ -81,5 +81,17 @@
     "liveAuthenticatedWalletAvailable": true,
     "liveAuthenticatedWalletNfcAvailable": false,
     "verifiedAt": "2026-11-08T22:39:45.247720+00:00"
+  },
+  "ownerDeviceAcceptance": {
+    "status": "passed",
+    "verification": "Owner confirmed successful testing in conversation",
+    "recordedAt": "2026-11-09T19:13:36.600030+00:00",
+    "appleWalletInstallation": true,
+    "gdgWorkspaceQrScan": true,
+    "scope": "Existing Apple Wallet membership pass added to Apple Wallet and its QR successfully scanned in GDG Workspace",
+    "nfcTappingIncluded": false,
+    "biometricsIncluded": false,
+    "duplicateAndRevocationDeviceTestsIncluded": false,
+    "repeatRequired": false
   }
 }

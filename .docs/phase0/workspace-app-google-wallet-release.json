@@ -33,7 +33,19 @@
     "bundleBudgets": true,
     "publicSsr": true,
     "physicalDeviceAcceptance": false,
-    "qrCameraRealDecoderChromium": true
+    "qrCameraRealDecoderChromium": true,
+    "appleWalletQrOwnerDeviceAcceptance": {
+      "status": "passed",
+      "verification": "Owner confirmed successful testing in conversation",
+      "recordedAt": "2026-11-09T19:13:36.600030+00:00",
+      "appleWalletInstallation": true,
+      "gdgWorkspaceQrScan": true,
+      "scope": "Existing Apple Wallet membership pass added to Apple Wallet and its QR successfully scanned in GDG Workspace",
+      "nfcTappingIncluded": false,
+      "biometricsIncluded": false,
+      "duplicateAndRevocationDeviceTestsIncluded": false,
+      "repeatRequired": false
+    }
   },
   "google": {
     "businessId": "BCR2DN6DWL3IRBQG",

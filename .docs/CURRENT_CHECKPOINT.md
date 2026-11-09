@@ -1,3 +1,7 @@
+## Owner device acceptance: Apple Wallet QR — 2026-11-09
+
+Owner explicitly confirmed successfully adding the existing membership pass to Apple Wallet and scanning its QR in GDG Workspace. Mark these two checks **passed, owner-tested**. No repeat installation or QR-scan test is needed for this acceptance item. This confirmation does not cover NFC tapping, Google Wallet, physical cards, biometrics, or device tests of duplicate handling/revocation. See [Apple Wallet evidence](phase0/apple-wallet-qr-verification.json).
+
 ## Google Smart Tap issuer preparation — 2026-11-09
 
 Owner requested Android Wallet NFC setup. Registered the chapter's own ECDSA P-256 reader public key, version 1, on existing issuer `3388000000023239310`; a fresh Google issuer GET verified it and Collector ID `29267263`. Encrypted private material and its separate passphrase stay outside Git in the private Google Smart Tap directory. No issuer RSA identity, service-account permissions, member credential, provider member pass or email was changed.
