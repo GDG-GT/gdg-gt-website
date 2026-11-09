@@ -13,7 +13,7 @@ The owned app adds iPhone NFC hardware to the existing GDG workspace. Members, c
 | Tap an NFC Wallet pass | Native VAS reader, server decryption, session-bound challenge, replay protection | Apple NFC issuer approval, VAS reader entitlement/provisioning and physical acceptance |
 | Award/check in | Existing Super Admin review and confirmation, external event connector | Real event registration source must be configured by that event |
 
-The normal app is signed and uploaded to App Store Connect as **GDG GT Scanner**, version **1.0.0 (1)**, app ID `6832381059`. Apple processed the build and it is assigned to the private **GDG Officers** internal group. The owner's existing Apple account is invited; no other tester was invited. Open the invitation on the iPhone in Apple's free TestFlight app. The group has automatic distribution off. No public App Store release or external beta review was submitted.
+The normal app is signed and uploaded to App Store Connect as **GDG GT Scanner**, version **1.0.0 (2)**, app ID `6832381059`. Apple processed the build and it is assigned to the private **GDG Officers** internal group. The owner's existing Apple account is invited; no other tester was invited. Open the invitation on the iPhone in Apple's free TestFlight app. The group has automatic distribution off. No public App Store release or external beta review was submitted. TestFlight builds expire after 90 days; upload a new numbered build before expiry if continuing the beta. For longer-term officer distribution, an Apple-reviewed unlisted App Store release is a separate step after device acceptance. It was not submitted here.
 
 The signed archive and App Store distribution IPA were verified locally; the IPA has the TAG entitlement and is not debuggable. Release and optional Wallet device builds and an unsigned archive also compiled. This establishes signing/distribution, not physical device acceptance. Keep Wallet NFC flags off until issuer/reader approval and device acceptance are complete. The normal build has NDEF capability only; the optional Wallet build also requests VAS and cannot grant itself Apple's entitlement.
 
@@ -30,7 +30,7 @@ The Walmart X100 is not established as an NDEF URL writer or Apple VAS reader. T
 
 ## Issue and write a card
 
-1. Install the provisioned GDG Scanner app on the officer's iPhone and sign in with the existing Super Admin account. Safari/PWA cookies are separate; signing into Safari does not sign into this app.
+1. Install GDG GT Scanner from the private TestFlight invitation on the officer's iPhone. Enter the existing chapter access code on the dedicated sign-in screen, then the existing Super Admin email and password. Safari/PWA cookies are separate; signing into Safari does not sign into this app.
 2. Open Members in the Points & cards workspace. Select a real active community member, choose NFC card, give it a useful label and issue the credential.
 3. Tap **Write blank NFC card** and confirm the native write prompt. Hold the card against the top of the iPhone. Keep it still until **Card written and verified** appears.
 4. The app refuses read-only cards, unsupported tags, insufficient memory and cards that already contain data. It does not erase, lock or overwrite them. If the write or verification is interrupted, keep that card aside and scan it before reusing it.
@@ -46,7 +46,7 @@ Use Event connections in the same workspace. Scan either the member's physical c
 
 ## Generate, build and test the app
 
-Sources: `native/Scanner`. Requires Xcode with iOS SDK and XcodeGen. The generated `.xcodeproj`, build artifacts and per-user signing state are ignored. No new dependency or scanner service is required at runtime. Existing archive: `native/Scanner/build/GDGScanner-Signed.xcarchive`; distribution package: `native/Scanner/build/TestFlight/GDGScanner.ipa`. Both are ignored by Git.
+Sources: `native/Scanner`. Requires Xcode with iOS SDK and XcodeGen. The generated `.xcodeproj`, build artifacts and per-user signing state are ignored. No new dependency or scanner service is required at runtime. Existing archive: `native/Scanner/build/GDGScanner-Build2.xcarchive`; distribution package: `native/Scanner/build/TestFlight2/GDGScanner.ipa`. Both are ignored by Git.
 
 ```sh
 xcodegen generate --spec native/Scanner/project.yml
@@ -60,7 +60,7 @@ The App ID and profiles are now configured; do not create another app or Bundle 
 
 The initial TestFlight group is owner-only. Inviting other officers is a separate distribution step; no Apple team roles or website permissions were granted to them. External beta review needs appropriate review access and accurate contact information before submission; no production Super Admin credentials were supplied to Apple.
 
-The app requests only NFC and camera permissions on use. It opens `https://gdggt.dev/admin/rewards`; external domains and subframes cannot access its native bridge. Login and CSRF stay in the website. The app stores no private key, point authority, member cache or scanned credential history. Card operations are cancelled on backgrounding, sign-out and navigation. No member data or keys belong in Xcode build settings.
+The app requests only NFC and camera permissions on use. It opens `https://gdggt.dev/admin/scanner` and sends an authenticated Super Admin to `/admin/rewards`; external domains and subframes cannot access its native bridge. Login and CSRF stay in the website. The app stores no private key, point authority, member cache or scanned credential history. Card operations are cancelled on backgrounding, sign-out and navigation. No member data or keys belong in Xcode build settings.
 
 ## Enable Wallet NFC only after approval
 
@@ -93,5 +93,6 @@ Do not create fictional production members or points for acceptance. Use a real 
 - [Apple NFC tag-reader sample](https://developer.apple.com/documentation/corenfc/building-an-nfc-tag-reader-app)
 - [Apple guidance on modern TAG entitlement](https://developer.apple.com/forums/thread/781403)
 - [Apple VAS reader API](https://developer.apple.com/documentation/corenfc/nfcvasreadersession)
+- [Apple TestFlight lifetime and distribution](https://developer.apple.com/help/app-store-connect/test-a-beta-version/testflight-overview/)
 - [Apple Wallet setup and pass distribution](https://developer.apple.com/wallet/get-started/)
 - [Public protocol research by Grayson Martin](https://gist.github.com/gm3197/ad0959476346cef69b75ea0523214350) and [Kormax Apple VAS research](https://github.com/kormax/apple-vas): protocol facts used for an independent implementation, not a claim of Apple certification. Validate against Apple's approved integration documentation and real hardware before activation.

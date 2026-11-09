@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-11-09T00:09:03.675047+00:00",
+  "verifiedAt": "2026-11-09T00:41:55.138226+00:00",
   "software": {
     "native": "SwiftUI/WKWebView; current TAG entitlement for physical NDEF, optional VAS build",
     "web": "trusted-origin bridge, existing member/points/events authorization, existing-card programming recovery",
@@ -28,7 +28,14 @@
     "webBuild": "passed",
     "bundleBudgets": "passed",
     "compiledPublicSSR": "passed",
-    "secretScan": "zero unreviewed findings"
+    "secretScan": "zero unreviewed findings",
+    "github": {
+      "run": 42539646654,
+      "url": "https://github.com/GDG-GT/gdg-gt-website/actions/runs/42539646654",
+      "conclusion": "success",
+      "jobsPassed": 7,
+      "browserShardsPassed": 3
+    }
   },
   "production": {
     "migrationName": "202611080144_reward_wallet_reader",
@@ -39,10 +46,12 @@
     "replayRecords": 0,
     "pointRecords": 0,
     "release": "READY",
-    "commit": "1896f2e61cb6f94d92931a497e1f80e27b380457",
-    "deployment": "dpl_Ga5btGqVS2587u48Tshm2vwFGuVM",
+    "commit": "951937ba8cccf99712e4aeda37f64f178a90b61b",
+    "deployment": "dpl_CQUJgc4sEkhqBd8dB4Sio9buSHLY",
     "liveAuthenticatedReaderAvailable": false,
-    "liveWorkspaceAssetMatchesLocal": true
+    "liveWorkspaceAssetMatchesLocal": true,
+    "liveEntryAssetMatchesLocal": true,
+    "freshProductionGateVerified": true
   },
   "privateMaterial": "separate matching encrypted VAS key pair prepared outside Git, not uploaded or enabled",
   "limits": [
@@ -60,9 +69,9 @@
     "appId": "6832381059",
     "bundleId": "dev.gdggt.scanner",
     "version": "1.0.0",
-    "build": "1",
-    "signedArchive": "native/Scanner/build/GDGScanner-Signed.xcarchive",
-    "distributionIpa": "native/Scanner/build/TestFlight/GDGScanner.ipa",
+    "build": "2",
+    "signedArchive": "native/Scanner/build/GDGScanner-Build2.xcarchive",
+    "distributionIpa": "native/Scanner/build/TestFlight2/GDGScanner.ipa",
     "tagEntitlement": true,
     "vasEntitlement": false,
     "distributionDebuggable": false,
@@ -71,10 +80,10 @@
     "group": "GDG Officers",
     "automaticDistribution": false,
     "testers": "existing owner only",
-    "buildId": "387d265f-d848-4e20-b5bb-517010c641da",
+    "buildId": "7c32f47b-8370-469a-a482-0f000f9ff489",
     "assignedToGroup": true,
     "ownerStatus": "Invited",
-    "signedIpaSha256": "c8157521703f63a1decae1d26755eb7fb2c3e071b5ab7757146b4266c312e102",
+    "signedIpaSha256": "d435d05689d92fc40bf13d2f821768f4ab787eaa4333d467a577168477dda81a",
     "signatureVerification": "passed; FinderInfo added by local file provider removed from disposable extracted verification copy only",
     "externalBetaReviewSubmitted": false,
     "publicAppStoreReleaseSubmitted": false
@@ -93,6 +102,17 @@
     },
     "archive": "native/Scanner/build/GDGScanner-Build2.xcarchive",
     "ipa": "native/Scanner/build/TestFlight2/GDGScanner.ipa",
-    "upload": "not started; publish and verify website first"
+    "upload": "succeeded",
+    "uploadCompletedAt": "2026-11-09T00:27:11Z",
+    "productionCommit": "951937ba8cccf99712e4aeda37f64f178a90b61b",
+    "productionDeployment": "dpl_CQUJgc4sEkhqBd8dB4Sio9buSHLY",
+    "productionState": "READY",
+    "liveEntryAssetMatchesLocal": true,
+    "productionGateVerifiedInFreshPrivateSession": true,
+    "processing": "complete",
+    "buildId": "7c32f47b-8370-469a-a482-0f000f9ff489",
+    "assignedToGroup": true,
+    "group": "GDG Officers",
+    "ownerStatus": "Invited"
   }
 }
