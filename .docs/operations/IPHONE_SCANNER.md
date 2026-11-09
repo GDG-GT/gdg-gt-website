@@ -13,7 +13,9 @@ The owned app adds iPhone NFC hardware to the existing GDG workspace. Members, c
 | Tap an NFC Wallet pass | Native VAS reader, server decryption, session-bound challenge, replay protection | Apple NFC issuer approval, VAS reader entitlement/provisioning and physical acceptance |
 | Award/check in | Existing Super Admin review and confirmation, external event connector | Real event registration source must be configured by that event |
 
-Unsigned Debug and Wallet device builds compiled during implementation. This does not mean the app is signed, installed or available in TestFlight. Keep Wallet NFC flags off until the last row's prerequisites are met. The normal build has NDEF capability only; the optional Wallet build also requests VAS and cannot grant itself Apple's entitlement.
+The normal app is signed and uploaded to App Store Connect as **GDG GT Scanner**, version **1.0.0 (1)**, app ID `6832381059`. Apple processed the build and it is assigned to the private **GDG Officers** internal group. The owner's existing Apple account is invited; no other tester was invited. Open the invitation on the iPhone in Apple's free TestFlight app. The group has automatic distribution off. No public App Store release or external beta review was submitted.
+
+The signed archive and App Store distribution IPA were verified locally; the IPA has the TAG entitlement and is not debuggable. Release and optional Wallet device builds and an unsigned archive also compiled. This establishes signing/distribution, not physical device acceptance. Keep Wallet NFC flags off until issuer/reader approval and device acceptance are complete. The normal build has NDEF capability only; the optional Wallet build also requests VAS and cannot grant itself Apple's entitlement.
 
 ## Cards to buy
 
@@ -44,7 +46,7 @@ Use Event connections in the same workspace. Scan either the member's physical c
 
 ## Generate, build and test the app
 
-Sources: `native/Scanner`. Requires Xcode with iOS SDK and XcodeGen. The generated `.xcodeproj`, build artifacts and per-user signing state are ignored. No new dependency or scanner service is required at runtime.
+Sources: `native/Scanner`. Requires Xcode with iOS SDK and XcodeGen. The generated `.xcodeproj`, build artifacts and per-user signing state are ignored. No new dependency or scanner service is required at runtime. Existing archive: `native/Scanner/build/GDGScanner-Signed.xcarchive`; distribution package: `native/Scanner/build/TestFlight/GDGScanner.ipa`. Both are ignored by Git.
 
 ```sh
 xcodegen generate --spec native/Scanner/project.yml
@@ -54,7 +56,9 @@ xcodebuild -project native/Scanner/GDGScanner.xcodeproj -scheme GDGScanner \
   CODE_SIGNING_ALLOWED=NO build
 ```
 
-Open the generated project in Xcode. Use the existing developer team `7THP95SRTV`, bundle ID `dev.gdggt.scanner`, and the normal **GDGScanner** scheme. Enable the matching NFC tag-reading capability for that App ID and create a development/distribution provisioning profile through the Apple account. Select a connected iPhone and run, or archive Release and upload to the matching App Store Connect app for private TestFlight testing. A normal development build does not require publishing the app in the App Store. TestFlight distribution needs Apple's processing and any applicable beta review; external testers cannot be assumed approved.
+The App ID and profiles are now configured; do not create another app or Bundle ID. For subsequent builds, open the generated project in Xcode. Use the existing developer team `7THP95SRTV`, bundle ID `dev.gdggt.scanner`, and the normal **GDGScanner** scheme. The current App ID has NFC tag-reading capability. Preserve that capability and the existing automatic-signing setup. Increment the build number before any new TestFlight upload. Select a connected iPhone and run, or archive Release and upload to the matching App Store Connect app for private TestFlight testing. A normal development build does not require publishing the app in the App Store. Command-line signing/export/upload worked even though Xcode's GUI component updater and Simulator still need the local component update. That GUI issue did not prevent this TestFlight release. TestFlight distribution needs Apple's processing and any applicable beta review; external testers cannot be assumed approved.
+
+The initial TestFlight group is owner-only. Inviting other officers is a separate distribution step; no Apple team roles or website permissions were granted to them. External beta review needs appropriate review access and accurate contact information before submission; no production Super Admin credentials were supplied to Apple.
 
 The app requests only NFC and camera permissions on use. It opens `https://gdggt.dev/admin/rewards`; external domains and subframes cannot access its native bridge. Login and CSRF stay in the website. The app stores no private key, point authority, member cache or scanned credential history. Card operations are cancelled on backgrounding, sign-out and navigation. No member data or keys belong in Xcode build settings.
 

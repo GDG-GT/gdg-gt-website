@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-11-08T23:53:24.961263+00:00",
+  "verifiedAt": "2026-11-09T00:09:03.675047+00:00",
   "software": {
     "native": "SwiftUI/WKWebView; current TAG entitlement for physical NDEF, optional VAS build",
     "web": "trusted-origin bridge, existing member/points/events authorization, existing-card programming recovery",
@@ -38,13 +38,16 @@
     "authenticatedRpcExecute": false,
     "replayRecords": 0,
     "pointRecords": 0,
-    "release": "publication pending"
+    "release": "READY",
+    "commit": "1896f2e61cb6f94d92931a497e1f80e27b380457",
+    "deployment": "dpl_Ga5btGqVS2587u48Tshm2vwFGuVM",
+    "liveAuthenticatedReaderAvailable": false,
+    "liveWorkspaceAssetMatchesLocal": true
   },
   "privateMaterial": "separate matching encrypted VAS key pair prepared outside Git, not uploaded or enabled",
   "limits": [
-    "Unsigned compilation/archive is not signed installation or TestFlight availability",
+    "Internal owner TestFlight distribution is verified; no physical iPhone/card/Wallet acceptance is claimed.",
     "Xcode component installation needs local administrator authentication; simulator version mismatch",
-    "No local provisioning profiles; no new app identifier/certificate/profile created",
     "Wallet issuer and VAS reader approvals and real device/card/Wallet acceptance remain pending",
     "Existing QR issuer stays live; NFC remains disabled",
     "No production member, credential, point, event or provider-send fixtures created; no purchases or subscriptions"
@@ -52,5 +55,28 @@
   "notes": [
     "An unrelated form test timed out during the first concurrent coverage run; standalone retry and a complete lower-concurrency coverage run passed.",
     "The new browser case initially used an ambiguous text locator; corrected to scoped roles and passed all six profiles."
-  ]
+  ],
+  "nativeDistribution": {
+    "appId": "6832381059",
+    "bundleId": "dev.gdggt.scanner",
+    "version": "1.0.0",
+    "build": "1",
+    "signedArchive": "native/Scanner/build/GDGScanner-Signed.xcarchive",
+    "distributionIpa": "native/Scanner/build/TestFlight/GDGScanner.ipa",
+    "tagEntitlement": true,
+    "vasEntitlement": false,
+    "distributionDebuggable": false,
+    "upload": "succeeded",
+    "processing": "complete",
+    "group": "GDG Officers",
+    "automaticDistribution": false,
+    "testers": "existing owner only",
+    "buildId": "387d265f-d848-4e20-b5bb-517010c641da",
+    "assignedToGroup": true,
+    "ownerStatus": "Invited",
+    "signedIpaSha256": "c8157521703f63a1decae1d26755eb7fb2c3e071b5ab7757146b4266c312e102",
+    "signatureVerification": "passed; FinderInfo added by local file provider removed from disposable extracted verification copy only",
+    "externalBetaReviewSubmitted": false,
+    "publicAppStoreReleaseSubmitted": false
+  }
 }

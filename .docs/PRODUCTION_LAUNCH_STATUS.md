@@ -1,6 +1,8 @@
 # Production status
 
-Last verified feature release: `933a70f13f6c1f2913c41b89ec16c698c10dbc8f`, November 8, 2026. Vercel deployment `dpl_JBjLwxDeRTGfbipFfoLDwX1C6qGq` is READY. Subsequent documentation/cleanup work is recorded in [CURRENT_CHECKPOINT.md](CURRENT_CHECKPOINT.md).
+Latest scanner feature source: `1896f2e61cb6f94d92931a497e1f80e27b380457`, November 8, 2026. Vercel `dpl_Ga5btGqVS2587u48Tshm2vwFGuVM` is READY. The rewards workspace asset matches the tested local build; authenticated Wallet reader availability is false as intended, public routes return 200 and private unauthenticated routes return 401. The earlier event release remains recorded below. See [scanner verification](phase0/iphone-scanner-verification.json) and [current checkpoint](CURRENT_CHECKPOINT.md) for native distribution and pending acceptance.
+
+Owned iPhone app **GDG GT Scanner 1.0.0 (1)** is signed, processed by Apple and assigned to the private **GDG Officers** TestFlight group. The existing owner Apple account is invited. Physical NDEF reading/writing and QR reuse the chapter workspace; Wallet VAS code is gated pending Apple approval and device tests. No public App Store release, external tester invitation, new paid scanner service or production fixture member/point was created.
 
 ## Live services and routes
 
@@ -8,7 +10,7 @@ Last verified feature release: `933a70f13f6c1f2913c41b89ec16c698c10dbc8f`, Novem
 - Dedicated leaderboard: https://leaderboards.gdggt.dev/; member account: `/member` on that subdomain.
 - The main domain returns 404 for `/leaderboard`, `/leaderboard/member` and `/member`. Old leaderboard paths on the subdomain redirect to its root/member routes.
 - Source: https://github.com/GDG-GT/gdg-gt-website; `main` is connected to the existing Vercel project. Cloudflare manages the chapter domains.
-- Runtime: Vercel / Node 24 and Supabase, with canonical schema through migration 143 and explicit private-table/function grants.
+- Runtime: Vercel / Node 24 and Supabase, with canonical schema through migration 144 and explicit private-table/function grants.
 - The existing Super Admin account and production private workspace are configured. Do not create the owner again or replay applied migrations.
 
 ## Configured operating integrations
