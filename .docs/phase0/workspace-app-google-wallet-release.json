@@ -45,18 +45,25 @@
     "oauthVerified": true,
     "classAndPreviewObjectVerified": true,
     "previewIsChapterMember": false,
-    "publishing": "Approved by Google support email2026-11-09",
-    "publishingApproved": true,
+    "publishing": "In review in issuer console; ordinary-account save restricted to testing despite approval emails",
+    "publishingApproved": false,
     "serverEnvironmentConfigured": true,
     "publishingApprovalVerification": {
       "businessMatches": true,
       "issuerMatches": true,
       "emailVisibleFrom": "no-reply-support@google.com",
       "issuerApiStatus": 200,
-      "dashboardAtCheck": "Older In review label still visible",
-      "productionFlagUpdated": true,
-      "redeployment": "pending",
-      "noNewCredentialsOrPermissions": true
+      "dashboardAtCheck": "In review after refresh",
+      "savePage": "This pass is only used for testing. Ask your administrator to give you access.",
+      "productionFlagUpdated": false,
+      "temporaryFlagEnableReverted": true,
+      "redeployment": "restored false environment pending deployment",
+      "noNewCredentialsOrPermissions": true,
+      "verifiedAt": "2026-11-09T18:27:41.018Z",
+      "focusedTests": {
+        "files": 3,
+        "passed": 19
+      }
     }
   },
   "samsung": {
