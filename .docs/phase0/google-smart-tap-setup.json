@@ -1,0 +1,38 @@
+{
+  "verifiedAt": "2026-11-09T18:44:48.525Z",
+  "issuerId": "3388000000023239310",
+  "businessId": "BCR2DN6DWL3IRBQG",
+  "collectorId": "29267263",
+  "keyVersion": 1,
+  "keyAlgorithm": "ECDSA P-256",
+  "publicKeySha256": "fc8d0b6d26ae48edabdba6da3a4f5be23298c3f461d2c63f19cd0ac74b11d78f",
+  "keyRegisteredAndReadBack": true,
+  "privateKeyEncryptedOutsideRepository": true,
+  "noPrivateKeyOnVercelOrInApp": true,
+  "existingKeysReplaced": false,
+  "newIssuerOrServiceAccountPermissions": false,
+  "runtimeStaged": true,
+  "productionSmartTapEnabled": false,
+  "readerReady": false,
+  "readerImplemented": false,
+  "readerCertified": false,
+  "physicalAcceptance": false,
+  "documentationRequest": {
+    "status": "prepared; awaiting owner approval to submit",
+    "contact": "tejas.singhal@gatech.edu",
+    "allowlist": [
+      "tejas.singhal@gatech.edu"
+    ],
+    "type": "Terminal provider access to Smart Tap protocol developer documentation"
+  },
+  "productionMemberOrCredentialCreated": false,
+  "providerMemberPassChanged": false,
+  "memberEmailSent": false,
+  "remaining": [
+    "Google protocol documentation access and platform eligibility",
+    "Owned reader implementation and secure provisioning",
+    "Google terminal certification",
+    "Android Wallet and reader device acceptance",
+    "Public pass publishing restriction must clear"
+  ]
+}
