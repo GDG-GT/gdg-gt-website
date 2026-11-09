@@ -15,6 +15,22 @@ const options = {
   maxBytes: 100,
 };
 describe("Checksum-pinned build dependency availability", () => {
+  it("retries a gateway failure at the same official source before accepting its verified bytes", async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValueOnce(new Response(null, { status: 504 }))
+      .mockResolvedValueOnce(new Response(bytes));
+    expect(
+      await downloadPinnedArtifact(
+        { ...options, urls: [options.urls[0]] },
+        fetchImpl,
+      ),
+    ).toEqual(bytes);
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
+    expect(fetchImpl.mock.calls.every(([url]) => url === options.urls[0])).toBe(
+      true,
+    );
+  });
   it("falls back after bounded connection failures without changing the expected archive", async () => {
     const fetchImpl = vi
       .fn()

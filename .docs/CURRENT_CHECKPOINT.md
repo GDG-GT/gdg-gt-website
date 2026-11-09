@@ -1,8 +1,14 @@
-## Current release in progress — member delivery and workspace improvements
+## Latest release — member delivery and workspace improvements
 
-2026-11-09: owner-requested review and fix batch is complete in source. See [consolidated review](engineering/CURRENT_FIX_BATCH.md). Optional portfolio/website is included.253 test files /3002 tests, canonical and legacy DB migrations145–147, final focused15 tests,12 final email/dialog browser cases,56 broader mobile cases, typecheck/lint/build/SSR/budgets/secrets passed. Credential email and reusable newsletter templates are the remaining live acceptance actions. No production member or points fixtures were created.
+2026-11-09: feature commit `4c4377fc5d514add4bd441ecfc877c67fcbb8279` is pushed to GDG-GT/main and Vercel deployment `dpl_7KMpFQKSzgdG5MCSjKD1fTRJrKL6` is **READY** on both custom domains. The RewardsWorkspace asset matches the tested local build byte-for-byte. Migrations145–147 are applied, and delivery Cron job3 is restored active and verified. No scheduler remains paused.
 
-**Rollout procedure:** delivery Cron job3 was verified active. Pause only job3 immediately before applying145–147 through the Supabase migration API; deploy the matching Git commit to Vercel; restore job3 active after READY. Do not leave delivery paused. At this checkpoint it is still active and no new migration has been applied. Existing real owner member/credential IDs and UI-only acceptance steps are in the consolidated review. Keep auto-resume unloaded. Stop all temporary local test processes and Colima after acceptance.
+Owner card ending18FA was emailed through the production UI to `tejas.singhal@gatech.edu`; the job completed on its first worker attempt and Resend accepted it. The admin UI shows **Email sent**. No replacement pass was issued. The existing member balance remains0; owner-created test/revoked credentials and compensating ledger entries were preserved. No new production member, activity or points fixtures were created by this batch.
+
+Three reusable chapter newsletter templates are saved through UI: **Chapter update**, **Event invitation**, **Event recap and resources**. Saved email preview works. No campaign or subscriber send occurred. Optional **Portfolio / website** is visible in My profile and supported in public-team editing/publication. Site content spacing and activity-category/discard dialogs were checked live.
+
+Validation:253 test files /3002 tests; canonical and legacy DB tests145–147 including concurrency; final focused15 tests;12 final email/dialog browser cases plus56 broader mobile cases; typecheck, lint (8 inherited warnings), build, SSR, budgets and secrets passed. See [consolidated review](engineering/CURRENT_FIX_BATCH.md) and [release evidence](phase0/member-delivery-release.json). Hosted browser CI continues separately; its first code/database job stopped on a scanner publisher HTTP504. The availability retry fix preserves pinned integrity validation.
+
+Temporary preview servers and Colima test VM are stopped. Auto-resume stays unloaded; no timer was created. No native binary source changed; iPhone build6 and delivered Android APK remain current. Physical NFC, biometric/device acceptance, Apple VAS and Google Smart Tap approvals remain external checks. Google Wallet publishing approval must be verified separately. No AI commit trailers. Preserve unrelated `supabase/.temp/cli-latest`.
 
 # Current checkpoint
 

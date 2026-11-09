@@ -1,0 +1,89 @@
+{
+  "source": "4c4377fc5d514add4bd441ecfc877c67fcbb8279",
+  "review": {
+    "start": "2026-11-09T05:04:30Z",
+    "end": "2026-11-09T05:24:24Z",
+    "seconds": 1194
+  },
+  "validation": {
+    "unitFiles": 253,
+    "unitTests": 3002,
+    "additionalFocusedTests": 15,
+    "canonicalDatabase": true,
+    "legacyDatabaseGrants": true,
+    "finalEmailDialogBrowserTests": 12,
+    "broaderMobileBrowserCases": 56,
+    "typecheck": true,
+    "lintWarnings": 8,
+    "build": true,
+    "ssr": true,
+    "bundleBudgets": true,
+    "secretScanUnreviewedFindings": 0
+  },
+  "production": {
+    "deployment": "dpl_7KMpFQKSzgdG5MCSjKD1fTRJrKL6",
+    "state": "READY",
+    "migrations": [
+      {
+        "name": "202611090145_reward_credential_email",
+        "hostedVersion": "20261109053441"
+      },
+      {
+        "name": "202611090146_workspace_action_emails",
+        "hostedVersion": "20261109053443"
+      },
+      {
+        "name": "202611090147_profile_portfolio",
+        "hostedVersion": "20261109053444"
+      }
+    ],
+    "deliveryCron": {
+      "id": 3,
+      "previousActive": true,
+      "temporarilyPaused": false,
+      "restoredActiveVerified": true
+    },
+    "ownerCredentialEmail": "Queued once through production UI; completed on first worker attempt; Resend accepted; admin UI shows Email sent. Inbox placement is not claimed.",
+    "newsletterTemplates": [
+      "Chapter update",
+      "Event invitation",
+      "Event recap and resources"
+    ],
+    "domains": [
+      "gdggt.dev",
+      "leaderboards.gdggt.dev"
+    ],
+    "rewardsAsset": "RewardsWorkspace-l7RBFJqI.js",
+    "rewardsAssetMatchesLocal": true,
+    "rewardsAssetSha256": "3cb3f834bb40e349eab452a4d60f8bc2b6186658db7731ab7c5958862fd189e3",
+    "httpChecks": {
+      "home": 200,
+      "privatePassLanding": 200,
+      "adminPage": 200,
+      "unsignedRewardsApi": 401
+    },
+    "cacheChecks": "no-store",
+    "newsletterPreview": "Saved chapter update preview rendered branded HTML and working chapter links. No campaign sent.",
+    "portfolioField": "Verified visible in owner profile; source/db tests cover saving/clearing; owner profile was not changed.",
+    "siteContentLayout": "Visually checked live with separated heading, previews, collection tabs and visibility filter.",
+    "checkInCreation": "Verified activity/category fields and styled discard confirmation live; draft discarded, no point rule/activity created."
+  },
+  "local": {
+    "previewStopped": true,
+    "testVmStopped": true,
+    "autoResumeUnloaded": true
+  },
+  "limitations": [
+    "Physical NFC and biometric acceptance require the owner devices.",
+    "Apple VAS and Google Smart Tap approval/configuration remain gated.",
+    "Google Wallet publishing approval must be verified separately."
+  ],
+  "remoteCI": {
+    "run": 42568123852,
+    "status": "browser shards still running at live acceptance",
+    "coverage": "passed",
+    "dependency": "passed",
+    "secretGate": "passed",
+    "codeDatabase": "Initial attempt stopped on GitHub scanner archive HTTP504 before test execution; source download changed to bounded verified retry and tested separately."
+  }
+}

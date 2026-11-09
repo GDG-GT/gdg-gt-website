@@ -12,6 +12,7 @@ import {
 } from "node:fs/promises";
 import { tmpdir, platform, arch } from "node:os";
 import path from "node:path";
+import { downloadPinnedArtifact } from "./lib/pinned-download.mjs";
 import { fileURLToPath } from "node:url";
 import {
   secretScanVersion,
@@ -33,15 +34,14 @@ await chmod(scratch, 0o700);
 let report;
 try {
   const asset = `gitleaks_${secretScanVersion}_${archiveKey}.tar.gz`;
-  const response = await fetch(
-    `https://github.com/gitleaks/gitleaks/releases/download/v${secretScanVersion}/${asset}`,
-    { signal: AbortSignal.timeout(60000) },
-  );
-  if (!response.ok)
-    throw Error("Official scanner archive unavailable: " + response.status);
-  const archive = Buffer.from(await response.arrayBuffer());
-  if (archive.length > 30 * 1024 * 1024 || sha256(archive) !== expected)
-    throw Error("Scanner archive checksum mismatch. Nothing was executed.");
+  const archive = await downloadPinnedArtifact({
+    urls: [
+      `https://github.com/gitleaks/gitleaks/releases/download/v${secretScanVersion}/${asset}`,
+    ],
+    sha256: expected,
+    maxBytes: 30 * 1024 * 1024,
+    timeoutMs: 60000,
+  });
   const archivePath = path.join(scratch, "scanner.tar.gz");
   await writeFile(archivePath, archive, { mode: 0o600 });
   await execute("tar", ["-xzf", archivePath, "-C", scratch, "gitleaks"]);
