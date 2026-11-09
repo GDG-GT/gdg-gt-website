@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
-<key>CFBundleDisplayName</key><string>GDG Scanner</string>
+<key>CFBundleDisplayName</key><string>GDG Workspace</string>
 <key>CFBundleIdentifier</key><string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 <key>CFBundleName</key><string>$(PRODUCT_NAME)</string>
 <key>CFBundleExecutable</key><string>$(EXECUTABLE_NAME)</string>
@@ -13,6 +13,7 @@
 <key>UILaunchScreen</key><dict><key>UIColorName</key><string>LaunchBackground</string></dict>
 <key>UISupportedInterfaceOrientations</key><array><string>UIInterfaceOrientationPortrait</string></array>
 <key>NFCReaderUsageDescription</key><string>Read GDG membership cards and write newly issued cards at chapter check-in.</string>
+<key>NSFaceIDUsageDescription</key><string>Unlock your saved GDG officer sign-in and chapter workspace.</string>
 <key>NSCameraUsageDescription</key><string>Scan a member’s GDG Wallet QR code at check-in.</string>
 <key>ITSAppUsesNonExemptEncryption</key><false/>
 </dict></plist>

@@ -1,6 +1,6 @@
-# GDG iPhone scanner and card writer
+# GDG iPhone workspace, scanner and card writer
 
-The owned app adds iPhone NFC hardware to the existing GDG workspace. Members, cards, external event registration and points remain in the website database. There is no scanner subscription, second member directory or offline award queue.
+The owned iPhone app now opens the full admin workspace with native sign-in, native navigation, account locking and the existing NFC hardware bridge. Members, cards, external event registration and points remain in the website database. There is no scanner subscription, second member directory or offline award queue.
 
 ## What is implemented and what needs a device
 
@@ -13,7 +13,7 @@ The owned app adds iPhone NFC hardware to the existing GDG workspace. Members, c
 | Tap an NFC Wallet pass | Native VAS reader, server decryption, session-bound challenge, replay protection | Apple NFC issuer approval, VAS reader entitlement/provisioning and physical acceptance |
 | Award/check in | Existing Super Admin review and confirmation, external event connector | Real event registration source must be configured by that event |
 
-The normal app is signed and uploaded to App Store Connect as **GDG GT Scanner**, version **1.0.0 (2)**, app ID `6832381059`. Apple processed the build and it is assigned to the private **GDG Officers** internal group. The owner's existing Apple account is invited; no other tester was invited. Open the invitation on the iPhone in Apple's free TestFlight app. The group has automatic distribution off. No public App Store release or external beta review was submitted. TestFlight builds expire after 90 days; upload a new numbered build before expiry if continuing the beta. For longer-term officer distribution, an Apple-reviewed unlisted App Store release is a separate step after device acceptance. It was not submitted here.
+The normal app is signed and uploaded to App Store Connect as **GDG GT Scanner**, version **1.0.0 (5)**, app ID `6832381059`. Apple processed the build and it is assigned to the private **GDG Officers** internal group. The owner's existing Apple account is invited; no other tester was invited. Build5 supersedes builds3and4 with final app lifecycle/link fixes. It uses the same private group. Open the invitation on the iPhone in Apple's free TestFlight app. The group has automatic distribution off. No public App Store release or external beta review was submitted. TestFlight builds expire after 90 days; upload a new numbered build before expiry if continuing the beta. For longer-term officer distribution, an Apple-reviewed unlisted App Store release is a separate step after device acceptance. It was not submitted here.
 
 The signed archive and App Store distribution IPA were verified locally; the IPA has the TAG entitlement and is not debuggable. Release and optional Wallet device builds and an unsigned archive also compiled. This establishes signing/distribution, not physical device acceptance. Keep Wallet NFC flags off until issuer/reader approval and device acceptance are complete. The normal build has NDEF capability only; the optional Wallet build also requests VAS and cannot grant itself Apple's entitlement.
 
@@ -30,7 +30,13 @@ The Walmart X100 is not established as an NDEF URL writer or Apple VAS reader. T
 
 ## Issue and write a card
 
-1. Install GDG GT Scanner from the private TestFlight invitation on the officer's iPhone. Enter the existing chapter access code on the dedicated sign-in screen, then the existing Super Admin email and password. Safari/PWA cookies are separate; signing into Safari does not sign into this app.
+1. Install the latest GDG GT Scanner beta from the private TestFlight invitation. Build5 is displayed on the phone as **GDG Workspace**. Enter the existing chapter access code, officer email and password in native sign-in. Enable Remember with Face ID to store those credentials in the device-only Keychain protected by the current biometric enrollment. No password is sent to JavaScript or saved in UserDefaults, browser storage, Git or logs. Safari/PWA cookies are separate.
+
+The full workspace is available according to the signed-in officer's server permissions. Native tabs expose Home, Events, Check-in, Members and More. More contains the permission-filtered complete tool directory; points/card changes still require Super Admin. Existing workflow screens reuse the website in a WKWebView, rather than separate SwiftUI implementations of every editor. Native navigation goes through the existing router and unsaved-work safeguards.
+
+The app locks on background and covers account data while inactive. Face ID reopens the same page without reloading valid-session edits. The server checks account status and session revocation on unlock. When a session expires, the native client authenticates with Keychain credentials after biometric approval. A changed password/access code requires manual re-entry. Changed biometric enrollment invalidates the saved secret. Sign out and forget account revokes the server session and removes the Keychain item and local website data. Use another account on the lock screen forgets local credentials/data; it does not revoke an unreachable old session.
+
+PDF, CSV, JSON, ZIP, common image, XLSX and Wallet downloads from the authorized workspace use the native share sheet and private temporary files, bounded to64MiB. External links open outside the admin webview. Face ID and iPhone share-sheet/device acceptance remain physical-device checks.
 2. Open Members in the Points & cards workspace. Select a real active community member, choose NFC card, give it a useful label and issue the credential.
 3. Tap **Write blank NFC card** and confirm the native write prompt. Hold the card against the top of the iPhone. Keep it still until **Card written and verified** appears.
 4. The app refuses read-only cards, unsupported tags, insufficient memory and cards that already contain data. It does not erase, lock or overwrite them. If the write or verification is interrupted, keep that card aside and scan it before reusing it.
@@ -46,7 +52,7 @@ Use Event connections in the same workspace. Scan either the member's physical c
 
 ## Generate, build and test the app
 
-Sources: `native/Scanner`. Requires Xcode with iOS SDK and XcodeGen. The generated `.xcodeproj`, build artifacts and per-user signing state are ignored. No new dependency or scanner service is required at runtime. Existing archive: `native/Scanner/build/GDGScanner-Build2.xcarchive`; distribution package: `native/Scanner/build/TestFlight2/GDGScanner.ipa`. Both are ignored by Git.
+Sources: `native/Scanner`. Requires Xcode with iOS SDK and XcodeGen. The generated `.xcodeproj`, build artifacts and per-user signing state are ignored. No new dependency or scanner service is required at runtime. Existing archive: `native/Scanner/build/GDGWorkspace-Build5.xcarchive`; distribution package: `native/Scanner/build/TestFlight5/GDGScanner.ipa`. Both are ignored by Git.
 
 ```sh
 xcodegen generate --spec native/Scanner/project.yml
@@ -60,7 +66,7 @@ The App ID and profiles are now configured; do not create another app or Bundle 
 
 The initial TestFlight group is owner-only. Inviting other officers is a separate distribution step; no Apple team roles or website permissions were granted to them. External beta review needs appropriate review access and accurate contact information before submission; no production Super Admin credentials were supplied to Apple.
 
-The app requests only NFC and camera permissions on use. It opens `https://gdggt.dev/admin/scanner` and sends an authenticated Super Admin to `/admin/rewards`; external domains and subframes cannot access its native bridge. Login and CSRF stay in the website. The app stores no private key, point authority, member cache or scanned credential history. Card operations are cancelled on backgrounding, sign-out and navigation. No member data or keys belong in Xcode build settings.
+The app requests only NFC and camera permissions on use. It opens `https://gdggt.dev/admin/scanner` and sends an authenticated Super Admin to `/admin/rewards`; external domains and subframes cannot access its native bridge. Login and CSRF stay in the website. The app stores no issuer private key, point authority, member cache or scanned credential history. Remembered officer credentials are held only by the OS Keychain with biometric access control. Card operations are cancelled on backgrounding, sign-out and navigation. No member data or keys belong in Xcode build settings.
 
 ## Enable Wallet NFC only after approval
 

@@ -4,7 +4,8 @@ import SwiftUI
 struct ScannerApp: App {
     var body: some Scene {
         WindowGroup {
-            ScannerView()
+            OfficerAppView()
+                .preferredColorScheme(.light)
                 .tint(Color(red: 0.72, green: 0.25, blue: 0.19))
         }
     }

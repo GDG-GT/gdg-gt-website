@@ -1,0 +1,57 @@
+{
+  "verifiedAt": "2026-11-09T03:45:44.519789+00:00",
+  "native": {
+    "appId": "6832381059",
+    "bundleId": "dev.gdggt.scanner",
+    "teamId": "7THP95SRTV",
+    "version": "1.0.0",
+    "build": 5,
+    "buildId": null,
+    "displayName": "GDG Workspace",
+    "signedArchive": "native/Scanner/build/GDGWorkspace-Build5.xcarchive",
+    "uploadSucceeded": false,
+    "group": "GDG Officers",
+    "groupId": "41f538c7-5b66-48dd-8719-761f0c0dcfef",
+    "assigned": false,
+    "vasGranted": false,
+    "biometricDeviceAcceptance": false,
+    "newTesters": 0,
+    "publicRelease": false,
+    "priorAssignedBuild": 4
+  },
+  "checks": {
+    "sourceFiles": 249,
+    "sourceTests": 2981,
+    "swiftPolicyTests": 3,
+    "mobileRewardsBrowserCases": 18,
+    "nativeWorkspaceBrowserAndAxeCases": 2,
+    "typecheck": true,
+    "lint": true,
+    "webBuild": true,
+    "bundleBudgets": true,
+    "publicSsr": true,
+    "physicalDeviceAcceptance": false
+  },
+  "google": {
+    "businessId": "BCR2DN6DWL3IRBQG",
+    "issuerId": "3388000000023239310",
+    "project": "gdg-gt-wallet",
+    "serviceAccount": "gdg-wallet-issuer@gdg-gt-wallet.iam.gserviceaccount.com",
+    "role": "Developer",
+    "cloudProjectRoles": [],
+    "oauthVerified": true,
+    "classAndPreviewObjectVerified": true,
+    "previewIsChapterMember": false,
+    "publishing": "In review",
+    "publishingApproved": false,
+    "serverEnvironmentConfigured": true
+  },
+  "samsung": {
+    "directIntegration": "excluded by owner",
+    "supportedPhonesUse": "Google Wallet"
+  },
+  "productionData": {
+    "chapterMemberOrPointFixturesCreated": false,
+    "newBillingAccountsOrPaidResources": false
+  }
+}

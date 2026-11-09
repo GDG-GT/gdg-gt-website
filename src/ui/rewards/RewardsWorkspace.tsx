@@ -73,6 +73,7 @@ type Claim = {
 };
 type Inventory = {
   walletAvailable?: boolean;
+  googleWalletAvailable?: boolean;
   walletNfcAvailable?: boolean;
   selectedMember?: Member | null;
   members: Member[];
@@ -578,10 +579,17 @@ export default function RewardsWorkspace() {
                     <select name="kind">
                       <option value="card">NFC card</option>
                       <option value="qr">QR fallback</option>
-                      <option value="wallet" disabled={!data?.walletAvailable}>
-                        Apple Wallet{" "}
+                      <option
+                        value="wallet"
+                        disabled={
+                          !data?.walletAvailable && !data?.googleWalletAvailable
+                        }
+                      >
+                        Wallet pass{" "}
                         {data?.walletNfcAvailable ? "NFC + QR" : "QR"}
-                        {!data?.walletAvailable ? " · Setup required" : ""}
+                        {!data?.walletAvailable && !data?.googleWalletAvailable
+                          ? " · Setup required"
+                          : ""}
                       </option>
                     </select>
                   </Field>
@@ -597,10 +605,22 @@ export default function RewardsWorkspace() {
                     {issued.kind === "wallet" ? (
                       <a
                         className="gt-button gt-button-secondary"
-                        href={"/api/v1/admin/rewards/wallet/" + issued.id}
-                        download="gdg-member.pkpass"
+                        href={
+                          "/api/v1/admin/rewards/" +
+                          (data?.walletAvailable
+                            ? "wallet/"
+                            : "google-wallet/") +
+                          issued.id
+                        }
+                        download={
+                          data?.walletAvailable
+                            ? "gdg-member.pkpass"
+                            : undefined
+                        }
                       >
-                        Download Wallet pass
+                        {data?.walletAvailable
+                          ? "Download Apple Wallet pass"
+                          : "Add to Google Wallet"}
                       </a>
                     ) : (
                       <>
@@ -656,14 +676,40 @@ export default function RewardsWorkspace() {
                       </span>
                       {!c.revoked_at &&
                         c.kind === "wallet" &&
-                        data.walletAvailable && (
+                        (data.walletAvailable ||
+                          data.googleWalletAvailable) && (
                           <a
                             className="gt-button gt-button-secondary"
-                            href={"/api/v1/admin/rewards/wallet/" + c.id}
-                            download="gdg-member.pkpass"
+                            href={
+                              "/api/v1/admin/rewards/" +
+                              (data.walletAvailable
+                                ? "wallet/"
+                                : "google-wallet/") +
+                              c.id
+                            }
+                            download={
+                              data?.walletAvailable
+                                ? "gdg-member.pkpass"
+                                : undefined
+                            }
                             aria-label={"Download Wallet pass for " + c.label}
                           >
-                            Download Wallet pass
+                            {data?.walletAvailable
+                              ? "Download Apple Wallet pass"
+                              : "Add to Google Wallet"}
+                          </a>
+                        )}
+                      {!c.revoked_at &&
+                        c.kind === "wallet" &&
+                        data.walletAvailable &&
+                        data.googleWalletAvailable && (
+                          <a
+                            className="gt-button gt-button-secondary"
+                            href={"/api/v1/admin/rewards/google-wallet/" + c.id}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Add to Google Wallet
                           </a>
                         )}
                       {!c.revoked_at && c.kind === "card" && (

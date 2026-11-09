@@ -76,3 +76,24 @@ export function scanNative(
     }
   });
 }
+
+/** App chrome uses the same permission-filtered destinations and router guards. */
+export function nativeWorkspace() {
+  return (
+    nativeScanner() &&
+    (window as NativeWindow & { gdgScanner?: { admin?: boolean } }).gdgScanner
+      ?.admin === true
+  );
+}
+export function postNativeWorkspace(message: Record<string, unknown>) {
+  const handler = (
+    window as Window & {
+      webkit?: {
+        messageHandlers?: {
+          gdgAdmin?: { postMessage: (message: unknown) => void };
+        };
+      };
+    }
+  ).webkit?.messageHandlers?.gdgAdmin;
+  if (nativeWorkspace()) handler?.postMessage(message);
+}

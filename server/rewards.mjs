@@ -1,3 +1,7 @@
+import {
+  googleWalletConfiguration,
+  generateGoogleMemberPass,
+} from "./rewards-google-wallet.mjs";
 import { walletReaderRoute } from "./rewards-wallet-reader.mjs";
 import { walletConfiguration, generateMemberPass } from "./rewards-wallet.mjs";
 import { rewardsPagePaths } from "../shared/rewards-pages.mjs";
@@ -108,6 +112,8 @@ async function quota(store, request, response, config, scope, limit = 120) {
   }
 }
 async function downloadMemberPass({
+  provider = "apple",
+  fetchImpl = fetch,
   id,
   memberId,
   db,
@@ -140,11 +146,14 @@ async function downloadMemberPass({
     credential.encrypted_token,
     config.encryptionSecret,
   );
-  const bytes = await generateMemberPass({
+  const generate =
+    provider === "google" ? generateGoogleMemberPass : generateMemberPass;
+  const bytes = await generate({
     credential: payload.credential,
     id: credential.id,
     name: credential.members.name,
     origin: rewardsOrigin(request, config),
+    fetchImpl,
     env,
   });
   if (!checked(await lookup()))
@@ -154,6 +163,14 @@ async function downloadMemberPass({
       "This Wallet credential is not available.",
     );
   response.statusCode = 200;
+  if (provider === "google") {
+    response.statusCode = 303;
+    response.setHeader("Location", bytes);
+    response.setHeader("Cache-Control", "no-store");
+    response.setHeader("Referrer-Policy", "no-referrer");
+    response.end();
+    return true;
+  }
   response.setHeader("Content-Type", "application/vnd.apple.pkpass");
   response.setHeader(
     "Content-Disposition",
@@ -222,11 +239,15 @@ export async function rewardsRoutes(
         url: cardUrl(config.origin, credential),
       });
     }
-    const walletDownload = route.match(/^\/wallet\/([0-9a-f-]{36})$/);
+    const walletDownload = route.match(
+      /^\/(wallet|google-wallet)\/([0-9a-f-]{36})$/,
+    );
     if (walletDownload) {
       allowMethod(request, response, ["GET"]);
       return downloadMemberPass({
-        id: uuid.parse(walletDownload[1]),
+        provider: walletDownload[1] === "google-wallet" ? "google" : "apple",
+        fetchImpl,
+        id: uuid.parse(walletDownload[2]),
         db,
         config,
         request,
@@ -260,6 +281,7 @@ export async function rewardsRoutes(
         ...inventory,
         walletAvailable: !!wallet,
         walletNfcAvailable: !!wallet?.nfcEnabled,
+        googleWalletAvailable: !!googleWalletConfiguration(env),
       });
     }
     if (
@@ -305,11 +327,15 @@ export async function rewardsRoutes(
       requestHash = tokenHash(JSON.stringify({ action, document }));
     let d = document;
     if (action === "credential") {
-      if (document.kind === "wallet" && !walletConfiguration(env))
+      if (
+        document.kind === "wallet" &&
+        !walletConfiguration(env) &&
+        !googleWalletConfiguration(env)
+      )
         throw new ApiError(
           503,
           "WALLET_UNAVAILABLE",
-          "Apple Wallet issuance is awaiting issuer certificate configuration.",
+          "Wallet issuance is awaiting issuer configuration.",
         );
       const raw = token();
       d = {
@@ -517,12 +543,23 @@ export async function rewardsRoutes(
     );
   await quota(store, request, response, config, "rewards.member", 120);
   const walletMatch = path.match(
-    /^\/api\/v1\/rewards\/wallet\/([0-9a-f-]{36})$/,
+    /^\/api\/v1\/rewards\/(wallet|google-wallet)\/([0-9a-f-]{36})$/,
   );
   if (walletMatch) {
+    if (
+      walletMatch[1] === "google-wallet" &&
+      !googleWalletConfiguration(env)?.approved
+    )
+      throw new ApiError(
+        503,
+        "GOOGLE_WALLET_UNAVAILABLE",
+        "Google Wallet is awaiting publishing approval.",
+      );
     allowMethod(request, response, ["GET"]);
     return downloadMemberPass({
-      id: uuid.parse(walletMatch[1]),
+      provider: walletMatch[1] === "google-wallet" ? "google" : "apple",
+      fetchImpl,
+      id: uuid.parse(walletMatch[2]),
       memberId: member.id,
       db,
       config,
@@ -546,6 +583,7 @@ export async function rewardsRoutes(
         .limit(5),
     );
     safe.walletAvailable = !!walletConfiguration(env);
+    safe.googleWalletAvailable = !!googleWalletConfiguration(env)?.approved;
     return reply({ ...safe, csrf });
   }
   allowMethod(request, response, ["POST"]);

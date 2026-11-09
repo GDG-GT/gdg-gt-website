@@ -50,7 +50,11 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import NotificationBell from "@/components/admin/NotificationBell";
-import { nativeScanner } from "./rewards/nativeScanner";
+import {
+  nativeScanner,
+  nativeWorkspace,
+  postNativeWorkspace,
+} from "./rewards/nativeScanner";
 import { useAdmin } from "@/contexts/AdminContext";
 import { PermissionsService } from "@/services/permissionsService";
 import {
@@ -136,6 +140,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   }, []);
   const { currentAdmin, logout, isAuthenticated } = useAdmin();
   const navigationSafety = useNavigationSafety();
+  const inNativeApp = nativeWorkspace();
   const location = useLocation(),
     navigate = useNavigate();
   const navigationOpener = useRef<HTMLButtonElement>(null),
@@ -256,6 +261,46 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       ),
     [allowed, query],
   );
+  useEffect(() => {
+    if (!inNativeApp || !isAuthenticated) return;
+    postNativeWorkspace({
+      action: "state",
+      path: location.pathname,
+      title,
+      destinations: workspaceDestinations
+        .filter((item) => allowed.includes(item.href))
+        .map((item) => ({ path: item.href, title: item.label })),
+    });
+  }, [inNativeApp, isAuthenticated, location.pathname, title, allowed]);
+  useEffect(() => {
+    if (!inNativeApp) return;
+    const receive = (event: Event) => {
+      const target = (event as CustomEvent<unknown>).detail;
+      if (typeof target !== "string") return;
+      if (target === "signOut")
+        navigationSafety.request(() => {
+          void logout()
+            .then(() => postNativeWorkspace({ action: "signedOut" }))
+            .catch(() => {
+              // Keep the account and its drafts intact when server sign-out fails.
+              window.alert(
+                "Sign-out could not finish. Try again when connected.",
+              );
+            });
+        });
+      else if (target === "reload")
+        navigationSafety.request(() => window.location.reload());
+      else if (target === "back") navigate(-1);
+      else if (allowed.includes(target)) navigate(target);
+    };
+    const expired = () => postNativeWorkspace({ action: "authRequired" });
+    window.addEventListener("gdg:native-navigation", receive);
+    window.addEventListener("gdg:session-cleared", expired);
+    return () => {
+      window.removeEventListener("gdg:native-navigation", receive);
+      window.removeEventListener("gdg:session-cleared", expired);
+    };
+  }, [inNativeApp, allowed, navigate, navigationSafety, logout]);
   if (!isAuthenticated) return <>{children}</>;
   const sidebar = (
     <>
@@ -338,13 +383,25 @@ export default function AdminShell({ children }: { children: ReactNode }) {
     </>
   );
   return (
-    <div className="gt-admin-app">
+    <div className={`gt-admin-app${inNativeApp ? " gt-native-workspace" : ""}`}>
       <a href="#workspace-content" className="gt-skip">
         Skip to workspace
       </a>
-      <aside className="gt-sidebar">{sidebar}</aside>
+      {!inNativeApp && <aside className="gt-sidebar">{sidebar}</aside>}
       <div className="gt-workspace">
-        <header className="gt-workspace-topbar">
+        {inNativeApp && (
+          <div className="gt-native-actions">
+            <button
+              className="gt-button gt-button-ghost"
+              onClick={(event) => openSearch(event.currentTarget)}
+            >
+              <Search size={18} />
+              Find a tool
+            </button>
+            <NotificationBell />
+          </div>
+        )}
+        <header className="gt-workspace-topbar" hidden={!!inNativeApp}>
           <button
             className="gt-icon-button gt-admin-menu"
             ref={navigationOpener}

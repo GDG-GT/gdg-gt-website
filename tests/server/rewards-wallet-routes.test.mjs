@@ -241,3 +241,30 @@ describe("Existing physical card programming", () => {
     expect(f.db.from).not.toHaveBeenCalled();
   });
 });
+
+describe("Google Wallet authorization", () => {
+  it.each(["admin", "team_member", "blog_editor"])(
+    "rejects %s before accessing any Wallet credential",
+    async (role) => {
+      const f = fixture(role);
+      f.request.url = "/api/v1/admin/rewards/google-wallet/" + id;
+      await expect(run(f)).rejects.toMatchObject({ status: 403 });
+      expect(f.db.from).not.toHaveBeenCalled();
+    },
+  );
+  it("does not expose disabled Google issuance to a member", async () => {
+    const f = fixture();
+    f.request.url = "/api/v1/rewards/google-wallet/" + id;
+    f.request.headers.host = "leaderboards.gdggt.dev";
+    f.request.headers.cookie =
+      "__Host-gdg_rewards=" +
+      f.raw +
+      "; __Host-gdg_rewards_csrf=" +
+      f.csrf;
+    await expect(run(f)).rejects.toMatchObject({
+      status: 503,
+      code: "GOOGLE_WALLET_UNAVAILABLE",
+    });
+    expect(f.db.from).not.toHaveBeenCalled();
+  });
+});

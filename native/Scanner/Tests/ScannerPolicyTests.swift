@@ -23,3 +23,17 @@ final class ScannerPolicyTests: XCTestCase {
         }
     }
 }
+
+extension ScannerPolicyTests {
+    func testAdminAndDownloadBoundaries() {
+        XCTAssertTrue(ScannerPolicy.admin(URL(string: "https://gdggt.dev/admin/forms/new")))
+        XCTAssertTrue(ScannerPolicy.passDownload(URL(string: "https://gdggt.dev/api/v1/admin/rewards/wallet/123")))
+        XCTAssertTrue(ScannerPolicy.blobDownload(URL(string: "blob:https://gdggt.dev/12345678-1234-1234-1234-123456789012")))
+        for raw in ["https://gdggt.dev/admin-evil", "https://gdggt.dev.evil.test/admin/forms", "https://gdggt.dev:444/admin", "http://gdggt.dev/admin"] { XCTAssertFalse(ScannerPolicy.admin(URL(string: raw))) }
+        for raw in ["blob:https://evil.test/12345678-1234-1234-1234-123456789012", "blob:https://gdggt.dev.evil.test/12345678-1234-1234-1234-123456789012"] { XCTAssertFalse(ScannerPolicy.blobDownload(URL(string: raw))) }
+        XCTAssertTrue(ScannerPolicy.googleSave(URL(string: "https://pay.google.com/gp/v/save/abc.def.ghi")))
+        XCTAssertFalse(ScannerPolicy.googleSave(URL(string: "https://pay.google.com.evil.test/gp/v/save/abc")))
+        XCTAssertEqual(ScannerPolicy.downloadExtension("application/pdf"), "pdf")
+        XCTAssertNil(ScannerPolicy.downloadExtension("text/html"))
+    }
+}

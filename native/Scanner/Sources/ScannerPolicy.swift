@@ -10,6 +10,25 @@ enum ScannerPolicy {
         return url.scheme == "https" && url.host == "gdggt.dev" &&
             (url.port == nil || url.port == 443) && url.user == nil && url.password == nil
     }
+    static func admin(_ url: URL?) -> Bool {
+        trusted(url) && (url!.path == "/admin" || url!.path.hasPrefix("/admin/"))
+    }
+    static func googleSave(_ url: URL?) -> Bool {
+        guard let url else { return false }
+        return url.scheme == "https" && url.host == "pay.google.com" && url.port == nil && url.user == nil && url.password == nil && url.path.hasPrefix("/gp/v/save/")
+    }
+    static func passDownload(_ url: URL?) -> Bool {
+        guard trusted(url) else { return false }
+        return url!.path.hasPrefix("/api/v1/admin/")
+    }
+    static func blobDownload(_ url: URL?) -> Bool {
+        guard let url else { return false }
+        return url.absoluteString.range(of: "^blob:https://gdggt\\.dev/[0-9a-fA-F-]{36}$", options: .regularExpression) != nil
+    }
+    static func downloadExtension(_ mime: String?) -> String? {
+        let types = ["application/vnd.apple.pkpass": "pkpass", "application/pdf": "pdf", "text/csv": "csv", "application/zip": "zip", "application/json": "json", "text/plain": "txt", "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx", "application/octet-stream": "bin"]
+        return types[mime?.lowercased() ?? ""]
+    }
     static func workspace(_ url: URL?) -> Bool {
         trusted(url) && (url!.path == "/admin/rewards" || url!.path == "/admin/rewards/")
     }

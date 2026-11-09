@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import { useAdmin } from "@/contexts/AdminContext";
 import { Brand, Button, Field } from "../primitives";
 import "./rewards.css";
+import { nativeWorkspace, postNativeWorkspace } from "./nativeScanner";
 
 /** Dedicated app entry; retains the same server gate, account and permissions. */
 export default function ScannerEntry() {
@@ -76,6 +77,12 @@ export default function ScannerEntry() {
       if (live.current) setBusy(false);
     }
   };
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated && nativeWorkspace())
+      postNativeWorkspace({ action: "authRequired" });
+  }, [isLoading, isAuthenticated]);
+  if (!isLoading && isAuthenticated && nativeWorkspace())
+    return <Navigate to="/admin" replace />;
   if (!isLoading && isAuthenticated && isSuperAdmin)
     return <Navigate to="/admin/rewards" replace />;
   return (

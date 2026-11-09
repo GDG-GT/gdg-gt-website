@@ -88,7 +88,7 @@ describe("Member rewards interactions and recovery", () => {
       await screen.findByRole("button", { name: /Fictional Member.*25 pts/ }),
     );
     expect(
-      await screen.findByRole("option", { name: "Apple Wallet QR" }),
+      await screen.findByRole("option", { name: "Wallet pass QR" }),
     ).toHaveProperty("disabled", false);
     expect(
       screen
@@ -130,7 +130,7 @@ describe("Member rewards interactions and recovery", () => {
     await screen.findByRole("heading", { name: "Wallet pass ready" });
     expect(
       screen
-        .getByRole("link", { name: "Download Wallet pass" })
+        .getByRole("link", { name: "Download Apple Wallet pass" })
         .getAttribute("href"),
     ).toBe("/api/v1/admin/rewards/wallet/" + activity.id);
     expect(screen.queryByRole("button", { name: "Copy NFC URL" })).toBeNull();

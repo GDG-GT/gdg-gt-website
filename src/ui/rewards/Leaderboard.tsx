@@ -20,6 +20,7 @@ type Board = {
 };
 type Me = {
   walletAvailable?: boolean;
+  googleWalletAvailable?: boolean;
   walletCredentials?: { id: string; label: string }[];
   id: string;
   name: string;
@@ -307,6 +308,19 @@ export default function Leaderboard() {
                       href={"/api/v1/rewards/wallet/" + c.id}
                     >
                       Add {c.label} to Apple Wallet
+                    </a>
+                  </p>
+                ))}
+              {me.googleWalletAvailable &&
+                me.walletCredentials?.map((c) => (
+                  <p key={"google-" + c.id}>
+                    <a
+                      className="gt-button gt-button-secondary"
+                      href={"/api/v1/rewards/google-wallet/" + c.id}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Add {c.label} to Google Wallet
                     </a>
                   </p>
                 ))}

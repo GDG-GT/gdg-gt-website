@@ -1,5 +1,25 @@
 # Current checkpoint
 
+## Current work: full iPhone admin app and Google Wallet
+
+Owner requested the full admin app, Face ID, remembered sign-in and free Google Wallet setup. Owner subsequently excluded direct Samsung Wallet integration; supported Samsung phones should use Google Wallet. No Samsung account or agreement was created.
+
+### Implemented and checked
+
+Full SwiftUI app chrome/native sign-in, device-only biometric Keychain, native HTTP authentication, permission-filtered complete tool directory, background lock/privacy cover, download sharing and existing NFC hardware bridge are implemented. All admin pages are reachable under existing server permissions. Native navigation uses web router/draft guards. Existing workflow screens remain shared WKWebView screens, not duplicate SwiftUI editors. Face ID/device acceptance is not claimed.
+
+Build5 is displayed as **GDG Workspace**, same bundle`dev.gdggt.scanner`, team`7THP95SRTV`, app`6832381059`. Signed archive`native/Scanner/build/GDGWorkspace-Build5.xcarchive` verified: build5, TAG-only, no VAS, not debuggable. Build5 upload is in progress; check `/tmp/gdg-workspace-build5-upload.log` before repeating any upload. Builds3and4 uploaded successfully. Build4 is assigned to GDG Officers, but build5 supersedes it with interrupted-load recovery, external-link handling and inactive accessibility shielding. Assign build5 to existing GDG Officers once processed. Do not upload3/4again or create another group. No other testers or public distribution were requested.
+
+Google Wallet QR issuance uses the existing Wallet credential, server OAuth service-account auth, stable class/object creation and short signed Save links. Member issuance stays hidden/disabled before publishing approval. Full unit suite249files/2981tests passed;18mobile rewards cases and2native-workspace browser/a11y cases passed. Final mobile profile layout wrap fix was visually checked in WebKit. Swift policy3tests, typecheck, lint, signed archive, web build and bundle budgets passed. No physical iPhone is connected for hardware acceptance.
+
+### Google setup completed, review pending
+
+Console business`BCR2DN6DWL3IRBQG`, Wallet issuer`3388000000023239310`, Cloud project`gdg-gt-wallet` number`28621550653`; Wallet API enabled. User separately approved Console terms, Wallet API terms, and public certificate registration plus issuer Developer access. Service account`gdg-wallet-issuer@gdg-gt-wallet.iam.gserviceaccount.com` exists with no Cloud project roles and Console Developer access. Uploaded public key`58d1cf229d795c4a48c1cb8f66d976aa4aacf564` authenticated successfully; private key remains encrypted outsideGit. One Google-only preview class/object was created; no chapter member/card/points record was inserted.
+
+Six settings are saved as production-only sensitive Vercel variables on existing project`prj_p6dWtmkiB6rk0C4fsKX4upEKxQNQ`. `GOOGLE_WALLET_PUBLISHING_APPROVED=false` remains until Google actually grants access. Publishing request176-character membership/check-in use case was submitted once and console visibly confirmed **In review** with2–3day estimate. Business profile was linked to an existing GDG@GT organization profile and is under review. Do not repeat publishing request or change identity. Owner explicitly requested the public GT student-organization office number; entered+14048943458, verified at official CSE contact page. Chapter support email`gdg@gatech.edu`, website`https://gdggt.dev`, support`https://gdggt.dev/contact` saved. No payment card, billing account or paid resource was added by this work.
+
+Apple NFC request was submitted by the owner earlier. Apple issuer/reader approval still pending; all NFC flags stay off. Preserve unrelated`supabase/.temp/cli-latest` edit. No AI commit trailers or new timers. Production deployment/push remains authorized.
+
 ## Current release: owned iPhone scanner and writer
 
 Owner approved an owned iPhone app after rejecting recurring scanner-service subscriptions. Use the existing Apple Developer account, private TestFlight distribution and existing Super Admin records/permissions. No more preferences or card-design questions are pending. The chosen first order is ten plain NTAG215 PVC cards for hardware acceptance; no order was placed. GT SSO and Google/Bevy/Engage remain deferred; no Google login was added. No AI commit trailers or new timers.

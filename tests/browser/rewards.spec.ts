@@ -95,7 +95,7 @@ test("QR Wallet issuance downloads a private pass without NFC programming", asyn
   });
   const download = page.waitForEvent("download");
   await page
-    .getByRole("link", { name: "Download Wallet pass", exact: true })
+    .getByRole("link", { name: "Download Apple Wallet pass", exact: true })
     .click();
   expect((await download).suggestedFilename()).toBe("gdg-member.pkpass");
 });
