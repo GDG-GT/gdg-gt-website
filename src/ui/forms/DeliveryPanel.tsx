@@ -1,4 +1,3 @@
-import ActionFeedback from "@/ui/ActionFeedback";
 import { useEffect, useRef, useState } from "react";
 import { ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -62,6 +61,7 @@ function DeliveryWorkspace({
   const callbacks = useRef(handlers),
     intentRef = useRef<DeliveryIntent>(),
     feedback = useRef<HTMLParagraphElement>(null),
+    noticeFeedback = useRef<HTMLParagraphElement>(null),
     { isOnline } = useOnlineStatus(),
     safety = useNavigationSafety(),
     path = "/admin/forms/" + formId + "/delivery",
@@ -211,6 +211,9 @@ function DeliveryWorkspace({
   useEffect(() => {
     if (error) feedback.current?.focus();
   }, [error]);
+  useEffect(() => {
+    if (notice && !error) noticeFeedback.current?.focus();
+  }, [notice, error]);
   function reloadSaved() {
     clear();
     setPolicy(undefined);
@@ -328,7 +331,11 @@ function DeliveryWorkspace({
   if (!policy || !draft)
     return (
       <>
-        {notice && <ActionFeedback message={notice} />}
+        {notice && (
+          <p role="status" tabIndex={-1} ref={noticeFeedback}>
+            {notice}
+          </p>
+        )}
         {read.error ? (
           <EmptyState
             title="Delivery settings unavailable"
@@ -479,7 +486,11 @@ function DeliveryWorkspace({
               {error}
             </p>
           )}
-          {notice && <ActionFeedback message={notice} />}
+          {notice && (
+            <p role="status" tabIndex={-1} ref={noticeFeedback}>
+              {notice}
+            </p>
+          )}
           <fieldset disabled={!editable} className="gt-form">
             <legend>Chapter delivery</legend>
             {(draft.receipts || receiptSetting) && (

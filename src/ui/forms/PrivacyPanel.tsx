@@ -1,4 +1,3 @@
-import ActionFeedback from "@/ui/ActionFeedback";
 import { useEffect, useRef, useState } from "react";
 import { ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -50,6 +49,7 @@ function PrivacyWorkspace({ formId, responseId, ...handlers }: Props) {
   const callbacks = useRef(handlers),
     intentRef = useRef<PrivacyIntent>(),
     feedback = useRef<HTMLParagraphElement>(null),
+    noticeFeedback = useRef<HTMLParagraphElement>(null),
     { isOnline } = useOnlineStatus(),
     safety = useNavigationSafety(),
     path = privacyPath(formId, responseId),
@@ -190,6 +190,9 @@ function PrivacyWorkspace({ formId, responseId, ...handlers }: Props) {
   useEffect(() => {
     if (error) feedback.current?.focus();
   }, [error]);
+  useEffect(() => {
+    if (notice && !error) noticeFeedback.current?.focus();
+  }, [notice, error]);
   function reloadSaved() {
     clear();
     setState(undefined);
@@ -303,7 +306,11 @@ function PrivacyWorkspace({ formId, responseId, ...handlers }: Props) {
   if (!state)
     return (
       <>
-        {notice && <ActionFeedback message={notice} />}
+        {notice && (
+          <p role="status" tabIndex={-1} ref={noticeFeedback}>
+            {notice}
+          </p>
+        )}
         {read.error ? (
           <EmptyState
             title="Privacy review unavailable"
@@ -412,7 +419,11 @@ function PrivacyWorkspace({ formId, responseId, ...handlers }: Props) {
               {error}
             </p>
           )}
-          {notice && <ActionFeedback message={notice} />}
+          {notice && (
+            <p role="status" tabIndex={-1} ref={noticeFeedback}>
+              {notice}
+            </p>
+          )}
           {(read.error ||
             read.loading ||
             needsRecheck ||

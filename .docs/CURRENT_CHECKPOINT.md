@@ -10,6 +10,8 @@ Validation:253 test files /3002 tests; canonical and legacy DB tests145–147 in
 
 A final event-connection regression check narrowed the new scanner section guard so an open server credential remains available across sections without an unnecessary discard prompt. The corrected event-disconnect test uses the new app dialog. All18 event cases across six browser profiles and12 email/dialog cases passed, plus the full3004-test suite and source/build checks. The final correction is being pushed; no production data or email was created by these checks.
 
+A final feedback refinement keeps Forms delivery/privacy receipts inside their containing dialogs and account/team receipts inside their focused region, instead of portalling them outside the modal or detaching keyboard focus. Existing browser assertions remain unchanged. All96 targeted account/team/Forms/event-link cases passed across six browser profiles, with the full3004-test suite and source/build checks passing again. See the latest Actions run for full hosted matrix status.
+
 Temporary preview servers and Colima test VM are stopped. Auto-resume stays unloaded; no timer was created. No native binary source changed; iPhone build6 and delivered Android APK remain current. Physical NFC, biometric/device acceptance, Apple VAS and Google Smart Tap approvals remain external checks. Google Wallet publishing approval must be verified separately. No AI commit trailers. Preserve unrelated `supabase/.temp/cli-latest`.
 
 # Current checkpoint

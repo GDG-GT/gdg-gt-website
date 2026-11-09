@@ -1,4 +1,3 @@
-import ActionFeedback from "@/ui/ActionFeedback";
 import ScrollableTable from "@/ui/ScrollableTable";
 import {
   useCallback,
@@ -1018,7 +1017,7 @@ function TeamWorkspaceContent() {
               </button>
             </p>
           )}
-          {notice && <ActionFeedback message={notice} />}
+          {notice && <p role="status">{notice}</p>}
         </div>
       )}
       {!review && (needsRecheck || uncertain) && recovery()}

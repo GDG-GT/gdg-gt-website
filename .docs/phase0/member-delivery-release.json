@@ -100,5 +100,13 @@
     "build": true,
     "ssr": true,
     "budgets": true
+  },
+  "containedFeedbackRefinement": {
+    "forms": "Delivery/privacy receipts remain inside the focused modal; success receives focus unless an error has priority",
+    "accountsAndTeams": "Existing focused receipt region preserved",
+    "allSixBrowserProfiles": true,
+    "targetedCasesPassed": 96,
+    "unitTestsPassed": 3004,
+    "browserAssertionsPreserved": true
   }
 }
