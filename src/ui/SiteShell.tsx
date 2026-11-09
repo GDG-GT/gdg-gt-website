@@ -40,6 +40,7 @@ import { rewardsPagePaths } from "../../shared/rewards-pages.mjs";
 const AdminLoginModal = lazy(() => import("@/components/AdminLoginModal"));
 const standaloneRoutes = [
   "/tap",
+  "/pass",
   "/links",
   "/l/:username",
   "/forms/:slug",

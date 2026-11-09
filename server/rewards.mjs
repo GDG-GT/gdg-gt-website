@@ -5,6 +5,7 @@ import {
 import { walletReaderRoute } from "./rewards-wallet-reader.mjs";
 import { walletConfiguration, generateMemberPass } from "./rewards-wallet.mjs";
 import { rewardsPagePaths } from "../shared/rewards-pages.mjs";
+import { emailedPass } from "./rewards-email.mjs";
 import { z } from "zod";
 import { requireSession, requireCsrf } from "./auth.mjs";
 import { ApiError, allowMethod, jsonBody, sendJson } from "./lib/http.mjs";
@@ -196,6 +197,40 @@ export async function rewardsRoutes(
     sendJson(response, 200, data, requestId);
     return true;
   };
+  if (path === "/api/v1/rewards/email-pass") {
+    allowMethod(request, response, ["POST"]);
+    await quota(store, request, response, config, "rewards.email-pass", 60);
+    if (request.headers.origin !== rewardsOrigin(request, config))
+      throw new ApiError(
+        403,
+        "FORBIDDEN",
+        "Open this link on the chapter member website.",
+      );
+    const input = await jsonBody(
+      request,
+      z
+        .object({
+          ticket: z.string().max(128),
+          provider: z.enum(["info", "qr", "apple", "google"]),
+        })
+        .strict(),
+      1024,
+    );
+    const result = await emailedPass({ ...input, db, config, env, fetchImpl });
+    response.setHeader("Cache-Control", "no-store");
+    response.setHeader("Referrer-Policy", "no-referrer");
+    if (input.provider === "apple") {
+      response.statusCode = 200;
+      response.setHeader("Content-Type", "application/vnd.apple.pkpass");
+      response.setHeader(
+        "Content-Disposition",
+        'attachment; filename="GDG-Membership.pkpass"',
+      );
+      response.end(result);
+      return true;
+    }
+    return reply(input.provider === "google" ? { url: result } : result);
+  }
   if (path.startsWith("/api/v1/admin/rewards")) {
     const session = await requireSession(request, store, config);
     if (session.user.role !== "super_admin")
@@ -279,6 +314,15 @@ export async function rewardsRoutes(
       const wallet = walletConfiguration(env);
       return reply({
         ...inventory,
+        emailDeliveries: q.member
+          ? checked(
+              await db.rpc("reward_email_status", {
+                p_actor: session.user.id,
+                p_session: session.sessionId,
+                p_member: q.member,
+              }),
+            )
+          : [],
         walletAvailable: !!wallet,
         walletNfcAvailable: !!wallet?.nfcEnabled,
         googleWalletAvailable: !!googleWalletConfiguration(env),
@@ -300,6 +344,23 @@ export async function rewardsRoutes(
     }
     allowMethod(request, response, ["POST"]);
     await requireCsrf(request, session, store);
+    if (route === "/credential-email") {
+      const { id } = await jsonBody(
+        request,
+        z.object({ id: uuid }).strict(),
+        512,
+      );
+      return reply(
+        checked(
+          await db.rpc("queue_reward_credential_email", {
+            p_actor: session.user.id,
+            p_session: session.sessionId,
+            p_credential: id,
+            p_key_hash: tokenHash(idempotency(request)),
+          }),
+        ),
+      );
+    }
     if (route === "/resolve") {
       const d = await jsonBody(
         request,
@@ -368,6 +429,7 @@ export async function rewardsRoutes(
         memberId: result.member_id,
         credential,
         url: cardUrl(config.origin, credential),
+        emailQueued: true,
       });
     }
     return reply(result);

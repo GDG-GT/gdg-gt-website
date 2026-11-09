@@ -127,6 +127,7 @@ function ProfileEditor() {
     imageUrl: p?.imageUrl || "",
     linkedinUrl: p?.linkedinUrl || "",
     githubUrl: p?.githubUrl || "",
+    portfolioUrl: p?.portfolioUrl || "",
   });
   const writable = isOnline && !busy && !needsRefresh && !blocked;
   const work = async (
@@ -177,6 +178,7 @@ function ProfileEditor() {
           imageUrl: "",
           linkedinUrl: "",
           githubUrl: "",
+          portfolioUrl: "",
         });
         setAccountDirty(false);
         setProfileDirty(false);
@@ -211,6 +213,7 @@ function ProfileEditor() {
           image_url?: string;
           linkedin_url?: string;
           github_url?: string;
+          portfolio_url?: string;
         };
       }>("/admin/me", { signal: controller.signal });
       if (!mutation.current(controller)) return;
@@ -226,6 +229,7 @@ function ProfileEditor() {
           "Saved photo URL": latest.profile?.image_url || "",
           "Saved LinkedIn URL": latest.profile?.linkedin_url || "",
           "Saved GitHub URL": latest.profile?.github_url || "",
+          "Saved portfolio / website": latest.profile?.portfolio_url || "",
         },
       });
       if (blocked) {
@@ -237,6 +241,7 @@ function ProfileEditor() {
           imageUrl: latest.profile?.image_url || "",
           linkedinUrl: latest.profile?.linkedin_url || "",
           githubUrl: latest.profile?.github_url || "",
+          portfolioUrl: latest.profile?.portfolio_url || "",
         });
       }
       setNeedsRefresh(false);
@@ -545,6 +550,7 @@ function ProfileEditor() {
                 ["imageUrl", "Photo URL"],
                 ["linkedinUrl", "LinkedIn URL"],
                 ["githubUrl", "GitHub URL"],
+                ["portfolioUrl", "Portfolio / website"],
               ] as const
             ).map(([key, label]) => (
               <Field

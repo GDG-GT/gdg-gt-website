@@ -1,3 +1,4 @@
+import ActionFeedback from "@/ui/ActionFeedback";
 import { useEffect, useState } from "react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
@@ -89,7 +90,7 @@ function SecurityControls() {
     {read.loading && <p role="status">Loading security status… Refresh again to restart a stuck read.</p>}
     {read.error && <p role="alert">{read.error}</p>}
     {error && <p role="alert" className="gt-form-error">{error}</p>}
-    {notice && <p role="status">{notice}</p>}
+    {notice && <ActionFeedback message={notice} />}
     {read.data && <><dl className="gt-security-metrics">
       <div><dt>Active accounts</dt><dd>{read.data.activeAccounts}</dd></div>
       <div><dt>Active sessions</dt><dd>{read.data.activeSessions}</dd></div>

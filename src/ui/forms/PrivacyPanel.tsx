@@ -1,3 +1,4 @@
+import ActionFeedback from "@/ui/ActionFeedback";
 import { useEffect, useRef, useState } from "react";
 import { ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -302,7 +303,7 @@ function PrivacyWorkspace({ formId, responseId, ...handlers }: Props) {
   if (!state)
     return (
       <>
-        {notice && <p role="status">{notice}</p>}
+        {notice && <ActionFeedback message={notice} />}
         {read.error ? (
           <EmptyState
             title="Privacy review unavailable"
@@ -411,7 +412,7 @@ function PrivacyWorkspace({ formId, responseId, ...handlers }: Props) {
               {error}
             </p>
           )}
-          {notice && <p role="status">{notice}</p>}
+          {notice && <ActionFeedback message={notice} />}
           {(read.error ||
             read.loading ||
             needsRecheck ||

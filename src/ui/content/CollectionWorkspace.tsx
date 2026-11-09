@@ -1,3 +1,9 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { useEffect, useRef, useState } from "react";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { api, ApiFailure } from "@/lib/api";
@@ -158,6 +164,7 @@ const specifications: Record<
       { name: "image_url", label: "Approved photo URL or /assets/ path" },
       { name: "linkedin_url", label: "LinkedIn", type: "url" },
       { name: "github_url", label: "GitHub", type: "url" },
+      { name: "portfolio_url", label: "Portfolio / website", type: "url" },
       {
         name: "email",
         label: "Private contact email · never shown publicly",
@@ -819,58 +826,78 @@ function CollectionEditor({ initialKind }: { initialKind: Kind }) {
         </section>
       )}
       {confirm && (
-        <section className="gt-panel gt-operational-confirm">
-          <h2 tabIndex={-1} ref={reviewHeading}>
-            {confirm.action === "publish"
-              ? "Publish this record?"
-              : confirm.action === "archive"
-                ? "Move this record to archive?"
+        <Dialog
+          open
+          onOpenChange={(open) => {
+            if (!open && !busy) setConfirm(undefined);
+          }}
+        >
+          <DialogContent
+            onOpenAutoFocus={(event) => {
+              event.preventDefault();
+              reviewHeading.current?.focus();
+            }}
+          >
+            <DialogTitle tabIndex={-1} ref={reviewHeading}>
+              {confirm.action === "publish"
+                ? "Publish this record?"
+                : confirm.action === "archive"
+                  ? "Move this record to archive?"
+                  : confirm.action === "restore"
+                    ? "Restore this private draft?"
+                    : "Unpublish this record?"}
+            </DialogTitle>
+            <DialogDescription>
+              {rowLabel(confirm.row)}.{" "}
+              {confirm.action === "publish"
+                ? "This makes the approved content visible publicly."
                 : confirm.action === "restore"
-                  ? "Restore this private draft?"
-                  : "Unpublish this record?"}
-          </h2>
-          <p>
-            {rowLabel(confirm.row)}.{" "}
-            {confirm.action === "publish"
-              ? "This makes the approved content visible publicly."
-              : confirm.action === "restore"
-                ? "This restores a private draft without publishing it."
-                : "This removes it from public pages. It remains recoverable from Archived records."}
-          </p>
-          <div className="gt-actions">
-            <Button
-              disabled={
-                busy ||
-                !isOnline ||
-                unavailable ||
-                stale ||
-                conflict ||
-                !freshRow?.actions.includes(
-                  ["archive", "restore"].includes(confirm.action)
-                    ? "delete"
-                    : "publish",
-                )
-              }
-              variant={confirm.action === "archive" ? "danger" : "primary"}
-              onClick={() => mutate(confirm.row, confirm.action)}
-            >
-              Confirm{" "}
-              {confirm.action === "publish" ? "publication" : confirm.action}
-            </Button>
-            <Button
-              variant="secondary"
-              disabled={busy}
-              onClick={() => {
-                setConfirm(undefined);
-                setConflict(false);
-                setError("");
-                retry.current = undefined;
-              }}
-            >
-              Cancel
-            </Button>
-          </div>
-        </section>
+                  ? "This restores a private draft without publishing it."
+                  : "This removes it from public pages. It remains recoverable from Archived records."}
+            </DialogDescription>
+            {error && <p role="alert">{error}</p>}
+            <div className="gt-actions">
+              <Button
+                variant="ghost"
+                disabled={busy}
+                onClick={() => setRefresh((v) => v + 1)}
+              >
+                Refresh review access
+              </Button>
+              <Button
+                disabled={
+                  busy ||
+                  !isOnline ||
+                  unavailable ||
+                  stale ||
+                  conflict ||
+                  !freshRow?.actions.includes(
+                    ["archive", "restore"].includes(confirm.action)
+                      ? "delete"
+                      : "publish",
+                  )
+                }
+                variant={confirm.action === "archive" ? "danger" : "primary"}
+                onClick={() => mutate(confirm.row, confirm.action)}
+              >
+                Confirm{" "}
+                {confirm.action === "publish" ? "publication" : confirm.action}
+              </Button>
+              <Button
+                variant="secondary"
+                disabled={busy}
+                onClick={() => {
+                  setConfirm(undefined);
+                  setConflict(false);
+                  setError("");
+                  retry.current = undefined;
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       )}
       <fieldset
         className="gt-toolbar gt-plain-fieldset"

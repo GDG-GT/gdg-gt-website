@@ -55,6 +55,7 @@ export type PublicPerson = {
   image_url?: string;
   linkedin_url?: string;
   github_url?: string;
+  portfolio_url?: string;
   team_section?: string;
 };
 export type PublicResource = {

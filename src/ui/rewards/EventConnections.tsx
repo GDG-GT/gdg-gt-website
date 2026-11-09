@@ -1,3 +1,5 @@
+import ActionFeedback from "@/ui/ActionFeedback";
+import { confirmAction } from "@/lib/app-dialogs";
 import { useCallback, useEffect, useState } from "react";
 import { api, ApiFailure } from "@/lib/api";
 import { Button, Field } from "../primitives";
@@ -141,7 +143,7 @@ export default function EventConnections({
           </Button>
         </div>
       )}
-      {notice && <p role="status">{notice}</p>}
+      {notice && <ActionFeedback message={notice} />}
       {attempt && !busy && (
         <Button onClick={() => void run(attempt)}>
           Retry same event request
@@ -258,10 +260,12 @@ export default function EventConnections({
                 <Button
                   type="button"
                   variant="ghost"
-                  onClick={() => {
+                  onClick={async () => {
                     if (
                       !dirty ||
-                      window.confirm("Discard these event connection edits?")
+                      (await confirmAction(
+                        "Discard these event connection edits?",
+                      ))
                     ) {
                       setEdit(undefined);
                       setDirty(false);
@@ -288,8 +292,11 @@ export default function EventConnections({
                   <Button
                     disabled={busy || !!attempt || !!secret}
                     variant="ghost"
-                    onClick={() => {
-                      if (!dirty || window.confirm("Discard current edits?")) {
+                    onClick={async () => {
+                      if (
+                        !dirty ||
+                        (await confirmAction("Discard current edits?"))
+                      ) {
                         setEdit(e);
                         setDirty(false);
                       }
@@ -307,10 +314,16 @@ export default function EventConnections({
                   <Button
                     disabled={busy || !!attempt || !!secret}
                     variant="ghost"
-                    onClick={() => {
+                    onClick={async () => {
                       if (
-                        window.confirm(
+                        await confirmAction(
                           "Rotate this event’s key? The previous key stops working immediately.",
+                          {
+                            title: "Rotate event key?",
+                            confirmLabel: "Rotate key",
+                            cancelLabel: "Cancel",
+                            danger: true,
+                          },
                         )
                       )
                         action("rotate", { id: e.id, revision: e.revision });
@@ -321,10 +334,16 @@ export default function EventConnections({
                   <Button
                     disabled={busy || !!attempt}
                     variant="danger"
-                    onClick={() => {
+                    onClick={async () => {
                       if (
-                        window.confirm(
+                        await confirmAction(
                           "Disable this event connection and revoke its key?",
+                          {
+                            title: "Revoke event connection?",
+                            confirmLabel: "Revoke connection",
+                            cancelLabel: "Cancel",
+                            danger: true,
+                          },
                         )
                       )
                         action("revoke", { id: e.id, revision: e.revision });
@@ -361,7 +380,7 @@ export default function EventConnections({
       {selected && initialCredential && (
         <Button
           disabled={busy || !!attempt}
-          onClick={() => {
+          onClick={async () => {
             setReview(undefined);
             action("lookup", {
               eventId: selected,
@@ -429,10 +448,15 @@ export default function EventConnections({
                     <Button
                       disabled={busy || !!attempt}
                       variant="secondary"
-                      onClick={() => {
+                      onClick={async () => {
                         if (
-                          window.confirm(
+                          await confirmAction(
                             "Award the linked activity’s chapter points for this confirmed check-in?",
+                            {
+                              title: "Award chapter points?",
+                              confirmLabel: "Award points",
+                              cancelLabel: "Cancel",
+                            },
                           )
                         )
                           action("points", { checkinId: c.id });

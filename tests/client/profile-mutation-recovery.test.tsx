@@ -154,12 +154,16 @@ describe("Own-profile mutation, security review and interruption recovery", () =
     fireEvent.change(screen.getByLabelText(/^Chapter role/), {
       target: { value: "Fictional builder" },
     });
+    fireEvent.change(screen.getByLabelText(/^Portfolio \/ website/), {
+      target: { value: "https://portfolio.example.test/" },
+    });
     fireEvent.submit(screen.getByLabelText(/^Full name/).closest("form")!);
     await screen.findByText(/Profile saved. New profiles remain unpublished/);
     expect(writes()).toHaveLength(1);
     expect(writes()[0][1].body.profile).toMatchObject({
       name: "Fictional public member",
       role: "Fictional builder",
+      portfolioUrl: "https://portfolio.example.test/",
     });
     expect(writes()[0][1].signal).toBeInstanceOf(AbortSignal);
   });

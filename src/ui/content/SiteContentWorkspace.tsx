@@ -12,6 +12,12 @@ import { useContent } from "@/contexts/ContentContext";
 import { Badge, Button, EmptyState, Field } from "../primitives";
 import ScrollableTable from "../ScrollableTable";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   managedPublicPages,
   editablePageCopy,
   publicPageSections,
@@ -79,13 +85,27 @@ function SiteContentView() {
   const { pathname } = useLocation();
   const team = pathname === "/admin/content/team";
   if (params.get("mode") === "preview") return <SiteCompositionPreview />;
-  return <>
-    <nav className="gt-team-tabs" aria-label="Site content sections">
-      <Link className="gt-button gt-button-ghost" to="/admin/content" aria-current={!team ? "page" : undefined}>Page content &amp; settings</Link>
-      <Link className="gt-button gt-button-ghost" to="/admin/content/team" aria-current={team ? "page" : undefined}>Public team</Link>
-    </nav>
-    {team ? <PublicTeamWorkspace /> : <ContentEditor />}
-  </>;
+  return (
+    <>
+      <nav className="gt-team-tabs" aria-label="Site content sections">
+        <Link
+          className="gt-button gt-button-ghost"
+          to="/admin/content"
+          aria-current={!team ? "page" : undefined}
+        >
+          Page content &amp; settings
+        </Link>
+        <Link
+          className="gt-button gt-button-ghost"
+          to="/admin/content/team"
+          aria-current={team ? "page" : undefined}
+        >
+          Public team
+        </Link>
+      </nav>
+      {team ? <PublicTeamWorkspace /> : <ContentEditor />}
+    </>
+  );
 }
 function ContentEditor() {
   const [kind, setKind] = useState<Kind>("pages"),
@@ -392,7 +412,7 @@ function ContentEditor() {
     }
   };
   return (
-    <div className="gt-admin-page">
+    <div className="gt-admin-page gt-site-content-workspace">
       <div className="gt-admin-page-heading">
         <div>
           <h1>Site content</h1>
@@ -401,27 +421,32 @@ function ContentEditor() {
             until a separate publication action.
           </p>
         </div>
-        <Button
-          disabled={
-            !!draft ||
-            !!confirm ||
-            busy ||
-            unavailable ||
-            !actions.includes("create")
-          }
-          onClick={() => open()}
-        >
-          Create draft
-        </Button>
-        <Button
-          variant="secondary"
-          disabled={busy}
-          onClick={() => setRefresh((v) => v + 1)}
-        >
-          Refresh site content
-        </Button>
+        <div className="gt-site-content-heading-actions">
+          <Button
+            disabled={
+              !!draft ||
+              !!confirm ||
+              busy ||
+              unavailable ||
+              !actions.includes("create")
+            }
+            onClick={() => open()}
+          >
+            Create draft
+          </Button>
+          <Button
+            variant="secondary"
+            disabled={busy}
+            onClick={() => setRefresh((v) => v + 1)}
+          >
+            Refresh site content
+          </Button>
+        </div>
       </div>
-      <div className="gt-actions" aria-label="Private page previews">
+      <div
+        className="gt-site-content-previews"
+        aria-label="Private page previews"
+      >
         <a
           className="gt-button gt-button-secondary"
           href="/admin/content?mode=preview&page=home"
@@ -445,7 +470,11 @@ function ContentEditor() {
         </Button>
         <span className="gt-helper">Save changes before previewing.</span>
       </div>
-      <div className="gt-actions" aria-label="Content collections">
+      <div
+        className="gt-site-content-collections"
+        role="group"
+        aria-label="Content collections"
+      >
         {(Object.keys(kinds) as Kind[]).map((value) => (
           <Button
             key={value}
@@ -863,60 +892,80 @@ function ContentEditor() {
           </form>
         </section>
       )}
-      {confirm && (
-        <section className="gt-panel gt-operational-confirm">
-          <h2 tabIndex={-1} ref={reviewHeading}>
-            {confirm.action === "publish"
-              ? "Publish approved content?"
-              : confirm.action === "archive"
-                ? "Archive this content?"
+      <Dialog
+        open={!!confirm}
+        onOpenChange={(open) => {
+          if (!open && !busy) setConfirm(undefined);
+        }}
+      >
+        {confirm && (
+          <DialogContent
+            onOpenAutoFocus={(event) => {
+              event.preventDefault();
+              reviewHeading.current?.focus();
+            }}
+          >
+            <DialogTitle tabIndex={-1} ref={reviewHeading}>
+              {confirm.action === "publish"
+                ? "Publish approved content?"
+                : confirm.action === "archive"
+                  ? "Archive this content?"
+                  : confirm.action === "restore"
+                    ? "Restore this private draft?"
+                    : "Unpublish this content?"}
+            </DialogTitle>
+            <DialogDescription>
+              {label(confirm.row)}.{" "}
+              {confirm.action === "publish"
+                ? "This changes the public website."
                 : confirm.action === "restore"
-                  ? "Restore this private draft?"
-                  : "Unpublish this content?"}
-          </h2>
-          <p>
-            {label(confirm.row)}.{" "}
-            {confirm.action === "publish"
-              ? "This changes the public website."
-              : confirm.action === "restore"
-                ? "This restores a private draft without publishing it."
-                : "This hides the record and preserves it for recovery."}
-          </p>
-          <div className="gt-actions">
-            <Button
-              disabled={
-                busy ||
-                !isOnline ||
-                unavailable ||
-                stale ||
-                conflict ||
-                !actions.includes(
-                  ["archive", "restore"].includes(confirm.action)
-                    ? "delete"
-                    : "publish",
-                )
-              }
-              variant={confirm.action === "archive" ? "danger" : "primary"}
-              onClick={() => mutate(confirm.row, confirm.action)}
-            >
-              Confirm{" "}
-              {confirm.action === "publish" ? "publication" : confirm.action}
-            </Button>
-            <Button
-              disabled={busy}
-              variant="secondary"
-              onClick={() => {
-                setConfirm(undefined);
-                setConflict(false);
-                retry.current = undefined;
-                setError("");
-              }}
-            >
-              Cancel
-            </Button>
-          </div>
-        </section>
-      )}
+                  ? "This restores a private draft without publishing it."
+                  : "This hides the record and preserves it for recovery."}
+            </DialogDescription>
+            {error && <p role="alert">{error}</p>}
+            <div className="gt-actions">
+              <Button
+                variant="ghost"
+                disabled={busy}
+                onClick={() => setRefresh((v) => v + 1)}
+              >
+                Refresh review access
+              </Button>
+              <Button
+                disabled={
+                  busy ||
+                  !isOnline ||
+                  unavailable ||
+                  stale ||
+                  conflict ||
+                  !actions.includes(
+                    ["archive", "restore"].includes(confirm.action)
+                      ? "delete"
+                      : "publish",
+                  )
+                }
+                variant={confirm.action === "archive" ? "danger" : "primary"}
+                onClick={() => mutate(confirm.row, confirm.action)}
+              >
+                Confirm{" "}
+                {confirm.action === "publish" ? "publication" : confirm.action}
+              </Button>
+              <Button
+                disabled={busy}
+                variant="secondary"
+                onClick={() => {
+                  setConfirm(undefined);
+                  setConflict(false);
+                  retry.current = undefined;
+                  setError("");
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </DialogContent>
+        )}
+      </Dialog>
       <Field label="Visibility">
         <select
           value={state}

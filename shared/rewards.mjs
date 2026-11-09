@@ -44,7 +44,7 @@ export const rewardAdminSchemas = {
   credential: z
     .object({
       memberId: id,
-      kind: z.enum(["card", "qr", "wallet"]),
+      kind: z.enum(["card", "wallet"]),
       label: z.string().trim().min(1).max(80),
     })
     .strict(),

@@ -1,3 +1,4 @@
+import ActionFeedback from "@/ui/ActionFeedback";
 import { otherChoiceText } from "../../../shared/form-choice";
 import { useEffect, useRef, useState } from "react";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
@@ -406,7 +407,7 @@ function ResponseWorkspaceContent() {
           {error || server.error}
         </p>
       )}
-      {notice && <p role="status">{notice}</p>}
+      {notice && <ActionFeedback message={notice} />}
       {needsRecheck && isOnline && (
         <p role="status">
           Connection restored. Reload the current response view before further

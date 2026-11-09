@@ -84,7 +84,15 @@ test("native workspace uses permitted app destinations and keeps all admin tools
         ),
       path,
     );
-    await expect(page).toHaveURL(new RegExp(path + "$"));
+    await expect(page).toHaveURL(
+      new RegExp(
+        path + (path === "/admin/rewards" ? "\\?view=scanner" : "") + "$",
+      ),
+    );
+    if (path === "/admin/rewards")
+      await expect(
+        page.getByRole("heading", { name: "Check-in scanner", exact: true }),
+      ).toBeVisible();
     await expect(page.locator("#workspace-content h1")).toBeVisible();
     await expect(page.locator(".gt-workspace-topbar")).toBeHidden();
   }
@@ -93,7 +101,7 @@ test("native workspace uses permitted app destinations and keeps all admin tools
       new CustomEvent("gdg:native-navigation", { detail: "back" }),
     ),
   );
-  await expect(page).toHaveURL(/\/admin\/rewards$/);
+  await expect(page).toHaveURL(/\/admin\/rewards\?view=scanner$/);
   await page.evaluate(() =>
     window.dispatchEvent(
       new CustomEvent("gdg:native-navigation", { detail: "/admin/forms" }),

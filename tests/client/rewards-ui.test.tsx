@@ -93,12 +93,12 @@ describe("Member rewards interactions and recovery", () => {
     expect(
       screen
         .getByRole("link", {
-          name: "Download Wallet pass for iPhone membership",
+          name: "Download Apple Wallet pass for iPhone membership",
         })
         .getAttribute("href"),
     ).toBe("/api/v1/admin/rewards/wallet/" + member.id);
     expect(
-      screen.queryByRole("link", { name: "Download Wallet pass for Old pass" }),
+      screen.queryByRole("link", { name: "Download Apple Wallet pass for Old pass" }),
     ).toBeNull();
     expect(screen.queryByText(/Your X100/)).toBeNull();
   });

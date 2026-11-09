@@ -1,3 +1,4 @@
+import { confirmAction } from "@/lib/app-dialogs";
 // Reapply the complete canonical sheets in their original order after the
 // public subset. Every earlier rule has its later exact duplicate, preserving
 // the original admin cascade rather than changing selector precedence.
@@ -286,8 +287,13 @@ export default function AdminShell({ children }: { children: ReactNode }) {
             .then(() => postNativeWorkspace({ action: "signedOut" }))
             .catch(() => {
               // Keep the account and its drafts intact when server sign-out fails.
-              window.alert(
+              void confirmAction(
                 "Sign-out could not finish. Try again when connected.",
+                {
+                  title: "Sign-out failed",
+                  confirmLabel: "OK",
+                  cancelLabel: "Close",
+                },
               );
             });
         });
@@ -297,7 +303,10 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       else if (target === "notifications")
         window.dispatchEvent(new Event("gdg:native-notifications"));
       else if (target === "search") openSearch();
-      else if (allowed.includes(target)) navigate(target);
+      else if (allowed.includes(target))
+        navigate(
+          target === "/admin/rewards" ? target + "?view=scanner" : target,
+        );
     };
     const expired = () => postNativeWorkspace({ action: "authRequired" });
     window.addEventListener("gdg:native-navigation", receive);

@@ -29,7 +29,7 @@ const select = {
   team: {
     table: "team_members",
     columns:
-      "id,name,role,bio,image_url,linkedin_url,github_url,order_index,team_section",
+      "id,name,role,bio,image_url,linkedin_url,github_url,portfolio_url,order_index,team_section",
     order: "order_index",
   },
   resources: {
@@ -56,127 +56,123 @@ const select = {
   },
 };
 export async function readPublicHome(db) {
-    const [
-      settings,
-      navigation,
-      footer,
-      pages,
-      social,
-      events,
-      team,
-      sponsors,
-      metrics,
-    ] = await Promise.all([
-      db
-        .from("site_settings")
-        .select("key,value")
-        .eq("is_active", true)
-        .is("deleted_at", null)
-        .in("key", [
-          "site_title",
-          "site_subtitle",
-          "site_description",
-          "contact_email",
-          "all_links",
-        ]),
-      db
-        .from("navigation_items")
-        .select("id,label,href,order_index,parent_id")
-        .eq("is_active", true)
-        .is("deleted_at", null)
-        .order("order_index"),
-      db
-        .from("footer_content")
-        .select("section_key,content")
-        .eq("is_active", true)
-        .is("deleted_at", null),
-      db
-        .from("page_content")
-        .select("page_slug,section_key,content,order_index")
-        .eq("is_active", true)
-        .is("deleted_at", null)
-        .in("page_slug", publicPages)
-        .order("order_index"),
-      db
-        .from("social_links")
-        .select("platform,url,icon")
-        .eq("is_active", true)
-        .is("deleted_at", null)
-        .order("order_index"),
-      db
-        .from("events")
-        .select(
-          "id,title,slug,short_description,start_at,end_at,timezone,location,image_url,type,level,registration_enabled,registration_type,publication_status,is_featured",
-        )
-        .eq("publication_status", "published")
-        .gte("start_at", new Date().toISOString())
-        .order("start_at")
-        .limit(3),
-      db
-        .from("team_members")
-        .select(select.team.columns)
-        .eq("is_active", true)
-        .is("deleted_at", null)
-        .order("order_index")
-        .order("id")
-        .limit(6),
-      db
-        .from("sponsors")
-        .select(select.sponsors.columns)
-        .eq("is_active", true)
-        .is("deleted_at", null)
-        .order("order_index")
-        .order("id")
-        .limit(12),
-      db
-        .from("sponsor_impact_stats")
-        .select(
-          "id,stat_label,stat_value,stat_description,icon_name,order_index",
-        )
-        .eq("is_active", true)
-        .is("deleted_at", null)
-        .order("order_index")
-        .order("id")
-        .limit(4),
-    ]);
-    for (const result of [
-      settings,
-      navigation,
-      footer,
-      pages,
-      social,
-      events,
-      team,
-      sponsors,
-      metrics,
-    ])
-      checked(result);
+  const [
+    settings,
+    navigation,
+    footer,
+    pages,
+    social,
+    events,
+    team,
+    sponsors,
+    metrics,
+  ] = await Promise.all([
+    db
+      .from("site_settings")
+      .select("key,value")
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .in("key", [
+        "site_title",
+        "site_subtitle",
+        "site_description",
+        "contact_email",
+        "all_links",
+      ]),
+    db
+      .from("navigation_items")
+      .select("id,label,href,order_index,parent_id")
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .order("order_index"),
+    db
+      .from("footer_content")
+      .select("section_key,content")
+      .eq("is_active", true)
+      .is("deleted_at", null),
+    db
+      .from("page_content")
+      .select("page_slug,section_key,content,order_index")
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .in("page_slug", publicPages)
+      .order("order_index"),
+    db
+      .from("social_links")
+      .select("platform,url,icon")
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .order("order_index"),
+    db
+      .from("events")
+      .select(
+        "id,title,slug,short_description,start_at,end_at,timezone,location,image_url,type,level,registration_enabled,registration_type,publication_status,is_featured",
+      )
+      .eq("publication_status", "published")
+      .gte("start_at", new Date().toISOString())
+      .order("start_at")
+      .limit(3),
+    db
+      .from("team_members")
+      .select(select.team.columns)
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .order("order_index")
+      .order("id")
+      .limit(6),
+    db
+      .from("sponsors")
+      .select(select.sponsors.columns)
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .order("order_index")
+      .order("id")
+      .limit(12),
+    db
+      .from("sponsor_impact_stats")
+      .select("id,stat_label,stat_value,stat_description,icon_name,order_index")
+      .eq("is_active", true)
+      .is("deleted_at", null)
+      .order("order_index")
+      .order("id")
+      .limit(4),
+  ]);
+  for (const result of [
+    settings,
+    navigation,
+    footer,
+    pages,
+    social,
+    events,
+    team,
+    sponsors,
+    metrics,
+  ])
+    checked(result);
   return {
-        settings: settings.data,
-        navigation: navigation.data.filter(
-          (item) =>
-            publicHref(item.href) &&
-            (!item.parent_id ||
-              navigation.data.some(
-                (parent) =>
-                  parent.id === item.parent_id &&
-                  !parent.parent_id &&
-                  publicHref(parent.href),
-              )),
-        ),
-        footer: footer.data.filter(
-          (item) =>
-            !["blog", "projects", "admin", "security"].includes(
-              item.section_key,
-            ),
-        ),
-        pages: pages.data,
-        social: social.data,
-        events: events.data,
-        team: team.data,
-        sponsors: sponsors.data,
-        metrics: metrics.data,
-      };
+    settings: settings.data,
+    navigation: navigation.data.filter(
+      (item) =>
+        publicHref(item.href) &&
+        (!item.parent_id ||
+          navigation.data.some(
+            (parent) =>
+              parent.id === item.parent_id &&
+              !parent.parent_id &&
+              publicHref(parent.href),
+          )),
+    ),
+    footer: footer.data.filter(
+      (item) =>
+        !["blog", "projects", "admin", "security"].includes(item.section_key),
+    ),
+    pages: pages.data,
+    social: social.data,
+    events: events.data,
+    team: team.data,
+    sponsors: sponsors.data,
+    metrics: metrics.data,
+  };
 }
 export async function publicContentRoutes(
   request,

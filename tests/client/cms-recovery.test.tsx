@@ -430,7 +430,9 @@ describe("CMS private mutations and recovery", () => {
       "Publish approved content?",
     );
     allowed = false;
-    refresh();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Refresh review access" }),
+    );
     await waitFor(() =>
       expect(
         (

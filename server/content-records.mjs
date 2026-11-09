@@ -87,6 +87,7 @@ export const contentSchemas = {
       image_url: imageUrl.optional(),
       linkedin_url: optional(safeUrl),
       github_url: optional(safeUrl),
+      portfolio_url: optional(safeUrl),
       email: z
         .union([
           z.string().trim().toLowerCase().email().max(254),

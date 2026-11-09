@@ -1,3 +1,9 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   useApprovedSearchParams as useSearchParams,
@@ -1341,30 +1347,39 @@ function TaskWorkspaceContent({ personal }: { personal: boolean }) {
                     </div>
                   )}
                   {deleting?.id === item.id && (
-                    <div className="gt-operational-confirm">
-                      <p>
-                        Remove this comment from the conversation? Its audit
-                        trail is retained.
-                      </p>
-                      <div className="gt-button-row">
-                        <Button
-                          variant="danger"
-                          disabled={
-                            busy || !isOnline || recordLoading || !!loadError
-                          }
-                          onClick={() => void removeComment()}
-                        >
-                          Confirm removal
-                        </Button>
-                        <Button
-                          variant="secondary"
-                          disabled={busy}
-                          onClick={() => setDeleting(null)}
-                        >
-                          Keep comment
-                        </Button>
-                      </div>
-                    </div>
+                    <Dialog
+                      open
+                      onOpenChange={(open) => {
+                        if (!open && !busy) setDeleting(null);
+                      }}
+                    >
+                      <DialogContent>
+                        <DialogTitle>Remove comment?</DialogTitle>
+                        <DialogDescription>
+                          Remove this comment from the conversation? Its audit
+                          trail is retained.
+                        </DialogDescription>
+                        {error && <p role="alert">{error}</p>}
+                        <div className="gt-button-row">
+                          <Button
+                            variant="danger"
+                            disabled={
+                              busy || !isOnline || recordLoading || !!loadError
+                            }
+                            onClick={() => void removeComment()}
+                          >
+                            Confirm removal
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            disabled={busy}
+                            onClick={() => setDeleting(null)}
+                          >
+                            Keep comment
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   )}
                 </li>
               ))}

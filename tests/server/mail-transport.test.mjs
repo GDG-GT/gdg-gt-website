@@ -29,6 +29,19 @@ describe("shared server mail transport", () => {
           text: "Only a unit test",
           from: "forged@example.test",
           replyTo: "forged@example.test",
+          attachments: [
+            {
+              filename: "member-inline.png",
+              content: "ZmFrZQ==",
+              contentType: "image/png",
+              contentId: "gdg-member-qr",
+            },
+            {
+              filename: "member.png",
+              content: "ZmFrZQ==",
+              contentType: "image/png",
+            },
+          ],
         },
         { jobId: "fixture", idempotencyKey: "gdg-newsletter-fixture" },
       ),
@@ -44,6 +57,19 @@ describe("shared server mail transport", () => {
       reply_to: env.REPLY_TO_EMAIL,
     });
     expect(options.body).not.toContain("forged@");
+    expect(JSON.parse(options.body).attachments).toEqual([
+      {
+        filename: "member-inline.png",
+        content: "ZmFrZQ==",
+        content_type: "image/png",
+        content_id: "gdg-member-qr",
+      },
+      {
+        filename: "member.png",
+        content: "ZmFrZQ==",
+        content_type: "image/png",
+      },
+    ]);
     transport.close();
   });
   it("maps permanent provider rejects without retaining their sensitive response", async () => {

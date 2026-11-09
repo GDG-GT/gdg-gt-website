@@ -25,6 +25,8 @@ import { QueueRuntime } from "@/pwa/SubmissionQueue";
 import { MaintenancePage } from "@/ui/status/SiteAvailability";
 import { HomePage } from "@/ui/HomePage";
 import { rewardsPagePaths } from "../shared/rewards-pages.mjs";
+import AppDialogHost from "@/ui/AppDialogHost";
+const EmailedPass = lazy(() => import("@/ui/rewards/EmailedPass"));
 
 const Leaderboard = lazy(() => import("@/ui/rewards/Leaderboard"));
 const ScannerEntry = lazy(() => import("@/ui/rewards/ScannerEntry"));
@@ -179,6 +181,7 @@ export function RoutedApplication() {
   );
   return (
     <NavigationSafety>
+      <AppDialogHost />
       <RouteFocus />
       <PwaUpdateNotice />
       <QueueRuntime />
@@ -231,6 +234,14 @@ export function RoutedApplication() {
                 </>
               )}
               <Route path="/tap" element={<TapHandoff />} />
+              <Route
+                path="/pass"
+                element={
+                  <CapabilityBoundary names={["ticket"]}>
+                    <EmailedPass />
+                  </CapabilityBoundary>
+                }
+              />
               <Route path="/resources" element={<ResourcesPage />} />
               <Route path="/sponsors" element={<SponsorsPage />} />
               <Route path="/gallery" element={<GalleryPage />} />

@@ -11,6 +11,7 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, afterEach, it, expect, vi } from "vitest";
 import EventConnections from "../../src/ui/rewards/EventConnections";
 import MemberEventLinks from "../../src/ui/rewards/MemberEventLinks";
+import AppDialogHost from "../../src/ui/AppDialogHost";
 const { apiMock } = vi.hoisted(() => ({ apiMock: vi.fn() }));
 vi.mock("@/lib/api", async (original) => ({
   ...(await original<typeof import("../../src/lib/api")>()),
@@ -27,7 +28,12 @@ const event = {
   revision: 1,
 };
 const mount = (element: React.ReactNode) =>
-  render(<MemoryRouter>{element}</MemoryRouter>);
+  render(
+    <MemoryRouter>
+      <AppDialogHost />
+      {element}
+    </MemoryRouter>,
+  );
 const storage = {
   setItem: vi.fn(),
   getItem: vi.fn(() => null),
@@ -93,11 +99,21 @@ it("can discard unsaved connection edits and does not persist a server credentia
       ? { ...event, credential: event.id + "." + "A".repeat(43) }
       : { events: [], checkins: [] },
   );
-  vi.spyOn(window, "confirm").mockReturnValue(true);
+  const browserConfirm = vi.spyOn(window, "confirm");
   mount(<EventConnections />);
   const name = screen.getByRole("textbox", { name: "Event name" });
   fireEvent.change(name, { target: { value: "Unsaved event" } });
   fireEvent.click(screen.getByRole("button", { name: "Cancel changes" }));
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Discard changes" }),
+  );
+  await waitFor(() =>
+    expect(screen.getByRole("textbox", { name: "Event name" })).toHaveProperty(
+      "value",
+      "",
+    ),
+  );
+  expect(browserConfirm).not.toHaveBeenCalled();
   expect(screen.getByRole("textbox", { name: "Event name" })).toHaveProperty(
     "value",
     "",
@@ -151,7 +167,6 @@ it("keeps event link codes private and supports disconnecting an event account",
     },
   );
   vi.stubGlobal("fetch", fetchMock);
-  vi.spyOn(window, "confirm").mockReturnValue(true);
   mount(<MemberEventLinks csrf="fictional-member-csrf" />);
   fireEvent.click(
     await screen.findByRole("button", {
@@ -165,6 +180,12 @@ it("keeps event link codes private and supports disconnecting an event account",
   fireEvent.click(screen.getByRole("button", { name: "Done with this code" }));
   fireEvent.click(
     await screen.findByRole("button", { name: "Disconnect Fictional DevFest" }),
+  );
+  fireEvent.click(
+    await screen.findByRole("button", {
+      name: "Disconnect event",
+      exact: true,
+    }),
   );
   await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
   await screen.findByRole("button", {
@@ -180,7 +201,6 @@ it("preserves an unsaved connection form when a different connection key is rota
       ? { ...event, credential: event.id + "." + "A".repeat(43) }
       : { events: [event], checkins: [] },
   );
-  vi.spyOn(window, "confirm").mockReturnValue(true);
   mount(<EventConnections />);
   const input = screen.getByRole("textbox", { name: "Event name" });
   fireEvent.change(input, { target: { value: "Unsaved next event" } });
@@ -188,6 +208,9 @@ it("preserves an unsaved connection form when a different connection key is rota
     await screen.findByRole("button", {
       name: "Rotate key for Fictional DevFest",
     }),
+  );
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Rotate key", exact: true }),
   );
   await screen.findByRole("textbox", { name: "Server credential" });
   expect(screen.getByRole("textbox", { name: "Event name" })).toHaveProperty(

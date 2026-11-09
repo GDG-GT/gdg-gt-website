@@ -85,6 +85,17 @@ export async function siteDocument({
       image: config.origin + "/logo.png",
       links: [{ href: rewardsPages.home, label: "Leaderboard" }],
     };
+  if (pathname === "/pass")
+    return {
+      status: 200,
+      index: false,
+      title: "Your membership card · GDG at Georgia Tech",
+      heading: "Your membership card",
+      description: "Your private chapter membership card.",
+      canonical: (config.rewardsOrigin || config.origin) + pathname,
+      image: config.origin + "/logo.png",
+      links: [],
+    };
   if (pathname === "/tap")
     return {
       status: 200,

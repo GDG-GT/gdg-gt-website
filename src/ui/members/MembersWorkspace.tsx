@@ -1,3 +1,4 @@
+import ActionFeedback from "@/ui/ActionFeedback";
 import ScrollableTable from "@/ui/ScrollableTable";
 import {
   useCallback,
@@ -567,7 +568,7 @@ function MemberDirectory() {
           }}
         />
       )}
-      {notice && <p role="status">{notice}</p>}
+      {notice && <ActionFeedback message={notice} />}
       {error && (
         <p className="gt-form-error" role="alert">
           {error}

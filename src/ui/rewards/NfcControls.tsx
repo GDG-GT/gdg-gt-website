@@ -20,9 +20,11 @@ const nfc = () =>
 export default function NfcControls({
   onRead,
   writeUrl,
+  continuous = false,
 }: {
-  onRead?: (token: string) => void;
+  onRead?: (token: string) => void | Promise<void>;
   writeUrl?: string;
+  continuous?: boolean;
 }) {
   const [status, setStatus] = useState(""),
     [active, setActive] = useState(false),
@@ -37,11 +39,15 @@ export default function NfcControls({
     frozen = useRef<HTMLCanvasElement>(null),
     confirmation = useRef<ReturnType<typeof setTimeout>>(),
     detected = useRef(false),
+    mounted = useRef(true),
+    run = useRef(0),
+    recent = useRef<{ token: string; at: number }>(),
     scanner = useRef<{ stop: () => void; destroy: () => void }>();
   const onReadRef = useRef(onRead);
   onReadRef.current = onRead;
   const acceptRef = useRef<(value: string) => void>(() => {});
   const stop = () => {
+    run.current++;
     clearTimeout(confirmation.current);
     detected.current = false;
     setFocus(null);
@@ -53,6 +59,8 @@ export default function NfcControls({
     setActive(false);
   };
   useEffect(() => {
+    mounted.current = true;
+    const scanGeneration = run;
     setSupported(!!nfc() || !!nativeScanner());
     setNative(!!nativeScanner());
     if (nativeScanner()?.wallet && onReadRef.current) {
@@ -68,6 +76,7 @@ export default function NfcControls({
     }
     const hidden = () => {
       if (document.hidden) {
+        run.current++;
         clearTimeout(confirmation.current);
         detected.current = false;
         setFocus(null);
@@ -80,6 +89,8 @@ export default function NfcControls({
     document.addEventListener("visibilitychange", hidden);
     window.addEventListener("gdg:session-cleared", stop);
     return () => {
+      mounted.current = false;
+      scanGeneration.current++;
       controller.current?.abort();
       clearTimeout(confirmation.current);
       scanner.current?.destroy();
@@ -87,15 +98,31 @@ export default function NfcControls({
       window.removeEventListener("gdg:session-cleared", stop);
     };
   }, []);
-  const accept = (value: string) => {
+  const accept = async (value: string) => {
     const token = parseCardPayload(value, window.location.origin);
     if (!token) {
       setStatus("This is not a GDG member credential.");
       return;
     }
+    const resumeCamera = continuous && camera;
     stop();
-    setStatus("Credential read. Check the member before awarding points.");
-    onReadRef.current?.(token);
+    const current = run.current;
+    setStatus(
+      continuous
+        ? "Reading member and recording check-in…"
+        : "Credential read. Check the member before awarding points.",
+    );
+    try {
+      await onReadRef.current?.(token);
+    } finally {
+      if (
+        resumeCamera &&
+        mounted.current &&
+        current === run.current &&
+        !document.hidden
+      )
+        setCamera(true);
+    }
   };
   acceptRef.current = accept;
   const scan = async () => {
@@ -233,6 +260,13 @@ export default function NfcControls({
               setStatus("This is not a GDG member credential.");
               return;
             }
+            const token = parseCardPayload(r.data, window.location.origin)!;
+            if (
+              recent.current?.token === token &&
+              Date.now() - recent.current.at < 3000
+            )
+              return;
+            recent.current = { token, at: Date.now() };
             detected.current = true;
             const source = video.current,
               canvas = frozen.current;
@@ -368,25 +402,28 @@ export default function NfcControls({
               />
             </div>
           )}
-          <Field
-            label="Credential link or code"
-            hint="For a connected reader or a credential copied from an issued card."
-          >
-            <input
-              value={manual}
-              onChange={(e) => setManual(e.target.value)}
-              maxLength={300}
-              autoComplete="off"
-              spellCheck={false}
-            />
-          </Field>
-          <Button
-            variant="secondary"
-            onClick={() => accept(manual)}
-            disabled={!manual}
-          >
-            Read credential
-          </Button>
+          <details className="rewards-manual-entry">
+            <summary>Enter credential manually</summary>
+            <Field
+              label="Credential link or code"
+              hint="Paste the member’s issued credential, or use a reader that types it."
+            >
+              <input
+                value={manual}
+                onChange={(e) => setManual(e.target.value)}
+                maxLength={300}
+                autoComplete="off"
+                spellCheck={false}
+              />
+            </Field>
+            <Button
+              variant="secondary"
+              onClick={() => accept(manual)}
+              disabled={!manual}
+            >
+              Read credential
+            </Button>
+          </details>
         </>
       )}
       {(active || camera) && (

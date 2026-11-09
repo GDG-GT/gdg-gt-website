@@ -8,17 +8,46 @@ import { ApiError } from "./lib/http.mjs";
 import { tokenHash } from "./lib/security.mjs";
 import { visibleFields } from "../shared/forms.ts";
 import { responseCopyText } from "../shared/form-respondent.mjs";
-const escape = (v) =>
-  String(v || "").replace(
-    /[&<>"']/g,
-    (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
-        c
-      ],
-  );
-export async function deliveryMessage(job, db, config, mail) {
+import { rewardCredentialMessage } from "./rewards-email.mjs";
+import { emailDocument } from "../shared/email.mjs";
+export async function deliveryMessage(
+  job,
+  db,
+  config,
+  mail,
+  env = process.env,
+) {
+  if (job.kind === "reward_credential_email")
+    return rewardCredentialMessage(job, db, config, mail, env);
   let to, subject, content;
-  if (job.kind === "event_confirmation") {
+  if (job.kind === "workspace_notice_email") {
+    const notice = checked(
+      await db.rpc("prepare_workspace_notice_email", {
+        p_job: job.id,
+        p_lease: job.lease_token,
+      }),
+    );
+    if (!notice) return null;
+    to = notice.email;
+    subject = {
+      assignment: "A task has been assigned to you",
+      due: "Your task is due soon",
+      overdue: "Your task is overdue",
+      team_announcement: "New team announcement",
+    }[notice.kind];
+    if (
+      !subject ||
+      !/^\/admin\/(communications\?tab=tasks&task=[0-9a-f-]{36}|team\/[0-9a-f-]{36}\?section=announcements)$/.test(
+        notice.link,
+      )
+    )
+      throw new ApiError(
+        503,
+        "DELIVERY_RETRY",
+        "The workspace notice could not be prepared.",
+      );
+    content = `${subject}.${notice.dueDate ? "\nDeadline: " + notice.dueDate + " (UTC)" : ""}\n\nOpen your workspace to review the details:\n${config.origin}${notice.link}`;
+  } else if (job.kind === "event_confirmation") {
     const registration = checked(
       await db
         .from("event_attendance")
@@ -413,7 +442,7 @@ export async function deliveryMessage(job, db, config, mail) {
     to,
     subject,
     text: content,
-    html: `<!doctype html><html><body><h1 style="font:600 22px system-ui">GDG at Georgia Tech</h1><div style="font:16px/1.6 system-ui;white-space:pre-wrap">${escape(content)}</div></body></html>`,
+    html: emailDocument({ subject, content }),
     ...(mail.replyTo ? { replyTo: mail.replyTo } : {}),
     headers: { "X-GDG-Job-ID": job.id },
     messageId: "<" + job.id + "@gdg.local>",
@@ -440,7 +469,7 @@ export async function runDelivery({
         success = false,
         errorCode = null;
       try {
-        const message = await deliveryMessage(job, db, config, mail);
+        const message = await deliveryMessage(job, db, config, mail, env);
         if (message) {
           providerId = await transport.send(message, {
             jobId: job.id,

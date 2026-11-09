@@ -1,3 +1,10 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { confirmAction } from "@/lib/app-dialogs";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { api, ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -491,9 +498,10 @@ function ChannelWorkspaceContent() {
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty]);
   useDraftGuard(dirty, { busy, label: "Room message or room settings" });
-  function choose(id: string) {
+  async function choose(id: string) {
     if (busyRef.current) return;
-    if (dirty && !window.confirm("Discard your unsent room changes?")) return;
+    if (dirty && !(await confirmAction("Discard your unsent room changes?")))
+      return;
     setSelected(id);
     selectedRef.current = id;
     setRoom(undefined);
@@ -511,11 +519,11 @@ function ChannelWorkspaceContent() {
     setNotice("");
     sendKey.current = null;
   }
-  function open(next: Mode, m?: Member) {
+  async function open(next: Mode, m?: Member) {
     if (busyRef.current) return;
     if (
       dirty &&
-      !window.confirm("Discard your unsaved room or message changes?")
+      !(await confirmAction("Discard your unsaved room or message changes?"))
     )
       return;
     setDraft("");
@@ -1427,30 +1435,38 @@ function ChannelWorkspaceContent() {
                   </p>
                 )}
               {deleteMessage && (
-                <section className="gt-operational-confirm">
-                  <h3>Remove this message?</h3>
-                  <p>
-                    The conversation keeps a tombstone and audit entry. The
-                    original text is no longer shown in messages or reply
-                    previews.
-                  </p>
-                  <div className="gt-button-row">
-                    <Button
-                      variant="danger"
-                      disabled={busy || !roomWritable}
-                      onClick={() => messageAction(deleteMessage, "delete")}
-                    >
-                      Confirm removal
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      disabled={busy}
-                      onClick={() => setDeleteMessage(null)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </section>
+                <Dialog
+                  open
+                  onOpenChange={(open) => {
+                    if (!open && !busy) setDeleteMessage(null);
+                  }}
+                >
+                  <DialogContent>
+                    <DialogTitle>Remove this message?</DialogTitle>
+                    <DialogDescription>
+                      The conversation keeps a tombstone and audit entry. The
+                      original text is no longer shown in messages or reply
+                      previews.
+                    </DialogDescription>
+                    {error && <p role="alert">{error}</p>}
+                    <div className="gt-button-row">
+                      <Button
+                        variant="danger"
+                        disabled={busy || !roomWritable}
+                        onClick={() => messageAction(deleteMessage, "delete")}
+                      >
+                        Confirm removal
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        disabled={busy}
+                        onClick={() => setDeleteMessage(null)}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               )}
               {notice && messageNotice && (
                 <p ref={noticeFocus} tabIndex={-1} role="status">

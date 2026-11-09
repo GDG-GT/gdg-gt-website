@@ -94,7 +94,11 @@ async function edit() {
 }
 const refresh = () =>
   fireEvent.click(
-    screen.getByRole("button", { name: "Refresh content records" }),
+    screen.getByRole("button", {
+      name: screen.queryByRole("dialog")
+        ? "Refresh review access"
+        : "Refresh content records",
+    }),
   );
 beforeEach(() => {
   apiMock.mockReset();

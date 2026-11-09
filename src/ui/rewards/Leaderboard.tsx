@@ -1,3 +1,4 @@
+import ActionFeedback from "@/ui/ActionFeedback";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { api, ApiFailure } from "@/lib/api";
@@ -208,7 +209,7 @@ export default function Leaderboard() {
             )}
           </div>
         )}
-        {notice && <p role="status">{notice}</p>}
+        {notice && <ActionFeedback message={notice} />}
         {privateView && !me && (
           <section className="rewards-signin">
             <h2>Member sign-in</h2>

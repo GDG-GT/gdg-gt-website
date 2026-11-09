@@ -1,3 +1,4 @@
+import { confirmAction } from "@/lib/app-dialogs";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Button } from "../primitives";
@@ -80,10 +81,16 @@ export default function MemberEventLinks({ csrf }: { csrf: string }) {
               <Button
                 disabled={busy}
                 variant="ghost"
-                onClick={() => {
+                onClick={async () => {
                   if (
-                    window.confirm(
+                    await confirmAction(
                       "Disconnect your chapter membership from this event?",
+                      {
+                        title: "Disconnect event?",
+                        confirmLabel: "Disconnect event",
+                        cancelLabel: "Cancel",
+                        danger: true,
+                      },
                     )
                   )
                     void write(e.id, "unlink");
@@ -113,7 +120,7 @@ export default function MemberEventLinks({ csrf }: { csrf: string }) {
           </p>
           <input readOnly aria-label="Event link code" value={code.value} />
           <Button
-            onClick={() => {
+            onClick={async () => {
               setCode(undefined);
               void load();
             }}

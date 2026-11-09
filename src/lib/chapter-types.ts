@@ -58,6 +58,7 @@ export interface MergedProfile {
     imageUrl?: string;
     linkedinUrl?: string;
     githubUrl?: string;
+    portfolioUrl?: string;
     orderIndex: number;
     isActive: boolean;
   };

@@ -1,3 +1,4 @@
+import ActionFeedback from "@/ui/ActionFeedback";
 import { useEffect, useRef, useState } from "react";
 import { ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -327,7 +328,7 @@ function DeliveryWorkspace({
   if (!policy || !draft)
     return (
       <>
-        {notice && <p role="status">{notice}</p>}
+        {notice && <ActionFeedback message={notice} />}
         {read.error ? (
           <EmptyState
             title="Delivery settings unavailable"
@@ -478,7 +479,7 @@ function DeliveryWorkspace({
               {error}
             </p>
           )}
-          {notice && <p role="status">{notice}</p>}
+          {notice && <ActionFeedback message={notice} />}
           <fieldset disabled={!editable} className="gt-form">
             <legend>Chapter delivery</legend>
             {(draft.receipts || receiptSetting) && (

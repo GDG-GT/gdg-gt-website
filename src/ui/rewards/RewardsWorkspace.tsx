@@ -1,6 +1,9 @@
+import ActionFeedback from "@/ui/ActionFeedback";
+import { confirmAction } from "@/lib/app-dialogs";
 import EventConnections from "./EventConnections";
 import {
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -8,10 +11,19 @@ import {
   type FormHTMLAttributes,
 } from "react";
 import { api, ApiFailure } from "@/lib/api";
+import { useLocation } from "react-router-dom";
+import { NavigationSafetyContext } from "@/contexts/NavigationSafetyContext";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { useAdmin } from "@/contexts/AdminContext";
 import { Button, Field } from "../primitives";
 import NfcControls from "./NfcControls";
+import CheckInScanner from "./CheckInScanner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import "./rewards.css";
 function RewardForm({
   busy,
@@ -72,6 +84,12 @@ type Claim = {
   revision: number;
 };
 type Inventory = {
+  emailDeliveries?: {
+    credentialId: string;
+    state: string | null;
+    providerAccepted: boolean;
+    reference: string;
+  }[];
   walletAvailable?: boolean;
   googleWalletAvailable?: boolean;
   walletNfcAvailable?: boolean;
@@ -90,13 +108,18 @@ const errorMessage = (e: unknown) =>
     ? e.message
     : "The result could not be confirmed. Use the same request to retry; check the ledger before starting another correction.";
 export default function RewardsWorkspace() {
+  const location = useLocation();
   const { isSuperAdmin } = useAdmin();
   const [data, setData] = useState<Inventory>(),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [busy, setBusy] = useState(false),
     [loading, setLoading] = useState(false),
-    [tab, setTab] = useState("members"),
+    [tab, setTab] = useState(() =>
+      new URLSearchParams(location.search).get("view") === "scanner"
+        ? "scanner"
+        : "members",
+    ),
     [query, setQuery] = useState(""),
     [search, setSearch] = useState(""),
     [page, setPage] = useState(1),
@@ -115,6 +138,7 @@ export default function RewardsWorkspace() {
       key: string;
     }>(),
     [editPerk, setEditPerk] = useState<Perk>();
+  const navigationSafety = useContext(NavigationSafetyContext);
   const [editRule, setEditRule] = useState<Rule>();
   const [uncertain, setUncertain] = useState<{
     action: string;
@@ -122,6 +146,10 @@ export default function RewardsWorkspace() {
     key: string;
   }>();
   const [dirty, setDirty] = useState(false);
+  useEffect(() => {
+    if (new URLSearchParams(location.search).get("view") === "scanner")
+      setTab("scanner");
+  }, [location.search]);
   useDraftGuard(dirty || !!review || !!issued || !!uncertain, {
     busy,
     label: "Member rewards changes",
@@ -161,6 +189,20 @@ export default function RewardsWorkspace() {
       capturedGeneration.current++;
     };
   }, [load, isSuperAdmin]);
+  useEffect(() => {
+    if (
+      !memberId ||
+      busy ||
+      !data?.emailDeliveries?.some((mail) =>
+        ["pending", "running"].includes(mail.state || ""),
+      )
+    )
+      return;
+    const timer = window.setTimeout(() => {
+      if (!document.hidden) void load();
+    }, 8000);
+    return () => window.clearTimeout(timer);
+  }, [data?.emailDeliveries, memberId, busy, load]);
   useEffect(() => {
     let active = true;
     setQr("");
@@ -222,10 +264,15 @@ export default function RewardsWorkspace() {
         setIssued({ ...result, kind: String(document.kind) });
       if (action === "rule") setEditRule(undefined);
       if (action === "perk") setEditPerk(undefined);
-      setNotice("Saved. The current records are shown below.");
+      setNotice(
+        action === "credential" || action === "credential-email"
+          ? "Credential email queued for the member. Delivery status appears below."
+          : "Saved. The current records are shown below.",
+      );
       await load();
       return true;
     } catch (e) {
+      setReview(undefined);
       if (!(e instanceof ApiFailure) || e.status >= 500) {
         setUncertain({ action, document, key: pending.current!.key });
       } else {
@@ -303,12 +350,22 @@ export default function RewardsWorkspace() {
             key={id}
             disabled={busy}
             aria-current={tab === id ? "page" : undefined}
-            onClick={() => {
+            onClick={async () => {
+              const changeSection = () => {
+                setTab(id);
+                setDirty(false);
+                setIssued(undefined);
+                setReview(undefined);
+              };
+              if (navigationSafety) {
+                navigationSafety.request(changeSection);
+                return;
+              }
               if (
                 (dirty || issued || review) &&
-                !window.confirm(
+                !(await confirmAction(
                   "Switch sections and discard the current unsaved entries?",
-                )
+                ))
               )
                 return;
               setTab(id);
@@ -322,8 +379,7 @@ export default function RewardsWorkspace() {
         ))}
       </nav>
       {error && (
-        <div role="alert" className="rewards-notice">
-          <p>{error}</p>
+        <ActionFeedback message={error} tone="error">
           <Button
             variant="secondary"
             onClick={() => void load()}
@@ -341,31 +397,44 @@ export default function RewardsWorkspace() {
               Retry same request
             </Button>
           )}
-        </div>
+        </ActionFeedback>
       )}
-      {notice && <p role="status">{notice}</p>}
+      {notice && <ActionFeedback message={notice} />}
       {loading && <p role="status">Refreshing records…</p>}
-      {review && (
-        <section className="rewards-review" aria-label="Confirm points change">
-          <h2>Confirm this change</h2>
-          <p>{review.label}</p>
-          <Button
-            disabled={busy}
-            onClick={() =>
-              void mutate(review.action, review.document, review.key)
-            }
-          >
-            Confirm change
-          </Button>
-          <Button
-            disabled={busy}
-            variant="ghost"
-            onClick={() => setReview(undefined)}
-          >
-            Cancel
-          </Button>
-        </section>
-      )}
+      <Dialog
+        open={!!review}
+        onOpenChange={(open) => {
+          if (!open && !busy) setReview(undefined);
+        }}
+      >
+        {review && (
+          <DialogContent>
+            <DialogTitle>
+              {review.action === "revoke"
+                ? "Revoke this credential?"
+                : "Confirm points change"}
+            </DialogTitle>
+            <DialogDescription>{review.label}</DialogDescription>
+            <Button
+              disabled={busy}
+              onClick={() =>
+                void mutate(review.action, review.document, review.key)
+              }
+            >
+              {review.action === "revoke"
+                ? "Revoke credential"
+                : "Confirm change"}
+            </Button>
+            <Button
+              disabled={busy}
+              variant="ghost"
+              onClick={() => setReview(undefined)}
+            >
+              Cancel
+            </Button>
+          </DialogContent>
+        )}
+      </Dialog>
       <div hidden={tab !== "events"}>
         <EventConnections
           active={tab === "events"}
@@ -373,15 +442,12 @@ export default function RewardsWorkspace() {
         />
       </div>
       {tab === "scanner" && (
-        <>
-          <h2>Ready for check-in</h2>
-          <p>
-            Stay online. A tap identifies the member; points are awarded after
-            you confirm an activity. A copied card can identify the same member,
-            so check who is in front of you.
-          </p>
-          <NfcControls onRead={(v) => void resolve(v)} />
-        </>
+        <CheckInScanner
+          activities={data?.activities || []}
+          rules={data?.rules || []}
+          refresh={load}
+          manual={resolve}
+        />
       )}
       {tab === "members" && (
         <div className="rewards-split">
@@ -410,12 +476,12 @@ export default function RewardsWorkspace() {
                     type="button"
                     disabled={busy}
                     className={member?.id === m.id ? "selected" : ""}
-                    onClick={() => {
+                    onClick={async () => {
                       if (
                         (dirty || issued || review) &&
-                        !window.confirm(
+                        !(await confirmAction(
                           "Choose another member and discard the current unsaved entries?",
-                        )
+                        ))
                       )
                         return;
                       setDirty(false);
@@ -578,7 +644,6 @@ export default function RewardsWorkspace() {
                   <Field label="Credential type">
                     <select name="kind">
                       <option value="card">NFC card</option>
-                      <option value="qr">QR fallback</option>
                       <option
                         value="wallet"
                         disabled={
@@ -600,7 +665,9 @@ export default function RewardsWorkspace() {
                     <h3>
                       {issued.kind === "wallet"
                         ? "Wallet pass ready"
-                        : "Program this credential"}
+                        : issued.kind === "card"
+                          ? "Program NFC card"
+                          : "Membership QR"}
                     </h3>
                     {issued.kind === "wallet" ? (
                       <a
@@ -622,7 +689,7 @@ export default function RewardsWorkspace() {
                           ? "Download Apple Wallet pass"
                           : "Add to Google Wallet"}
                       </a>
-                    ) : (
+                    ) : issued.kind === "card" ? (
                       <>
                         <p>
                           Write this URL as the first NDEF URL record. Keep the
@@ -650,7 +717,7 @@ export default function RewardsWorkspace() {
                         </Button>
                         <NfcControls writeUrl={issued.url} />
                       </>
-                    )}
+                    ) : null}
                     {qr && (
                       <img
                         src={qr}
@@ -663,7 +730,7 @@ export default function RewardsWorkspace() {
                       variant="ghost"
                       onClick={() => setIssued(undefined)}
                     >
-                      {issued.kind === "wallet" ? "Done" : "Done programming"}
+                      {issued.kind === "card" ? "Done programming" : "Done"}
                     </Button>
                   </section>
                 )}
@@ -673,6 +740,27 @@ export default function RewardsWorkspace() {
                       <span>
                         {c.label} · {c.kind}
                         {c.revoked_at ? " · Revoked" : ""}
+                        {" · ending " +
+                          c.id.replace(/-/g, "").slice(-4).toUpperCase()}
+                        {!c.revoked_at && (
+                          <small className="gt-help">
+                            {(() => {
+                              const mail = data.emailDeliveries?.find(
+                                (e) => e.credentialId === c.id,
+                              );
+                              if (!mail?.state) return "Email not sent";
+                              if (mail.providerAccepted) return "Email sent";
+                              if (
+                                mail.state === "dead" ||
+                                mail.state === "failed"
+                              )
+                                return "Email failed — resend available";
+                              if (mail.state === "completed")
+                                return "Email skipped — check member status";
+                              return "Email queued";
+                            })()}
+                          </small>
+                        )}
                       </span>
                       {!c.revoked_at &&
                         c.kind === "wallet" &&
@@ -692,7 +780,11 @@ export default function RewardsWorkspace() {
                                 ? "gdg-member.pkpass"
                                 : undefined
                             }
-                            aria-label={"Download Wallet pass for " + c.label}
+                            aria-label={
+                              (data.walletAvailable
+                                ? "Download Apple Wallet pass for "
+                                : "Add to Google Wallet for ") + c.label
+                            }
                           >
                             {data?.walletAvailable
                               ? "Download Apple Wallet pass"
@@ -717,7 +809,7 @@ export default function RewardsWorkspace() {
                           variant="secondary"
                           disabled={busy}
                           aria-label={"Program card for " + c.label}
-                          onClick={() => {
+                          onClick={async () => {
                             setBusy(true);
                             const g = generation.current;
                             void api<{
@@ -734,6 +826,17 @@ export default function RewardsWorkspace() {
                           }}
                         >
                           Program card
+                        </Button>
+                      )}
+                      {!c.revoked_at && (
+                        <Button
+                          variant="secondary"
+                          disabled={busy}
+                          onClick={() =>
+                            void mutate("credential-email", { id: c.id })
+                          }
+                        >
+                          Email card to member
                         </Button>
                       )}
                       {!c.revoked_at && (

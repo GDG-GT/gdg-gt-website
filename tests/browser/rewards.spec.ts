@@ -207,7 +207,7 @@ test("super-admin awards require review and retry uses the same write key", asyn
     .click();
   expect(writes).toHaveLength(0);
   await expect(
-    page.getByRole("region", { name: "Confirm points change" }),
+    page.getByRole("dialog", { name: "Confirm points change" }),
   ).toContainText("10 points");
   await page
     .getByRole("button", { name: "Confirm change", exact: true })

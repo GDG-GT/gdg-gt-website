@@ -73,6 +73,18 @@ export function createMailTransport(env) {
             (
               await smtp.sendMail({
                 ...send,
+                ...(send.attachments
+                  ? {
+                      attachments: send.attachments.map((a) => ({
+                        ...a,
+                        content:
+                          typeof a.content === "string"
+                            ? Buffer.from(a.content, "base64")
+                            : a.content,
+                        ...(a.contentId ? { cid: a.contentId } : {}),
+                      })),
+                    }
+                  : {}),
                 messageId: `<${jobId}@gdg.local>`,
               })
             ).messageId,

@@ -82,9 +82,10 @@ export async function accessRoutes(
               name: text(100, 2),
               role: text(100, 1),
               bio: text(3000).optional(),
-              imageUrl: imageUrl.optional(),
-              linkedinUrl: safeUrl.optional(),
-              githubUrl: safeUrl.optional(),
+              imageUrl: z.union([imageUrl,z.literal("")]).optional(),
+              linkedinUrl: z.union([safeUrl,z.literal("")]).optional(),
+              githubUrl: z.union([safeUrl,z.literal("")]).optional(),
+              portfolioUrl: z.union([safeUrl,z.literal("")]).optional(),
             })
             .strict()
             .optional(),
@@ -108,7 +109,7 @@ export async function accessRoutes(
       await db
         .from("team_members")
         .select(
-          "id,name,role,bio,image_url,linkedin_url,github_url,order_index,is_active",
+          "id,name,role,bio,image_url,linkedin_url,github_url,portfolio_url,order_index,is_active",
         )
         .eq("admin_user_id", session.user.id)
         .limit(1)
@@ -140,7 +141,12 @@ export async function accessRoutes(
   const context = { user: session.user, memberships, grants };
   const accessibleRoutes = Object.entries(routes)
     .filter(([route, resource]) =>
-      isAuthorized({ ...context, route: route === "/admin/content/team" ? "/admin/team" : route, resource, action: "view" }),
+      isAuthorized({
+        ...context,
+        route: route === "/admin/content/team" ? "/admin/team" : route,
+        resource,
+        action: "view",
+      }),
     )
     .map(([route]) => route);
   if (

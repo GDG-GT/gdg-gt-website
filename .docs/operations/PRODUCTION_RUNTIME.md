@@ -102,11 +102,13 @@ explicitly deferred.
 
 ## Current hosted scheduler
 
-The canonical Supabase project has eleven named `gdg-gt-*` Cron jobs using pg_net
-to POST to the existing authenticated HTTPS endpoints. The nine maintenance jobs
-are active. Delivery and newsletter jobs are inactive until email launch checks
-finish. Their commands read the shared cron bearer from encrypted Vault
-`gdg_gt_cron_secret`; commands contain no plaintext bearer. Cron-secret rotation
-must update both Vercel `CRON_SECRET` and that Vault entry. Do not recreate these
-jobs or run a second scheduler against them. This replaces the separate scheduler
-process only; private scanner/upload/media/export workers still need their host.
+The canonical Supabase project has thirteen named `gdg-gt-*` Cron jobs using pg_net
+to POST to the authenticated HTTPS endpoints. All thirteen were active at the
+2026-11-09 audit, including delivery and newsletter. Delivery is every minute;
+task deadlines run every fifteen minutes. Their commands read the shared cron
+bearer from encrypted Vault `gdg_gt_cron_secret`; commands contain no plaintext
+bearer. Cron-secret rotation must update both Vercel `CRON_SECRET` and that Vault
+entry. Do not recreate these jobs or run a second scheduler against them. Private
+scan/upload/media/export work is hosted by the bounded Vercel workers described
+in FREE_BACKGROUND_RUNTIME.md. During schema/worker rollouts, pause only the
+affected delivery job and restore its prior state after the matching deploy.

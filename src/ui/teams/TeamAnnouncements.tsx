@@ -565,7 +565,7 @@ function TeamAnnouncementsContent({
             {notice}
           </p>
         )}
-        {!saveReview && uncertain && recovery()}
+        {!saveReview && !pending && uncertain && recovery()}
         {conflict && (
           <p role="alert">
             The saved announcement changed before this operation was accepted.
@@ -877,52 +877,68 @@ function TeamAnnouncementsContent({
           </Button>
         )}
         {pending && (
-          <section className="gt-panel gt-operational-confirm">
-            <h3 ref={heading} tabIndex={-1}>
-              {actionLabel[pending.action]}
-            </h3>
-            <p className="gt-announcement-body !m-0">{pending.row.title}</p>
-            <p>
-              {pending.action === "publish"
-                ? "This commits the post for its scheduled publication time, snapshots the current team audience, and queues metadata-only notifications. Former members are excluded again at delivery time."
-                : pending.action === "archive"
-                  ? "This hides the announcement and preserves its content, audit history and read receipts. It can be restored as a private draft."
-                  : "This post remains private until an authorized team manager explicitly publishes it."}
-            </p>
-            <Field label="Type announcement title to confirm" required>
-              <input
-                value={confirmation}
-                maxLength={200}
-                disabled={busy || !ready || held || stale}
-                onChange={(event) => {
-                  if (!mutation.pending.current)
-                    setConfirmation(event.target.value);
-                }}
-              />
-            </Field>
-            <div className="gt-button-row">
-              <Button
-                disabled={
-                  busy ||
-                  !ready ||
-                  stale ||
-                  !manager ||
-                  held ||
-                  confirmation !== pending.row.title
-                }
-                onClick={() => mutate(pending.row, pending.action)}
-              >
-                {busy ? "Saving…" : "Confirm"}
-              </Button>
-              <Button
-                variant="secondary"
-                disabled={busy}
-                onClick={() => discard(() => setPending(null))}
-              >
-                Cancel
-              </Button>
-            </div>
-          </section>
+          <Dialog
+            open
+            onOpenChange={(open) => {
+              if (!open && !busy) discard(() => setPending(null));
+            }}
+          >
+            <DialogContent
+              onOpenAutoFocus={(event) => {
+                event.preventDefault();
+                heading.current?.focus();
+              }}
+            >
+              <DialogTitle ref={heading} tabIndex={-1}>
+                {actionLabel[pending.action]}
+              </DialogTitle>
+              <DialogDescription className="gt-announcement-body !m-0">
+                {pending.row.title}
+              </DialogDescription>
+              {error && <p role="alert">{error}</p>}
+              {uncertain && recovery()}
+              <p>
+                {pending.action === "publish"
+                  ? "This commits the post for its scheduled publication time, snapshots the current team audience, and queues metadata-only notifications. Former members are excluded again at delivery time."
+                  : pending.action === "archive"
+                    ? "This hides the announcement and preserves its content, audit history and read receipts. It can be restored as a private draft."
+                    : "This post remains private until an authorized team manager explicitly publishes it."}
+              </p>
+              <Field label="Type announcement title to confirm" required>
+                <input
+                  value={confirmation}
+                  maxLength={200}
+                  disabled={busy || !ready || held || stale}
+                  onChange={(event) => {
+                    if (!mutation.pending.current)
+                      setConfirmation(event.target.value);
+                  }}
+                />
+              </Field>
+              <div className="gt-button-row">
+                <Button
+                  disabled={
+                    busy ||
+                    !ready ||
+                    stale ||
+                    !manager ||
+                    held ||
+                    confirmation !== pending.row.title
+                  }
+                  onClick={() => mutate(pending.row, pending.action)}
+                >
+                  {busy ? "Saving…" : "Confirm"}
+                </Button>
+                <Button
+                  variant="secondary"
+                  disabled={busy}
+                  onClick={() => discard(() => setPending(null))}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         )}
         {manager && (
           <Field label="Announcement view">

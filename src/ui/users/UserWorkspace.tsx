@@ -1,3 +1,4 @@
+import ActionFeedback from "@/ui/ActionFeedback";
 import AccountSecurity from "./AccountSecurity";
 import {
   useCallback,
@@ -666,7 +667,7 @@ function AccountDirectory() {
               </button>
             </p>
           )}
-          {notice && <p role="status">{notice}</p>}
+          {notice && <ActionFeedback message={notice} />}
         </div>
       )}
       {!review && (needsRecheck || uncertain) && recovery()}

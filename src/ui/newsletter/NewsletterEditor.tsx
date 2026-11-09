@@ -649,6 +649,37 @@ export default function NewsletterEditor({
                   />
                 </Field>
               )}
+              {!record && (
+                <Field
+                  label="Start from a chapter template"
+                  hint="Copies a starter into this draft. Replace bracketed details before sending."
+                >
+                  <select
+                    defaultValue=""
+                    disabled={working}
+                    onChange={(e) => {
+                      const starter = newsletterStarters.find(
+                        (t) => t.id === e.target.value,
+                      );
+                      if (starter)
+                        setDraft({
+                          ...draft,
+                          name: starter.name,
+                          description: starter.description,
+                          subject: starter.subject,
+                          content: starter.content,
+                        });
+                    }}
+                  >
+                    <option value="">Choose a starter</option>
+                    {newsletterStarters.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.name}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+              )}
               <Field
                 label="Message"
                 required
@@ -910,3 +941,4 @@ export default function NewsletterEditor({
     </section>
   );
 }
+import { newsletterStarters } from "../../../shared/newsletter-starters.mjs";

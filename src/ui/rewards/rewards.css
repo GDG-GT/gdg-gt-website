@@ -412,3 +412,51 @@
   margin-top: 24px;
   color: var(--coral, #b84030);
 }
+.rewards-emailed-pass {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 32px 20px 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+.rewards-emailed-pass h1 {
+  font-size: 28px;
+  margin: 20px 0 0;
+}
+.rewards-emailed-pass h2 {
+  font-size: 22px;
+  margin: 0;
+}
+.rewards-emailed-pass p {
+  margin: 0;
+}
+.rewards-emailed-pass img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+.rewards-email-wallet-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+.rewards-checkin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  margin: 24px 0 16px;
+}
+.rewards-checkin-toolbar .gt-field {
+  flex: 1 1 260px;
+}
+.rewards-checkin-session > .gt-actions {
+  margin-bottom: 20px;
+}
+.rewards-manual-entry {
+  margin-top: 24px;
+}

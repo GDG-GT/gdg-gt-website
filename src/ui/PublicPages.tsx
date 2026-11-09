@@ -1146,6 +1146,22 @@ export function TeamPage() {
                             />
                           </a>
                         )}
+                        {safePublicUrl(person.portfolio_url) && (
+                          <a
+                            href={safePublicUrl(person.portfolio_url)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${person.name}'s portfolio website (opens a new tab)`}
+                            className="gt-team-social"
+                          >
+                            <ExternalLink size={18} />
+                            <ArrowUpRight
+                              className="gt-external-marker"
+                              size={10}
+                              aria-hidden="true"
+                            />
+                          </a>
+                        )}
                         {safePublicUrl(person.github_url) && (
                           <a
                             href={safePublicUrl(person.github_url)}

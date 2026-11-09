@@ -1,3 +1,4 @@
+import { emailDocument, escapeEmail, safeEmailLink } from "./email.mjs";
 import { z } from "zod";
 const uuid = z.string().uuid(),
   revision = z.number().int().min(1),
@@ -143,43 +144,9 @@ export const campaignMutation = z.discriminatedUnion("action", [
     .strict(),
 ]);
 export function newsletterPreview(subject, content, unsubscribe = null) {
-  const escape = (v) =>
-    String(v).replace(
-      /[&<>"']/g,
-      (c) =>
-        ({
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#39;",
-        })[c],
-    );
-  const safeLink = (raw) => {
-    try {
-      const u = new URL(raw);
-      return (
-        !u.username &&
-        !u.password &&
-        (u.protocol === "https:" ||
-          (u.protocol === "http:" && u.hostname === "127.0.0.1")) &&
-        !/[\x00-\x20\x7f]/.test(raw)
-      );
-    } catch {
-      return false;
-    }
-  };
-  const body = String(content)
-    .split(/(https?:\/\/[^\s<>"']+)/g)
-    .map((part, i) =>
-      i % 2 && safeLink(part)
-        ? `<a href="${escape(part)}" rel="noopener noreferrer">${escape(part)}</a>`
-        : escape(part),
-    )
-    .join("");
-  const footer =
-    unsubscribe && safeLink(unsubscribe)
-      ? `<a href="${escape(unsubscribe)}">Unsubscribe from this newsletter</a>`
-      : "Every campaign email includes its own unsubscribe link.";
-  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;padding:24px;background:#f4f5f6;color:#2e3033;font:16px/1.6 system-ui"><main style="max-width:640px;margin:auto"><h1 style="font-size:22px">${escape(subject)}</h1><div style="white-space:pre-wrap;overflow-wrap:anywhere">${body}</div><hr><p style="font-size:13px">GDG at Georgia Tech · You receive this because you confirmed your subscription.<br>${footer}</p></main></body></html>`;
+  const footerHtml =
+    unsubscribe && safeEmailLink(unsubscribe)
+      ? `You receive this because you confirmed your subscription.<br><a href="${escapeEmail(unsubscribe)}" style="color:#9b3326">Unsubscribe from this newsletter</a>`
+      : "You receive this because you confirmed your subscription.<br>Every campaign email includes its own unsubscribe link.";
+  return emailDocument({ subject, content, footerHtml });
 }

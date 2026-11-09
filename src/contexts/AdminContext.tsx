@@ -51,6 +51,7 @@ interface Context {
     imageUrl?: string;
     linkedinUrl?: string;
     githubUrl?: string;
+    portfolioUrl?: string;
   }) => Promise<boolean>;
 }
 const AdminContext = createContext<Context | undefined>(undefined);
@@ -70,11 +71,18 @@ type Me = {
     image_url?: string;
     linkedin_url?: string;
     github_url?: string;
+    portfolio_url?: string;
     order_index: number;
     is_active: boolean;
   };
 };
-export const AdminProvider = ({ children, deferSession = false }: { children: React.ReactNode; deferSession?: boolean }) => {
+export const AdminProvider = ({
+  children,
+  deferSession = false,
+}: {
+  children: React.ReactNode;
+  deferSession?: boolean;
+}) => {
   const [currentAdmin, setCurrentAdmin] = useState<AdminUser | null>(null),
     [mergedProfile, setMergedProfile] = useState<MergedProfile | null>(null);
   const [userTeams, setUserTeams] = useState<TeamMembership[]>([]),
@@ -122,6 +130,7 @@ export const AdminProvider = ({ children, deferSession = false }: { children: Re
               imageUrl: p.image_url,
               linkedinUrl: p.linkedin_url,
               githubUrl: p.github_url,
+              portfolioUrl: p.portfolio_url,
               orderIndex: p.order_index,
               isActive: p.is_active,
             },
@@ -150,16 +159,18 @@ export const AdminProvider = ({ children, deferSession = false }: { children: Re
   };
   useEffect(() => {
     let live = true;
-    const begin = () => SessionService.validateSession()
-      .then(async (user) => {
-        if (user && live) await load();
-      })
-      .catch(() => {
-        if (live) setError("Your workspace could not load. Please try again.");
-      })
-      .finally(() => {
-        if (live) setIsLoading(false);
-      });
+    const begin = () =>
+      SessionService.validateSession()
+        .then(async (user) => {
+          if (user && live) await load();
+        })
+        .catch(() => {
+          if (live)
+            setError("Your workspace could not load. Please try again.");
+        })
+        .finally(() => {
+          if (live) setIsLoading(false);
+        });
     const cancel = deferSession ? schedulePublicSessionCheck(begin) : undefined;
     if (!deferSession) void begin();
     return () => {

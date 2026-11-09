@@ -12,13 +12,13 @@
     "uploadSucceeded": true,
     "group": "GDG Officers",
     "groupId": "41f538c7-5b66-48dd-8719-761f0c0dcfef",
-    "assigned": false,
+    "assigned": true,
     "vasGranted": false,
     "biometricDeviceAcceptance": false,
     "newTesters": 0,
     "publicRelease": false,
     "priorAssignedBuild": 5,
-    "assignmentVerification": "blocked by unresponsive computer-use browser; no duplicate upload",
+    "assignmentVerification": "Owner confirmed build6 assigned, 2026-11-09",
     "retainedDistributionIpa": false
   },
   "checks": {
