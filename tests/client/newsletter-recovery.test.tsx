@@ -588,7 +588,7 @@ describe("Newsletter delivery confirmation and expiry", () => {
       screen.getByRole("button", { name: "Confirm self-only test" }),
     );
     await screen.findByText(
-      /Test queued only for your signed-in chapter account/,
+      /Test email queued for your account/,
     );
     expect(writes()[0][0]).toBe(path + "/test");
     expect(writes()[0][1].body.confirmation).toBe("SEND TEST");
@@ -874,11 +874,11 @@ describe("Newsletter bulk subscriber review", () => {
         name: /fictional-second@example.test/,
       }),
     );
-    await screen.findByText(/Custom confirmed audience · 2 selected/);
+    await screen.findByText(/Choose recipients · 2 selected/);
     fireEvent.click(
       screen.getByRole("button", { name: "Clear selected", exact: true }),
     );
-    await screen.findByText(/Custom confirmed audience · 0 selected/);
+    await screen.findByText(/Choose recipients · 0 selected/);
     fireEvent.click(
       screen.getByRole("checkbox", { name: /fictional-second@example.test/ }),
     );
@@ -890,13 +890,13 @@ describe("Newsletter bulk subscriber review", () => {
         name: /fictional-subscriber@example.test/,
       }),
     );
-    fireEvent.change(screen.getByLabelText("Find confirmed subscribers"), {
+    fireEvent.change(screen.getByLabelText("Find subscribers"), {
       target: { value: "fictional" },
     });
     fireEvent.click(
       screen.getByRole("button", { name: "Find subscribers", exact: true }),
     );
-    await screen.findByText(/Custom confirmed audience · 2 selected/);
+    await screen.findByText(/Choose recipients · 2 selected/);
     fireEvent.click(
       screen.getByRole("button", { name: "Save private changes", exact: true }),
     );

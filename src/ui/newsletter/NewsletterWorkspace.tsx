@@ -5,6 +5,7 @@ import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { useNavigationSafety } from "@/hooks/useDraftGuard";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import NewsletterEditor from "./NewsletterEditor";
+import MemberSubscriberImport from "./MemberSubscriberImport";
 import SubscriberBulk from "./SubscriberBulk";
 import ScrollableTable from "../ScrollableTable";
 import {
@@ -30,6 +31,8 @@ export default function NewsletterWorkspace() {
   );
 }
 function NewsletterWorkspaceContent() {
+  const { currentAdmin } = useAdmin();
+  const [importingMembers, setImportingMembers] = useState(false);
   const [kind, setKind] = useState<Kind>("campaigns"),
     [team, setTeam] = useState(""),
     [state, setState] = useState("current"),
@@ -189,6 +192,24 @@ function NewsletterWorkspaceContent() {
           Refresh workspace
         </Button>
       </header>
+      {importingMembers && currentAdmin?.role === "super_admin" && (
+        <MemberSubscriberImport
+          onClose={() => setImportingMembers(false)}
+          onDone={(result) => {
+            setImportingMembers(false);
+            setKind("subscribers");
+            setTeam("chapter");
+            setStatus("");
+            setQuery("");
+            setQ("");
+            setPage(1);
+            refresh();
+            setNotice(
+              `${result.created + result.activated} members added. ${result.existing} already subscribed.${result.excluded ? ` ${result.excluded} excluded.` : ""}`,
+            );
+          }}
+        />
+      )}
       {notice && (
         <p role="status" tabIndex={-1} ref={noticeFocus} className="gt-notice">
           {notice}
@@ -362,6 +383,20 @@ function NewsletterWorkspaceContent() {
                   ? "Create template"
                   : "Add subscriber request"}
             </Button>
+            {kind === "subscribers" && currentAdmin?.role === "super_admin" && (
+              <Button
+                variant="secondary"
+                disabled={
+                  busy ||
+                  !cap?.chapterCreate ||
+                  !!capRead.error ||
+                  capRead.loading
+                }
+                onClick={() => setImportingMembers(true)}
+              >
+                Add community members
+              </Button>
+            )}
             {kind === "subscribers" && (
               <Button
                 variant="secondary"
@@ -374,8 +409,8 @@ function NewsletterWorkspaceContent() {
           </div>
           {!team && (
             <p className="gt-helper">
-              Choose a chapter or team scope to create a record. Team audiences
-              never include chapter or other team subscribers.
+              Choose Chapter newsletter or a team to create a campaign, template
+              or subscription.
             </p>
           )}
           <form
@@ -471,8 +506,8 @@ function NewsletterWorkspaceContent() {
             selected.length > 0 &&
             selected.every((r) => list.items.some((s) => s.id === r.id)) && (
               <SubscriberBulk
-                records={selected.map(
-                  (r) => list.items.find((s) => s.id === r.id)!,
+                records={selected.map((r) =>
+                  list.items.find((s) => s.id === r.id)!,
                 )}
                 archived={state === "trash"}
                 onLockChange={setBulkLocked}
@@ -638,11 +673,6 @@ function NewsletterWorkspaceContent() {
               </div>
             </>
           )}
-          <p className="gt-helper">
-            Approval is a separate password-confirmed action. Sending runs on
-            the server even when this page is closed. Never upload or add
-            addresses without consent.
-          </p>
         </>
       )}
     </div>

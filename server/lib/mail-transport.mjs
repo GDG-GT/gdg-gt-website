@@ -28,8 +28,21 @@ export function mailConfig(env) {
     (env.CHAPTER_CONTACT_EMAIL && !address.test(env.CHAPTER_CONTACT_EMAIL))
   )
     throw Error("Valid configured sender and reply addresses are required.");
+  const domain = env.FROM_EMAIL.split("@")[1];
+  const senders = Object.fromEntries(
+    [
+      "forms",
+      "newsletter",
+      "contact",
+      "id",
+      "accounts",
+      "events",
+      "workspace",
+    ].map((category) => [category, `${category}@${domain}`]),
+  );
   return {
     local,
+    senders,
     from: env.FROM_EMAIL,
     replyTo: env.REPLY_TO_EMAIL || env.CHAPTER_CONTACT_EMAIL,
     chapter: env.CHAPTER_CONTACT_EMAIL,
@@ -52,7 +65,7 @@ export function createMailTransport(env) {
     resend = smtp ? null : new Resend(env.RESEND_API_KEY);
   return {
     config,
-    async send(message, { jobId, idempotencyKey }) {
+    async send(message, { jobId, idempotencyKey, category = "general" }) {
       return timeDependency("mail", async () => {
         const {
           from: ignoredFrom,
@@ -63,9 +76,14 @@ export function createMailTransport(env) {
         void ignoredFrom;
         void ignoredReply;
         void ignoredId;
+        if (category !== "general" && !Object.hasOwn(config.senders, category))
+          throw Error("Unknown server email category.");
         const send = {
           ...content,
-          from: config.from,
+          from:
+            category === "general"
+              ? config.from
+              : `GDG at Georgia Tech <${config.senders[category]}>`,
           ...(config.replyTo ? { replyTo: config.replyTo } : {}),
         };
         if (smtp)

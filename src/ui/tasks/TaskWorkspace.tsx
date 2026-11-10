@@ -1273,7 +1273,7 @@ function TaskWorkspaceContent({ personal }: { personal: boolean }) {
               >
                 {record.status === "overdue" && (
                   <option value="overdue" disabled>
-                    Overdue — set by scheduler
+                    Overdue
                   </option>
                 )}
                 <option value="pending">Pending</option>

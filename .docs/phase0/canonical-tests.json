@@ -150,7 +150,9 @@
     "202611090146_workspace_action_emails.sql",
     "202611090147_profile_portfolio.sql",
     "202611100148_profile_identity_reconciliation.sql",
-    "202611100149_profile_identity_case_preservation.sql"
+    "202611100149_profile_identity_case_preservation.sql",
+    "202611100150_newsletter_test_snapshot.sql",
+    "202611100151_newsletter_member_import.sql"
   ],
   "tests": [
     {
@@ -754,6 +756,14 @@
       "passed": true
     },
     {
+      "name": "202611100150_newsletter_test_snapshot.sql",
+      "passed": true
+    },
+    {
+      "name": "202611100151_newsletter_member_import.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -1227,6 +1237,14 @@
     },
     {
       "name": "149_profile_identity_case_preservation.sql",
+      "passed": true
+    },
+    {
+      "name": "150_newsletter_test_snapshot.sql",
+      "passed": true
+    },
+    {
+      "name": "151_newsletter_member_import.sql",
       "passed": true
     },
     {

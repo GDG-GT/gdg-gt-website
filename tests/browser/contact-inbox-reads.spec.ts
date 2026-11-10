@@ -316,3 +316,49 @@ test("failed later inbox page has a previous escape and a filtered error can res
   await verify(page, state);
   expect(fixture.unexpected).toEqual([]);
 });
+
+test("contact search controls stay mounted and focused while results load", async ({
+  page,
+  fixture,
+}) => {
+  fixture.authenticated = true;
+  const state = await setup(page);
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route("**/api/v1/admin/contact-submissions?**", async (route) => {
+    if (new URL(route.request().url()).searchParams.get("q")) await held;
+    await route.fallback();
+  });
+  try {
+    await page.goto("/admin/communications?tab=contact");
+    await expect(page.getByText(seed.email, { exact: true })).toBeVisible();
+    const search = page.getByRole("searchbox", {
+      name: "Search contact inquiries",
+      exact: true,
+    });
+    await search.scrollIntoViewIfNeeded();
+    const before = await search.boundingBox();
+    await search.fill("fictional");
+    await search.press("Enter");
+    const loading = page.getByRole("status", {
+      name: "Loading contact inbox",
+      exact: true,
+    });
+    await expect(loading).toBeVisible();
+    await expect(search).toBeFocused();
+    expect(
+      Math.abs((await search.boundingBox())!.y - before!.y),
+    ).toBeLessThanOrEqual(2);
+    expect(
+      (await loading.locator(".gt-skeleton").boundingBox())!.height,
+    ).toBeLessThanOrEqual(64);
+    release();
+    await expect(loading).toHaveCount(0);
+    await expect(search).toBeFocused();
+    await verify(page, state);
+  } finally {
+    release();
+  }
+});

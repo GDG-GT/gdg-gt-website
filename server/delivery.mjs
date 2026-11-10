@@ -10,6 +10,15 @@ import { visibleFields } from "../shared/forms.ts";
 import { responseCopyText } from "../shared/form-respondent.mjs";
 import { rewardCredentialMessage } from "./rewards-email.mjs";
 import { emailDocument } from "../shared/email.mjs";
+export function deliveryCategory(kind) {
+  if (kind.startsWith("form_")) return "forms";
+  if (kind.startsWith("newsletter_")) return "newsletter";
+  if (kind.startsWith("contact_")) return "contact";
+  if (kind.startsWith("reward_")) return "id";
+  if (kind.startsWith("event_")) return "events";
+  if (["account_access", "team_invite"].includes(kind)) return "accounts";
+  return "workspace";
+}
 export async function deliveryMessage(
   job,
   db,
@@ -19,7 +28,8 @@ export async function deliveryMessage(
 ) {
   if (job.kind === "reward_credential_email")
     return rewardCredentialMessage(job, db, config, mail, env);
-  let to, subject, content;
+  let to, subject, content, htmlContent;
+  const actions = [];
   if (job.kind === "workspace_notice_email") {
     const notice = checked(
       await db.rpc("prepare_workspace_notice_email", {
@@ -47,6 +57,8 @@ export async function deliveryMessage(
         "The workspace notice could not be prepared.",
       );
     content = `${subject}.${notice.dueDate ? "\nDeadline: " + notice.dueDate + " (UTC)" : ""}\n\nOpen your workspace to review the details:\n${config.origin}${notice.link}`;
+    htmlContent = `${subject}.${notice.dueDate ? "\nDeadline: " + notice.dueDate + " (UTC)" : ""}`;
+    actions.push({ label: "Open workspace", url: config.origin + notice.link });
   } else if (job.kind === "event_confirmation") {
     const registration = checked(
       await db
@@ -67,6 +79,11 @@ export async function deliveryMessage(
     to = registration.attendee_email;
     subject = "Your registration: " + event.title;
     content = `Hi ${registration.attendee_name},\n\nYour place at ${event.title} is confirmed.\n${new Date(event.start_at).toLocaleString("en-US", { timeZone: event.timezone })} (${event.timezone})\n${event.location}\n\nDetails: ${config.origin}/events/${event.slug}`;
+    htmlContent = content.split("\n\nDetails:")[0];
+    actions.push({
+      label: "View event",
+      url: config.origin + "/events/" + event.slug,
+    });
   } else if (job.kind === "event_message") {
     const notice = checked(
       await db.rpc("prepare_event_mail", {
@@ -91,6 +108,13 @@ export async function deliveryMessage(
     to = notice.email;
     subject = "Verify your event reminder request";
     content = `You requested a device reminder for a GDG at Georgia Tech event you registered for. Verify through this private link, then explicitly enable notifications on your device:\n${config.origin}/events/${notice.slug}#reminder=${secret.token}\n\nThis link expires in 24 hours. Opening it does not enable notifications automatically. Do not forward it. If you did not request this, ignore the message.`;
+    htmlContent =
+      "Confirm your email to set up reminders for this event.\n\nThis button expires in 24 hours.";
+    actions.push({
+      label: "Verify event reminder",
+      url:
+        config.origin + "/events/" + notice.slug + "#reminder=" + secret.token,
+    });
   } else if (job.kind === "newsletter_confirmation") {
     const record = checked(
       await db
@@ -131,6 +155,11 @@ export async function deliveryMessage(
     const secret = decryptPayload(job.secret_payload, config.encryptionSecret);
     to = subscriber.email;
     subject = "Confirm your GDG at Georgia Tech subscription";
+    const confirmationUrl =
+      config.origin + "/newsletter/confirm#token=" + secret.token;
+    actions.push({ label: "Confirm subscription", url: confirmationUrl });
+    htmlContent =
+      "Get chapter news and event updates. Confirm your email below.\n\nThis button expires in 24 hours. If you didn’t sign up, you can ignore this email.";
     content =
       "Confirm that you want chapter news and event updates:\n" +
       config.origin +
@@ -153,7 +182,7 @@ export async function deliveryMessage(
     if (job.kind === "contact_acknowledgment") {
       to = contact.email;
       subject = "We received your message";
-      content = `Hi ${contact.name},\n\nYour message to GDG at Georgia Tech has been saved. The chapter will review it and be in touch.\n\nPlease do not send sensitive personal information by email.`;
+      content = `Hi ${contact.name},\n\nThanks for contacting GDG at Georgia Tech. We’ve received your message and will get back to you.`;
     } else {
       if (!mail.chapter)
         throw new ApiError(
@@ -164,6 +193,16 @@ export async function deliveryMessage(
       to = mail.chapter;
       subject = "New chapter inquiry: " + contact.inquiry_type;
       content = `${contact.name} (${contact.email}) sent an inquiry.\n\n${contact.message}\n\n${contact.attachment_upload_id ? "A private scanned attachment is available in the protected inbox.\n\n" : ""}Review securely: ${config.origin}/admin/communications?tab=contact&contact=${job.payload.contactId}`;
+    }
+    if (job.kind === "contact_notification") {
+      htmlContent = content.split("\n\nReview securely:")[0];
+      actions.push({
+        label: "Review inquiry",
+        url:
+          config.origin +
+          "/admin/communications?tab=contact&contact=" +
+          job.payload.contactId,
+      });
     }
   } else if (job.kind === "chapter_announcement") {
     const notice = checked(
@@ -180,6 +219,14 @@ export async function deliveryMessage(
       config.origin +
       "/admin/communications?tab=announcements&announcement=" +
       notice.announcementId;
+    htmlContent = "There’s a new announcement in your chapter workspace.";
+    actions.push({
+      label: "Read announcement",
+      url:
+        config.origin +
+        "/admin/communications?tab=announcements&announcement=" +
+        notice.announcementId,
+    });
   } else if (job.kind === "direct_message_notice") {
     const notice = checked(
       await db.rpc("prepare_direct_notice", {
@@ -195,6 +242,14 @@ export async function deliveryMessage(
       config.origin +
       "/admin/communications?tab=messages&thread=" +
       notice.threadId;
+    htmlContent = "You have a new message in your chapter workspace.";
+    actions.push({
+      label: "Read message",
+      url:
+        config.origin +
+        "/admin/communications?tab=messages&thread=" +
+        notice.threadId,
+    });
   } else if (job.kind === "task_notification") {
     checked(
       await db.rpc("deliver_task_notification", {
@@ -249,6 +304,11 @@ export async function deliveryMessage(
       "/team/join#invite=" +
       secret.token +
       "\n\nUse the email address that received this message. The single-use link expires in seven days. Existing account holders must sign in; an invitation never resets an existing password. Do not forward this private link.";
+    htmlContent = `You’ve been invited to join ${info.teamName} at GDG at Georgia Tech.\n\nUse the email address that received this invitation. This button expires in seven days.`;
+    actions.push({
+      label: "Join team",
+      url: config.origin + "/team/join#invite=" + secret.token,
+    });
   } else if (job.kind === "account_access") {
     const access = checked(
       await db
@@ -293,6 +353,12 @@ export async function deliveryMessage(
       "/account/setup#token=" +
       secret.token +
       "\n\nThis single-use link expires in 24 hours. Do not forward it. Completing setup does not bypass the chapter access entry. If you did not expect this request, contact chapter leadership.";
+    htmlContent =
+      "Set a password for your GDG at Georgia Tech account.\n\nThis button expires in 24 hours. If you weren’t expecting this email, contact the chapter.";
+    actions.push({
+      label: "Set up account",
+      url: config.origin + "/account/setup#token=" + secret.token,
+    });
   } else if (job.kind === "form_access") {
     const access = checked(
       await db
@@ -329,6 +395,11 @@ export async function deliveryMessage(
       "\n\nDo not forward this link. It grants access to this form and expires " +
       new Date(access.expires_at).toUTCString() +
       ".";
+    htmlContent = `Open ${form.title} using the button below.\n\nThis private link expires ${new Date(access.expires_at).toUTCString()}. Don’t forward it.`;
+    actions.push({
+      label: "Open form",
+      url: config.origin + "/forms/" + form.slug + "#access=" + secret.token,
+    });
   } else if (job.kind === "form_respondent_copy") {
     const notice = checked(
       await db.rpc("prepare_form_respondent_copy", {
@@ -381,12 +452,12 @@ export async function deliveryMessage(
     subject = receipt
       ? "Your form response was received"
       : "New chapter form response";
-    content = `${receipt ? "Your response has been received." : "A committed response is ready for authorized review."}\n\nForm: ${notice.title}\nForm version: ${notice.version}\nSubmitted: ${new Date(notice.submittedAt).toUTCString()}\nReference: ${notice.responseId}`;
+    content = `${receipt ? "Your response has been received." : "A new form response is ready to review."}\n\nForm: ${notice.title}\nForm version: ${notice.version}\nSubmitted: ${new Date(notice.submittedAt).toUTCString()}\nReference: ${notice.responseId}`;
     if (!receipt)
       content += `\n\nReview securely: ${config.origin}/admin/forms/${notice.formId}/responses`;
     if (notice.answers?.length)
       content +=
-        "\n\nReviewed non-sensitive answers:\n" +
+        "\n\nResponse summary:\n" +
         notice.answers
           .map(
             (answer) =>
@@ -396,8 +467,13 @@ export async function deliveryMessage(
     if (notice.answersOmitted)
       content +=
         "\n\nAnswers were omitted because this response exceeds the safe email size limit. Review the response in the protected workspace.";
-    content +=
-      "\n\nSensitive answers and files are never included. Downloaded or delivered copies cannot be recalled.";
+    content += "\n\nSensitive answers and files are excluded.";
+    if (!receipt) {
+      const reviewUrl =
+        config.origin + "/admin/forms/" + notice.formId + "/responses";
+      htmlContent = content.replace("\n\nReview securely: " + reviewUrl, "");
+      actions.push({ label: "Review response", url: reviewUrl });
+    }
   } else if (job.kind === "form_response_notification") {
     const form = checked(
       await db
@@ -442,7 +518,7 @@ export async function deliveryMessage(
     to,
     subject,
     text: content,
-    html: emailDocument({ subject, content }),
+    html: emailDocument({ subject, content: htmlContent ?? content, actions }),
     ...(mail.replyTo ? { replyTo: mail.replyTo } : {}),
     headers: { "X-GDG-Job-ID": job.id },
     messageId: "<" + job.id + "@gdg.local>",
@@ -473,6 +549,7 @@ export async function runDelivery({
         if (message) {
           providerId = await transport.send(message, {
             jobId: job.id,
+            category: deliveryCategory(job.kind),
             idempotencyKey: "gdg-job-" + job.id,
           });
         }

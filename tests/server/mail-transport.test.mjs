@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { deliveryCategory } from "../../server/delivery.mjs";
 import {
   createMailTransport,
   mailConfig,
@@ -114,4 +115,87 @@ describe("shared server mail transport", () => {
     ).toThrow();
     expect(() => mailConfig({ ...env, EMAIL_SEND_ENABLED: "false" })).toThrow();
   });
+});
+
+describe("purpose-specific chapter senders", () => {
+  it.each([
+    "forms",
+    "newsletter",
+    "contact",
+    "id",
+    "accounts",
+    "events",
+    "workspace",
+  ])(
+    "uses the verified sender domain for %s and routes replies to the chapter",
+    async (category) => {
+      const fake = vi.fn(
+        async () =>
+          new Response(JSON.stringify({ id: "fictional-provider" }), {
+            status: 200,
+          }),
+      );
+      vi.stubGlobal("fetch", fake);
+      const transport = createMailTransport({
+        ...env,
+        FROM_EMAIL: "hello@gdggt.dev",
+        REPLY_TO_EMAIL: "gdg@gatech.edu",
+      });
+      await transport.send(
+        {
+          to: "fictional@example.test",
+          subject: "Fixture",
+          text: "Fixture",
+          from: "spoof@other.test",
+        },
+        { jobId: "fixture", idempotencyKey: "fictional-" + category, category },
+      );
+      expect(JSON.parse(fake.mock.calls[0][1].body)).toMatchObject({
+        from: `GDG at Georgia Tech <${category}@gdggt.dev>`,
+        reply_to: "gdg@gatech.edu",
+      });
+      transport.close();
+    },
+  );
+  it("rejects arbitrary category values before making a provider request", async () => {
+    const fake = vi.fn();
+    vi.stubGlobal("fetch", fake);
+    const transport = createMailTransport(env);
+    await expect(
+      transport.send(
+        { to: "fixture@example.test" },
+        {
+          jobId: "fixture",
+          idempotencyKey: "fixture",
+          category: "spoof@other.test",
+        },
+      ),
+    ).rejects.toThrow("Unknown server email category");
+    expect(fake).not.toHaveBeenCalled();
+    transport.close();
+  });
+});
+
+describe("transactional job sender routing", () => {
+  it.each([
+    ["form_access", "forms"],
+    ["form_reviewed_email", "forms"],
+    ["form_respondent_copy", "forms"],
+    ["newsletter_confirmation", "newsletter"],
+    ["newsletter_campaign", "newsletter"],
+    ["newsletter_test", "newsletter"],
+    ["contact_acknowledgment", "contact"],
+    ["contact_notification", "contact"],
+    ["reward_credential_email", "id"],
+    ["account_access", "accounts"],
+    ["team_invite", "accounts"],
+    ["event_confirmation", "events"],
+    ["event_message", "events"],
+    ["event_push_verification", "events"],
+    ["workspace_notice_email", "workspace"],
+    ["chapter_announcement", "workspace"],
+    ["direct_message_notice", "workspace"],
+  ])("routes %s through %s", (kind, category) =>
+    expect(deliveryCategory(kind)).toBe(category),
+  );
 });

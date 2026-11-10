@@ -83,9 +83,11 @@ describe("Newsletter boundaries", () => {
       "<script>bad()</script>\n<a href='javascript:bad'>link</a>",
     );
     expect(html).not.toContain("<script>");
-    expect(html).not.toContain("<img");
+    expect(html).not.toContain("<img src=x");
+    expect(html.match(/<img /g)).toHaveLength(1);
+    expect(html).toContain('src="https://gdggt.dev/logo.png"');
     expect(html).not.toContain("<a href=");
     expect(html).toContain("&lt;script&gt;");
-    expect(html).toContain("unsubscribe");
+    expect(html).toContain("Chapter news and events");
   });
 });

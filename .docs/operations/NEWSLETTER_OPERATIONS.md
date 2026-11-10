@@ -137,3 +137,34 @@ approval, real provider callback secret/raw-body hosting behavior, hosted provid
 idempotency/retry/failure/load tests, supervised worker/scheduler and alerts,
 retention/privacy policy approval, supported-device/screen-reader/accessibility,
 performance and visual sign-off. Other PRD backlog items remain open.
+
+## November 10 delivery and member import update
+
+Chapter Super Admins can open Subscribers → Add community members to select
+active directory members with previously collected newsletter consent. Record
+where consent was collected and acknowledge it before importing. The server
+rechecks membership and role, matches normalized email, records consent evidence
+in the audit trail, and preserves unsubscribed, suppressed, archived and other
+team subscriptions. Existing active addresses are reused. The import sends no
+email and has a stable retry receipt; use Retry import after an interrupted
+response. Public signup and ordinary Add subscriber still use email confirmation.
+
+Self-only tests retain the requested message across campaign approval metadata
+changes. A changed subject/body, expired request, revoked session, changed
+password or lost send permission still prevents dispatch. Campaign and test
+email are processed on the five-minute newsletter worker cycle. The UI states
+this delay and delivery results distinguish queued, accepted and delivered.
+
+All outgoing application mail uses the verified sender domain with server-owned
+purpose addresses: forms@, newsletter@, contact@, id@, accounts@, events@ and
+workspace@gdggt.dev. Unknown/general mail uses hello@gdggt.dev. Replies go to
+`gdg@gatech.edu`. These are sending identities; replies are routed through the
+Reply-To header, not new mailboxes. Supabase Auth SMTP is configured with
+accounts@gdggt.dev and matching account templates. No new provider, mailbox,
+subscription, key or charge is required.
+
+The shared HTML shell uses the actual four-color chapter mark, table layout,
+readable text and button actions. Subscription confirmations put their private
+URL only behind the button in HTML; the text-only alternative retains the URL.
+Campaign HTML contains one small unsubscribe link in the footer. The plain-text
+alternative retains its unsubscribe URL for clients that do not render HTML.

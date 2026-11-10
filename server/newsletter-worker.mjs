@@ -76,24 +76,26 @@ export async function runNewsletterWorker({
           }
           unsubscribe =
             config.origin + "/newsletter/unsubscribe#token=" + secret.token;
-          content +=
-            "\n\nYou received this because you confirmed your subscription.\nUnsubscribe: " +
-            unsubscribe;
+          content += "\n\nUnsubscribe: " + unsubscribe;
           headers["List-Unsubscribe"] = "<" + unsubscribe + ">";
-        } else
-          content +=
-            "\n\nTEST COPY — sent only to the chapter account that requested this preview. No campaign audience was contacted.";
+        } else content += "\n\nTest email for your account.";
         const message = {
           from: mail.from,
           to: prepared.email,
           subject: prepared.subject,
           text: content,
-          html: newsletterPreview(prepared.subject, content, unsubscribe),
+          html: newsletterPreview(
+            prepared.subject,
+            prepared.content +
+              (prepared.test ? "\n\nTest email for your account." : ""),
+            unsubscribe,
+          ),
           headers,
           ...(mail.replyTo ? { replyTo: mail.replyTo } : {}),
         };
         provider = await transport.send(message, {
           jobId: job.id,
+          category: "newsletter",
           idempotencyKey: "gdg-newsletter-" + job.id,
         });
         success = true;

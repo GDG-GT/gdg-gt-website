@@ -267,3 +267,53 @@ test("member activity retries independently and a failed later page retains a pr
   await verify(page, state);
   expect(fixture.unexpected).toEqual([]);
 });
+
+test("typing a member search keeps its position and focus during a slow read", async ({
+  page,
+  fixture,
+}, info) => {
+  fixture.authenticated = true;
+  const state = await setup(page);
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  await page.route("**/api/v1/admin/members?**", async (route) => {
+    if (new URL(route.request().url()).searchParams.get("q")) await held;
+    await route.fallback();
+  });
+  try {
+    await page.goto("/admin/members");
+    await ready(page);
+    const search = page.getByRole("searchbox", {
+      name: "Search private members",
+      exact: true,
+    });
+    await search.scrollIntoViewIfNeeded();
+    await search.focus();
+    const before = await search.boundingBox();
+    await search.pressSequentially("ani", { delay: 20 });
+    const loading = page.getByRole("status", {
+      name: "Loading member inventory",
+      exact: true,
+    });
+    await expect(loading).toBeVisible();
+    const during = await search.boundingBox(),
+      placeholder = await loading.locator(".gt-skeleton").boundingBox();
+    expect(Math.abs(during!.y - before!.y)).toBeLessThanOrEqual(2);
+    expect(placeholder!.height).toBeLessThanOrEqual(64);
+    expect(placeholder!.y).toBeGreaterThan(during!.y + during!.height);
+    await expect(search).toBeFocused();
+    await expect(search).toHaveValue("ani");
+    await page.screenshot({
+      path: info.outputPath("member-search-pending.png"),
+      animations: "disabled",
+    });
+    release();
+    await expect(loading).toHaveCount(0);
+    await expect(search).toBeFocused();
+    await verify(page, state);
+  } finally {
+    release();
+  }
+});

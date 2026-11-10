@@ -185,13 +185,15 @@ export default function NewsletterSend({
         clear();
         if (action === "test")
           setNotice(
-            "Test queued only for your signed-in chapter account. No campaign audience was contacted.",
+            "Test email queued for your account. Allow up to five minutes.",
           );
         else
           onSaved(
             action === "cancel"
-              ? "Remaining queued sends cancelled. A message already handed to the mail provider cannot be recalled."
-              : "Campaign approved with a frozen audience. Delivery starts on the next scheduler pass; the saved message cannot be rewritten or sent twice.",
+              ? "Remaining emails cancelled. Emails already sent cannot be recalled."
+              : scheduledAt
+                ? `Campaign scheduled for ${new Date(scheduledAt).toLocaleString()}.`
+                : "Campaign queued. Sending starts within five minutes. Check Delivery results for progress.",
           );
       },
     );

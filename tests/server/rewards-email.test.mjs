@@ -127,7 +127,9 @@ describe("Member credential mail and limited pass capability", () => {
       ],
     });
     expect(html).not.toContain("<script>");
-    expect(html).not.toContain("<img");
+    expect(html).not.toContain("<img src=x");
+    expect(html.match(/<img /g)).toHaveLength(1);
+    expect(html).toContain('src="https://gdggt.dev/logo.png"');
     expect(html).not.toContain("javascript:");
     expect(html).toContain('role="presentation"');
     expect(html).toContain('href="https://gdggt.dev/events"');

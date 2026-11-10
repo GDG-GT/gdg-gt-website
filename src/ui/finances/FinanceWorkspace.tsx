@@ -276,9 +276,6 @@ function FinanceWorkspaceContent() {
           </Button>
         ))}
       </nav>
-      {tab === "requests" && !selected && !mode && (
-        <FinanceCharts listing={list} />
-      )}
       {!isOnline && (
         <p role="status" className="gt-data-note">
           You are offline. Unsaved finance fields stay only in this open tab.
@@ -446,6 +443,9 @@ function FinanceWorkspaceContent() {
             />
           </Field>
         </section>
+      )}
+      {tab === "requests" && !selected && !mode && (
+        <FinanceCharts listing={list} />
       )}
       {loading && !list && (
         <div

@@ -146,7 +146,7 @@ export const campaignMutation = z.discriminatedUnion("action", [
 export function newsletterPreview(subject, content, unsubscribe = null) {
   const footerHtml =
     unsubscribe && safeEmailLink(unsubscribe)
-      ? `You receive this because you confirmed your subscription.<br><a href="${escapeEmail(unsubscribe)}" style="color:#9b3326">Unsubscribe from this newsletter</a>`
-      : "You receive this because you confirmed your subscription.<br>Every campaign email includes its own unsubscribe link.";
+      ? `<a href="${escapeEmail(unsubscribe)}" style="color:#9b3326">Unsubscribe from this newsletter</a>`
+      : "Chapter news and events · gdggt.dev";
   return emailDocument({ subject, content, footerHtml });
 }

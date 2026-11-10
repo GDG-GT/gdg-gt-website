@@ -49,6 +49,7 @@ import { blogUploadRoutes } from "./blog-uploads.mjs";
 import { mediaRoutes } from "./media.mjs";
 import { mediaUploadRoutes } from "./media-uploads.mjs";
 import { mediaPublicationRoutes } from "./media-publication.mjs";
+import { newsletterMemberImportRoutes } from "./newsletter-member-import.mjs";
 import { newsletterRoutes } from "./newsletter.mjs";
 import { newsletterSendRoutes } from "./newsletter-sends.mjs";
 import { newsletterWebhookRoutes } from "./newsletter-webhook.mjs";
@@ -203,6 +204,7 @@ export function applicationHandler({
           })
         )
           return;
+        if (await newsletterMemberImportRoutes(request,response,{db,store,config,requestId})) return;
         if (
           await newsletterRoutes(request, response, {
             db,

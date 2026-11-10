@@ -47,6 +47,20 @@
     "bundleBudgets": "passed",
     "secretScanUnreviewed": 0
   },
-  "finalCombinedDeployment": "pending",
-  "batching": "Owner requested one combined push for remaining changes. Record final deployment in the next work session without a separate docs-only deployment."
+  "finalCombinedDeployment": {
+    "id": "dpl_4f336F8a6rReRsLPWArVmvNxQC4y",
+    "source": "2076b8c2693592a832cdce1177ce22673061175b",
+    "state": "READY",
+    "adminUI": "authenticated Dashboard visibly verified",
+    "testedBuildMatchesLive": true
+  },
+  "batching": "Owner requested one combined push for remaining changes. Record final deployment in the next work session without a separate docs-only deployment.",
+  "hostedCI": {
+    "run": 42767478323,
+    "codeDatabase": "passed",
+    "coverage": "passed",
+    "secrets": "passed",
+    "dependencies": "passed",
+    "fullBrowserShards": "in progress at verification"
+  }
 }

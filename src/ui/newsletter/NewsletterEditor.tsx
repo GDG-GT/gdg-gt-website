@@ -49,9 +49,9 @@ function RecipientPicker({
     error = read.error;
   return (
     <fieldset className="gt-newsletter-audience" disabled={disabled}>
-      <legend>Custom confirmed audience · {selected.length} selected</legend>
+      <legend>Choose recipients · {selected.length} selected</legend>
       <div className="gt-inline-actions">
-        <Field label="Find confirmed subscribers">
+        <Field label="Find subscribers">
           <input
             value={q}
             maxLength={100}
@@ -119,12 +119,7 @@ function RecipientPicker({
               </li>
             ))}
           </ul>
-          {!list.items.length && (
-            <p>
-              No matching confirmed subscribers. A new address must complete
-              double opt-in before it can be selected.
-            </p>
-          )}
+          {!list.items.length && <p>No subscribers match this search.</p>}
           <div className="gt-inline-actions">
             <Button
               type="button"
@@ -149,8 +144,7 @@ function RecipientPicker({
         </>
       )}
       <p className="gt-helper">
-        Selections persist across search pages. Maximum 1,000; only current
-        confirmed, unsuppressed subscribers are included at review.
+        {selected.length} of 1,000 recipients selected.
       </p>
     </fieldset>
   );
@@ -180,9 +174,8 @@ function DeliveryStatus({ record }: { record: NewsletterRecord }) {
         </Button>
       </div>
       <p className="gt-helper">
-        “Accepted” means handed to the mail provider, not inbox delivery.
-        Delivered, bounce, open and click results require verified provider
-        callbacks; email clients can block or prefetch tracking.
+        Queued emails are waiting to send. Delivered means the recipient’s mail
+        server accepted the email.
       </p>
       {error && <p role="alert">{error}</p>}
       {result && (error || read.loading) && (
@@ -209,9 +202,7 @@ function DeliveryStatus({ record }: { record: NewsletterRecord }) {
           </dl>
           <ScrollableTable label="Campaign delivery table, scroll horizontally for all columns">
             <table className="gt-table">
-              <caption className="sr-only">
-                Frozen audience delivery results
-              </caption>
+              <caption className="sr-only">Recipient delivery results</caption>
               <thead>
                 <tr>
                   <th scope="col">Recipient</th>
@@ -440,7 +431,7 @@ export default function NewsletterEditor({
       (r) =>
         onSaved(
           kind === "subscribers" && !record
-            ? "Request accepted. A new address must confirm its email before receiving campaigns; existing subscription state was not changed."
+            ? "Confirmation email requested. They’ll appear as subscribed after confirming."
             : "Saved newsletter changes.",
           r.id,
         ),
@@ -561,7 +552,9 @@ export default function NewsletterEditor({
           {error}
         </p>
       )}
-      {(stale || conflict) && (
+      {((stale &&
+        (dirty || kind !== "campaigns" || record?.status === "draft")) ||
+        conflict) && (
         <p role="alert">
           This newsletter record changed. Your input is preserved. Return to the
           list and reopen before saving or sending.
@@ -683,7 +676,7 @@ export default function NewsletterEditor({
               <Field
                 label="Message"
                 required
-                hint="Plain text, up to 30,000 characters. Line breaks are preserved and HTTPS links become clickable. Raw HTML is displayed as text."
+                hint="Up to 30,000 characters. Website links are clickable."
               >
                 <textarea
                   required
@@ -756,10 +749,7 @@ export default function NewsletterEditor({
       {kind === "campaigns" && editable && (
         <details>
           <summary>Start from a saved template</summary>
-          <p className="gt-helper">
-            Copies message text into this draft without changing the template or
-            sending email.
-          </p>
+          <p className="gt-helper">Choose a template to start this draft.</p>
           <div className="gt-inline-actions">
             <Field label="Find templates">
               <input
@@ -912,10 +902,10 @@ export default function NewsletterEditor({
               <h3>Confirm {action}</h3>
               <p>
                 {kind === "subscribers"
-                  ? "Deactivation and archiving stop future sends and revoke active tokens. Restoring leaves this address unsubscribed; it does not restore consent."
+                  ? "They will stop receiving newsletters. Restoring this record won’t subscribe them again."
                   : action === "duplicate"
-                    ? "Creates a new private draft. This campaign and its delivery history stay unchanged."
-                    : "Records are retained for audit. Archiving does not erase completed delivery history."}
+                    ? "Create an editable copy of this campaign."
+                    : "Move this record to the archive. Delivery history is kept."}
               </p>
               <div className="gt-inline-actions">
                 <Button

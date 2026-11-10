@@ -2821,6 +2821,16 @@ img {
 .gt-detail-skeleton {
   min-height: 420px;
 }
+/* Private reads use compact placeholders so filters stay within reach while
+   searching. Public event/hero placeholders retain their own geometry. */
+.gt-admin-body .gt-skeleton.gt-detail-skeleton {
+  min-height: 56px;
+  height: 56px;
+}
+.gt-admin-body .gt-skeleton.gt-overview-placeholder {
+  min-height: 64px;
+  height: 64px;
+}
 .gt-loading-heading {
   width: 280px;
   height: 40px;
@@ -7034,3 +7044,7 @@ fieldset.gt-event-fields {
 .gt-profile-choice { min-height: 44px; gap: 12px; align-items: center; padding-block: 8px; }
 .gt-profile-choice input[type="radio"] { width: 24px; height: 24px; margin: 0; }
 .gt-profile-choice span { min-width: 0; overflow-wrap: anywhere; }
+
+.gt-newsletter-import-dialog { max-width: 720px; max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior: contain; }
+.gt-newsletter-import-dialog .gt-newsletter-recipient-list { max-height: 34vh; overflow-y: auto; padding: 8px 4px; }
+.gt-newsletter-import-dialog .gt-newsletter-recipient-list small { display: block; color: var(--text-secondary, #666); overflow-wrap: anywhere; }

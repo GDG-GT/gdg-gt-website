@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-10",
+  "status": "prepared for combined release",
+  "searchFixes": [
+    "compact admin skeletons",
+    "Members and Teams loading below filters",
+    "Contact search remains mounted",
+    "Finance charts and Forms metrics below filters"
+  ],
+  "mail": {
+    "logo": "actual four-color PNG",
+    "unsubscribe": "one HTML footer link; URL retained only in text alternative",
+    "senders": [
+      "forms@gdggt.dev",
+      "newsletter@gdggt.dev",
+      "contact@gdggt.dev",
+      "id@gdggt.dev",
+      "accounts@gdggt.dev",
+      "events@gdggt.dev",
+      "workspace@gdggt.dev"
+    ],
+    "general": "hello@gdggt.dev",
+    "replyTo": "gdg@gatech.edu",
+    "supabaseAuthTemplates": 6
+  },
+  "diagnosis": {
+    "campaign": "owner campaign delivered1 through verified callback",
+    "test": "skipped when campaign approval advanced revision before worker; fixed by comparing retained message content",
+    "cadenceMinutes": 5
+  },
+  "migrations": {
+    "150": "applied and snapshot guard verified; no browser execute",
+    "151": "applied; consent import available only through chapter Super Admin API/UI"
+  },
+  "memberImport": {
+    "activeMembers": 42,
+    "alreadySubscribed": 1,
+    "ownerConfirmedPriorConsent": true,
+    "productionImport": "pending actual UI; browser click host returns noWindowsAvailable",
+    "emailsSentByImport": 0
+  },
+  "validation": {
+    "unitFiles": 260,
+    "unitTests": 3077,
+    "browserCases": 60,
+    "engines": [
+      "Chromium desktop",
+      "WebKit mobile"
+    ],
+    "databaseThrough": 151,
+    "legacyGrantsThrough": 151,
+    "typecheck": "passed",
+    "build": "passed",
+    "lintErrors": 0,
+    "inheritedWarnings": 8,
+    "bundleBudgets": "passed",
+    "publicSSR": "passed",
+    "unreviewedSecrets": 0
+  },
+  "productionMessagesTriggeredByAgent": 0
+}

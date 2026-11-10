@@ -610,13 +610,6 @@ function MemberDirectory() {
             retry={() => setCapAttempt((v) => v + 1)}
             disabled={busy || !!uncertain || !isOnline || needsRecheck}
           />
-          <MemberReadFeedback
-            name="member inventory"
-            read={listRead}
-            offline={!isOnline}
-            retry={() => setListAttempt((v) => v + 1)}
-            disabled={busy || !!uncertain || !isOnline || needsRecheck}
-          />
           {selected && (
             <>
               <MemberReadFeedback
@@ -829,6 +822,15 @@ function MemberDirectory() {
           </select>
         </Field>
       </fieldset>
+      {!accessDenied && (
+        <MemberReadFeedback
+          name="member inventory"
+          read={listRead}
+          offline={!isOnline}
+          retry={() => setListAttempt((v) => v + 1)}
+          disabled={busy || !!uncertain || !isOnline || needsRecheck}
+        />
+      )}
       {listing && (
         <>
           <p role="status">

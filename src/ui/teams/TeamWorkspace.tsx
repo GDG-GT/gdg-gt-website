@@ -263,6 +263,7 @@ function TeamWorkspaceContent() {
     [page, setPage] = useState(1),
     [refresh, setRefresh] = useState(0),
     [blocked, setBlocked] = useState(false),
+    [showCreate, setShowCreate] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
   const [mode, setMode] = useState<Mode | null>(null),
@@ -392,9 +393,15 @@ function TeamWorkspaceContent() {
       detail.denied ||
       activity.denied ||
       destinationRead.denied;
+  // Keep the disabled header action in place during a filter read. Permission
+  // and mutation guards still require the current successful inventory.
+  useEffect(() => {
+    if (list) setShowCreate(list.canCreate);
+  }, [list]);
   const clearPrivate = useCallback(() => {
     cancelMutation();
     setBlocked(true);
+    setShowCreate(false);
     clearInventory();
     clearDetail();
     clearActivity();
@@ -941,7 +948,7 @@ function TeamWorkspaceContent() {
               All teams
             </Button>
           )}
-          {list?.canCreate && (
+          {showCreate && (
             <Button
               disabled={busy || !!mode || !listReady}
               onClick={() => open("create")}
@@ -957,13 +964,15 @@ function TeamWorkspaceContent() {
           before another change.
         </p>
       )}
-      <ReadFeedback
-        name="team inventory"
-        read={inventory}
-        retry={() => setListRefresh((value) => value + 1)}
-        disabled={!isOnline || busy}
-        offline={!isOnline}
-      />
+      {selected && (
+        <ReadFeedback
+          name="team inventory"
+          read={inventory}
+          retry={() => setListRefresh((value) => value + 1)}
+          disabled={!isOnline || busy}
+          offline={!isOnline}
+        />
+      )}
       <Button
         variant="ghost"
         disabled={!isOnline || busy || inventory.loading}
@@ -1894,6 +1903,13 @@ function TeamWorkspaceContent() {
                 </select>
               </Field>
             </div>
+            <ReadFeedback
+              name="team inventory"
+              read={inventory}
+              retry={() => setListRefresh((value) => value + 1)}
+              disabled={!isOnline || busy}
+              offline={!isOnline}
+            />
             {list?.items.length ? (
               <div className="gt-team-directory">
                 {list.items.map((t) => (

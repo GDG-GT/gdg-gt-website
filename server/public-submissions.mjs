@@ -104,7 +104,7 @@ export async function publicSubmissionRoutes(
       {
         accepted: true,
         message:
-          "If this address needs confirmation, you’ll receive an email with the next step.",
+          "Thanks for signing up. Check your email to confirm your subscription.",
       },
       requestId,
     );

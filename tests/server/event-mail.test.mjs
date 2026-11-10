@@ -70,7 +70,9 @@ describe("reviewed event email", () => {
     expect(calls).toEqual([["prepare_event_mail", { p_job: id, p_lease: id }]]);
     expect(message.to).toBe("fixture@example.test");
     expect(message.html).toContain("&lt;img");
-    expect(message.html).not.toContain("<img");
+    expect(message.html).not.toContain("<img src=x");
+    expect(message.html.match(/<img /g)).toHaveLength(1);
+    expect(message.html).toContain('src="https://gdggt.dev/logo.png"');
     expect(
       await deliveryMessage(
         { kind: "event_message", id, lease_token: id },

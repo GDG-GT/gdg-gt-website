@@ -142,6 +142,10 @@ function FormsLibraryWorkspace() {
       !dateError,
     ),
     forms = library.items;
+  const [showTemplates, setShowTemplates] = useState(false);
+  useEffect(() => {
+    if (library.at && !library.loading) setShowTemplates(library.canCreate);
+  }, [library.at, library.loading, library.canCreate]);
   const paused =
     library.loading ||
     !!library.error ||
@@ -380,39 +384,6 @@ function FormsLibraryWorkspace() {
           </button>
         </p>
       )}
-      <section
-        className="gt-form-library-read-status"
-        aria-label="Form library read status"
-      >
-        <p id="form-library-read-status" role="status" tabIndex={-1}>
-          {library.at ? (
-            <>
-              Last successful form library read:{" "}
-              <time dateTime={library.at}>
-                {new Date(library.at).toLocaleString()}
-              </time>
-              .
-              {uncertain
-                ? " The original change is unconfirmed; new writes remain paused."
-                : paused
-                  ? " Saved forms remain visible; writes are paused until current access is checked."
-                  : " Current authorized inventory loaded."}
-            </>
-          ) : library.loading ? (
-            "Loading the current authorized form library…"
-          ) : (
-            "A successful current library read is required before changes."
-          )}
-        </p>
-        <Button
-          type="button"
-          variant="secondary"
-          disabled={busy || library.loading || !isOnline || dateError}
-          onClick={() => void recheckLibrary()}
-        >
-          Recheck form library
-        </Button>
-      </section>
       {!isOnline && (
         <p role="alert">You are offline. Form library changes are paused.</p>
       )}
@@ -431,43 +402,8 @@ function FormsLibraryWorkspace() {
           onAbandon={() => setAbandonRecovery(true)}
         />
       )}
-      {library.loading && <p role="status">Loading your forms…</p>}
-      {library.at && (
-        <div className="gt-forms-stats">
-          {[
-            ["Matching forms", library.total],
-            [
-              "Open on this page",
-              forms.filter((form) => form.status === "Open").length,
-            ],
-            [
-              "Drafts on this page",
-              forms.filter((form) => form.status === "Draft").length,
-            ],
-            [
-              "Visible responses on this page",
-              forms.length &&
-              !forms.some((form) => form.actions?.includes("view_responses"))
-                ? "Restricted"
-                : forms.reduce(
-                    (sum, form) =>
-                      sum +
-                      (form.actions?.includes("view_responses")
-                        ? form.responseCount || 0
-                        : 0),
-                    0,
-                  ),
-            ],
-          ].map(([label, value]) => (
-            <div key={label}>
-              <span>{label}</span>
-              <strong>{value}</strong>
-            </div>
-          ))}
-        </div>
-      )}
       <div
-        className={`gt-forms-library-layout ${library.canCreate ? "" : "is-view-only"}`}
+        className={`gt-forms-library-layout ${showTemplates ? "" : "is-view-only"}`}
       >
         <section className="gt-panel gt-forms-inventory">
           <div className="gt-panel-heading">
@@ -608,6 +544,76 @@ function FormsLibraryWorkspace() {
               </div>
             )}
           </details>
+          <section
+            className="gt-form-library-read-status"
+            aria-label="Form library read status"
+          >
+            <p id="form-library-read-status" role="status" tabIndex={-1}>
+              {library.at ? (
+                <>
+                  Last successful form library read:{" "}
+                  <time dateTime={library.at}>
+                    {new Date(library.at).toLocaleString()}
+                  </time>
+                  .
+                  {uncertain
+                    ? " The original change is unconfirmed; new writes remain paused."
+                    : paused
+                      ? " Saved forms remain visible; writes are paused until current access is checked."
+                      : " Current authorized inventory loaded."}
+                </>
+              ) : library.loading ? (
+                "Loading the current authorized form library…"
+              ) : (
+                "A successful current library read is required before changes."
+              )}
+            </p>
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={busy || library.loading || !isOnline || dateError}
+              onClick={() => void recheckLibrary()}
+            >
+              Recheck form library
+            </Button>
+          </section>
+          {library.loading && <p role="status">Loading your forms…</p>}
+          {library.at && (
+            <div className="gt-forms-stats">
+              {[
+                ["Matching forms", library.total],
+                [
+                  "Open on this page",
+                  forms.filter((form) => form.status === "Open").length,
+                ],
+                [
+                  "Drafts on this page",
+                  forms.filter((form) => form.status === "Draft").length,
+                ],
+                [
+                  "Visible responses on this page",
+                  forms.length &&
+                  !forms.some((form) =>
+                    form.actions?.includes("view_responses"),
+                  )
+                    ? "Restricted"
+                    : forms.reduce(
+                        (sum, form) =>
+                          sum +
+                          (form.actions?.includes("view_responses")
+                            ? form.responseCount || 0
+                            : 0),
+                        0,
+                      ),
+                ],
+              ].map(([label, value]) => (
+                <div key={label}>
+                  <span>{label}</span>
+                  <strong>{value}</strong>
+                </div>
+              ))}
+            </div>
+          )}
           {dateError && (
             <p
               id="form-library-date-error"
@@ -880,7 +886,7 @@ function FormsLibraryWorkspace() {
             </div>
           </div>
         </section>
-        {library.canCreate && (
+        {showTemplates && (
           <aside className="gt-forms-template-panel">
             <h2>A head start.</h2>
             <p>Good questions start here.</p>

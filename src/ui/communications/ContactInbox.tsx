@@ -240,7 +240,9 @@ function InquiryReview({
     >
       <header className="gt-inline-actions">
         <div>
-          <h2 ref={heading} tabIndex={-1}>{record.name}</h2>
+          <h2 ref={heading} tabIndex={-1}>
+            {record.name}
+          </h2>
           <p className="gt-helper">
             {record.type} · received {date(record.createdAt)} · revision{" "}
             {record.revision}
@@ -645,6 +647,39 @@ function Inbox() {
           Contact inbox
         </span>
       </nav>
+      {!id && !denied && (
+        <form
+          className="gt-toolbar"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setQ(query);
+            setPage(1);
+          }}
+        >
+          <SearchBox
+            label="Search contact inquiries"
+            value={query}
+            onChange={(v) => setQuery(v.slice(0, 100))}
+            placeholder="Find a name, email or message"
+          />
+          <Field label="Status">
+            <select
+              value={status}
+              onChange={(e) => {
+                setStatus(e.target.value);
+                setPage(1);
+              }}
+            >
+              <option value="">All statuses</option>
+              <option value="new">New</option>
+              <option value="in_progress">In progress</option>
+              <option value="resolved">Resolved</option>
+              <option value="redacted">Redacted by retention</option>
+            </select>
+          </Field>
+          <Button variant="secondary">Search inquiries</Button>
+        </form>
+      )}
       {!isOnline || needsRecheck ? (
         <p role="status">
           Contact actions are paused.{" "}
@@ -765,37 +800,6 @@ function Inbox() {
         />
       ) : (
         <>
-          <form
-            className="gt-toolbar"
-            onSubmit={(e) => {
-              e.preventDefault();
-              setQ(query);
-              setPage(1);
-            }}
-          >
-            <SearchBox
-              label="Search contact inquiries"
-              value={query}
-              onChange={(v) => setQuery(v.slice(0, 100))}
-              placeholder="Find a name, email or message"
-            />
-            <Field label="Status">
-              <select
-                value={status}
-                onChange={(e) => {
-                  setStatus(e.target.value);
-                  setPage(1);
-                }}
-              >
-                <option value="">All statuses</option>
-                <option value="new">New</option>
-                <option value="in_progress">In progress</option>
-                <option value="resolved">Resolved</option>
-                <option value="redacted">Redacted by retention</option>
-              </select>
-            </Field>
-            <Button variant="secondary">Search inquiries</Button>
-          </form>
           {!list.items.length ? (
             <EmptyState title="No matching inquiries">
               New messages submitted through the contact page appear here.
