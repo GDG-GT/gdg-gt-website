@@ -11,6 +11,7 @@ export type MemberReceipt = {
   id: string;
   revision: number;
   profileId?: string | null;
+  profileActive?: boolean | null;
 };
 export type MemberInspection = {
   committed: boolean;
@@ -45,6 +46,7 @@ export function validMemberReceipt(
     (intent.action === "create" ||
       value.revision > JSON.parse(intent.body).revision) &&
     (intent.action === "create" || value.id === id) &&
+    (value.profileActive == null || typeof value.profileActive === "boolean") &&
     (value.profileId === undefined ||
       value.profileId === null ||
       typeof value.profileId === "string")

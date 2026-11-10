@@ -74,12 +74,12 @@ const attempts = () =>
   transport.mock.calls.filter(
     ([p, o]) => o?.method === "POST" && !p.endsWith("/recovery"),
   );
-it("syncs a named member into a reviewable draft without publishing automatically", async () => {
+it.each([false, true])("reuses a named member profile and reports its publication status (%s)", async (published) => {
   const profileId = "f1330000-0000-4000-8000-000000000010";
   const original = transport.getMockImplementation()!;
   transport.mockImplementation(async (path: string, options = {}) => {
     const o = options as { method?: string };
-    if (o.method === "POST") return { id, revision: 2, profileId };
+    if (o.method === "POST") return { id, revision: 2, profileId, profileActive: published };
     const result = await original(path, options);
     return result.member ? { member: { ...result.member, canSyncProfile: true } } : result;
   });
@@ -94,7 +94,7 @@ it("syncs a named member into a reviewable draft without publishing automaticall
   expect(attempts()).toHaveLength(0);
   fireEvent.click(screen.getByRole("checkbox", { name: /Create or update the draft Team profile for Fictional existing member/ }));
   fireEvent.submit(form);
-  const review = await screen.findByRole("link", { name: "Review draft Team profile" });
+  const review = await screen.findByRole("link", { name: published ? "Review published Team profile" : "Review draft Team profile" });
   expect(review.getAttribute("href")).toBe("/admin/content/team?profile=" + profileId);
   expect(attempts()).toHaveLength(1);
   expect(attempts()[0][1].body).toMatchObject({ action: "sync_profile", confirmation: record.reference });

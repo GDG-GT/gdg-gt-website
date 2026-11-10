@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { contentSchemas } from "../../server/content-records.mjs";
+import { contentSchemas, profileReconciliation } from "../../server/content-records.mjs";
 import { safeUrl } from "../../server/lib/validation.mjs";
 describe("server-owned content editing contract", () => {
   it("rejects client-owned publication, authorship, revisions and counters", () => {
@@ -66,4 +66,15 @@ describe("server-owned content editing contract", () => {
     ])
       expect(safeUrl.safeParse(url).success).toBe(false);
   });
+});
+
+it("normalizes an optional empty portfolio URL and keeps URL validation strict", () => {
+  const base = { name: "Fictional officer", role: "Builder" };
+  for (const value of ["", null]) expect(contentSchemas["team-profiles"].parse({ ...base, portfolio_url: value }).portfolio_url).toBeNull();
+  expect(contentSchemas["team-profiles"].parse({ ...base, portfolio_url: "https://example.org/work" }).portfolio_url).toBe("https://example.org/work");
+  for (const value of ["javascript:alert(1)", "http://example.org", "https://localhost"]) expect(contentSchemas["team-profiles"].safeParse({ ...base, portfolio_url: value }).success).toBe(false);
+});
+it("rejects duplicate identities in a consolidation review", () => {
+  const id = "f1480000-0000-4000-8000-000000000001";
+  expect(profileReconciliation.safeParse({ action: "reconcile", keepId: id, profiles: [{ id, revision: 1 }, { id, revision: 1 }] }).success).toBe(false);
 });

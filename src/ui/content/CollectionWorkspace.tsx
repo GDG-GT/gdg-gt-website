@@ -1,3 +1,4 @@
+import ProfileReconcileDialog from "./ProfileReconcileDialog";
 import { useSearchParams } from "react-router-dom";
 import {
   Dialog,
@@ -221,6 +222,7 @@ export default function CollectionWorkspace({
   );
 }
 function CollectionEditor({ initialKind }: { initialKind: Kind }) {
+  const { currentAdmin } = useAdmin();
   const [params] = useSearchParams();
   const requestedProfile = initialKind === "team-profiles" ? params.get("profile") || "" : "";
   const openedProfile = useRef("");
@@ -244,7 +246,7 @@ function CollectionEditor({ initialKind }: { initialKind: Kind }) {
     [errors, setErrors] = useState<Record<string, string>>({}),
     [confirm, setConfirm] = useState<{
       row: Row;
-      action: "archive" | "publish" | "unpublish" | "restore";
+      action: "archive" | "publish" | "unpublish" | "restore" | "reconcile";
     }>(),
     [discard, setDiscard] = useState(false),
     [conflict, setConflict] = useState(false);
@@ -652,8 +654,8 @@ function CollectionEditor({ initialKind }: { initialKind: Kind }) {
                           .filter(Boolean)
                       : field.type === "number"
                         ? Number(editor.values[field.name])
-                        : field.name === "image_url" &&
-                            !editor.values[field.name]
+                        : ["image_url", "portfolio_url"].includes(field.name) &&
+                            !editor.values[field.name]?.trim()
                           ? null
                           : editor.values[field.name],
                   ]),
@@ -846,8 +848,11 @@ function CollectionEditor({ initialKind }: { initialKind: Kind }) {
           </form>
         </section>
       )}
-      {confirm && (
-        <Dialog
+      {confirm && (confirm.action === "reconcile" ? <ProfileReconcileDialog id={confirm.row.id}
+        onClose={() => setConfirm(undefined)} onSaved={(result) => {
+          setConfirm(undefined); setRefresh((v) => v + 1);
+          setNotice(`Kept ${result.record.name} ${result.record.is_active ? "published" : "as a private draft"}. Archived ${result.archived} duplicate profile${result.archived === 1 ? "" : "s"}.`);
+        }} /> : <Dialog
           open
           onOpenChange={(open) => {
             if (!open && !busy) setConfirm(undefined);
@@ -996,6 +1001,11 @@ function CollectionEditor({ initialKind }: { initialKind: Kind }) {
                   <td>{new Date(row.updated_at).toLocaleDateString()}</td>
                   <td>
                     <div className="gt-actions">
+                      {kind === "team-profiles" && currentAdmin?.role === "super_admin" && !row.deleted_at && !!row.email && (
+                        <Button variant="secondary" disabled={busy || !!editor || !!confirm || unavailable}
+                          aria-label={`Resolve duplicates for ${rowLabel(row)} (${row.is_active ? "Published" : "Private draft"})`}
+                          onClick={() => setConfirm({ row, action: "reconcile" })}>Resolve duplicates</Button>
+                      )}
                       {!row.deleted_at && row.actions.includes("update") && (
                         <Button
                           variant="secondary"

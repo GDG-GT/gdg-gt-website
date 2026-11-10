@@ -87,7 +87,7 @@ export const contentSchemas = {
       image_url: imageUrl.optional(),
       linkedin_url: optional(safeUrl),
       github_url: optional(safeUrl),
-      portfolio_url: optional(safeUrl),
+      portfolio_url: optional(safeUrl.transform((value) => value === "" ? null : value)),
       email: z
         .union([
           z.string().trim().toLowerCase().email().max(254),
@@ -100,6 +100,12 @@ export const contentSchemas = {
     })
     .strict(),
 };
+export const profileReconciliation = z.object({
+  action: z.literal("reconcile"),
+  keepId: uuid,
+  profiles: z.array(z.object({ id: uuid, revision: z.number().int().min(1) }).strict()).min(2).max(10)
+    .refine((rows) => new Set(rows.map((row) => row.id)).size === rows.length, "Review each profile once."),
+}).strict();
 export async function contentRecordRoutes(
   request,
   response,
@@ -171,6 +177,12 @@ export async function contentRecordRoutes(
   }
   const id = match[2] ? parse(uuid, match[2]) : null;
   if (request.method === "GET") {
+    if (id && kind === "team-profiles" && new URL(request.url, config.origin).searchParams.has("duplicates")) {
+      queryValues(new URL(request.url, config.origin).searchParams, z.object({ duplicates: z.literal("true") }).strict());
+      if (session.user.role !== "super_admin") throw new ApiError(403, "FORBIDDEN", "Only Super Admins can consolidate profiles.");
+      sendJson(response, 200, checked(await db.rpc("review_team_profile_duplicates", { p_actor: session.user.id, p_id: id })), requestId);
+      return true;
+    }
     if (id) {
       const table = {
         resources: "resources",
@@ -237,20 +249,28 @@ export async function contentRecordRoutes(
               record: schema.partial(),
             })
             .strict()
-        : z
-            .object({
+        : z.union([
+            z.object({
               revision: z.number().int().min(1),
-              action:
-                request.method === "DELETE"
-                  ? z.literal("archive").default("archive")
-                  : z.enum(["publish", "unpublish", "restore", "duplicate"]),
-            })
-            .strict()
+              action: request.method === "DELETE" ? z.literal("archive").default("archive") : z.enum(["publish", "unpublish", "restore", "duplicate"]),
+            }).strict(),
+            ...(kind === "team-profiles" && request.method === "POST" ? [profileReconciliation] : []),
+          ])
       : z
           .object({ teamId: uuid.nullable().default(null), record: schema })
           .strict(),
     65536,
   );
+  if (body.action === "reconcile") {
+    if (session.user.role !== "super_admin") throw new ApiError(403, "FORBIDDEN", "Only Super Admins can consolidate profiles.");
+    const result = checked(await db.rpc("reconcile_team_profiles", {
+      p_actor: session.user.id, p_session: session.sessionId, p_id: id, p_keep: body.keepId,
+      p_profiles: body.profiles, p_key_hash: tokenHash(idempotency(request)),
+      p_request_hash: tokenHash(JSON.stringify({ id, body })), p_request_id: requestId,
+    }));
+    sendJson(response, 200, result, requestId);
+    return true;
+  }
   if (kind === "sponsor-tiers" && body.action === "duplicate")
     throw new ApiError(
       409,

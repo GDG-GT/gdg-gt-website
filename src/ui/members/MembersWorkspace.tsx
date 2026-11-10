@@ -101,6 +101,7 @@ function MemberDirectory() {
     [activityAttempt, setActivityAttempt] = useState(0),
     [notice, setNotice] = useState(""),
     [profileToReview, setProfileToReview] = useState<string>(),
+    [publishedReview, setPublishedReview] = useState(false),
     [conflict, setConflict] = useState(false),
     [mergeDirty, setMergeDirty] = useState(false);
   const snapshot = useRef<{
@@ -391,7 +392,7 @@ function MemberDirectory() {
   useEffect(() => {
     if (mode === "merge" && (denied || !cap?.merge)) setBusy(false);
   }, [mode, denied, cap?.merge]);
-  function finished(id: string, message: string, profileId?: string | null) {
+  function finished(id: string, message: string, profileId?: string | null, profileActive = false) {
     setBusy(false);
     reset();
     clearDetail();
@@ -400,6 +401,7 @@ function MemberDirectory() {
     setTick((v) => v + 1);
     setNotice(message);
     setProfileToReview(profileId || undefined);
+    setPublishedReview(profileActive);
   }
   async function save(e: FormEvent) {
     e.preventDefault();
@@ -471,9 +473,10 @@ function MemberDirectory() {
         finished(
           result.id,
           mode === "sync_profile"
-            ? "Draft Team profile saved. Review and publish it to show this member on the website."
+            ? result.profileActive ? "Team profile linked. The existing published profile remains published." : "Draft Team profile saved. Review and publish it to show this member on the website."
             : "Community record saved. No account or permissions were created.",
           result.profileId,
+          result.profileActive === true,
         );
     } catch (e) {
       if (current === epoch.current) {
@@ -556,9 +559,10 @@ function MemberDirectory() {
             finished(
               receipt.id,
               uncertain.action === "sync_profile"
-                ? "Draft Team profile save confirmed. Review and publish it to show this member on the website."
+                ? receipt.profileActive ? "Team profile link confirmed. The existing published profile remains published." : "Draft Team profile save confirmed. Review and publish it to show this member on the website."
                 : "Original community member save confirmed.",
               receipt.profileId,
+              receipt.profileActive === true,
             )
           }
           onDenied={() => {
@@ -576,7 +580,7 @@ function MemberDirectory() {
         />
       )}
       {notice && <ActionFeedback message={notice}>
-        {profileToReview && <Link className="gt-button gt-button-secondary" to={`/admin/content/team?profile=${encodeURIComponent(profileToReview)}`}>Review draft Team profile</Link>}
+        {profileToReview && <Link className="gt-button gt-button-secondary" to={`/admin/content/team?profile=${encodeURIComponent(profileToReview)}`}>{publishedReview ? "Review published Team profile" : "Review draft Team profile"}</Link>}
       </ActionFeedback>}
       {error && (
         <p className="gt-form-error" role="alert">

@@ -507,3 +507,16 @@ it("passes structural axe checks for editor and publication review", async () =>
   fireEvent.click(screen.getByRole("button", { name: "Publish " + row.title }));
   await audit();
 });
+
+it("sends an empty portfolio URL as null when saving a Team profile", async () => {
+  const profile = { ...row, title: undefined, name: "Fictional existing officer", role: "Builder", portfolio_url: null, team_section: "Active Members" };
+  apiMock.mockImplementation(async (p: string, o?: { method?: string }) => o?.method ? { record: { ...profile, revision: 2 } } : p.endsWith("/capabilities") ? cap : p.includes("?") ? { ...listing, items: [profile] } : { record: profile });
+  mount("team-profiles");
+  fireEvent.click(await screen.findByRole("button", { name: "Edit " + profile.name }));
+  const portfolio = screen.getByLabelText("Portfolio / website");
+  fireEvent.change(portfolio, { target: { value: "" } });
+  await waitFor(() => expect((screen.getByRole("button", { name: "Save changes" }) as HTMLButtonElement).disabled).toBe(false));
+  fireEvent.submit(portfolio.closest("form")!);
+  await screen.findByText("Saved as a private draft. Publish separately after review.");
+  expect(writes()[0][1].body.record.portfolio_url).toBeNull();
+});

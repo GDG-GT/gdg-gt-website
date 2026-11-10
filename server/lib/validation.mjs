@@ -90,6 +90,8 @@ export function databaseResult({ data, error }) {
     FORBIDDEN: [403, "This action is not allowed."],
     NOT_FOUND: [404, "This record was not found."],
     DUPLICATE: [409, "This record already exists."],
+    PROFILE_DUPLICATES: [409, "A Team profile already uses this email in this scope. Open Public team and resolve duplicate profiles instead of creating another."],
+    PROFILE_IDENTITY_CONFLICT: [409, "These profiles have conflicting account or member links. Review their identities before consolidating them; nothing was changed."],
     INVALID_STATE: [
       409,
       "This operation is not available in the current state.",

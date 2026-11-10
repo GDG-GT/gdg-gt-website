@@ -25,9 +25,12 @@ Read audits hash filters rather than retaining raw private search/contact values
 ## Separate public profile workflow
 
 Synchronization additionally requires current public-profile access/action grants
-and the current profile revision. It creates or updates an **unpublished draft**,
-not an account or publication. The save receipt and linked-profile summary provide
-a **Review draft Team profile** link to the exact profile in Site content → Public
+and the current profile revision. It creates a new **unpublished draft**, or reuses
+the existing profile matched by identity and normalized email in the same scope.
+An unchanged published identity remains published when its member link is added;
+name, email or public-section changes still require publication review. No
+officer account or permissions are created. The save receipt and linked-profile summary provide
+a **Review draft Team profile** or **Review published Team profile** link to the exact profile in Site content → Public
 team. Review its details, save edits if needed, then choose **Publish** and confirm
 publication. Syncing alone does not put a member on the public Team page. Private phone, academic fields and interests are
 not copied. Identity changes, community deactivation or team archival unpublish
@@ -79,3 +82,18 @@ probe, and there is no evidence of outside access. `test:local-dev-security`
 records 11 file-policy and app-health checks. This is not a production security
 certification. Session-switch transport hardening is separately recorded in
 `../engineering/SESSION_TRANSPORT_SAFETY.md`; final system-wide security acceptance remains open.
+
+## Existing duplicate Team profiles
+
+Site content → Public team → **Resolve duplicates** is available to Super Admins
+for profiles with a private contact email. The review groups current profiles by
+normalized email and owning scope, then defaults to the published profile. Choose
+the profile to keep and acknowledge archiving the others. Consolidation retains
+the kept profile's content and publication status, moves its existing account and
+community-member links, and recoverably archives the redundant records. Conflicting
+account/member identities or changed revisions block the entire operation. It
+does not combine accounts, permissions, community records or rewards. Names alone
+are never used for matching. New duplicate emails in the same scope are rejected.
+
+Optional empty portfolio URLs are normalized to null in the editor, API and
+database; HTTPS URL validation remains in force.

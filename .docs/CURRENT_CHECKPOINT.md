@@ -1,3 +1,11 @@
+## Portfolio validation and profile identity repair — 2026-11-10
+
+Implemented empty portfolio normalization in the editor, API and database; My profile/member sync now reuse a profile by exact identity/normalized email within the owning scope. New same-email duplicates are rejected. Super Admins can explicitly consolidate existing duplicate Team profiles, keeping one profile's content/publication and transferring existing identity links while archiving the others. Different account/member identities cannot be merged this way. No name-only matching.
+
+Migration `202611100148_profile_identity_reconciliation` is applied as hosted version `20261110060231`. New RPCs are server-only; anon/authenticated execution is false. Schema rollout changed no production profile records. Canonical and legacy-grant suites pass through migration148, including profile creation in either order, blank portfolio normalization, conflict/stale guards, preserved publication/content and idempotent reconciliation. Full unit suite: 257 files / 3,029 tests. Desktop Chromium/mobile WebKit profile-save/consolidation/publication cases: 4 passed. Typecheck, lint (8 inherited warnings), build, SSR, budgets and secrets passed. Temporary test databases/preview and Colima are stopped.
+
+App deployment and UI-only cleanup of the owner's existing duplicate remain next. Preserve `supabase/.temp/cli-latest`. No provider sends, purchases, credentials, account privileges, NFC/provider approvals or native binaries changed.
+
 ## Member profile review and UID entry cleanup — 2026-11-10
 
 Current work replaces internal-reference text prompts with named acknowledgements in member archive/restore/sync/unmerge, duplicate merges, editorial actions, finance decisions, Forms delivery settings and retention/holds. Password, permission, revision and idempotency checks remain. Finance event/project links, audit account filters (including archived accounts) and historical unidentified Forms response selection use permission-scoped record pickers. No database migration is required.
