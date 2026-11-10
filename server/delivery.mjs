@@ -1,3 +1,4 @@
+import { queueMailAppNotification } from "./app-notifications.mjs";
 import { createMailTransport, mailConfig } from "./lib/mail-transport.mjs";
 export { mailConfig } from "./lib/mail-transport.mjs";
 import { serverDatabase } from "./db/client.mjs";
@@ -582,6 +583,7 @@ export async function runDelivery({
             category: deliveryCategory(job.kind),
             idempotencyKey: "gdg-job-" + job.id,
           });
+          await queueMailAppNotification(db, job, message, deliveryCategory(job.kind), env);
         }
         success = true;
       } catch (error) {

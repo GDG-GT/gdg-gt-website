@@ -1,3 +1,4 @@
+import { normalizeProfileLink } from "../../shared/profile-links.mjs";
 import ScrollableTable from "@/ui/ScrollableTable";
 import { useState, useEffect, useRef, type FormEvent } from "react";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
@@ -164,7 +165,12 @@ function ProfileEditor() {
     } catch (e) {
       if (!mutation.current(controller)) return;
       setError((e as Error).message);
-      if (e instanceof ApiFailure) setFieldErrors(e.fields || {});
+      if (e instanceof ApiFailure) {
+        setFieldErrors(e.fields || {});
+        const labels: Record<string, string> = { "profile.name": "Full name", "profile.role": "Chapter role", "profile.bio": "Short bio", "profile.imageUrl": "Photo URL", "profile.linkedinUrl": "LinkedIn URL", "profile.githubUrl": "GitHub URL", "profile.portfolioUrl": "Portfolio / website" };
+        const invalid = Object.keys(e.fields || {}).filter(key => labels[key]);
+        if (invalid.length) setError(invalid.map(key => labels[key] + (key.endsWith("Url") ? ": enter a valid public HTTPS address." : ": check this field.")).join(" "));
+      }
       if (e instanceof ApiFailure && [401, 403, 404].includes(e.status)) {
         setBlocked(true);
         setReview(undefined);
@@ -421,10 +427,14 @@ function ProfileEditor() {
                 required
                 minLength={2}
                 maxLength={100}
+                name="display_name" data-managed-validation="true"
+                aria-invalid={!!fieldErrors.display_name}
+                aria-describedby={fieldErrors.display_name ? "profile-display-name-error" : undefined}
                 value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
+                onChange={(e) => { setDisplayName(e.target.value); setFieldErrors(previous => ({ ...previous, display_name: "" })); }}
               />
             </Field>
+            {fieldErrors.display_name && <small id="profile-display-name-error" className="gt-field-error">{fieldErrors.display_name}</small>}
             <Button disabled={!writable}>Save account details</Button>
           </fieldset>
         </form>
@@ -525,7 +535,7 @@ function ProfileEditor() {
                 method: "PATCH",
                 protected: true,
                 signal,
-                body: { profile: { ...profile } },
+                body: { profile: { ...profile, imageUrl: normalizeProfileLink(profile.imageUrl), linkedinUrl: normalizeProfileLink(profile.linkedinUrl), githubUrl: normalizeProfileLink(profile.githubUrl), portfolioUrl: normalizeProfileLink(profile.portfolioUrl) } },
               }),
             () => setProfileDirty(false),
             "Profile saved. New profiles remain unpublished until an officer approves them.",
@@ -564,11 +574,19 @@ function ProfileEditor() {
                     key === "name" ? 2 : key === "role" ? 1 : undefined
                   }
                   maxLength={["name", "role"].includes(key) ? 100 : 2000}
+                  name={"profile." + key} data-managed-validation="true"
+                  aria-invalid={!!fieldErrors["profile." + key]}
+                  aria-describedby={fieldErrors["profile." + key] ? "profile-field-" + key + "-error" : undefined}
+                  autoComplete={key.endsWith("Url") ? "url" : undefined}
+                  inputMode={key.endsWith("Url") ? "url" : undefined}
                   value={profile[key]}
-                  onChange={(e) =>
-                    setProfile({ ...profile, [key]: e.target.value })
-                  }
+                  onBlur={() => { if (key.endsWith("Url")) setProfile(previous => ({ ...previous, [key]: normalizeProfileLink(previous[key]) })); }}
+                  onChange={(e) => {
+                    setProfile({ ...profile, [key]: e.target.value });
+                    setFieldErrors(previous => ({ ...previous, ["profile." + key]: "" }));
+                  }}
                 />
+                {fieldErrors["profile." + key] && <small id={"profile-field-" + key + "-error"} className="gt-field-error">{label}: {key.endsWith("Url") ? "Enter a valid public HTTPS address." : fieldErrors["profile." + key]}</small>}
               </Field>
             ))}
           </div>
@@ -576,9 +594,13 @@ function ProfileEditor() {
             <textarea
               maxLength={3000}
               rows={4}
+              name="profile.bio" data-managed-validation="true"
+              aria-invalid={!!fieldErrors["profile.bio"]}
+              aria-describedby={fieldErrors["profile.bio"] ? "profile-bio-error" : undefined}
               value={profile.bio}
-              onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+              onChange={(e) => { setProfile({ ...profile, bio: e.target.value }); setFieldErrors(previous => ({ ...previous, "profile.bio": "" })); }}
             />
+            {fieldErrors["profile.bio"] && <small id="profile-bio-error" className="gt-field-error">{fieldErrors["profile.bio"]}</small>}
           </Field>
           <Button disabled={!writable}>Save team profile</Button>
         </fieldset>

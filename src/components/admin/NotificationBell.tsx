@@ -1,3 +1,4 @@
+import { postNativeWorkspace } from "@/ui/rewards/nativeScanner";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Bell } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -344,6 +345,9 @@ function NotificationBellWorkspace({
     window.addEventListener("gdg:native-notifications", show);
     return () => window.removeEventListener("gdg:native-notifications", show);
   }, [native, accountId]);
+  useEffect(() => {
+    if (native && accountId) postNativeWorkspace({ action: "notificationBadge", count: Math.min(9999, Math.max(0, count)) });
+  }, [native, accountId, count]);
   useScopedRealtime(
     { kind: "notifications" },
     () => {
@@ -409,6 +413,7 @@ function NotificationBellWorkspace({
             Your account’s updates. Only you can read or dismiss these
             notifications.
           </DialogDescription>
+          <Link to="/admin/notifications" onClick={() => setOpen(false)}>Notification settings</Link>
           <NotificationInbox onChange={setCount} />
         </DialogContent>
       </Dialog>

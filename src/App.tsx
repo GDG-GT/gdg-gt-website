@@ -101,6 +101,7 @@ const adminRoutes = [
   ["blog", lazy(() => import("@/pages/admin/AdminBlog"))],
   ["users", lazy(() => import("@/ui/users/UserWorkspace"))],
   ["profile", lazy(() => import("@/ui/ProfileWorkspace"))],
+  ["notifications", lazy(() => import("@/ui/NotificationWorkspace"))],
   [
     "sponsors",
     lazy(() =>

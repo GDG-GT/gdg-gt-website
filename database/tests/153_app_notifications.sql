@@ -1,0 +1,42 @@
+BEGIN;
+DO $$ DECLARE a uuid;b uuid;s uuid;other_s uuid;d uuid;n uuid;j public.delivery_jobs;r jsonb;prefs jsonb;
+BEGIN
+ INSERT INTO public.admin_users(email,password_hash,role,is_active) VALUES('push-owner@example.test','fixture','super_admin',true) RETURNING id INTO a;
+ INSERT INTO public.admin_users(email,password_hash,role,is_active) VALUES('push-other@example.test','fixture','blog_editor',true) RETURNING id INTO b;
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash,idle_expires_at,absolute_expires_at) VALUES(a,repeat('a',64),now()+interval '1 hour',now()+interval '2 hours') RETURNING id INTO s;
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash,idle_expires_at,absolute_expires_at) VALUES(b,repeat('c',64),now()+interval '1 hour',now()+interval '2 hours') RETURNING id INTO other_s;
+ d:=public.register_app_notification_device(a,s,gen_random_uuid(),'ios','production',repeat('1',64),'encrypted-device','iPhone');
+ r:=public.read_app_notification_settings(a,s);
+ IF jsonb_array_length(r->'devices')<>1 OR r::text LIKE '%encrypted-device%' OR r::text LIKE '%'||repeat('1',64)||'%' THEN RAISE EXCEPTION 'Device disclosure';END IF;
+ IF jsonb_array_length(public.read_app_notification_settings(b,other_s)->'devices')<>0 THEN RAISE EXCEPTION 'Cross-account device disclosure';END IF;
+ BEGIN PERFORM public.remove_app_notification_device(b,other_s,d);RAISE EXCEPTION 'Cross-account revoke allowed';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ INSERT INTO public.notifications(user_id,type,title,message,link,delivery_key) VALUES(a,'system','Private title','Private answer must never enter push','/admin/notifications','push-fixture:1') RETURNING id INTO n;
+ SELECT * INTO j FROM public.delivery_jobs WHERE kind='app_push_ios' AND payload->>'notificationId'=n::text;
+ IF j.id IS NULL OR j.payload::text LIKE '%Private%' THEN RAISE EXCEPTION 'Push not queued or private content leaked';END IF;
+ IF public.prepare_app_push(j.id,gen_random_uuid()) IS NOT NULL THEN RAISE EXCEPTION 'Unleased push prepared';END IF;
+ UPDATE public.delivery_jobs SET state='running',lease_token=gen_random_uuid(),locked_until=now()+interval '1 minute' WHERE id=j.id RETURNING * INTO j;
+ r:=public.prepare_app_push(j.id,j.lease_token);
+ IF r->>'encrypted'<>'encrypted-device' OR r::text LIKE '%Private%' THEN RAISE EXCEPTION 'Push payload leak';END IF;
+ IF public.finish_app_push(j.id,gen_random_uuid(),'accepted') THEN RAISE EXCEPTION 'Stale push lease accepted';END IF;
+ prefs:='{"forms":true,"events":true,"newsletter":true,"accounts":true,"id":true,"contact":true,"workspace":false}';
+ PERFORM public.save_app_notification_preferences(a,s,prefs);
+ IF public.prepare_app_push(j.id,j.lease_token) IS NOT NULL THEN RAISE EXCEPTION 'Preference changed after queue ignored';END IF;
+ PERFORM public.save_app_notification_preferences(a,s,jsonb_set(prefs,'{workspace}','true'));
+ UPDATE public.notifications SET is_read=true WHERE id=n;
+ IF public.prepare_app_push(j.id,j.lease_token) IS NOT NULL THEN RAISE EXCEPTION 'Read notification pushed';END IF;
+ UPDATE public.notifications SET is_read=false WHERE id=n;
+ UPDATE public.admin_sessions SET revoked_at=now() WHERE id=s;
+ IF public.prepare_app_push(j.id,j.lease_token) IS NOT NULL THEN RAISE EXCEPTION 'Signed-out device pushed';END IF;
+ UPDATE public.admin_sessions SET revoked_at=NULL WHERE id=s;
+ IF NOT public.finish_app_push(j.id,j.lease_token,'expired') THEN RAISE EXCEPTION 'Expired device finish lost';END IF;
+ IF (SELECT revoked_at IS NULL OR address_encrypted<>'' FROM public.app_notification_devices WHERE id=d) THEN RAISE EXCEPTION 'Expired address retained';END IF;
+ -- The same public email is not accepted as an authenticated identity by browser SQL roles.
+ IF has_function_privilege('authenticated','public.queue_mail_app_notification(uuid,uuid,text,text,text,boolean)','EXECUTE') OR has_table_privilege('anon','public.app_notification_devices','SELECT') THEN RAISE EXCEPTION 'Push browser privileges leaked';END IF;
+ -- Every eligible mail recipient gets one inbox notification even on exact retry.
+ INSERT INTO public.delivery_jobs(kind,deduplication_key,payload,state,lease_token,locked_until) VALUES('event_confirmation','push-mail-fixture','{}','running',gen_random_uuid(),now()+interval '1 minute') RETURNING * INTO j;
+ IF public.queue_mail_app_notification(j.id,j.lease_token,'push-other@example.test','events','Your registration')<>1 THEN RAISE EXCEPTION 'Mail mirror missing';END IF;
+ IF public.queue_mail_app_notification(j.id,j.lease_token,'push-other@example.test','events','Your registration')<>0 THEN RAISE EXCEPTION 'Mail mirror duplicated';END IF;
+ IF public.queue_mail_app_notification(j.id,j.lease_token,'unknown@example.test','events','Your registration')<>0 THEN RAISE EXCEPTION 'Unknown recipient was enrolled';END IF;
+ PERFORM public.read_app_notification_settings(b,other_s);
+END $$;
+ROLLBACK;

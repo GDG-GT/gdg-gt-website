@@ -42,6 +42,7 @@ export const PAGE_PERMISSIONS: Record<
   "/admin/linktree": [{ resource: "site_content", action: "read" }],
   "/admin/resources": [{ resource: "site_content", action: "read" }],
   "/admin/site-status": [{ resource: "site_content", action: "update" }],
+  "/admin/notifications": [],
   "/admin/profile": [], // Profile - accessible to all authenticated admins
   "/admin/guide": [], // Guide - accessible to all authenticated admins
   "/admin/channels": [], // Org-wide channels - accessible to all authenticated admins

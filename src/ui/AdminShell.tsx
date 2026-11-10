@@ -1,3 +1,5 @@
+import { installValidationFeedback } from "@/lib/form-validation";
+import { NativeNotificationSync } from "./notifications/NotificationSettings";
 import { confirmAction } from "@/lib/app-dialogs";
 // Reapply the complete canonical sheets in their original order after the
 // public subset. Every earlier rule has its later exact duplicate, preserving
@@ -16,7 +18,7 @@ import {
 } from "react";
 import { useNavigationSafety } from "@/hooks/useDraftGuard";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import {
+import { Bell,
   Activity,
   ArrowLeft,
   ArrowUpRight,
@@ -129,6 +131,7 @@ const groups: { title: string; links: Destination[] }[] = [
         icon: Activity,
       },
       { label: "Operating guide", href: "/admin/guide", icon: BookOpen },
+      { label: "Notifications", href: "/admin/notifications", icon: Bell },
       { label: "My profile", href: "/admin/profile", icon: Users },
     ],
   },
@@ -136,6 +139,7 @@ const groups: { title: string; links: Destination[] }[] = [
 const workspaceDestinations = groups.flatMap((group) => group.links);
 
 export default function AdminShell({ children }: { children: ReactNode }) {
+  useEffect(installValidationFeedback, []);
   useEffect(() => {
     window.dispatchEvent(new Event("gdg:auth-needed"));
   }, []);
@@ -404,6 +408,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       </a>
       {!inNativeApp && <aside className="gt-sidebar">{sidebar}</aside>}
       <div className="gt-workspace">
+        <NativeNotificationSync />
         {inNativeApp && <NotificationBell native />}
         {!inNativeApp && (
           <header className="gt-workspace-topbar">

@@ -1,3 +1,4 @@
+import UserNotifications
 import SwiftUI
 import WebKit
 import CoreNFC
@@ -32,6 +33,7 @@ final class ScannerModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
     private let shareDirectory = FileManager.default.temporaryDirectory.appendingPathComponent("GDGPassShares", isDirectory: true)
     override init() {
         super.init()
+        NotificationCenter.default.addObserver(self, selector: #selector(pushOpened), name: .gdgPushOpened, object: nil)
         // Remove only this app's abandoned pass-share files after a crash/relaunch.
         try? FileManager.default.removeItem(at: shareDirectory)
         try? FileManager.default.createDirectory(at: shareDirectory, withIntermediateDirectories: true, attributes: [.protectionKey: FileProtectionType.complete])
@@ -52,7 +54,7 @@ final class ScannerModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
         config.userContentController.add(self, name: "gdgScanner")
         config.userContentController.add(self, name: "gdgAdmin")
         // At document start, before the workspace mounts. Subframes never receive the bridge marker.
-        let js = "if(location.origin==='https://gdggt.dev'){Object.defineProperty(window,'gdgScanner',{value:Object.freeze({version:1,admin:true,wallet:\(walletEnabled)}),writable:false});}"
+        let js = "if(location.origin==='https://gdggt.dev'){Object.defineProperty(window,'gdgScanner',{value:Object.freeze({version:1,admin:true,wallet:\(walletEnabled),push:true,platform:'ios'}),writable:false});}"
         config.userContentController.addUserScript(WKUserScript(source: js, injectionTime: .atDocumentStart, forMainFrameOnly: true))
         let view = WKWebView(frame: .zero, configuration: config)
         view.navigationDelegate = self
@@ -97,9 +99,15 @@ final class ScannerModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
             if !renewed && hasWorkspace && ScannerPolicy.admin(webView.url) {
                 unlocked = true
                 _ = try? await webView.evaluateJavaScript("window.dispatchEvent(new Event('focus'));")
+                pushOpened()
             } else { openWorkspace() }
         } catch { if generation == authenticationGeneration { signInNotice = error.localizedDescription } }
         authenticationContext = nil
+    }
+    @objc private func pushOpened() {
+        guard unlocked, NativeNotifications.shared.pendingOpen, ScannerPolicy.admin(webView.url) else { return }
+        NativeNotifications.shared.pendingOpen = false
+        requestNavigation("notifications")
     }
     private func openWorkspace() {
         hasWorkspace = true; unlocked = true; signInNotice = nil; error = nil; loading = true
@@ -112,6 +120,7 @@ final class ScannerModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
         cancel(); webView.stopLoading(); unlocked = false
     }
     func forgetLocally() {
+        NativeNotifications.shared.forget()
         lock(); OfficerKeychain.remove(); hasRememberedAccount = false; signInNotice = nil
         hasWorkspace = false; destinations = []; signingIn = true
         let store = webView.configuration.websiteDataStore
@@ -149,11 +158,25 @@ final class ScannerModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
             if action == "signedOut" { forgetLocally(); return }
             guard unlocked else { return }
             if action == "authRequired" { hasWorkspace = false; lock(); return }
+            if action == "notificationBadge", let count = body["count"] as? Int, (0...9999).contains(count) {
+                UNUserNotificationCenter.current().setBadgeCount(count) { _ in }
+                return
+            }
+            if action == "appPush", let id = body["id"] as? String, UUID(uuidString: id) != nil, let method = body["method"] as? String {
+                NativeNotifications.shared.request(id: id, method: method) { [weak self] state, error in
+                    guard let self, self.unlocked, ScannerPolicy.admin(self.webView.url) else { return }
+                    var payload: [String: Any] = ["id": id]
+                    if let state { payload["state"] = state }; if let error { payload["error"] = error }
+                    self.webView.callAsyncJavaScript("window.dispatchEvent(new CustomEvent('gdg:native-push-result',{detail:payload}));", arguments: ["payload": payload], in: nil, in: .page, completionHandler: { _ in })
+                }
+                return
+            }
             if action == "state", let currentPath = body["path"] as? String,
                ScannerPolicy.admin(URL(string: ScannerPolicy.origin + currentPath)), currentPath.hasPrefix("/admin"),
                let title = body["title"] as? String, title.count <= 100,
                let rows = body["destinations"] as? [[String: String]], rows.count <= 60 {
                 path = currentPath; pageTitle = title; canGoBack = (body["canGoBack"] as? Bool) ?? webView.canGoBack
+                if NativeNotifications.shared.pendingOpen { DispatchQueue.main.async { self.pushOpened() } }
                 destinations = rows.compactMap { row in
                     guard let path = row["path"], path.hasPrefix("/admin"), !path.contains("?"), !path.contains("#"),
                           ScannerPolicy.admin(URL(string: ScannerPolicy.origin + path)),

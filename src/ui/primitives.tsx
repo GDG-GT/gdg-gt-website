@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { Children, cloneElement, isValidElement, useId, type ButtonHTMLAttributes, type ReactNode, type HTMLAttributes } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, ArrowUpRight, Search, Inbox } from "lucide-react";
 import { chapterName } from "./preview-data";
@@ -232,13 +232,14 @@ export function Field({
   hint?: string;
   required?: boolean;
 }) {
+  const labelId = useId();
   return (
     <label className="gt-field">
-      <span>
+      <span id={labelId}>
         {label}
         {required && <span className="gt-required"> *</span>}
       </span>
-      {children}
+      {Children.map(children, child => isValidElement<HTMLAttributes<HTMLElement>>(child) && ["input", "select", "textarea"].includes(String(child.type)) ? cloneElement(child, { "data-field-label": label, ...(!child.props["aria-label"] ? { "aria-labelledby": child.props["aria-labelledby"] || labelId } : {}) } as HTMLAttributes<HTMLElement>) : child)}
       {hint && <small>{hint}</small>}
     </label>
   );

@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct ScannerApp: App {
+    @UIApplicationDelegateAdaptor(WorkspaceAppDelegate.self) var appDelegate
     var body: some Scene {
         WindowGroup {
             OfficerAppView()

@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-10",
+  "scope": [
+    "Direct APNs notifications for opted-in iOS workspace users, with existing browser push support; Firebase cancelled",
+    "Every form response creates a canonical authorized inbox notification; accepted mail and existing workspace notices use the same device queue",
+    "Untouched OrganizationRoster.csv import adapter with reviewed deduplication",
+    "Profile pasted-link normalization and visible field-level feedback across admin forms"
+  ],
+  "validation": {
+    "unit": "268 files / 3116 tests pass",
+    "browser": "18 cases pass in desktop Chromium and mobile WebKit; notification preferences/device removal, visible profile field errors, roster preview, member read/recovery/focus and profile identity consolidation",
+    "database": "All 153 canonical and legacy-default-grant tests pass; both 100-client concurrency checks pass",
+    "native": "Swift tests pass; final signed build8 archive/export and App Store Connect upload succeed. Export has production APNs, webcredentials:gdggt.dev, TAG-only NFC and no debug entitlement.",
+    "provider": "Production APNs connection with intentionally invalid token returns expired-token class; no real device was messaged.",
+    "typecheck": "pass",
+    "lint": "0 errors / 8 inherited warnings",
+    "buildBundleSSRSecrets": "pass; offline install 514594 bytes; 0 unreviewed secret findings",
+    "visual": "Desktop and mobile notification settings and profile red-border/inline error screenshots inspected"
+  },
+  "production": {
+    "migration": "app_notifications_153 applied exactly once; RLS true, anon cannot prepare push, devices0 at verification",
+    "configuration": "Seven APNs/app-notification variables verified against private prepared configuration; existing VAPID and Wallet keys preserved",
+    "members": "No roster import or other production business-record mutation performed",
+    "mail": "No member mail or notification blast; no historical replay",
+    "source": "One combined push; see git history for this release commit"
+  },
+  "app": {
+    "bundle": "dev.gdggt.scanner",
+    "build": 8,
+    "archive": "native/Scanner/build/GDGWorkspace-Build8-Final.xcarchive",
+    "upload": "Succeeded, 2026-11-10T20:51:39Z; do not repeat upload",
+    "group": "Existing GDG Officers group. Build8 still processing at review; assignment pending Apple processing. Build7 confirmed assigned."
+  },
+  "acceptanceRemaining": [
+    "Install build8 and explicitly enable notifications; test foreground/background alerts and tap-to-unlock on a physical iPhone",
+    "Check OS permission/Focus/offline behavior; provider connection does not prove device delivery"
+  ],
+  "documentation": ".docs/operations/APP_NOTIFICATIONS.md"
+}

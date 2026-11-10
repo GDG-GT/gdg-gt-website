@@ -1,3 +1,4 @@
+import { normalizeProfileLink } from "../shared/profile-links.mjs";
 import { z } from "zod";
 import { requireSession, requireCsrf } from "./auth.mjs";
 import { allowMethod, sendJson, jsonBody } from "./lib/http.mjs";
@@ -82,10 +83,10 @@ export async function accessRoutes(
               name: text(100, 2),
               role: text(100, 1),
               bio: text(3000).optional(),
-              imageUrl: z.union([imageUrl,z.literal("")]).optional(),
-              linkedinUrl: z.union([safeUrl,z.literal("")]).optional(),
-              githubUrl: z.union([safeUrl,z.literal("")]).optional(),
-              portfolioUrl: z.union([safeUrl,z.literal("")]).optional(),
+              imageUrl: z.preprocess(normalizeProfileLink, z.union([imageUrl,z.literal("")])).optional(),
+              linkedinUrl: z.preprocess(normalizeProfileLink, z.union([safeUrl,z.literal("")])).optional(),
+              githubUrl: z.preprocess(normalizeProfileLink, z.union([safeUrl,z.literal("")])).optional(),
+              portfolioUrl: z.preprocess(normalizeProfileLink, z.union([safeUrl,z.literal("")])).optional(),
             })
             .strict()
             .optional(),

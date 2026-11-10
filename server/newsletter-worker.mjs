@@ -1,3 +1,4 @@
+import { queueMailAppNotification } from "./app-notifications.mjs";
 import { serverDatabase } from "./db/client.mjs";
 import { serverConfig } from "./config.mjs";
 import { createMailTransport } from "./lib/mail-transport.mjs";
@@ -98,6 +99,7 @@ export async function runNewsletterWorker({
           category: "newsletter",
           idempotencyKey: "gdg-newsletter-" + job.id,
         });
+        await queueMailAppNotification(db, job, message, "newsletter", env);
         success = true;
       } catch (failure) {
         permanent = permanent || failure.permanent === true;

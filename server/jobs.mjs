@@ -1,3 +1,4 @@
+import { runAppPushWorker } from "./app-push-worker.mjs";
 import { authorizeJob } from "./lib/job-authorization.mjs";
 import { ApiError, allowMethod, sendJson } from "./lib/http.mjs";
 import { databaseResult as checked } from "./lib/validation.mjs";
@@ -136,6 +137,8 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
         );
     } else {
       counts = await runDelivery({ db, limit: 25 });
+      const appPush = await runAppPushWorker({ db });
+      counts.appPush = appPush;
       if (counts.retried || counts.lostLease)
         throw new ApiError(
           503,

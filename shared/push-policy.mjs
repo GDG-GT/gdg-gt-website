@@ -1,6 +1,10 @@
 // Keep the worker policy dependency-free; subscription validation belongs to API.
 // Push content is untrusted and can only open a canonical public event.
 export function pushNotification(value, origin) {
+  if (value?.type === "workspace-update" && /^[0-9a-f-]{36}$/.test(value.notificationId || "") && value.path === "/admin/notifications") {
+    return { title: "GDG Workspace", options: { body: "You have a new chapter update.", icon: "/icons/pwa-192.png", tag: "gdg-update:" + value.notificationId,
+      renotify: false, data: { url: new URL("/admin/notifications", origin).href } } };
+  }
   if (
     !value ||
     value.type !== "event-reminder" ||
@@ -25,6 +29,7 @@ export function pushNotification(value, origin) {
 export function canonicalPushClick(value, origin) {
   try {
     const u = new URL(value, origin);
+    if (u.origin === origin && u.pathname === "/admin/notifications" && !u.search && !u.hash) return u.href;
     return u.origin === origin &&
       /^\/events\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(u.pathname) &&
       !u.search &&

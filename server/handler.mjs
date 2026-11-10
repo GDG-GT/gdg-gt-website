@@ -56,6 +56,7 @@ import { newsletterWebhookRoutes } from "./newsletter-webhook.mjs";
 import { newsletterResultRoutes } from "./newsletter-results.mjs";
 import { contactUploadRoutes } from "./contact-uploads.mjs";
 import { contactInboxRoutes } from "./contact-inbox.mjs";
+import { appNotificationRoutes } from "./app-notifications.mjs";
 import { pushRoutes } from "./push.mjs";
 import { personPrivacyRoutes } from "./person-privacy.mjs";
 import { createTelemetryLogger } from "./lib/telemetry.mjs";
@@ -164,6 +165,7 @@ export function applicationHandler({
           })
         )
           return;
+        if (await appNotificationRoutes(request, response, { db, store, config, requestId })) return;
         if (
           await pushRoutes(request, response, { db, store, config, requestId })
         )

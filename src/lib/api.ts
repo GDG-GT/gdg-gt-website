@@ -1,3 +1,4 @@
+import { captureValidationForm, presentValidationErrors } from "./form-validation";
 // Same-origin application transport. Session cookies are HttpOnly and CSRF is
 // held only in module memory; neither bearer material nor CSRF enters storage.
 export class ApiFailure extends Error {
@@ -73,6 +74,7 @@ async function execute<T>(
 ): Promise<T> {
   if (!path.startsWith("/") || path.startsWith("//"))
     throw new Error("Use a relative API path.");
+  const validationForm = !["GET", "HEAD"].includes((options.method || "GET").toUpperCase()) ? captureValidationForm() : undefined;
   const method = (options.method || "GET").toUpperCase(),
     mutation = !["GET", "HEAD"].includes(method),
     scoped =
@@ -168,6 +170,7 @@ async function execute<T>(
     return execute<T>(path, options, false, expectedEpoch);
   }
   if (!response.ok) {
+    if (response.status === 400 && result?.error?.code === "VALIDATION_ERROR") presentValidationErrors(validationForm, result.error.fields);
     if (response.status === 401 && scoped) {
       // An initial anonymous session probe still cancels protected requests, but
       // is not a sign-out of independent public resume/edit capabilities.

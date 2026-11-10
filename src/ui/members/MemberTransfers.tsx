@@ -34,6 +34,8 @@ type Parsed = {
   rows: MemberFields[];
   errors: { line: number; message: string }[];
   ignoredColumns: string[];
+  format?: string;
+  duplicatesCollapsed?: number;
 };
 const download = (csv: string, filename: string) => {
   const url = URL.createObjectURL(
@@ -290,7 +292,7 @@ function MemberTransfersContent({
               <p className="gt-helper">
                 Download only for an approved chapter purpose. Exported private
                 data cannot be recalled. Spreadsheet formula prefixes are
-                escaped; use the import template when preparing new records.
+                escaped. Upload the member template or the original Organization Roster CSV.
               </p>
               <Button
                 disabled={busy || disabled || !isOnline}
@@ -399,7 +401,7 @@ function MemberTransfersContent({
                 <summary>Paste CSV instead</summary>
                 <Field
                   label="CSV content"
-                  hint="Include the template header. This stays in memory until you close or submit the import."
+                  hint="Paste the member template or the original Organization Roster export."
                 >
                   <textarea
                     rows={5}
@@ -436,6 +438,7 @@ function MemberTransfersContent({
                     {parsed.rows.length === 1 ? "row" : "rows"} ·{" "}
                     {parsed.errors.length} to fix.
                   </p>
+                  {parsed.format === "organization-roster" && <p>Organization Roster detected. {parsed.duplicatesCollapsed || 0} repeated position rows combined. Members are matched by email; roster positions do not change workspace permissions.</p>}
                   {!!parsed.ignoredColumns.length && (
                     <p className="gt-helper">
                       Ignored metadata: {parsed.ignoredColumns.join(", ")}.

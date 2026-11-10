@@ -21,7 +21,7 @@ function cells(source) {
   source = source.replace(/^\uFEFF/, "");
   const result = []; let row = [], value = "", quoted = false, closed = false, line = 1, start = 1;
   const cell = () => { row.push(value); value = ""; closed = false; if (row.length > 25) throw Error("The CSV has too many columns."); };
-  const finish = () => { cell(); if (row.some((v) => v.trim())) result.push({ cells: row, line: start }); row = []; start = line + 1; if (result.length > 201) throw Error("Import at most 200 member rows per batch."); };
+  const finish = () => { cell(); if (row.some((v) => v.trim())) result.push({ cells: row, line: start }); row = []; start = line + 1; if (result.length > 1005) throw Error("The roster has too many source rows."); };
   for (let i = 0; i < source.length; i++) {
     const c = source[i];
     if (quoted) {
@@ -36,8 +36,37 @@ function cells(source) {
   if (row.length || value || closed) finish();
   return result;
 }
+const rosterColumns = ["username", "card id number", "first name", "last name", "campus email", "preferred email", "local phone", "mobile phone", "organization id", "organization name", "position name", "position start date", "position end date", "last login"];
+const rosterValue = value => /^\s*\(hidden\)\s*$/i.test(value || "") ? "" : (value || "").trim();
+function parseOrganizationRoster(parsed, headerIndex) {
+  const headers = parsed[headerIndex].cells.map(v => v.trim().toLowerCase());
+  if (new Set(headers).size !== headers.length || headers.some(h => !rosterColumns.includes(h))) throw Error("The organization roster has duplicate or unsupported columns.");
+  const rows = [], errors = [], seen = new Map(); let duplicatesCollapsed = 0;
+  for (const record of parsed.slice(headerIndex + 1)) {
+    if (record.cells.length !== headers.length) { errors.push({ line: record.line, message: "The number of cells does not match the roster header." }); continue; }
+    const value = Object.fromEntries(headers.map((h, i) => [h, rosterValue(record.cells[i])])),
+      input = { name: [value["first name"], value["last name"]].filter(Boolean).join(" "), email: value["campus email"] || value["preferred email"] || "", phone: value["mobile phone"] || value["local phone"] || "" },
+      valid = communityMemberRecord.safeParse(input);
+    if (!valid.success) { errors.push({ line: record.line, message: "Check " + [...new Set(valid.error.issues.map(i => i.path[0]))].join(", ") + "." }); continue; }
+    const previous = seen.get(valid.data.email);
+    if (previous) {
+      if (previous.name.toLowerCase() !== valid.data.name.toLowerCase() || (previous.phone && valid.data.phone && previous.phone !== valid.data.phone)) errors.push({ line: record.line, message: "This email has conflicting member details in the roster." });
+      else { if (!previous.phone) previous.phone = valid.data.phone; duplicatesCollapsed++; }
+      continue;
+    }
+    seen.set(valid.data.email, valid.data); rows.push(valid.data);
+  }
+  if (rows.length > 200) throw Error("Import at most 200 members per batch.");
+  return { rows, errors, ignoredColumns: headers.filter(h => !["first name", "last name", "campus email", "preferred email", "mobile phone", "local phone"].includes(h)), format: "organization-roster", duplicatesCollapsed };
+}
 export function parseMemberCsv(source) {
   const parsed = cells(source);
+  const rosterHeader = parsed.slice(0, 6).findIndex(record => {
+    const headers = record.cells.map(v => v.trim().toLowerCase());
+    return ["first name", "last name", "campus email"].every(h => headers.includes(h));
+  });
+  if (rosterHeader >= 0 && (rosterHeader === 0 || parsed[0].cells[0]?.trim().toLowerCase() === "organization roster")) return parseOrganizationRoster(parsed, rosterHeader);
+  if (parsed.length > 201) throw Error("Import at most 200 member rows per batch.");
   if (parsed.length < 2) throw Error("Include a header and at least one member row.");
   const headers = parsed.shift().cells.map((v) => v.trim().toLowerCase());
   if (new Set(headers).size !== headers.length || headers.some((h) => !memberCsvColumns.includes(h) && !metadata.includes(h)))
