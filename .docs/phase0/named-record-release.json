@@ -1,0 +1,53 @@
+{
+  "verifiedAt": "2026-11-10T05:39:59.726154+00:00",
+  "featureSource": "d11ec86ba57e9e070bb294436898429d786df224",
+  "deployment": {
+    "id": "dpl_723Bm6MS1VVQVR61noq3RhxjsUh9",
+    "state": "READY",
+    "domains": [
+      "gdggt.dev",
+      "leaderboards.gdggt.dev"
+    ]
+  },
+  "verification": {
+    "unitFiles": 255,
+    "unitTests": 3015,
+    "targetedBrowserCases": 50,
+    "browserProfiles": [
+      "chromium-1440",
+      "webkit-mobile"
+    ],
+    "typecheck": "passed",
+    "lint": {
+      "errors": 0,
+      "inheritedWarnings": 8
+    },
+    "productionBuild": "passed",
+    "publicSSR": "passed",
+    "bundleBudgets": "passed",
+    "secretScan": "passed"
+  },
+  "hostedCI": {
+    "run": 42762783515,
+    "codeAndDatabase": "passed",
+    "coverage": "passed",
+    "secrets": "passed",
+    "dependencies": "passed",
+    "fullBrowserMatrix": "in progress at recording"
+  },
+  "productionUI": {
+    "workflow": "Existing linked unpublished Team profile \u2192 Review draft Team profile \u2192 exact draft editor",
+    "verified": true,
+    "profileEditsSaved": 0,
+    "profilesPublished": 0,
+    "duplicateMembersCreated": 0,
+    "note": "Anish\u2019s original sync succeeded; publication remains a separate explicit action."
+  },
+  "boundaries": {
+    "productionDataWrites": 0,
+    "providerSends": 0,
+    "databaseMigrations": 0,
+    "nativeBinaryChanges": false,
+    "temporaryPreviewStopped": true
+  }
+}
