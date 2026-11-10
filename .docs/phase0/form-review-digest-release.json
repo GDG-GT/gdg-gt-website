@@ -32,7 +32,41 @@
     "SSR": "pass",
     "secrets": "0 unreviewed findings"
   },
-  "rollout": "Pending single source push and hosted migration152; do not claim live before verification",
+  "rollout": {
+    "source": "fefe5e04b9c2a103302479280f617de2161568ff",
+    "deployment": "dpl_Ho3iyFLW3Yy21L5eKNGDavvJeU2a",
+    "state": "READY",
+    "domains": [
+      "gdggt.dev",
+      "leaderboards.gdggt.dev"
+    ],
+    "migration152": "20261110153303",
+    "signedInUi": "Current answers readable in published question order; clean uploaded PDF opened inline through one-click authenticated route",
+    "unsignedPrivateAPI": 401,
+    "responseCountAfter": 1,
+    "cleanAttachmentCountAfter": 1,
+    "schedulersActive": 2,
+    "digestQueuedBefore11pm": 0,
+    "schedulerRun": {
+      "formSchedules": "completed with digestQueued0 at2026-11-10T15:35Z",
+      "delivery": "completed at2026-11-10T15:37Z"
+    }
+  },
   "native": "Web companion changes only; no new native binary, no physical-device test claimed",
-  "mail": "No preview sent to chapter; first scheduled digest tonight"
+  "mail": "No preview sent to chapter; first scheduled digest tonight",
+  "submissionAlertFollowup": {
+    "setting": "Email on every submission",
+    "applies": "Save and publish live form",
+    "default": "off for forms without prior simple setting",
+    "sender": "forms@gdggt.dev",
+    "destination": "configured chapter inbox gdg@gatech.edu",
+    "delivery": "existing atomic notification job and minute-based durable mail worker",
+    "legacyPolicy": "Explicit simple setting replaces only legacy chapter-inbox alerts, avoiding duplicate chapter mail; account recipients/copies remain separate",
+    "validation": "44 focused unit tests; desktop Chromium/mobile WebKit toggle save-on/off; type/lint/build/bundle/SSR/secrets pass",
+    "rollout": "Follow-up source push pending; original batch was already building when owner added this request",
+    "fullUnit": {
+      "files": 263,
+      "tests": 3093
+    }
+  }
 }

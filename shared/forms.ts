@@ -73,6 +73,7 @@ export interface FormSettings {
   resume: boolean;
   editing: boolean;
   receipts: boolean;
+  notifyOnSubmission?: boolean;
   confirmation: string;
   opensAt: string;
   closesAt: string;
@@ -1107,6 +1108,7 @@ export const formDraftDefinitionSchema = z
         resume: z.boolean(),
         editing: z.boolean(),
         receipts: z.boolean(),
+        notifyOnSubmission: z.boolean().optional(),
         confirmation: bounded(3000),
         opensAt: timestamp,
         closesAt: timestamp,

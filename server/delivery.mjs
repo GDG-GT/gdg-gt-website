@@ -446,6 +446,12 @@ export async function deliveryMessage(
       }),
     );
     if (!notice) return null;
+    if (notice.chapterInbox && notice.purpose === "notification") {
+      const form = checked(await db.from("forms").select("settings").eq("id", notice.formId).maybeSingle());
+      // An explicit simple setting owns chapter alerts. Older forms retain
+      // their reviewed policy until they opt into the simple setting.
+      if (typeof form?.settings?.notifyOnSubmission === "boolean") return null;
+    }
     to = notice.chapterInbox
       ? mail.chapter
       : notice.email ||
@@ -488,7 +494,7 @@ export async function deliveryMessage(
     const form = checked(
       await db
         .from("forms")
-        .select("id,title,owner_id")
+        .select("id,title,owner_id,state,settings")
         .eq("id", job.payload.formId)
         .maybeSingle(),
     );
@@ -516,7 +522,21 @@ export async function deliveryMessage(
           { onConflict: "delivery_key", ignoreDuplicates: true },
         ),
       );
-    return null;
+    if (form.state === "Archived" || form.settings?.notifyOnSubmission !== true)
+      return null;
+    const submitted = checked(await db.from("form_responses")
+      .select("id,submitted_at,deleted_at,redacted_at")
+      .eq("id", job.payload.responseId).eq("form_id", form.id).maybeSingle());
+    if (!submitted || submitted.deleted_at || submitted.redacted_at) return null;
+    if (!mail.chapter)
+      throw new ApiError(503, "MAIL_NOT_CONFIGURED", "A chapter inbox is required.");
+    to = mail.chapter;
+    subject = "New response: " + form.title;
+    content = `A new response to ${form.title} is ready to review.`;
+    const reviewUrl = config.origin + "/admin/forms/" + form.id + "/responses";
+    htmlContent = content;
+    content += "\n\nReview response: " + reviewUrl;
+    actions.push({ label: "Review response", url: reviewUrl });
   } else
     throw new ApiError(
       400,

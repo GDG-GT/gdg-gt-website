@@ -1093,6 +1093,7 @@ function FormBuilderContent() {
                 [
                   ["resume", "Save & resume"],
                   ["editing", "Allow response edits"],
+                  ["notifyOnSubmission", "Email on every submission"],
                   ["receipts", "Legacy receipt publication review"],
                   ["review", "Final answer review"],
                   ["oneResponse", "One response per verified identity"],
@@ -1132,6 +1133,10 @@ function FormBuilderContent() {
                   </label>
                 ))}
               <p className="gt-helper">
+                Submission alerts go to gdg@gatech.edu. The nightly digest is
+                sent separately at 11 pm Atlanta time.
+              </p>
+              <p className="gt-helper">
                 One-response enforcement requires a verified identity or unique
                 private invitation. A public form with entered details cannot
                 reliably identify respondents.
@@ -1154,12 +1159,8 @@ function FormBuilderContent() {
                   </Button>
                 )}
               <p className="gt-helper">
-                Respondents can request their own complete copy at submission,
-                sent only to their entered email without confirmation. Chapter
-                notifications are separate and only go to explicitly reviewed
-                recipients. Older receipt-enabled drafts keep their existing
-                publication-review requirement until that legacy setting is
-                turned off.
+                Applicants can request a copy of their answers when submitting.
+                Use chapter notification settings to add individual reviewers.
               </p>
               <Field
                 label="Response retention (days)"

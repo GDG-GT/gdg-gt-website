@@ -1,3 +1,13 @@
+## Current chapter alerts and digest — 2026-11-10
+
+Builder → Settings → **Email on every submission** is the simple chapter-inbox alert. It starts off for forms without this setting. Draft changes autosave; publish the saved draft to apply the choice to the live form. Each new submitted response already creates one durable notification job in the submission transaction. With the setting enabled, that job sends a metadata-only email from forms@gdggt.dev to configured CHAPTER_CONTACT_EMAIL (gdg@gatech.edu), with a Review response button. The existing minute-based worker retries with the same provider idempotency key. It is queued immediately and normally delivered on the next minute's worker pass, rather than blocking the respondent's submission on Resend.
+
+Turning it off suppresses pending simple alerts. Archived forms and deleted/redacted responses do not send. No past completed submission job is replayed. An explicit simple setting replaces only the advanced policy's chapter-inbox alert, preventing duplicate chapter mail; account-targeted notifications and respondent copies stay separate. Older policies remain compatible until a form explicitly saves the simple setting.
+
+Migration152 also adds one nightly counts-only digest at23:00 America/New_York, using the existing five-minute form scheduler and mail worker. It includes all currently live published forms, including zeros, with today and total counts as of23:00. Local-midnight boundaries follow DST. One retained date key prevents duplicate digests across retries. No new Cron job is installed. No email is queued when no forms are live.
+
+Reviewers with sensitive-response permission see their permitted current answers automatically; exports and history default to including permitted sensitive answers. PDF/image uploads can open through the authenticated one-minute signed viewer. Manual privacy deletion and retention are separate from display masking.
+
 # Reviewed Forms mail
 
 Update 2026-10-21 / migration 092: respondent copies now require the respondent's
