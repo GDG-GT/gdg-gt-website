@@ -255,15 +255,17 @@ test("member activity retries independently and a failed later page retains a pr
     .click();
   await expect(page.getByText("created", { exact: true })).toBeVisible();
   expect(state.reads.filter((k) => k === "detail")).toHaveLength(before);
+  await page.getByRole("button", { name: "Close member", exact: true }).click();
   state.fail.add("inventory");
   await page.getByRole("button", { name: "Next members", exact: true }).click();
   await expect(page.getByText(/Fictional inventory outage/)).toBeVisible();
-  await expect(page.getByText(record.email)).toHaveCount(1);
+  await expect(page.getByRole("region", { name: "Member details", exact: true })).toHaveCount(0);
   state.fail.clear();
   await page
     .getByRole("button", { name: "Previous members", exact: true })
     .click();
-  await ready(page, true);
+  await ready(page);
+  await expect(page.getByText(record.email)).toBeVisible();
   await verify(page, state);
   expect(fixture.unexpected).toEqual([]);
 });

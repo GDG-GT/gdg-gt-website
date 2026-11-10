@@ -1791,6 +1791,7 @@ img {
 }
 .gt-button-ghost:hover {
   background: #fff0e9;
+  color: #a13e31;
 }
 .gt-button-danger {
   background: #fff0ef;
@@ -6607,6 +6608,38 @@ fieldset.gt-event-fields {
   max-width: 44rem;
   max-height: min(48rem, 90dvh);
   overflow-y: auto;
+}
+.gt-record-dialog {
+  left: auto;
+  right: 16px;
+  transform: translateY(-50%);
+  width: calc(100% - 32px);
+  max-width: 48rem;
+  max-height: min(52rem, calc(100dvh - 32px));
+  padding: 28px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.875rem;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 18%);
+}
+.gt-record-panel-body { min-width: 0; }
+.gt-record-panel-body > :is(.gt-panel, .gt-event-editor, .gt-blog-editor, .gt-finance-detail) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.gt-record-panel-body .gt-panel-heading { padding-right: 28px; }
+.gt-record-panel-body .gt-plain-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.gt-record-panel-body :is(input, textarea, select) { max-width: 100%; }
+.gt-record-panel-body .gt-team-history { max-height: 16rem; overflow-y: auto; }
+@media (max-width: 767px) {
+  .gt-record-dialog { right: 8px; width: calc(100% - 16px); max-height: calc(100dvh - 16px); padding: 22px 18px; }
 }
 .gt-form-integration-list {
   list-style: none;

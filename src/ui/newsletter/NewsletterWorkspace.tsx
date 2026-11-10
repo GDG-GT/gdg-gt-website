@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { useLiveSearch } from "@/hooks/useLiveSearch";
 import { useNavigationSafety } from "@/hooks/useDraftGuard";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import NewsletterEditor from "./NewsletterEditor";
@@ -84,6 +85,11 @@ function NewsletterWorkspaceContent() {
         : undefined,
       tick,
     );
+  useLiveSearch(query, q, (value) => {
+    setQ(value);
+    setPage(1);
+    setExporting(false);
+  }, !busy && !editor);
   const cap = capRead.data,
     list = listRead.data,
     loading = listRead.loading,

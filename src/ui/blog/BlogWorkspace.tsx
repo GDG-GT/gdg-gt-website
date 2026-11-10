@@ -1,3 +1,4 @@
+import RecordPanel from "@/ui/RecordPanel";
 import RecordAcknowledgement from "@/ui/RecordAcknowledgement";
 import {
   useCallback,
@@ -570,47 +571,7 @@ function BlogWorkspaceContent({
     string(r, "original_name") ||
     string(r, "content").slice(0, 120) ||
     "Retained record";
-  return (
-    <div className="gt-admin-page gt-blog-workspace">
-      <div className="gt-admin-page-heading">
-        <div>
-          <h1 tabIndex={-1} ref={workspaceHeading}>
-            Private editorial workspace
-          </h1>
-          <p>
-            Draft, review and retain chapter writing. Internal publication never
-            creates a public Blog.
-          </p>
-        </div>
-        <div className="gt-toolbar">
-          {create && (
-            <Button disabled={busy || !!mode} onClick={() => open("create")}>
-              New {kind === "posts" ? "article" : "category"}
-            </Button>
-          )}
-          <Button
-            variant="secondary"
-            disabled={busy}
-            onClick={() => setTick((v) => v + 1)}
-          >
-            Refresh editorial records
-          </Button>
-        </div>
-      </div>
-      {editorial && <EditorialOverview />}
-      <nav aria-label="Editorial collections" className="gt-workspace-tabs">
-        {kinds.map((k) => (
-          <Button
-            key={k}
-            variant={k === kind ? "primary" : "ghost"}
-            aria-current={k === kind ? "page" : undefined}
-            disabled={busy}
-            onClick={() => collection(k)}
-          >
-            {labels[k]}
-          </Button>
-        ))}
-      </nav>
+  const panelFeedback = (<>
       {notice && (
         <p role="status" tabIndex={-1} ref={noticeFocus} className="gt-notice">
           {notice}
@@ -672,8 +633,53 @@ function BlogWorkspaceContent({
           {error}
         </p>
       )}
+  </>);
+  return (
+    <div className="gt-admin-page gt-blog-workspace">
+      <div className="gt-admin-page-heading">
+        <div>
+          <h1 tabIndex={-1} ref={workspaceHeading}>
+            Private editorial workspace
+          </h1>
+          <p>
+            Draft, review and retain chapter writing. Internal publication never
+            creates a public Blog.
+          </p>
+        </div>
+        <div className="gt-toolbar">
+          {create && (
+            <Button disabled={busy || !!mode} onClick={() => open("create")}>
+              New {kind === "posts" ? "article" : "category"}
+            </Button>
+          )}
+          <Button
+            variant="secondary"
+            disabled={busy}
+            onClick={() => setTick((v) => v + 1)}
+          >
+            Refresh editorial records
+          </Button>
+        </div>
+      </div>
+      {editorial && <EditorialOverview />}
+      <nav aria-label="Editorial collections" className="gt-workspace-tabs">
+        {kinds.map((k) => (
+          <Button
+            key={k}
+            variant={k === kind ? "primary" : "ghost"}
+            aria-current={k === kind ? "page" : undefined}
+            disabled={busy}
+            onClick={() => collection(k)}
+          >
+            {labels[k]}
+          </Button>
+        ))}
+      </nav>
+      {!mode && !(selected && detail) && panelFeedback}
       {mode && (
-        <form
+        <RecordPanel title="Editorial editor" busy={busy} onClose={() => navigation.request(() => navigation.allow(reset))}>
+          {panelFeedback}
+<form
           className="gt-blog-editor"
           onSubmit={submit}
           aria-labelledby="blog-editor-title"
@@ -890,6 +896,7 @@ function BlogWorkspaceContent({
             </Button>
           </div>
         </form>
+</RecordPanel>
       )}
       {kind === "submissions" &&
         !mode &&
@@ -1074,7 +1081,9 @@ function BlogWorkspaceContent({
         )}
       </section>
       {record && !mode && (
-        <section
+        <RecordPanel title="Editorial record" busy={busy} onClose={() => select("")}>
+          {panelFeedback}
+<section
           className="gt-blog-detail"
           aria-label="Selected editorial record"
         >
@@ -1254,6 +1263,7 @@ function BlogWorkspaceContent({
             </nav>
           )}
         </section>
+</RecordPanel>
       )}
     </div>
   );

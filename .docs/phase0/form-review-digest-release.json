@@ -63,10 +63,33 @@
     "delivery": "existing atomic notification job and minute-based durable mail worker",
     "legacyPolicy": "Explicit simple setting replaces only legacy chapter-inbox alerts, avoiding duplicate chapter mail; account recipients/copies remain separate",
     "validation": "44 focused unit tests; desktop Chromium/mobile WebKit toggle save-on/off; type/lint/build/bundle/SSR/secrets pass",
-    "rollout": "Follow-up source push pending; original batch was already building when owner added this request",
+    "rollout": {
+      "source": "9aa0a4b6dd97ed2de546f90465df1ebedc540beb",
+      "deployment": "dpl_BE5fbPBfLNMkNNN7DB9JedAw1yin",
+      "state": "READY",
+      "aliases": [
+        "gdggt.dev",
+        "leaderboards.gdggt.dev"
+      ],
+      "testedFormBuilderAssetMatchesLive": true,
+      "rootStatuses": [
+        200,
+        200
+      ],
+      "unsignedPrivateAPI": 401
+    },
     "fullUnit": {
       "files": 263,
       "tests": 3093
     }
-  }
+  },
+  "hostedCI": {
+    "run": 42846434825,
+    "codeDatabase": "passed",
+    "coverage": "passed",
+    "secrets": "passed",
+    "dependencies": "passed",
+    "fullBrowserShards": "in progress at final verification"
+  },
+  "cleanup": "Temporary preview servers stopped; default and gdg-gt Colima stopped. Only invocation-owned failed disposable test container removed; prior unrelated stopped containers retained."
 }

@@ -1,3 +1,4 @@
+import RecordPanel from "@/ui/RecordPanel";
 import ScrollableTable from "@/ui/ScrollableTable";
 import {
   useCallback,
@@ -928,36 +929,7 @@ function TeamWorkspaceContent() {
         has been cleared. Recheck current access before continuing.
       </EmptyState>
     );
-  return (
-    <div className="gt-admin-page">
-      <header className="gt-admin-heading">
-        <div>
-          <h1>{workspace?.team.name || "Teams & permissions"}</h1>
-          <p>
-            {workspace?.team.description ||
-              "Organize chapter responsibilities, protect team scope, and keep membership changes accountable."}
-          </p>
-        </div>
-        <div className="gt-button-row">
-          {selected && (
-            <Button
-              variant="secondary"
-              disabled={busy}
-              onClick={() => choose("")}
-            >
-              All teams
-            </Button>
-          )}
-          {showCreate && (
-            <Button
-              disabled={busy || !!mode || !listReady}
-              onClick={() => open("create")}
-            >
-              Create team
-            </Button>
-          )}
-        </div>
-      </header>
+  const panelFeedback = (<>
       {!isOnline && (
         <p role="status">
           You are offline. Draft input remains here; refresh current team data
@@ -1030,6 +1002,38 @@ function TeamWorkspaceContent() {
         </div>
       )}
       {!review && (needsRecheck || uncertain) && recovery()}
+  </>);
+  return (
+    <div className="gt-admin-page">
+      <header className="gt-admin-heading">
+        <div>
+          <h1>{workspace?.team.name || "Teams & permissions"}</h1>
+          <p>
+            {workspace?.team.description ||
+              "Organize chapter responsibilities, protect team scope, and keep membership changes accountable."}
+          </p>
+        </div>
+        <div className="gt-button-row">
+          {selected && (
+            <Button
+              variant="secondary"
+              disabled={busy}
+              onClick={() => choose("")}
+            >
+              All teams
+            </Button>
+          )}
+          {showCreate && (
+            <Button
+              disabled={busy || !!mode || !listReady}
+              onClick={() => open("create")}
+            >
+              Create team
+            </Button>
+          )}
+        </div>
+      </header>
+      {!mode && panelFeedback}
       <Dialog
         open={!!review}
         onOpenChange={(open) => {
@@ -1149,7 +1153,9 @@ function TeamWorkspaceContent() {
         </DialogContent>
       </Dialog>
       {mode && (
-        <section className="gt-panel gt-event-editor">
+        <RecordPanel title="Team editor" busy={busy} onClose={() => navigationSafety ? navigationSafety.request(close) : close()}>
+          {panelFeedback}
+<section className="gt-panel gt-event-editor">
           <h2 tabIndex={-1} ref={heading}>
             {names[mode]}
           </h2>
@@ -1561,6 +1567,7 @@ function TeamWorkspaceContent() {
             </fieldset>
           </form>
         </section>
+</RecordPanel>
       )}
       {selected && workspace ? (
         <>

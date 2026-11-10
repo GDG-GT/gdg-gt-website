@@ -4,6 +4,7 @@ import { api, ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
 import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { useLiveSearch } from "@/hooks/useLiveSearch";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
 import { Badge, Button, EmptyState, Field, SearchBox } from "../primitives";
 import {
@@ -314,6 +315,9 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
       action();
     });
   const refresh = () => setTick((v) => v + 1);
+  useLiveSearch(JSON.stringify([queryDraft, tagDraft]), JSON.stringify([q, tag]), () => {
+    change(() => { setQ(queryDraft); setTag(tagDraft); });
+  }, !busy && isOnline && !editor && !folderMode && !upload && !bulk);
   useEffect(() => {
     const invalidate = () => {
       epoch.current++;

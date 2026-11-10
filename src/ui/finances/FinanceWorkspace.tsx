@@ -485,7 +485,7 @@ function FinanceWorkspaceContent() {
       )}
       {tab === "requests" && (
         <div
-          className={`gt-finance-layout ${selected ? "gt-finance-layout-detail" : ""}`}
+          className="gt-finance-layout"
         >
           <section>
             {list && (

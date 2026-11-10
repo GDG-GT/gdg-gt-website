@@ -1,4 +1,5 @@
 import ActionFeedback from "@/ui/ActionFeedback";
+import { useLiveSearch } from "@/hooks/useLiveSearch";
 import { confirmAction } from "@/lib/app-dialogs";
 import EventConnections from "./EventConnections";
 import {
@@ -146,6 +147,7 @@ export default function RewardsWorkspace() {
     key: string;
   }>();
   const [dirty, setDirty] = useState(false);
+  useLiveSearch(query, search, (value) => { setSearch(value); setPage(1); }, !busy && tab === "members");
   const [scannerDraft, setScannerDraft] = useState(false);
   useEffect(() => {
     if (new URLSearchParams(location.search).get("view") === "scanner")

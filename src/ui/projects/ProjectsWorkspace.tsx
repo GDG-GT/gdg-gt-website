@@ -1,3 +1,4 @@
+import RecordPanel from "@/ui/RecordPanel";
 import ScrollableTable from "@/ui/ScrollableTable";
 import {
   useCallback,
@@ -447,41 +448,7 @@ function ProjectsWorkspaceContent() {
       />
     </Field>
   );
-  return (
-    <section className="gt-admin-page gt-projects-workspace">
-      <header className="gt-admin-heading">
-        <div>
-          <h1 ref={workspaceHeading} tabIndex={-1}>
-            Projects
-          </h1>
-          <p>
-            Private chapter work, participants and progress. Featured projects
-            stay private.
-          </p>
-        </div>
-        <div className="gt-actions">
-          <Button
-            disabled={
-              !canCreate ||
-              !isOnline ||
-              !!capRead.error ||
-              capRead.loading ||
-              busy ||
-              !!mode
-            }
-            onClick={() => edit("create")}
-          >
-            New project
-          </Button>
-          <Button
-            variant="secondary"
-            disabled={busy || !isOnline}
-            onClick={() => setTick((v) => v + 1)}
-          >
-            Refresh
-          </Button>
-        </div>
-      </header>
+  const panelFeedback = (<>
       {notice && (
         <p ref={noticeFocus} tabIndex={-1} role="status">
           {notice}
@@ -527,8 +494,47 @@ function ProjectsWorkspaceContent() {
             {read.at ? new Date(read.at).toLocaleString() : "earlier"}.
           </p>
         ))}
+  </>);
+  return (
+    <section className="gt-admin-page gt-projects-workspace">
+      <header className="gt-admin-heading">
+        <div>
+          <h1 ref={workspaceHeading} tabIndex={-1}>
+            Projects
+          </h1>
+          <p>
+            Private chapter work, participants and progress. Featured projects
+            stay private.
+          </p>
+        </div>
+        <div className="gt-actions">
+          <Button
+            disabled={
+              !canCreate ||
+              !isOnline ||
+              !!capRead.error ||
+              capRead.loading ||
+              busy ||
+              !!mode
+            }
+            onClick={() => edit("create")}
+          >
+            New project
+          </Button>
+          <Button
+            variant="secondary"
+            disabled={busy || !isOnline}
+            onClick={() => setTick((v) => v + 1)}
+          >
+            Refresh
+          </Button>
+        </div>
+      </header>
+      {!mode && !(selected && p) && panelFeedback}
       {mode && (
-        <form className="gt-panel gt-event-editor" onSubmit={save}>
+        <RecordPanel title="Project editor" busy={busy} onClose={() => leave(() => {})}>
+          {panelFeedback}
+<form className="gt-panel gt-event-editor" onSubmit={save}>
           <h2 ref={heading} tabIndex={-1}>
             {mode === "create"
               ? "New private project"
@@ -804,6 +810,7 @@ function ProjectsWorkspaceContent() {
             </Button>
           </div>
         </form>
+</RecordPanel>
       )}
       <section
         aria-label="Project filters"
@@ -1008,7 +1015,9 @@ function ProjectsWorkspaceContent() {
         </>
       )}
       {!mode && selected && p && (
-        <section className="gt-panel">
+        <RecordPanel title="Project details" busy={busy} onClose={() => choose("")}>
+          {panelFeedback}
+<section className="gt-panel">
           <div className="gt-panel-heading">
             <div>
               <h2>{p.title}</h2>
@@ -1155,6 +1164,7 @@ function ProjectsWorkspaceContent() {
             </Button>
           </nav>
         </section>
+</RecordPanel>
       )}
       {!mode &&
         selected &&

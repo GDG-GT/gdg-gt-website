@@ -1,3 +1,4 @@
+import RecordPanel from "@/ui/RecordPanel";
 import {
   useCallback,
   useEffect,
@@ -633,51 +634,7 @@ function EventWorkspaceContent() {
         current access before continuing.
       </EmptyState>
     );
-  return (
-    <div className="gt-admin-page">
-      <header className="gt-admin-heading">
-        <div>
-          <p className="gt-helper">Chapter operations</p>
-          <h1>
-            {mode === "attendees"
-              ? "Registrations & attendance"
-              : mode === "edit"
-                ? selected
-                  ? "Edit event"
-                  : "Create an event"
-                : "Events"}
-          </h1>
-          <p>
-            Draft, publish, and run events with confirmed registration data.
-          </p>
-        </div>
-        {mode === "list" ? (
-          <Button
-            disabled={
-              !canWrite || !canCreate || inventory.loading || !!inventory.error
-            }
-            onClick={() => edit()}
-          >
-            <Plus size={17} />
-            Create event
-          </Button>
-        ) : (
-          <Button
-            variant="secondary"
-            disabled={busy}
-            onClick={() => {
-              const leave = () => {
-                setShowMail(false);
-                setMode("list");
-              };
-              requestMove(leave);
-            }}
-          >
-            <ArrowLeft size={17} />
-            All events
-          </Button>
-        )}
-      </header>
+  const panelFeedback = (<>
       {!isOnline && (
         <p role="status">
           You are offline. Draft input stays on this page; reconnect and refresh
@@ -758,6 +715,53 @@ function EventWorkspaceContent() {
           )}
         </section>
       )}
+  </>);
+  return (
+    <div className="gt-admin-page">
+      <header className="gt-admin-heading">
+        <div>
+          <p className="gt-helper">Chapter operations</p>
+          <h1>
+            {mode === "attendees"
+              ? "Registrations & attendance"
+              : mode === "edit"
+                ? selected
+                  ? "Edit event"
+                  : "Create an event"
+                : "Events"}
+          </h1>
+          <p>
+            Draft, publish, and run events with confirmed registration data.
+          </p>
+        </div>
+        {mode === "list" ? (
+          <Button
+            disabled={
+              !canWrite || !canCreate || inventory.loading || !!inventory.error
+            }
+            onClick={() => edit()}
+          >
+            <Plus size={17} />
+            Create event
+          </Button>
+        ) : (
+          <Button
+            variant="secondary"
+            disabled={busy}
+            onClick={() => {
+              const leave = () => {
+                setShowMail(false);
+                setMode("list");
+              };
+              requestMove(leave);
+            }}
+          >
+            <ArrowLeft size={17} />
+            All events
+          </Button>
+        )}
+      </header>
+      {(mode !== "edit" || !draft) && panelFeedback}
       <Dialog
         open={!!confirmation}
         onOpenChange={(open) => {
@@ -1064,7 +1068,8 @@ function EventWorkspaceContent() {
         </>
       )}
       {mode === "edit" && draft && (
-        <>
+        <RecordPanel title="Event editor" busy={busy || !!uncertain} onClose={() => requestMove(() => setMode("list"))}>
+          {panelFeedback}
           {selected && (
             <div className="gt-inline-actions">
               <FormIntegrations
@@ -1079,7 +1084,7 @@ function EventWorkspaceContent() {
               </span>
             </div>
           )}
-          <form onSubmit={save} className="gt-form gt-panel gt-event-editor">
+<form onSubmit={save} className="gt-form gt-panel gt-event-editor">
             {selected?.publication_status === "published" && (
               <p role="status">
                 Saving changes updates this published event. Unpublish it first
@@ -1502,7 +1507,7 @@ function EventWorkspaceContent() {
               </div>
             </fieldset>
           </form>
-        </>
+        </RecordPanel>
       )}
       {mode === "attendees" && selected && (
         <section>

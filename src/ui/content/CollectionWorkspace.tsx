@@ -1,3 +1,4 @@
+import RecordPanel from "@/ui/RecordPanel";
 import ProfileReconcileDialog from "./ProfileReconcileDialog";
 import { useSearchParams } from "react-router-dom";
 import {
@@ -494,59 +495,7 @@ function CollectionEditor({ initialKind }: { initialKind: Kind }) {
     initialKind === "sponsors"
       ? ["sponsors", "sponsor-tiers", "sponsor-stats"]
       : [initialKind];
-  return (
-    <div className="gt-admin-page">
-      <div className="gt-admin-page-heading">
-        <div>
-          <p className="gt-breadcrumb">Chapter content</p>
-          <h1>{spec.title}</h1>
-          <p>{spec.description}</p>
-        </div>
-        <Button
-          disabled={
-            busy ||
-            !!editor ||
-            !!confirm ||
-            unavailable ||
-            !(capabilities?.globalCreate || capabilities?.teams.length)
-          }
-          onClick={() => open()}
-        >
-          Create draft
-        </Button>
-        <Button
-          variant="secondary"
-          disabled={busy}
-          onClick={() => setRefresh((v) => v + 1)}
-        >
-          Refresh content records
-        </Button>
-      </div>
-      {tabs.length > 1 && (
-        <div className="gt-actions" aria-label="Sponsor content sections">
-          {tabs.map((value) => (
-            <Button
-              key={value}
-              variant={kind === value ? "primary" : "secondary"}
-              disabled={!!editor || !!confirm || busy}
-              aria-pressed={kind === value}
-              onClick={() => {
-                setKind(value);
-                setPage(1);
-                setNotice("");
-                setError("");
-                setConflict(false);
-                retry.current = undefined;
-              }}
-            >
-              {specifications[value].title}
-            </Button>
-          ))}
-        </div>
-      )}
-      {requestedProfile && linkedProfile.loading && <p role="status">Opening the selected Team profile…</p>}
-      {requestedProfile && linkedProfile.error && <p role="alert">{linkedProfile.error} <Button variant="ghost" onClick={() => setProfileRetry(profileRetry + 1)}>Retry selected Team profile</Button></p>}
-      {kind === "team-profiles" && !editor && <p>Member sync creates a draft here. Review the profile, then choose Publish to show it on the Team page.</p>}
+  const panelFeedback = (<>
       {error && (
         <p
           className="gt-form-error"
@@ -608,8 +557,65 @@ function CollectionEditor({ initialKind }: { initialKind: Kind }) {
           Your current access no longer permits saving this draft.
         </p>
       )}
+  </>);
+  return (
+    <div className="gt-admin-page">
+      <div className="gt-admin-page-heading">
+        <div>
+          <p className="gt-breadcrumb">Chapter content</p>
+          <h1>{spec.title}</h1>
+          <p>{spec.description}</p>
+        </div>
+        <Button
+          disabled={
+            busy ||
+            !!editor ||
+            !!confirm ||
+            unavailable ||
+            !(capabilities?.globalCreate || capabilities?.teams.length)
+          }
+          onClick={() => open()}
+        >
+          Create draft
+        </Button>
+        <Button
+          variant="secondary"
+          disabled={busy}
+          onClick={() => setRefresh((v) => v + 1)}
+        >
+          Refresh content records
+        </Button>
+      </div>
+      {tabs.length > 1 && (
+        <div className="gt-actions" aria-label="Sponsor content sections">
+          {tabs.map((value) => (
+            <Button
+              key={value}
+              variant={kind === value ? "primary" : "secondary"}
+              disabled={!!editor || !!confirm || busy}
+              aria-pressed={kind === value}
+              onClick={() => {
+                setKind(value);
+                setPage(1);
+                setNotice("");
+                setError("");
+                setConflict(false);
+                retry.current = undefined;
+              }}
+            >
+              {specifications[value].title}
+            </Button>
+          ))}
+        </div>
+      )}
+      {requestedProfile && linkedProfile.loading && <p role="status">Opening the selected Team profile…</p>}
+      {requestedProfile && linkedProfile.error && <p role="alert">{linkedProfile.error} <Button variant="ghost" onClick={() => setProfileRetry(profileRetry + 1)}>Retry selected Team profile</Button></p>}
+      {kind === "team-profiles" && !editor && <p>Member sync creates a draft here. Review the profile, then choose Publish to show it on the Team page.</p>}
+      {!editor && panelFeedback}
       {editor && (
-        <section className="gt-panel gt-event-editor">
+        <RecordPanel title="Content editor" busy={busy} onClose={() => dirty ? setDiscard(true) : (setEditor(null), setConflict(false), setError(""))}>
+          {panelFeedback}
+<section className="gt-panel gt-event-editor">
           <h2 tabIndex={-1} ref={editorHeading}>
             {editor.row ? "Edit " + rowLabel(editor.row) : "New private draft"}
           </h2>
@@ -847,6 +853,7 @@ function CollectionEditor({ initialKind }: { initialKind: Kind }) {
             )}
           </form>
         </section>
+</RecordPanel>
       )}
       {confirm && (confirm.action === "reconcile" ? <ProfileReconcileDialog id={confirm.row.id}
         onClose={() => setConfirm(undefined)} onSaved={(result) => {

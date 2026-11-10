@@ -1,3 +1,4 @@
+import RecordPanel from "@/ui/RecordPanel";
 import RecordAcknowledgement from "@/ui/RecordAcknowledgement";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, ApiFailure } from "@/lib/api";
@@ -105,6 +106,7 @@ export default function FinanceDetail({
     if (!busy) callback();
   };
   return (
+    <RecordPanel title="Finance record" busy={busy} onClose={() => leave(onClose)}>
     <aside className="gt-finance-detail" aria-label="Finance request details">
       <div className="gt-button-row">
         <h2 tabIndex={-1} ref={heading}>
@@ -518,5 +520,6 @@ export default function FinanceDetail({
       />
       <p className="gt-helper">{detail.retention}</p>
     </aside>
+    </RecordPanel>
   );
 }

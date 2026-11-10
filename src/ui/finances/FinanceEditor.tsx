@@ -1,3 +1,4 @@
+import RecordPanel from "@/ui/RecordPanel";
 import RecordPicker from "@/ui/RecordPicker";
 import { useEffect, useRef, useState } from "react";
 import { api, ApiFailure } from "@/lib/api";
@@ -109,7 +110,8 @@ export default function FinanceEditor({
     },
   });
   return (
-    <section className="gt-panel gt-event-editor">
+    <RecordPanel title="Finance request editor" busy={busy} onClose={onCancel}>
+<section className="gt-panel gt-event-editor">
       <h2 ref={heading} tabIndex={-1}>
         {record ? `Edit ${record.reference}` : "New finance request"}
       </h2>
@@ -398,6 +400,7 @@ export default function FinanceEditor({
         </div>
       </form>
     </section>
+</RecordPanel>
   );
 }
 

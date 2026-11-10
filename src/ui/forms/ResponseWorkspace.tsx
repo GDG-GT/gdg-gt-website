@@ -28,6 +28,7 @@ import PrivacyPanel from "./PrivacyPanel";
 import { responseFilterLocalTime } from "./response-filters";
 import { useNavigationSafety } from "@/hooks/useDraftGuard";
 import ScrollableTable from "../ScrollableTable";
+import LiveSearchInput from "../LiveSearchInput";
 type Result = {
   items: FormResponse[];
   total: number;
@@ -238,7 +239,7 @@ function ResponseWorkspaceContent() {
     if (value) next.set(key, value);
     else next.delete(key);
     if (key !== "page") next.delete("page");
-    setParams(next);
+    setParams(next, key === "q" ? { replace: true } : undefined);
     if (key === "page") document.getElementById("workspace-content")?.focus();
   };
   const blockPrivateWorkspace = (message: string) => {
@@ -466,7 +467,7 @@ function ResponseWorkspaceContent() {
         ))}
       </div>
       <form
-        key={query}
+        key={new URLSearchParams([...params].filter(([key]) => key !== "q")).toString()}
         className="gt-panel gt-form"
         onSubmit={(e) => {
           e.preventDefault();
@@ -530,10 +531,11 @@ function ResponseWorkspaceContent() {
         )}
         <div className="gt-form-grid">
           <Field label="Search respondents and non-sensitive answers">
-            <input
-              type="search"
+            <LiveSearchInput
               name="q"
-              defaultValue={params.get("q") || ""}
+              value={params.get("q") || ""}
+              onSearch={(value) => change("q", value)}
+              disabled={busy || !isOnline}
               maxLength={100}
             />
           </Field>

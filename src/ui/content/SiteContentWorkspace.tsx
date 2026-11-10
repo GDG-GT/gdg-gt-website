@@ -1,3 +1,4 @@
+import RecordPanel from "@/ui/RecordPanel";
 import { useEffect, useRef, useState } from "react";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
@@ -411,6 +412,64 @@ function ContentEditor() {
       finish(controller);
     }
   };
+  const panelFeedback = (<>
+      {error && (
+        <p
+          className="gt-form-error"
+          role="alert"
+          tabIndex={-1}
+          ref={errorFocus}
+        >
+          {error}{" "}
+        </p>
+      )}
+      {notice && (
+        <p role="status" tabIndex={-1} ref={noticeFocus}>
+          {notice}
+        </p>
+      )}
+      {[
+        { name: "Content permissions", ...capRead },
+        { name: "Content inventory", ...listRead },
+        { name: "Selected content", ...detailRead },
+      ].map((read) => (
+        <div key={read.name}>
+          {read.error && (
+            <p role="alert">
+              {read.name}: {read.error}{" "}
+              <Button
+                variant="ghost"
+                disabled={busy}
+                onClick={() => {
+                  document.getElementById("workspace-content")?.focus();
+                  setRefresh((v) => v + 1);
+                }}
+              >
+                Retry {read.name.toLowerCase()}
+              </Button>
+            </p>
+          )}
+          {read.data && (read.loading || read.error) && (
+            <p role="status">
+              {read.name} may be out of date. Last loaded{" "}
+              {new Date(read.at!).toLocaleString()}.
+            </p>
+          )}
+        </div>
+      ))}
+      {!isOnline && (
+        <p role="status">
+          You’re offline. Your input stays in this tab. Reconnect and save when
+          ready; nothing sends automatically.
+        </p>
+      )}
+      {(stale || conflict) && (
+        <p role="alert">
+          This content changed. Input is preserved; close and reopen the editor
+          or review before saving.
+        </p>
+      )}
+  </>);
   return (
     <div className="gt-admin-page gt-site-content-workspace">
       <div className="gt-admin-page-heading">
@@ -495,63 +554,10 @@ function ContentEditor() {
           </Button>
         ))}
       </div>
-      {error && (
-        <p
-          className="gt-form-error"
-          role="alert"
-          tabIndex={-1}
-          ref={errorFocus}
-        >
-          {error}{" "}
-        </p>
-      )}
-      {notice && (
-        <p role="status" tabIndex={-1} ref={noticeFocus}>
-          {notice}
-        </p>
-      )}
-      {[
-        { name: "Content permissions", ...capRead },
-        { name: "Content inventory", ...listRead },
-        { name: "Selected content", ...detailRead },
-      ].map((read) => (
-        <div key={read.name}>
-          {read.error && (
-            <p role="alert">
-              {read.name}: {read.error}{" "}
-              <Button
-                variant="ghost"
-                disabled={busy}
-                onClick={() => {
-                  document.getElementById("workspace-content")?.focus();
-                  setRefresh((v) => v + 1);
-                }}
-              >
-                Retry {read.name.toLowerCase()}
-              </Button>
-            </p>
-          )}
-          {read.data && (read.loading || read.error) && (
-            <p role="status">
-              {read.name} may be out of date. Last loaded{" "}
-              {new Date(read.at!).toLocaleString()}.
-            </p>
-          )}
-        </div>
-      ))}
-      {!isOnline && (
-        <p role="status">
-          You’re offline. Your input stays in this tab. Reconnect and save when
-          ready; nothing sends automatically.
-        </p>
-      )}
-      {(stale || conflict) && (
-        <p role="alert">
-          This content changed. Input is preserved; close and reopen the editor
-          or review before saving.
-        </p>
-      )}
+      {!draft && panelFeedback}
       {draft && (
+        <RecordPanel title="Site content editor" busy={busy} onClose={() => dirty ? setDiscard(true) : setDraft(undefined)}>
+          {panelFeedback}
         <section className="gt-panel gt-event-editor">
           <h2 ref={heading} tabIndex={-1}>
             {draft.row
@@ -891,6 +897,7 @@ function ContentEditor() {
             )}
           </form>
         </section>
+        </RecordPanel>
       )}
       <Dialog
         open={!!confirm}

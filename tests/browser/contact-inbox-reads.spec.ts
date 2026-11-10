@@ -341,7 +341,6 @@ test("contact search controls stay mounted and focused while results load", asyn
     await search.scrollIntoViewIfNeeded();
     const before = await search.boundingBox();
     await search.fill("fictional");
-    await search.press("Enter");
     const loading = page.getByRole("status", {
       name: "Loading contact inbox",
       exact: true,

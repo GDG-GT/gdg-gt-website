@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useLiveSearch } from "@/hooks/useLiveSearch";
 import { Link } from "react-router-dom";
 import { ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -213,6 +214,10 @@ function IntegrationPanel(props: Props) {
       !props.disabled &&
       baseReady &&
       !!workspace?.canEdit;
+  useLiveSearch(query, search, (value) => {
+    setSearch(value);
+    setPage(1);
+  }, open && writable && !review);
   const clearBase = base.clear,
     clearCandidates = candidateRead.clear,
     clearTarget = targetRead.clear;

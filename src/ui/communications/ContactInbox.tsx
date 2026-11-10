@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { useLiveSearch } from "@/hooks/useLiveSearch";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import ScrollableTable from "../ScrollableTable";
 import InquiryWriteRecovery from "./InquiryWriteRecovery";
@@ -562,6 +563,7 @@ function Inbox() {
     [detailBusy, setDetailBusy] = useState(false);
   const safety = useNavigationSafety(),
     { isOnline } = useOnlineStatus();
+  useLiveSearch(query, q, (value) => { setQ(value); setPage(1); }, !id && !denied && !detailBusy && isOnline && !needsRecheck);
   const path =
     "/admin/contact-submissions" +
     (id

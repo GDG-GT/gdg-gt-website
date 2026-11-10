@@ -150,12 +150,6 @@ for (const c of cases)
       await search.focus();
       const before = await search.boundingBox();
       await search.fill("fictional");
-      if (c.path === "/admin/newsletter") {
-        await search.press("Enter");
-      } else if (c.submit) {
-        await page.getByRole("button", { name: c.submit, exact: true }).click();
-        await search.focus();
-      }
       await expect.poll(() => pending).toBeGreaterThan(0);
       if (c.loadingText)
         await expect(

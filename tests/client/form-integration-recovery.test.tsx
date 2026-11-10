@@ -613,7 +613,6 @@ describe("First-party linked form current-read and original-request recovery", (
       screen.getByLabelText("Find a published form", { exact: false }),
       { target: { value: "Fictional" } },
     );
-    click("Search forms");
     await screen.findByText("Fictional candidates outage");
     click("Remove link");
     expect(

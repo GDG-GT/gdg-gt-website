@@ -1,3 +1,4 @@
+import RecordPanel from "@/ui/RecordPanel";
 import AccountSecurity from "./AccountSecurity";
 import {
   useCallback,
@@ -591,28 +592,7 @@ function AccountDirectory() {
         cleared. Recheck current access before continuing.
       </EmptyState>
     );
-  return (
-    <div className="gt-admin-page">
-      <header className="gt-admin-page-heading">
-        <div>
-          <h1>People & account access</h1>
-          <p>
-            Create individual accounts, manage roles, and revoke access. Account
-            passwords are never shared with administrators.
-          </p>
-        </div>
-        <Button
-          disabled={!ready || busy || !!editor || !!pending}
-          onClick={() => {
-            setEditor({ email: "", display_name: "", role: "team_member" });
-            setCurrentPassword("");
-            setSessionsTarget(null);
-          }}
-        >
-          Create account
-        </Button>
-      </header>
-      <AccountSecurity />
+  const panelFeedback = (<>
       {!isOnline && (
         <p role="status">
           You are offline. Account changes and refresh wait for connectivity.
@@ -724,6 +704,30 @@ function AccountDirectory() {
           )}
         </section>
       )}
+  </>);
+  return (
+    <div className="gt-admin-page">
+      <header className="gt-admin-page-heading">
+        <div>
+          <h1>People & account access</h1>
+          <p>
+            Create individual accounts, manage roles, and revoke access. Account
+            passwords are never shared with administrators.
+          </p>
+        </div>
+        <Button
+          disabled={!ready || busy || !!editor || !!pending}
+          onClick={() => {
+            setEditor({ email: "", display_name: "", role: "team_member" });
+            setCurrentPassword("");
+            setSessionsTarget(null);
+          }}
+        >
+          Create account
+        </Button>
+      </header>
+      <AccountSecurity />
+      {!editor && !pending && panelFeedback}
       <Dialog
         open={!!review}
         onOpenChange={(open) => {
@@ -871,7 +875,9 @@ function AccountDirectory() {
         </DialogContent>
       </Dialog>
       {(editor || pending) && (
-        <section className="gt-panel gt-event-editor">
+        <RecordPanel title="Account management" busy={busy} onClose={() => close()}>
+          {panelFeedback}
+<section className="gt-panel gt-event-editor">
           <h2 ref={heading} tabIndex={-1}>
             {editor
               ? editor.user
@@ -1069,8 +1075,10 @@ function AccountDirectory() {
             </fieldset>
           </form>
         </section>
+</RecordPanel>
       )}
       {sessionsTarget && (
+        <RecordPanel title="Account sessions" busy={busy} onClose={() => setSessionsTarget(null)}>
         <section className="gt-panel" aria-label="Selected account sessions">
           <h2 ref={sessionsHeading} tabIndex={-1}>
             Active sessions · {sessionsTarget.email}
@@ -1144,6 +1152,7 @@ function AccountDirectory() {
             Close session details
           </Button>
         </section>
+        </RecordPanel>
       )}
       {data && loading && (
         <p role="status">

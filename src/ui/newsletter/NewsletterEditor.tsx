@@ -3,6 +3,7 @@ import { api, ApiFailure } from "@/lib/api";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
+import { useLiveSearch } from "@/hooks/useLiveSearch";
 import {
   newsletterCampaign,
   newsletterTemplate,
@@ -35,6 +36,7 @@ function RecipientPicker({
     [search, setSearch] = useState(""),
     [page, setPage] = useState(1),
     [tick, setTick] = useState(0);
+  useLiveSearch(q, search, (value) => { setSearch(value); setPage(1); }, !disabled);
   const read = usePrivateRead<Listing>(
     "/admin/newsletter/subscribers?" +
       new URLSearchParams({

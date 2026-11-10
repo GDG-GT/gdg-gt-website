@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-10",
+  "scope": [
+    "Bounded record inspectors/editors instead of large appended inline sections across member, account, team, project, event, content, finance, editorial and audit records",
+    "Search as typed on remaining campaign, subscriber, recipient, inquiry, rewards, media name/tag, response, audit and linked-form controls",
+    "Existing public events/resources and admin SearchBox controls already update as typed; unchanged",
+    "Preserve input focus, browser filter navigation, dirty-draft confirmation, permission checks, interrupted-save recovery and explicit mutations"
+  ],
+  "implementation": {
+    "recordPanel": "Shared nonmodal portalled region, width at most 768px, viewport-bound internal scrolling and explicit guarded close; no outside dismissal",
+    "search": "200ms cancellable debounce for previously submit-only searches; URL-backed input retains newer typing and IME/reset behavior",
+    "feedback": "Selected-record feedback and retry controls move into the inspector; status focus preserved after saves",
+    "data": "Frontend only. No migrations, production records, emails, scheduler or native binary changes."
+  },
+  "validation": {
+    "unit": "264 files / 3097 tests pass, plus final 33 linked-form recovery/search tests",
+    "browser": "74 desktop Chromium/mobile WebKit composition, access, recovery, focus and management cases pass across final full run and targeted contrast recheck. Additional linked-form no-submit search passes on both browsers. Prior 20 search-layout and 10 inbox checks passed without Enter, and response typed-search/recovery passed on both browsers. Member detail/editor screenshots reviewed at 1440px and 375px; axe checks pass.",
+    "typecheck": "pass",
+    "lint": "0 errors / 8 inherited warnings",
+    "build": "pass",
+    "bundleSSRSecrets": "pass; 0 unreviewed findings, offline install 511019 bytes"
+  },
+  "rollout": {
+    "state": "validated; source push next",
+    "priorSource": "9aa0a4b6dd97ed2de546f90465df1ebedc540beb",
+    "deployment": null,
+    "note": "Update after final targeted checks, then one source push. Record final deployment locally and include notes in the next real batch; no docs-only deployment."
+  }
+}

@@ -1,3 +1,4 @@
+import RecordPanel from "@/ui/RecordPanel";
 import RecordAcknowledgement from "@/ui/RecordAcknowledgement";
 import ActionFeedback from "@/ui/ActionFeedback";
 import ScrollableTable from "@/ui/ScrollableTable";
@@ -504,53 +505,31 @@ function MemberDirectory() {
       if (current === epoch.current) setBusy(false);
     }
   }
-  return (
-    <section className="gt-admin-page gt-members-workspace">
-      <header className="gt-admin-heading">
-        <div>
-          <h1 ref={heading} tabIndex={-1}>
-            Community members
-          </h1>
-          <p>
-            Private contact records, community categories and reviewed
-            public-profile links—not officer accounts.
-          </p>
-        </div>
-        <div className="gt-button-row">
-          <Button
-            disabled={
-              busy ||
-              unavailable ||
-              !!mode ||
-              !cap ||
-              (!cap.globalCreate && !cap.teams.length)
-            }
-            onClick={() => edit("create")}
-          >
-            New member
-          </Button>
-          <Button
-            variant="secondary"
-            disabled={busy || !!uncertain || !isOnline}
-            onClick={recheck}
-          >
-            Recheck member access
-          </Button>
-        </div>
-      </header>
-      <MemberTransfers
-        cap={cap}
-        disabled={busy || unavailable || !!mode}
-        onImported={() => setTick((v) => v + 1)}
-        filters={{
-          q,
-          state,
-          ...(category ? { category } : {}),
-          ...(year ? { year } : {}),
-          ...(active ? { active: active === "true" } : {}),
-          ...(core ? { core: core === "true" } : {}),
-        }}
-      />
+  const memberFeedback = (<>
+      {(selected || mode) && (
+        <Button variant="secondary" disabled={busy || !!uncertain || !isOnline} onClick={recheck}>
+          Recheck member access
+        </Button>
+      )}
+      {accessDenied && (selected || mode) && <p role="alert">Member access changed. Recheck access to continue.</p>}
+      {selected && (<>
+              <MemberReadFeedback
+                name="selected member"
+                read={detailRead}
+                offline={!isOnline}
+                retry={() => setDetailAttempt((v) => v + 1)}
+                disabled={busy || !!uncertain || !isOnline || needsRecheck}
+              />
+              <MemberReadFeedback
+                name="member activity"
+                read={activityRead}
+                offline={!isOnline}
+                retry={() => setActivityAttempt((v) => v + 1)}
+                disabled={busy || !!uncertain || !isOnline || needsRecheck}
+              />
+
+</>)}
+
       {uncertain && (
         <MemberWriteRecovery
           key={uncertain.key}
@@ -587,6 +566,57 @@ function MemberDirectory() {
           {error}
         </p>
       )}
+
+</>);
+  return (
+    <section className="gt-admin-page gt-members-workspace">
+      <header className="gt-admin-heading">
+        <div>
+          <h1 ref={heading} tabIndex={-1}>
+            Community members
+          </h1>
+          <p>
+            Private contact records, community categories and reviewed
+            public-profile links—not officer accounts.
+          </p>
+        </div>
+        <div className="gt-button-row">
+          <Button
+            disabled={
+              busy ||
+              unavailable ||
+              !!mode ||
+              !cap ||
+              (!cap.globalCreate && !cap.teams.length)
+            }
+            onClick={() => edit("create")}
+          >
+            New member
+          </Button>
+          <Button
+            variant="secondary"
+            aria-hidden={!!selected || !!mode}
+            disabled={busy || !!uncertain || !isOnline || !!selected || !!mode}
+            onClick={recheck}
+          >
+            Recheck member access
+          </Button>
+        </div>
+      </header>
+      <MemberTransfers
+        cap={cap}
+        disabled={busy || unavailable || !!mode}
+        onImported={() => setTick((v) => v + 1)}
+        filters={{
+          q,
+          state,
+          ...(category ? { category } : {}),
+          ...(year ? { year } : {}),
+          ...(active ? { active: active === "true" } : {}),
+          ...(core ? { core: core === "true" } : {}),
+        }}
+      />
+      {!mode && !selected && memberFeedback}
       {accessDenied ? (
         <div role="alert" className="gt-form-error">
           <p>
@@ -610,28 +640,12 @@ function MemberDirectory() {
             retry={() => setCapAttempt((v) => v + 1)}
             disabled={busy || !!uncertain || !isOnline || needsRecheck}
           />
-          {selected && (
-            <>
-              <MemberReadFeedback
-                name="selected member"
-                read={detailRead}
-                offline={!isOnline}
-                retry={() => setDetailAttempt((v) => v + 1)}
-                disabled={busy || !!uncertain || !isOnline || needsRecheck}
-              />
-              <MemberReadFeedback
-                name="member activity"
-                read={activityRead}
-                offline={!isOnline}
-                retry={() => setActivityAttempt((v) => v + 1)}
-                disabled={busy || !!uncertain || !isOnline || needsRecheck}
-              />
-            </>
-          )}
         </>
       )}
       {mode && mode !== "merge" && (
-        <form className="gt-panel gt-event-editor" onSubmit={save}>
+        <RecordPanel title="Member editor" className="gt-members-workspace" busy={busy || !!uncertain} onClose={() => leave(() => {})}>
+          {memberFeedback}
+<form className="gt-panel gt-event-editor" onSubmit={save}>
           <h2 tabIndex={-1} ref={editorHeading}>
             {mode === "create"
               ? "New private community member"
@@ -712,6 +726,7 @@ function MemberDirectory() {
             </Button>
           </div>
         </form>
+</RecordPanel>
       )}
       {mode === "merge" && member && (denied || !cap?.merge) && (
         <section className="gt-panel">
@@ -725,6 +740,8 @@ function MemberDirectory() {
         </section>
       )}
       {mode === "merge" && member && !denied && cap?.merge && (
+        <RecordPanel title="Member duplicate review" className="gt-members-workspace" busy={busy || !!uncertain} onClose={() => leave(() => {})}>
+{memberFeedback}
         <MergeReview
           key={JSON.stringify([member.id, member.team_id])}
           source={member}
@@ -744,6 +761,7 @@ function MemberDirectory() {
             )
           }
         />
+</RecordPanel>
       )}
       <fieldset
         disabled={busy || !!uncertain}
@@ -932,13 +950,11 @@ function MemberDirectory() {
           Previous members
         </Button>
       )}
-      {selected && !member && !mode && (
-        <Button variant="secondary" onClick={() => choose("")}>
-          Close selection
-        </Button>
-      )}
-      {!mode && member && (
-        <section className="gt-panel">
+      {selected && !mode && (
+        <RecordPanel title="Member details" className="gt-members-workspace" busy={busy || !!uncertain} onClose={() => choose("")}>
+          {memberFeedback}
+
+          {member ? (<section className="gt-panel">
           <header className="gt-panel-heading">
             <div>
               <h2>{member.name}</h2>
@@ -989,10 +1005,9 @@ function MemberDirectory() {
               ))}
             </dl>
           </details>
-          <p>
-            {member.activeProjectCount} active project memberships in your
-            readable project scope.
-          </p>
+          {member.activeProjectCount > 0 && <p>
+            {member.activeProjectCount} active project memberships
+          </p>}
           <p>
             {member.publicProfile
               ? `Linked public profile: ${member.publicProfile.name} · ${member.publicProfile.active ? "Published" : "Draft"}.`
@@ -1056,7 +1071,7 @@ function MemberDirectory() {
               </Link>
             )}
           </div>
-          {activity && (
+          {activity && (activity.items.length > 0 || activityPage > 1) && (
             <section>
               <h3>Retained activity</h3>
               <ol className="gt-team-history">
@@ -1100,7 +1115,8 @@ function MemberDirectory() {
               </nav>
             </section>
           )}
-        </section>
+        </section>) : (<Button variant="secondary" onClick={() => choose("")}>Close selection</Button>)}
+        </RecordPanel>
       )}
     </section>
   );

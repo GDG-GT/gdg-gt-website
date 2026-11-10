@@ -120,6 +120,15 @@ test("response workspace retains independent private reads and clears denied acc
     page.getByRole("heading", { name: "1 matching responses", exact: true }),
   ).toBeVisible();
   expect(reads.slice(before.length)).toEqual(["responses"]);
+  const responseSearch = page.getByRole("searchbox", { name: "Search respondents and non-sensitive answers", exact: true });
+  const searched = page.waitForRequest((request) => {
+    const url = new URL(request.url());
+    return url.pathname.endsWith("/responses") && url.searchParams.get("q") === "Fictional person";
+  });
+  await responseSearch.fill("Fictional person");
+  await searched;
+  await expect(responseSearch).toBeFocused();
+  await expect(page.getByRole("heading", { name: "1 matching responses", exact: true })).toBeVisible();
   const proposed = page.getByLabel("New view name", { exact: false });
   await proposed.fill("Fictional proposed private view");
   failed = "views";

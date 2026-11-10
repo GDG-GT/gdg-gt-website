@@ -1,4 +1,6 @@
+import RecordPanel from "@/ui/RecordPanel";
 import RecordPicker from "./RecordPicker";
+import LiveSearchInput from "./LiveSearchInput";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
@@ -82,6 +84,14 @@ function AuditHistory() {
   const trailQuery = useRef<string>();
   filters.delete("entry");
   const query = filters.toString();
+  const search = (key: string, value: string) => {
+    if (!(key === "action" ? /^[a-z0-9_.-]*$/ : /^[A-Za-z0-9_.:-]*$/).test(value)) return;
+    const next = new URLSearchParams(params);
+    ["before", "beforeId", "at", "entry"].forEach((name) => next.delete(name));
+    if (value) next.set(key, value); else next.delete(key);
+    setTrail([]);
+    setParams(next, { replace: true });
+  };
   useEffect(() => {
     if (trailQuery.current !== query) setTrail([]);
     trailQuery.current = query;
@@ -221,7 +231,7 @@ function AuditHistory() {
       )}
       <form
         className="gt-panel gt-form"
-        key={query}
+        key={new URLSearchParams([...filters].filter(([key]) => !["q", "action"].includes(key))).toString()}
         onSubmit={(event) => {
           event.preventDefault();
           const values = new FormData(event.currentTarget),
@@ -252,17 +262,19 @@ function AuditHistory() {
             label="Search actions or record types"
             hint="Letters, numbers, periods, underscores, colons and hyphens."
           >
-            <input
+            <LiveSearchInput
               name="q"
-              defaultValue={params.get("q") || ""}
+              value={params.get("q") || ""}
+              onSearch={(value) => search("q", value)}
               maxLength={100}
               pattern="[A-Za-z0-9_.:\-]*"
             />
           </Field>
           <Field label="Exact action">
-            <input
+            <LiveSearchInput
               name="action"
-              defaultValue={params.get("action") || ""}
+              value={params.get("action") || ""}
+              onSearch={(value) => search("action", value)}
               maxLength={100}
               pattern="[a-z0-9_.\-]*"
               placeholder="For example: events.published"
@@ -299,7 +311,8 @@ function AuditHistory() {
           <Button
             type="button"
             variant="ghost"
-            onClick={() => {
+            onClick={(event) => {
+              event.currentTarget.form?.reset();
               setError("");
               setTrail([]);
               setParams({});
@@ -532,7 +545,8 @@ function AuditHistory() {
         </>
       )}
       {selected && (
-        <section
+        <RecordPanel title="Audit record" onClose={() => choose()}>
+<section
           className="gt-panel"
           aria-label="Audit entry detail"
           aria-busy={detailBusy}
@@ -621,6 +635,7 @@ function AuditHistory() {
             </>
           )}
         </section>
+</RecordPanel>
       )}
     </div>
   );

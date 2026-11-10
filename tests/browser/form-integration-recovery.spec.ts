@@ -398,9 +398,7 @@ test("first-party candidate outage preserves link inventory and independent remo
   const { op } = await setup(page, "replace", "before"),
     dialog = await open(page);
   op.failCandidates = true;
-  await dialog
-    .getByRole("button", { name: "Search forms", exact: true })
-    .click();
+  await dialog.getByRole("textbox", { name: "Find a published form", exact: false }).fill("Fictional");
   await expect(
     dialog.getByText("Fictional published-form inventory outage.", {
       exact: true,

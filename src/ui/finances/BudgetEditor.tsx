@@ -1,3 +1,4 @@
+import RecordPanel from "@/ui/RecordPanel";
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { validationMessage } from "@/lib/validationMessage";
@@ -71,7 +72,8 @@ export default function BudgetEditor({
     },
   });
   return (
-    <section className="gt-panel gt-event-editor">
+    <RecordPanel title="Budget editor" busy={busy} onClose={onCancel}>
+<section className="gt-panel gt-event-editor">
       <h2 ref={heading} tabIndex={-1}>
         {record ? record.name : "New budget allocation"}
       </h2>
@@ -294,5 +296,6 @@ export default function BudgetEditor({
         </div>
       </form>
     </section>
+</RecordPanel>
   );
 }
