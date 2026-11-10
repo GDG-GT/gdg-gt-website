@@ -17,6 +17,14 @@ The normal app is signed and uploaded to App Store Connect as **GDG GT Scanner**
 
 Build2's retained distribution IPA was verified locally as TAG-only and non-debuggable. Build6's archive is development-signed with TAG capability only; Xcode completed App Store distribution re-signing/upload successfully, but the upload destination did not retain a local build6 IPA. Do not confuse the archive's development entitlements with the uploaded distribution package. Release and optional Wallet device builds and an unsigned archive also compiled. This establishes signing/distribution, not physical device acceptance. Keep Wallet NFC flags off until issuer/reader approval and device acceptance are complete. The normal build has NDEF capability only; the optional Wallet build also requests VAS and cannot grant itself Apple's entitlement.
 
+## Password AutoFill and app verification
+
+Build7 adds `webcredentials:gdggt.dev` to both normal and optional Wallet entitlements. The website publishes the matching `7THP95SRTV.dev.gdggt.scanner` identity at `https://gdggt.dev/.well-known/apple-app-site-association`, as JSON with no sign-in or redirect. This allows iOS and password managers to associate native email/password fields with saved gdggt.dev credentials. The access-code field remains separate. There are no universal-link handlers or extra domains.
+
+Build7 archive and provisioning profile include Associated Domains and TAG. Its App Store Connect upload succeeded at2026-11-10T19:44:34Z; do not upload it again. Processing/group assignment is separate and recorded in phase0/ios-autofill-icons-release.json. Build6 cannot acquire an entitlement through a website update: install the new TestFlight build after Apple processing and officer-group assignment. Apple's association CDN can cache results, so verify the CDN endpoint and test a fresh installation if the prior missing association persists. Use `https://gdggt.dev` as the saved Login item's website. A successful archive/upload does not prove the actual iPhone's 1Password matching or Face ID behavior.
+
+The website now also publishes a multi-resolution `/favicon.ico`, explicit PNG icons through512px and the conventional `/apple-touch-icon.png` endpoint. 1Password uses its own rich-icon servers; these website assets cannot force its cache to update. The existing512px icon at `https://gdggt.dev/icons/pwa-512.png` can be used as a custom item icon or supplied to 1Password support. No vault entries or account credentials are modified by the website change.
+
 ## Cards to buy
 
 Start with **10 plain white PVC NTAG215 cards**, then order printed/bulk cards after the sample works. These are complete credit-card-sized cards with the antenna inside, not loose chips. Product details checked 2026-11-08:

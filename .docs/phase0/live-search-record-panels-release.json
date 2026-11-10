@@ -21,9 +21,11 @@
     "bundleSSRSecrets": "pass; 0 unreviewed findings, offline install 511019 bytes"
   },
   "rollout": {
-    "state": "validated; source push next",
+    "state": "READY",
     "priorSource": "9aa0a4b6dd97ed2de546f90465df1ebedc540beb",
-    "deployment": null,
-    "note": "Update after final targeted checks, then one source push. Record final deployment locally and include notes in the next real batch; no docs-only deployment."
+    "deployment": "dpl_23rmeumqL5J6obYS4o9QNFVEkPPZ",
+    "note": "One source push to main. Update final verification locally; include notes with next real batch, no docs-only push.",
+    "source": "6ba32e475fe1e0cf97a9427a28bdc63560dc04e9",
+    "productionVerification": "phase0/live-search-production-verification.json; both aliases READY, both roots200, five changed assets byte-identical, unsigned member API401/no-store"
   }
 }

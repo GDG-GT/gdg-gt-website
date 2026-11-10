@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-10",
+  "cause": "Missing native Associated Domains entitlement and missing website association file; saved credentials could not be matched to native sign-in.",
+  "app": {
+    "id": "6832381059",
+    "bundle": "dev.gdggt.scanner",
+    "team": "7THP95SRTV",
+    "version": "1.0.0",
+    "build": 7,
+    "archive": "native/Scanner/build/GDGWorkspace-Build7.xcarchive",
+    "signedAssociatedDomains": [
+      "webcredentials:gdggt.dev"
+    ],
+    "profileSupportsAssociatedDomains": true,
+    "nfc": [
+      "TAG"
+    ],
+    "upload": "Confirmed successful 2026-11-10T19:44:34Z; uploaded package processing in App Store Connect. Do not repeat upload.",
+    "group": "Existing GDG Officers group has automatic distribution off; build7 assignment not yet observed."
+  },
+  "website": {
+    "aasa": "/.well-known/apple-app-site-association",
+    "appIDs": [
+      "7THP95SRTV.dev.gdggt.scanner"
+    ],
+    "universalLinks": false,
+    "icons": [
+      "/favicon.ico",
+      "/favicon.png",
+      "/icons/pwa-192.png",
+      "/icons/pwa-512.png",
+      "/apple-touch-icon.png"
+    ]
+  },
+  "checks": {
+    "swift": "3 tests pass",
+    "contracts": "16 tests pass across native association, icons and existing Vercel routing",
+    "signedArchive": "pass, normal TAG-only and domain entitlement match public app identity",
+    "typecheck": "pass",
+    "lint": "0 errors / 8 inherited warnings",
+    "build": "pass",
+    "bundleSSRSecrets": "pass; final Vercel static package includes JSON association and favicon, 0 unreviewed secrets"
+  },
+  "limitations": [
+    "Build6 must be updated to build7 after Apple processing and TestFlight group assignment",
+    "Apple association CDN propagation and physical iPhone/1Password autofill remain device acceptance",
+    "1Password rich-icon cache controlled by its provider; website cannot force the saved item icon update",
+    "No Apple Wallet NFC entitlement activation, credentials reset or 1Password vault edit"
+  ],
+  "rollout": {
+    "state": "validated; single source push next"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "deployment": "dpl_23rmeumqL5J6obYS4o9QNFVEkPPZ",
+  "source": "6ba32e475fe1e0cf97a9427a28bdc63560dc04e9",
+  "state": "READY",
+  "error": null,
+  "aliases": {
+    "gdggt.dev": "dpl_23rmeumqL5J6obYS4o9QNFVEkPPZ",
+    "leaderboards.gdggt.dev": "dpl_23rmeumqL5J6obYS4o9QNFVEkPPZ"
+  },
+  "roots": [
+    {
+      "domain": "gdggt.dev",
+      "status": 200
+    },
+    {
+      "domain": "leaderboards.gdggt.dev",
+      "status": 200
+    }
+  ],
+  "assets": [
+    {
+      "name": "AdminMembers-CRbTOYxS.js",
+      "bytes": 55930,
+      "matches": true
+    },
+    {
+      "name": "RecordPanel-u4n3_4tD.js",
+      "bytes": 1443,
+      "matches": true
+    },
+    {
+      "name": "LiveSearchInput-C-EDZZgk.js",
+      "bytes": 621,
+      "matches": true
+    },
+    {
+      "name": "NewsletterWorkspace-DPsSFUsO.js",
+      "bytes": 44166,
+      "matches": true
+    },
+    {
+      "name": "AuditWorkspace-BlxXjDTK.js",
+      "bytes": 11756,
+      "matches": true
+    }
+  ],
+  "unsignedMemberAPI": {
+    "status": 401,
+    "cache": "no-store"
+  }
+}

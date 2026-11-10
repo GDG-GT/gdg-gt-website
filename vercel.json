@@ -6,6 +6,19 @@
   "trailingSlash": false,
   "headers": [
     {
+      "source": "/.well-known/apple-app-site-association",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    },
+    {
       "source": "/sw.js",
       "headers": [
         {
@@ -115,6 +128,14 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/.well-known/apple-app-site-association",
+      "destination": "/apple-app-site-association.json"
+    },
+    {
+      "source": "/apple-touch-icon.png",
+      "destination": "/icons/pwa-apple-180.png"
+    },
     {
       "source": "/",
       "destination": "/api/site?__route=/"
