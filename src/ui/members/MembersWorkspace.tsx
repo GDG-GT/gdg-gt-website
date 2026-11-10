@@ -1,3 +1,4 @@
+import RecordAcknowledgement from "@/ui/RecordAcknowledgement";
 import ActionFeedback from "@/ui/ActionFeedback";
 import ScrollableTable from "@/ui/ScrollableTable";
 import {
@@ -99,6 +100,7 @@ function MemberDirectory() {
     [detailAttempt, setDetailAttempt] = useState(0),
     [activityAttempt, setActivityAttempt] = useState(0),
     [notice, setNotice] = useState(""),
+    [profileToReview, setProfileToReview] = useState<string>(),
     [conflict, setConflict] = useState(false),
     [mergeDirty, setMergeDirty] = useState(false);
   const snapshot = useRef<{
@@ -364,6 +366,7 @@ function MemberDirectory() {
       setTeam(initialTeam);
       setMode(next);
       setNotice("");
+      setProfileToReview(undefined);
     });
   const stale =
     !!mode &&
@@ -388,7 +391,7 @@ function MemberDirectory() {
   useEffect(() => {
     if (mode === "merge" && (denied || !cap?.merge)) setBusy(false);
   }, [mode, denied, cap?.merge]);
-  function finished(id: string, message: string) {
+  function finished(id: string, message: string, profileId?: string | null) {
     setBusy(false);
     reset();
     clearDetail();
@@ -396,6 +399,7 @@ function MemberDirectory() {
     setParams({ member: id });
     setTick((v) => v + 1);
     setNotice(message);
+    setProfileToReview(profileId || undefined);
   }
   async function save(e: FormEvent) {
     e.preventDefault();
@@ -407,7 +411,8 @@ function MemberDirectory() {
       unavailable ||
       stale ||
       denied ||
-      conflict
+      conflict ||
+      (!["create", "update"].includes(mode) && confirmation !== snapshot.current?.reference)
     )
       return;
     const current = epoch.current,
@@ -466,8 +471,9 @@ function MemberDirectory() {
         finished(
           result.id,
           mode === "sync_profile"
-            ? "Public profile synchronized as an unpublished draft. Review it in Public team."
+            ? "Draft Team profile saved. Review and publish it to show this member on the website."
             : "Community record saved. No account or permissions were created.",
+          result.profileId,
         );
     } catch (e) {
       if (current === epoch.current) {
@@ -550,8 +556,9 @@ function MemberDirectory() {
             finished(
               receipt.id,
               uncertain.action === "sync_profile"
-                ? "Original draft public profile synchronization confirmed. Review it in Public team."
+                ? "Draft Team profile save confirmed. Review and publish it to show this member on the website."
                 : "Original community member save confirmed.",
+              receipt.profileId,
             )
           }
           onDenied={() => {
@@ -568,7 +575,9 @@ function MemberDirectory() {
           }}
         />
       )}
-      {notice && <ActionFeedback message={notice} />}
+      {notice && <ActionFeedback message={notice}>
+        {profileToReview && <Link className="gt-button gt-button-secondary" to={`/admin/content/team?profile=${encodeURIComponent(profileToReview)}`}>Review draft Team profile</Link>}
+      </ActionFeedback>}
       {error && (
         <p className="gt-form-error" role="alert">
           {error}
@@ -632,7 +641,7 @@ function MemberDirectory() {
               : mode === "update"
                 ? "Edit community member"
                 : mode === "sync_profile"
-                  ? "Synchronize an unpublished profile"
+                  ? `Draft Team profile for ${member?.name}`
                   : mode === "unmerge"
                     ? "Recover separate inactive record"
                     : mode === "archive"
@@ -669,18 +678,14 @@ function MemberDirectory() {
                       ? "The record and history are retained. Linked public profiles are unpublished; existing accounts and private project history are not deleted."
                       : "This recovers a separate inactive community record. It does not reactivate membership, republish a profile or alter any account."}
                 </p>
-                <Field
-                  label="Exact member reference"
-                  required
-                  hint={snapshot.current?.reference}
-                >
-                  <input
-                    autoComplete="off"
-                    required
-                    value={confirmation}
-                    onChange={(e) => setConfirmation(e.target.value)}
-                  />
-                </Field>
+                <RecordAcknowledgement
+                  label={mode === "sync_profile"
+                    ? `Create or update the draft Team profile for ${member?.name}.`
+                    : `I have reviewed ${member?.name} and want to ${mode === "archive" ? "archive this member" : mode === "restore" ? "restore this member" : "separate this merged member"}.`}
+                  reference={snapshot.current?.reference || ""}
+                  value={confirmation}
+                  onChange={setConfirmation}
+                />
                 <Field label="Current password" required>
                   <input
                     type="password"
@@ -698,7 +703,7 @@ function MemberDirectory() {
               type="submit"
               disabled={busy || unavailable || stale || denied || conflict}
             >
-              Save member changes
+              {mode === "sync_profile" ? "Create or update draft profile" : "Save member changes"}
             </Button>
             <Button
               type="button"
@@ -985,13 +990,19 @@ function MemberDirectory() {
           <p>
             {member.publicProfile
               ? `Linked public profile: ${member.publicProfile.name} · ${member.publicProfile.active ? "Published" : "Draft"}.`
-              : "No current public profile is visible in your permitted profile scope."}
+              : member.canSyncProfile ? "No linked Team profile yet." : "No Team profile is available in your current access."}
+            {member.publicProfile && !member.publicProfile.active && " Publish the draft in Public team to make it visible on the website."}
           </p>
           <div className="gt-button-row">
             {!member.deleted_at && member.actions.includes("update") && (
               <Button disabled={unavailable} onClick={() => edit("update")}>
                 Edit member
               </Button>
+            )}
+            {member.publicProfile && (
+              <Link className="gt-button gt-button-secondary" to={`/admin/content/team?profile=${encodeURIComponent(member.publicProfile.id)}`}>
+                {member.publicProfile.active ? "Edit published Team profile" : "Review draft Team profile"}
+              </Link>
             )}
             {member.canSyncProfile && (
               <Button

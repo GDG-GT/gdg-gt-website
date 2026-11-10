@@ -154,11 +154,9 @@ async function setup(
       }),
     ).toBeVisible();
     await page
-      .getByRole("textbox", { name: /Source reference/ })
-      .fill(source.reference);
+      .getByRole("checkbox", { name: /I want to retain this duplicate/ }).check();
     await page
-      .getByRole("textbox", { name: /Canonical reference/ })
-      .fill(targets[0].reference);
+      .getByRole("checkbox", { name: /I want to keep this member/ }).check();
     await page
       .getByLabel("Current password *", { exact: true })
       .fill("Fictional initial proof");

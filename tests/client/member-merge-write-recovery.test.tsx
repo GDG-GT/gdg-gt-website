@@ -204,18 +204,8 @@ async function start(
   mount();
   if (action === "commit") {
     await review();
-    fireEvent.change(
-      screen.getByRole("textbox", { name: /Source reference/ }),
-      {
-        target: { value: source.reference },
-      },
-    );
-    fireEvent.change(
-      screen.getByRole("textbox", { name: /Canonical reference/ }),
-      {
-        target: { value: records[0].reference },
-      },
-    );
+    fireEvent.click(screen.getByRole("checkbox", { name: /I want to retain this duplicate/ }));
+    fireEvent.click(screen.getByRole("checkbox", { name: /I want to keep this member/ }));
     fireEvent.change(screen.getByLabelText("Current password *"), {
       target: { value: "Original proof" },
     });

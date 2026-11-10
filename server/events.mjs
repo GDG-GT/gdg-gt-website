@@ -694,6 +694,7 @@ export async function eventRoutes(
         .object({
           page: z.coerce.number().int().min(1).default(1),
           pageSize: z.coerce.number().int().min(1).max(100).default(50),
+          q: z.string().trim().max(100).default(""),
         })
         .strict(),
     );
@@ -701,6 +702,7 @@ export async function eventRoutes(
       .from("events")
       .select("*", { count: "exact" })
       .order("start_at", { ascending: false });
+    if (p.q) query = query.ilike("title", "%" + p.q.replace(/[%_\\]/g, "\\$&") + "%");
     if (!["admin", "super_admin"].includes(session.user.role)) {
       const memberships = await store.memberships(session.user.id),
         allowed = [];

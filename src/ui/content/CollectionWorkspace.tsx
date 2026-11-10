@@ -1,10 +1,11 @@
+import { useSearchParams } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { api, ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -220,6 +221,14 @@ export default function CollectionWorkspace({
   );
 }
 function CollectionEditor({ initialKind }: { initialKind: Kind }) {
+  const [params] = useSearchParams();
+  const requestedProfile = initialKind === "team-profiles" ? params.get("profile") || "" : "";
+  const openedProfile = useRef("");
+  const [profileRetry, setProfileRetry] = useState(0);
+  const linkedProfile = usePrivateRead<{ record: Row }>(
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(requestedProfile) ? `/admin/content-records/team-profiles/${requestedProfile}` : undefined,
+    profileRetry,
+  );
   const [kind, setKind] = useState<Kind>(initialKind),
     [q, setQ] = useState(""),
     [state, setState] = useState("current"),
@@ -359,7 +368,7 @@ function CollectionEditor({ initialKind }: { initialKind: Kind }) {
   useEffect(() => {
     if (editorKey) editorHeading.current?.focus();
   }, [editorKey]);
-  const open = (row?: Row) => {
+  const open = useCallback((row?: Row) => {
     if (
       pending.current ||
       unavailable ||
@@ -394,7 +403,16 @@ function CollectionEditor({ initialKind }: { initialKind: Kind }) {
     setConfirm(undefined);
     setConflict(false);
     setNotice("");
-  };
+  }, [pending, unavailable, canCreate, spec.fields, capabilities]);
+  useEffect(() => {
+    if (!requestedProfile || openedProfile.current === requestedProfile || editor || confirm || busy || unavailable || !linkedProfile.data) return;
+    const row = linkedProfile.data.record;
+    if (row?.id !== requestedProfile || !Array.isArray(row.actions) || !row.actions.includes("update")) return;
+    openedProfile.current = requestedProfile;
+    setQ(rowLabel(row));
+    setPage(1);
+    open(row);
+  }, [requestedProfile, editor, confirm, busy, unavailable, linkedProfile.data, open]);
   const mutationDenied = (error: unknown) => {
     if (
       !(error instanceof ApiFailure) ||
@@ -524,6 +542,9 @@ function CollectionEditor({ initialKind }: { initialKind: Kind }) {
           ))}
         </div>
       )}
+      {requestedProfile && linkedProfile.loading && <p role="status">Opening the selected Team profile…</p>}
+      {requestedProfile && linkedProfile.error && <p role="alert">{linkedProfile.error} <Button variant="ghost" onClick={() => setProfileRetry(profileRetry + 1)}>Retry selected Team profile</Button></p>}
+      {kind === "team-profiles" && !editor && <p>Member sync creates a draft here. Review the profile, then choose Publish to show it on the Team page.</p>}
       {error && (
         <p
           className="gt-form-error"

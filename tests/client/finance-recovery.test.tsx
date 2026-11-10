@@ -226,9 +226,9 @@ function submitDecision() {
   fireEvent.click(
     screen.getByRole("button", { name: "Submit request", exact: true }),
   );
-  const input = screen.getByLabelText(/Type FIN-FICTIONAL-001 to confirm/),
+  const input = screen.getByRole("checkbox", { name: /I have reviewed/ }),
     password = screen.getByLabelText(/Your current password/);
-  fireEvent.change(input, { target: { value: record.reference } });
+  fireEvent.click(input);
   fireEvent.change(password, { target: { value: "Fictional-finance-proof" } });
   return { input, password, form: password.closest("form")! };
 }
@@ -643,10 +643,10 @@ describe("Finance drafts, allocations and retained decisions", () => {
     );
     expect(refresh).toHaveBeenCalledTimes(1);
   });
-  it("blocks direct decision submission when the reference confirmation is wrong", () => {
+  it("blocks direct decision submission without acknowledging the selected record", () => {
     ledger();
     const { input, form } = submitDecision();
-    fireEvent.change(input, { target: { value: "wrong reference" } });
+    fireEvent.click(input);
     fireEvent.submit(form);
     expect(writes()).toHaveLength(0);
   });

@@ -120,8 +120,8 @@ async function setup(page: Page, action: string, loss: "before" | "after") {
       .click();
     if (action === "archive") {
       await page
-        .getByRole("textbox", { name: /Exact member reference/ })
-        .fill("FICTIONAL-REF");
+        .getByRole("checkbox", { name: /I have reviewed/ })
+        .check();
       await page
         .getByLabel("Current password *", { exact: true })
         .fill("Fictional original proof");

@@ -177,10 +177,10 @@ async function open(page: Page, info: TestInfo) {
     exact: true,
   });
 }
-async function fill(dialog: Locator, id: string, proof: string) {
+async function fill(dialog: Locator, _id: string, proof: string) {
   await dialog
-    .getByLabel("Delivery confirmation", { exact: false })
-    .fill("DELIVERY " + id);
+    .getByRole("checkbox", { name: /I have reviewed these email/ })
+    .check();
   await dialog.getByLabel("Current password", { exact: true }).fill(proof);
 }
 for (const selected of [false, true])

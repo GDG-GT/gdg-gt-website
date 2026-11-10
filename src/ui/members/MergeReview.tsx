@@ -1,3 +1,4 @@
+import RecordAcknowledgement from "@/ui/RecordAcknowledgement";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ApiFailure } from "@/lib/api";
 import { validationMessage } from "@/lib/validationMessage";
@@ -291,7 +292,7 @@ export default function MergeReview({
   }
   async function commit(e: FormEvent) {
     e.preventDefault();
-    if (busy || unavailable || stale || !review) return;
+    if (busy || unavailable || stale || !review || sourceConfirmation !== review.source.reference || targetConfirmation !== review.target.reference) return;
     try {
       const { currentPassword, ...document } = memberMergeCommit.parse({
         reviewId: review.reviewId,
@@ -586,30 +587,18 @@ export default function MergeReview({
             disabled={busy || unavailable || stale}
             className="gt-plain-fieldset"
           >
-            <Field
-              label="Source reference"
-              hint={review.source.reference}
-              required
-            >
-              <input
-                required
-                autoComplete="off"
-                value={sourceConfirmation}
-                onChange={(e) => setSourceConfirmation(e.target.value)}
-              />
-            </Field>
-            <Field
-              label="Canonical reference"
-              hint={review.target.reference}
-              required
-            >
-              <input
-                required
-                autoComplete="off"
-                value={targetConfirmation}
-                onChange={(e) => setTargetConfirmation(e.target.value)}
-              />
-            </Field>
+            <RecordAcknowledgement
+              label={`I want to retain this duplicate as an inactive member: ${review.source.name} · ${review.source.email}.`}
+              reference={review.source.reference}
+              value={sourceConfirmation}
+              onChange={setSourceConfirmation}
+            />
+            <RecordAcknowledgement
+              label={`I want to keep this member as the main record: ${review.target.name} · ${review.target.email}.`}
+              reference={review.target.reference}
+              value={targetConfirmation}
+              onChange={setTargetConfirmation}
+            />
             <Field label="Current password" required>
               <input
                 type="password"

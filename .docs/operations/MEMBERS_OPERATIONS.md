@@ -18,14 +18,18 @@ No browser table/Realtime grants or private browser-storage cache are added.
 All writes require CSRF, idempotency, current authority and aggregate revision.
 Email normalization/uniqueness includes retained records; records cannot be
 hard-deleted. Archive, restore, public-profile synchronization and unmerge require
-the current password and exact full `MEM-…` reference. Restoration stays inactive.
+the current password and a named acknowledgement. The selected record’s internal
+reference is supplied automatically; officers do not type or copy it. Restoration stays inactive.
 Read audits hash filters rather than retaining raw private search/contact values.
 
 ## Separate public profile workflow
 
 Synchronization additionally requires current public-profile access/action grants
 and the current profile revision. It creates or updates an **unpublished draft**,
-not an account or publication. Private phone, academic fields and interests are
+not an account or publication. The save receipt and linked-profile summary provide
+a **Review draft Team profile** link to the exact profile in Site content → Public
+team. Review its details, save edits if needed, then choose **Publish** and confirm
+publication. Syncing alone does not put a member on the public Team page. Private phone, academic fields and interests are
 not copied. Identity changes, community deactivation or team archival unpublish
 linked profiles atomically; phone-only changes do not demote unchanged identity.
 Reactivation, restoration and team recovery never automatically republish people.
@@ -35,8 +39,9 @@ The publication path independently rejects inactive/archived/merged people.
 
 Only administrators can merge two same-scope identities. Preview compares their
 private fields and issues a five-minute, session-bound proof held only in memory;
-only its hash is persisted. Both revisions, both exact references, current
-password/authority and an unused proof are rechecked at commit. Active project
+only its hash is persisted. Both revisions, both selected references, current
+password/authority and an unused proof are rechecked at commit. The UI asks officers to acknowledge
+the source and main member by name/email, without typing internal references. Active project
 roles/current public profiles must first be explicitly reviewed and removed or
 archived. Cross-scope identity merging is rejected.
 

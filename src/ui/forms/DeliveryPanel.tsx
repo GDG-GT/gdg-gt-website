@@ -1,3 +1,4 @@
+import RecordAcknowledgement from "@/ui/RecordAcknowledgement";
 import { useEffect, useRef, useState } from "react";
 import { ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -619,17 +620,12 @@ function DeliveryWorkspace({
               restrictions do not truncate a respondent’s own requested copy.
               Delivered mail cannot be recalled.
             </p>
-            <Field
-              label="Delivery confirmation"
-              hint={`Type ${policy.reference}`}
-            >
-              <input
-                autoComplete="off"
-                spellCheck={false}
-                value={confirmation}
-                onChange={(e) => setConfirmation(e.target.value)}
-              />
-            </Field>
+            <RecordAcknowledgement
+              label="I have reviewed these email delivery settings."
+              reference={policy.reference}
+              value={confirmation}
+              onChange={setConfirmation}
+            />
             <Field label="Current password">
               <input
                 type="password"

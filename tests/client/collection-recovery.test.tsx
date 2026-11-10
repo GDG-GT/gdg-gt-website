@@ -113,6 +113,20 @@ afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
 });
+it("opens the exact synced Team draft from its member review link", async () => {
+  const profile = { ...row, title: undefined, name: "Anish Kamath", role: "Executive board", team_section: "Core Team" };
+  apiMock.mockImplementation(async (p: string) =>
+    p.endsWith("/capabilities") ? cap : p.includes("?q=") ? { ...listing, items: [profile] } : { record: profile },
+  );
+  render(<MemoryRouter initialEntries={["/admin/content/team?profile=" + id]}>
+    <main><CollectionWorkspace initialKind="team-profiles" /></main>
+  </MemoryRouter>);
+  await screen.findByRole("heading", { name: "Edit Anish Kamath" });
+  expect((screen.getByLabelText(/^Name/) as HTMLInputElement).value).toBe("Anish Kamath");
+  await waitFor(() => expect((screen.getByRole("button", { name: "Save changes" }) as HTMLButtonElement).disabled).toBe(false));
+  expect(writes()).toHaveLength(0);
+  expect(apiMock.mock.calls.some(([p]) => p === "/admin/content-records/team-profiles/" + id)).toBe(true);
+});
 it("shows a skeleton and aborts both independent reads", () => {
   const pending = deferred<unknown>();
   apiMock.mockReturnValue(pending.promise);

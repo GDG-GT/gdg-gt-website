@@ -19,7 +19,7 @@ Export remains available for held data; it does not release the hold.
 Exact matches cover event registrations, newsletter identity/delivery, contact
 inquiries/files, identified Forms responses/drafts/access and event device
 reminders. Legacy encrypted access-email matches use per-form HMACs. Explicit
-response IDs may supplement historical unidentified responses only after
+responses selected by form and submission time may supplement historical unidentified responses only after
 independent ownership verification; arbitrary answer-text matching is prohibited.
 
 Exports are private JSON downloads, bounded to 3 MiB, with sensitive Forms answers

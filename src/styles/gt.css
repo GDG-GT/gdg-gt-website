@@ -7021,3 +7021,12 @@ fieldset.gt-event-fields {
 @media (max-width: 600px) { .gt-site-content-heading-actions, .gt-site-content-previews .gt-button { width: 100%; } .gt-site-content-heading-actions > .gt-button { flex: 1; } .gt-site-content-collections .gt-button { flex: 1 1 auto; } }
 .gt-action-feedback-body { flex: 1; min-width: 0; }
 .gt-action-feedback-body > .gt-button { margin-top: 12px; margin-right: 8px; }
+
+/* Named record selection for operational workflows. */
+.gt-record-picker { min-width: 0; }
+.gt-picker-options { display: flex; flex-direction: column; gap: 0.5rem; list-style: none; padding: 0; margin: 0.75rem 0; }
+.gt-picker-options li { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; min-width: 0; }
+.gt-picker-options button { white-space: normal; overflow-wrap: anywhere; text-align: left; }
+
+.gt-record-acknowledgement { min-height: 44px; padding-block: 8px; gap: 12px; align-items: center; }
+.gt-record-acknowledgement input[type="checkbox"] { width: 24px; height: 24px; margin: 0; }

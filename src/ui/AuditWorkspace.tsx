@@ -1,3 +1,4 @@
+import RecordPicker from "./RecordPicker";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
@@ -85,6 +86,8 @@ function AuditHistory() {
     if (trailQuery.current !== query) setTrail([]);
     trailQuery.current = query;
   }, [query]);
+  const [actorChoice, setActorChoice] = useState(params.get("actor") || "");
+  useEffect(() => setActorChoice(params.get("actor") || ""), [params]);
   const history = usePrivateRead<Listing>("/admin/audit?" + query, refresh),
     entry = usePrivateRead<Detail>(
       selected ? "/admin/audit/" + encodeURIComponent(selected) : undefined,
@@ -246,7 +249,7 @@ function AuditHistory() {
       >
         <div className="gt-form-grid">
           <Field
-            label="Search actions, target types or exact IDs"
+            label="Search actions or record types"
             hint="Letters, numbers, periods, underscores, colons and hyphens."
           >
             <input
@@ -265,15 +268,9 @@ function AuditHistory() {
               placeholder="For example: events.published"
             />
           </Field>
-          <Field label="Actor account ID">
-            <input
-              name="actor"
-              defaultValue={params.get("actor") || ""}
-              placeholder="UUID, or leave blank"
-              maxLength={36}
-              pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
-            />
-          </Field>
+          <RecordPicker label="Account" name="actor" endpoint="/admin/users" value={actorChoice}
+            inventories={[{ label: "Current accounts", endpoint: "/admin/users" }, { label: "Archived accounts", endpoint: "/admin/users?state=archived" }]}
+            hint="Search by account email." onChange={(choice) => setActorChoice(choice?.id || "")} />
           <Field label="From (your local time)">
             <input
               name="from"

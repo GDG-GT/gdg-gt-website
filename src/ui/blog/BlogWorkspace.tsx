@@ -1,3 +1,4 @@
+import RecordAcknowledgement from "@/ui/RecordAcknowledgement";
 import {
   useCallback,
   useEffect,
@@ -402,7 +403,7 @@ function BlogWorkspaceContent({
     }
     if (confirmed && (!password || confirmation !== record?.reference)) {
       setError(
-        "Enter the exact editorial reference and your current password.",
+        "Confirm the selected editorial record and enter your current password.",
       );
       return;
     }
@@ -833,16 +834,12 @@ function BlogWorkspaceContent({
                       ? "The record and history will be retained, not deleted."
                       : "Confirm this editorial operation."}
                 </p>
-                <Field label="Exact editorial reference">
-                  <input
-                    value={confirmation}
-                    onChange={(e) => setConfirmation(e.target.value)}
-                    required
-                    autoComplete="off"
-                    aria-describedby="blog-reference"
-                  />
-                  <small id="blog-reference">{record?.reference}</small>
-                </Field>
+                <RecordAcknowledgement
+                  label={`I have reviewed “${record?.title || record?.name || "this editorial record"}” and want to ${mode?.replace(/_/g, " ")}.`}
+                  reference={record?.reference || ""}
+                  value={confirmation}
+                  onChange={setConfirmation}
+                />
                 <Field label="Current password">
                   <input
                     type="password"

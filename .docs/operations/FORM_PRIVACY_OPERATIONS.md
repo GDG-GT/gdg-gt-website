@@ -9,8 +9,8 @@ Responses → Retention & holds shows current form-wide policy and counters.
 An individual response → Review response retention & hold shows its exact stored
 deadline and any individual/form-wide hold. Form-wide and individual holds are
 separate operational records, not mutable published-definition switches. A
-password-confirmed review, typed HOLD reference, reason and matching revision are
-required. Current read/response-review/delete grants are checked. Authorized
+password-confirmed review, named hold-settings acknowledgement, reason and matching revision are
+required. The selected form/response reference is supplied automatically. Current read/response-review/delete grants are checked. Authorized
 reviewers may add holds; only Admins and Super Admins may release existing holds.
 Releasing the form-wide hold never releases separate response holds. Reasons
 remain private; audit/idempotency results contain hashes/references, not reasons.

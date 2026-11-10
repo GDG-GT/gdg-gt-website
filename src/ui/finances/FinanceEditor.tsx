@@ -1,3 +1,4 @@
+import RecordPicker from "@/ui/RecordPicker";
 import { useEffect, useRef, useState } from "react";
 import { api, ApiFailure } from "@/lib/api";
 import { validationMessage } from "@/lib/validationMessage";
@@ -346,16 +347,11 @@ export default function FinanceEditor({
           />
         </Field>
         <div className="gt-form-grid">
-          <Field
-            label="Event ID (optional)"
-            hint="Use an event you are authorized to view."
-          >
-            <input {...field("eventId")} maxLength={36} />
-          </Field>
+          <RecordPicker label="Event" endpoint="/admin/events" value={values.eventId} disabled={busy}
+            onChange={(choice) => { setValues((v) => ({ ...v, eventId: choice?.id || "" })); key.current = undefined; }} />
           {capabilities.globalAdmin && (
-            <Field label="Project ID (optional)">
-              <input {...field("projectId")} maxLength={36} />
-            </Field>
+            <RecordPicker label="Project" endpoint="/admin/projects" value={values.projectId} disabled={busy}
+              onChange={(choice) => { setValues((v) => ({ ...v, projectId: choice?.id || "" })); key.current = undefined; }} />
           )}
           <Field
             label="Recurrence metadata"

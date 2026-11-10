@@ -169,13 +169,13 @@ for (const individual of [false, true])
           .getByRole("button", { name: "Retention & holds", exact: true })
           .click();
       const dialog = page.getByRole("dialog");
-      await dialog.getByRole("checkbox").check();
+      await dialog.getByRole("checkbox", { name: /Retain (this|all) responses?/ }).check();
       await dialog
         .getByLabel("Private operational reason", { exact: false })
         .fill("Fictional reviewed operational reason");
       await dialog
-        .getByLabel("Hold confirmation", { exact: false })
-        .fill("HOLD " + (individual ? responseId : form.id));
+        .getByRole("checkbox", { name: /I have reviewed/ })
+        .check();
       await dialog.getByLabel("Current password", { exact: true }).fill(proof);
       await dialog
         .getByRole("button", { name: "Confirm privacy review", exact: true })

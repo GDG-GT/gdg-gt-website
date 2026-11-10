@@ -90,15 +90,13 @@ function mount(individual = false) {
     </MemoryRouter>,
   );
 }
-async function fill(individual = false) {
+async function fill(_individual = false) {
   const reason = await screen.findByLabelText(/Private operational reason/);
   fireEvent.change(reason, {
     target: { value: "Fictional reviewed private hold reason" },
   });
-  fireEvent.click(screen.getByRole("checkbox"));
-  fireEvent.change(screen.getByLabelText(/Hold confirmation/), {
-    target: { value: "HOLD " + (individual ? responseId : formId) },
-  });
+  fireEvent.click(screen.getByRole("checkbox", { name: /Retain (this|all) responses?/ }));
+  fireEvent.click(screen.getByRole("checkbox", { name: /I have reviewed/ }));
   fireEvent.change(screen.getByLabelText("Current password"), {
     target: { value: proof },
   });

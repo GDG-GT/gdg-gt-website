@@ -1,3 +1,11 @@
+## Member profile review and UID entry cleanup — 2026-11-10
+
+Current work replaces internal-reference text prompts with named acknowledgements in member archive/restore/sync/unmerge, duplicate merges, editorial actions, finance decisions, Forms delivery settings and retention/holds. Password, permission, revision and idempotency checks remain. Finance event/project links, audit account filters (including archived accounts) and historical unidentified Forms response selection use permission-scoped record pickers. No database migration is required.
+
+A read-only production UI check confirmed Anish Kamath already has a linked unpublished Team draft and a successful sync activity. No duplicate was created and no production profile was published. Members now link directly to the exact draft in Site content → Public team, with explicit review/publication guidance. The deep link opens the editor and searches the inventory by name so the profile stays findable after editing.
+
+Verification passed: 255 files / 3,015 unit tests; 50 Chromium desktop/WebKit mobile recovery and profile-publication cases; typecheck; lint with 8 inherited warnings; production build; compiled public SSR; bundle budgets; secret scan. Desktop/mobile draft screenshots were reviewed. Deployment is the next step. Preserve all edits and unrelated `supabase/.temp/cli-latest`. No production member, credential, point, provider email or native binary changes in this task. Existing SSO/Wallet approval deferrals remain unchanged.
+
 ## Owner device acceptance: Apple Wallet QR — 2026-11-09
 
 Owner explicitly confirmed successfully adding the existing membership pass to Apple Wallet and scanning its QR in GDG Workspace. Mark these two checks **passed, owner-tested**. No repeat installation or QR-scan test is needed for this acceptance item. This confirmation does not cover NFC tapping, Google Wallet, physical cards, biometrics, or device tests of duplicate handling/revocation. See [Apple Wallet evidence](phase0/apple-wallet-qr-verification.json).

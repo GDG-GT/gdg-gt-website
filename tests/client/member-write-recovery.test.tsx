@@ -74,6 +74,32 @@ const attempts = () =>
   transport.mock.calls.filter(
     ([p, o]) => o?.method === "POST" && !p.endsWith("/recovery"),
   );
+it("syncs a named member into a reviewable draft without publishing automatically", async () => {
+  const profileId = "f1330000-0000-4000-8000-000000000010";
+  const original = transport.getMockImplementation()!;
+  transport.mockImplementation(async (path: string, options = {}) => {
+    const o = options as { method?: string };
+    if (o.method === "POST") return { id, revision: 2, profileId };
+    const result = await original(path, options);
+    return result.member ? { member: { ...result.member, canSyncProfile: true } } : result;
+  });
+  mount(true);
+  await screen.findByRole("heading", { name: record.name });
+  await waitFor(() => expect((button("Sync draft public profile") as HTMLButtonElement).disabled).toBe(false));
+  click("Sync draft public profile");
+  expect(screen.queryByLabelText(/Exact member reference/)).toBeNull();
+  const proof = screen.getByLabelText("Current password *"), form = proof.closest("form")!;
+  fireEvent.change(proof, { target: { value: "Fictional-sync-proof" } });
+  fireEvent.submit(form);
+  expect(attempts()).toHaveLength(0);
+  fireEvent.click(screen.getByRole("checkbox", { name: /Create or update the draft Team profile for Fictional existing member/ }));
+  fireEvent.submit(form);
+  const review = await screen.findByRole("link", { name: "Review draft Team profile" });
+  expect(review.getAttribute("href")).toBe("/admin/content/team?profile=" + profileId);
+  expect(attempts()).toHaveLength(1);
+  expect(attempts()[0][1].body).toMatchObject({ action: "sync_profile", confirmation: record.reference });
+  expect(attempts().some(([, options]) => options.body.action === "publish")).toBe(false);
+});
 async function start(action = "create") {
   mount(action !== "create");
   await waitFor(() =>
@@ -95,9 +121,7 @@ async function start(action = "create") {
         target: { value: "Frozen original update" },
       });
     else {
-      fireEvent.change(screen.getByLabelText(/Exact member reference/), {
-        target: { value: record.reference },
-      });
+      fireEvent.click(screen.getByRole("checkbox", { name: /I have reviewed/ }));
       fireEvent.change(screen.getByLabelText("Current password *"), {
         target: { value: "Fresh original proof" },
       });

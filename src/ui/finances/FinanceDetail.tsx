@@ -1,3 +1,4 @@
+import RecordAcknowledgement from "@/ui/RecordAcknowledgement";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, ApiFailure } from "@/lib/api";
 import { financeMutation, financeNote } from "../../../shared/finances.mjs";
@@ -321,18 +322,13 @@ export default function FinanceDetail({
               />
             </Field>
           )}
-          <Field label={`Type ${f.reference} to confirm`} required>
-            <input
-              autoComplete="off"
-              required
-              disabled={busy}
-              value={confirmation}
-              onChange={(e) => {
-                setConfirmation(e.target.value);
-                decisionKey.current = undefined;
-              }}
-            />
-          </Field>
+          <RecordAcknowledgement
+            label={`I have reviewed “${f.description}” for ${dollars(f.amount)} and want to ${actionNames[action].toLowerCase()}.`}
+            reference={f.reference}
+            value={confirmation}
+            disabled={busy}
+            onChange={(value) => { setConfirmation(value); decisionKey.current = undefined; }}
+          />
           <Field label="Your current password" required>
             <input
               type="password"

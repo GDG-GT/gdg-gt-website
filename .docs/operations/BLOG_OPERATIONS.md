@@ -26,8 +26,9 @@ article leaves it draft, and restoring a category leaves it inactive.
 
 Current session/action checks are repeated inside the database transaction.
 Mutations use CSRF, idempotency and aggregate revision checks. Sensitive decisions,
-assignment, moderation and archive/restore require the current password and exact
-full BLOG reference, including on replays. Stored editorial versions retain
+assignment, moderation and archive/restore require the current password and a
+named record acknowledgement. The UI supplies the selected BLOG reference
+automatically, including on identical replays. Stored editorial versions retain
 business document snapshots, separate from append-only audit metadata. List DTOs
 omit article bodies, proposed document payloads and private author email.
 Submission DTOs never expose storage paths; editor views also omit submitter

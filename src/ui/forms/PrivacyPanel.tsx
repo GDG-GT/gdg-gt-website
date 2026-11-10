@@ -1,3 +1,4 @@
+import RecordAcknowledgement from "@/ui/RecordAcknowledgement";
 import { useEffect, useRef, useState } from "react";
 import { ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -527,14 +528,12 @@ function PrivacyWorkspace({ formId, responseId, ...handlers }: Props) {
                 />
               </Field>
             )}
-            <Field label="Hold confirmation" hint={`Type ${reference}`}>
-              <input
-                autoComplete="off"
-                spellCheck={false}
-                value={confirmation}
-                onChange={(e) => setConfirmation(e.target.value)}
-              />
-            </Field>
+            <RecordAcknowledgement
+              label={`I have reviewed the ${responseId ? "selected response’s" : "form’s"} hold and retention settings.`}
+              reference={reference}
+              value={confirmation}
+              onChange={setConfirmation}
+            />
             <Field label="Current password">
               <input
                 type="password"

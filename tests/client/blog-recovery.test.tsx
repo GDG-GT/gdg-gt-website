@@ -456,9 +456,7 @@ describe("Editorial writes and confirmation", () => {
     fireEvent.change(password, { target: { value: "Fictional-blog-proof" } });
     fireEvent.submit(password.closest("form")!);
     expect(writes()).toHaveLength(0);
-    fireEvent.change(screen.getByLabelText(/Exact editorial reference/), {
-      target: { value: record.reference },
-    });
+    fireEvent.click(screen.getByRole("checkbox", { name: /I have reviewed/ }));
     fireEvent.submit(password.closest("form")!);
     expect((password as HTMLInputElement).value).toBe("");
     expect(writes()[0][1].body).toMatchObject({
@@ -481,9 +479,7 @@ describe("Editorial writes and confirmation", () => {
     );
     const password = screen.getByLabelText("Current password"),
       form = password.closest("form")!;
-    fireEvent.change(screen.getByLabelText(/Exact editorial reference/), {
-      target: { value: record.reference },
-    });
+    fireEvent.click(screen.getByRole("checkbox", { name: /I have reviewed/ }));
     fireEvent.change(password, { target: { value: "Fictional-first-proof" } });
     fireEvent.submit(form);
     await screen.findByText("Archive not confirmed");

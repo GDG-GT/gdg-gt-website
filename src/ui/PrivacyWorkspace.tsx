@@ -1,3 +1,4 @@
+import HistoricalResponsePicker from "./privacy/HistoricalResponsePicker";
 import {
   useEffect,
   useRef,
@@ -341,7 +342,7 @@ function PrivacyRequests() {
     });
     if (!parsed.success) {
       setError(
-        "Enter an exact email, a purpose of 20–500 characters, your current password, and attest that you independently verified the requester. Historical response IDs must be unique UUIDs (up to 20).",
+        "Enter an exact email, a purpose of 20–500 characters, your current password, and attest that you independently verified the requester. Select up to 20 independently verified historical responses.",
       );
       return;
     }
@@ -394,8 +395,8 @@ function PrivacyRequests() {
           Matches exact email in event registrations, newsletter, contact
           inquiries, declared or verified Forms identities, private
           drafts/access and device reminders. Entered email alone is not proof
-          of identity. Historical Forms without identity need independently
-          verified response IDs; arbitrary answer-text matches are never used.
+          of identity. For older Forms without identity, select the responses only after
+          independently verifying ownership. Answer-text matches are not proof.
         </p>
         <p className="gt-helper">
           Finance records/files, audit/security retention, officer accounts,
@@ -503,7 +504,7 @@ function PrivacyRequests() {
                 autoComplete="off"
                 maxLength={254}
                 value={draft.email}
-                onChange={(e) => change({ email: e.target.value })}
+                onChange={(e) => change({ email: e.target.value, responseIds: "", identityVerified: false })}
               />
             </Field>
             <Field label="Requested action">
@@ -536,19 +537,8 @@ function PrivacyRequests() {
           </Field>
           <details>
             <summary>Historical Forms with no captured identity</summary>
-            <p className="gt-helper">
-              Only supply response IDs whose ownership you independently
-              verified. New identified responses cannot be substituted for
-              another email's records. Up to 20 UUIDs, separated by commas or
-              spaces.
-            </p>
-            <Field label="Independently verified historical response IDs">
-              <textarea
-                rows={3}
-                value={draft.responseIds}
-                onChange={(e) => change({ responseIds: e.target.value })}
-              />
-            </Field>
+            <HistoricalResponsePicker key={draft.email} value={draft.responseIds}
+              onChange={(value) => change({ responseIds: value })} />
           </details>
           <label className="gt-check">
             <input

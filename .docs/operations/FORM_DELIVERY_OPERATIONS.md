@@ -13,8 +13,9 @@ Local implementation: 2026-10-21. SSO and Bevy/Engage remain deferred. This does
 not certify the remaining Forms workflows, hosted providers or full PRD acceptance.
 
 Builder → Settings → Review receipts & notifications opens a separate review of
-the exact saved definition. Configure recipients, type the displayed `DELIVERY`
-reference and confirm the current password. Changes are not silently saved. The
+the exact saved definition. Configure recipients, acknowledge the reviewed email
+settings and confirm the current password. The selected form reference is
+supplied automatically. Changes are not silently saved. The
 review dialog warns before discarding edits and clears private state on session
 loss. Archived forms are read-only. The ordinary Response receipt setting must
 also be enabled and a matching review must exist before publishing receipts.

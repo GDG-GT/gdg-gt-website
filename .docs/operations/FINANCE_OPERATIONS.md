@@ -14,9 +14,11 @@ page/action grant. Global administrators cannot approve their own submissions.
 Blog Editors have no finance access. Membership removal revokes team history.
 
 Amounts are positive USD decimal strings, up to `9999999999.99` per record.
-Draft payloads are editable by their creator; scope/approval requirements are
+Event and project links are selected by name from permission-scoped, searchable
+inventories; database IDs are not entered manually. Draft payloads are editable by their creator; scope/approval requirements are
 fixed on creation. Submission makes the financial payload immutable. Decisions
-require a revision, password and exact `FIN-…` reference. A rejected request needs
+require a revision, password and acknowledgement of the selected request by
+description and amount. The selected `FIN-…` reference is supplied automatically. A rejected request needs
 a reason. New requests are separate records, never rewrites of final decisions.
 
 Budgets must be activated before reference. Approval reserves expense and

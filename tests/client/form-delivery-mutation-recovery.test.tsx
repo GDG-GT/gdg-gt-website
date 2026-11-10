@@ -100,10 +100,8 @@ function click(name: string) {
   fireEvent.click(screen.getByRole("button", { name, exact: true }));
 }
 async function fill() {
-  await screen.findByLabelText(/Delivery confirmation/);
-  fireEvent.change(screen.getByLabelText(/Delivery confirmation/), {
-    target: { value: policy.reference },
-  });
+  await screen.findByRole("checkbox", { name: /I have reviewed these email/ });
+  fireEvent.click(screen.getByRole("checkbox", { name: /I have reviewed these email/ }));
   fireEvent.change(screen.getByLabelText("Current password"), {
     target: { value: proof },
   });
@@ -427,9 +425,9 @@ describe("Reviewed delivery intent and complete recipient recovery", () => {
     click("Recheck delivery settings");
     await screen.findByText("Fictional policy outage");
     expect(
-      (screen.getByLabelText(/Delivery confirmation/) as HTMLInputElement)
-        .value,
-    ).toBe("DELIVERY " + formId);
+      (screen.getByRole("checkbox", { name: /I have reviewed these email/ }) as HTMLInputElement)
+        .checked,
+    ).toBe(true);
     expect(
       (
         screen.getByRole("button", {
@@ -465,9 +463,9 @@ describe("Reviewed delivery intent and complete recipient recovery", () => {
         click("Reload saved delivery settings and discard this review");
         await waitFor(() =>
           expect(
-            (screen.getByLabelText(/Delivery confirmation/) as HTMLInputElement)
-              .value,
-          ).toBe(""),
+            (screen.getByRole("checkbox", { name: /I have reviewed these email/ }) as HTMLInputElement)
+              .checked,
+          ).toBe(false),
         );
       },
     );
@@ -520,7 +518,7 @@ describe("Reviewed delivery intent and complete recipient recovery", () => {
       (screen.getByLabelText("Current password") as HTMLInputElement).value,
     ).toBe("");
     expect(
-      (screen.getByLabelText(/Delivery confirmation/) as HTMLInputElement)
+      (screen.getByRole("checkbox", { name: /I have reviewed these email/ }) as HTMLInputElement)
         .disabled,
     ).toBe(false);
   });
@@ -689,7 +687,7 @@ describe("Reviewed delivery intent and complete recipient recovery", () => {
     click("Confirm delivery review");
     await unknown();
     click("Stop tracking this delivery review");
-    await screen.findByLabelText(/Delivery confirmation/);
+    await screen.findByRole("checkbox", { name: /I have reviewed these email/ });
     expect(writes()).toHaveLength(1);
     expect(screen.queryByText(/Delivery review confirmed/)).toBeNull();
   });
