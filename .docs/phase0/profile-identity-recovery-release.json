@@ -1,0 +1,52 @@
+{
+  "recordedAt": "2026-11-10T06:17:00.678845+00:00",
+  "profileFeatureSource": "5583ee8d2d463ecf00322c7dac7747c65313c423",
+  "profileDeployment": "dpl_Hgkpmth2HNLis1KPU3Cx485oaVVG",
+  "migrations": [
+    {
+      "name": "202611100148_profile_identity_reconciliation",
+      "hostedVersion": "20261110060231"
+    },
+    {
+      "name": "202611100149_profile_identity_case_preservation",
+      "hostedVersion": "20261110060623"
+    }
+  ],
+  "productionUI": {
+    "emptyPortfolioSave": "passed on redundant Tejas draft, no displayed content changes",
+    "duplicateConsolidation": "kept published President profile, archived1 redundant Founder draft",
+    "retainedProfileRevision": 4,
+    "memberLink": "Tejas Singhal \u00b7 Published",
+    "adminRestored": "authenticated Dashboard visibly verified after clearing the failed CSS response through Shift+Reload",
+    "providerSends": 0,
+    "permissionChanges": 0
+  },
+  "diagnosis": {
+    "resource": "/assets/gt-D8DZXeuo.css",
+    "browserError": "Refused text/plain stylesheet, followed by Unable to preload CSS",
+    "networkRetest": "200 text/css",
+    "automaticFix": "retry one same-origin static CSS fetch with cache reload, validate type/status, replace stylesheet and retry route import",
+    "explicitRecovery": "refresh static assets before the user-requested reload",
+    "automaticDocumentReload": false,
+    "apiWriteReplay": false
+  },
+  "validation": {
+    "unitFiles": 258,
+    "unitTests": 3036,
+    "focusedBrowserCases": 20,
+    "engines": [
+      "Chromium desktop",
+      "WebKit mobile"
+    ],
+    "canonicalAndLegacySQLThrough": 149,
+    "typecheck": "passed",
+    "lintErrors": 0,
+    "inheritedWarnings": 8,
+    "build": "passed",
+    "publicSSR": "passed",
+    "bundleBudgets": "passed",
+    "secretScanUnreviewed": 0
+  },
+  "finalCombinedDeployment": "pending",
+  "batching": "Owner requested one combined push for remaining changes. Record final deployment in the next work session without a separate docs-only deployment."
+}

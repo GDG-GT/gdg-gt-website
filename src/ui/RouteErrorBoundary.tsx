@@ -1,10 +1,11 @@
 import { Component, type ReactNode } from "react";
+import { refreshPageAssets } from "@/lib/route-assets";
 
 export default class RouteErrorBoundary extends Component<
   { children: ReactNode },
-  { failed: boolean }
+  { failed: boolean; reloading: boolean }
 > {
-  state = { failed: false };
+  state = { failed: false, reloading: false };
   static getDerivedStateFromError() {
     return { failed: true };
   }
@@ -21,9 +22,14 @@ export default class RouteErrorBoundary extends Component<
           <div className="gt-inline-actions">
             <button
               className="gt-button gt-button-primary"
-              onClick={() => window.location.reload()}
+              disabled={this.state.reloading}
+              onClick={async () => {
+                this.setState({ reloading: true });
+                try { await refreshPageAssets(); }
+                finally { window.location.reload(); }
+              }}
             >
-              Reload page
+              {this.state.reloading ? "Refreshing page assets…" : "Reload page"}
             </button>
             <a className="gt-button gt-button-secondary" href="/">
               Return home

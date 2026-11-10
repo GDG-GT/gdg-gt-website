@@ -149,7 +149,8 @@
     "202611090145_reward_credential_email.sql",
     "202611090146_workspace_action_emails.sql",
     "202611090147_profile_portfolio.sql",
-    "202611100148_profile_identity_reconciliation.sql"
+    "202611100148_profile_identity_reconciliation.sql",
+    "202611100149_profile_identity_case_preservation.sql"
   ],
   "tests": [
     {
@@ -753,6 +754,10 @@
       "passed": true
     },
     {
+      "name": "202611100149_profile_identity_case_preservation.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -1222,6 +1227,10 @@
     },
     {
       "name": "148_profile_identity_reconciliation.sql",
+      "passed": true
+    },
+    {
+      "name": "149_profile_identity_case_preservation.sql",
       "passed": true
     },
     {

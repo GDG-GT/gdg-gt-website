@@ -2,7 +2,8 @@ import {
   PublicBootstrapContext,
   type PublicBootstrap,
 } from "@/contexts/PublicBootstrapContext";
-import { lazy, Suspense, type ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
+import { lazyRoute as lazy } from "@/lib/route-assets";
 import {
   createBrowserRouter,
   RouterProvider,

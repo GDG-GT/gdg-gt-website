@@ -175,3 +175,40 @@ for (const maintenance of [false, true])
       release();
     }
   });
+
+test("a cached plain-text admin stylesheet recovers without a document reload", async ({ page, fixture }) => {
+  fixture.authenticated = true;
+  let attempts = 0, documents = 0;
+  page.on("request", (request) => { if (request.isNavigationRequest() && request.frame() === page.mainFrame()) documents++; });
+  await page.route("**/assets/gt-*.css*", async (route) => {
+    attempts++;
+    if (attempts === 1) return route.fulfill({ status: 200, contentType: "text/plain", body: "Temporarily unavailable", headers: { "cache-control": "public, max-age=31536000, immutable", "x-content-type-options": "nosniff" } });
+    return route.continue();
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Workspace", exact: true }).click();
+  await expect(page.locator("#workspace-content h1")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "This page couldn’t load." })).toHaveCount(0);
+  expect(attempts).toBeGreaterThanOrEqual(3);
+  expect(documents).toBe(1);
+  expect(fixture.writes).toEqual([]);
+  expect(fixture.unexpected).toEqual([]);
+});
+
+test("explicit reload replaces a failed cached stylesheet before reopening admin", async ({ page, fixture }) => {
+  fixture.authenticated = true;
+  let unavailable = true, repairs = 0;
+  await page.route("**/assets/gt-*.css*", (route) => {
+    if (unavailable) return route.fulfill({ status: 200, contentType: "text/plain", body: "Unavailable", headers: { "x-content-type-options": "nosniff", "cache-control": "public, max-age=31536000, immutable" } });
+    repairs++; return route.continue();
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Workspace", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "This page couldn’t load." })).toBeVisible();
+  unavailable = false;
+  await page.getByRole("button", { name: "Reload page", exact: true }).click();
+  await expect(page.locator("#workspace-content h1")).toBeVisible();
+  expect(repairs).toBeGreaterThan(0);
+  expect(fixture.writes).toEqual([]);
+  expect(fixture.unexpected).toEqual([]);
+});
