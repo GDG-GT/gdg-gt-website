@@ -1,5 +1,6 @@
 import ActionFeedback from "@/ui/ActionFeedback";
 import { otherChoiceText } from "../../../shared/form-choice";
+import { orderedFormFields } from "../../../shared/forms";
 import { useEffect, useRef, useState } from "react";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
@@ -93,6 +94,9 @@ function ResponseWorkspaceContent() {
   const [dateError, setDateError] = useState<"from" | "to" | "">(""),
     [dateMessage, setDateMessage] = useState("");
   const query = params.toString();
+  const answerParams = new URLSearchParams(query);
+  answerParams.delete("sensitive");
+  const answerQuery = answerParams.toString();
   useEffect(() => {
     setDateError("");
     setDateMessage("");
@@ -113,7 +117,7 @@ function ResponseWorkspaceContent() {
     readable = !!formId && !!form && mayReviewResponses && !blocked,
     responsesRead = usePrivateRead<Result>(
       readable && tab === "Responses"
-        ? `${root}/responses?${query}`
+        ? `${root}/responses?${answerQuery}`
         : undefined,
       refresh + readRetry.responses,
     ),
@@ -333,11 +337,9 @@ function ResponseWorkspaceContent() {
       </div>
     );
   const fieldMap = new Map(
-      form.versions.flatMap((v) => v.fields.map((f) => [f.id, f] as const)),
+      form.versions.flatMap((v) => orderedFormFields(v.fields, v.sections).map((f) => [f.id, f] as const)),
     ),
-    visibleColumns = columns
-      .map((id) => fieldMap.get(id))
-      .filter((field): field is NonNullable<typeof field> => !!field);
+    visibleColumns = [...fieldMap.values()].filter((field) => columns.includes(field.id));
   return (
     <div className="gt-admin-page" aria-busy={loading || busy}>
       <header className="gt-admin-page-heading">
@@ -599,21 +601,6 @@ function ResponseWorkspaceContent() {
       <section className="gt-panel gt-event-editor">
         <div className="gt-panel-heading">
           <h2>Review preferences</h2>
-          <label className="gt-check">
-            <input
-              type="checkbox"
-              checked={params.get("sensitive") === "true"}
-              disabled={
-                busy ||
-                (!ready && params.get("sensitive") !== "true") ||
-                !form.actions?.includes("view_sensitive_responses")
-              }
-              onChange={(e) =>
-                change("sensitive", e.target.checked ? "true" : "false")
-              }
-            />
-            Reveal sensitive answers (audited)
-          </label>
         </div>
         <ResponseReadFeedback
           name="saved views"
@@ -873,8 +860,8 @@ function ResponseWorkspaceContent() {
                         <td>{row.status}</td>
                         {visibleColumns.map((f) => (
                           <td key={f.id}>
-                            {f.sensitive && !row.answers[f.id]
-                              ? "Hidden"
+                            {f.sensitive && !form.actions?.includes("view_sensitive_responses") && !Object.prototype.hasOwnProperty.call(row.answers, f.id)
+                              ? "Restricted"
                               : (otherChoiceText(row.answers[f.id]) ??
                                 (typeof row.answers[f.id] === "object"
                                   ? JSON.stringify(row.answers[f.id])
@@ -951,7 +938,6 @@ function ResponseWorkspaceContent() {
           <DialogDescription>
             Submitted{" "}
             {selected && new Date(selected.submittedAt).toLocaleString()}.
-            Sensitive answers remain hidden unless explicitly revealed.
           </DialogDescription>
           {selected && (
             <>
@@ -974,9 +960,10 @@ function ResponseWorkspaceContent() {
                           : "Identity unavailable"}
                   </p>
                   <div className="gt-response-answers">
-                    {form.versions
-                      .find((v) => v.version === selected.version)
-                      ?.fields.filter(
+                    {orderedFormFields(
+                      form.versions.find((v) => v.version === selected.version)?.fields || [],
+                      form.versions.find((v) => v.version === selected.version)?.sections,
+                    ).filter(
                         (f) =>
                           ![
                             "title",
@@ -996,6 +983,7 @@ function ResponseWorkspaceContent() {
                             <ResponseFileLinks
                               formId={form.id}
                               responseId={selected.id}
+                              label={field.label}
                               ids={selected.answers[field.id] as string[]}
                               canDownload={
                                 ready &&
@@ -1008,11 +996,12 @@ function ResponseWorkspaceContent() {
                           ) : (
                             <p>
                               {field.sensitive &&
+                              !form.actions?.includes("view_sensitive_responses") &&
                               !Object.prototype.hasOwnProperty.call(
                                 selected.answers,
                                 field.id,
                               )
-                                ? "Hidden by default"
+                                ? "This field requires sensitive-response access."
                                 : (otherChoiceText(
                                     selected.answers[field.id],
                                   ) ??

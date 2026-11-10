@@ -10,6 +10,7 @@ import { visibleFields } from "../shared/forms.ts";
 import { responseCopyText } from "../shared/form-respondent.mjs";
 import { rewardCredentialMessage } from "./rewards-email.mjs";
 import { emailDocument } from "../shared/email.mjs";
+import { formDigestMessage } from "../shared/form-digest.mjs";
 export function deliveryCategory(kind) {
   if (kind.startsWith("form_")) return "forms";
   if (kind.startsWith("newsletter_")) return "newsletter";
@@ -28,6 +29,15 @@ export async function deliveryMessage(
 ) {
   if (job.kind === "reward_credential_email")
     return rewardCredentialMessage(job, db, config, mail, env);
+  if (job.kind === "form_daily_digest") {
+    const notice = checked(await db.rpc("prepare_form_daily_digest", {
+      p_job: job.id, p_lease: job.lease_token,
+    }));
+    if (!notice) return null;
+    if (!mail.chapter) throw new ApiError(503, "MAIL_NOT_CONFIGURED", "A chapter inbox is required.");
+    return { to: mail.chapter, ...formDigestMessage(notice, config.origin),
+      headers: { "X-GDG-Job-ID": job.id } };
+  }
   let to, subject, content, htmlContent;
   const actions = [];
   if (job.kind === "workspace_notice_email") {

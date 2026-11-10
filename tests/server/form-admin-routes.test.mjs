@@ -549,6 +549,12 @@ describe("Forms library, authoring and response route contracts", () => {
         }),
       }),
     );
+    const defaults = await f.call(base + "/responses");
+    expect(defaults.body.data.items[0].answers[f.definition.fields[0].id]).toBe("Fictional sensitive answer");
+    f.results.set("can_operate_form", ({ p_action }) => p_action !== "view_sensitive_responses");
+    const restricted = await f.call(base + "/responses");
+    expect(restricted.body.data.items[0].answers).toEqual({});
+    f.results.set("can_operate_form", true);
     const sensitive = await f.call(base + "/responses?sensitive=true");
     expect(
       sensitive.body.data.items[0].answers[f.definition.fields[0].id],

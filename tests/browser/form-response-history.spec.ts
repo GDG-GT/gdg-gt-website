@@ -151,9 +151,9 @@ test("private response history recovers list and selected answers independently"
   await expect(
     history.getByText("Fictional historical answer", { exact: true }),
   ).toBeVisible();
-  expect(reads).toEqual(["list", "snapshot:false", "snapshot:false"]);
+  expect(reads).toEqual(["list", "snapshot:true", "snapshot:true"]);
   await expect(
-    history.getByText("Hidden by default", { exact: true }),
+    history.getByText("fictional-sensitive@example.test", { exact: true }),
   ).toBeVisible();
   failRevision = true;
   await history

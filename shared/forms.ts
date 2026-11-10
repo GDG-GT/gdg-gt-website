@@ -395,6 +395,17 @@ export function duplicateSection(
     ],
   };
 }
+/** Keep review screens in the same section/question order as the form. */
+export function orderedFormFields<T extends { sectionId: string }>(
+  fields: T[],
+  sections: { id: string }[] = [],
+): T[] {
+  const positions = new Map(sections.map((section, index) => [section.id, index]));
+  return [...fields].sort(
+    (a, b) => (positions.get(a.sectionId) ?? sections.length) -
+      (positions.get(b.sectionId) ?? sections.length),
+  );
+}
 export function visibleFields(
   fields: FormField[],
   answers: Record<string, Answer>,

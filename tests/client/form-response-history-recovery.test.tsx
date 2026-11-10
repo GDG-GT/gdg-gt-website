@@ -157,8 +157,8 @@ describe("Private response history recovery", () => {
     await screen.findByText("Fictional historical answer");
     expect(apiMock.mock.calls.map(([path]) => path)).toEqual([
       root + "?page=1",
-      root + "/0?sensitive=false",
-      root + "/0?sensitive=false",
+      root + "/0?sensitive=true",
+      root + "/0?sensitive=true",
     ]);
     expect(
       screen.getByRole("region", { name: "Selected revision 0", exact: true }),
@@ -262,6 +262,8 @@ describe("Private response history recovery", () => {
     render(<ResponseHistory {...props} />);
     await open();
     await select();
+    fireEvent.click(screen.getByRole("checkbox"));
+    await screen.findByText("Hidden by default");
     apiMock.mockResolvedValueOnce(
       snapshot({
         fields: [
@@ -366,7 +368,7 @@ describe("Private response history recovery", () => {
       ).disabled,
     ).toBe(true);
     expect((screen.getByRole("checkbox") as HTMLInputElement).disabled).toBe(
-      true,
+      false,
     );
     expect(screen.getByText("Fictional historical answer")).toBeTruthy();
     Object.defineProperty(navigator, "onLine", {
@@ -417,6 +419,8 @@ describe("Private response history recovery", () => {
     render(<ResponseHistory {...props} />);
     await open();
     await select();
+    fireEvent.click(screen.getByRole("checkbox"));
+    await screen.findByText("Hidden by default");
     apiMock.mockResolvedValueOnce(
       snapshot({
         fields: [

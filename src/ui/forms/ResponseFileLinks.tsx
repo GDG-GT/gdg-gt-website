@@ -5,11 +5,13 @@ import { usePrivateMutation } from "@/hooks/usePrivateMutation";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { Button } from "../primitives";
 import { authorizedPrivateDownload } from "./private-download";
+import { nativeWorkspace } from "../rewards/nativeScanner";
 type Props = {
   formId: string;
   responseId: string;
   ids: string[];
   canDownload?: boolean;
+  label?: string;
 };
 type Download = {
   id: string;
@@ -27,7 +29,7 @@ export default function ResponseFileLinks(props: Props) {
     />
   );
 }
-function PrivateFiles({ formId, responseId, ids, canDownload = true }: Props) {
+function PrivateFiles({ formId, responseId, ids, canDownload = true, label = "attachment" }: Props) {
   const [activeId, setActiveId] = useState(""),
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
@@ -83,7 +85,7 @@ function PrivateFiles({ formId, responseId, ids, canDownload = true }: Props) {
     );
     return () => window.clearTimeout(timer);
   }, [link]);
-  const authorize = async (id: string) => {
+  const authorize = async (id: string, openFile = false) => {
     if (!canDownload || sessionInvalid || !ids.includes(id)) return;
     const controller = begin();
     if (!controller) return;
@@ -95,12 +97,14 @@ function PrivateFiles({ formId, responseId, ids, canDownload = true }: Props) {
     setLink(undefined);
     try {
       const result = await api<{ url: string; expiresIn: number }>(
-        root + "/" + id,
+        root + "/" + id + (openFile ? "?view=true" : ""),
         { signal: controller.signal },
       );
       if (!current(controller)) return;
       const download = authorizedPrivateDownload(result, startedAt);
       setLink({ id, ...download });
+      if (openFile && navigator.onLine)
+        window.open(download.url, "_blank", "noopener,noreferrer");
       setNotice(
         "Attachment authorized. Use its download link within one minute. Downloaded copies cannot be recalled.",
       );
@@ -144,6 +148,25 @@ function PrivateFiles({ formId, responseId, ids, canDownload = true }: Props) {
           )}
           {ids.map((id, index) => (
             <div key={id} className="gt-inline-actions">
+              {isOnline && canDownload && !sessionInvalid && (
+                <a
+                  className="gt-button gt-button-secondary"
+                  href={`/api/v1${root}/${id}/open`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  referrerPolicy="no-referrer"
+                  onClick={(event) => {
+                    if (!navigator.onLine || sessionInvalid || busy) {
+                      event.preventDefault();
+                    } else if (nativeWorkspace()) {
+                      event.preventDefault();
+                      void authorize(id, true);
+                    }
+                  }}
+                >
+                  Open {label}{ids.length > 1 ? ` ${index + 1}` : ""}
+                </a>
+              )}
               <Button
                 type="button"
                 disabled={busy || !isOnline || !canDownload || sessionInvalid}

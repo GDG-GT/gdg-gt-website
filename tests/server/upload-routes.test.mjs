@@ -170,7 +170,7 @@ function fixture() {
         this.headers.set(name.toLowerCase(), value);
       },
       end(value) {
-        this.body = JSON.parse(value);
+        this.body = value ? JSON.parse(value) : undefined;
       },
     };
     await app(
@@ -551,6 +551,20 @@ describe("FORM-016 private intent, scanner state and exact response-file dispatc
       404,
     );
     expect(f.store.audit).not.toHaveBeenCalled();
+  });
+  it("opens a clean PDF in one authenticated click and refuses denied or expired access", async () => {
+    const f = fixture();
+    f.rows.get("form_uploads").detected_mime = "application/pdf";
+    let r = await f.call(f.privatePath + "/open", undefined, "GET");
+    expect(r.statusCode).toBe(302);
+    const url = new URL(r.headers.get("location"));
+    expect(url.searchParams.get("response-content-type")).toBe("application/pdf");
+    expect(url.searchParams.get("response-content-disposition")).toMatch(/^inline/);
+    expect(url.searchParams.get("X-Amz-Expires")).toBe("60");
+    expect(r.headers.get("cache-control")).toContain("no-store");
+    expect((await f.call(f.privatePath + "/open", undefined, "GET", { cookie: "" })).statusCode).toBe(401);
+    f.rpcResults.set("can_operate_form", false);
+    expect((await f.call(f.privatePath + "/open", undefined, "GET")).statusCode).toBe(404);
   });
   it("rechecks sensitive field permission against the exact immutable version before signing a private attachment download", async () => {
     const f = fixture();

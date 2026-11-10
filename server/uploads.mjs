@@ -24,13 +24,13 @@ export async function uploadRoutes(
       /^\/api\/v1\/forms\/([^/]+)\/uploads(?:\/(prepare|recovery|[^/]+)(?:\/(complete|status|remove))?)?$/,
     ),
     protectedMatch = url.pathname.match(
-      /^\/api\/v1\/admin\/forms\/([^/]+)\/responses\/([^/]+)\/files\/([^/]+)$/,
+      /^\/api\/v1\/admin\/forms\/([^/]+)\/responses\/([^/]+)\/files\/([^/]+)(\/open)?$/,
     );
   if (!publicMatch && !protectedMatch) return false;
   if (protectedMatch) {
     allowMethod(request, response, ["GET"]);
     const [formId, responseId, fileId] = protectedMatch
-        .slice(1)
+        .slice(1, 4)
         .map((v) => parse(uuid, v)),
       session = await requireSession(request, store, config);
     if (
@@ -46,7 +46,7 @@ export async function uploadRoutes(
     const record = checked(
       await db
         .from("form_uploads")
-        .select("id,private_object_key,original_filename,field_id,version_id")
+        .select("id,private_object_key,original_filename,field_id,version_id,detected_mime")
         .eq("id", fileId)
         .eq("form_id", formId)
         .eq("response_id", responseId)
@@ -86,10 +86,13 @@ export async function uploadRoutes(
       throw new ApiError(404, "NOT_FOUND", "This file is not available.");
     const storage = objectStorage();
     try {
-      const signed = await storage.downloadUrl(
+      const open = !!protectedMatch[4],
+        view = open || url.searchParams.get("view") === "true",
+        signed = await (view ? storage.documentUrl : storage.downloadUrl)(
         "form-uploads",
         record.private_object_key,
         record.original_filename,
+        record.detected_mime,
       );
       await store.audit({
         actorId: session.user.id,
@@ -99,6 +102,14 @@ export async function uploadRoutes(
         requestId,
         metadata: { formId, fileId, versionId: answer.version_id },
       });
+      if (open) {
+        response.statusCode = 302;
+        response.setHeader("Location", signed);
+        response.setHeader("Cache-Control", "private, no-store");
+        response.setHeader("Referrer-Policy", "no-referrer");
+        response.end();
+        return true;
+      }
       sendJson(
         response,
         200,

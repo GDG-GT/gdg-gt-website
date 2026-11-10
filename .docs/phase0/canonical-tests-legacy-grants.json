@@ -152,7 +152,8 @@
     "202611100148_profile_identity_reconciliation.sql",
     "202611100149_profile_identity_case_preservation.sql",
     "202611100150_newsletter_test_snapshot.sql",
-    "202611100151_newsletter_member_import.sql"
+    "202611100151_newsletter_member_import.sql",
+    "202611100152_form_daily_digest.sql"
   ],
   "tests": [
     {
@@ -768,6 +769,10 @@
       "passed": true
     },
     {
+      "name": "202611100152_form_daily_digest.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -1249,6 +1254,10 @@
     },
     {
       "name": "151_newsletter_member_import.sql",
+      "passed": true
+    },
+    {
+      "name": "152_form_daily_digest.sql",
       "passed": true
     },
     {

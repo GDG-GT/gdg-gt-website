@@ -10,14 +10,16 @@ import {
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiFailure } from "../../src/lib/api";
 import ResponseFileLinks from "../../src/ui/forms/ResponseFileLinks";
-const { apiMock, identity } = vi.hoisted(() => ({
+const { apiMock, identity, native } = vi.hoisted(() => ({
   apiMock: vi.fn(),
+  native: { enabled: false },
   identity: { id: "fictional-reviewer", role: "admin" },
 }));
 vi.mock("@/lib/api", async (original) => ({
   ...(await original<typeof import("../../src/lib/api")>()),
   api: apiMock,
 }));
+vi.mock("../../src/ui/rewards/nativeScanner", () => ({ nativeWorkspace: () => native.enabled }));
 vi.mock("@/contexts/AdminContext", () => ({
   useAdmin: () => ({ currentAdmin: identity.id ? identity : null }),
 }));
@@ -44,6 +46,7 @@ async function authorize() {
 }
 beforeEach(() => {
   apiMock.mockReset().mockResolvedValue(result);
+  native.enabled = false;
   identity.id = "fictional-reviewer";
   identity.role = "admin";
   Object.defineProperty(navigator, "onLine", {
@@ -57,6 +60,20 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 describe("Private response attachment authorization", () => {
+  it("offers one-click viewing without creating a signed link in advance", () => {
+    render(<ResponseFileLinks {...props} label="résumé" />);
+    expect(screen.getByRole("link", { name: "Open résumé 1" }).getAttribute("href")).toBe("/api/v1/admin/forms/fictional-form/responses/fictional-response/files/fictional-file-a/open");
+    expect(apiMock).not.toHaveBeenCalled();
+  });
+  it("opens a fresh signed document in the native app without navigating its webview out of the workspace", async () => {
+    native.enabled = true;
+    const open = vi.spyOn(window, "open").mockReturnValue(null);
+    render(<ResponseFileLinks {...props} label="résumé" />);
+    fireEvent.click(screen.getByRole("link", { name: "Open résumé 1" }));
+    await screen.findByRole("link", { name: "Download attachment 1" });
+    expect(apiMock.mock.calls[0][0]).toContain("/files/fictional-file-a?view=true");
+    expect(open).toHaveBeenCalledWith(result.url, "_blank", "noopener,noreferrer");
+  });
   it("authorizes on explicit request without opening a file automatically and retains privacy attributes", async () => {
     const click = vi.spyOn(HTMLAnchorElement.prototype, "click");
     render(<ResponseFileLinks {...props} />);
@@ -115,7 +132,7 @@ describe("Private response attachment authorization", () => {
           canDownload={change !== "permission"}
         />,
       );
-      expect(screen.queryByRole("link")).toBeNull();
+      expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeNull();
       expect(apiMock).toHaveBeenCalledTimes(1);
       if (change === "permission")
         expect((button() as HTMLButtonElement).disabled).toBe(true);
@@ -130,7 +147,7 @@ describe("Private response attachment authorization", () => {
     view.rerender(<ResponseFileLinks {...props} responseId="other-response" />);
     expect(signal.aborted).toBe(true);
     await act(async () => wait.resolve(result));
-    expect(screen.queryByRole("link")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeNull();
     expect((button() as HTMLButtonElement).disabled).toBe(false);
   });
   it("cancels authorization on unmount without creating or clicking an anchor", async () => {
@@ -149,7 +166,7 @@ describe("Private response attachment authorization", () => {
     render(<ResponseFileLinks {...props} />);
     await authorize();
     act(() => window.dispatchEvent(new Event("gdg:session-cleared")));
-    expect(screen.queryByRole("link")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeNull();
     expect((button() as HTMLButtonElement).disabled).toBe(true);
     fireEvent.click(button());
     expect(apiMock).toHaveBeenCalledTimes(1);
@@ -163,7 +180,7 @@ describe("Private response attachment authorization", () => {
     act(() => window.dispatchEvent(new Event("gdg:session-cleared")));
     expect(signal.aborted).toBe(true);
     await act(async () => wait.resolve(result));
-    expect(screen.queryByRole("link")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeNull();
   });
   it("clears private links on offline transition without authorizing again on reconnect", async () => {
     render(<ResponseFileLinks {...props} />);
@@ -173,7 +190,7 @@ describe("Private response attachment authorization", () => {
       configurable: true,
     });
     act(() => window.dispatchEvent(new Event("offline")));
-    expect(screen.queryByRole("link")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeNull();
     expect((button() as HTMLButtonElement).disabled).toBe(true);
     Object.defineProperty(navigator, "onLine", {
       value: true,
@@ -196,7 +213,7 @@ describe("Private response attachment authorization", () => {
     act(() => window.dispatchEvent(new Event("offline")));
     expect(signal.aborted).toBe(true);
     await act(async () => wait.resolve(result));
-    expect(screen.queryByRole("link")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeNull();
   });
   for (const status of [403, 404, 503]) {
     it(`clears the previous link on ${status} and permits only an explicit fresh authorization`, async () => {
@@ -211,7 +228,7 @@ describe("Private response attachment authorization", () => {
       );
       fireEvent.click(button());
       await screen.findByRole("alert");
-      expect(screen.queryByRole("link")).toBeNull();
+      expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeNull();
       expect(apiMock).toHaveBeenCalledTimes(2);
       await authorize();
       expect(apiMock).toHaveBeenCalledTimes(3);
@@ -225,7 +242,7 @@ describe("Private response attachment authorization", () => {
     fireEvent.click(button());
     await screen.findByRole("alert");
     expect((button() as HTMLButtonElement).disabled).toBe(true);
-    expect(screen.queryByRole("link")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeNull();
   });
   for (const bad of [
     { url: "javascript:alert(1)", expiresIn: 60 },
@@ -244,7 +261,7 @@ describe("Private response attachment authorization", () => {
       render(<ResponseFileLinks {...props} />);
       fireEvent.click(button());
       await screen.findByRole("alert");
-      expect(screen.queryByRole("link")).toBeNull();
+      expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeNull();
     });
   }
   it("supports configured loopback storage without weakening external HTTPS", async () => {
@@ -263,9 +280,9 @@ describe("Private response attachment authorization", () => {
     await act(async () => {
       fireEvent.click(button());
     });
-    expect(screen.queryByRole("link")).toBeTruthy();
+    expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeTruthy();
     act(() => vi.advanceTimersByTime(55000));
-    expect(screen.queryByRole("link")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeNull();
     expect(screen.getByText(/download link expired/)).toBeTruthy();
     expect(apiMock).toHaveBeenCalledTimes(1);
   });
@@ -277,7 +294,7 @@ describe("Private response attachment authorization", () => {
     fireEvent.click(button());
     act(() => vi.advanceTimersByTime(56000));
     await act(async () => wait.resolve(result));
-    expect(screen.queryByRole("link")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeNull();
     expect(screen.getByRole("alert").textContent).toMatch(
       /expired before it arrived/,
     );
@@ -291,7 +308,7 @@ describe("Private response attachment authorization", () => {
       link.dispatchEvent(event);
     });
     expect(event.defaultPrevented).toBe(true);
-    expect(screen.queryByRole("link")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeNull();
   });
   it("does not move focus when authorization expires in the background", async () => {
     vi.useFakeTimers();
@@ -305,7 +322,7 @@ describe("Private response attachment authorization", () => {
     second.focus();
     act(() => vi.advanceTimersByTime(55000));
     expect(document.activeElement).toBe(second);
-    expect(screen.queryByRole("link")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeNull();
   });
   it("prevents activation after the client clock moves behind the authorization start", async () => {
     render(<ResponseFileLinks {...props} />);
@@ -316,7 +333,7 @@ describe("Private response attachment authorization", () => {
       link.dispatchEvent(event);
     });
     expect(event.defaultPrevented).toBe(true);
-    expect(screen.queryByRole("link")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Download attachment 1" })).toBeNull();
   });
   it("replaces an authorized link when another attachment is requested", async () => {
     render(<ResponseFileLinks {...props} />);

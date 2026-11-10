@@ -83,6 +83,15 @@ export function objectStorage(env = process.env) {
         }),
         { expiresIn: 60 },
       ),
+    documentUrl: (bucket, key, filename, mime) =>
+      getSignedUrl(client, new GetObjectCommand({
+        Bucket: bucket,
+        Key: key,
+        ResponseContentDisposition:
+          (["application/pdf", "image/png", "image/jpeg", "image/webp"].includes(mime) ? "inline" : "attachment") +
+          '; filename="' + filename.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 160) + '"',
+        ResponseContentType: ["application/pdf", "image/png", "image/jpeg", "image/webp"].includes(mime) ? mime : "application/octet-stream",
+      }), { expiresIn: 60 }),
     previewUrl: (bucket, key, mime) => {
       if (!["image/png", "image/jpeg", "image/webp"].includes(mime))
         throw new ApiError(

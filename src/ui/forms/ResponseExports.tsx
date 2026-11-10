@@ -45,7 +45,7 @@ function ExportWorkspace({
   canSensitive,
 }: Props) {
   const [format, setFormat] = useState<ExportJob["format"]>("csv"),
-    [includeSensitive, setIncludeSensitive] = useState(false),
+    [includeSensitive, setIncludeSensitive] = useState(canSensitive),
     [review, setReview] = useState<ExportIntent>(),
     [cancelReview, setCancelReview] = useState<ExportIntent>(),
     [intent, setIntent] = useState<ExportIntent>(),
@@ -441,7 +441,7 @@ function ExportWorkspace({
                 checked={includeSensitive}
                 onChange={(e) => setIncludeSensitive(e.target.checked)}
               />
-              Include sensitive answers (separately authorized and audited)
+              Include sensitive answers
             </label>
           )}
           {review && (

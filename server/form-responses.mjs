@@ -1,4 +1,5 @@
 import { choiceSelection } from "../shared/form-choice.ts";
+import { orderedFormFields } from "../shared/forms.ts";
 import { z } from "zod";
 import { requireSession, requireCsrf } from "./auth.mjs";
 import { ApiError, allowMethod, jsonBody, sendJson } from "./lib/http.mjs";
@@ -76,7 +77,7 @@ function assertDateRange(p) {
 export function summarizeResponses(items, versions) {
   const summaries = [];
   for (const version of versions)
-    for (const field of version.definition.fields) {
+    for (const field of orderedFormFields(version.definition.fields, version.definition.sections)) {
       if (
         field.sensitive ||
         ["title", "description", "image", "divider"].includes(field.type)
@@ -279,7 +280,7 @@ export async function formResponseRoutes(
       .object({
         ...filterShape,
         ...pagination,
-        sensitive: z.enum(["true", "false"]).default("false"),
+        sensitive: z.enum(["true", "false"]).optional(),
         ...(exported
           ? {
               format: z.enum(["csv", "xlsx", "json"]).default("csv"),
@@ -291,8 +292,9 @@ export async function formResponseRoutes(
       .strict(),
   );
   assertDateRange(p);
-  const sensitive = p.sensitive === "true";
-  if (sensitive && !(await can("view_sensitive_responses")))
+  const canSensitive = await can("view_sensitive_responses"),
+    sensitive = p.sensitive === undefined ? !!canSensitive : p.sensitive === "true";
+  if (sensitive && !canSensitive)
     throw new ApiError(
       403,
       "FORBIDDEN",

@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-10",
+  "scope": [
+    "Authorized form review includes sensitive answers by default; existing stored values unchanged",
+    "One-click authenticated clean PDF/image viewing, private download fallback and native external-view handoff",
+    "Current/history review uses published section and question order",
+    "Daily live-form counts to configured chapter inbox at 23:00 America/New_York, one digest per local date, existing scheduler/mail queue"
+  ],
+  "productionBefore": {
+    "liveForms": 1,
+    "submittedResponses": 1,
+    "redactedResponses": 0,
+    "redactedAnswerValues": 0,
+    "cleanAttachments": 1
+  },
+  "tests": {
+    "unit": {
+      "files": 262,
+      "tests": 3083
+    },
+    "finalFocused": {
+      "files": 8,
+      "tests": 159
+    },
+    "database": "canonical and legacy suites through 152 pass, including DST/cutoff/dedup/access tests and both 100-client capacity races",
+    "browser": "10 desktop Chromium / mobile WebKit cases",
+    "email": "375px Chromium and WebKit rendered, no horizontal overflow; logo and counts visually reviewed",
+    "typecheck": "pass",
+    "lint": "0 errors, 8 inherited warnings",
+    "build": "pass",
+    "bundles": "pass",
+    "SSR": "pass",
+    "secrets": "0 unreviewed findings"
+  },
+  "rollout": "Pending single source push and hosted migration152; do not claim live before verification",
+  "native": "Web companion changes only; no new native binary, no physical-device test claimed",
+  "mail": "No preview sent to chapter; first scheduled digest tonight"
+}

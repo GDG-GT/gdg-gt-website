@@ -9,7 +9,7 @@ INSERT INTO public.forms(id,slug,title,owner_id,state,draft_definition,settings)
  ('f6400000-0000-4000-8000-000000000005','response-history-fixture','History SQL fixture','f6400000-0000-4000-8000-000000000001','Open','{}','{}');
 INSERT INTO public.form_versions(id,form_id,version,definition,schema_hash,published_by) VALUES
  ('f6400000-0000-4000-8000-000000000006','f6400000-0000-4000-8000-000000000005',1,
- '{"fields":[{"id":"f6400000-0000-4000-8000-000000000008","label":"Original name","type":"short","sensitive":false},{"id":"f6400000-0000-4000-8000-000000000009","label":"Original private label","type":"email","sensitive":true}]}',repeat('a',64),'f6400000-0000-4000-8000-000000000001');
+ '{"fields":[{"id":"f6400000-0000-4000-8000-000000000008","label":"Original name","type":"short","sectionId":"later","sensitive":false},{"id":"f6400000-0000-4000-8000-000000000009","label":"Original private label","type":"email","sectionId":"first","sensitive":true}],"sections":[{"id":"first"},{"id":"later"}]}',repeat('a',64),'f6400000-0000-4000-8000-000000000001');
 INSERT INTO public.form_responses(id,form_id,version_id,idempotency_key_hash,request_hash,revision) VALUES
  ('f6400000-0000-4000-8000-000000000007','f6400000-0000-4000-8000-000000000005','f6400000-0000-4000-8000-000000000006',repeat('a',64),repeat('b',64),2);
 INSERT INTO public.form_answers(response_id,field_id,value) VALUES
@@ -27,6 +27,7 @@ DO $$ DECLARE actor uuid:='f6400000-0000-4000-8000-000000000001';sid uuid:='f640
  r:=public.review_form_response_history(actor,sid,fid,rid,1,1,true,gen_random_uuid());
  IF r::text NOT LIKE '%Second name%' OR r::text NOT LIKE '%Second private answer%' THEN RAISE EXCEPTION 'Historical revision off by one';END IF;
  r:=public.review_form_response_history(actor,sid,fid,rid,2,1,false,gen_random_uuid());
+ IF r->'fields'->0->>'label'<>'Original private label' THEN RAISE EXCEPTION 'History follows creation order instead of section order';END IF;
  IF r::text NOT LIKE '%Current name%' OR r::text LIKE '%Current private answer%' THEN RAISE EXCEPTION 'Current snapshot projection wrong';END IF;
  BEGIN
   PERFORM public.review_form_response_history('f6400000-0000-4000-8000-000000000002','f6400000-0000-4000-8000-000000000004',fid,rid,0,1,true,gen_random_uuid());

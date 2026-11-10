@@ -598,7 +598,7 @@ describe("Private background export read and write recovery", () => {
     expect(
       apiMock.mock.calls.filter(([, options]) => options?.method === "POST"),
     ).toHaveLength(1);
-    await act(async () => pending.resolve({ job: originalJob }));
+    await act(async () => pending.resolve({ job: { ...originalJob, sensitive: true } }));
     await screen.findByText(/Original export request confirmed/);
   });
   it("refuses an expired proposed review before dispatching a creation", async () => {

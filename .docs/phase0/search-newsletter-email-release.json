@@ -1,6 +1,6 @@
 {
   "date": "2026-11-10",
-  "status": "prepared for combined release",
+  "status": "READY and production member import verified",
   "searchFixes": [
     "compact admin skeletons",
     "Members and Teams loading below filters",
@@ -36,8 +36,15 @@
     "activeMembers": 42,
     "alreadySubscribed": 1,
     "ownerConfirmedPriorConsent": true,
-    "productionImport": "pending actual UI; browser click host returns noWindowsAvailable",
-    "emailsSentByImport": 0
+    "productionImport": "completed through production UI",
+    "emailsSentByImport": 0,
+    "newSubscribers": 41,
+    "existingSubscribers": 1,
+    "finalActiveChapterSubscribers": 42,
+    "customPickerMatching": 42,
+    "consentAuditEntries": 41,
+    "newNewsletterJobs": 0,
+    "campaignCreated": false
   },
   "validation": {
     "unitFiles": 260,
@@ -55,7 +62,26 @@
     "inheritedWarnings": 8,
     "bundleBudgets": "passed",
     "publicSSR": "passed",
-    "unreviewedSecrets": 0
+    "unreviewedSecrets": 0,
+    "additionalMobileEmailLayouts": 16
   },
-  "productionMessagesTriggeredByAgent": 0
+  "productionMessagesTriggeredByAgent": 0,
+  "source": "15d60fd3444ed293a6942afece2a3007c2fdd9a7",
+  "deployment": {
+    "id": "dpl_9EhZVnSVS53VfRGAh2UREs8R6dn7",
+    "state": "READY",
+    "domains": [
+      "gdggt.dev",
+      "leaderboards.gdggt.dev"
+    ],
+    "testedMainAssetMatchesLive": true
+  },
+  "hostedCI": {
+    "run": 42773753213,
+    "codeDatabase": "passed",
+    "coverage": "passed",
+    "secrets": "passed",
+    "dependencies": "passed",
+    "fullBrowserShards": "still running at final verification"
+  }
 }

@@ -85,7 +85,7 @@ function HistoryWorkspace({ formId, responseId, canSensitive }: Props) {
   const [open, setOpen] = useState(false),
     [page, setPage] = useState(1),
     [selected, setSelected] = useState<number>(),
-    [sensitive, setSensitive] = useState(false),
+    [sensitive, setSensitive] = useState(canSensitive),
     [refresh, setRefresh] = useState(0),
     [denial, setDenial] = useState(""),
     [sessionInvalid, setSessionInvalid] = useState(false);
@@ -140,7 +140,7 @@ function HistoryWorkspace({ formId, responseId, canSensitive }: Props) {
           setOpen(!open);
           setPage(1);
           setSelected(undefined);
-          setSensitive(false);
+          setSensitive(canSensitive);
           setDenial("");
         }}
       >
@@ -229,7 +229,7 @@ function HistoryWorkspace({ formId, responseId, canSensitive }: Props) {
                         disabled={page === 1 || !ready}
                         onClick={() => {
                           setSelected(undefined);
-                          setSensitive(false);
+                          setSensitive(canSensitive);
                           setPage((value) => value - 1);
                           focus();
                         }}
@@ -245,7 +245,7 @@ function HistoryWorkspace({ formId, responseId, canSensitive }: Props) {
                         }
                         onClick={() => {
                           setSelected(undefined);
-                          setSensitive(false);
+                          setSensitive(canSensitive);
                           setPage((value) => value + 1);
                           focus();
                         }}
@@ -262,7 +262,7 @@ function HistoryWorkspace({ formId, responseId, canSensitive }: Props) {
                         disabled={!sensitive && !ready}
                         onChange={(event) => setSensitive(event.target.checked)}
                       />
-                      Reveal sensitive historical answers (audited)
+                      Show sensitive answers
                     </label>
                   )}
                   {selected !== undefined && (
