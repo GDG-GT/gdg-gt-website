@@ -155,7 +155,8 @@
     "202611100151_newsletter_member_import.sql",
     "202611100152_form_daily_digest.sql",
     "202611100153_app_notifications.sql",
-    "202611110154_physical_card_binding.sql"
+    "202611110154_physical_card_binding.sql",
+    "202611110155_native_fast_checkin.sql"
   ],
   "tests": [
     {
@@ -779,6 +780,10 @@
       "passed": true
     },
     {
+      "name": "202611110155_native_fast_checkin.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -1275,11 +1280,23 @@
       "passed": true
     },
     {
+      "name": "155_native_fast_checkin.sql",
+      "passed": true
+    },
+    {
       "name": "EVT concurrency: 100 clients, exactly one last-seat registration",
       "passed": true
     },
     {
       "name": "FORM concurrency: 100 clients, exactly one remaining response",
+      "passed": true
+    },
+    {
+      "name": "Native queue fixture",
+      "passed": true
+    },
+    {
+      "name": "Native queue: 101 members credited once, no duplicate points",
       "passed": true
     }
   ]

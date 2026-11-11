@@ -102,6 +102,30 @@ try {
     END IF;
   END $$;`,
   );
+  await execute("Native queue fixture", `
+    CREATE TABLE public.test_native_queue_fixture(i integer PRIMARY KEY,member_id uuid,credential_hash text);
+    INSERT INTO public.admin_users(id,email,password_hash,role,is_active) VALUES('a1550000-0000-4000-8000-000000000001','native-concurrency@example.test','fixture','super_admin',true);
+    INSERT INTO public.admin_sessions(id,admin_user_id,token_hash) VALUES('a1550000-0000-4000-8000-000000000002','a1550000-0000-4000-8000-000000000001',repeat('d1',32));
+    INSERT INTO public.reward_rules(id,title,points) VALUES('a1550000-0000-4000-8000-000000000003','Native queue rule',10);
+    INSERT INTO public.reward_activities(id,rule_id,title,points,opens_at,closes_at) VALUES('a1550000-0000-4000-8000-000000000004','a1550000-0000-4000-8000-000000000003','Native queue activity',10,now()-interval '1 hour',now()+interval '1 hour');
+    DO $$ DECLARE i integer;m uuid;BEGIN FOR i IN 0..100 LOOP
+      INSERT INTO public.members(name,email) VALUES('Queue participant '||i,'queue-'||i||'@example.test') RETURNING id INTO m;
+      INSERT INTO public.reward_credentials(member_id,kind,label,token_hash,encrypted_token) VALUES(m,'wallet','Queue Wallet',md5('native-queue-'||i)||md5('native-queue-'||i),'fixture');
+      INSERT INTO public.test_native_queue_fixture VALUES(i,m,md5('native-queue-'||i)||md5('native-queue-'||i));
+    END LOOP;END $$;
+    CREATE FUNCTION public.test_native_queue(p_i integer) RETURNS jsonb LANGUAGE sql AS $$
+      SELECT public.native_member_checkin('a1550000-0000-4000-8000-000000000001','a1550000-0000-4000-8000-000000000002','activity','a1550000-0000-4000-8000-000000000004',NULL,credential_hash,NULL,md5(gen_random_uuid()::text)||md5(gen_random_uuid()::text),repeat('d2',32),gen_random_uuid()) FROM public.test_native_queue_fixture WHERE i=p_i
+    $$;
+  `);
+  for (const [label,sql] of [["100 distinct participants","SELECT public.test_native_queue(:client_id);\n"],["100 simultaneous scans of one card","SELECT public.test_native_queue(100);\n"]]) {
+    const result=await dockerCommand(["exec","-i",database.name,"sh","-c",'script=$(mktemp); trap \'rm -f "$script"\' EXIT; cat > "$script"; pgbench -n -U postgres -d postgres -c 100 -j 4 -t 1 -f "$script"'],sql);
+    if(result.code!==0)throw new Error("Native queue "+label+": "+result.stderr);
+    console.log("PASS Native queue "+label);
+  }
+  await execute("Native queue: 101 members credited once, no duplicate points", `DO $$ BEGIN
+    IF (SELECT count(*) FROM public.reward_ledger WHERE activity_id='a1550000-0000-4000-8000-000000000004')<>101
+      OR EXISTS(SELECT 1 FROM public.test_native_queue_fixture WHERE gdg_security.reward_balance(member_id)<>10) THEN RAISE EXCEPTION 'Native queue duplicated or lost points';END IF;
+  END $$;`);
   await mkdir(path.join(root, ".docs/phase0"), { recursive: true });
   await writeFile(
     path.join(

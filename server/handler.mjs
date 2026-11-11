@@ -1,3 +1,4 @@
+import { mobileCheckinRoutes } from "./mobile-checkin.mjs";
 import { rewardsRoutes, rewardsOrigin } from "./rewards.mjs";
 import { rewardEventRoutes } from "./reward-events.mjs";
 import { accountSecurityRoutes } from "./account-security.mjs";
@@ -136,6 +137,7 @@ export function applicationHandler({
             mutation: !["GET", "HEAD"].includes(request.method),
           },
         );
+        if (await mobileCheckinRoutes(request, response, { db, store, config, requestId })) return;
         if (
           await rewardEventRoutes(request, response, {
             db,

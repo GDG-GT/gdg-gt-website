@@ -4,7 +4,7 @@ import { encryptPayload } from "../../server/lib/encryption.mjs";
 import { newsletterPreview } from "../../shared/newsletter.mjs";
 
 describe("Branded subscription email", () => {
-  it("offers one confirmation button with a plain-text alternative and the actual chapter mark", async () => {
+  it.each([false, true])("renders self-subscription or admin invitation distinctly (invited=%s)", async (invited) => {
     const secret = "fictional-newsletter-mail-secret",
       token = "a".repeat(43);
     const db = {
@@ -46,7 +46,7 @@ describe("Branded subscription email", () => {
           tokenId: "fictional-token",
           subscriberId: "fictional-subscriber",
         },
-        secret_payload: encryptPayload({ token }, secret),
+        secret_payload: encryptPayload({ token, ...(invited ? {source:"admin_invitation"} : {}) }, secret),
       },
       db,
       { origin: "https://gdggt.dev", encryptionSecret: secret },
@@ -56,7 +56,9 @@ describe("Branded subscription email", () => {
     expect(message.to).toBe("fictional@example.test");
     expect(message.text).toContain(url);
     expect(message.html).toContain(`href="${url}"`);
-    expect(message.html).toContain(">Confirm subscription</a>");
+    expect(message.html).toContain(invited ? ">Join the newsletter</a>" : ">Confirm subscription</a>");
+    expect(message.subject).toBe(invited ? "You’re invited to the GDG at Georgia Tech newsletter" : "Confirm your GDG at Georgia Tech subscription");
+    if (invited) {expect(message.html).toContain("Our chapter team invited you");expect(message.html).not.toContain("If you didn’t sign up");} else {expect(message.html).not.toContain("Our chapter team invited you");}
     expect(message.html).not.toContain(`>${url}</a>`);
     expect(message.html).toContain('src="https://gdggt.dev/logo.png"');
     expect(message.html).not.toContain("&lt;</span>");

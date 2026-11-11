@@ -163,7 +163,7 @@ export async function newsletterRoutes(
     const secret = token();
     document.tokenHash = tokenHash(secret);
     document.secretPayload = encryptPayload(
-      { token: secret },
+      { token: secret, source: "admin_invitation" },
       config.encryptionSecret,
     );
   }

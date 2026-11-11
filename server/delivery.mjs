@@ -165,18 +165,21 @@ export async function deliveryMessage(
     }
     const secret = decryptPayload(job.secret_payload, config.encryptionSecret);
     to = subscriber.email;
-    subject = "Confirm your GDG at Georgia Tech subscription";
+    const invited = secret.source === "admin_invitation";
+    subject = invited
+      ? "You’re invited to the GDG at Georgia Tech newsletter"
+      : "Confirm your GDG at Georgia Tech subscription";
     const confirmationUrl =
       config.origin + "/newsletter/confirm#token=" + secret.token;
-    actions.push({ label: "Confirm subscription", url: confirmationUrl });
-    htmlContent =
-      "Get chapter news and event updates. Confirm your email below.\n\nThis button expires in 24 hours. If you didn’t sign up, you can ignore this email.";
-    content =
-      "Confirm that you want chapter news and event updates:\n" +
-      config.origin +
-      "/newsletter/confirm#token=" +
-      secret.token +
-      "\n\nThis link expires in 24 hours. If you did not request it, ignore this email.";
+    actions.push({ label: invited ? "Join the newsletter" : "Confirm subscription", url: confirmationUrl });
+    const introduction = invited
+      ? "Welcome to GDG at Georgia Tech! Our chapter team invited you to receive the newsletter so you can keep up with events, projects and team news."
+      : "Get chapter news and event updates. Confirm your email below.";
+    const nextStep = invited
+      ? "Choose Join the newsletter below to accept. If you’d rather skip it, no action is needed. This invitation expires in 24 hours."
+      : "This button expires in 24 hours. If you didn’t sign up, you can ignore this email.";
+    htmlContent = introduction + "\n\n" + nextStep;
+    content = introduction + "\n\n" + (invited ? "Join the newsletter: " : "Confirm subscription: ") + confirmationUrl + "\n\n" + nextStep;
   } else if (
     ["contact_acknowledgment", "contact_notification"].includes(job.kind)
   ) {

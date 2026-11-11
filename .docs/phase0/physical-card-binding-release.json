@@ -25,15 +25,37 @@
   },
   "rollout": {
     "migration": "physical_card_binding_154 applied once",
-    "source": "one combined source push; deployment verification recorded locally afterwards",
+    "source": "6f3f425d04995cc0fcbe2acde76b0ffdbc950f39",
     "migrationVerification": {
       "applied": 1,
       "anonCanEnroll": false,
       "boundCards": 0,
       "uniqueChipIndex": true
-    }
+    },
+    "state": "READY",
+    "deployment": "dpl_Hu6k8D7FwsdNgMAruvZx4qNmsexM",
+    "http": {
+      "at": "2026-11-11T07:36:55.808Z",
+      "results": [
+        {
+          "origin": "https://gdggt.dev",
+          "root": 200,
+          "bundle": 200,
+          "bundleMatches": true
+        },
+        {
+          "origin": "https://leaderboards.gdggt.dev",
+          "root": 200,
+          "bundle": 200,
+          "bundleMatches": true
+        }
+      ],
+      "unsignedPrivate": 401
+    },
+    "note": "Saved final verification locally for the next real batch; no docs-only push."
   },
   "data": "No production member/card/points edits or test mail sends. Existing cards deliberately require programming/enrollment; legacy copied physical QR tokens cannot check in. Existing independent Wallet QR unaffected.",
   "physicalAcceptance": "Owner verified previous physical NDEF read/write. Revised build9 UID/packet behavior still needs three-card device experiment. This is ordinary-copy resistance, not cryptographic chip authentication.",
-  "docs": ".docs/operations/PHYSICAL_CARD_TESTING.md"
+  "docs": ".docs/operations/PHYSICAL_CARD_TESTING.md",
+  "cleanup": "Local browser/server/test jobs ended; Colima profiles stopped. Only unrelated supabase/.temp/cli-latest preserved."
 }

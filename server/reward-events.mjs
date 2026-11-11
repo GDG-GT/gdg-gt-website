@@ -8,10 +8,19 @@ import { encryptPayload, decryptPayload } from "./lib/encryption.mjs";
 import { eventAdminInputs } from "../shared/reward-events.mjs";
 import { eventAdapterRequest } from "./reward-event-transport.mjs";
 const id = z.string().uuid();
+const nativeQueueInvocation = Symbol("nativeQueueInvocation");
+// The native endpoint applies its authenticated per-officer quota once per scan.
+// Keep all existing session, CSRF, adapter and receipt checks for these steps.
+export async function nativeEventCheckinStep(request,response,context) {
+  if(!/^\/api\/v1\/admin\/reward-events\/(lookup|confirm|points)$/.test(request.url))
+    throw new ApiError(404,"NOT_FOUND","This check-in action was not found.");
+  return rewardEventRoutes(request,response,context,nativeQueueInvocation);
+}
 export async function rewardEventRoutes(
   request,
   response,
   { db, store, config, requestId, adapter = eventAdapterRequest },
+  invocation,
 ) {
   const path = new URL(request.url, config.origin).pathname;
   if (
@@ -32,7 +41,7 @@ export async function rewardEventRoutes(
     ),
     config.riskSecret,
   );
-  const quota = await store.rateLimit("reward-events", risk, 120, 60);
+  const quota = invocation === nativeQueueInvocation ? {allowed:true} : await store.rateLimit("reward-events", risk, 120, 60);
   if (!quota.allowed)
     throw new ApiError(
       429,

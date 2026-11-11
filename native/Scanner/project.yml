@@ -8,7 +8,7 @@ settings:
     SWIFT_VERSION: '5.0'
     DEVELOPMENT_TEAM: 7THP95SRTV
     MARKETING_VERSION: 1.0.0
-    CURRENT_PROJECT_VERSION: 9
+    CURRENT_PROJECT_VERSION: 10
     TARGETED_DEVICE_FAMILY: '1'
     CODE_SIGN_STYLE: Automatic
     ENABLE_USER_SCRIPT_SANDBOXING: YES
@@ -34,7 +34,7 @@ targets:
           CODE_SIGN_ENTITLEMENTS: ScannerWallet.entitlements
           SWIFT_ACTIVE_COMPILATION_CONDITIONS: WALLET_VAS
     scheme:
-      testTargets: [GDGScannerTests]
+      testTargets: [GDGScannerTests, GDGScannerUITests]
   GDGScannerTests:
     type: bundle.unit-test
     platform: iOS
@@ -45,6 +45,16 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: dev.gdggt.scanner.tests
+  GDGScannerUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    dependencies:
+      - target: GDGScanner
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: dev.gdggt.scanner.uitests
 schemes:
   GDGScannerWallet:
     build:

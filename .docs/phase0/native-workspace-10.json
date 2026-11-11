@@ -1,0 +1,80 @@
+{
+  "validatedAt": "2026-11-11T18:13:21.822397+00:00",
+  "build": 10,
+  "version": "1.0.0",
+  "bundle": "dev.gdggt.scanner",
+  "nativeScreens": [
+    "Home",
+    "Events and registrations",
+    "Continuous check-in",
+    "Members and cards",
+    "Forms and responses",
+    "Tasks",
+    "Notifications",
+    "Profile and notification preferences",
+    "Newsletter campaigns, invitations and audiences"
+  ],
+  "desktopEditors": "Advanced finance, site publishing, whiteboard and other editors explicitly open the website in the browser. This is not full desktop feature parity.",
+  "checkin": {
+    "clientRequestsPerParticipant": 1,
+    "superAdmin": true,
+    "csrfAndIdempotency": true,
+    "activityAwardOnce": true,
+    "eventRegistrationRequired": true,
+    "connectedEventAdapterRecovery": true,
+    "physicalChipProof": true,
+    "offlineAttendance": false
+  },
+  "tests": {
+    "vitestFiles": 271,
+    "vitestCases": 3138,
+    "nativeUnitCases": 7,
+    "nativeUITestCases": 4,
+    "uiData": "Fictional Debug-only fixtures, no production records.",
+    "postgres": "Canonical and legacy grant defaults passed, including 100 distinct participants and 100 concurrent scans of one card. All 101 members credited once.",
+    "secretScanUnreviewed": 0,
+    "webBuild": "Passed npm run build on macOS. Production ClamAV packager is Linux x64-only and runs in Vercel.",
+    "typecheck": "Passed"
+  },
+  "signing": {
+    "build": "10",
+    "bundle": "dev.gdggt.scanner",
+    "aps": "production",
+    "debuggable": false,
+    "nfc": [
+      "TAG"
+    ],
+    "webcredentials": [
+      "webcredentials:gdggt.dev"
+    ],
+    "fixtureTransportAbsent": true,
+    "profileExpires": "2027-06-06 16:52:56"
+  },
+  "productionSchema": {
+    "migration": "202611110155_native_fast_checkin.sql",
+    "applied": true,
+    "publicExecute": false,
+    "authenticatedExecute": false
+  },
+  "newsletter": "Admin-added subscribers receive a chapter invitation and Join the newsletter button; public self-subscriptions retain ordinary confirmation. Existing subscribers were not remailed.",
+  "artifacts": {
+    "archive": "native/Scanner/build/GDGWorkspace-Build10-Final.xcarchive",
+    "ipa": "native/Scanner/build/Distribution10/GDGScanner.ipa",
+    "uiResults": "native/Scanner/build/Native10-Acceptance",
+    "raceResults": "native/Scanner/build/Native10-RaceChecks2"
+  },
+  "remainingDeviceAcceptance": [
+    "Real camera scanning and focus animation in this build",
+    "Continuous physical NFC sessions and timeout/resume on iPhone",
+    "Face ID, native download/preview/share and APNs on actual device"
+  ],
+  "walletNfc": "Provider approval and entitlements remain pending; normal build stays TAG-only.",
+  "distribution": {
+    "uploaded": true,
+    "uploadCompletedAt": "2026-11-11T18:14:26Z",
+    "build": 10,
+    "group": "GDG Officers",
+    "groupAssignment": "Not verified: native computer-use connection unavailable. Existing automatic distribution is off.",
+    "publicStoreRelease": false
+  }
+}

@@ -28,7 +28,7 @@ enum ScannerPolicy {
         return url.absoluteString.range(of: "^blob:https://gdggt\\.dev/[0-9a-fA-F-]{36}$", options: .regularExpression) != nil
     }
     static func downloadExtension(_ mime: String?) -> String? {
-        let types = ["application/vnd.apple.pkpass": "pkpass", "application/pdf": "pdf", "text/csv": "csv", "application/zip": "zip", "application/json": "json", "text/plain": "txt", "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx", "application/octet-stream": "bin"]
+        let types = ["application/vnd.apple.pkpass": "pkpass", "application/vnd.openxmlformats-officedocument.wordprocessingml.document":"docx", "application/msword":"doc", "application/rtf":"rtf", "text/rtf":"rtf", "application/pdf": "pdf", "text/csv": "csv", "application/zip": "zip", "application/json": "json", "text/plain": "txt", "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx", "application/octet-stream": "bin"]
         return types[mime?.lowercased() ?? ""]
     }
     static func workspace(_ url: URL?) -> Bool {

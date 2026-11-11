@@ -1,128 +1,160 @@
 import SwiftUI
-import LocalAuthentication
-
-struct OfficerDestination: Identifiable {
-    let path: String
-    let title: String
-    let symbol: String
-    var id: String { path }
-}
 
 struct OfficerAppView: View {
-    @StateObject private var model = ScannerModel()
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var code = ""
-    @State private var email = ""
-    @State private var password = ""
-    @State private var remember = true
-    @State private var tools = false
-    @State private var search = ""
-    private let canvas = Color(red: 0.97, green: 0.97, blue: 0.96)
-    var body: some View {
-        ZStack {
-            canvas.ignoresSafeArea()
-            if model.unlocked {
-                NavigationStack {
-                    WorkspaceView(model: model)
-                        .accessibilityHidden(scenePhase != .active)
-                        .overlay(alignment: .top) {
-                            if model.loading { ProgressView().padding(10).background(.regularMaterial, in: Capsule()).padding(8).accessibilityLabel("Loading workspace") }
-                        }
-                        .overlay { if let error = model.error { ContentUnavailableView { Label("Couldn’t load workspace", systemImage: "wifi.exclamationmark") } description: { Text(error) } actions: { Button("Try again") { model.reload() } } .background(canvas) } }
-                        .navigationTitle(model.pageTitle)
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            if model.canGoBack && !model.destinations.contains(where: { $0.path == model.path }) {
-                                ToolbarItem(placement: .topBarLeading) {
-                                    Button { model.navigateBack() } label: { Label("Back", systemImage: "chevron.left") }
-                                }
-                            }
-                            ToolbarItem(placement: .topBarTrailing) {
-                                Button { model.requestNavigation("notifications") } label: { Image(systemName: "bell") }.accessibilityLabel("Notifications")
-                            }
-                            ToolbarItem(placement: .topBarTrailing) {
-                                Menu {
-                                    Button("Find a tool", systemImage: "magnifyingglass") { model.requestNavigation("search") }
-                                    Button("Reload", systemImage: "arrow.clockwise") { model.requestNavigation("reload") }
-                                    Button("Lock app", systemImage: "lock") { model.lock() }
-                                    Button("Sign out and forget account", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive) { model.requestNavigation("signOut") }
-                                } label: { Image(systemName: "ellipsis.circle") }.accessibilityLabel("Account and app options")
-                            }
-                        }
-                        .safeAreaInset(edge: .bottom, spacing: 0) {
-                            HStack(spacing: 0) {
-                                tab("Home", "house", "/admin")
-                                tab("Events", "calendar", "/admin/events")
-                                tab("Check-in", "wave.3.right", "/admin/rewards")
-                                tab("Members", "person.2", "/admin/members")
-                                Button { tools = true } label: { VStack(spacing: 5) { Image(systemName: "square.grid.2x2").font(.system(size: 20)); Text("More").font(.caption2) }.frame(maxWidth: .infinity, minHeight: 54).contentShape(Rectangle()) }.foregroundStyle(.secondary)
-                            }.padding(.horizontal, 8).background(.bar)
-                        }
+  @StateObject private var model = ScannerModel()
+  @Environment(\.scenePhase) private var phase
+  var body: some View {
+    ZStack {
+      if !model.user.id.isEmpty {
+        NativeWorkspace().environmentObject(model).id(model.user.id).disabled(!model.unlocked)
+          .accessibilityHidden(!model.unlocked)
+      } else {
+        NativeSignInScreen(model: model)
+      }
+      if phase != .active {
+        Color(.systemGroupedBackground).ignoresSafeArea().overlay {
+          Label("GDG@GT", systemImage: "lock.fill").font(.title2.bold())
+        }
+      }
+    }
+    .onChange(of: phase) { _, value in
+      if value == .background { model.lock() }
+      NativePrivacyShield.shared.update(model: model, active: value == .active)
+      #if DEBUG
+        if value == .active && NativeFixtures.enabled && !model.unlocked {
+          Task { await model.resumeFixture() }
+        }
+      #endif
+      if value == .active && model.hasRememberedAccount && !model.unlocked {
+        Task { await model.unlock() }
+      }
+    }
+    .onChange(of: model.unlocked) { _, _ in
+      NativePrivacyShield.shared.update(model: model, active: phase == .active)
+    }
+    .task { if model.hasRememberedAccount { await model.unlock() } }
+  }
+}
+struct NativeSignInScreen: View {
+  @ObservedObject var model: ScannerModel
+  @State private var code = ""
+  @State private var email = ""
+  @State private var password = ""
+  @State private var remember = true
+  var body: some View {
+    NavigationStack {
+      ScrollView {
+        VStack(alignment: .leading, spacing: 26) {
+          HStack(spacing: 10) {
+            Image("AppMark").resizable().scaledToFit().frame(width: 32, height: 24)
+            Text("GDG@GT").font(.headline)
+          }.padding(.top, 20)
+          VStack(alignment: .leading, spacing: 10) {
+            Text(model.hasRememberedAccount ? "Welcome back" : "Your chapter.\nIn your pocket.")
+              .font(.system(size: 36, weight: .bold, design: .rounded))
+            Text(
+              model.hasRememberedAccount
+                ? "Unlock your workspace to continue." : "The tools you need, ready when you are."
+            ).foregroundStyle(.secondary)
+          }
+          if model.hasRememberedAccount {
+            Image(systemName: "faceid").font(.system(size: 64)).foregroundStyle(.tint).frame(
+              maxWidth: .infinity
+            ).padding(.vertical, 30)
+            Button {
+              Task { await model.unlock() }
+            } label: {
+              Label("Unlock with Face ID", systemImage: "faceid").frame(
+                maxWidth: .infinity, minHeight: 42)
+            }.buttonStyle(.borderedProminent).disabled(model.signingIn)
+            Button("Use another account") { model.forgetLocally() }.frame(
+              maxWidth: .infinity, minHeight: 42
+            ).disabled(model.signingIn)
+          } else {
+            VStack(alignment: .leading, spacing: 18) {
+              field("Chapter access code") {
+                SecureField("Access code", text: $code).textContentType(.none)
+              }
+              field("Email") {
+                TextField("you@gatech.edu", text: $email).textContentType(.username).keyboardType(
+                  .emailAddress
+                ).textInputAutocapitalization(.never).autocorrectionDisabled()
+              }
+              field("Password") {
+                SecureField("Password", text: $password).textContentType(.password)
+              }
+              Toggle("Remember with Face ID", isOn: $remember).disabled(!model.biometryAvailable)
+              Button {
+                let credentials = OfficerCredentials(
+                  code: code, email: email.trimmingCharacters(in: .whitespacesAndNewlines),
+                  password: password)
+                code = ""
+                password = ""
+                Task {
+                  await model.signIn(credentials, remember: remember && model.biometryAvailable)
                 }
-            } else {
-                NavigationStack {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 24) {
-                            Label("GDG@GT", systemImage: "chevron.left.forwardslash.chevron.right").font(.headline).foregroundStyle(.tint)
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(model.hasRememberedAccount ? "Welcome back" : "Chapter workspace").font(.largeTitle.bold())
-                                Text(model.hasRememberedAccount ? "Unlock your workspace to continue." : "Your chapter, wherever you are.").foregroundStyle(.secondary)
-                            }
-                            if model.hasRememberedAccount {
-                                Image(systemName: "faceid").font(.system(size: 58)).foregroundStyle(.tint).frame(maxWidth: .infinity).padding(.vertical, 24).accessibilityHidden(true)
-                                Button { Task { await model.unlock() } } label: { Label("Unlock with Face ID", systemImage: "faceid").frame(maxWidth: .infinity, minHeight: 44) }.buttonStyle(.borderedProminent).disabled(model.signingIn)
-                                Button("Use another account") { model.forgetLocally() }.frame(maxWidth: .infinity, minHeight: 44).disabled(model.signingIn)
-                            } else {
-                                VStack(spacing: 18) {
-                                    field("Access code") { SecureField("Chapter access code", text: $code).textContentType(.none) }
-                                    field("Email") { TextField("Email address", text: $email).textContentType(.username).keyboardType(.emailAddress).textInputAutocapitalization(.never).autocorrectionDisabled() }
-                                    field("Password") { SecureField("Password", text: $password).textContentType(.password) }
-                                    Toggle("Remember with Face ID", isOn: $remember).disabled(!model.biometryAvailable)
-                                    if !model.biometryAvailable { Text("Set up Face ID or Touch ID in iPhone Settings to remember this account.").font(.footnote).foregroundStyle(.secondary) }
-                                    Button {
-                                        let credentials = OfficerCredentials(code: code, email: email.trimmingCharacters(in: .whitespacesAndNewlines), password: password)
-                                        password = ""; code = ""
-                                        Task { await model.signIn(credentials, remember: remember && model.biometryAvailable) }
-                                    } label: { Text(model.signingIn ? "Signing in…" : "Sign in").frame(maxWidth: .infinity, minHeight: 44) }
-                                    .buttonStyle(.borderedProminent).disabled(model.signingIn || code.isEmpty || email.isEmpty || password.isEmpty)
-                                }
-                            }
-                            if model.signingIn { ProgressView().frame(maxWidth: .infinity) }
-                            if let message = model.signInNotice { Text(message).foregroundStyle(.red).accessibilityAddTraits(.updatesFrequently) }
-                        }.padding(24).frame(maxWidth: 540).frame(maxWidth: .infinity)
-                    }.scrollDismissesKeyboard(.interactively).background(canvas).toolbar(.hidden, for: .navigationBar)
-                }
+              } label: {
+                Text(model.signingIn ? "Signing in…" : "Sign in").frame(
+                  maxWidth: .infinity, minHeight: 42)
+              }.buttonStyle(.borderedProminent).disabled(
+                model.signingIn || code.isEmpty || email.isEmpty || password.isEmpty)
             }
-            // Covers account data in the app switcher, before the system takes its snapshot.
-            if scenePhase != .active { canvas.ignoresSafeArea().overlay { Label("GDG@GT", systemImage: "lock.fill").font(.title2.bold()) } }
-        }
-        .sheet(isPresented: $tools) {
-            NavigationStack {
-                List {
-                    ForEach(model.destinations.filter { search.isEmpty || $0.title.localizedCaseInsensitiveContains(search) }) { destination in
-                        Button { tools = false; model.requestNavigation(destination.path) } label: { Label(destination.title, systemImage: destination.symbol).frame(minHeight: 32) }.foregroundStyle(.primary)
-                    }
-                    Section("Security") {
-                        Button("Lock app", systemImage: "lock") { tools = false; model.lock() }
-                        Button("Sign out and forget account", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive) { tools = false; model.requestNavigation("signOut") }
-                    }
-                }.scrollContentBackground(.hidden).background(canvas).searchable(text: $search, prompt: "Find a chapter tool").navigationTitle("All tools").toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { tools = false } } }
-            }
-        }
-        .onChange(of: scenePhase) { _, value in
-            if value == .background { tools = false; model.lock(); code = ""; password = "" }
-            if value == .active && model.hasRememberedAccount && !model.unlocked { Task { await model.unlock() } }
-        }
-        .task { if model.hasRememberedAccount { await model.unlock() } }
+          }
+          if model.signingIn { ProgressView().frame(maxWidth: .infinity) }
+          if let message = model.signInNotice { NativeErrorView(error: message) }
+        }.padding(24).frame(maxWidth: 540).frame(maxWidth: .infinity)
+      }.scrollDismissesKeyboard(.interactively).background(Color(.systemGroupedBackground)).toolbar(
+        .hidden, for: .navigationBar)
     }
-    private func tab(_ title: String, _ symbol: String, _ path: String) -> some View {
-        let enabled = model.destinations.contains { $0.path == path }
-        let selected = model.path == path || (path != "/admin" && model.path.hasPrefix(path + "/"))
-        return Button { model.requestNavigation(path) } label: {
-            VStack(spacing: 5) { Image(systemName: selected ? symbol + (symbol == "wave.3.right" || symbol == "calendar" ? "" : ".fill") : symbol).font(.system(size: 20)); Text(title).font(.caption2) }.frame(maxWidth: .infinity, minHeight: 54).contentShape(Rectangle())
-        }.disabled(!enabled).foregroundStyle(selected ? Color.accentColor : Color.secondary).accessibilityAddTraits(selected ? [.isSelected] : [])
+    .onChange(of: model.unlocked) { _, _ in
+      code = ""
+      password = ""
     }
-    private func field<Content: View>(_ label: String, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 7) { Text(label).font(.subheadline.weight(.medium)); content().padding(13).background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 12)) }
+  }
+  func field<C: View>(_ title: String, @ViewBuilder content: () -> C) -> some View {
+    VStack(alignment: .leading, spacing: 8) {
+      Text(title).font(.subheadline.weight(.medium))
+      content().padding(15).background(
+        Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14))
     }
+  }
+}
+struct NativeWorkspace: View {
+  @EnvironmentObject var model: ScannerModel
+  var body: some View {
+    TabView(selection: $model.selectedTab) {
+      NavigationStack { NativeHome() }.tabItem { Label("Home", systemImage: "house") }.tag(
+        NativeTab.home)
+      NavigationStack { NativeEventList() }.tabItem { Label("Events", systemImage: "calendar") }
+        .tag(NativeTab.events)
+      Group {
+        if model.superAdmin {
+          NavigationStack { NativeCheckinScreen(model: model.checkin) }
+        } else {
+          NavigationStack {
+            NativeEmpty(
+              title: "Check-in access", symbol: "lock",
+              message: "Your account cannot change attendance or points.")
+          }
+        }
+      }.tabItem { Label("Check-in", systemImage: "wave.3.right") }.tag(NativeTab.checkin)
+      NavigationStack { NativeMemberList() }.tabItem { Label("Members", systemImage: "person.2") }
+        .tag(NativeTab.members)
+      NavigationStack { NativeMore() }.tabItem { Label("More", systemImage: "square.grid.2x2") }
+        .tag(NativeTab.more).badge(model.unread)
+    }
+    .sheet(item: $model.sheet) { sheet in
+      NavigationStack {
+        Group {
+          switch sheet {
+          case .notifications: NativeNotificationList()
+          case .profile: NativeProfile()
+          case .notificationSettings: NativeNotificationSettings()
+          }
+        }.toolbar {
+          ToolbarItem(placement: .confirmationAction) { Button("Done") { model.sheet = nil } }
+        }
+      }.environmentObject(model)
+    }
+  }
 }
