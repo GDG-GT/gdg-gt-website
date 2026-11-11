@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-11",
+  "scope": [
+    "Public leaderboard URL plus separate NDEF MIME credential",
+    "One active physical chip per credential and one active credential per chip",
+    "Separate Wallet/QR credential, same member/balance; no physical token QR bypass",
+    "Email only after successful programming/enrollment; same-chip retry without rewriting",
+    "Automatic check-in pauses on background and activity expiry",
+    "Withdrawn form responses suppress queued app alerts; accessible validation descriptions preserved"
+  ],
+  "tests": {
+    "unit": "269 files / 3126 tests pass",
+    "database": "154 migrations and canonical tests pass; final withdrawn-response regression passes; legacy-default-grant suite passes; both 100-client capacity races pass",
+    "browser": "44 desktop Chromium/mobile WebKit cases pass: copied-card boundary, enrollment retry without rewrite, public tap, external event scan/retry, Wallet issuance, email layout, profiles, roster and notification settings",
+    "native": "Swift3 tests, build9 signed archive and export pass; production APNs, TAG-only NFC, webcredentials preserved",
+    "typecheck": "pass",
+    "lint": "0 errors / 8 inherited warnings",
+    "buildBundleSSRSecrets": "pass; offline install514630 bytes, zero unreviewed secret findings"
+  },
+  "app": {
+    "build": 9,
+    "bundle": "dev.gdggt.scanner",
+    "upload": "Succeeded 2026-11-11T07:18:02Z; do not repeat",
+    "group": "Build9 observed in GDG Officers group Builds list through App Store Connect UI; same existing testers"
+  },
+  "rollout": {
+    "migration": "physical_card_binding_154 applied once",
+    "source": "one combined source push; deployment verification recorded locally afterwards",
+    "migrationVerification": {
+      "applied": 1,
+      "anonCanEnroll": false,
+      "boundCards": 0,
+      "uniqueChipIndex": true
+    }
+  },
+  "data": "No production member/card/points edits or test mail sends. Existing cards deliberately require programming/enrollment; legacy copied physical QR tokens cannot check in. Existing independent Wallet QR unaffected.",
+  "physicalAcceptance": "Owner verified previous physical NDEF read/write. Revised build9 UID/packet behavior still needs three-card device experiment. This is ordinary-copy resistance, not cryptographic chip authentication.",
+  "docs": ".docs/operations/PHYSICAL_CARD_TESTING.md"
+}

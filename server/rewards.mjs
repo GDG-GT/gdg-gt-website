@@ -1,3 +1,4 @@
+import { parsePresentedCredential, presentedCredential } from "../shared/card-presentation.mjs";
 import {
   googleWalletConfiguration,
   generateGoogleMemberPass,
@@ -245,34 +246,9 @@ export async function rewardsRoutes(
     if (existingCard) {
       allowMethod(request, response, ["GET"]);
       const id = uuid.parse(existingCard[1]);
-      const row = checked(
-        await db
-          .from("reward_credentials")
-          .select("encrypted_token")
-          .eq("id", id)
-          .eq("kind", "card")
-          .is("revoked_at", null)
-          .maybeSingle(),
-      );
-      if (!row)
-        throw new ApiError(404, "NOT_FOUND", "This card is not available.");
-      const { credential } = decryptPayload(
-        row.encrypted_token,
-        config.encryptionSecret,
-      );
-      checked(
-        await db.rpc("reward_resolve", {
-          p_actor: session.user.id,
-          p_session: session.sessionId,
-          p_hash: tokenHash(credential),
-        }),
-      );
-      return reply({
-        id,
-        kind: "card",
-        credential,
-        url: cardUrl(config.origin, credential),
-      });
+      const row = checked(await db.rpc("reward_card_programming", {p_actor:session.user.id,p_session:session.sessionId,p_id:id}));
+      const { credential } = decryptPayload(row.encryptedToken, config.encryptionSecret);
+      return reply({id,kind:"card",credential,url:cardUrl(config.origin,credential),uidHash:row.uidHash,programmedAt:row.programmedAt});
     }
     const walletDownload = route.match(
       /^\/(wallet|google-wallet)\/([0-9a-f-]{36})$/,
@@ -344,6 +320,11 @@ export async function rewardsRoutes(
     }
     allowMethod(request, response, ["POST"]);
     await requireCsrf(request, session, store);
+    if (route === "/card-bind") {
+      const d=await jsonBody(request,z.object({id:uuid,uid:z.string().regex(/^[a-f0-9]{14}$/)}).strict(),1024);
+      const raw=token();
+      return reply(checked(await db.rpc("reward_bind_card",{p_actor:session.user.id,p_session:session.sessionId,p_id:d.id,p_uid_hash:tokenHash(d.uid),p_digital_hash:tokenHash(raw),p_digital_encrypted:encryptPayload({credential:raw},config.encryptionSecret)})));
+    }
     if (route === "/credential-email") {
       const { id } = await jsonBody(
         request,
@@ -365,19 +346,13 @@ export async function rewardsRoutes(
       const d = await jsonBody(
         request,
         z
-          .object({ credential: z.string().regex(/^[A-Za-z0-9_-]{43}$/) })
+          .object({ credential: presentedCredential })
           .strict(),
         1024,
       );
-      return reply(
-        checked(
-          await db.rpc("reward_resolve", {
-            p_actor: session.user.id,
-            p_session: session.sessionId,
-            p_hash: tokenHash(d.credential),
-          }),
-        ),
-      );
+      const presented=parsePresentedCredential(d.credential);
+      return reply(checked(await db.rpc("reward_resolve_scan", {p_actor:session.user.id,p_session:session.sessionId,p_hash:tokenHash(presented.credential),p_uid_hash:presented.uid?tokenHash(presented.uid):null})));
+
     }
     const action = route.slice(1),
       schema = rewardAdminSchemas[action];
@@ -429,7 +404,7 @@ export async function rewardsRoutes(
         memberId: result.member_id,
         credential,
         url: cardUrl(config.origin, credential),
-        emailQueued: true,
+        emailQueued: document.kind !== "card",
       });
     }
     return reply(result);

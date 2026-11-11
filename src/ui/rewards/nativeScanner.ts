@@ -2,7 +2,7 @@
 type Action = "readCard" | "writeCard" | "readWallet";
 type Reply = { id: string; value?: string; error?: string };
 type NativeWindow = Window & {
-  gdgScanner?: { version: number; wallet: boolean };
+  gdgScanner?: { version: number; wallet: boolean; cardBinding?: boolean };
   webkit?: {
     messageHandlers?: {
       gdgScanner?: { postMessage: (message: unknown) => void };

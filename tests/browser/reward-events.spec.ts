@@ -26,7 +26,7 @@ const inventory = {
   ledger: [],
   claims: [],
 };
-test("external event NFC handoff checks registration and retries the same attendance request", async ({
+test("external event physical scan checks registration and retries the same attendance request", async ({
   page,
   fixture,
 }, info) => {
@@ -60,17 +60,14 @@ test("external event NFC handoff checks registration and retries the same attend
     }
     throw Error("Unexpected event write " + path);
   });
-  await page.goto("/tap#card=" + "A".repeat(43));
-  await page
-    .getByRole("button", { name: "External event", exact: true })
-    .click();
-  await expect(page).toHaveURL(/\/tap$/);
-  await page
-    .getByRole("combobox", { name: "Check-in event", exact: true })
-    .selectOption(event.id);
-  await page
-    .getByRole("button", { name: "Check this card for the event", exact: true })
-    .click();
+  await page.route("**/api/v1/admin/rewards**",r=>r.fulfill({json:{data:inventory}}));
+  await page.addInitScript(()=>{
+    Object.assign(window,{gdgScanner:{version:1,wallet:false,cardBinding:true},webkit:{messageHandlers:{gdgScanner:{postMessage:(m:{id:string;action:string})=>{if(m.action==="readCard")setTimeout(()=>window.dispatchEvent(new CustomEvent("gdg:scanner-result",{detail:{id:m.id,value:JSON.stringify({v:2,credential:"A".repeat(43),uid:"04aabbccddeeff"})}})),0);}}}}});
+  });
+  await page.goto("/admin/rewards");
+  await page.getByRole("button",{name:"Event connections",exact:true}).click();
+  await page.getByRole("combobox",{name:"Check-in event",exact:true}).selectOption(event.id);
+  await page.getByRole("button",{name:"Start NFC scanning"}).click();
   await expect(
     page.getByRole("region", { name: "Event registration result" }),
   ).toContainText("Registration confirmed");

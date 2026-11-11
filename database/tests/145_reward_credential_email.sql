@@ -5,7 +5,7 @@ DO $$ DECLARE a uuid;s uuid;ordinary uuid;os uuid;m uuid;c uuid;j public.deliver
  INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(a,repeat('a1',32)) RETURNING id INTO s;
  INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(ordinary,repeat('a2',32)) RETURNING id INTO os;
  INSERT INTO public.members(name,email) VALUES('Fictional Mail Member','reward-mail-member@example.test') RETURNING id INTO m;
- INSERT INTO public.reward_credentials(member_id,kind,label,token_hash,encrypted_token) VALUES(m,'card','Fictional card',repeat('a3',32),'encrypted-fixture') RETURNING id INTO c;
+ INSERT INTO public.reward_credentials(member_id,kind,label,token_hash,encrypted_token) VALUES(m,'wallet','Fictional wallet',repeat('a3',32),'encrypted-fixture') RETURNING id INTO c;
  SELECT * INTO j FROM public.delivery_jobs WHERE payload->>'credentialId'=c::text;
  IF j.kind<>'reward_credential_email' OR j.payload::text LIKE '%example.test%' OR j.secret_payload IS NOT NULL THEN RAISE EXCEPTION 'Atomic credential email missing or raw secret leaked';END IF;
  r:=public.queue_reward_credential_email(a,s,c,repeat('a4',32));

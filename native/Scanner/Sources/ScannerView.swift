@@ -54,7 +54,7 @@ final class ScannerModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
         config.userContentController.add(self, name: "gdgScanner")
         config.userContentController.add(self, name: "gdgAdmin")
         // At document start, before the workspace mounts. Subframes never receive the bridge marker.
-        let js = "if(location.origin==='https://gdggt.dev'){Object.defineProperty(window,'gdgScanner',{value:Object.freeze({version:1,admin:true,wallet:\(walletEnabled),push:true,platform:'ios'}),writable:false});}"
+        let js = "if(location.origin==='https://gdggt.dev'){Object.defineProperty(window,'gdgScanner',{value:Object.freeze({version:1,admin:true,wallet:\(walletEnabled),push:true,cardBinding:true,platform:'ios'}),writable:false});}"
         config.userContentController.addUserScript(WKUserScript(source: js, injectionTime: .atDocumentStart, forMainFrameOnly: true))
         let view = WKWebView(frame: .zero, configuration: config)
         view.navigationDelegate = self
@@ -195,7 +195,7 @@ final class ScannerModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
         if action == "cancel" { if id == pendingID { cancel() }; return }
         guard pendingID == nil else { reply(id: id, error: "Finish the current scan first."); return }
         guard ["readCard", "writeCard", "readWallet"].contains(action),
-              Set(body.keys).isSubset(of: ["id", "action", "url", "passTypeIdentifier"]) else { return }
+              Set(body.keys).isSubset(of: ["id", "action", "url", "passTypeIdentifier", "uidHash"]) else { return }
         if action == "writeCard" && ScannerPolicy.writableURL(body["url"] ?? "") == nil {
             reply(id: id, error: "This is not a GDG card URL."); return
         }
@@ -207,11 +207,11 @@ final class ScannerModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
         pendingGeneration = documentGeneration
         // A native confirmation prevents a webpage from silently starting a hardware operation.
         let alert = UIAlertController(title: action == "writeCard" ? "Write member card?" : "Start NFC scan?",
-            message: action == "writeCard" ? "Only a blank, rewritable NFC card will be written. The app reads it back before confirming." : "Hold the member card or pass near the top of this iPhone.", preferredStyle: .alert)
+            message: action == "writeCard" ? "Use a blank card or the same credential’s test card. The app verifies the chip and reads the data back. It does not lock the card." : "Hold the member card or pass near the top of this iPhone.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in self?.cancel() })
         alert.addAction(UIAlertAction(title: action == "writeCard" ? "Write card" : "Scan", style: .default) { [weak self] _ in
             guard let self, self.pendingID == id, ScannerPolicy.workspace(self.webView.url), self.pendingGeneration == self.documentGeneration else { return }
-            self.nfc = CardSession(action: action, url: body["url"], completion: { [weak self] value, error in self?.finish(value: value, error: error) })
+            self.nfc = CardSession(action: action, url: body["url"], uidHash: body["uidHash"], completion: { [weak self] value, error in self?.finish(value: value, error: error) })
             self.nfc?.start()
         })
         guard let presenter = webView.window?.rootViewController else { finish(error: "Scanner is not visible."); return }

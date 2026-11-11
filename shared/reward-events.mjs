@@ -1,3 +1,4 @@
+import { presentedCredential } from "./card-presentation.mjs";
 import { z } from "zod";
 const id = z.string().uuid();
 export const eventConnection = z
@@ -44,7 +45,7 @@ export const eventAdminInputs = {
   lookup: z
     .object({
       eventId: id,
-      credential: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
+      credential: presentedCredential,
     })
     .strict(),
   confirm: z.object({ reviewId: id }).strict(),

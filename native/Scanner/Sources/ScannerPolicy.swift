@@ -4,6 +4,8 @@ import Foundation
 enum ScannerPolicy {
     static let origin = "https://gdggt.dev"
     static let startURL = URL(string: origin + "/admin/scanner")!
+    static let cardDestination = "https://leaderboards.gdggt.dev/"
+    static let cardMediaType = "application/vnd.gdggt.card"
     static let passTypeIdentifier = "pass.dev.gdggt.membership"
     static func trusted(_ url: URL?) -> Bool {
         guard let url else { return false }

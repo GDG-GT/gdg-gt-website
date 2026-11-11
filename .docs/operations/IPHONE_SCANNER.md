@@ -38,21 +38,24 @@ The Walmart X100 is not established as an NDEF URL writer or Apple VAS reader. T
 
 ## Issue and write a card
 
-1. Install the latest GDG GT Scanner beta from the private TestFlight invitation. Build8 is displayed on the phone as **GDG Workspace**. Enter the existing chapter access code, officer email and password in native sign-in. Enable Remember with Face ID to store those credentials in the device-only Keychain protected by the current biometric enrollment. No password is sent to JavaScript or saved in UserDefaults, browser storage, Git or logs. Safari/PWA cookies are separate.
+1. Install the latest GDG GT Scanner beta from the private TestFlight invitation. Build9 is displayed on the phone as **GDG Workspace**. Enter the existing chapter access code, officer email and password in native sign-in. Enable Remember with Face ID to store those credentials in the device-only Keychain protected by the current biometric enrollment. No password is sent to JavaScript or saved in UserDefaults, browser storage, Git or logs. Safari/PWA cookies are separate.
 
 The full workspace is available according to the signed-in officer's server permissions. Native tabs expose Home, Events, Check-in, Members and More. The website header, sidebar and hamburger are removed in the app. The native toolbar provides notifications, account actions and Back only on nested screens. More contains the permission-filtered complete tool directory; points/card changes still require Super Admin. Existing workflow screens reuse the website in a WKWebView, rather than separate SwiftUI implementations of every editor. Native navigation goes through the existing router and unsaved-work safeguards.
 
 The app locks on background and covers account data while inactive. Face ID reopens the same page without reloading valid-session edits. The server checks account status and session revocation on unlock. When a session expires, the native client authenticates with Keychain credentials after biometric approval. A changed password/access code requires manual re-entry. Changed biometric enrollment invalidates the saved secret. Sign out and forget account revokes the server session and removes the Keychain item and local website data. Use another account on the lock screen forgets local credentials/data; it does not revoke an unreachable old session.
 
 PDF, CSV, JSON, ZIP, common image, XLSX and Wallet downloads from the authorized workspace use the native share sheet and private temporary files, bounded to64MiB. External links open outside the admin webview. Face ID and iPhone share-sheet/device acceptance remain physical-device checks.
-2. Open Members in the Points & cards workspace. Select a real active community member, choose NFC card, give it a useful label and issue the credential.
-3. Tap **Write blank NFC card** and confirm the native write prompt. Hold the card against the top of the iPhone. Keep it still until **Card written and verified** appears.
-4. The app refuses read-only cards, unsupported tags, insufficient memory and cards that already contain data. It does not erase, lock or overwrite them. If the write or verification is interrupted, keep that card aside and scan it before reusing it.
-5. Open Check-in scanner and scan the card. Confirm it resolves to the intended member before handing it over. Choose the activity and explicitly confirm any point award.
-6. If the page closed before programming, select the member's existing card and tap **Program card**. This retrieves the same active credential privately; it does not issue another card or consume another credential slot. Program only one physical card per credential unless intentionally replacing it.
-7. For a lost or compromised card, revoke that credential and issue a replacement. Member points remain in their account.
+2. Open Members in Points & cards, select the member, choose NFC card and issue the credential. This creates an **unprogrammed** card. It cannot check in and no card email is sent yet.
+3. Use **Write and register NFC card** in GDG Workspace build9 or later. Present one NTAG213/215/216 card. The app checks its seven-byte chip identifier, writes and reads back two records, then registers the chip on the server.
+4. A normal tap offers `https://leaderboards.gdggt.dev/`. The second record is MIME `application/vnd.gdggt.card` with the opaque credential. It contains no name, email or points. NFC Tools can still read that record; it is not encrypted.
+5. The same credential is bound to one physical chip. Reprogramming checks the expected chip hash before writing; the database rejects competing enrollment on another chip and prevents one active chip being registered twice. Matching is a defense against ordinary copied cards, **not cryptographic chip authentication or an uncloneability guarantee**. The scanner reports the UID; a trusted Super Admin can already award points manually.
+6. Registration queues one member email containing their independent Wallet QR and Apple/Google Wallet options. Existing active Wallet credentials are reused. Physical and digital credentials share the member/balance, not the credential secret. Revoking a lost physical card does not revoke an independent Wallet pass.
+7. If registration loses its network response, choose **Retry card registration**. It retries the same chip registration without writing again. Do not hand out a card until registered. A write that may have succeeded can be retried on that same card: matching current records are read back rather than overwritten.
+8. A copied physical credential cannot be checked in via a QR or pasted token. Physical scans must supply the enrolled chip ID. Legacy test cards need reprogramming; merely tapping their old URL opens the public leaderboard. There is no automatic member or officer login from a card.
+9. Blank cards and that same credential’s legacy records can be programmed. Other contents are refused. Read-only, password-protected, incompatible and undersized cards receive an error. The app never sets passwords, changes lock bits or tries to unlock a card. A correctly programmed read-only card can be read and registered; a permanently locked legacy card cannot receive the new public destination and should be replaced for testing.
+10. Revoke a lost credential before issuing a replacement. Keep the member account and points. Use a new credential when moving to a different chip. Ordinary URL taps cannot establish which physical chip was scanned.
 
-The card contains an opaque URL such as `https://gdggt.dev/tap#card=<43-character credential>`, not a name, email or balance. The fragment does not go into the HTTP request URL, but anyone with a copy can present the same static credential. Officers still verify the person and server-side revocation. NFC tap identifies a member; it is not a payment, identity document or proof of event registration by itself.
+For the test matrix and limits, see [physical card testing](PHYSICAL_CARD_TESTING.md).
 
 ## Check in to a separate event
 
@@ -60,7 +63,7 @@ Use Event connections in the same workspace. Scan either the member's physical c
 
 ## Generate, build and test the app
 
-Sources: `native/Scanner`. Requires Xcode with iOS SDK and XcodeGen. The generated `.xcodeproj`, build artifacts and per-user signing state are ignored. No new dependency or scanner service is required at runtime. Latest archive: `native/Scanner/build/GDGWorkspace-Build8-Final.xcarchive`; build8 upload succeeded on 2026-11-10. The exported IPA and archive are ignored by Git. Preserve the final archive for matching dSYMs.
+Sources: `native/Scanner`. Requires Xcode with iOS SDK and XcodeGen. The generated `.xcodeproj`, build artifacts and per-user signing state are ignored. No new dependency or scanner service is required at runtime. Latest archive: `native/Scanner/build/GDGWorkspace-Build9.xcarchive`; build9 upload succeeded on 2026-11-11. The exported IPA and archive are ignored by Git. Preserve the final archive for matching dSYMs.
 
 ```sh
 xcodegen generate --spec native/Scanner/project.yml
@@ -111,6 +114,6 @@ Do not create fictional production members or points for acceptance. Use a real 
 - [Apple Wallet setup and pass distribution](https://developer.apple.com/wallet/get-started/)
 - [Public protocol research by Grayson Martin](https://gist.github.com/gm3197/ad0959476346cef69b75ea0523214350) and [Kormax Apple VAS research](https://github.com/kormax/apple-vas): protocol facts used for an independent implementation, not a claim of Apple certification. Validate against Apple's approved integration documentation and real hardware before activation.
 
-## Build8 notifications
+## Build8+ notifications
 
 Install build8 or later. Open Notifications in More, tap **Enable on this device**, and allow the iOS prompt. Existing installations are not silently opted in. Form submissions notify the owner and authorized recipients in the current reviewed delivery policy. The same private inbox receives relevant accepted-email updates and workspace notices; the OS alert contains generic text. Notification taps open the protected inbox after Face ID unlock. Category switches and device removal are available on that page. Sign-out revokes the session-bound registration. Android native push is intentionally not configured; Firebase was cancelled. Existing PWA notifications remain supported.

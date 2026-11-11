@@ -1,3 +1,4 @@
+import { parsePresentedCredential } from "../shared/card-presentation.mjs";
 import { z } from "zod";
 import { requireSession, requireCsrf } from "./auth.mjs";
 import { ApiError, allowMethod, jsonBody, sendJson } from "./lib/http.mjs";
@@ -200,9 +201,12 @@ export async function rewardEventRoutes(
     key = tokenHash(idempotency(request)),
     hash = tokenHash(JSON.stringify({ action, input }));
   if (action === "lookup") {
+    const presented=parsePresentedCredential(input.credential);
+    const cardProof=presented.uid?{cardUidHash:tokenHash(presented.uid)}:{};
     const resolved = await rpc("lookup", {
         eventId: input.eventId,
-        credentialHash: tokenHash(input.credential),
+        credentialHash: tokenHash(presented.credential),
+        ...cardProof,
       }),
       e = resolved.event;
     if (!resolved.memberRef)
@@ -225,7 +229,8 @@ export async function rewardEventRoutes(
           {
             eventId: e.id,
             eventRevision: e.revision,
-            credentialHash: tokenHash(input.credential),
+            credentialHash: tokenHash(presented.credential),
+        ...cardProof,
             memberRef: resolved.memberRef,
           },
           key,

@@ -145,6 +145,20 @@ describe("Member rewards boundary", () => {
     expect(result.credential).toBe(credential);
     expect(result.url).toBe(cardUrl(f.config.origin, credential));
   });
+  it("forwards the physical chip hash without treating it as a Wallet token",async()=>{
+    const f=setup(),credential=token(),uid="04aabbccddeeff";
+    await rewardsRoutes(f.req("/admin/rewards/resolve",{credential:JSON.stringify({v:2,credential,uid})}),f.response,{...f,requestId:actor});
+    expect(f.db.rpc).toHaveBeenCalledWith("reward_resolve_scan",{p_actor:actor,p_session:session,p_hash:tokenHash(credential),p_uid_hash:tokenHash(uid)});
+  });
+  it("enrolls only the authenticated officer's card and generates the separate digital secret server-side",async()=>{
+    const f=setup(),uid="04aabbccddeeff";
+    await rewardsRoutes(f.req("/admin/rewards/card-bind",{id:member,uid}),f.response,{...f,requestId:actor});
+    const [name,input]=f.db.rpc.mock.calls[0];expect(name).toBe("reward_bind_card");expect(input).toMatchObject({p_actor:actor,p_session:session,p_id:member,p_uid_hash:tokenHash(uid)});
+    expect(input.p_digital_hash).toMatch(/^[a-f0-9]{64}$/);expect(input.p_digital_encrypted).not.toContain(uid);expect(input).not.toHaveProperty("uid");
+  });
+  it("rejects caller supplied binding identity or digital token",async()=>{
+    const f=setup();await expect(rewardsRoutes(f.req("/admin/rewards/card-bind",{id:member,uid:"04aabbccddeeff",actor,token:"forged"}),f.response,{...f,requestId:actor})).rejects.toMatchObject({code:"VALIDATION_ERROR"});expect(f.db.rpc).not.toHaveBeenCalled();
+  });
   it("keeps Wallet issuance unavailable without issuer configuration", async () => {
     const f = setup();
     await expect(

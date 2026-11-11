@@ -278,7 +278,7 @@ describe("Member rewards interactions and recovery", () => {
     mount(<RewardsWorkspace />, "/admin/rewards");
     await screen.findByRole("button", { name: /Fictional Member.*25 pts/ });
     fireEvent.click(screen.getByRole("button", { name: "Check-in scanner" }));
-    expect(screen.getByText(/On iPhone, tap a physical NFC card/)).toBeTruthy();
+    expect(screen.getByText(/Use GDG Workspace build9 or later/)).toBeTruthy();
     fireEvent.change(
       screen.getByRole("textbox", { name: /Credential link or code/ }),
       { target: { value: "https://unrelated.example.test/" } },

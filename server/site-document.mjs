@@ -100,9 +100,9 @@ export async function siteDocument({
     return {
       status: 200,
       index: false,
-      title: "Member card check-in · GDG at Georgia Tech",
-      heading: "Member card check-in",
-      description: "Chapter member card check-in.",
+      title: "GDG membership · GDG at Georgia Tech",
+      heading: "GDG membership",
+      description: "Open the chapter member leaderboard.",
       canonical: config.origin + pathname,
       image: config.origin + "/logo.png",
       links: [{ href: config.origin, label: "Chapter website" }],

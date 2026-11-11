@@ -188,3 +188,11 @@ it("creates a points category and activity directly, reusing the rule and reques
   expect(writes[0][1]).toEqual(writes[1][1]);
   expect(writes[0][1].body.ruleId).toBe("fictional-new-rule");
 });
+
+it("pauses automatic check-in when the app is backgrounded",async()=>{
+ const manual=setup();arm();Object.defineProperty(document,"hidden",{configurable:true,value:true});
+ fireEvent(document,new Event("visibilitychange"));
+ expect(screen.queryByRole("button",{name:"Stop automatic check-in"})).toBeNull();
+ Object.defineProperty(document,"hidden",{configurable:true,value:false});
+ fireEvent.click(screen.getByRole("button",{name:"Scan fictional member"}));await waitFor(()=>expect(manual).toHaveBeenCalledTimes(1));expect(apiMock).not.toHaveBeenCalled();
+});

@@ -13,7 +13,8 @@ DO $$ DECLARE a uuid;s uuid;ordinary uuid;os uuid;m uuid;m2 uuid;r jsonb;r2 json
  r:=pg_temp.reward_change(a,s,'rule','{"title":"Fictional attendance","points":15,"active":true}','rule');rule:=(r->>'id')::uuid;
  r:=pg_temp.reward_change(a,s,'activity',jsonb_build_object('title','Fictional event','ruleId',rule,'opensAt',now()-interval '1 hour','closesAt',now()+interval '1 hour'),'activity');activity:=(r->>'id')::uuid;
  r:=pg_temp.reward_change(a,s,'credential',jsonb_build_object('memberId',m,'kind','card','label','Fictional card','tokenHash',repeat('14',32),'encryptedToken','fictional-encrypted-token'),'card');cred:=(r->>'id')::uuid;
- IF public.reward_resolve(a,s,repeat('14',32))->>'id'<>m::text THEN RAISE EXCEPTION 'Card resolved wrong member';END IF;
+ PERFORM public.reward_bind_card(a,s,cred,repeat('a4',32),repeat('a5',32),'fictional-wallet');
+ IF public.reward_resolve_scan(a,s,repeat('14',32),repeat('a4',32))->>'id'<>m::text THEN RAISE EXCEPTION 'Card resolved wrong member';END IF;
  r:=pg_temp.reward_change(a,s,'award',jsonb_build_object('memberId',m,'activityId',activity,'credentialId',cred),'award');entry:=(r->>'id')::uuid;
  r2:=pg_temp.reward_change(a,s,'award',jsonb_build_object('memberId',m,'activityId',activity,'credentialId',cred),'award');IF r<>r2 OR gdg_security.reward_balance(m)<>15 THEN RAISE EXCEPTION 'Retry double awarded';END IF;
  BEGIN PERFORM pg_temp.reward_change(a,s,'award',jsonb_build_object('memberId',m,'activityId',activity),'another-tap');RAISE EXCEPTION 'Second tap double awarded';EXCEPTION WHEN unique_violation THEN NULL;END;
@@ -39,7 +40,8 @@ DO $$ DECLARE a uuid;s uuid;ordinary uuid;os uuid;m uuid;m2 uuid;r jsonb;r2 json
  PERFORM pg_temp.reward_change(a,s,'revoke',jsonb_build_object('id',cred),'revoke');
  BEGIN PERFORM public.reward_resolve(a,s,repeat('14',32));RAISE EXCEPTION 'Revoked card resolved';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
  r:=pg_temp.reward_change(a,s,'credential',jsonb_build_object('memberId',m,'kind','card','label','Replacement','tokenHash',repeat('23',32),'encryptedToken','fictional-replacement'),'replacement');
- IF public.reward_resolve(a,s,repeat('23',32))->>'id'<>m::text THEN RAISE EXCEPTION 'Replacement lost member identity';END IF;
+ PERFORM public.reward_bind_card(a,s,(r->>'id')::uuid,repeat('a6',32),repeat('a7',32),'fictional-wallet');
+ IF public.reward_resolve_scan(a,s,repeat('23',32),repeat('a6',32))->>'id'<>m::text THEN RAISE EXCEPTION 'Replacement lost member identity';END IF;
  BEGIN UPDATE public.members SET merged_into_id=m2 WHERE id=m;RAISE EXCEPTION 'Rewards merge silently discarded history';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'REWARD_MERGE_REVIEW_REQUIRED' THEN RAISE;END IF;END;
  UPDATE public.members SET is_active=false WHERE id=m;
  BEGIN PERFORM public.reward_member_read(repeat('15',32));RAISE EXCEPTION 'Inactive member session survived';EXCEPTION WHEN insufficient_privilege THEN NULL;END;

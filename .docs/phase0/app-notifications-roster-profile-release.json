@@ -22,18 +22,24 @@
     "configuration": "Seven APNs/app-notification variables verified against private prepared configuration; existing VAPID and Wallet keys preserved",
     "members": "No roster import or other production business-record mutation performed",
     "mail": "No member mail or notification blast; no historical replay",
-    "source": "One combined push; see git history for this release commit"
+    "source": "dc1afd41478d936b2ee7df4d29913ff712364c0b",
+    "deployment": {
+      "id": "dpl_ESAxXM7kEobJGGhoZaBQkuBsRR8q",
+      "state": "BUILDING",
+      "note": "One source push; no repeated build polling per owner preference."
+    }
   },
   "app": {
     "bundle": "dev.gdggt.scanner",
     "build": 8,
     "archive": "native/Scanner/build/GDGWorkspace-Build8-Final.xcarchive",
     "upload": "Succeeded, 2026-11-10T20:51:39Z; do not repeat upload",
-    "group": "Existing GDG Officers group. Build8 still processing at review; assignment pending Apple processing. Build7 confirmed assigned."
+    "group": "Build8 observed in existing GDG Officers group during build9 release; superseded by build9. Source deployment completed and tested during follow-up."
   },
   "acceptanceRemaining": [
     "Install build8 and explicitly enable notifications; test foreground/background alerts and tap-to-unlock on a physical iPhone",
     "Check OS permission/Focus/offline behavior; provider connection does not prove device delivery"
   ],
-  "documentation": ".docs/operations/APP_NOTIFICATIONS.md"
+  "documentation": ".docs/operations/APP_NOTIFICATIONS.md",
+  "cleanup": "Test browser/server processes ended; Colima gdg-gt and default stopped. Unrelated supabase/.temp/cli-latest preserved."
 }

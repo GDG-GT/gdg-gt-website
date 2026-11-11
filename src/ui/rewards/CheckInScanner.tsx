@@ -85,8 +85,11 @@ export default function CheckInScanner({
       session.current++;
       setArmed(false);
     };
+    const hidden=()=>{if(document.hidden)stop();};
+    document.addEventListener("visibilitychange",hidden);
     window.addEventListener("gdg:session-cleared", stop);
     return () => {
+      document.removeEventListener("visibilitychange",hidden);
       alive.current = false;
       scannerSession.current++;
       window.removeEventListener("gdg:session-cleared", stop);
@@ -97,6 +100,16 @@ export default function CheckInScanner({
     !!activity &&
     Date.parse(activity.opens_at) <= Date.now() &&
     Date.parse(activity.closes_at) >= Date.now();
+  useEffect(()=>{
+    if(!armed || !activity)return;
+    let timer:number;
+    const check=()=>{
+      const remaining=Date.parse(activity.closes_at)-Date.now();
+      if(!open || remaining<=0){session.current++;setArmed(false);setNotice("Automatic check-in paused. The activity’s check-in window has closed.");return;}
+      timer=window.setTimeout(check,Math.min(remaining+1,2147483647));
+    };
+    check();return()=>window.clearTimeout(timer);
+  },[armed,activity,open]);
   const choose = (id: string) => {
     session.current++;
     setArmed(false);

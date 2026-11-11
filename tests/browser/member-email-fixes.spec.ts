@@ -189,6 +189,7 @@ test("membership email renders its inline QR and attachment layout on desktop an
     { from: "chapter@example.test" },
     {},
   );
+  await page.route("https://gdggt.dev/logo.png",route=>route.fulfill({path:"public/logo.png",contentType:"image/png"}));
   await page.setContent(
     message!.html.replace(
       "cid:gdg-member-qr",

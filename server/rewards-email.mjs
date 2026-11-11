@@ -174,7 +174,7 @@ export async function emailedPass({
     provider === "google" ? generateGoogleMemberPass : generateMemberPass
   )({
     credential,
-    id: row.id,
+    id: row.passId || row.id,
     name: row.name,
     origin: config.rewardsOrigin || config.origin,
     env,

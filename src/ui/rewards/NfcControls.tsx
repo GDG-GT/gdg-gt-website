@@ -1,17 +1,19 @@
+import { parsePresentedCredential, physicalCardPresentation } from "../../../shared/card-presentation.mjs";
+import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { useEffect, useRef, useState } from "react";
-import { api } from "@/lib/api";
+import { api, ApiFailure } from "@/lib/api";
 import { nativeScanner, scanNative } from "./nativeScanner";
 import { Button, Field } from "../primitives";
 import { parseCardPayload } from "../../../shared/rewards.mjs";
 import { qrFocus } from "./qrFocus";
-type NfcRecord = { recordType: string; data: DataView };
+type NfcRecord = { recordType: string; mediaType?: string; data: DataView };
 type NfcReader = {
   scan: (options: { signal: AbortSignal }) => Promise<void>;
   write: (
     message: unknown,
     options: { signal: AbortSignal; overwrite: boolean },
   ) => Promise<void>;
-  onreading: ((event: { message: { records: NfcRecord[] } }) => void) | null;
+  onreading: ((event: { serialNumber?: string; message: { records: NfcRecord[] } }) => void) | null;
   onreadingerror: (() => void) | null;
 };
 type NfcConstructor = new () => NfcReader;
@@ -20,10 +22,16 @@ const nfc = () =>
 export default function NfcControls({
   onRead,
   writeUrl,
+  writeId,
+  uidHash,
+  onWritten,
   continuous = false,
 }: {
   onRead?: (token: string) => void | Promise<void>;
   writeUrl?: string;
+  writeId?: string;
+  uidHash?: string | null;
+  onWritten?: () => void | Promise<void>;
   continuous?: boolean;
 }) {
   const [status, setStatus] = useState(""),
@@ -34,6 +42,9 @@ export default function NfcControls({
     [camera, setCamera] = useState(false),
     [focus, setFocus] = useState<ReturnType<typeof qrFocus> | null>(null),
     [manual, setManual] = useState("");
+  const [bindingHash,setBindingHash]=useState(uidHash || "");
+  const [pendingBinding,setPendingBinding]=useState<{uid:string;id:string}>();
+  useDraftGuard(active || !!pendingBinding,{busy:active,label:"NFC card registration"});
   const controller = useRef<AbortController>(),
     video = useRef<HTMLVideoElement>(null),
     frozen = useRef<HTMLCanvasElement>(null),
@@ -99,7 +110,8 @@ export default function NfcControls({
     };
   }, []);
   const accept = async (value: string) => {
-    const token = parseCardPayload(value, window.location.origin);
+    const presented = parsePresentedCredential(value);
+    const token = presented ? ("uid" in presented ? JSON.stringify(presented) : presented.credential) : null;
     if (!token) {
       setStatus("This is not a GDG member credential.");
       return;
@@ -129,10 +141,14 @@ export default function NfcControls({
     try {
       stop();
       if (nativeScanner()) {
+        if (!nativeScanner()?.cardBinding) throw Error("Update GDG Workspace to build9 or later for chip-bound NFC scanning. Wallet QR remains available.");
         controller.current = new AbortController();
         setActive(true);
         setStatus("Hold the member card near your phone’s NFC reader.");
-        accept(await scanNative("readCard", {}, controller.current.signal));
+        const raw=await scanNative("readCard", {}, controller.current.signal);
+        const proof=parsePresentedCredential(raw);
+        if(!proof || !("uid" in proof))throw Error("This is not a GDG member credential with a physical chip ID.");
+        await accept(raw);
         return;
       }
       const C = nfc();
@@ -140,10 +156,12 @@ export default function NfcControls({
       const reader = new C();
       controller.current = new AbortController();
       reader.onreading = (e) => {
-        const record = e.message.records.find(
-          (r) => r.recordType === "url" || r.recordType === "text",
-        );
-        if (record) accept(new TextDecoder().decode(record.data));
+        const record = e.message.records.find(r => r.recordType === "mime" && r.mediaType === "application/vnd.gdggt.card") || e.message.records.find(r => r.recordType === "url" || r.recordType === "text");
+        if (record) {
+          const value=new TextDecoder().decode(record.data), token=parseCardPayload(value);
+          if(token && e.serialNumber) { try { void accept(physicalCardPresentation(token,e.serialNumber)); } catch { setStatus("This browser did not provide a supported chip ID. Use GDG Workspace."); } }
+          else setStatus("A physical chip ID is required. Use GDG Workspace for this card.");
+        }
         else setStatus("No supported credential was found on this card.");
       };
       reader.onreadingerror = () =>
@@ -162,44 +180,35 @@ export default function NfcControls({
       if (nativeScanner()) setActive(false);
     }
   };
+  const bind = async (pending:{id:string;uid:string}, signal?:AbortSignal) => {
+    setPendingBinding(pending);
+    try {
+      const result=await api<{uidHash:string}>("/admin/rewards/card-bind",{method:"POST",body:pending,signal});
+      if(signal?.aborted || !mounted.current)return;
+      setBindingHash(result.uidHash);setPendingBinding(undefined);
+      setStatus("Card written, verified and registered. The member email is queued.");
+      await onWritten?.();
+    } catch(error) {
+      if(error instanceof ApiFailure && error.status<500 && error.status!==429)setPendingBinding(undefined);
+      throw error;
+    }
+  };
   const write = async () => {
     try {
       stop();
-      if (nativeScanner() && writeUrl) {
-        controller.current = new AbortController();
-        setActive(true);
-        setStatus("Hold a blank card near your phone’s NFC reader.");
-        await scanNative(
-          "writeCard",
-          { url: writeUrl },
-          controller.current.signal,
-        );
-        setStatus("Card written and verified. It is ready for the member.");
-        setActive(false);
-        return;
-      }
-      const C = nfc();
-      if (!C || !writeUrl) throw Error();
-      controller.current = new AbortController();
+      if (!nativeScanner()?.cardBinding || !writeUrl || !writeId) throw Error("Use GDG Workspace build9 or later to write and register physical cards.");
+      controller.current=new AbortController();const signal=controller.current.signal;
       setActive(true);
-      setStatus("Hold a blank NDEF card near the phone.");
-      await new C().write(
-        { records: [{ recordType: "url", data: writeUrl }] },
-        { signal: controller.current.signal, overwrite: false },
-      );
-      setStatus(
-        "Card written. Scan it to verify before handing it to the member.",
-      );
-      setActive(false);
+      if(pendingBinding) {setStatus("Retrying registration for the same written card…");await bind(pendingBinding,signal);return;}
+      setStatus("Hold the card near the top of your iPhone.");
+      const raw=await scanNative("writeCard",{url:writeUrl,...(bindingHash?{uidHash:bindingHash}:{})},signal);
+      if(signal.aborted)return;
+      const proof=parsePresentedCredential(raw);
+      if(!proof || !("uid" in proof) || proof.credential!==parseCardPayload(writeUrl))throw Error("The physical write could not be verified. Scan this card before reusing it.");
+      await bind({id:writeId,uid:proof.uid},signal);
     } catch (e) {
-      if ((e as Error).name !== "AbortError")
-        setStatus(
-          nativeScanner()
-            ? (e as Error).message
-            : "Card was not written. Use a blank, compatible NDEF card and allow NFC access.",
-        );
-      setActive(false);
-    }
+      if ((e as Error).name !== "AbortError") setStatus((e as Error).message + (pendingBinding ? " Retry registration before handing out this card." : ""));
+    } finally {if(mounted.current)setActive(false);}
   };
   const walletScan = async () => {
     stop();
@@ -340,13 +349,11 @@ export default function NfcControls({
           onClick={() => void (writeUrl ? write() : scan())}
           disabled={active}
         >
-          {writeUrl ? "Write blank NFC card" : "Start NFC scanning"}
+          {writeUrl ? (pendingBinding ? "Retry card registration" : "Write and register NFC card") : "Start NFC scanning"}
         </Button>
       ) : (
         <p>
-          On iPhone, tap a physical NFC card near the top of the phone and open
-          its notification. Sign in to this website in Safari first. Use the GDG
-          Scanner iPhone app for direct NFC reading and writing.
+          Use GDG Workspace build9 or later for physical NFC cards. You can scan Wallet QR here.
         </p>
       )}
       {native && walletReady && onRead && (
@@ -406,7 +413,7 @@ export default function NfcControls({
             <summary>Enter credential manually</summary>
             <Field
               label="Credential link or code"
-              hint="Paste the member’s issued credential, or use a reader that types it."
+              hint="For Wallet QR codes and supported QR readers. Physical cards require a chip scan."
             >
               <input
                 value={manual}

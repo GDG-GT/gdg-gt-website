@@ -69,6 +69,8 @@ type Credential = {
   label: string;
   kind: string;
   revoked_at: string | null;
+  bound?: boolean;
+  programmed_at?: string | null;
 };
 type Entry = {
   id: string;
@@ -130,6 +132,7 @@ export default function RewardsWorkspace() {
       kind: string;
       url: string;
       credential: string;
+      uidHash?: string | null;
     }>(),
     [qr, setQr] = useState(""),
     [review, setReview] = useState<{
@@ -209,10 +212,10 @@ export default function RewardsWorkspace() {
   useEffect(() => {
     let active = true;
     setQr("");
-    if (issued)
+    if (issued?.kind === "wallet")
       void import("qrcode")
         .then((m) =>
-          m.toDataURL(issued.url, {
+          m.toDataURL(issued.credential, {
             width: 256,
             margin: 2,
             color: { light: "#faf7f2", dark: "#302c29" },
@@ -224,7 +227,7 @@ export default function RewardsWorkspace() {
         })
         .catch(() =>
           setError(
-            "QR could not be generated. The NFC credential remains available.",
+            "QR could not be generated. The Wallet download remains available.",
           ),
         );
     return () => {
@@ -268,7 +271,9 @@ export default function RewardsWorkspace() {
       if (action === "rule") setEditRule(undefined);
       if (action === "perk") setEditPerk(undefined);
       setNotice(
-        action === "credential" || action === "credential-email"
+        action === "credential" && document.kind === "card"
+          ? "Card credential created. Write and register its physical chip before use."
+          : action === "credential" || action === "credential-email"
           ? "Credential email queued for the member. Delivery status appears below."
           : "Saved. The current records are shown below.",
       );
@@ -698,31 +703,8 @@ export default function RewardsWorkspace() {
                       </a>
                     ) : issued.kind === "card" ? (
                       <>
-                        <p>
-                          Write this URL as the first NDEF URL record. Keep the
-                          link private; it identifies this member.
-                        </p>
-                        <textarea
-                          aria-label="Issued NFC URL"
-                          readOnly
-                          value={issued.url}
-                        />
-                        <Button
-                          variant="secondary"
-                          onClick={() =>
-                            void navigator.clipboard
-                              .writeText(issued.url)
-                              .then(() => setNotice("Credential URL copied."))
-                              .catch(() =>
-                                setError(
-                                  "Clipboard unavailable. Select and copy the credential URL.",
-                                ),
-                              )
-                          }
-                        >
-                          Copy NFC URL
-                        </Button>
-                        <NfcControls writeUrl={issued.url} />
+                        <p>Write and register this card in GDG Workspace. An ordinary tap opens the leaderboard. Check-in verifies this card’s chip.</p>
+                        <NfcControls key={issued.id} writeUrl={issued.url} writeId={issued.id} uidHash={issued.uidHash} onWritten={async()=>{setNotice("Physical card registered. Membership QR and Wallet options will be emailed to the member.");await load();}} />
                       </>
                     ) : null}
                     {qr && (
@@ -746,7 +728,7 @@ export default function RewardsWorkspace() {
                     <li key={c.id}>
                       <span>
                         {c.label} · {c.kind}
-                        {c.revoked_at ? " · Revoked" : ""}
+                        {c.revoked_at ? " · Revoked" : c.kind === "card" ? (c.bound ? " · Registered chip" : " · Needs programming") : ""}
                         {" · ending " +
                           c.id.replace(/-/g, "").slice(-4).toUpperCase()}
                         {!c.revoked_at && (
@@ -755,6 +737,7 @@ export default function RewardsWorkspace() {
                               const mail = data.emailDeliveries?.find(
                                 (e) => e.credentialId === c.id,
                               );
+                              if(c.kind === "card" && !c.bound)return "Email follows physical registration";
                               if (!mail?.state) return "Email not sent";
                               if (mail.providerAccepted) return "Email sent";
                               if (
@@ -824,6 +807,7 @@ export default function RewardsWorkspace() {
                               kind: string;
                               url: string;
                               credential: string;
+                              uidHash?: string | null;
                             }>("/admin/rewards/card/" + c.id)
                               .then((r) => {
                                 if (g === generation.current) setIssued(r);
@@ -838,7 +822,7 @@ export default function RewardsWorkspace() {
                       {!c.revoked_at && (
                         <Button
                           variant="secondary"
-                          disabled={busy}
+                          disabled={busy || (c.kind === "card" && !c.bound)}
                           onClick={() =>
                             void mutate("credential-email", { id: c.id })
                           }

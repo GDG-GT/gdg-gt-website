@@ -23,7 +23,7 @@ DO $$ DECLARE a uuid;s uuid;bad uuid;bs uuid;m uuid;m2 uuid;e uuid;e2 uuid;ref u
  IF public.reward_event_external(e,repeat('b1',32),'redeem',jsonb_build_object('codeHash',repeat('c3',32),'accountHash',repeat('c4',32)))<>r THEN RAISE EXCEPTION 'Lost link response could not retry';END IF;
  BEGIN PERFORM public.reward_event_external(e,repeat('b1',32),'redeem',jsonb_build_object('codeHash',repeat('c3',32),'accountHash',repeat('ff',32)));RAISE EXCEPTION 'Link replay changed account';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'CONFLICT' THEN RAISE;END IF;END;
  BEGIN PERFORM public.reward_event_external(e,repeat('b1',32),'points',jsonb_build_object('memberRef',ref));RAISE EXCEPTION 'Event credential awarded points';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'VALIDATION_ERROR' THEN RAISE;END IF;END;
- INSERT INTO public.reward_credentials(member_id,kind,label,token_hash,encrypted_token) VALUES(m,'card','Fictional card',repeat('d1',32),'fictional') RETURNING id INTO cred;
+ INSERT INTO public.reward_credentials(member_id,kind,label,token_hash,encrypted_token) VALUES(m,'wallet','Fictional wallet',repeat('d1',32),'fictional') RETURNING id INTO cred;
  info:=public.reward_event_admin(a,s,'lookup',jsonb_build_object('eventId',e,'credentialHash',repeat('d1',32)));
  IF info->>'memberRef'<>ref::text THEN RAISE EXCEPTION 'Card did not link to event account';END IF;
  r:=public.reward_event_admin(a,s,'review',jsonb_build_object('eventId',e,'eventRevision',1,'credentialHash',repeat('d1',32),'memberRef',ref),repeat('d2',32),repeat('d3',32));review:=(r->>'reviewId')::uuid;

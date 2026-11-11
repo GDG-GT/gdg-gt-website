@@ -199,47 +199,21 @@ describe("Private Wallet pass downloads", () => {
 });
 
 describe("Existing physical card programming", () => {
-  it("retrieves the existing active credential with live database authorization and no new issuance", async () => {
-    const f = fixture();
-    f.request.url = "/api/v1/admin/rewards/card/" + id;
-    expect(await run(f)).toBe(true);
-    expect(f.db.rpc).toHaveBeenCalledWith("reward_resolve", {
-      p_actor: id,
-      p_session: id,
-      p_hash: tokenHash(f.credential),
-    });
-    expect(f.query.eq).toHaveBeenCalledWith("kind", "card");
-    expect(f.query.is).toHaveBeenCalledWith("revoked_at", null);
-    const body = JSON.parse(f.response.end.mock.calls[0][0]);
-    expect(body.data).toEqual({
-      id,
-      kind: "card",
-      credential: f.credential,
-      url: "https://gdggt.dev/tap#card=" + f.credential,
-    });
-    expect(f.response.headers["Cache-Control"]).toBe("no-store");
-    expect(
-      f.db.rpc.mock.calls.some(([name]) => name === "reward_admin_mutate"),
-    ).toBe(false);
+  it("retrieves the active credential and chip binding through the authorized database read",async()=>{
+    const f=fixture();f.request.url="/api/v1/admin/rewards/card/"+id;
+    f.db.rpc.mockResolvedValue({data:{id,encryptedToken:encryptPayload({credential:f.credential},f.config.encryptionSecret),uidHash:"a".repeat(64),programmedAt:"2026-11-11T00:00:00Z"},error:null});
+    expect(await run(f)).toBe(true);expect(f.db.rpc).toHaveBeenCalledWith("reward_card_programming",{p_actor:id,p_session:id,p_id:id});
+    expect(JSON.parse(f.response.end.mock.calls[0][0]).data).toMatchObject({id,kind:"card",credential:f.credential,uidHash:"a".repeat(64)});
+    expect(f.response.headers["Cache-Control"]).toBe("no-store");expect(f.db.from).not.toHaveBeenCalled();
   });
-  it("does not return missing cards, inactive membership or a revoked session", async () => {
-    const f = fixture();
-    f.request.url = "/api/v1/admin/rewards/card/" + id;
-    f.query.maybeSingle.mockResolvedValueOnce({ data: null, error: null });
-    await expect(run(f)).rejects.toMatchObject({ status: 404 });
-    f.db.rpc.mockResolvedValueOnce({
-      data: null,
-      error: { message: "FORBIDDEN", code: "42501" },
-    });
-    await expect(run(f)).rejects.toMatchObject({ status: 403 });
-    expect(f.response.end).not.toHaveBeenCalled();
+  it("does not return missing cards, inactive membership or a revoked session",async()=>{
+    const f=fixture();f.request.url="/api/v1/admin/rewards/card/"+id;
+    f.db.rpc.mockResolvedValueOnce({data:null,error:{message:"NOT_FOUND",code:"P0001"}});
+    await expect(run(f)).rejects.toMatchObject({status:404});
+    f.db.rpc.mockResolvedValueOnce({data:null,error:{message:"FORBIDDEN",code:"42501"}});
+    await expect(run(f)).rejects.toMatchObject({status:403});expect(f.response.end).not.toHaveBeenCalled();
   });
-  it("rejects a regular Admin before reading encrypted card material", async () => {
-    const f = fixture("admin");
-    f.request.url = "/api/v1/admin/rewards/card/" + id;
-    await expect(run(f)).rejects.toMatchObject({ status: 403 });
-    expect(f.db.from).not.toHaveBeenCalled();
-  });
+  it("rejects a regular Admin before reading encrypted material",async()=>{const f=fixture("admin");f.request.url="/api/v1/admin/rewards/card/"+id;await expect(run(f)).rejects.toMatchObject({status:403});expect(f.db.rpc).not.toHaveBeenCalled();});
 });
 
 describe("Google Wallet authorization", () => {

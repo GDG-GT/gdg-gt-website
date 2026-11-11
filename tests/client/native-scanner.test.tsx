@@ -11,7 +11,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nativeScanner, scanNative } from "../../src/ui/rewards/nativeScanner";
 import NfcControls from "../../src/ui/rewards/NfcControls";
 const { apiMock } = vi.hoisted(() => ({ apiMock: vi.fn() }));
-vi.mock("@/lib/api", () => ({ api: apiMock }));
+vi.mock("@/lib/api", async original => ({...(await original<typeof import("../../src/lib/api")>()),api:apiMock}));
 const post = vi.fn();
 const result = (id: string, value?: string, error?: string) =>
   window.dispatchEvent(
@@ -21,7 +21,7 @@ beforeEach(() => {
   vi.stubGlobal("webkit", {
     messageHandlers: { gdgScanner: { postMessage: post } },
   });
-  vi.stubGlobal("gdgScanner", { version: 1, wallet: false });
+  vi.stubGlobal("gdgScanner", { version: 1, wallet: false, cardBinding:true });
   post.mockReset();
   apiMock.mockReset();
 });
@@ -32,7 +32,7 @@ afterEach(() => {
 });
 describe("Owned iPhone scanner bridge", () => {
   it("requires both a supported native marker and a message handler", async () => {
-    expect(nativeScanner()).toEqual({ version: 1, wallet: false });
+    expect(nativeScanner()).toEqual({ version: 1, wallet: false, cardBinding:true });
     vi.stubGlobal("gdgScanner", { version: 2, wallet: false });
     expect(nativeScanner()).toBeNull();
     await expect(scanNative("readCard")).rejects.toThrow(/GDG Scanner/);
@@ -86,26 +86,30 @@ describe("Owned iPhone scanner bridge", () => {
     );
     let [{ id }] = post.mock.calls.find(([v]) => v.action === "readCard")!;
     result(id, "https://evil.test/tap#card=" + "A".repeat(43));
-    await screen.findByText("This is not a GDG member credential.");
+    await screen.findByText("This is not a GDG member credential with a physical chip ID.");
     expect(onRead).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "Start NFC scanning" }));
     [{ id }] = post.mock.calls.at(-1)!;
-    result(id, "A".repeat(43));
-    await waitFor(() => expect(onRead).toHaveBeenCalledWith("A".repeat(43)));
+    const proof=JSON.stringify({v:2,credential:"A".repeat(43),uid:"04aabbccddeeff"});
+    result(id,proof);
+    await waitFor(() => expect(onRead).toHaveBeenCalledWith(proof));
   });
   it("writes through the native confirmation and reports read-back success", async () => {
     const url = "https://gdggt.dev/tap#card=" + "B".repeat(43);
-    render(<NfcControls writeUrl={url} />);
+    apiMock.mockResolvedValue({uidHash:"a".repeat(64)});
+    render(<NfcControls writeUrl={url} writeId="b2100000-0000-4000-8000-000000000001" />);
     fireEvent.click(
-      await screen.findByRole("button", { name: "Write blank NFC card" }),
+      await screen.findByRole("button", { name: "Write and register NFC card" }),
     );
     const [{ id, action, url: sent }] = post.mock.calls.at(-1)!;
     expect(action).toBe("writeCard");
     expect(sent).toBe(url);
-    result(id, url);
-    await screen.findByText(
-      "Card written and verified. It is ready for the member.",
-    );
+    const uid="04aabbccddeeff";
+    result(id,JSON.stringify({v:2,credential:"B".repeat(43),uid}));
+    await screen.findByText("Card written, verified and registered. The member email is queued.");
+    expect(apiMock).toHaveBeenCalledWith("/admin/rewards/card-bind",expect.objectContaining({body:{id:"b2100000-0000-4000-8000-000000000001",uid}}));
+    fireEvent.click(screen.getByRole("button",{name:"Write and register NFC card"}));
+    expect(post.mock.calls.at(-1)![0]).toMatchObject({uidHash:"a".repeat(64)});
   });
   it("requires native and server approval for Wallet NFC, then verifies through the session API", async () => {
     vi.stubGlobal("gdgScanner", { version: 1, wallet: true });

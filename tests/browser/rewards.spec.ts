@@ -247,7 +247,7 @@ test("unsupported NFC provides honest iPhone handoff instructions", async ({
     .getByRole("button", { name: "Check-in scanner", exact: true })
     .click();
   await expect(
-    page.getByText(/On iPhone, tap a physical NFC card/),
+    page.getByText(/Use GDG Workspace build9 or later/),
   ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Start NFC scanning", exact: true }),
@@ -256,7 +256,7 @@ test("unsupported NFC provides honest iPhone handoff instructions", async ({
     page.getByRole("button", { name: "Use QR instead", exact: true }),
   ).toBeVisible();
 });
-test("card issuance programs a URL and QR for the same member identity", async ({
+test("browser refuses to write an unbound physical card or display its token as a QR", async ({
   page,
   fixture,
 }) => {
@@ -304,22 +304,11 @@ test("card issuance programs a URL and QR for the same member identity", async (
   await page
     .getByRole("button", { name: "Issue credential", exact: true })
     .click();
-  await expect(
-    page.getByRole("textbox", { name: "Issued NFC URL", exact: true }),
-  ).toHaveValue(issuedUrl);
-  await expect(
-    page.getByRole("img", { name: "Member credential QR code", exact: true }),
-  ).toBeVisible();
-  await page
-    .getByRole("button", { name: "Write blank NFC card", exact: true })
-    .click();
-  await expect(page.getByText(/Card written. Scan it to verify/)).toBeVisible();
-  expect(
-    await page.evaluate(() => Reflect.get(window, "fictionalNfcWrite")),
-  ).toEqual({
-    message: { records: [{ recordType: "url", data: issuedUrl }] },
-    options: { overwrite: false },
-  });
+  await expect(page.getByRole("textbox",{name:"Issued NFC URL",exact:true})).toHaveCount(0);
+  await expect(page.getByRole("img",{name:"Member credential QR code",exact:true})).toHaveCount(0);
+  await page.getByRole("button",{name:"Write and register NFC card",exact:true}).click();
+  await expect(page.getByText("Use GDG Workspace build9 or later to write and register physical cards.")).toBeVisible();
+  expect(await page.evaluate(()=>Reflect.get(window,"fictionalNfcWrite"))).toBeUndefined();
 });
 test("members can opt into an alias and request a qualifying perk without admin access", async ({
   page,
@@ -459,7 +448,7 @@ test("owned iPhone scanner resolves a card through the existing reviewed award f
   fixture.authenticated = true;
   await page.addInitScript(() => {
     Object.defineProperty(window, "gdgScanner", {
-      value: { version: 1, wallet: false },
+      value: { version: 1, wallet: false, cardBinding:true },
     });
     Object.defineProperty(window, "webkit", {
       value: {
@@ -471,7 +460,7 @@ test("owned iPhone scanner resolves a card through the existing reviewed award f
                   () =>
                     window.dispatchEvent(
                       new CustomEvent("gdg:scanner-result", {
-                        detail: { id: message.id, value: "R".repeat(43) },
+                        detail: { id: message.id, value: JSON.stringify({v:2,credential:"R".repeat(43),uid:"04aabbccddeeff"}) },
                       }),
                     ),
                   20,
@@ -489,7 +478,7 @@ test("owned iPhone scanner resolves a card through the existing reviewed award f
       return r.fulfill({ json: { data: inventory } });
     writes.push(path);
     expect(path).toBe("/api/v1/admin/rewards/resolve");
-    expect(r.request().postDataJSON()).toEqual({ credential: "R".repeat(43) });
+    expect(r.request().postDataJSON()).toEqual({ credential: JSON.stringify({v:2,credential:"R".repeat(43),uid:"04aabbccddeeff"}) });
     return r.fulfill({
       json: {
         data: {

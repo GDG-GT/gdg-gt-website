@@ -32,7 +32,9 @@ export function presentValidationErrors(form: HTMLFormElement | undefined, field
       error.textContent = (label ? label + ": " : "") + value;
       control.setAttribute("aria-invalid", "true"); control.setAttribute("aria-describedby", [description, error.id].filter(Boolean).join(" "));
       // Existing caller-owned field messages remain authoritative.
-      if (!description?.split(" ").some(id => document.getElementById(id)?.matches('[role="alert"], .gt-field-error, [id$="-error"]'))) control.insertAdjacentElement("afterend", error);
+      const callerMessage=description?.split(" ").some(id => document.getElementById(id)?.matches('[role="alert"], .gt-field-error, [id$="-error"]'));
+      if(!callerMessage)control.insertAdjacentElement("afterend",error);
+      else control.setAttribute("aria-describedby",description!);
       marked.set(control, () => { error.remove(); if (previous === null) control.removeAttribute("aria-invalid"); else control.setAttribute("aria-invalid", previous); if (description === null) control.removeAttribute("aria-describedby"); else control.setAttribute("aria-describedby", description); });
       first ||= control;
     }
