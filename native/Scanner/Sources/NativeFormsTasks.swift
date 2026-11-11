@@ -94,7 +94,7 @@ struct NativeFormResponses: View {
       isPresented: Binding(get: { stateAction != nil }, set: { if !$0 { stateAction = nil } })
     ) {
       Button(stateAction == "Closed" ? "Close form" : "Reopen form") {
-        Task { await changeState() }
+        if let state=stateAction{Task { await changeState(state) }}
       }
       Button("Cancel", role: .cancel) { stateAction = nil }
     }
@@ -114,8 +114,7 @@ struct NativeFormResponses: View {
       error = nil
     } catch { if !Task.isCancelled { self.error = error.localizedDescription } }
   }
-  func changeState() async {
-    guard let state = stateAction else { return }
+  func changeState(_ state:String) async {
     loading = true
     defer {
       loading = false

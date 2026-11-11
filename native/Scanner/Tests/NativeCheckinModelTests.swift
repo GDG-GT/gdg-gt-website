@@ -66,7 +66,17 @@
       XCTAssertEqual(m.succeeded, 1)
       XCTAssertEqual(m.recent.first?.name, "New account")
     }
-    @MainActor func testUncertainResultRetriesIdenticalOperation() async {
+    @MainActor func testSystemNfcSheetDoesNotPauseButBackgroundDoes() {
+    let m=ready(QueueTransport());m.sceneChanged(.inactive);XCTAssertTrue(m.running);m.sceneChanged(.active);XCTAssertTrue(m.running);m.sceneChanged(.background);XCTAssertFalse(m.running)
+  }
+  @MainActor func testTargetCannotChangeWhileCheckinIsPending() async {
+    let api=QueueTransport(),m=ready(api),original=m.selected
+    let first=Task{await m.accept(String(repeating:"A",count:43))};await settle(api,1)
+    m.choose("event:another-event");XCTAssertEqual(m.selected,original);XCTAssertTrue(m.processing)
+    api.requests[0].continuation.resume(throwing:NativeAPIError(status:503,code:"UNAVAILABLE",message:"Fixture outage",fields:.null));await first.value
+    m.choose("event:another-event");XCTAssertEqual(m.selected,original);XCTAssertNotNil(m.pending)
+  }
+  @MainActor func testUncertainResultRetriesIdenticalOperation() async {
       let api = QueueTransport()
       let m = ready(api)
       let first = Task { await m.accept(String(repeating: "A", count: 43)) }

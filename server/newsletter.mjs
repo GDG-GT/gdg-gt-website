@@ -27,21 +27,23 @@ export async function newsletterRoutes(
 ) {
   const url = new URL(request.url, config.origin),
     match = url.pathname.match(
-      /^\/api\/v1\/admin\/newsletter\/(capabilities|subscribers|templates|campaigns)(?:\/([^/]+))?(?:\/(preview))?$/,
+      /^\/api\/v1\/admin\/newsletter\/(capabilities|subscribers|templates|campaigns)(?:\/([^/]+))?(?:\/(preview|notify))?$/,
     );
   if (!match) return false;
   const kind = match[1],
     id = match[2] ? parse(uuid, match[2]) : null,
-    preview = !!match[3];
+    preview = match[3] === "preview",
+    notify = match[3] === "notify";
   if (
     (kind === "capabilities" && id) ||
-    (preview && (!id || kind === "subscribers"))
+    (preview && (!id || kind === "subscribers")) ||
+    (notify && (!id || kind !== "subscribers"))
   )
     throw new ApiError(404, "NOT_FOUND", "This endpoint was not found.");
   allowMethod(
     request,
     response,
-    kind === "capabilities" || preview
+    notify ? ["POST"] : kind === "capabilities" || preview
       ? ["GET"]
       : id
         ? ["GET", "POST"]
@@ -68,6 +70,16 @@ export async function newsletterRoutes(
     sendJson(response, 200, data, requestId);
     return true;
   };
+  if (notify) {
+    queryValues(url.searchParams,z.object({}).strict());
+    await jsonBody(request,z.object({}).strict(),1024);
+    const key=idempotency(request), raw=token();
+    return reply(checked(await db.rpc("notify_newsletter_subscriber",{
+      ...args,p_subscriber:id,p_token_hash:tokenHash(raw),
+      p_secret_payload:encryptPayload({token:raw,source:"admin_invitation"},config.encryptionSecret),
+      p_key_hash:tokenHash(key),p_request_hash:tokenHash(JSON.stringify({id})),p_request:requestId,
+    })));
+  }
   if (kind === "capabilities") {
     queryValues(url.searchParams, z.object({}).strict());
     const actor = session.user.id,

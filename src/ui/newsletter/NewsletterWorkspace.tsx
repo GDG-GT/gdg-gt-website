@@ -32,10 +32,11 @@ export default function NewsletterWorkspace() {
   );
 }
 function NewsletterWorkspaceContent() {
+  const team="";
   const { currentAdmin } = useAdmin();
   const [importingMembers, setImportingMembers] = useState(false);
   const [kind, setKind] = useState<Kind>("campaigns"),
-    [team, setTeam] = useState(""),
+    [creationTeam, setCreationTeam] = useState(""),
     [state, setState] = useState("current"),
     [status, setStatus] = useState(""),
     [query, setQuery] = useState(""),
@@ -63,7 +64,6 @@ function NewsletterWorkspaceContent() {
     noticeFocus = useRef<HTMLParagraphElement>(null),
     errorFocus = useRef<HTMLParagraphElement>(null);
   const filters = {
-    ...(team ? { team } : {}),
     state,
     ...(status ? { status } : {}),
     q,
@@ -90,6 +90,7 @@ function NewsletterWorkspaceContent() {
     setPage(1);
     setExporting(false);
   }, !busy && !editor);
+  const createScope=creationTeam || (capRead.data?.chapterCreate ? "chapter":capRead.data?.teams.find(t=>t.canCreate)?.id || "");
   const cap = capRead.data,
     list = listRead.data,
     loading = listRead.loading,
@@ -150,10 +151,10 @@ function NewsletterWorkspaceContent() {
       state === "current" &&
       !capRead.loading &&
       !capRead.error &&
-      !!team &&
-      (team === "chapter"
+      !!createScope &&
+      (createScope === "chapter"
         ? cap?.chapterCreate
-        : cap?.teams.find((t) => t.id === team)?.canCreate);
+        : cap?.teams.find((t) => t.id === createScope)?.canCreate);
   const navigate = (run: () => void) => {
     if (!busy && !pending.current) {
       if (safety) safety.request(run);
@@ -204,7 +205,7 @@ function NewsletterWorkspaceContent() {
           onDone={(result) => {
             setImportingMembers(false);
             setKind("subscribers");
-            setTeam("chapter");
+            setCreationTeam("chapter");
             setStatus("");
             setQuery("");
             setQ("");
@@ -261,11 +262,13 @@ function NewsletterWorkspaceContent() {
         </div>
       ))}
       {editor ? (
+        <>
+        {!editor.record && cap && ((cap.chapterCreate ? 1:0)+cap.teams.filter(t=>t.canCreate).length)>1 && <Field label="Newsletter"><select value={createScope} disabled={busy} onChange={e=>setCreationTeam(e.target.value)}>{cap.chapterCreate && <option value="chapter">Chapter newsletter</option>}{cap.teams.filter(t=>t.canCreate).map(t=><option key={t.id} value={t.id}>{t.name}</option>)}</select></Field>}
         <NewsletterEditor
           key={editor.key}
           kind={kind}
           record={detailRead.data?.record || editor.record}
-          scope={team}
+          scope={createScope}
           unavailable={
             capRead.loading ||
             !!capRead.error ||
@@ -279,6 +282,7 @@ function NewsletterWorkspaceContent() {
             refresh();
           }}
         />
+        </>
       ) : (
         <>
           <nav className="gt-newsletter-tabs" aria-label="Newsletter sections">
@@ -310,27 +314,6 @@ function NewsletterWorkspaceContent() {
             ))}
           </nav>
           <div className="gt-newsletter-toolbar">
-            <Field label="Scope">
-              <select
-                value={team}
-                disabled={busy}
-                onChange={(e) => {
-                  setTeam(e.target.value);
-                  setPage(1);
-                  setExporting(false);
-                }}
-              >
-                <option value="">All accessible scopes</option>
-                {cap?.chapterRead && (
-                  <option value="chapter">Chapter newsletter</option>
-                )}
-                {cap?.teams.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.name}
-                  </option>
-                ))}
-              </select>
-            </Field>
             <Field label="Records">
               <select
                 value={state}
@@ -578,7 +561,7 @@ function NewsletterWorkspaceContent() {
                             : "Campaign"}
                       </th>
                       <th scope="col">State</th>
-                      <th scope="col">Scope</th>
+                      <th scope="col">Team</th>
                       <th scope="col">
                         {kind === "subscribers" ? "Confirmed" : "Updated"}
                       </th>

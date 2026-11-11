@@ -82,7 +82,7 @@ struct NativeMore: View {
         ) { confirm = true }.disabled(signingOut)
       }
       if let error { NativeErrorView(error: error) }
-      Section { LabeledContent("GDG Workspace", value: "1.0 · Build 10") }
+      Section { LabeledContent("GDG Workspace", value: "1.0 · Build 11") }
     }.navigationTitle("More").confirmationDialog(
       "Sign out of GDG Workspace?", isPresented: $confirm, titleVisibility: .visible
     ) {

@@ -193,7 +193,7 @@ export default function BudgetEditor({
                   maxLength={150}
                 />
               </Field>
-              <Field label="Owning scope">
+              <Field label="Team">
                 <select
                   value={team}
                   disabled={busy || !!record}

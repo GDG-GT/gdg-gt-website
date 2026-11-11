@@ -125,9 +125,6 @@ function edit(saved = vi.fn()) {
 }
 async function scope() {
   await screen.findByRole("button", { name: file.name });
-  fireEvent.change(screen.getByLabelText("Library scope"), {
-    target: { value: "chapter" },
-  });
   await waitFor(() =>
     expect(
       (
@@ -194,7 +191,7 @@ describe("Media inventory and folder recovery", () => {
         : Promise.resolve(response(path)),
     );
     mount();
-    await screen.findByText(/Media inventory is unavailable/);
+    await screen.findByText(/Media files could not load/);
     expect(screen.queryByText("This part of the library is empty")).toBeNull();
     failed = false;
     fireEvent.click(screen.getByRole("button", { name: "Retry list" }));

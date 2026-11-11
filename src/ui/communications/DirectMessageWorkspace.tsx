@@ -1,3 +1,4 @@
+import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import {
   useCallback,
   useEffect,
@@ -124,6 +125,7 @@ function DirectMessageContent({ personal }: { personal: boolean }) {
     [reviewForm, setReviewForm] = useState(false),
     [reason, setReason] = useState(""),
     [password, setPassword] = useState("");
+  useWorkspaceReadiness(loading);
   const selectedRef = useRef(selected),
     seq = useRef(0),
     listSeq = useRef(0),

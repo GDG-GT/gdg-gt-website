@@ -44,7 +44,7 @@ export default function MemberFields({
         {input("Name", "name", 100, true)}
         {input("Email", "email", 254, true, "email")}
         {creating && (
-          <Field label="Owning scope" required>
+          <Field label="Team" required>
             <select
               required={!cap?.globalCreate}
               value={team}

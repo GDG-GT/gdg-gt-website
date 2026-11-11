@@ -1,0 +1,54 @@
+{
+  "validatedAt": "2026-11-11T19:10:34.404939+00:00",
+  "build": 11,
+  "changes": [
+    "NFC remains active through transient iOS scene inactivity; background still pauses and locks",
+    "Subscriber invitation/welcome resend with session, CSRF, idempotency, consent and suppression checks",
+    "Initial workspace read barrier including nested Communications/PersonalWork lazy routes",
+    "Removed top-level newsletter, finance and media scope bars; creation destinations stay explicit",
+    "Per-account local sidebar pins, maximum three",
+    "Numeric app push scheduler counters; operational status auto-refresh"
+  ],
+  "database": {
+    "migration": "202611110156_newsletter_subscriber_notifications.sql",
+    "applied": true,
+    "serviceExecute": true,
+    "anonymousOrAuthenticatedExecute": false,
+    "canonicalPostgresTests": "Passed, including migration156 and 100-client check-in regression"
+  },
+  "validation": {
+    "nativeUnit": 9,
+    "nativeUI": 4,
+    "browser": "32 Chromium desktop/mobile cases passed across corrected fixture runs, plus six WebKit desktop/mobile checks; pin UI visually reviewed.",
+    "webBuild": "Passed",
+    "typecheck": "Passed",
+    "secretsUnreviewed": 0,
+    "bundleBudgets": "Passed",
+    "vitest": "275 files / 3147 cases exercised. Final full run passed 3146; one obsolete media error-copy assertion updated and all 23 media recovery cases then passed. Earlier concurrency-related timeouts passed in the bounded-worker regression."
+  },
+  "signing": {
+    "build": "11",
+    "aps": "production",
+    "debuggable": false,
+    "nfc": [
+      "TAG"
+    ],
+    "associatedDomains": [
+      "webcredentials:gdggt.dev"
+    ],
+    "fixturesAbsent": true
+  },
+  "distribution": {
+    "uploadSucceededAt": "2026-11-11T19:08:45Z",
+    "build": 11,
+    "group": "GDG Officers",
+    "groupAssignment": "Build11 upload verified in App Store Connect; processing pending at commit."
+  },
+  "remainingDeviceAcceptance": [
+    "Retest continuous physical NFC on an iPhone using build11; simulator cannot present the NFC system sheet."
+  ],
+  "notes": [
+    "No subscriber emails were triggered by deployment or tests; browser/native fixtures are fictional.",
+    "One combined production branch push; hosted build outcome is verified separately after commit."
+  ]
+}

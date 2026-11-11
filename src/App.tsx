@@ -1,3 +1,4 @@
+import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import {
   PublicBootstrapContext,
   type PublicBootstrap,
@@ -138,6 +139,7 @@ const adminRoutes = [
   ["blog-media", lazy(() => import("@/pages/admin/BlogEditorMedia"))],
 ] as const;
 function LoadingPage() {
+  useWorkspaceReadiness(true);
   return (
     <div
       className="gt-container gt-route-loading gt-initial-route-loading"

@@ -529,7 +529,7 @@ function LinktreeWorkspaceContent() {
               <>
                 <div className="gt-form-grid">
                   {mode === "profile_create" && (
-                    <Field label="Scope">
+                    <Field label="Team">
                       <select
                         disabled={busy}
                         value={team}

@@ -1,3 +1,4 @@
+import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import "./assets";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
 import {
@@ -185,6 +186,7 @@ function WhiteboardWorkspaceContent() {
   modeRef.current = mode;
   const [fitRequest, setFitRequest] = useState(0);
   const [loadErrors, setLoadErrors] = useState<Record<string, string>>({});
+  useWorkspaceReadiness(listLoading || (!capabilities && !loadErrors.capabilities));
   const [capabilityRetry, setCapabilityRetry] = useState(0);
   const liveStatus = useScopedRealtime(
     selected ? { kind: "whiteboard", id: selected } : null,

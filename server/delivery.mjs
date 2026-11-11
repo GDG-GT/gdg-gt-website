@@ -10,7 +10,7 @@ import { tokenHash } from "./lib/security.mjs";
 import { visibleFields } from "../shared/forms.ts";
 import { responseCopyText } from "../shared/form-respondent.mjs";
 import { rewardCredentialMessage } from "./rewards-email.mjs";
-import { emailDocument } from "../shared/email.mjs";
+import { emailDocument, escapeEmail } from "../shared/email.mjs";
 import { formDigestMessage } from "../shared/form-digest.mjs";
 export function deliveryCategory(kind) {
   if (kind.startsWith("form_")) return "forms";
@@ -39,7 +39,7 @@ export async function deliveryMessage(
     return { to: mail.chapter, ...formDigestMessage(notice, config.origin),
       headers: { "X-GDG-Job-ID": job.id } };
   }
-  let to, subject, content, htmlContent;
+  let to, subject, content, htmlContent, footerHtml;
   const actions = [];
   if (job.kind === "workspace_notice_email") {
     const notice = checked(
@@ -130,7 +130,7 @@ export async function deliveryMessage(
     const record = checked(
       await db
         .from("newsletter_tokens")
-        .select("consumed_at,expires_at")
+        .select("consumed_at,expires_at,purpose,token_hash")
         .eq("id", job.payload.tokenId)
         .maybeSingle(),
     );
@@ -148,7 +148,7 @@ export async function deliveryMessage(
         .single(),
     );
     if (
-      subscriber.state !== "pending" ||
+      subscriber.state !== (job.payload.mode === "welcome" ? "active" : "pending") ||
       subscriber.deleted_at ||
       subscriber.suppressed_at
     )
@@ -165,6 +165,16 @@ export async function deliveryMessage(
     }
     const secret = decryptPayload(job.secret_payload, config.encryptionSecret);
     to = subscriber.email;
+    if(record.token_hash && tokenHash(secret.token)!==record.token_hash)throw new ApiError(503,"DELIVERY_RETRY","The subscriber email could not be verified.");
+    if(job.payload.mode === "welcome") {
+      if(record.purpose!=="unsubscribe")return null;
+      subject="Welcome to the GDG at Georgia Tech newsletter";
+      htmlContent="You’re subscribed to chapter news, upcoming events and opportunities to build with the GDG community. We’re glad you’re here.";
+      const unsubscribe=config.origin+"/newsletter/unsubscribe#token="+secret.token;
+      actions.push({label:"Explore chapter events",url:config.origin+"/events"});
+      content=htmlContent+"\n\nChapter events: "+config.origin+"/events\n\nUnsubscribe: "+unsubscribe;
+      footerHtml='<a style="color:#9b3326" href="'+escapeEmail(unsubscribe)+'">Unsubscribe from the newsletter</a>';
+    } else {
     const invited = secret.source === "admin_invitation";
     subject = invited
       ? "You’re invited to the GDG at Georgia Tech newsletter"
@@ -180,6 +190,7 @@ export async function deliveryMessage(
       : "This button expires in 24 hours. If you didn’t sign up, you can ignore this email.";
     htmlContent = introduction + "\n\n" + nextStep;
     content = introduction + "\n\n" + (invited ? "Join the newsletter: " : "Confirm subscription: ") + confirmationUrl + "\n\n" + nextStep;
+    }
   } else if (
     ["contact_acknowledgment", "contact_notification"].includes(job.kind)
   ) {
@@ -552,7 +563,7 @@ export async function deliveryMessage(
     to,
     subject,
     text: content,
-    html: emailDocument({ subject, content: htmlContent ?? content, actions }),
+    html: emailDocument({ subject, content: htmlContent ?? content, actions, footerHtml }),
     ...(mail.replyTo ? { replyTo: mail.replyTo } : {}),
     headers: { "X-GDG-Job-ID": job.id },
     messageId: "<" + job.id + "@gdg.local>",

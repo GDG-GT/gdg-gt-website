@@ -1,3 +1,4 @@
+import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, ApiFailure } from "@/lib/api";
 
@@ -60,6 +61,7 @@ export function usePrivateRead<T>(path: string | undefined, refresh: number) {
   }, [path, refresh]);
   const matching = snapshot?.path === path ? snapshot : undefined;
   const currentRequest = request.path === path && request.refresh === refresh;
+  useWorkspaceReadiness(!!path && (!currentRequest || request.loading));
   return {
     data: matching?.value,
     at: matching?.at,

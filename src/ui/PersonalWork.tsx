@@ -1,3 +1,4 @@
+import { WorkspaceLoading } from "@/contexts/WorkspaceReadinessContext";
 import { lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 const Tasks = lazy(() => import("./tasks/TaskWorkspace"));
@@ -34,7 +35,7 @@ export default function PersonalWork({
           Your messages
         </Link>
       </nav>
-      <Suspense fallback={<p role="status">Loading your {view}…</p>}>
+      <Suspense fallback={<WorkspaceLoading>Loading your {view}…</WorkspaceLoading>}>
         {view === "tasks" ? <Tasks personal /> : <Messages personal />}
       </Suspense>
     </>

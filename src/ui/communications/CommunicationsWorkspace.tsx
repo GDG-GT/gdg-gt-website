@@ -1,3 +1,4 @@
+import { WorkspaceLoading } from "@/contexts/WorkspaceReadinessContext";
 import { lazy, Suspense } from "react";
 import { useSearchParams } from "react-router-dom";
 const Tasks = lazy(() => import("../tasks/TaskWorkspace"));
@@ -9,9 +10,7 @@ export default function CommunicationsWorkspace() {
   return (
     <Suspense
       fallback={
-        <div className="gt-admin-page" role="status">
-          Loading communications…
-        </div>
+        <WorkspaceLoading>Loading communications…</WorkspaceLoading>
       }
     >
       {params.get("tab") === "contact" ? (

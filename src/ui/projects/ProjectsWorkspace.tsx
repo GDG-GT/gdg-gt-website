@@ -572,7 +572,7 @@ function ProjectsWorkspaceContent() {
                     />
                   </Field>
                   {mode === "create" && (
-                    <Field label="Owning scope" required>
+                    <Field label="Team" required>
                       <select
                         required={!cap?.globalCreate}
                         value={team}

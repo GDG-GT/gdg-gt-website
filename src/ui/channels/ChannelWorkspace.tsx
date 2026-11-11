@@ -1,3 +1,4 @@
+import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import {
   Dialog,
   DialogContent,
@@ -139,6 +140,7 @@ function ChannelWorkspaceContent() {
     [listReadAt, setListReadAt] = useState<string>(),
     [capabilityLoading, setCapabilityLoading] = useState(true),
     [memberLoading, setMemberLoading] = useState(false);
+  useWorkspaceReadiness(loading || capabilityLoading);
   const room = roomSnapshot?.record.id === selected ? roomSnapshot : undefined;
   const [draft, setDraft] = useState(""),
     [replyTo, setReplyTo] = useState<Message | null>(null),

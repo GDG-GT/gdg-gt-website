@@ -1,0 +1,22 @@
+BEGIN;
+DO $$ DECLARE a uuid;s uuid;pending uuid;active uuid;blocked uuid;r jsonb;first_result jsonb;t uuid;BEGIN
+ INSERT INTO public.admin_users(email,password_hash,role,is_active) VALUES('subscriber-notify-owner@example.test','fixture','super_admin',true) RETURNING id INTO a;
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(a,repeat('e1',32)) RETURNING id INTO s;
+ INSERT INTO public.newsletter_subscribers(email,name,state,is_active,consent_at) VALUES('notify-pending@example.test','Pending fixture','pending',false,now()) RETURNING id INTO pending;
+ INSERT INTO public.newsletter_tokens(subscriber_id,purpose,token_hash,expires_at) VALUES(pending,'confirm',repeat('e2',32),now()+interval '1 day') RETURNING id INTO t;
+ first_result:=public.notify_newsletter_subscriber(a,s,pending,repeat('e3',32),repeat('x',64),repeat('e4',32),repeat('e5',32),gen_random_uuid());
+ IF first_result->>'purpose'<>'invitation' OR NOT(SELECT consumed_at IS NOT NULL FROM public.newsletter_tokens WHERE id=t) OR(SELECT count(*) FROM public.delivery_jobs WHERE payload->>'subscriberId'=pending::text)<>1 THEN RAISE EXCEPTION 'Invitation rotation or delivery failed';END IF;
+ r:=public.notify_newsletter_subscriber(a,s,pending,repeat('e6',32),repeat('y',64),repeat('e4',32),repeat('e5',32),gen_random_uuid());IF r<>first_result OR(SELECT count(*) FROM public.delivery_jobs WHERE payload->>'subscriberId'=pending::text)<>1 THEN RAISE EXCEPTION 'Retry duplicated subscriber mail';END IF;
+ BEGIN PERFORM public.notify_newsletter_subscriber(a,s,pending,repeat('e7',32),repeat('z',64),repeat('e8',32),repeat('e5',32),gen_random_uuid());RAISE EXCEPTION 'Cooldown bypassed';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOTIFICATION_COOLDOWN' THEN RAISE;END IF;END;
+ INSERT INTO public.newsletter_subscribers(email,name,state,is_active,consent_at,confirmed_at) VALUES('notify-active@example.test','Active fixture','active',true,now(),now()) RETURNING id INTO active;
+ r:=public.notify_newsletter_subscriber(a,s,active,repeat('e9',32),repeat('x',64),repeat('ea',32),repeat('eb',32),gen_random_uuid());
+ IF r->>'purpose'<>'welcome' OR(SELECT state FROM public.newsletter_subscribers WHERE id=active)<>'active' OR NOT EXISTS(SELECT 1 FROM public.newsletter_tokens WHERE subscriber_id=active AND purpose='unsubscribe' AND consumed_at IS NULL) THEN RAISE EXCEPTION 'Welcome mail changed consent or omitted opt-out';END IF;
+ INSERT INTO public.newsletter_subscribers(email,name,state,is_active,consent_at) VALUES('notify-unsubscribed@example.test','Unsubscribed fixture','unsubscribed',false,now()) RETURNING id INTO blocked;
+ BEGIN PERFORM public.notify_newsletter_subscriber(a,s,blocked,repeat('ec',32),repeat('x',64),repeat('ed',32),repeat('ee',32),gen_random_uuid());RAISE EXCEPTION 'Unsubscribed member mailed';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'INVALID_STATE' THEN RAISE;END IF;END;
+ UPDATE public.newsletter_subscribers SET suppressed_at=now() WHERE id=active;
+ BEGIN PERFORM public.notify_newsletter_subscriber(a,s,active,repeat('ec',32),repeat('x',64),repeat('ed',32),repeat('ee',32),gen_random_uuid());RAISE EXCEPTION 'Suppressed member mailed';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'INVALID_STATE' THEN RAISE;END IF;END;
+ UPDATE public.admin_sessions SET revoked_at=now() WHERE id=s;
+ BEGIN PERFORM public.notify_newsletter_subscriber(a,s,pending,repeat('ec',32),repeat('x',64),repeat('ed',32),repeat('ee',32),gen_random_uuid());RAISE EXCEPTION 'Revoked session mailed';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ IF has_function_privilege('anon','public.notify_newsletter_subscriber(uuid,uuid,uuid,text,text,text,text,uuid)','EXECUTE') OR has_function_privilege('authenticated','public.notify_newsletter_subscriber(uuid,uuid,uuid,text,text,text,text,uuid)','EXECUTE') THEN RAISE EXCEPTION 'Notify API exposed';END IF;
+END $$;
+ROLLBACK;

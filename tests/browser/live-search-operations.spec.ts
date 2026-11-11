@@ -43,7 +43,6 @@ test("newsletter recipient search updates without saving the campaign", async ({
     ? route.fulfill({ json: { data: newsletters.response(new URL(route.request().url()).pathname.replace("/api/v1", "")) } })
     : route.fallback());
   await page.goto("/admin/newsletter");
-  await page.getByRole("combobox", { name: "Scope", exact: true }).selectOption("chapter");
   await page.getByRole("button", { name: "Write campaign", exact: true }).click();
   await page.getByRole("combobox", { name: "Audience", exact: true }).selectOption("custom");
   const input = page.getByRole("textbox", { name: "Find subscribers", exact: true });

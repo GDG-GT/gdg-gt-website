@@ -1,0 +1,9 @@
+import {afterEach,it,expect,vi} from 'vitest';
+vi.mock('../../server/delivery.mjs',()=>({runDelivery:vi.fn(async()=>({claimed:0,completed:0,retried:0,lostLease:0}))}));
+vi.mock('../../server/app-push-worker.mjs',()=>({runAppPushWorker:vi.fn(async()=>({claimed:2,accepted:2,retried:0,lostLease:0}))}));
+import {jobRoutes} from '../../server/jobs.mjs';
+import {runAppPushWorker} from '../../server/app-push-worker.mjs';
+afterEach(()=>vi.unstubAllEnvs());
+async function run(){vi.stubEnv('CRON_SECRET','fictional-'.repeat(8));const db={rpc:vi.fn(async(name,args)=>{if(name==='begin_scheduled_job')return{data:{runId:'run',lease:'lease'}};if(Object.values(args.p_counts).some(v=>typeof v!=='number'))return{error:{code:'22023'}};return{data:true}})};const response={setHeader(){},end(){}};const pending=jobRoutes({url:'/api/v1/jobs/delivery',method:'POST',headers:{authorization:'Bearer '+'fictional-'.repeat(8)}},response,{db,config:{origin:'https://fictional.test'},requestId:'fixture'});return{db,pending}}
+it('persists numeric push counters without leaving a successful delivery occurrence running',async()=>{const{db,pending}=await run();await expect(pending).resolves.toBe(true);expect(db.rpc).toHaveBeenLastCalledWith('finish_scheduled_job',expect.objectContaining({p_success:true,p_counts:{claimed:0,completed:0,retried:0,lostLease:0,appPushClaimed:2,appPushAccepted:2,appPushRetried:0,appPushLostLease:0}}))});
+it('records a retryable push failure under the current scheduled lease',async()=>{runAppPushWorker.mockResolvedValueOnce({claimed:1,accepted:0,retried:1,lostLease:0});const{db,pending}=await run();await expect(pending).rejects.toMatchObject({code:'DELIVERY_RETRY'});expect(db.rpc).toHaveBeenLastCalledWith('finish_scheduled_job',expect.objectContaining({p_success:false,p_error:'DELIVERY_RETRY',p_counts:expect.objectContaining({appPushRetried:1})}))});

@@ -78,6 +78,7 @@ struct NativeScanResult: Identifiable {
     } catch { self.error = error.localizedDescription }
   }
   func choose(_ key: String) {
+    guard pending==nil && !processing else{error="Retry the pending check-in before changing activities or events.";return}
     pause()
     selected = key
     activity = ""
@@ -111,6 +112,7 @@ struct NativeScanResult: Identifiable {
       })
     nfc?.start()
   }
+  func sceneChanged(_ phase:ScenePhase){if phase == .background{pause()}}
   func pause() {
     epoch += 1
     running = false
@@ -551,7 +553,7 @@ struct NativeCheckinScreen: View {
           }.refreshable { await model.load() }
         }
       }
-      .onChange(of: phase) { _, value in if value != .active { model.pause() } }
+      .onChange(of: phase) { _, value in model.sceneChanged(value) }
       .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
         if model.running, let target = model.target, !model.isOpen(target) {
           model.pause()

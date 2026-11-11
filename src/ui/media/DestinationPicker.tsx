@@ -47,7 +47,7 @@ export default function DestinationPicker({
   }, [team, folder, gallery, retry]);
   return (
     <div className="gt-media-destination">
-      <Field label="Destination scope">
+      <Field label="Library">
         <select
           disabled={disabled || fixedTeam}
           value={team}
@@ -84,7 +84,7 @@ export default function DestinationPicker({
       {list && (
         <>
           <p>
-            Destination: <strong>{list.folder?.name || "Scope root"}</strong>
+            Destination: <strong>{list.folder?.name || "Library root"}</strong>
           </p>
           <div className="gt-inline-actions">
             <Button

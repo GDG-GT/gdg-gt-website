@@ -382,7 +382,7 @@ describe("Linktree mutation lifecycle", () => {
         }) as HTMLButtonElement
       ).disabled,
     ).toBe(true);
-    fireEvent.change(screen.getByLabelText("Scope"), {
+    fireEvent.change(screen.getByLabelText("Team"), {
       target: { value: team },
     });
     fireEvent.submit(screen.getByLabelText(/Display name/).closest("form")!);

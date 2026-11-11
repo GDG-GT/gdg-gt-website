@@ -1,3 +1,4 @@
+import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import { useState, useEffect, useContext, type ReactNode } from "react";
 import { Navigate, useLocation, Link } from "react-router-dom";
 import { nativeScanner } from "@/ui/rewards/nativeScanner";
@@ -68,6 +69,7 @@ export default function PageAccessGuard({ children }: { children: ReactNode }) {
           }
         : undefined
     : decision;
+  useWorkspaceReadiness(isLoading || (isAuthenticated && resolved?.key !== key));
   if (isLoading)
     return (
       <div className="gt-admin-page" role="status">

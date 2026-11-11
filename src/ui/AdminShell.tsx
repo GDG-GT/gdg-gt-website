@@ -1,3 +1,5 @@
+import { useSidebarPins } from "@/hooks/useSidebarPins";
+import { WorkspaceReadinessProvider } from "@/contexts/WorkspaceReadinessContext";
 import { installValidationFeedback } from "@/lib/form-validation";
 import { NativeNotificationSync } from "./notifications/NotificationSettings";
 import { confirmAction } from "@/lib/app-dialogs";
@@ -39,6 +41,8 @@ import { Bell,
   Menu,
   MessageSquare,
   PenTool,
+  Pin,
+  PinOff,
   Search,
   Settings2,
   Shield,
@@ -137,6 +141,7 @@ const groups: { title: string; links: Destination[] }[] = [
   },
 ];
 const workspaceDestinations = groups.flatMap((group) => group.links);
+const pinnablePaths=workspaceDestinations.map(item=>item.href);
 
 export default function AdminShell({ children }: { children: ReactNode }) {
   useEffect(installValidationFeedback, []);
@@ -145,6 +150,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   }, []);
   const { currentAdmin, logout, isAuthenticated } = useAdmin();
   const navigationSafety = useNavigationSafety();
+  const {pins,toggle:togglePin}=useSidebarPins(currentAdmin?.id,pinnablePaths);
   const inNativeApp = nativeWorkspace();
   const location = useLocation(),
     navigate = useNavigate();
@@ -321,29 +327,8 @@ export default function AdminShell({ children }: { children: ReactNode }) {
     };
   }, [inNativeApp, allowed, navigate, navigationSafety, logout, openSearch]);
   if (!isAuthenticated) return <>{children}</>;
-  const sidebar = (
-    <>
-      <div className="gt-sidebar-brand">
-        <Brand inverse compact />
-        <span className="gt-workspace-label">Chapter workspace</span>
-      </div>
-      {navFailed && (
-        <button
-          className="gt-button gt-button-secondary"
-          onClick={() => setNavRetry((v) => v + 1)}
-        >
-          Retry workspace navigation
-        </button>
-      )}
-      <nav aria-label="Workspace navigation" className="gt-sidebar-navigation">
-        {groups.map((group) => {
-          const links = group.links.filter((item) =>
-            allowed.includes(item.href),
-          );
-          return links.length ? (
-            <div className="gt-sidebar-group" key={group.title}>
-              <p>{group.title}</p>
-              {links.map(({ href, label, icon: Icon }) => (
+  const sidebarRow=({href,label,icon:Icon}:Destination,pinnedSection=false)=>(
+    <div className="gt-sidebar-link-row" key={href}>
                 <NavLink
                   key={href}
                   to={href}
@@ -365,7 +350,38 @@ export default function AdminShell({ children }: { children: ReactNode }) {
                   <span>{label}</span>
                   {location.pathname === href && <ChevronRight size={14} />}
                 </NavLink>
-              ))}
+      <button type="button" className="gt-sidebar-pin" data-pin-origin={pinnedSection ? "pinned":"regular"} data-pin-path={href} aria-label={`${pins.includes(href) ? "Unpin":"Pin"} ${label}`} aria-pressed={pins.includes(href)} disabled={!pins.includes(href)&&pins.length>=3} title={!pins.includes(href)&&pins.length>=3 ? "You can pin up to three tabs":pins.includes(href) ? "Unpin tab":"Pin tab"} onClick={()=>{togglePin(href);if(pinnedSection)requestAnimationFrame(()=>document.querySelector<HTMLButtonElement>(`button[data-pin-origin="regular"][data-pin-path="${CSS.escape(href)}"]`)?.focus())}}>
+        {pins.includes(href)?<PinOff size={14}/>:<Pin size={14}/>}<span className="sr-only">{pins.includes(href)?"Unpin":"Pin"}</span>
+      </button>
+    </div>
+  );
+  const sidebar = (
+    <>
+      <div className="gt-sidebar-brand">
+        <Brand inverse compact />
+        <span className="gt-workspace-label">Chapter workspace</span>
+      </div>
+      {navFailed && (
+        <button
+          className="gt-button gt-button-secondary"
+          onClick={() => setNavRetry((v) => v + 1)}
+        >
+          Retry workspace navigation
+        </button>
+      )}
+      <nav aria-label="Workspace navigation" className="gt-sidebar-navigation">
+        <div className="gt-sidebar-group gt-sidebar-pinned"><p>Pinned <span>{pins.filter(path=>allowed.includes(path)).length}/3</span></p>
+          {pins.filter(path=>allowed.includes(path)).map(path=>sidebarRow(workspaceDestinations.find(item=>item.href===path)!,true))}
+          {!pins.some(path=>allowed.includes(path))&&<small>Pin up to three tabs using the pin buttons.</small>}
+        </div>
+        {groups.map((group) => {
+          const links = group.links.filter((item) =>
+            allowed.includes(item.href),
+          );
+          return links.length ? (
+            <div className="gt-sidebar-group" key={group.title}>
+              <p>{group.title}</p>
+              {links.map(item=>sidebarRow(item))}
             </div>
           ) : null;
         })}
@@ -473,7 +489,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
         )}
         <main id="workspace-content" className="gt-admin-body" tabIndex={-1}>
           <WorkspaceAccessContext.Provider value={access}>
-            {children}
+            <WorkspaceReadinessProvider key={`${currentAdmin?.id}:${currentAdmin?.role}:${location.pathname}:${new URLSearchParams(location.search).get("tab") || ""}`}>{children}</WorkspaceReadinessProvider>
           </WorkspaceAccessContext.Provider>
         </main>
       </div>

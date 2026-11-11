@@ -73,4 +73,12 @@ xcodebuild -project native/Scanner/GDGScanner.xcodeproj -scheme GDGScanner -dest
 
 The disposable PostgreSQL suite applies all migrations under canonical and legacy Supabase grant defaults. It exercises100 distinct queue participants and100 simultaneous scans of one credential, requiring101 one-time awards across the two scenarios. API tests cover authorization, CSRF, binding proof, queue quota and connected-event recovery steps.
 
-Build10 artifacts are ignored under `native/Scanner/build/`: `GDGWorkspace-Build10-Final.xcarchive`, `Distribution10` and the signing-verification JSON. Preserve the archive/dSYMs for the distributed build. Validation evidence is recorded in `.docs/phase0/native-workspace-10.json`; check App Store Connect for the current processing and officer-group assignment. The normal signed export must have production APNs, Associated Domains, TAG-only NFC and `get-task-allow=false`.
+Build11 artifacts are ignored under `native/Scanner/build/`: `GDGWorkspace-Build11.xcarchive`, `Distribution11` and the signing-verification JSON. Preserve the archive/dSYMs for the distributed build. Validation evidence is recorded in `.docs/phase0/workspace-batch11.json`; check App Store Connect for the current processing and officer-group assignment. The normal signed export must have production APNs, Associated Domains, TAG-only NFC and `get-task-allow=false`.
+
+## Build 11 fixes
+
+NFC scanning pauses only on actual background entry. Presenting the system NFC sheet temporarily makes the scene inactive; that transition must not invalidate the reader or make the privacy shield window key. The app still locks and pauses scanning when it enters the background. Native queue tests cover both transitions and prohibit activity/event selection while a check-in result is unresolved.
+
+Subscriber details offer **Resend invitation** for pending invitations and **Resend welcome email** for active subscribers with send permission. The operation uses CSRF, an idempotency key, a one-minute cooldown and delivery-time eligibility checks. Active subscribers keep their current consent. Suppressed, unsubscribed and archived recipients cannot be remailed by this action. The migration and deployment do not themselves send these notices.
+
+The delivery scheduler now flattens push counters into numeric fields. Previously its nested `appPush` object violated `finish_scheduled_job` validation, including in the error path, and left otherwise processed runs marked running until lease expiry. Regression tests exercise both success and provider retry without weakening database counter validation.

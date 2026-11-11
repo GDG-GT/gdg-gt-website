@@ -1,10 +1,12 @@
+import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
+import { WorkspaceAccessContext } from "@/contexts/WorkspaceAccessContext";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, useContext, type FormEvent } from "react";
 import {
   useApprovedSearchParams as useSearchParams,
   useDraftGuard,
@@ -227,9 +229,13 @@ function TaskWorkspaceContent({ personal }: { personal: boolean }) {
   }
   recordRef.current = record;
   const [capabilityError, setCapabilityError] = useState("");
-  const [allowedLinks, setAllowedLinks] = useState<string[]>([]);
+  const sharedAccess=useContext(WorkspaceAccessContext);
+  const [fallbackLinks,setAllowedLinks]=useState<string[]>([]),[linksReady,setLinksReady]=useState(false);
+  const allowedLinks=sharedAccess?.snapshot?.routes || fallbackLinks;
+  useWorkspaceReadiness(listLoading || (!capabilities && !capabilityError) || (sharedAccess ? !sharedAccess.snapshot && !sharedAccess.failed : !linksReady));
   useEffect(() => {
     const controller = new AbortController();
+    if(sharedAccess)return;
     api<{ accessibleRoutes: string[] }>("/admin/access", {
       signal: controller.signal,
     })
@@ -238,9 +244,9 @@ function TaskWorkspaceContent({ personal }: { personal: boolean }) {
       })
       .catch(() => {
         if (!controller.signal.aborted) setAllowedLinks([]);
-      });
+      }).finally(()=>{if(!controller.signal.aborted)setLinksReady(true)});
     return () => controller.abort();
-  }, [capabilityRetry]);
+  }, [capabilityRetry,sharedAccess]);
   selectedRef.current = selected;
   modeRef.current = mode;
   useEffect(() => {
@@ -735,8 +741,7 @@ function TaskWorkspaceContent({ personal }: { personal: boolean }) {
         <div>
           <h1>{personal ? "Your tasks" : "Communications"}</h1>
           <p>
-            Keep chapter work moving with clear ownership, protected
-            conversations and reliable deadlines.
+            Announcements, tasks and conversations for your chapter.
           </p>
         </div>
         {(capabilities?.personalCreate || !!capabilities?.teams.length) && (
@@ -907,8 +912,8 @@ function TaskWorkspaceContent({ personal }: { personal: boolean }) {
           {mode === "create" && (
             <>
               <Field
-                label="Task scope"
-                hint="Scope cannot change after creation."
+                label="Team"
+                hint="The team cannot change after creation."
               >
                 <select {...field("teamId")}>
                   <option value="">Private — creator and assignee</option>

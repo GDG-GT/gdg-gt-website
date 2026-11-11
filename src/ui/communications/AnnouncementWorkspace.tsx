@@ -1,3 +1,4 @@
+import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import {
   useCallback,
   useEffect,
@@ -155,6 +156,7 @@ function AnnouncementWorkspaceContent() {
     [listReadAt, setListReadAt] = useState<string>(),
     [detailReadAt, setDetailReadAt] = useState<string>(),
     [clock, setClock] = useState(Date.now());
+  useWorkspaceReadiness(loading || (!capabilities && !capabilityError));
   const record = recordSnapshot?.id === selected ? recordSnapshot : undefined;
   const selectedRef = useRef(selected),
     listSeq = useRef(0),

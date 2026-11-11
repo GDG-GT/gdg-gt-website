@@ -7096,3 +7096,15 @@ fieldset.gt-event-fields {
   background-color: #fff5f3;
 }
 .gt-admin-app .gt-field-error { display: block; color: #9c3028; font-size: .8125rem; line-height: 1.5; margin-top: 4px; }
+
+/* Pinned destinations share the same permission-filtered sidebar navigation. */
+.gt-sidebar-link-row{display:flex;align-items:center;gap:2px;min-width:0}
+.gt-sidebar-link-row>a{flex:1;min-width:0}
+.gt-sidebar-pin{flex:0 0 28px;width:28px;height:32px;display:grid;place-items:center;border:0;border-radius:6px;background:transparent;color:#b8b0a8;cursor:pointer}
+.gt-sidebar-pin:hover,.gt-sidebar-pin:focus-visible{background:#ffffff12;color:var(--text-on-dark)}
+.gt-sidebar-pin:disabled{opacity:.3;cursor:default}
+.gt-sidebar-pin[aria-pressed=true]{color:#ffad94}
+.gt-sidebar-pinned>p{display:flex;justify-content:space-between}
+.gt-sidebar-pinned>small{display:block;padding:0 12px;color:#c7bcb3;font-size:12px;line-height:1.5}
+.gt-workspace-readiness{position:relative;min-width:0}
+.gt-workspace-loading{padding:24px;min-height:360px}

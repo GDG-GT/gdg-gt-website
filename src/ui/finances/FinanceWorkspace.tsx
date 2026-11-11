@@ -55,7 +55,7 @@ function FinanceWorkspaceContent() {
     [q, setQ] = useState(""),
     [state, setState] = useState(""),
     [type, setType] = useState(""),
-    [team, setTeam] = useState(""),
+    [team] = useState(""),
     [from, setFrom] = useState(""),
     [to, setTo] = useState("");
   const selectedRef = useRef(selected);
@@ -406,22 +406,6 @@ function FinanceWorkspaceContent() {
               ))}
             </select>
           </Field>
-          <Field label="Team">
-            <select
-              value={team}
-              onChange={(e) => {
-                setTeam(e.target.value);
-                setPage(1);
-              }}
-            >
-              <option value="">All permitted scopes</option>
-              {cap?.teams.map((v) => (
-                <option value={v.id} key={v.id}>
-                  {v.name}
-                </option>
-              ))}
-            </select>
-          </Field>
           <Field label="From date">
             <input
               type="date"
@@ -467,7 +451,6 @@ function FinanceWorkspaceContent() {
               setQ("");
               setState("");
               setType("");
-              setTeam("");
               setFrom("");
               setTo("");
               setPage(1);
@@ -648,7 +631,7 @@ function FinanceWorkspaceContent() {
             </div>
           ) : budgetRead.error && !budgets ? (
             <p>
-              Budget allocations are unavailable. Retry to check your scope.
+              Budgets could not load. Try again.
             </p>
           ) : budgets?.items.length ? (
             <ScrollableTable label="Budget allocations">

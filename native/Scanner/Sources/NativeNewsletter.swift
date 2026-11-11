@@ -102,6 +102,8 @@ struct NativeNewsletterDetail: View {
   let id: String
   @State private var record: NativeJSON = .null
   @State private var error: String?
+  @State private var notice:String?
+  @State private var notifyKey:String?
   @State private var edit = false
   @State private var send = false
   @State private var action: String?
@@ -109,6 +111,7 @@ struct NativeNewsletterDetail: View {
   var body: some View {
     List {
       if let error { NativeErrorView(error: error, retry: { Task { await load() } }) }
+      if let notice{Text(notice).foregroundStyle(.primary)}
       if !record.id.isEmpty {
         if kind == "subscribers" {
           Section {
@@ -136,9 +139,12 @@ struct NativeNewsletterDetail: View {
             Section { Button("Review and send", systemImage: "paperplane") { send = true } }
           }
         }
+        if kind=="subscribers" && record["deletedAt"].string.isEmpty && record["suppressedAt"].string.isEmpty && ((record["state"].string=="pending" && record["actions"].items.contains(.string("create"))) || (record["state"].string=="active" && record["actions"].items.contains(.string("send_email")))) {
+          Section{Button(record["state"].string=="pending" ? "Resend invitation":"Resend welcome email"){Task{await notify()}}.disabled(busy)}
+        }
         if record["actions"].items.contains(.string("delete")) {
           Section {
-            if kind == "subscribers" && record["active"].flag {
+            if kind == "subscribers" && record["state"].string == "active" {
               Button("Unsubscribe", role: .destructive) { action = "deactivate" }
             }
             Button("Archive", role: .destructive) { action = "archive" }
@@ -147,7 +153,8 @@ struct NativeNewsletterDetail: View {
       } else if error == nil {
         ProgressView("Loading…")
       }
-    }.navigationTitle(
+    }.alert("Email queued",isPresented:Binding(get:{notice != nil},set:{if !$0{notice=nil}})){Button("OK"){notice=nil}}message:{Text(notice ?? "")}
+    .navigationTitle(
       kind == "subscribers" ? "Subscriber" : kind == "campaigns" ? "Campaign" : "Template"
     ).navigationBarTitleDisplayMode(.inline)
       .toolbar {
@@ -180,10 +187,15 @@ struct NativeNewsletterDetail: View {
         titleVisibility: .visible
       ) {
         Button(action == "archive" ? "Archive" : "Unsubscribe", role: .destructive) {
-          Task { await change() }
+          if let operation=action{Task { await change(operation) }}
         }
         Button("Cancel", role: .cancel) { action = nil }
       }
+  }
+  func notify()async {
+    busy=true;defer{busy=false};error=nil;notice=nil
+    if notifyKey==nil{notifyKey=UUID().uuidString}
+    do{let r=try await session.api.request("/admin/newsletter/subscribers/"+id+"/notify",method:"POST",body:.object([:]),key:notifyKey);notifyKey=nil;notice=r["purpose"].string=="welcome" ? "Welcome email queued.":"Newsletter invitation queued.";await load()}catch{self.error=error.localizedDescription;if let e=error as? NativeAPIError,!e.uncertain{notifyKey=nil}}
   }
   func load() async {
     do {
@@ -191,8 +203,7 @@ struct NativeNewsletterDetail: View {
       error = nil
     } catch { self.error = error.localizedDescription }
   }
-  func change() async {
-    guard let action else { return }
+  func change(_ action:String) async {
     busy = true
     defer {
       busy = false
@@ -230,8 +241,8 @@ struct NativeNewsletterEditor: View {
   var body: some View {
     Form {
       if record == nil {
-        Section("Audience scope") {
-          Picker("Scope", selection: $scope) {
+        Section("Newsletter") {
+          Picker("Team", selection: $scope) {
             if capabilities["chapterCreate"].flag { Text("Chapter").tag("chapter") }
             ForEach(capabilities["teams"].items.filter { $0["canCreate"].flag }, id: \.id) { team in
               Text(team["name"].string).tag(team.id)

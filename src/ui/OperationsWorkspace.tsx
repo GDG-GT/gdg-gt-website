@@ -91,7 +91,7 @@ function OperationsStatus() {
   const { isOnline } = useOnlineStatus();
   const { data: status, loading: busy, error, at } = usePrivateRead<Status>("/admin/operations", refresh);
   useEffect(() => {
-    const timer = window.setInterval(() => setNow(Date.now()), 60000);
+    const timer = window.setInterval(() => {setNow(Date.now());if(!document.hidden && navigator.onLine)setRefresh(v=>v+1)}, 60000);
     return () => window.clearInterval(timer);
   }, []);
   const stale =
@@ -164,10 +164,7 @@ function OperationsStatus() {
             >
               <h2 id="operations-alert-heading">Operational alerts</h2>
               <p>
-                Thresholds use a rolling 15-minute window; missed/duplicate job
-                checks use their actual cadence. Alerts are grouped by condition
-                and UTC hour. Read a count as a signal to investigate, not proof
-                of an incident.
+                Current alerts from background jobs and service checks. This page refreshes every minute.
               </p>
               {active.length ? (
                 <ScrollableTable label="Operational alerts table">
@@ -175,7 +172,8 @@ function OperationsStatus() {
                     <thead>
                       <tr>
                         <th>Condition</th>
-                        <th>Observed / threshold</th>
+                        <th>Detected</th>
+                        <th>Alert threshold</th>
                         <th>Last observed</th>
                       </tr>
                     </thead>
@@ -184,8 +182,9 @@ function OperationsStatus() {
                         <tr key={row.id}>
                           <td>{names[row.code] || "Operational condition"}</td>
                           <td>
-                            {row.count.toLocaleString()} / {row.threshold}
+                            {row.count.toLocaleString()}{row.code==="jobs_missed" ? (row.count===1 ? " overdue job":" overdue jobs"):""}
                           </td>
+                          <td>{row.threshold}</td>
                           <td>{new Date(row.last_seen_at).toLocaleString()}</td>
                         </tr>
                       ))}
@@ -197,12 +196,12 @@ function OperationsStatus() {
                   title={
                     stale
                       ? "No current alert data"
-                      : "No active threshold alerts"
+                      : "No active alerts"
                   }
                 >
                   {stale
                     ? "Restore the scheduler and refresh before interpreting this as healthy."
-                    : "The most recent evaluation found no configured threshold exceeded. This does not replace external monitoring."}
+                    : "The latest check found no active alerts."}
                 </EmptyState>
               )}
               {status.alerts.some((row) => row.resolved_at) && (

@@ -186,9 +186,6 @@ for (const state of states)
     if (state.startsWith("private upload")) {
       await page.goto("/admin/media");
       await page
-        .getByRole("combobox", { name: "Library scope", exact: true })
-        .selectOption("chapter");
-      await page
         .getByRole("button", { name: "Upload privately", exact: true })
         .click();
       const upload = page.getByRole("region", { name: "Upload private media" });
@@ -367,7 +364,7 @@ for (const state of states)
         await recipient.check();
         await expect(
           page.getByRole("group", {
-            name: "Custom confirmed audience · 1 selected",
+            name: "Choose recipients · 1 selected",
             exact: true,
           }),
         ).toBeVisible();

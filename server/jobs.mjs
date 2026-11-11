@@ -138,8 +138,8 @@ export async function jobRoutes(request, response, { db, config, requestId }) {
     } else {
       counts = await runDelivery({ db, limit: 25 });
       const appPush = await runAppPushWorker({ db });
-      counts.appPush = appPush;
-      if (counts.retried || counts.lostLease)
+      for (const [name, value] of Object.entries(appPush)) counts["appPush" + name[0].toUpperCase() + name.slice(1)] = value;
+      if (counts.retried || counts.lostLease || appPush.retried || appPush.lostLease)
         throw new ApiError(
           503,
           "DELIVERY_RETRY",

@@ -1,3 +1,4 @@
+import { confirmAction } from "@/lib/app-dialogs";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, ApiFailure } from "@/lib/api";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
@@ -702,7 +703,7 @@ export default function NewsletterEditor({
                     }
                   >
                     <option value="all">
-                      All confirmed subscribers in this scope
+                      All confirmed subscribers
                     </option>
                     <option value="custom">Choose confirmed subscribers</option>
                   </select>
@@ -725,7 +726,7 @@ export default function NewsletterEditor({
               {busy
                 ? "Working…"
                 : !record && kind === "subscribers"
-                  ? "Send confirmation request"
+                  ? "Send newsletter invitation"
                   : "Save private changes"}
             </Button>
             <span className="gt-helper">
@@ -734,6 +735,13 @@ export default function NewsletterEditor({
           </div>
         )}
       </form>
+      {kind === "subscribers" && record && !record.deletedAt && !record.suppressedAt && ((record.state==="pending" && record.actions.includes("create")) || (record.state==="active" && record.actions.includes("send_email"))) && (
+        <Button type="button" variant="secondary" disabled={busy || blocked || dirty} onClick={()=>{
+          const signature="subscriber-notify:"+record.id;
+          if(attempt.current?.signature!==signature)attempt.current={signature,key:crypto.randomUUID()};
+          void work(signal=>api<{queued:boolean;purpose:string}>(`/admin/newsletter/subscribers/${record.id}/notify`,{method:"POST",body:{},idempotencyKey:attempt.current!.key,signal}),result=>{attempt.current=undefined;const message=result.purpose==="welcome"?"Welcome email queued.":"Newsletter invitation queued.";onSaved(message);void confirmAction(message,{title:"Email queued",confirmLabel:"OK",cancelLabel:"Close"})});
+        }}>{record.state==="pending" ? "Resend invitation":"Resend welcome email"}</Button>
+      )}
       {kind === "subscribers" && record && (
         <dl className="gt-newsletter-facts">
           <dt>Confirmed</dt>
@@ -801,7 +809,7 @@ export default function NewsletterEditor({
             </ul>
           )}
           {templates && !templates.items.length && (
-            <p>No matching templates in this scope.</p>
+            <p>No matching templates.</p>
           )}
         </details>
       )}

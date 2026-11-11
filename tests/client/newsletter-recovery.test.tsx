@@ -728,7 +728,7 @@ describe("Newsletter bulk subscriber review", () => {
       target: { value: "Reviewed subscriber" },
     });
     const button = screen.getByRole("button", {
-      name: "Send confirmation request",
+      name: "Send newsletter invitation",
       exact: true,
     });
     fireEvent.submit(button.closest("form")!);

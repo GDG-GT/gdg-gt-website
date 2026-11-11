@@ -739,7 +739,7 @@ function BlogWorkspaceContent({
                   </nav>
                 )}
                 {mode === "create" && kind === "posts" && (
-                  <Field label="Owning scope">
+                  <Field label="Team">
                     <select
                       value={team}
                       onChange={(e) => setTeam(e.target.value)}

@@ -19,7 +19,7 @@ struct OfficerAppView: View {
     }
     .onChange(of: phase) { _, value in
       if value == .background { model.lock() }
-      NativePrivacyShield.shared.update(model: model, active: value == .active)
+      NativePrivacyShield.shared.update(model: model, active: value != .background)
       #if DEBUG
         if value == .active && NativeFixtures.enabled && !model.unlocked {
           Task { await model.resumeFixture() }
@@ -30,7 +30,7 @@ struct OfficerAppView: View {
       }
     }
     .onChange(of: model.unlocked) { _, _ in
-      NativePrivacyShield.shared.update(model: model, active: phase == .active)
+      NativePrivacyShield.shared.update(model: model, active: phase != .background)
     }
     .task { if model.hasRememberedAccount { await model.unlock() } }
   }

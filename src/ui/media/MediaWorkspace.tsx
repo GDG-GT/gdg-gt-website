@@ -1,3 +1,4 @@
+import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Folder, FileImage, Star, Upload } from "lucide-react";
 import { api, ApiFailure } from "@/lib/api";
@@ -44,6 +45,8 @@ function FolderEditor({
       folderId: string | null;
     }>(),
     [error, setError] = useState("");
+  const [createTeam,setCreateTeam]=useState(teamId || "chapter");
+  const effectiveTeam=mode.action==="create" ? (createTeam==="chapter"?null:createTeam):teamId;
   const safety = useNavigationSafety(),
     heading = useRef<HTMLHeadingElement>(null),
     errorFocus = useRef<HTMLParagraphElement>(null);
@@ -53,8 +56,8 @@ function FolderEditor({
   const { isOnline } = useOnlineStatus();
   const canChange =
     !readUnavailable &&
-    (teamId
-      ? !!listing.teams.find((team) => team.id === teamId)?.canManageFolders
+    (effectiveTeam
+      ? !!listing.teams.find((team) => team.id === effectiveTeam)?.canManageFolders
       : !!listing.chapterFolders);
   const dirty =
     name !== (mode.folder?.name || "") ||
@@ -76,7 +79,7 @@ function FolderEditor({
     const f = mode.folder;
     const body =
       mode.action === "create"
-        ? { name, description, teamId, parentId }
+        ? { name, description, teamId:effectiveTeam, parentId }
         : mode.action === "update"
           ? {
               action: "update",
@@ -140,6 +143,7 @@ function FolderEditor({
           {error}
         </p>
       )}
+      {mode.action==="create" && !parentId && <Field label="Library"><select value={createTeam} disabled={busy} onChange={e=>setCreateTeam(e.target.value)}>{listing.chapterFolders&&<option value="chapter">Chapter library</option>}{listing.teams.filter(t=>t.canManageFolders).map(t=><option key={t.id} value={t.id}>{t.name}</option>)}</select></Field>}
       {["create", "update"].includes(mode.action) && (
         <>
           <Field label="Folder name" required>
@@ -242,6 +246,7 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
     [error, setError] = useState(""),
     [notice, setNotice] = useState(""),
     [team, setTeam] = useState(""),
+    [uploadDestination,setUploadDestination]=useState<{teamId:string|null;folderId:string|null}>(),
     [folder, setFolder] = useState<string | null>(null),
     [state, setState] = useState("current"),
     [type, setType] = useState(gallery ? "image" : ""),
@@ -392,21 +397,16 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
     }, 5000);
     return () => clearInterval(id);
   }, [pending, editor, upload, folderMode, bulk]);
+  useWorkspaceReadiness(loading && !list);
   const scope =
       list?.folder?.teamId ?? (team === "chapter" ? null : team || null),
     explicitScope = !!team || !!folder,
     canCreate =
       !!list &&
-      explicitScope &&
-      (scope
-        ? !!list.teams.find((t) => t.id === scope)?.canCreate
-        : list.chapterCreate),
+      (explicitScope ? (scope ? !!list.teams.find(t=>t.id===scope)?.canCreate : list.chapterCreate) : list.chapterCreate || list.teams.some(t=>t.canCreate)),
     canManageFolders =
       !!list &&
-      explicitScope &&
-      (scope
-        ? !!list.teams.find((t) => t.id === scope)?.canManageFolders
-        : list.chapterFolders),
+      (explicitScope ? (scope ? !!list.teams.find(t=>t.id===scope)?.canManageFolders : list.chapterFolders) : list.chapterFolders || list.teams.some(t=>t.canManageFolders)),
     allUpdate =
       selected.length > 0 &&
       selected.every((f) => {
@@ -514,7 +514,11 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
           </Button>
           <Button
             disabled={!canCreate || state === "trash" || loading || busy}
-            onClick={() => leave(() => setUpload(true))}
+            onClick={() => leave(() => {
+              const options=(list?.chapterCreate?1:0)+(list?.teams.filter(t=>t.canCreate).length || 0);
+              setUploadDestination(explicitScope?{teamId:scope,folderId:folder}:options===1?{teamId:list?.chapterCreate?null:list!.teams.find(t=>t.canCreate)!.id,folderId:null}:undefined);
+              setUpload(true);
+            })}
           >
             <Upload size={16} /> Upload privately
           </Button>
@@ -561,28 +565,6 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
         </p>
       )}
       <section className="gt-media-filters" aria-label="Media filters">
-        <Field label="Library scope">
-          <select
-            value={team}
-            disabled={busy}
-            onChange={(e) =>
-              change(() => {
-                setTeam(e.target.value);
-                setFolder(null);
-              })
-            }
-          >
-            <option value="">All permitted scopes</option>
-            {list?.chapterCreate && (
-              <option value="chapter">Chapter library</option>
-            )}
-            {list?.teams.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-        </Field>
         {!gallery && (
           <Field label="File type">
             <select
@@ -684,21 +666,16 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
       )}
       {!loading && !list && listError && (
         <p>
-          Media inventory is unavailable. Retry to check your permitted scopes.
+          Media files could not load. Try again.
         </p>
       )}
-      {!explicitScope && (
-        <p className="gt-helper">
-          Choose a library scope to upload files or manage folders. This view
-          includes every file you are permitted to read.
-        </p>
-      )}
-      {upload && (
+      {upload && !uploadDestination && list && <section className="gt-panel gt-form"><h2>Choose an upload destination</h2><DestinationPicker teams={list.teams} chapter={list.chapterCreate} initialTeam={list.chapterCreate?null:list.teams.find(t=>t.canCreate)?.id || null} gallery={gallery} onChange={setUploadDestination}/><Button variant="secondary" onClick={()=>setUpload(false)}>Cancel upload</Button></section>}
+      {upload && uploadDestination && (
         <MediaUpload
           imagesOnly={gallery}
-          key={`${scope}/${folder}`}
-          teamId={scope}
-          folderId={folder}
+          key={`${uploadDestination.teamId}/${uploadDestination.folderId}`}
+          teamId={uploadDestination.teamId}
+          folderId={uploadDestination.folderId}
           onSaved={() => {
             setNotice(
               "Private upload queued. Checks must finish before download or public approval.",
@@ -713,7 +690,7 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
           key={`${folderMode.action}/${folderMode.folder?.id || "new"}`}
           mode={folderMode}
           listing={list}
-          teamId={folderMode.folder?.teamId ?? scope}
+          teamId={folderMode.folder?.teamId ?? (explicitScope?scope:list?.chapterFolders?null:list?.teams.find(t=>t.canManageFolders)?.id || null)}
           parentId={folder}
           readUnavailable={loading || !!listError}
           onSaved={() => saved("Folder change recorded.")}
@@ -752,7 +729,7 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
             <Folder size={18} />
             <strong>
               {list.folder?.name ||
-                (explicitScope ? "Scope root" : "All files")}
+                (explicitScope ? "Library" : "All files")}
             </strong>
             {folder && (
               <Button
@@ -765,7 +742,7 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
                 ↑ Parent folder
               </Button>
             )}
-            {explicitScope && state === "current" && (
+            {canManageFolders && state === "current" && (
               <Button
                 variant="secondary"
                 disabled={!canManageFolders || busy}
@@ -1063,7 +1040,7 @@ function MediaWorkspaceContent({ gallery = false }: { gallery?: boolean }) {
                   ? "Archived files remain restorable until their retained bytes are cleaned up."
                   : canCreate
                     ? "Upload a file privately, or create a folder to organize this scope."
-                    : "Choose a permitted scope or adjust the filters to find chapter media."}
+                    : "Upload a file or adjust the filters."}
               </EmptyState>
             )
           )}
