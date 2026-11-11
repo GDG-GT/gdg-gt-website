@@ -168,3 +168,9 @@ readable text and button actions. Subscription confirmations put their private
 URL only behind the button in HTML; the text-only alternative retains the URL.
 Campaign HTML contains one small unsubscribe link in the footer. The plain-text
 alternative retains its unsubscribe URL for clients that do not render HTML.
+
+## Reinviting an existing address
+
+Subscriber details show **Resend invitation** for pending and unsubscribed records. An unsubscribed recipient returns to Pending and must accept the new invitation before receiving campaigns. Add subscriber uses the same invitation flow for an existing address rather than reporting a send without queuing mail. Already active addresses are reported as already subscribed; use their separate welcome-email resend action when wanted. Archived records must be restored first, and provider-suppressed recipients remain blocked.
+
+Migration157 adds a service-only invitation transaction with current-session and newsletter permissions, per-address locking, durable retry receipts and the existing one-minute resend cooldown. It keeps the subscriber ID and historical opt-out data. The editor also ignores an older cached revision when a freshly opened record is newer, while continuing to protect unsaved input if a genuinely newer revision arrives during editing.

@@ -1,0 +1,28 @@
+BEGIN;
+DO $$ DECLARE a uuid;s uuid;sid uuid;u uuid;active uuid;archived uuid;suppressed uuid;other uuid;team uuid;r jsonb;again jsonb;before_count integer;BEGIN
+ INSERT INTO public.admin_users(email,password_hash,role,is_active) VALUES('reinvite-owner@example.test','fixture','super_admin',true) RETURNING id INTO a;
+ INSERT INTO public.admin_sessions(admin_user_id,token_hash) VALUES(a,repeat('f1',32)) RETURNING id INTO s;
+ r:=public.invite_newsletter_subscriber(a,s,NULL,'reinvite-new@example.test','New fixture',true,repeat('f2',32),repeat('x',64),repeat('f3',32),repeat('f4',32),gen_random_uuid());sid:=(r->>'id')::uuid;
+ IF r->>'queued'<>'true' OR r->>'state'<>'pending' OR(SELECT count(*) FROM public.delivery_jobs WHERE payload->>'subscriberId'=sid::text)<>1 THEN RAISE EXCEPTION 'New invitation was not queued';END IF;
+ again:=public.invite_newsletter_subscriber(a,s,NULL,'reinvite-new@example.test','New fixture',true,repeat('f5',32),repeat('y',64),repeat('f3',32),repeat('f4',32),gen_random_uuid());
+ IF again<>r OR(SELECT count(*) FROM public.delivery_jobs WHERE payload->>'subscriberId'=sid::text)<>1 THEN RAISE EXCEPTION 'Retry duplicated invitation';END IF;
+ BEGIN PERFORM public.invite_newsletter_subscriber(a,s,NULL,'reinvite-new@example.test','New fixture',true,repeat('f5',32),repeat('y',64),repeat('f6',32),repeat('f7',32),gen_random_uuid());RAISE EXCEPTION 'Pending invitation silently accepted';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOTIFICATION_COOLDOWN' THEN RAISE;END IF;END;
+ INSERT INTO public.newsletter_subscribers(email,name,state,is_active,consent_at,unsubscribed_at) VALUES('reinvite-optout@example.test','Optout fixture','unsubscribed',false,now()-interval '1 day',now()) RETURNING id INTO u;
+ r:=public.invite_newsletter_subscriber(a,s,NULL,'reinvite-optout@example.test','Optout fixture',true,repeat('f8',32),repeat('x',64),repeat('f9',32),repeat('fa',32),gen_random_uuid());
+ IF (r->>'id')::uuid<>u OR r->>'queued'<>'true' OR(SELECT state FROM public.newsletter_subscribers WHERE id=u)<>'pending' OR(SELECT is_active OR confirmed_at IS NOT NULL FROM public.newsletter_subscribers WHERE id=u) THEN RAISE EXCEPTION 'Reinvitation did not require fresh acceptance';END IF;
+ IF(SELECT count(*) FROM public.newsletter_subscribers WHERE email='reinvite-optout@example.test')<>1 OR NOT EXISTS(SELECT 1 FROM public.delivery_jobs WHERE payload->>'subscriberId'=u::text AND payload->>'mode'='invitation') THEN RAISE EXCEPTION 'Reinvitation duplicated identity or skipped email';END IF;
+ INSERT INTO public.newsletter_subscribers(email,name,state,is_active,consent_at,confirmed_at) VALUES('reinvite-active@example.test','Active fixture','active',true,now(),now()) RETURNING id INTO active;
+ r:=public.invite_newsletter_subscriber(a,s,NULL,'reinvite-active@example.test','Active fixture',true,repeat('fb',32),repeat('x',64),repeat('fc',32),repeat('fd',32),gen_random_uuid());
+ IF r->>'state'<>'active' OR r->>'queued'<>'false' OR EXISTS(SELECT 1 FROM public.delivery_jobs WHERE payload->>'subscriberId'=active::text) THEN RAISE EXCEPTION 'Existing active address reported a false send';END IF;
+ INSERT INTO public.newsletter_subscribers(email,state,is_active,deleted_at) VALUES('reinvite-archived@example.test','unsubscribed',false,now()) RETURNING id INTO archived;
+ BEGIN PERFORM public.invite_newsletter_subscriber(a,s,NULL,'reinvite-archived@example.test','',true,repeat('f2',32),repeat('x',64),repeat('01',32),repeat('fe',32),gen_random_uuid());RAISE EXCEPTION 'Archived recipient mailed';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NEWSLETTER_ARCHIVED' THEN RAISE;END IF;END;
+ INSERT INTO public.newsletter_subscribers(email,state,is_active,suppressed_at,suppression_reason) VALUES('reinvite-blocked@example.test','unsubscribed',false,now(),'hard_bounce') RETURNING id INTO suppressed;
+ BEGIN PERFORM public.invite_newsletter_subscriber(a,s,NULL,'reinvite-blocked@example.test','',true,repeat('f2',32),repeat('x',64),repeat('02',32),repeat('fe',32),gen_random_uuid());RAISE EXCEPTION 'Suppressed recipient mailed';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NEWSLETTER_SUPPRESSED' THEN RAISE;END IF;END;
+ INSERT INTO public.admin_teams(name,slug,created_by) VALUES('Other newsletter fixture','reinvite-other',a) RETURNING id INTO team;
+ INSERT INTO public.newsletter_subscribers(email,team_id,state,is_active) VALUES('reinvite-other@example.test',team,'unsubscribed',false) RETURNING id INTO other;
+ BEGIN PERFORM public.invite_newsletter_subscriber(a,s,NULL,'reinvite-other@example.test','',true,repeat('f2',32),repeat('x',64),repeat('03',32),repeat('fe',32),gen_random_uuid());RAISE EXCEPTION 'Cross-team address changed';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ UPDATE public.admin_sessions SET revoked_at=now() WHERE id=s;
+ BEGIN PERFORM public.invite_newsletter_subscriber(a,s,NULL,'reinvite-new@example.test','New fixture',true,repeat('f2',32),repeat('x',64),repeat('f3',32),repeat('f4',32),gen_random_uuid());RAISE EXCEPTION 'Revoked session replayed receipt';EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'NOT_FOUND' THEN RAISE;END IF;END;
+ IF has_function_privilege('anon','public.invite_newsletter_subscriber(uuid,uuid,uuid,text,text,boolean,text,text,text,text,uuid)','EXECUTE') OR has_function_privilege('authenticated','public.invite_newsletter_subscriber(uuid,uuid,uuid,text,text,boolean,text,text,text,text,uuid)','EXECUTE') THEN RAISE EXCEPTION 'Invitation function exposed';END IF;
+END $$;
+ROLLBACK;

@@ -1,0 +1,28 @@
+{
+  "validatedAt": "2026-11-11T19:46:49.925122+00:00",
+  "migration": "202611110157_newsletter_reinvitation.sql",
+  "productionSchemaApplied": true,
+  "grants": {
+    "service": true,
+    "anonymous": false,
+    "authenticated": false
+  },
+  "behavior": [
+    "Unsubscribed records expose Resend invitation",
+    "Existing-address Add subscriber queues a fresh invitation and reuses the record",
+    "New acceptance required before campaigns",
+    "Already active addresses reported accurately; suppressed and archived records remain guarded",
+    "Opening a newer record ignores an older cached revision"
+  ],
+  "validation": {
+    "vitestFiles": 5,
+    "vitestCases": 49,
+    "postgres": "Canonical migrations and full regression passed, including reinvitation, cooldown, idempotency, scope isolation and 100-client concurrency checks",
+    "browser": "Chromium desktop and WebKit mobile reinvitation passed; enabled action and absence of false stale-record warning verified",
+    "typecheck": "Passed",
+    "build": "Passed",
+    "secretScanUnreviewed": 0,
+    "bundleBudgets": "Passed"
+  },
+  "productionRecords": "No subscriber was changed or emailed by these tests or the schema migration. The chapter can send its invitation with the UI action after deployment."
+}

@@ -178,6 +178,12 @@ export async function newsletterRoutes(
       { token: secret, source: "admin_invitation" },
       config.encryptionSecret,
     );
+    return reply(checked(await db.rpc("invite_newsletter_subscriber", {
+      ...args, p_team: document.teamId, p_email: document.email,
+      p_name: document.name, p_acknowledged: document.consentAcknowledged,
+      p_token_hash: document.tokenHash, p_secret_payload: document.secretPayload,
+      p_key_hash: key, p_request_hash: hash, p_request: requestId,
+    })));
   }
   return reply(
     checked(

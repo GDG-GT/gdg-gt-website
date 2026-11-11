@@ -89,6 +89,8 @@ export function databaseResult({ data, error }) {
     REWARD_MERGE_REVIEW_REQUIRED: [409, "These members have points or perk history. Reconcile their rewards before merging them; no balances were changed."],
     FORBIDDEN: [403, "This action is not allowed."],
     NOT_FOUND: [404, "This record was not found."],
+    NEWSLETTER_SUPPRESSED: [409, "Email delivery is blocked for this address. Invitations cannot be sent while it is suppressed."],
+    NEWSLETTER_ARCHIVED: [409, "Restore this archived subscriber before sending an invitation."],
     NOTIFICATION_COOLDOWN: [429, "Wait one minute before sending another subscriber email."],
     CARD_NOT_PROGRAMMED: [409, "This physical card has not been registered. Open Program card in GDG Workspace and write it first."],
     CARD_SCAN_REQUIRED: [409, "Scan this physical card in GDG Workspace. Its copied token or QR cannot be used for check-in; use the member’s Wallet QR instead."],

@@ -430,11 +430,11 @@ export default function NewsletterEditor({
       attempt.current = { signature, key: crypto.randomUUID() };
     const idempotencyKey = attempt.current.key;
     await work(
-      (signal) => request<{ id?: string }>(signal, body, idempotencyKey),
+      (signal) => request<{ id?: string; queued?: boolean; state?: string }>(signal, body, idempotencyKey),
       (r) =>
         onSaved(
           kind === "subscribers" && !record
-            ? "Confirmation email requested. They’ll appear as subscribed after confirming."
+            ? r.state === "active" ? "This address is already subscribed. Open the record to resend its welcome email." : "Newsletter invitation queued. They’ll appear as subscribed after accepting."
             : "Saved newsletter changes.",
           r.id,
         ),
@@ -735,12 +735,13 @@ export default function NewsletterEditor({
           </div>
         )}
       </form>
-      {kind === "subscribers" && record && !record.deletedAt && !record.suppressedAt && ((record.state==="pending" && record.actions.includes("create")) || (record.state==="active" && record.actions.includes("send_email"))) && (
+      {kind === "subscribers" && record?.state === "unsubscribed" && !record.deletedAt && !record.suppressedAt && <p className="gt-helper">This address is unsubscribed. Send a new invitation to let them rejoin.</p>}
+      {kind === "subscribers" && record && !record.deletedAt && !record.suppressedAt && ((["pending","unsubscribed"].includes(record.state || "") && record.actions.includes("create")) || (record.state==="active" && record.actions.includes("send_email"))) && (
         <Button type="button" variant="secondary" disabled={busy || blocked || dirty} onClick={()=>{
           const signature="subscriber-notify:"+record.id;
           if(attempt.current?.signature!==signature)attempt.current={signature,key:crypto.randomUUID()};
-          void work(signal=>api<{queued:boolean;purpose:string}>(`/admin/newsletter/subscribers/${record.id}/notify`,{method:"POST",body:{},idempotencyKey:attempt.current!.key,signal}),result=>{attempt.current=undefined;const message=result.purpose==="welcome"?"Welcome email queued.":"Newsletter invitation queued.";onSaved(message);void confirmAction(message,{title:"Email queued",confirmLabel:"OK",cancelLabel:"Close"})});
-        }}>{record.state==="pending" ? "Resend invitation":"Resend welcome email"}</Button>
+          void work(signal=>api<{queued:boolean;purpose:string}>(record.state === "unsubscribed" ? "/admin/newsletter/subscribers" : `/admin/newsletter/subscribers/${record.id}/notify`,{method:"POST",body:record.state === "unsubscribed" ? {teamId:record.teamId,email:record.email,name:record.name || "",consentAcknowledged:true} : {},idempotencyKey:attempt.current!.key,signal}),result=>{attempt.current=undefined;const message=result.purpose==="welcome"?"Welcome email queued.":"Newsletter invitation queued.";onSaved(message);void confirmAction(message,{title:"Email queued",confirmLabel:"OK",cancelLabel:"Close"})});
+        }}>{record.state==="active" ? "Resend welcome email":"Resend invitation"}</Button>
       )}
       {kind === "subscribers" && record && (
         <dl className="gt-newsletter-facts">

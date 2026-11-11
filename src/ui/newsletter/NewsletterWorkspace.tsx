@@ -267,7 +267,7 @@ function NewsletterWorkspaceContent() {
         <NewsletterEditor
           key={editor.key}
           kind={kind}
-          record={detailRead.data?.record || editor.record}
+          record={detailRead.data?.record && (!editor.record || detailRead.data.record.revision >= editor.record.revision) ? detailRead.data.record : editor.record}
           scope={createScope}
           unavailable={
             capRead.loading ||

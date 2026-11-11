@@ -916,3 +916,18 @@ describe("Newsletter bulk subscriber review", () => {
     expect(apiMock.mock.calls.some(([p]) => p.endsWith("/send"))).toBe(false);
   });
 });
+
+describe('subscriber reinvitations',()=>{
+ it('offers unsubscribed recipients a fresh invitation and reuses the same request after interruption',async()=>{
+  let attempts=0;const saved=vi.fn();apiMock.mockImplementation(async(p:string,o?:{method?:string})=>{if(o?.method==='POST'){if(++attempts===1)throw new ApiFailure(503,'TEMPORARILY_UNAVAILABLE','Fictional invitation interruption');return{queued:true,purpose:'invitation',state:'pending',id}}return response(p)});
+  render(<main><NewsletterEditor kind="subscribers" record={{...subscriber,state:'unsubscribed'}} scope="chapter" onSaved={saved} onClose={vi.fn()}/></main>);
+  fireEvent.click(screen.getByRole('button',{name:'Resend invitation',exact:true}));await screen.findByText('Fictional invitation interruption');expect(writes()[0][0]).toBe(base+'/subscribers');expect(writes()[0][1].body).toEqual({teamId:null,email:subscriber.email,name:'',consentAcknowledged:true});
+  fireEvent.click(screen.getByRole('button',{name:'Resend invitation',exact:true}));await waitFor(()=>expect(saved).toHaveBeenCalledWith('Newsletter invitation queued.'));expect(writes()).toHaveLength(2);expect(writes()[0][1].idempotencyKey).toBe(writes()[1][1].idempotencyKey);
+ });
+ it('does not offer invitations to archived or provider-suppressed addresses',()=>{
+  const r=render(<main><NewsletterEditor kind="subscribers" record={{...subscriber,state:'unsubscribed',suppressedAt:'2026-11-11T12:00:00Z'}} scope="chapter" onSaved={vi.fn()} onClose={vi.fn()}/></main>);expect(screen.queryByRole('button',{name:'Resend invitation',exact:true})).toBeNull();r.unmount();render(<main><NewsletterEditor kind="subscribers" record={{...subscriber,state:'unsubscribed',deletedAt:'2026-11-11T12:00:00Z'}} scope="chapter" onSaved={vi.fn()} onClose={vi.fn()}/></main>);expect(screen.queryByRole('button',{name:'Resend invitation',exact:true})).toBeNull();
+ });
+ it('reports an already subscribed address without claiming another invitation was sent',async()=>{
+  const saved=vi.fn();apiMock.mockResolvedValue({id,queued:false,state:'active'});render(<main><NewsletterEditor kind="subscribers" scope="chapter" onSaved={saved} onClose={vi.fn()}/></main>);fireEvent.change(screen.getByLabelText(/^Email address/),{target:{value:subscriber.email}});fireEvent.click(screen.getByRole('checkbox',{name:/This person requested to join/}));fireEvent.click(screen.getByRole('button',{name:'Send newsletter invitation',exact:true}));await waitFor(()=>expect(saved).toHaveBeenCalledWith('This address is already subscribed. Open the record to resend its welcome email.',id));
+ });
+});
