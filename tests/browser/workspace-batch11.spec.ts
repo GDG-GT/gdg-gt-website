@@ -25,3 +25,13 @@ test('resends a subscriber welcome email from its editor without a scope filter'
  await page.goto('/admin/newsletter');await expect(page.getByRole('combobox',{name:'Scope',exact:true})).toHaveCount(0);await page.getByRole('button',{name:'Subscribers',exact:true}).click();
  await page.getByRole('button',{name:'fictional-subscriber@example.test',exact:true}).click();await page.getByRole('button',{name:'Resend welcome email',exact:true}).click();await expect(page.getByRole('dialog',{name:'Email queued',exact:true})).toBeVisible();await expect.poll(()=>sent).toBe(1);await page.screenshot({path:info.outputPath('subscriber-resend.png')});expect(fixture.unexpected).toEqual([]);
 });
+test('keeps the legacy Forms library hidden until its initial inventory is ready',async({page,fixture})=>{
+ fixture.authenticated=true;fixture.formLibrary=true;let release!:()=>void;const deferred=new Promise<void>(resolve=>release=resolve);let requested=false;
+ await page.route('**/api/v1/admin/forms?**',async route=>{requested=true;await deferred;await route.fallback()});
+ await page.goto('/admin/forms');await expect.poll(()=>requested).toBe(true);await expect(page.getByRole('status',{name:'Loading workspace',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Create form',exact:true})).not.toBeVisible();release();await expect(page.getByRole('status',{name:'Loading workspace',exact:true})).toHaveCount(0);await expect(page.getByRole('heading',{name:'Forms',exact:true})).toBeVisible();expect(fixture.unexpected).toEqual([]);
+});
+test('keeps notification preferences and inbox together during initial loading',async({page,fixture})=>{
+ fixture.authenticated=true;let release!:()=>void;const deferred=new Promise<void>(resolve=>release=resolve);let requested=false;
+ await page.route('**/api/v1/admin/app-notifications',async route=>{requested=true;await deferred;await route.fulfill({json:{data:{preferences:{},devices:[],config:{ios:false,web:false}}}})});
+ await page.goto('/admin/notifications');await expect.poll(()=>requested).toBe(true);await expect(page.getByRole('status',{name:'Loading workspace',exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Notifications',exact:true})).not.toBeVisible();release();await expect(page.getByRole('heading',{name:'Notifications',exact:true})).toBeVisible();expect(fixture.unexpected).toEqual([]);
+});

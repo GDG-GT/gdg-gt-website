@@ -1,3 +1,4 @@
+import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import { postNativeWorkspace } from "@/ui/rewards/nativeScanner";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Bell } from "lucide-react";
@@ -44,6 +45,7 @@ export function NotificationInbox({
     feedback = useRef<HTMLParagraphElement>(null),
     failure = useRef<HTMLParagraphElement>(null),
     focusTarget = useRef<"summary" | "notice" | "error" | null>(null);
+  useWorkspaceReadiness(reading);
   const busy = reading || writing,
     current = loadedPage === page ? data : undefined;
   useEffect(() => {

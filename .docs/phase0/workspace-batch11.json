@@ -1,10 +1,10 @@
 {
-  "validatedAt": "2026-11-11T19:10:34.404939+00:00",
+  "validatedAt": "2026-11-11T19:17:10.035317+00:00",
   "build": 11,
   "changes": [
     "NFC remains active through transient iOS scene inactivity; background still pauses and locks",
     "Subscriber invitation/welcome resend with session, CSRF, idempotency, consent and suppression checks",
-    "Initial workspace read barrier including nested Communications/PersonalWork lazy routes",
+    "Initial workspace read barrier including nested lazy routes, legacy Forms reads, notification inbox/preferences and Points & cards; personal view changes remount the gate",
     "Removed top-level newsletter, finance and media scope bars; creation destinations stay explicit",
     "Per-account local sidebar pins, maximum three",
     "Numeric app push scheduler counters; operational status auto-refresh"
@@ -19,12 +19,13 @@
   "validation": {
     "nativeUnit": 9,
     "nativeUI": 4,
-    "browser": "32 Chromium desktop/mobile cases passed across corrected fixture runs, plus six WebKit desktop/mobile checks; pin UI visually reviewed.",
+    "browser": "Chromium and WebKit desktop/mobile checks passed. Final 10-case pass covers pins, subscriber resend and delayed task, Forms and Notifications reads. Additional publication/upload, audience and search checks passed.",
     "webBuild": "Passed",
     "typecheck": "Passed",
     "secretsUnreviewed": 0,
     "bundleBudgets": "Passed",
-    "vitest": "275 files / 3147 cases exercised. Final full run passed 3146; one obsolete media error-copy assertion updated and all 23 media recovery cases then passed. Earlier concurrency-related timeouts passed in the bounded-worker regression."
+    "vitest": "275 files / 3147 cases exercised. Final full run passed 3146; one obsolete media error-copy assertion updated and all 23 media recovery cases then passed. Earlier concurrency-related timeouts passed in the bounded-worker regression.",
+    "legacyReadRegression": "53 affected Forms, notification, reward and navigation cases passed."
   },
   "signing": {
     "build": "11",
@@ -42,13 +43,14 @@
     "uploadSucceededAt": "2026-11-11T19:08:45Z",
     "build": 11,
     "group": "GDG Officers",
-    "groupAssignment": "Build11 upload verified in App Store Connect; processing pending at commit."
+    "groupAssignment": "Verified Testing in GDG Officers, including build11 row in the group.",
+    "appStoreBuildId": "1b0aff7b-779a-43f8-a736-0477279512aa"
   },
   "remainingDeviceAcceptance": [
     "Retest continuous physical NFC on an iPhone using build11; simulator cannot present the NFC system sheet."
   ],
   "notes": [
     "No subscriber emails were triggered by deployment or tests; browser/native fixtures are fictional.",
-    "One combined production branch push; hosted build outcome is verified separately after commit."
+    "Initial production build cancelled before alias assignment to include remaining legacy loading hooks; final combined production build is verified separately after commit."
   ]
 }

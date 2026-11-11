@@ -1,3 +1,4 @@
+import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, ApiFailure } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -450,6 +451,7 @@ export function useFormLibrary(params: string, enabled = true) {
     error = current ? request.error : "",
     denied =
       (current && request.denied) || blockedScope.current === authorityScope;
+  useWorkspaceReadiness(loading);
   return {
     ...data,
     scope,
@@ -556,6 +558,7 @@ export function useServerForm(id: string | undefined) {
       activeRequest.current?.abort();
     };
   }, [load]);
+  useWorkspaceReadiness(!!id && (request.scope !== scope || request.loading));
   return {
     form: id && snapshot?.scope === scope ? snapshot.form : undefined,
     at: id && snapshot?.scope === scope ? snapshot.at : undefined,

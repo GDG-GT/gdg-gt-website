@@ -1,3 +1,4 @@
+import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import ActionFeedback from "@/ui/ActionFeedback";
 import { useLiveSearch } from "@/hooks/useLiveSearch";
 import { confirmAction } from "@/lib/app-dialogs";
@@ -142,6 +143,7 @@ export default function RewardsWorkspace() {
       key: string;
     }>(),
     [editPerk, setEditPerk] = useState<Perk>();
+  useWorkspaceReadiness(isSuperAdmin && !data && !error);
   const navigationSafety = useContext(NavigationSafetyContext);
   const [editRule, setEditRule] = useState<Rule>();
   const [uncertain, setUncertain] = useState<{

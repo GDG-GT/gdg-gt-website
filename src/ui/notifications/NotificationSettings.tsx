@@ -1,3 +1,4 @@
+import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -46,6 +47,7 @@ export default function NotificationSettings() {
 }
 function NotificationSettingsContent() {
   const [data, setData] = useState<Settings>(), [busy, setBusy] = useState(false), [error, setError] = useState(""), [notice, setNotice] = useState("");
+  useWorkspaceReadiness(!data && !error);
   const operation = useRef<AbortController>(), pending = useRef(false);
   useEffect(() => { const controller = new AbortController(); operation.current = controller; api<Settings>(root, { signal: controller.signal }).then(setData).catch(e => { if (!controller.signal.aborted) setError(e.message); }); return () => operation.current?.abort(); }, []);
   const work = async (action: (signal: AbortSignal) => Promise<void>) => {

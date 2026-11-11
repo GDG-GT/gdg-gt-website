@@ -489,7 +489,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
         )}
         <main id="workspace-content" className="gt-admin-body" tabIndex={-1}>
           <WorkspaceAccessContext.Provider value={access}>
-            <WorkspaceReadinessProvider key={`${currentAdmin?.id}:${currentAdmin?.role}:${location.pathname}:${new URLSearchParams(location.search).get("tab") || ""}`}>{children}</WorkspaceReadinessProvider>
+            <WorkspaceReadinessProvider key={`${currentAdmin?.id}:${currentAdmin?.role}:${location.pathname}:${new URLSearchParams(location.search).get("tab") || new URLSearchParams(location.search).get("view") || ""}`}>{children}</WorkspaceReadinessProvider>
           </WorkspaceAccessContext.Provider>
         </main>
       </div>
