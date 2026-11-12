@@ -58,7 +58,7 @@ const retention = [
   ],
   ["Security events", "1 year"],
   ["Audit history", "At least 2 years; automatic deletion is disabled"],
-  ["Contact inquiries and files", "180 days after resolution, unless held"],
+  ["Contact inquiries and files", "365 days after resolution, unless held"],
   ["Incomplete Forms drafts", "Form-configured, at most 30 days"],
   [
     "Form responses and files",

@@ -65,7 +65,7 @@ export function createMailTransport(env) {
     resend = smtp ? null : new Resend(env.RESEND_API_KEY);
   return {
     config,
-    async send(message, { jobId, idempotencyKey, category = "general" }) {
+    async send(message, { jobId, idempotencyKey, category = "general", replyTo }) {
       return timeDependency("mail", async () => {
         const {
           from: ignoredFrom,
@@ -78,13 +78,15 @@ export function createMailTransport(env) {
         void ignoredId;
         if (category !== "general" && !Object.hasOwn(config.senders, category))
           throw Error("Unknown server email category.");
+        if (replyTo !== undefined && (category !== "contact" || !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(replyTo)))
+          throw Error("Invalid server reply address.");
         const send = {
           ...content,
           from:
             category === "general"
               ? config.from
               : `GDG at Georgia Tech <${config.senders[category]}>`,
-          ...(config.replyTo ? { replyTo: config.replyTo } : {}),
+          ...((replyTo || config.replyTo) ? { replyTo: replyTo || config.replyTo } : {}),
         };
         if (smtp)
           return String(

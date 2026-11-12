@@ -35,7 +35,7 @@ the inbox or files. DTOs omit bucket paths, object keys and capability hashes.
 Chapter notices link to this protected inbox, never directly to storage.
 
 Status writes check the current revision. Reopening clears the resolution clock.
-Resolved inquiries are redacted 180 days after resolution, unless held. Retention
+Resolved inquiries are redacted 365 days after resolution, unless held. Retention
 holds/releases require the current password, meaningful reason, current revision
 and `HOLD CONTACT` / `RELEASE HOLD` confirmation. Release warns that overdue
 cleanup may run immediately. Redacted records cannot be restored by adding a hold.
@@ -81,3 +81,13 @@ Still open: browser file-chooser automation (extension file access was not enabl
 full screen-reader/device/accessibility review, hosted storage CORS/scanner
 isolation/worker supervision/retention/load/security headers and approved live
 sender/chapter address/privacy policy. Other PRD backlog items remain open.
+
+## Replies and follow-up ownership (migration 158)
+
+Contact notification emails retain the verified `contact@gdggt.dev` sender and use the submitter's address as Reply-To. The shared transport accepts this server-selected override only for contact messages and rejects header injection; other mail keeps the configured chapter reply address. Already delivered messages retain their original headers.
+
+Inquiry details offer a blank email composer, the fixed saved recipient and a delivery history. Replies send from the contact sender, return replies to the chapter inbox, and use the existing transactional outbox with stable provider retry keys. The same revision, session, CSRF, audit and explicit outcome-recovery checks used by contact status changes apply. Provider acceptance is shown as Sent; it does not prove inbox delivery. External mail-client replies are not imported into this history. Reply bodies share the inquiry's retention deadline and are cleared when it is redacted. Provider-detail cleanup at 90 days does not erase the history's saved send state.
+
+New inquiries create a private follow-up task in the same transaction. Routing prefers an active linked chapter profile whose role includes the word Secretary, provided its officer account already has contact-inbox access. Otherwise the least-loaded eligible Super Admin is selected, with stable tie-breaking. An unlinked or unauthorized profile title never grants inbox access. The task receives the existing assignment notification/email/push flow and links to the protected inquiry without copying the sender's message into task history. No eligible officer leaves the inquiry safely unassigned. Existing inquiries have an explicit Assign follow-up action; deployment does not backfill real business records.
+
+Resolution completes the linked task, and reopening updates its status. Use the task's existing reassign controls to transfer follow-up ownership. Retention is 365 days after resolution; manual holds still block cleanup. A successful send does not automatically mark an inquiry resolved.

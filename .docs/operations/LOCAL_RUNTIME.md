@@ -169,7 +169,7 @@ response files are not treated as abandoned. This does not yet implement every
 PRD retention policy, event-reminder job, or missed-run alert. Newsletter campaign
 workflows and retention are documented in `NEWSLETTER_OPERATIONS.md`.
 Private contact files use the ordinary Forms/contact upload worker and the same
-hourly cleanup occurrence. Resolved contacts expire after 180 days unless held;
+hourly cleanup occurrence. Resolved contacts expire after 365 days unless held;
 see `CONTACT_OPERATIONS.md` for capability, quarantine and private inbox controls.
 
 Hosted deployment must choose and configure Supabase Cron or an equivalently

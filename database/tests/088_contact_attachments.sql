@@ -23,7 +23,7 @@ DO $$ DECLARE actor uuid:='f8800000-0000-4000-8000-000000000001';sid uuid:='f880
  v:=public.contact_attachment_download(actor,sid,c,gen_random_uuid());IF v->>'key'<>clean THEN RAISE EXCEPTION 'Protected download';END IF;
  PERFORM public.mutate_contact_record(actor,sid,c,1,'status','{"status":"resolved"}',NULL,gen_random_uuid());
  PERFORM public.mutate_contact_record(actor,sid,c,2,'hold','{"enabled":true,"reason":"Fictional operational hold for SQL test"}','test-only',gen_random_uuid());
- UPDATE public.contact_submissions SET resolved_at=now()-interval '181 days' WHERE id=c;
+ UPDATE public.contact_submissions SET resolved_at=now()-interval '366 days' WHERE id=c;
  PERFORM public.claim_contact_upload_cleanup(50);
  IF(SELECT redacted_at FROM public.contact_submissions WHERE id=c) IS NOT NULL OR(SELECT deleted_at FROM public.upload_intents WHERE id=u) IS NOT NULL THEN RAISE EXCEPTION 'Contact hold ignored';END IF;
  PERFORM public.mutate_contact_record(actor,sid,c,3,'hold','{"enabled":false}','test-only',gen_random_uuid());

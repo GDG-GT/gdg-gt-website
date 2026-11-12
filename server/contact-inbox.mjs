@@ -100,7 +100,7 @@ export async function contactInboxRoutes(
       body = await jsonBody(
         request,
         recovering ? contactMutationInspection : contactMutation,
-        8192,
+        24576,
       ),
       { currentPassword, ...original } = body,
       { action, revision, ...document } = original;

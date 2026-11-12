@@ -158,7 +158,8 @@
     "202611110154_physical_card_binding.sql",
     "202611110155_native_fast_checkin.sql",
     "202611110156_newsletter_subscriber_notifications.sql",
-    "202611110157_newsletter_reinvitation.sql"
+    "202611110157_newsletter_reinvitation.sql",
+    "202611120158_contact_followup.sql"
   ],
   "tests": [
     {
@@ -794,6 +795,10 @@
       "passed": true
     },
     {
+      "name": "202611120158_contact_followup.sql",
+      "passed": true
+    },
+    {
       "name": "001_security_foundation.sql",
       "passed": true
     },
@@ -1299,6 +1304,10 @@
     },
     {
       "name": "157_newsletter_reinvitation.sql",
+      "passed": true
+    },
+    {
+      "name": "158_contact_followup.sql",
       "passed": true
     },
     {

@@ -53,8 +53,13 @@ export const contactInboxQuery = z
     page: z.coerce.number().int().min(1).max(10000).default(1),
   })
   .strict();
+export const contactReply = z.object({
+  action: z.literal("reply"), revision: z.number().int().positive(), body: text(5000, 1),
+}).strict();
+export const contactAssignment = z.object({action:z.literal("assign"),revision:z.number().int().positive()}).strict();
 export const contactMutation = z
   .discriminatedUnion("action", [
+    contactReply,
     z
       .object({
         action: z.literal("status"),
@@ -72,6 +77,7 @@ export const contactMutation = z
         confirmation: z.enum(["HOLD CONTACT", "RELEASE HOLD"]),
       })
       .strict(),
+    contactAssignment,
   ])
   .superRefine((v, ctx) => {
     if (
@@ -87,8 +93,10 @@ export const contactMutation = z
   });
 export const contactMutationInspection = z
   .discriminatedUnion("action", [
-    contactMutation.options[0],
-    contactMutation.options[1].omit({ currentPassword: true }),
+    contactReply,
+    contactMutation.options[1],
+    contactMutation.options[2].omit({ currentPassword: true }),
+    contactAssignment,
   ])
   .superRefine((v, ctx) => {
     if (

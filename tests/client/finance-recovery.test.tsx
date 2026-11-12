@@ -318,7 +318,7 @@ describe("Finance independent private reads", () => {
     );
     mount(false, "budgets");
     await screen.findByText(
-      "Budget allocations are unavailable. Retry to check your scope.",
+      "Budgets could not load. Try again.",
     );
     expect(
       screen.queryByRole("heading", {

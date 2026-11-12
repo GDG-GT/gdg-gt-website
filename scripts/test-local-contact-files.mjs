@@ -433,7 +433,7 @@ try {
     await db
       .from("contact_submissions")
       .update({
-        resolved_at: new Date(Date.now() - 181 * 86400000).toISOString(),
+        resolved_at: new Date(Date.now() - 366 * 86400000).toISOString(),
       })
       .eq("id", contactId),
   );
@@ -441,7 +441,7 @@ try {
     await db
       .from("contact_submissions")
       .select("id")
-      .lt("resolved_at", new Date(Date.now() - 180 * 86400000).toISOString())
+      .lt("resolved_at", new Date(Date.now() - 365 * 86400000).toISOString())
       .is("redacted_at", null)
       .eq("retention_hold", false),
   );

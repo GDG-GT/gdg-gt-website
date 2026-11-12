@@ -32,7 +32,7 @@
 .gt-contact-inbox table small {
   display: block;
   font-size: 0.8rem;
-  color: var(--text-secondary);
+  color: var(--muted);
   font-weight: 400;
   overflow-wrap: anywhere;
   margin-top: 5px;
@@ -80,3 +80,8 @@
     padding: 18px;
   }
 }
+
+.gt-contact-reply{padding-top:18px;border-top:1px solid var(--line)}
+.gt-contact-replies{display:flex;flex-direction:column;gap:20px}
+.gt-contact-replies article{padding:16px 0;border-bottom:1px solid var(--line)}
+.gt-contact-replies time{font-size:.8125rem;color:var(--muted)}

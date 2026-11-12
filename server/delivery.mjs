@@ -39,7 +39,7 @@ export async function deliveryMessage(
     return { to: mail.chapter, ...formDigestMessage(notice, config.origin),
       headers: { "X-GDG-Job-ID": job.id } };
   }
-  let to, subject, content, htmlContent, footerHtml;
+  let to, subject, content, htmlContent, footerHtml, replyTo = mail.replyTo;
   const actions = [];
   if (job.kind === "workspace_notice_email") {
     const notice = checked(
@@ -220,6 +220,8 @@ export async function deliveryMessage(
       content = `${contact.name} (${contact.email}) sent an inquiry.\n\n${contact.message}\n\n${contact.attachment_upload_id ? "A private scanned attachment is available in the protected inbox.\n\n" : ""}Review securely: ${config.origin}/admin/communications?tab=contact&contact=${job.payload.contactId}`;
     }
     if (job.kind === "contact_notification") {
+      replyTo = contact.email;
+      footerHtml = "Reply to this email to respond directly to the person who contacted the chapter.";
       htmlContent = content.split("\n\nReview securely:")[0];
       actions.push({
         label: "Review inquiry",
@@ -229,6 +231,13 @@ export async function deliveryMessage(
           job.payload.contactId,
       });
     }
+  } else if (job.kind === "contact_reply") {
+    const reply = checked(await db.rpc("prepare_contact_reply", {p_job:job.id,p_lease:job.lease_token}));
+    if (!reply) return null;
+    to = reply.email;
+    subject = "Re: Your " + reply.type + " inquiry to GDG at Georgia Tech";
+    content = reply.body;
+    htmlContent = reply.body;
   } else if (job.kind === "chapter_announcement") {
     const notice = checked(
       await db.rpc("prepare_chapter_announcement_notice", {
@@ -564,7 +573,7 @@ export async function deliveryMessage(
     subject,
     text: content,
     html: emailDocument({ subject, content: htmlContent ?? content, actions, footerHtml }),
-    ...(mail.replyTo ? { replyTo: mail.replyTo } : {}),
+    ...(replyTo ? { replyTo } : {}),
     headers: { "X-GDG-Job-ID": job.id },
     messageId: "<" + job.id + "@gdg.local>",
   };
@@ -596,6 +605,7 @@ export async function runDelivery({
             jobId: job.id,
             category: deliveryCategory(job.kind),
             idempotencyKey: "gdg-job-" + job.id,
+            ...(job.kind === "contact_notification" ? { replyTo: message.replyTo } : {}),
           });
           await queueMailAppNotification(db, job, message, deliveryCategory(job.kind), env);
         }

@@ -192,3 +192,10 @@ describe("contact original-outcome routes", () => {
     expect(f.db.rpc).not.toHaveBeenCalled();
   });
 });
+
+it('binds an inquiry reply to its saved record and rejects client-supplied recipients',async()=>{
+ const f=fixture(),key=token(),body={action:'reply',revision:1,body:'A fictional chapter reply.'};
+ const result=await f.call('/'+source,body,{'idempotency-key':key});expect(result.statusCode).toBe(200);expect(f.db.rpc).toHaveBeenCalledWith('mutate_contact_write',expect.objectContaining({p_actor:actor,p_session:sessionId,p_id:source,p_action:'reply',p_document:{body:body.body},p_verified_hash:null,p_key_hash:tokenHash(key)}));
+ f.db.rpc.mockClear();const invalid=await f.call('/'+source,{...body,email:'arbitrary@example.test'});expect(invalid.statusCode).toBe(400);expect(f.db.rpc).not.toHaveBeenCalled();
+ const noCsrf=await f.call('/'+source,body,{'x-csrf-token':''});expect(noCsrf.statusCode).toBe(403);expect(f.db.rpc).not.toHaveBeenCalled();
+});

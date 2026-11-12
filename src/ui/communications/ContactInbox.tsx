@@ -1,3 +1,4 @@
+import { confirmAction } from "@/lib/app-dialogs";
 import { useEffect, useRef, useState } from "react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { usePrivateRead } from "@/hooks/usePrivateRead";
@@ -40,6 +41,8 @@ type Inquiry = {
   redactedAt: string | null;
   hold: boolean;
   holdReason: string | null;
+  assignment?: { taskId: string; name: string; userId: string } | null;
+  replies?: { id: string; body: string; createdAt: string; senderName: string; state: string }[];
   attachment: {
     id: string;
     filename: string;
@@ -65,6 +68,8 @@ function validInquiry(value: Inquiry) {
     value.interests.every((v) => typeof v === "string") &&
     Number.isInteger(value.revision) &&
     value.revision >= 1 &&
+    (value.assignment == null || (typeof value.assignment.taskId === "string" && typeof value.assignment.userId === "string" && typeof value.assignment.name === "string")) &&
+    (value.replies === undefined || (Array.isArray(value.replies) && value.replies.every(reply=>!!reply && [reply.id,reply.body,reply.createdAt,reply.senderName].every(v=>typeof v==="string") && ["queued","sent","failed","cancelled"].includes(reply.state)))) &&
     typeof value.hold === "boolean" &&
     [value.resolvedAt, value.redactedAt, value.holdReason].every(
       (v) => v === null || typeof v === "string",
@@ -79,6 +84,7 @@ function validInquiry(value: Inquiry) {
         typeof value.attachment.canDownload === "boolean"))
   );
 }
+const inquiryStatus = (value:string) => ({new:"New",in_progress:"In progress",resolved:"Resolved",redacted:"Redacted"}[value] || value);
 const date = (v?: string) => (v ? new Date(v).toLocaleString() : "—");
 function InquiryReview({
   record: currentRecord,
@@ -121,6 +127,11 @@ function InquiryReview({
       filename: string;
       expiresAt: number;
     }>();
+  const [composing, setComposing] = useState(false), [replyBody, setReplyBody] = useState("");
+  function savedAction(action:string) {
+    setReplyBody("");setComposing(false);onSaved();
+    if(action === "reply") void confirmAction("Your reply is queued for email delivery.", {title:"Reply queued",confirmLabel:"OK",cancelLabel:"Close"});
+  }
   const { busy: fileBusy, error: fileError, work } = usePrivateOperation(),
     safety = useNavigationSafety(),
     [writeBusy, setWriteBusy] = useState(false),
@@ -169,7 +180,7 @@ function InquiryReview({
     setCapability(undefined);
     try {
       await submitInquiryWrite(intent, controller.signal, proof);
-      if (mounted.current && !controller.signal.aborted) onSaved();
+      if (mounted.current && !controller.signal.aborted) savedAction(String(document.action));
     } catch (e) {
       if (!mounted.current || controller.signal.aborted) return;
       if (
@@ -202,7 +213,7 @@ function InquiryReview({
       setCapability(undefined);
     }
   }, [paused, stale]);
-  useDraftGuard(hold || status !== record.status || !!uncertain, {
+  useDraftGuard(hold || status !== record.status || !!uncertain || !!replyBody.trim(), {
     busy: busy || !!uncertain,
     label: "Contact inquiry review",
   });
@@ -280,7 +291,7 @@ function InquiryReview({
         <InquiryWriteRecovery
           key={uncertain.key}
           intent={uncertain}
-          onConfirmed={() => onSaved()}
+          onConfirmed={(receipt) => savedAction(receipt.action)}
           onDenied={onDenied}
           onBusy={setRecoveryBusy}
           onStop={() => {
@@ -319,7 +330,7 @@ function InquiryReview({
         </p>
       )}
       <div className="gt-inline-actions">
-        <Badge>{record.status}</Badge>
+        <Badge>{inquiryStatus(record.status)}</Badge>
         {record.hold && <Badge tone="warning">Retention hold</Badge>}
       </div>
       {record.email && (
@@ -327,6 +338,7 @@ function InquiryReview({
           <strong>Reply address:</strong> {record.email}
         </p>
       )}
+      {record.assignment ? <p><strong>Assigned to:</strong> {record.assignment.name} <ActionLink to={`/admin/communications?tab=tasks&task=${record.assignment.taskId}`} variant="ghost">Open follow-up task</ActionLink></p> : !record.redactedAt && <div className="gt-inline-actions"><span className="gt-helper">No follow-up owner assigned.</span>{["new","in_progress"].includes(record.status) && <Button type="button" variant="secondary" disabled={locked} onClick={()=>void saveOriginal({action:"assign",revision:record.revision})}>Assign follow-up</Button>}</div>}
       <div className="gt-contact-inbox-message">{record.message}</div>
       {record.interests.length > 0 && (
         <p>
@@ -411,6 +423,15 @@ function InquiryReview({
           </p>
         </section>
       )}
+      {!record.redactedAt && record.email && <section aria-label="Reply to inquiry" className="gt-contact-reply">
+        {!composing ? <Button type="button" disabled={locked} onClick={()=>setComposing(true)}>Reply to {record.name}</Button> : <form className="gt-form" aria-label="Email reply" onSubmit={e=>{e.preventDefault();if(!replyBody.trim() || locked)return;void saveOriginal({action:"reply",revision:record.revision,body:replyBody.trim()})}}>
+          <h3>Reply by email</h3>
+          <p>To: {record.email}<br/>From: contact@gdggt.dev</p>
+          <Field label="Your reply" required><textarea autoFocus value={replyBody} maxLength={5000} rows={7} disabled={locked} onChange={e=>setReplyBody(e.target.value)}/></Field>
+          <div className="gt-inline-actions"><Button disabled={locked || !replyBody.trim()}>Send reply</Button><Button type="button" variant="secondary" disabled={busy || !!uncertain} onClick={()=>navigate(()=>{setComposing(false);setReplyBody("")})}>Cancel reply</Button></div>
+        </form>}
+      </section>}
+      {!!record.replies?.length && <section aria-label="Email replies"><h3>Email replies</h3><div className="gt-contact-replies">{record.replies.map(reply=><article key={reply.id}><div className="gt-inline-actions"><strong>{reply.senderName}</strong><Badge>{reply.state === "sent" ? "Sent" : reply.state === "failed" ? "Failed" : reply.state === "cancelled" ? "Cancelled" : "Queued"}</Badge><time dateTime={reply.createdAt}>{date(reply.createdAt)}</time></div><p className="gt-contact-inbox-message">{reply.body}</p></article>)}</div></section>}
       {!record.redactedAt && (
         <>
           <form
@@ -437,7 +458,7 @@ function InquiryReview({
               </select>
             </Field>
             <p className="gt-helper">
-              Resolved inquiries and their attachments are redacted after 180
+              Resolved inquiries, replies and attachments are redacted after 365
               days unless an operational/legal hold applies. Reopening removes
               the resolution deadline; it does not remove a hold.
             </p>
@@ -467,7 +488,7 @@ function InquiryReview({
               </h3>
               <p>
                 {record.hold
-                  ? "If resolution was more than 180 days ago, releasing this hold allows the next scheduled cleanup to erase message identity and private attachment bytes. That cleanup cannot be undone."
+                  ? "If resolution was more than 365 days ago, releasing this hold allows the next scheduled cleanup to erase message identity and private attachment bytes. That cleanup cannot be undone."
                   : "Use holds for a genuine operational/legal need. A hold prevents scheduled identity and attachment cleanup."}
               </p>
               {!record.hold && (
@@ -846,8 +867,9 @@ function Inbox() {
                         )}
                       </td>
                       <td>
-                        <Badge>{r.status}</Badge>
+                        <Badge>{inquiryStatus(r.status)}</Badge>
                         {r.hold && <small>Retention hold</small>}
+                        {r.assignment && <small>Assigned to {r.assignment.name}</small>}
                       </td>
                       <td>{date(r.createdAt)}</td>
                     </tr>

@@ -1,0 +1,34 @@
+{
+  "validatedAt": "2026-11-12T16:28:03.619542+00:00",
+  "migration": "202611120158_contact_followup.sql",
+  "productionSchemaApplied": true,
+  "grants": {
+    "service": true,
+    "anonymous": false,
+    "authenticated": false,
+    "repliesRls": true
+  },
+  "behavior": [
+    "Contact notification Reply-To uses saved submitter; original delivered headers cannot change",
+    "Workspace composer sends from contact@gdggt.dev to saved inquiry email with recoverable atomic receipt",
+    "Reply history saves delivery state beyond provider-detail retention",
+    "New inquiry creates follow-up for authorized linked Secretary or least-loaded eligible Super Admin",
+    "Explicit Assign follow-up for older unassigned inquiries; no historical backfill",
+    "Resolution completes task; inquiry and reply redaction after 365 days unless held"
+  ],
+  "validation": {
+    "fullVitest": "3153 passed; one pre-existing finance empty-state copy assertion failed and was corrected, then its targeted suite passed",
+    "targetedVitest": "7 files, 118 cases passed; final contact API checks 2 files, 14 cases passed",
+    "postgres": "Full migrations, canonical SQL tests, contact follow-up and 100-client event/form/native concurrency passed",
+    "browser": "26 broader contact cases passed; final 6 desktop and mobile reply/recovery/assignment cases passed",
+    "typecheck": "Passed",
+    "build": "Passed",
+    "secretScanUnreviewed": 0,
+    "bundleBudgets": "Passed"
+  },
+  "routingPreflight": {
+    "eligibleSecretaryAccounts": 0,
+    "eligibleSuperAdmins": 2
+  },
+  "productionRecords": "No inquiry reply, business-record backfill, or test email was sent by release validation."
+}
