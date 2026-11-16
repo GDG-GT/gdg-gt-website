@@ -6,6 +6,13 @@ const env={MAIL_MODE:'resend',EMAIL_SEND_ENABLED:'true',RESEND_API_KEY:'re_ficti
 const id='f1580000-0000-4000-8000-000000000001';
 afterEach(()=>vi.unstubAllGlobals());
 describe('contact email reply routing',()=>{
+ it('renders links in outgoing reply emails with escaped query parameters',async()=>{
+  const url='https://gdggt.dev/forms/executive-board-application?from=contact&invite=1';
+  const db={rpc:vi.fn(async()=>({data:{email:'submitter@example.test',type:'membership',body:'Apply here: '+url}}))};
+  const message=await deliveryMessage({id,kind:'contact_reply',lease_token:id},db,{origin:env.APP_ORIGIN},{replyTo:env.REPLY_TO_EMAIL},env);
+  expect(message.html).toContain('href="https://gdggt.dev/forms/executive-board-application?from=contact&amp;invite=1"');
+  expect(message.text).toBe('Apply here: '+url);
+ });
  it('sets notification Reply-To to the submitter and retains the verified chapter sender',async()=>{
   const fetcher=vi.fn(async()=>new Response(JSON.stringify({id:'provider-fixture'}),{status:200}));vi.stubGlobal('fetch',fetcher);
   const job={id,kind:'contact_notification',payload:{contactId:id},lease_token:id};

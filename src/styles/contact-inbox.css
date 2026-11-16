@@ -64,6 +64,11 @@
   max-width: 75ch;
   line-height: 1.7;
 }
+.gt-contact-inbox-message a {
+  color: var(--coral);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
 .gt-contact-inbox-review > section,
 .gt-contact-inbox-review > form {
   border-top: 1px solid var(--line);

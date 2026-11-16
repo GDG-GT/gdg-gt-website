@@ -6,6 +6,7 @@ import { useLiveSearch } from "@/hooks/useLiveSearch";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import ScrollableTable from "../ScrollableTable";
 import InquiryWriteRecovery from "./InquiryWriteRecovery";
+import InquiryText from "./InquiryText";
 import {
   inquiryIntent,
   submitInquiryWrite,
@@ -339,7 +340,7 @@ function InquiryReview({
         </p>
       )}
       {record.assignment ? <p><strong>Assigned to:</strong> {record.assignment.name} <ActionLink to={`/admin/communications?tab=tasks&task=${record.assignment.taskId}`} variant="ghost">Open follow-up task</ActionLink></p> : !record.redactedAt && <div className="gt-inline-actions"><span className="gt-helper">No follow-up owner assigned.</span>{["new","in_progress"].includes(record.status) && <Button type="button" variant="secondary" disabled={locked} onClick={()=>void saveOriginal({action:"assign",revision:record.revision})}>Assign follow-up</Button>}</div>}
-      <div className="gt-contact-inbox-message">{record.message}</div>
+      <div className="gt-contact-inbox-message"><InquiryText text={record.message} /></div>
       {record.interests.length > 0 && (
         <p>
           <strong>Interests:</strong> {record.interests.join(", ")}
@@ -431,7 +432,7 @@ function InquiryReview({
           <div className="gt-inline-actions"><Button disabled={locked || !replyBody.trim()}>Send reply</Button><Button type="button" variant="secondary" disabled={busy || !!uncertain} onClick={()=>navigate(()=>{setComposing(false);setReplyBody("")})}>Cancel reply</Button></div>
         </form>}
       </section>}
-      {!!record.replies?.length && <section aria-label="Email replies"><h3>Email replies</h3><div className="gt-contact-replies">{record.replies.map(reply=><article key={reply.id}><div className="gt-inline-actions"><strong>{reply.senderName}</strong><Badge>{reply.state === "sent" ? "Sent" : reply.state === "failed" ? "Failed" : reply.state === "cancelled" ? "Cancelled" : "Queued"}</Badge><time dateTime={reply.createdAt}>{date(reply.createdAt)}</time></div><p className="gt-contact-inbox-message">{reply.body}</p></article>)}</div></section>}
+      {!!record.replies?.length && <section aria-label="Email replies"><h3>Email replies</h3><div className="gt-contact-replies">{record.replies.map(reply=><article key={reply.id}><div className="gt-inline-actions"><strong>{reply.senderName}</strong><Badge>{reply.state === "sent" ? "Sent" : reply.state === "failed" ? "Failed" : reply.state === "cancelled" ? "Cancelled" : "Queued"}</Badge><time dateTime={reply.createdAt}>{date(reply.createdAt)}</time></div><p className="gt-contact-inbox-message"><InquiryText text={reply.body} /></p></article>)}</div></section>}
       {!record.redactedAt && (
         <>
           <form
