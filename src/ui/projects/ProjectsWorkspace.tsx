@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import RecordPanel from "@/ui/RecordPanel";
 import ScrollableTable from "@/ui/ScrollableTable";
 import {
@@ -1029,8 +1030,8 @@ function ProjectsWorkspaceContent() {
               Close project
             </Button>
           </div>
-          <p style={{ whiteSpace: "pre-wrap" }}>{p.description}</p>
-          <p>{p.short_description}</p>
+          <p style={{ whiteSpace: "pre-wrap" }}><LinkedText text={p.description} /></p>
+          <p><LinkedText text={p.short_description} /></p>
           <p>
             {BigInt(p.starCount).toLocaleString()} retained star records ·
             legacy cached counter: {p.stars_count}. Star identities remain

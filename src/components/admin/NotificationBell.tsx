@@ -1,3 +1,4 @@
+import LinkedText from "../../ui/LinkedText";
 import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import { postNativeWorkspace } from "@/ui/rewards/nativeScanner";
 import { useEffect, useState, useCallback, useRef } from "react";
@@ -253,7 +254,7 @@ export function NotificationInbox({
           <li key={item.id} className={item.is_read ? "" : "is-unread"}>
             <div>
               <h3>{item.title}</h3>
-              <p>{item.message}</p>
+              <p><LinkedText text={item.message} /></p>
               <small>{new Date(item.created_at).toLocaleString()}</small>
             </div>
             <div className="gt-actions">

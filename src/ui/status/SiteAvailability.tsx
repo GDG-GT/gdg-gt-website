@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import { usePublicBootstrap } from "@/contexts/PublicBootstrapContext";
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -159,8 +160,8 @@ export function MaintenanceContent({
       <span className="gt-section-note">CHAPTER UPDATE</span>
       <Heading>A little work behind the scenes.</Heading>
       <p style={{ whiteSpace: "pre-wrap" }}>
-        {status?.message ||
-          "The chapter website is taking a short break while we make improvements."}
+        <LinkedText text={status?.message ||
+          "The chapter website is taking a short break while we make improvements."} />
       </p>
       {status?.redirect_url &&
         (preview ? (

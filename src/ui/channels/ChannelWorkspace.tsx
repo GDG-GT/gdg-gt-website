@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import {
   Dialog,
@@ -1077,7 +1078,7 @@ function ChannelWorkspaceContent() {
               <header className="gt-admin-heading">
                 <div>
                   <h2># {room.record.name}</h2>
-                  <p>{room.record.description}</p>
+                  <p><LinkedText text={room.record.description} /></p>
                   {room.record.is_team_chat && (
                     <p className="gt-help">
                       Access follows current team membership. Chapter
@@ -1290,9 +1291,9 @@ function ChannelWorkspaceContent() {
                       </header>
                       {m.reply && (
                         <blockquote>
-                          {m.reply.is_deleted
+                          <LinkedText text={m.reply.is_deleted
                             ? "Original message was removed"
-                            : m.reply.message}
+                            : m.reply.message} />
                         </blockquote>
                       )}
                       {editing?.id === m.id ? (
@@ -1350,7 +1351,7 @@ function ChannelWorkspaceContent() {
                       ) : m.is_deleted ? (
                         <p className="gt-helper">Message removed.</p>
                       ) : (
-                        <p className="gt-message-body">{m.message}</p>
+                        <p className="gt-message-body"><LinkedText text={m.message} /></p>
                       )}
                       {!m.is_deleted && (
                         <div className="gt-button-row">

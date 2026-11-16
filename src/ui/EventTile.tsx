@@ -1,3 +1,4 @@
+import LinkedText from "./LinkedText";
 import { Link } from "react-router-dom";
 import { Clock3, MapPin, ArrowRight } from "lucide-react";
 import PublicImage from "./PublicImage";
@@ -64,7 +65,7 @@ export function EventTile({ event }: { event: SiteEvent }) {
           <Link to={`/events/${slugFor(event)}`}>{event.title}</Link>
         </h3>
         {event.short_description && (
-          <p className="gt-event-summary">{event.short_description}</p>
+          <p className="gt-event-summary"><LinkedText text={event.short_description} /></p>
         )}
         {availability && (
           <p className="gt-event-availability">

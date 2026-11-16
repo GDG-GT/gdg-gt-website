@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { otherChoiceText } from "../../../shared/form-choice";
 import { useAdmin } from "@/contexts/AdminContext";
@@ -364,7 +365,7 @@ function RevisionWorkspace({
                 {field.sensitive ? " · Sensitive" : ""}
               </strong>
               <p>
-                {field.masked
+                <LinkedText text={field.masked
                   ? "Hidden by default"
                   : !field.answered
                     ? "Not answered"
@@ -373,7 +374,7 @@ function RevisionWorkspace({
                       : (otherChoiceText(field.value) ??
                         (typeof field.value === "object"
                           ? JSON.stringify(field.value)
-                          : String(field.value ?? "Not answered")))}
+                          : String(field.value ?? "Not answered")))} />
               </p>
             </div>
           ))}

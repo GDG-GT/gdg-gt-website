@@ -92,7 +92,7 @@ for (const state of states)
               id: "fbbf0000-0000-4000-8000-000000000014",
               user_id: peer,
               authorName: "Fictional workshop lead",
-              comment: "Fictional progress: captions are ready for review.",
+              comment: "Fictional progress: captions are ready for review. See https://gdggt.dev/events.",
               comment_type: "comment",
               revision: 1,
               deleted_at: null,
@@ -123,7 +123,7 @@ for (const state of states)
               id: "fbbf0000-0000-4000-8000-000000000015",
               from_user_id: peer,
               authorName: "Fictional workshop lead",
-              message: "Fictional handoff: the caption checklist is ready.",
+              message: "Fictional handoff: the caption checklist is ready. See https://gdggt.dev/events.",
               revision: 1,
               deleted_at: null,
               created_at: at,
@@ -165,6 +165,7 @@ for (const state of states)
         await expect(
           page.getByRole("textbox", { name: /^Add a comment(?:\s|$)/ }),
         ).toBeVisible();
+        await expect(discussion.getByRole("link", { name: "https://gdggt.dev/events", exact: true })).toHaveAttribute("href", "https://gdggt.dev/events");
         if (state === "task editor") {
           await page
             .getByRole("button", { name: "Edit task", exact: true })
@@ -188,6 +189,7 @@ for (const state of states)
         await expect(
           page.getByRole("region", { name: "Selected conversation" }),
         ).toContainText("Fictional handoff: the caption checklist is ready.");
+        await expect(page.getByRole("region", { name: "Selected conversation" }).getByRole("link", { name: "https://gdggt.dev/events", exact: true })).toHaveAttribute("href", "https://gdggt.dev/events");
         await expect(
           page.getByRole("textbox", { name: /^Your reply(?:\s|$)/ }),
         ).toBeVisible();

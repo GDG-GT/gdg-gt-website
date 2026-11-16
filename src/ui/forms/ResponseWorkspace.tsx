@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import ActionFeedback from "@/ui/ActionFeedback";
 import { otherChoiceText } from "../../../shared/form-choice";
 import { orderedFormFields } from "../../../shared/forms";
@@ -997,7 +998,7 @@ function ResponseWorkspaceContent() {
                             />
                           ) : (
                             <p>
-                              {field.sensitive &&
+                              <LinkedText text={field.sensitive &&
                               !form.actions?.includes("view_sensitive_responses") &&
                               !Object.prototype.hasOwnProperty.call(
                                 selected.answers,
@@ -1013,7 +1014,7 @@ function ResponseWorkspaceContent() {
                                     : String(
                                         selected.answers[field.id] ??
                                           "Not answered",
-                                      )))}
+                                      )))} />
                             </p>
                           )}
                         </div>

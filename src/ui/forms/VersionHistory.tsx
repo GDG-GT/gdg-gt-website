@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import { useState } from "react";
 import { compareFormDefinitions } from "../../../shared/form-history";
 import type { PreviewForm } from "./store";
@@ -15,7 +16,7 @@ export default function VersionHistory({ form }: { form: PreviewForm }) {
       {form.versions.map((v) => <option key={v.version} value={v.version}>Version {v.version} · {new Date(v.publishedAt).toLocaleString()}</option>)}
     </select></Field>
     <p>Read-only version {version.version}. Published {new Date(version.publishedAt).toLocaleString()}. Viewing a snapshot does not restore it or change the current draft.</p>
-    <h3>{version.title}</h3><p>{version.description}</p>
+    <h3>{version.title}</h3><p><LinkedText text={version.description} /></p>
     <details><summary>Compare with another version or the current draft</summary>
       <Field label="Compare snapshot against"><select value={compareTo} onChange={(e) => setCompareTo(e.target.value)}>
         <option value="draft">Current draft (including unsaved edits)</option>
@@ -28,10 +29,10 @@ export default function VersionHistory({ form }: { form: PreviewForm }) {
       <p className="gt-helper">Stable field IDs determine identity. Label, option, validation and rule changes never rewrite older response labels.</p>
     </details>
     {version.sections.map((section, index) => <section key={section.id} className="gt-history-section">
-      <h4>Section {index + 1}: {section.title}</h4><p>{section.description}</p>
+      <h4>Section {index + 1}: {section.title}</h4><p><LinkedText text={section.description} /></p>
       {version.fields.filter((f) => f.sectionId === section.id).map((field) => <div key={field.id} className="gt-history-field">
         <strong>{field.label || "Unlabeled block"}</strong><p>{fieldTypes.find(([type]) => type === field.type)?.[1] || field.type}{field.required ? " · Required" : " · Optional"}{field.sensitive ? " · Sensitive" : ""}</p>
-        {field.description && <p>{field.description}</p>}
+        {field.description && <p><LinkedText text={field.description} /></p>}
         {["radio", "dropdown", "checkbox", "likert", "grid", "ranking"].includes(field.type) && field.options.length > 0 && <p>Options: {field.options.join(" · ")}</p>}
         {field.columns && field.columns.length > 0 && <p>Grid columns: {field.columns.join(" · ")}</p>}
         <small>Field ID {field.id}</small>

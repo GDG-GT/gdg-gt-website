@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import ActionFeedback from "@/ui/ActionFeedback";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -391,7 +392,7 @@ export default function Leaderboard() {
                 <article key={p.id}>
                   <p className="rewards-threshold">{p.threshold} points</p>
                   <h3>{p.title}</h3>
-                  <p>{p.description}</p>
+                  <p><LinkedText text={p.description} /></p>
                   {me &&
                     (claim ? (
                       <>

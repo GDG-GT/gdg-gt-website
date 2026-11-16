@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import { ArrowDown, ArrowUp, Star } from "lucide-react";
 import type { ReactNode } from "react";
 import { conditionValues, type Answer, type FormField } from "./store";
@@ -55,7 +56,7 @@ export default function FieldRenderer({
   if (field.type === "title")
     return <h3 className="gt-form-content-title">{field.label}</h3>;
   if (field.type === "description")
-    return <p className="gt-helper">{field.label}</p>;
+    return <p className="gt-helper"><LinkedText text={field.label} /></p>;
   if (field.type === "image")
     return (
       <FormImage
@@ -80,7 +81,7 @@ export default function FieldRenderer({
     <>
       {field.description && (
         <p id={`${inputId}-help`} className="gt-field-description">
-          {field.description}
+          <LinkedText text={field.description} />
         </p>
       )}
       {error && (

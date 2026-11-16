@@ -1,3 +1,4 @@
+import LinkedText from "./LinkedText";
 import {
   useCallback,
   useEffect,
@@ -539,7 +540,7 @@ function EventMailContent({
               Changes to the event or its recipients require a new review.
             </p>
             <h4>{review.subject}</h4>
-            <p className="gt-mail-preview">{review.message}</p>
+            <p className="gt-mail-preview"><LinkedText text={review.message} /></p>
             <details>
               <summary>Inspect all {review.count} recipient addresses</summary>
               <ul
@@ -693,7 +694,7 @@ function EventMailContent({
                 </time>{" "}
                 · {item.recipient_count} recipients
               </p>
-              <p className="gt-mail-preview">{item.message}</p>
+              <p className="gt-mail-preview"><LinkedText text={item.message} /></p>
             </article>
           ))}
           {history.data &&

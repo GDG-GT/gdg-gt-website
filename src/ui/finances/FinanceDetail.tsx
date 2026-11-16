@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import RecordPanel from "@/ui/RecordPanel";
 import RecordAcknowledgement from "@/ui/RecordAcknowledgement";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -410,7 +411,7 @@ export default function FinanceDetail({
             <time dateTime={n.createdAt}>
               {new Date(n.createdAt).toLocaleString()}
             </time>
-            <p>{n.note}</p>
+            <p><LinkedText text={n.note} /></p>
           </article>
         ))}
         <nav className="gt-button-row" aria-label="Finance note pages">

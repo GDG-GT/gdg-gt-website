@@ -35,7 +35,7 @@ for (const state of states)
     if (state === "campaign send approval")
       newsletter.record.content = Array(24)
         .fill(
-          "Fictional workshop update: review the complete message, caption plan, practical checklist and accessible demo instructions before approving any delivery.",
+          "Fictional workshop update: review the complete message, caption plan, practical checklist and accessible demo instructions before approving any delivery. Apply at https://gdggt.dev/forms/executive-board-application.",
         )
         .join("\n\n");
     const reviewRecipients = Array.from({ length: 18 }, (_, index) => ({
@@ -432,6 +432,7 @@ for (const state of states)
             name: "Campaign message for review",
             exact: true,
           });
+          await expect(message.getByRole("link", { name: "https://gdggt.dev/forms/executive-board-application", exact: true }).first()).toHaveAttribute("href", "https://gdggt.dev/forms/executive-board-application");
           for (const reviewPanel of [recipients, message]) {
             const bounds = await reviewPanel.evaluate((node) => ({
               visible: node.clientHeight,

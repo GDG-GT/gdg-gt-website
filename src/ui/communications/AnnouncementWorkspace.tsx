@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import {
   useCallback,
@@ -1069,7 +1070,7 @@ function AnnouncementWorkspaceContent() {
             {record.authorName || "Chapter account"} · Updated{" "}
             {when(record.updated_at)}
           </p>
-          <p className="gt-announcement-body">{record.message}</p>
+          <p className="gt-announcement-body"><LinkedText text={record.message} /></p>
           {record.canManage && (
             <dl className="gt-task-facts">
               <div>
@@ -1426,9 +1427,8 @@ function AnnouncementWorkspaceContent() {
                       {n.isRead && <Badge tone="success">Read</Badge>}
                     </div>
                     <h2>{n.title}</h2>
-                    <p>
-                      {n.message.slice(0, 180)}
-                      {n.message.length > 180 ? "…" : ""}
+                    <p className="gt-announcement-summary">
+                      <LinkedText text={n.message} />
                     </p>
                     <small>
                       {n.authorName || "Chapter account"} · {when(n.updated_at)}

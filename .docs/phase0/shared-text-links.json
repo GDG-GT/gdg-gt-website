@@ -1,0 +1,41 @@
+{
+  "validatedAt": "2026-11-16T19:07:19.112830+00:00",
+  "change": "Shared validated plain-text links for rendered web content and emails",
+  "recognizes": [
+    "HTTPS and HTTP URLs",
+    "www addresses",
+    "Email addresses"
+  ],
+  "behavior": [
+    "Escaped React text and escaped email attributes; no untrusted HTML rendering",
+    "Excludes executable schemes and URL credentials",
+    "Preserves paragraphs, query strings, fragments and balanced URL parentheses; keeps sentence punctuation outside links",
+    "New web tabs use noopener and noreferrer",
+    "Existing structured links and Markdown views retain their own renderers"
+  ],
+  "surfaces": [
+    "Newsletter send reviews and email templates",
+    "Contact inquiries and reply history",
+    "Chapter and team announcements",
+    "Channel messages and quoted replies",
+    "Private messages and quoted replies",
+    "Task descriptions and comments",
+    "Form help, response review and historical answers",
+    "Event descriptions, contact details and mail reviews",
+    "Project descriptions",
+    "Finance notes",
+    "Notifications",
+    "Public bios and reward descriptions",
+    "Site status messages"
+  ],
+  "validation": {
+    "unitSuite": "278 files, 3162 cases passed before final punctuation performance adjustment; final targeted 11 cases passed afterward",
+    "browser": "12 Chromium desktop and WebKit mobile cases passed, including newsletter send review links, task comments, private conversation and contact reply recovery",
+    "typecheck": "Passed",
+    "productionBuild": "Passed",
+    "changedUiLint": "Passed",
+    "bundleBudgets": "Passed",
+    "secretScanUnreviewed": 0
+  },
+  "productionEmailTests": "No real email or campaign was sent during validation"
+}

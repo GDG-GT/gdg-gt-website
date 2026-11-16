@@ -1,3 +1,5 @@
+import { textLinks } from "./text-links.mjs";
+
 export const escapeEmail = (value) =>
   String(value ?? "").replace(
     /[&<>"']/g,
@@ -26,12 +28,11 @@ export function emailText(content) {
     .map(
       (paragraph) =>
         '<p style="margin:0 0 20px;overflow-wrap:anywhere">' +
-        paragraph
-          .split(/(https?:\/\/[^\s<>"']+)/g)
-          .map((part, i) =>
-            i % 2 && safeEmailLink(part)
-              ? `<a style="color:#a63628;text-decoration:underline;word-break:break-word" href="${escapeEmail(part)}">${escapeEmail(part)}</a>`
-              : escapeEmail(part).replaceAll("\n", "<br>"),
+        textLinks(paragraph)
+          .map((part) =>
+            part.href
+              ? `<a style="color:#a63628;text-decoration:underline;word-break:break-word" href="${escapeEmail(part.href)}">${escapeEmail(part.text)}</a>`
+              : escapeEmail(part.text).replaceAll("\n", "<br>"),
           )
           .join("") +
         "</p>",

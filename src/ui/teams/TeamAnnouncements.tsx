@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import {
   useCallback,
   useEffect,
@@ -473,7 +474,7 @@ function TeamAnnouncementsContent({
                 <li key={row.id}>
                   <strong>{row.title}</strong> · {stateLabel(row)} · revision{" "}
                   {row.revision}
-                  <p className="gt-announcement-body">{row.message}</p>
+                  <p className="gt-announcement-body"><LinkedText text={row.message} /></p>
                 </li>
               ))}
             </ul>
@@ -645,7 +646,7 @@ function TeamAnnouncementsContent({
             ) : (
               <>
                 <p>Current title: {editor?.row?.title}</p>
-                <p className="gt-announcement-body">{editor?.row?.message}</p>
+                <p className="gt-announcement-body"><LinkedText text={editor?.row?.message || ""} /></p>
                 <p className="gt-helper">
                   Current settings: {editor?.row?.priority} priority · pinned{" "}
                   {editor?.row?.is_pinned ? "Yes" : "No"} · scheduled{" "}
@@ -991,7 +992,7 @@ function TeamAnnouncementsContent({
                   {post.expires_at &&
                     " · Expires " + new Date(post.expires_at).toLocaleString()}
                 </p>
-                <p className="gt-announcement-body">{post.message}</p>
+                <p className="gt-announcement-body"><LinkedText text={post.message} /></p>
                 <div className="gt-button-row">
                   {!post.isRead && !post.deleted_at && (
                     <Button

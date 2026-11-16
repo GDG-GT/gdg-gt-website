@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -201,7 +202,7 @@ export default function PublicProfile() {
           )}
           <p className="gt-linktree-handle">@{profile.username}</p>
           <h1>{profile.displayName}</h1>
-          {profile.bio && <p className="gt-linktree-bio">{profile.bio}</p>}
+          {profile.bio && <p className="gt-linktree-bio"><LinkedText text={profile.bio} /></p>}
         </header>
         <nav
           className="gt-linktree-links"

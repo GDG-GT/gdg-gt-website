@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import { useContext, useEffect, useRef, useState, type FormEvent } from "react";
 import { useDraftGuard } from "@/hooks/useDraftGuard";
 import { NavigationSafetyContext } from "@/contexts/NavigationSafetyContext";
@@ -991,7 +992,7 @@ function RespondentFormRuntime({
                 GDG on Campus · Georgia Tech
               </span>
               <h1>{definition.title}</h1>
-              <p>{definition.description}</p>
+              <p><LinkedText text={definition.description} /></p>
               <div className="gt-form-progress-label">
                 <span>
                   {review
@@ -1182,11 +1183,11 @@ function RespondentFormRuntime({
                       <div key={field.id}>
                         <strong>{field.label}</strong>
                         <p style={{ whiteSpace: "pre-wrap" }}>
-                          {reviewAnswer(
+                          <LinkedText text={reviewAnswer(
                             answers[field.id],
                             field.type,
                             fileNames,
-                          )}
+                          )} />
                         </p>
                       </div>
                     ))}

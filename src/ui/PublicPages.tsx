@@ -1,3 +1,4 @@
+import LinkedText from "./LinkedText";
 import { HydratedForm } from "./PublicHydrationBoundary";
 import { EventTile } from "./EventTile";
 import PrivacyNoticeDetails from "./PrivacyNoticeDetails";
@@ -708,7 +709,7 @@ export function EventDetailPage() {
       <section className="gt-container gt-section gt-detail-grid">
         <article className="gt-prose">
           <h2>About this event</h2>
-          <p>{event.description.replace(/<[^>]*>/g, "")}</p>
+          <p><LinkedText text={event.description.replace(/<[^>]*>/g, "")} /></p>
           {!!event.linked_forms?.length && (
             <section aria-label="Event forms">
               <h3>Event forms</h3>
@@ -727,43 +728,43 @@ export function EventDetailPage() {
           {event.what_youll_learn && (
             <>
               <h3>What you’ll learn</h3>
-              <p>{event.what_youll_learn}</p>
+              <p><LinkedText text={event.what_youll_learn} /></p>
             </>
           )}
           {event.prerequisites && (
             <>
               <h3>Prerequisites</h3>
-              <p>{event.prerequisites}</p>
+              <p><LinkedText text={event.prerequisites} /></p>
             </>
           )}
           {event.room && (
             <>
               <h3>Room</h3>
-              <p>{event.room}</p>
+              <p><LinkedText text={event.room} /></p>
             </>
           )}
           {event.additional_info && (
             <>
               <h3>Additional information</h3>
-              <p>{event.additional_info}</p>
+              <p><LinkedText text={event.additional_info} /></p>
             </>
           )}
           {event.contact_info && (
             <>
               <h3>Questions?</h3>
-              <p>{event.contact_info}</p>
+              <p><LinkedText text={event.contact_info} /></p>
             </>
           )}
           {event.what_to_bring && (
             <>
               <h3>What to bring</h3>
-              <p>{event.what_to_bring}</p>
+              <p><LinkedText text={event.what_to_bring} /></p>
             </>
           )}
           {event.schedule && (
             <>
               <h3>Schedule</h3>
-              <p>{event.schedule}</p>
+              <p><LinkedText text={event.schedule} /></p>
             </>
           )}
           <div className="gt-soft-callout">
@@ -1128,7 +1129,7 @@ export function TeamPage() {
                       </div>
                       <h3>{person.name}</h3>
                       <p className="gt-person-role">{person.role}</p>
-                      {person.bio && <p>{person.bio}</p>}
+                      {person.bio && <p><LinkedText text={person.bio} /></p>}
                       <div className="gt-inline-actions">
                         {safePublicUrl(person.linkedin_url) && (
                           <a
@@ -1378,7 +1379,7 @@ export function ResourcesPage() {
                 <div>
                   <Badge tone="coral">{resource.type.replace(/_/g, " ")}</Badge>
                   <h2>{resource.title}</h2>
-                  <p>{resource.description}</p>
+                  <p><LinkedText text={resource.description} /></p>
                   <div className="gt-tags">
                     {(resource.tags || []).map((tag: string) => (
                       <span key={tag}>{tag}</span>
@@ -1584,7 +1585,7 @@ export function SponsorsPage() {
                   <dt>{metric.stat_label}</dt>
                   <dd>
                     <strong>{metric.stat_value}</strong>
-                    <p>{metric.stat_description}</p>
+                    <p><LinkedText text={metric.stat_description} /></p>
                   </dd>
                 </div>
               ))}
@@ -1622,7 +1623,7 @@ export function SponsorsPage() {
           ].map(([title, text]) => (
             <div key={title}>
               <h3>{title}</h3>
-              <p>{text}</p>
+              <p><LinkedText text={text} /></p>
             </div>
           ))}
         </div>
@@ -1884,7 +1885,7 @@ function ContactPageContent({ initialType }: { initialType: string }) {
                   </span>
                   <div>
                     <h2>{String(title)}</h2>
-                    <p>{String(text)}</p>
+                    <p><LinkedText text={String(text)} /></p>
                   </div>
                 </div>
               );

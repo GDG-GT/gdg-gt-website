@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import { WorkspaceAccessContext } from "@/contexts/WorkspaceAccessContext";
 import {
@@ -1213,7 +1214,7 @@ function TaskWorkspaceContent({ personal }: { personal: boolean }) {
             </div>
           </dl>
           <p className="gt-announcement-body">
-            {record.description || "No extra description."}
+            <LinkedText text={record.description || "No extra description."} />
           </p>
           {!!record.tags?.length && (
             <div className="gt-button-row">
@@ -1312,14 +1313,14 @@ function TaskWorkspaceContent({ personal }: { personal: boolean }) {
                     {item.comment_type !== "comment" && <Badge>Activity</Badge>}
                   </header>
                   <p className="gt-message-body">
-                    {item.deleted_at
+                    <LinkedText text={item.deleted_at
                       ? "Comment removed."
                       : item.change && item.comment_type === "status_change"
                         ? `Status: ${statusLabel(item.change.from || "Unknown")} → ${statusLabel(item.change.to || "Unknown")}`
                         : item.change &&
                             item.comment_type === "assignment_change"
                           ? `Assigned: ${item.change.from || "Unassigned"} → ${item.change.to || "Unassigned"}`
-                          : item.comment}
+                          : item.comment} />
                   </p>
                   {item.comment_type === "comment" && (
                     <div className="gt-button-row">

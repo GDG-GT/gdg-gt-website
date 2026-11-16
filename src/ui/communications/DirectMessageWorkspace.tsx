@@ -1,3 +1,4 @@
+import LinkedText from "../LinkedText";
 import { useWorkspaceReadiness } from "@/contexts/WorkspaceReadinessContext";
 import {
   useCallback,
@@ -1219,12 +1220,12 @@ function DirectMessageContent({ personal }: { personal: boolean }) {
                       ) : (
                         <>
                           {m.replyPreview && (
-                            <blockquote>{m.replyPreview}</blockquote>
+                            <blockquote><LinkedText text={m.replyPreview} /></blockquote>
                           )}
                           <p className="gt-direct-body">
-                            {m.deleted_at
+                            <LinkedText text={m.deleted_at
                               ? "Message removed by its author."
-                              : m.message}
+                              : m.message} />
                           </p>
                           <footer>
                             {m.own && !m.deleted_at && (
