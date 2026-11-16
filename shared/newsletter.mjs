@@ -1,4 +1,5 @@
 import { emailDocument, escapeEmail, safeEmailLink } from "./email.mjs";
+import { newsletterBodyHtml } from "./newsletter-format.mjs";
 import { z } from "zod";
 const uuid = z.string().uuid(),
   revision = z.number().int().min(1),
@@ -148,5 +149,5 @@ export function newsletterPreview(subject, content, unsubscribe = null) {
     unsubscribe && safeEmailLink(unsubscribe)
       ? `<a href="${escapeEmail(unsubscribe)}" style="color:#9b3326">Unsubscribe from this newsletter</a>`
       : "Chapter news and events · gdggt.dev";
-  return emailDocument({ subject, content, footerHtml });
+  return emailDocument({ subject, bodyHtml: newsletterBodyHtml(content), footerHtml });
 }

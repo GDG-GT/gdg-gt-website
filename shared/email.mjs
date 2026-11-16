@@ -22,19 +22,18 @@ export function safeEmailLink(raw) {
     return false;
   }
 }
+export function emailInlineText(content) {
+  return textLinks(content).map((part) => part.href
+    ? `<a style="color:#a63628;text-decoration:underline;word-break:break-word" href="${escapeEmail(part.href)}">${escapeEmail(part.text)}</a>`
+    : escapeEmail(part.text).replaceAll("\n", "<br>")).join("");
+}
 export function emailText(content) {
   return String(content)
     .split(/\n\s*\n/)
     .map(
       (paragraph) =>
         '<p style="margin:0 0 20px;overflow-wrap:anywhere">' +
-        textLinks(paragraph)
-          .map((part) =>
-            part.href
-              ? `<a style="color:#a63628;text-decoration:underline;word-break:break-word" href="${escapeEmail(part.href)}">${escapeEmail(part.text)}</a>`
-              : escapeEmail(part.text).replaceAll("\n", "<br>"),
-          )
-          .join("") +
+        emailInlineText(paragraph) +
         "</p>",
     )
     .join("");

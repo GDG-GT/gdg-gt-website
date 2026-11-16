@@ -33,7 +33,7 @@ for (const state of states)
     if (state === "campaign delivery results")
       newsletter.record.status = "sent";
     if (state === "campaign send approval")
-      newsletter.record.content = Array(24)
+      newsletter.record.content = "EXECUTIVE BOARD APPLICATIONS\n\n" + Array(24)
         .fill(
           "Fictional workshop update: review the complete message, caption plan, practical checklist and accessible demo instructions before approving any delivery. Apply at https://gdggt.dev/forms/executive-board-application.",
         )
@@ -433,6 +433,9 @@ for (const state of states)
             exact: true,
           });
           await expect(message.getByRole("link", { name: "https://gdggt.dev/forms/executive-board-application", exact: true }).first()).toHaveAttribute("href", "https://gdggt.dev/forms/executive-board-application");
+          const sectionHeading = message.getByRole("heading", { name: "EXECUTIVE BOARD APPLICATIONS", exact: true });
+          await expect(sectionHeading).toBeVisible();
+          await expect(sectionHeading).toHaveCSS("font-weight", "700");
           for (const reviewPanel of [recipients, message]) {
             const bounds = await reviewPanel.evaluate((node) => ({
               visible: node.clientHeight,

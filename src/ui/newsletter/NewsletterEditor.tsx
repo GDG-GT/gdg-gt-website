@@ -679,7 +679,7 @@ export default function NewsletterEditor({
               <Field
                 label="Message"
                 required
-                hint="Up to 30,000 characters. Website links are clickable."
+                hint="Up to 30,000 characters. Links are clickable. Put section headings on their own line in capitals, or start them with ##."
               >
                 <textarea
                   required

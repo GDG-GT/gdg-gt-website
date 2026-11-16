@@ -1,4 +1,4 @@
-import LinkedText from "../LinkedText";
+import NewsletterBody from "./NewsletterBody";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { useDraftGuard, useNavigationSafety } from "@/hooks/useDraftGuard";
@@ -316,7 +316,7 @@ export default function NewsletterSend({
                 tabIndex={0}
                 onKeyDown={(event) => scrollWithKeyboard(event, "vertical")}
               >
-                <LinkedText text={review.content} />
+                <NewsletterBody content={review.content} />
               </div>
               <p className="gt-helper">
                 The final email also includes chapter identity and an individual
