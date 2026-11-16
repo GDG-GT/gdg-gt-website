@@ -51,7 +51,7 @@ export default function MemberSubscriberImport({
     };
   }>();
   const eligible = (read.data?.items || []).filter(
-    (m) => !["excluded", "other_scope"].includes(m.status),
+    (m) => m.status === "new" || m.status === "pending",
   );
   const ready =
     !!read.data && !read.loading && !read.error && !read.denied && isOnline;
@@ -137,6 +137,7 @@ export default function MemberSubscriberImport({
             <Button
               type="button"
               variant="secondary"
+              disabled={!eligible.length}
               onClick={() => setSelected(eligible.map((m) => m.id))}
             >
               Select all {eligible.length} members
@@ -154,14 +155,11 @@ export default function MemberSubscriberImport({
             className="gt-newsletter-recipient-list"
             aria-label="Community members to subscribe"
           >
-            {(read.data?.items || []).map((m) => (
+            {eligible.map((m) => (
               <li key={m.id}>
                 <label className="gt-check">
                   <input
                     type="checkbox"
-                    disabled={
-                      m.status === "excluded" || m.status === "other_scope"
-                    }
                     checked={selected.includes(m.id)}
                     onChange={(e) =>
                       setSelected(
@@ -190,6 +188,9 @@ export default function MemberSubscriberImport({
               </li>
             ))}
           </ul>
+          {ready && !eligible.length && (
+            <p role="status">No community members are available to add.</p>
+          )}
           <Field label="How was consent collected?" required>
             <input
               value={note}

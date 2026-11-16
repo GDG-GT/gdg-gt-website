@@ -54,10 +54,10 @@ test("imports consented members once and makes the full audience available", asy
       return route.fulfill({
         json: {
           data: {
-            selected: 42,
+            selected: 41,
             created: 41,
             activated: 0,
-            existing: 1,
+            existing: 0,
             excluded: 0,
             emailsQueued: 0,
           },
@@ -95,10 +95,11 @@ test("imports consented members once and makes the full audience available", asy
     .getByRole("button", { name: "Add community members", exact: true })
     .click();
   const dialog = page.getByRole("dialog");
-  await dialog.getByRole("button", { name: "Select all 42 members" }).click();
+  await expect(dialog.getByRole("checkbox", { name: /Fictional Member 1 fictional-1@example.test/ })).toHaveCount(0);
+  await dialog.getByRole("button", { name: "Select all 41 members" }).click();
   await expect(
     dialog.getByRole("checkbox", { name: /Fictional Optout/ }),
-  ).toBeDisabled();
+  ).toHaveCount(0);
   await dialog
     .getByLabel("How was consent collected?", { exact: false })
     .fill("Chapter lead confirmed existing member newsletter consent");
@@ -118,7 +119,7 @@ test("imports consented members once and makes the full audience available", asy
     fullPage: true,
   });
   await dialog
-    .getByRole("button", { name: "Add 42 members", exact: true })
+    .getByRole("button", { name: "Add 41 members", exact: true })
     .click();
   await expect(
     dialog.getByText("Fictional interrupted import response", { exact: true }),
@@ -131,12 +132,12 @@ test("imports consented members once and makes the full audience available", asy
     .click();
   await expect(dialog).toHaveCount(0);
   await expect(
-    page.getByText("41 members added. 1 already subscribed.", { exact: true }),
+    page.getByText("41 members added. 0 already subscribed.", { exact: true }),
   ).toBeVisible();
   expect(writes).toHaveLength(2);
   expect(writes[0]).toEqual(writes[1]);
   expect((writes[0].body as { memberIds: string[] }).memberIds).toHaveLength(
-    42,
+    41,
   );
   await page.getByRole("button", { name: "Campaigns", exact: true }).click();
   await page
