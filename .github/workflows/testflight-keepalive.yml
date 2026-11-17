@@ -1,0 +1,104 @@
+name: Keep TestFlight Build Active
+
+on:
+  schedule:
+    - cron: "17 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: testflight-keepalive
+  cancel-in-progress: false
+
+jobs:
+  renew-if-stale:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Check whether main has been inactive for 55 days
+        id: inactivity
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "The checkout is not clean; refusing to continue."
+            exit 1
+          fi
+          git fetch --prune origin main
+          git checkout -B main origin/main
+          audited_head="$(git rev-parse origin/main)"
+          latest_commit_epoch="$(git show -s --format=%ct "$audited_head")"
+          now_epoch="$(date -u +%s)"
+          age_seconds="$((now_epoch - latest_commit_epoch))"
+          threshold_seconds="$((55 * 86400))"
+
+          if (( age_seconds < 0 )); then
+            echo "Latest commit is dated in the future; refusing to push."
+            exit 1
+          fi
+          age_days="$((age_seconds / 86400))"
+          echo "origin/main has been inactive for ${age_days} full days."
+          echo "inactive_days=$age_days" >> "$GITHUB_OUTPUT"
+          echo "audited_head=$audited_head" >> "$GITHUB_OUTPUT"
+          if (( age_seconds < threshold_seconds )); then
+            echo "should_push=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "should_push=true" >> "$GITHUB_OUTPUT"
+
+      - name: Audit and trigger a new TestFlight build
+        if: steps.inactivity.outputs.should_push == 'true'
+        env:
+          AUDITED_HEAD: ${{ steps.inactivity.outputs.audited_head }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git fetch --prune origin main
+          local_head="$(git rev-parse HEAD)"
+          remote_head="$(git rev-parse origin/main)"
+          if [[ "$local_head" != "$remote_head" || "$remote_head" != "$AUDITED_HEAD" ]]; then
+            echo "main changed during this run; refusing to push."
+            exit 1
+          fi
+          if ! git diff --quiet || ! git diff --cached --quiet || [[ -n "$(git status --porcelain)" ]]; then
+            echo "The checkout has file changes; refusing to push."
+            exit 1
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "chore(release): keep TestFlight build active"
+
+          if [[ "$(git rev-parse HEAD^)" != "$remote_head" ]]; then
+            echo "The release commit has the wrong parent; refusing to push."
+            exit 1
+          fi
+          if ! git diff --quiet HEAD^ HEAD; then
+            echo "The release commit is not empty; refusing to push."
+            exit 1
+          fi
+          if ! git diff --quiet || ! git diff --cached --quiet || [[ -n "$(git status --porcelain)" ]]; then
+            echo "The checkout changed while creating the release commit; refusing to push."
+            exit 1
+          fi
+          if git log -1 --format=%B | grep -Eiq '^[[:space:]]*Co-Authored-By[[:space:]]*:'; then
+            echo "The release commit contains a prohibited attribution trailer."
+            exit 1
+          fi
+          if [[ "$(git log -1 --format=%B)" != "chore(release): keep TestFlight build active" ]]; then
+            echo "The release commit has an unexpected message; refusing to push."
+            exit 1
+          fi
+
+          # A racing main update is rejected by the ordinary non-force push.
+          git push origin HEAD:main
