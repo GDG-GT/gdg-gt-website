@@ -1,0 +1,9 @@
+{
+  "id" : "f951c26e-49d3-4d84-bb9a-3b26f618e939",
+  "targets" : [
+    {
+      "id" : "ea587da9-84e8-4449-8a36-f79fe1cf4bff",
+      "name" : "GDGScanner"
+    }
+  ]
+}

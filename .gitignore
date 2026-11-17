@@ -60,6 +60,9 @@ src/styles/public.generated.css
 
 # Native scanner generated build products and per-user signing state.
 native/Scanner/*.xcodeproj/
+!native/Scanner/GDGScanner.xcodeproj/
+native/Scanner/GDGScanner.xcodeproj/xcuserdata/
+native/Scanner/GDGScanner.xcodeproj/project.xcworkspace/xcuserdata/
 native/Scanner/build/
 native/Scanner/DerivedData/
 *.xcarchive/

@@ -82,3 +82,9 @@ NFC scanning pauses only on actual background entry. Presenting the system NFC s
 Subscriber details offer **Resend invitation** for pending invitations and **Resend welcome email** for active subscribers with send permission. The operation uses CSRF, an idempotency key, a one-minute cooldown and delivery-time eligibility checks. Active subscribers keep their current consent. Suppressed, unsubscribed and archived recipients cannot be remailed by this action. The migration and deployment do not themselves send these notices.
 
 The delivery scheduler now flattens push counters into numeric fields. Previously its nested `appPush` object violated `finish_scheduled_job` validation, including in the error path, and left otherwise processed runs marked running until lease expiry. Regression tests exercise both success and provider retry without weakening database counter validation.
+
+## Automatic TestFlight renewal
+
+The owner approved GitHub Actions plus Xcode Cloud on 2026-11-17. The keepalive check runs at 12:17 UTC daily and supports manual dispatch. A fresh main commit skips release. After 55 full idle days, the guarded workflow can create one empty release commit and non-force push it to main. This earlier threshold avoids GitHub's 60-day scheduled-workflow inactivity cutoff for public repositories while leaving margin before TestFlight's 90-day expiry. Every normal main update resets the clock.
+
+See the narrow automatic-push exception at the top of `../CURRENT_CHECKPOINT.md`. Xcode Cloud is the build/sign/upload/distribution system; GitHub Actions only checks inactivity and triggers an empty main update. The source project is generated from `native/Scanner/project.yml`; if that specification changes, regenerate and commit the canonical `GDGScanner.xcodeproj` and shared schemes. Do not commit user workspace state, local signing material, archives or generated build output.
