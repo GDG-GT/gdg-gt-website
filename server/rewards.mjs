@@ -57,8 +57,16 @@ const providerConfig = (env) => {
     !env.SUPABASE_PUBLISHABLE_KEY
   )
     return null;
-  const u = new URL(env.SUPABASE_URL);
-  if (u.protocol !== "https:") return null;
+  let u;
+  try {
+    u = new URL(env.SUPABASE_URL);
+  } catch {
+    return null;
+  }
+  if (
+    u.protocol !== "https:" || u.username || u.password ||
+    u.pathname !== "/" || u.search || u.hash
+  ) return null;
   return {
     url: u.origin,
     key: env.SUPABASE_PUBLISHABLE_KEY,
@@ -456,6 +464,7 @@ export async function rewardsRoutes(
     const target = new URL("/auth/v1/authorize", provider.url);
     target.search = new URLSearchParams({
       provider: provider.provider,
+      scopes: "openid profile email",
       redirect_to: origin + "/api/v1/rewards/callback",
       code_challenge: challenge,
       code_challenge_method: "s256",

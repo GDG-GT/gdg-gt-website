@@ -11,7 +11,7 @@ import {
   cardUrl,
 } from "../../shared/rewards.mjs";
 import { token, tokenHash } from "../../server/lib/security.mjs";
-import { encryptPayload } from "../../server/lib/encryption.mjs";
+import { encryptPayload, decryptPayload } from "../../server/lib/encryption.mjs";
 const actor = "b2100000-0000-4000-8000-000000000001",
   session = "b2100000-0000-4000-8000-000000000002",
   member = "b2100000-0000-4000-8000-000000000003";
@@ -216,6 +216,113 @@ describe("Member rewards boundary", () => {
     expect(
       rewardsOrigin({ headers: { host: "evil.gdggt.dev" } }, f.config),
     ).toBe(f.config.origin);
+  });
+});
+describe("Campus sign-in round trip", () => {
+  const env = {
+    GT_MEMBER_SSO_ENABLED: "true",
+    GT_MEMBER_SSO_PROVIDER: "custom:gatech",
+    SUPABASE_URL: "https://fictional.supabase.co",
+    SUPABASE_PUBLISHABLE_KEY: "fictional-public-key",
+  };
+  const user = () => ({
+    email: "member@gatech.edu",
+    email_confirmed_at: new Date().toISOString(),
+    identities: [{
+      provider: "custom:gatech", provider_id: "immutable-subject",
+      last_sign_in_at: new Date().toISOString(),
+      identity_data: { email: "member@gatech.edu", email_verified: true },
+    }],
+  });
+  function callbackFixture() {
+    const f = setup(), raw = token(), verifier = token() + token();
+    const flow = {
+      origin: f.config.rewardsOrigin,
+      encryptedVerifier: encryptPayload({ verifier, startedAt: Date.now() }, f.config.encryptionSecret),
+    };
+    f.db.rpc.mockImplementation(async (name) => ({
+      data: name === "reward_consume_flow" ? flow : {}, error: null,
+    }));
+    const request = f.req("/rewards/callback?code=fictional-auth-code");
+    request.headers.host = "leaderboards.gdggt.dev";
+    request.headers.cookie = "__Host-gdg_rewards_flow=" + raw;
+    const fetchImpl = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ access_token: "fictional-supabase-token" })))
+      .mockResolvedValueOnce(new Response(JSON.stringify(user())));
+    return { ...f, flow, raw, verifier, request, fetchImpl };
+  }
+  it.each(["not-a-url", "http://fictional.supabase.co", "https://user:pass@fictional.supabase.co", "https://fictional.supabase.co/other", "https://fictional.supabase.co/?other=true"])(
+    "fails closed for invalid Supabase origin %s", async (SUPABASE_URL) => {
+      const f = setup();
+      await expect(rewardsRoutes(f.req("/rewards/login", {}), f.response, {
+        ...f, env: { ...env, SUPABASE_URL }, requestId: actor,
+      })).rejects.toMatchObject({ code: "SSO_UNAVAILABLE" });
+      expect(f.db.from).not.toHaveBeenCalled();
+    },
+  );
+  it("starts a browser-bound, encrypted PKCE flow requesting only the campus scopes", async () => {
+    const f = setup(), insert = vi.fn(async () => ({ error: null }));
+    f.db.from.mockReturnValue({ insert });
+    const request = f.req("/rewards/login", {});
+    request.headers.host = "leaderboards.gdggt.dev";
+    await rewardsRoutes(request, f.response, { ...f, env, requestId: actor });
+    const target = new URL(JSON.parse(f.response.end.mock.calls[0][0]).data.url);
+    expect(target.origin).toBe(env.SUPABASE_URL);
+    expect(target.pathname).toBe("/auth/v1/authorize");
+    expect(target.searchParams.get("provider")).toBe("custom:gatech");
+    expect(target.searchParams.get("redirect_to")).toBe(f.config.rewardsOrigin + "/api/v1/rewards/callback");
+    expect(target.searchParams.get("scopes")).toBe("openid profile email");
+    expect(target.searchParams.get("code_challenge_method")).toBe("s256");
+    const stored = insert.mock.calls[0][0];
+    const { verifier } = decryptPayload(stored.encrypted_verifier, f.config.encryptionSecret);
+    expect(target.searchParams.get("code_challenge")).toBe(Buffer.from(tokenHash(verifier), "hex").toString("base64url"));
+    expect(stored.encrypted_verifier).not.toContain(verifier);
+    const cookie = f.response.headers["Set-Cookie"].join(";");
+    expect(cookie).toContain("__Host-gdg_rewards_flow=");
+    expect(cookie).toContain("HttpOnly");
+    expect(cookie).toContain("Secure");
+    expect(cookie).toContain("Max-Age=300");
+    const raw = /__Host-gdg_rewards_flow=([^;]+)/.exec(cookie)[1];
+    expect(stored.token_hash).toBe(tokenHash(raw));
+    expect(stored.origin).toBe(f.config.rewardsOrigin);
+  });
+  it("exchanges the PKCE code, verifies the Supabase identity and opens only the member session", async () => {
+    const f = callbackFixture();
+    await rewardsRoutes(f.request, f.response, { ...f, env, requestId: actor });
+    expect(f.db.rpc).toHaveBeenCalledWith("reward_consume_flow", { p_hash: tokenHash(f.raw) });
+    expect(f.fetchImpl.mock.calls[0][0]).toBe(env.SUPABASE_URL + "/auth/v1/token?grant_type=pkce");
+    expect(JSON.parse(f.fetchImpl.mock.calls[0][1].body)).toEqual({ auth_code: "fictional-auth-code", code_verifier: f.verifier });
+    expect(f.fetchImpl.mock.calls[1][0]).toBe(env.SUPABASE_URL + "/auth/v1/user");
+    expect(f.fetchImpl.mock.calls[1][1].headers.Authorization).toBe("Bearer fictional-supabase-token");
+    expect(f.db.rpc).toHaveBeenCalledWith("reward_open_session", {
+      p_email: "member@gatech.edu", p_subject: "custom:gatech:immutable-subject",
+      p_token: expect.stringMatching(/^[a-f0-9]{64}$/), p_csrf: expect.stringMatching(/^[a-f0-9]{64}$/),
+    });
+    expect(f.response.statusCode).toBe(303);
+    expect(f.response.headers.Location).toBe("/member");
+    const cookies = f.response.headers["Set-Cookie"].join(";");
+    expect(cookies).toContain("__Host-gdg_rewards=");
+    expect(cookies).not.toContain("__Host-gdg_session=");
+    expect(cookies).not.toContain("fictional-supabase-token");
+  });
+  it.each(["expired", "replayed", "wrong-origin"])("rejects %s flows before contacting Supabase", async (reason) => {
+    const f = callbackFixture();
+    if (reason === "wrong-origin") f.flow.origin = "https://other.test";
+    else f.db.rpc.mockResolvedValue({ data: null, error: null });
+    await expect(rewardsRoutes(f.request, f.response, { ...f, env, requestId: actor })).rejects.toMatchObject({ status: 403 });
+    expect(f.fetchImpl).not.toHaveBeenCalled();
+    expect(f.response.headers["Set-Cookie"].join(";")).toContain("Max-Age=0");
+  });
+  it.each(["exchange", "identity", "membership"])("rejects a denied %s without issuing a session", async (reason) => {
+    const f = callbackFixture();
+    if (reason === "exchange") f.fetchImpl.mockReset().mockResolvedValue(new Response("{}", { status: 403 }));
+    if (reason === "identity") f.fetchImpl.mockReset()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ access_token: "fictional" })))
+      .mockResolvedValueOnce(new Response("{}", { status: 403 }));
+    if (reason === "membership") f.db.rpc.mockImplementation(async (name) =>
+      name === "reward_consume_flow" ? { data: f.flow, error: null } : { data: null, error: { message: "FORBIDDEN" } });
+    await expect(rewardsRoutes(f.request, f.response, { ...f, env, requestId: actor })).rejects.toMatchObject({ status: 403 });
+    expect(f.response.headers["Set-Cookie"].join(";")).not.toContain("__Host-gdg_rewards=");
   });
 });
 describe("Campus identity verification", () => {

@@ -1,3 +1,11 @@
+## GT test OIDC preparation — 2026-11-18
+
+Owner requested the application-side work from Jian Wang's SCTASK0363981 reply and does not want to send a ticket reply. IAM's `sso-upgrade` registration/client credentials are still pending. The live discovery document and public RSA signing keys pass `node scripts/check-gt-sso.mjs`. Its public provider profile pins the exact nonstandard discovery URL, issuer, minimal scopes, PKCE, nonce checking and required email, initially disabled. The provider callback remains `https://gyzrciokgqwxjrlqrklz.supabase.co/auth/v1/callback`; Supabase's separate application redirect is the leaderboard API callback. See [activation plan](planning/GEORGIA_TECH_SSO_PLAN.md).
+
+The existing member flow now explicitly requests `openid profile email` and fails closed for malformed/credential-bearing/non-origin Supabase URLs. Added mocked start/callback coverage for encrypted browser binding, PKCE exchange, server-verified identity, separate member sessions, expiry/replay/origin rejection and provider/membership denial. All 280 files / 3,188 tests, typecheck, production build, bundle budgets, SSR and secret scan pass. Whole-repository lint passes with ten existing warnings after removing an unused fixture argument from the newsletter notification test; its assertions and behavior are unchanged.
+
+No hosted Auth settings or provider were changed, no credentials invented, and no sign-in flag enabled. The stored Supabase management token expired; GitHub-linked personal login cannot access the GDG project. Owner identified `gdg@gatech.edu` as its account. Dashboard access and real IAM credentials/sign-in acceptance remain prerequisites. Admin and Forms SSO are separate planned workflows; this preparation does not enable them. Preserve unrelated `supabase/.temp/cli-latest` and `tmp/`.
+
 ## Automatic TestFlight renewal authorization — 2026-11-17
 
 Owner explicitly authorized committing and pushing the scanner release automation to `main`, with no app source changes and no AI attribution. The owner subsequently chose **55 idle days** instead of 85 because this repository is public and GitHub can disable scheduled workflows after 60 days without repository activity; the referenced Wayfarer repository is private.

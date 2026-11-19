@@ -31,7 +31,7 @@ Private screens show the latest 100 ledger/credential records; the immutable dat
 
 ## Campus sign-in
 
-IAM approval is still an external input. Configure a Supabase custom OIDC provider `custom:gatech`, with verified email and immutable subject, then set `GT_MEMBER_SSO_ENABLED=true` and `GT_MEMBER_SSO_PROVIDER=custom:gatech`. Register the exact callback(s):
+IAM is preparing the `sso-upgrade` test registration under SCTASK0363981; client credentials are pending. Follow the exact [test provider configuration and activation steps](../planning/GEORGIA_TECH_SSO_PLAN.md). `node scripts/check-gt-sso.mjs` checks its live public metadata without changing hosted settings. Configure Supabase's custom OIDC provider `custom:gatech`, with verified email and immutable subject, and complete real sign-in testing before setting `GT_MEMBER_SSO_ENABLED=true` and `GT_MEMBER_SSO_PROVIDER=custom:gatech`. Add the exact application return URL to Supabase's redirect allowlist:
 
 - `https://leaderboards.gdggt.dev/api/v1/rewards/callback`
 

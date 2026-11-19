@@ -1,6 +1,38 @@
 # Georgia Tech SSO configuration and remaining scope
 
-The owner confirmed submitting the institutional SSO request. Approval, issued provider configuration and real campus sign-in verification remain pending. Google sign-in is excluded.
+GT IAM is preparing the test registration under **SCTASK0363981**. Jian Wang supplied the `sso-upgrade` discovery URL; the client ID, client secret and registration-ready confirmation have not arrived. Google sign-in is excluded.
+
+## Test-instance preparation — 2026-11-18
+
+The live discovery document and public signing keys were checked successfully. The exact public provider settings are in [scripts/lib/gt-oidc.mjs](../../scripts/lib/gt-oidc.mjs). Run `node scripts/check-gt-sso.mjs` from the repository root to recheck the pinned issuer, endpoints, code flow, S256 support, scopes, claims and public signing keys. This command is read-only and does not enable authentication.
+
+| Setting | Value |
+| --- | --- |
+| Supabase custom provider identifier | `custom:gatech` |
+| Type | OIDC |
+| Issuer | `https://sso-upgrade.a.iam.gatech.edu/cas/oidc` |
+| Discovery URL override | `https://sso-upgrade.a.iam.gatech.edu/cas/oidc/.well-known` |
+| GT-registered callback | `https://gyzrciokgqwxjrlqrklz.supabase.co/auth/v1/callback` |
+| Supabase redirect allowlist entry | `https://leaderboards.gdggt.dev/api/v1/rewards/callback` |
+| Scopes | `openid profile email` |
+| PKCE / nonce checks | Enabled / required |
+| Email optional | No |
+| Initial provider state | Disabled |
+
+The discovery override matters: GT uses `.well-known`, rather than the conventional `.well-known/openid-configuration` suffix. Choose **Custom OAuth/OIDC provider** in Supabase Auth, not a Third-Party Auth JWT integration. The latter is a different feature. Do not add GTCustomScope, arbitrary attributes or extra acceptable client IDs for this flow.
+
+Supabase performs the OIDC signature, issuer, audience, expiry and nonce verification. The application exchanges the browser-bound PKCE code on the server and fetches the authenticated Supabase user. It then requires a recent, verified `custom:gatech` identity and an active directory member before creating its separate member session. The explicit scopes are also included when initiating login.
+
+### Hosted activation still required
+
+1. Obtain Jian's real client ID and secret and confirmation that the above callback is registered. Do not use dummy credentials or store the secret in Git, browser code or public deployment variables.
+2. In the correct Supabase project, create the disabled custom OIDC provider with the settings above and the issued credentials. Preserve existing Auth URL settings and add only the exact application callback to its redirect allowlist. Keep `GT_MEMBER_SSO_ENABLED=false` while preparing it.
+3. For a controlled sign-in test, enable the provider and set `GT_MEMBER_SSO_ENABLED=true` with `GT_MEMBER_SSO_PROVIDER=custom:gatech` in the test deployment. Test real GT sign-in, verified email and immutable subject claims, active/nonmember rejection, expired/reused attempts, sign-out and browser/PWA contexts. Revert the flag if testing fails. The mocked route tests and metadata preflight do not establish institutional sign-in acceptance.
+4. This test issuer is not a production IAM registration. Obtain and validate the production configuration and repeat real sign-in acceptance before enabling campus-wide access.
+
+No hosted provider or Auth URL settings were changed on 2026-11-18. The locally saved Supabase management token is expired, and the current GitHub-linked dashboard account cannot access the GDG project. Access through its owning account is required. This is separate from the pending IAM credentials.
+
+Reference: [Supabase custom OAuth/OIDC providers](https://supabase.com/docs/guides/auth/custom-oauth-providers). No reply to the IAM ticket was sent.
 
 ## Current implementation
 
