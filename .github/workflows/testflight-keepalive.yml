@@ -23,7 +23,7 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Check whether main has been inactive for 55 days
+      - name: Check whether the iOS release source has been inactive for 55 days
         id: inactivity
         shell: bash
         run: |
@@ -34,9 +34,32 @@ jobs:
             exit 1
           fi
           git fetch --prune origin main
+          git fetch --tags origin
           git checkout -B main origin/main
           audited_head="$(git rev-parse origin/main)"
-          latest_commit_epoch="$(git show -s --format=%ct "$audited_head")"
+          native_head="$(git log -1 --format=%H "$audited_head" -- native/Scanner)"
+          if [[ -z "$native_head" ]]; then
+            echo "No scanner history found; refusing to continue."
+            exit 1
+          fi
+          latest_commit_epoch="$(git show -s --format=%ct "$native_head")"
+          # Website changes no longer create iOS builds and cannot reset this clock.
+          # Only a guarded empty release on main can count as a renewal source.
+          while IFS= read -r release_tag; do
+            release_head="${release_tag#testflight-keepalive-}"
+            if [[ ! "$release_head" =~ ^[0-9a-f]{40}$ ]] ||
+              [[ "$(git rev-parse "refs/tags/$release_tag")" != "$release_head" ]] ||
+              ! git merge-base --is-ancestor "$release_head" "$audited_head" ||
+              [[ "$(git log -1 --format=%B "$release_head")" != "chore(release): keep TestFlight build active" ]] ||
+              ! git diff --quiet "$release_head^" "$release_head"; then
+              echo "Invalid keepalive release tag; refusing to continue."
+              exit 1
+            fi
+            release_epoch="$(git show -s --format=%ct "$release_head")"
+            if (( release_epoch > latest_commit_epoch )); then
+              latest_commit_epoch="$release_epoch"
+            fi
+          done < <(git tag --list 'testflight-keepalive-*')
           now_epoch="$(date -u +%s)"
           age_seconds="$((now_epoch - latest_commit_epoch))"
           threshold_seconds="$((55 * 86400))"
@@ -46,7 +69,7 @@ jobs:
             exit 1
           fi
           age_days="$((age_seconds / 86400))"
-          echo "origin/main has been inactive for ${age_days} full days."
+          echo "iOS release source has been inactive for ${age_days} full days."
           echo "inactive_days=$age_days" >> "$GITHUB_OUTPUT"
           echo "audited_head=$audited_head" >> "$GITHUB_OUTPUT"
           if (( age_seconds < threshold_seconds )); then
@@ -100,5 +123,14 @@ jobs:
             exit 1
           fi
 
-          # A racing main update is rejected by the ordinary non-force push.
-          git push origin HEAD:main
+          release_head="$(git rev-parse HEAD)"
+          release_tag="testflight-keepalive-${release_head}"
+          git tag "$release_tag" "$release_head"
+          if [[ "$(git rev-parse "refs/tags/$release_tag")" != "$release_head" ]]; then
+            echo "The release tag has the wrong target; refusing to push."
+            exit 1
+          fi
+          # The native-folder filter excludes empty commits. This dedicated tag
+          # triggers the same Xcode Cloud archive/distribution workflow instead.
+          # Atomic, non-force push rejects a racing main/tag update as a unit.
+          git push --atomic origin HEAD:main "refs/tags/$release_tag:refs/tags/$release_tag"

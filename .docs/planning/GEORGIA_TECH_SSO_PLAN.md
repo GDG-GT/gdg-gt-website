@@ -30,7 +30,7 @@ Supabase performs the OIDC signature, issuer, audience, expiry and nonce verific
 3. For a controlled sign-in test, enable the provider and set `GT_MEMBER_SSO_ENABLED=true` with `GT_MEMBER_SSO_PROVIDER=custom:gatech` in the test deployment. Test real GT sign-in, verified email and immutable subject claims, active/nonmember rejection, expired/reused attempts, sign-out and browser/PWA contexts. Revert the flag if testing fails. The mocked route tests and metadata preflight do not establish institutional sign-in acceptance.
 4. This test issuer is not a production IAM registration. Obtain and validate the production configuration and repeat real sign-in acceptance before enabling campus-wide access.
 
-No hosted provider or Auth URL settings were changed on 2026-11-18. The locally saved Supabase management token is expired, and the current GitHub-linked dashboard account cannot access the GDG project. Access through its owning account is required. This is separate from the pending IAM credentials.
+After the owner signed in as `gdg@gatech.edu` on 2026-11-18, the exact leaderboard application callback above was added to Supabase's Auth redirect allowlist and verified after navigation. Supabase's provider creation screen also confirmed the provider callback sent to Jian. No custom provider was created and no sign-in flag enabled; IAM credentials remain pending. The existing Site URL and other Auth settings were preserved. Website preparation commit `941e87d` is deployed.
 
 Reference: [Supabase custom OAuth/OIDC providers](https://supabase.com/docs/guides/auth/custom-oauth-providers). No reply to the IAM ticket was sent.
 
