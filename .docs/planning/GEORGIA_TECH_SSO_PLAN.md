@@ -1,6 +1,6 @@
 # Georgia Tech SSO configuration and remaining scope
 
-GT IAM is preparing the test registration under **SCTASK0363981**. Jian Wang supplied the `sso-upgrade` discovery URL; the client ID, client secret and registration-ready confirmation have not arrived. Google sign-in is excluded.
+GT IAM is preparing the test registration under **SCTASK0363981**. Jian Wang supplied the `sso-upgrade` discovery URL; the client ID and secret arrived on 2026-11-21. Jian confirmed the test service ready on 2026-11-23, and real GT login plus the Supabase code exchange/user verification succeeded that day. Google sign-in is excluded.
 
 ## Test-instance preparation — 2026-11-18
 
@@ -25,7 +25,7 @@ Supabase performs the OIDC signature, issuer, audience, expiry and nonce verific
 
 ### Hosted activation still required
 
-1. Obtain Jian's real client ID and secret and confirmation that the above callback is registered. Do not use dummy credentials or store the secret in Git, browser code or public deployment variables.
+1. Issued client credentials are now saved in Supabase Auth. Jian confirmed test IDP readiness on 2026-11-23, and authorization succeeded. Never store the secret in Git, browser code or public deployment variables.
 2. In the correct Supabase project, create the disabled custom OIDC provider with the settings above and the issued credentials. Preserve existing Auth URL settings and add only the exact application callback to its redirect allowlist. Keep `GT_MEMBER_SSO_ENABLED=false` while preparing it.
 3. For a controlled sign-in test, enable the provider and set `GT_MEMBER_SSO_ENABLED=true` with `GT_MEMBER_SSO_PROVIDER=custom:gatech` in the test deployment. Test real GT sign-in, verified email and immutable subject claims, active/nonmember rejection, expired/reused attempts, sign-out and browser/PWA contexts. Revert the flag if testing fails. The mocked route tests and metadata preflight do not establish institutional sign-in acceptance.
 4. This test issuer is not a production IAM registration. Obtain and validate the production configuration and repeat real sign-in acceptance before enabling campus-wide access.
@@ -33,6 +33,22 @@ Supabase performs the OIDC signature, issuer, audience, expiry and nonce verific
 After the owner signed in as `gdg@gatech.edu` on 2026-11-18, the exact leaderboard application callback above was added to Supabase's Auth redirect allowlist and verified after navigation. Supabase's provider creation screen also confirmed the provider callback sent to Jian. No custom provider was created and no sign-in flag enabled; IAM credentials remain pending. The existing Site URL and other Auth settings were preserved. Website preparation commit `941e87d` is deployed.
 
 Reference: [Supabase custom OAuth/OIDC providers](https://supabase.com/docs/guides/auth/custom-oauth-providers). No reply to the IAM ticket was sent.
+
+## Issued credentials configured — 2026-11-21
+
+Created `custom:gatech` in the chapter Supabase project using the credentials Jian supplied, then disabled the provider pending IAM readiness. Reopened the saved provider after reloading and verified its OIDC type, exact test issuer/discovery override, `openid profile email` scopes and required email. The creation UI initially enables new providers; the provider was immediately disabled, and the website flag stayed off throughout. The live leaderboard API still reports `ssoAvailable: false`. No campus authentication was attempted, and no website push or iOS build was triggered. No client secret or client ID is retained in repository documentation. Include these operational notes with the next real change rather than deploying only documentation.
+
+## Controlled authorization attempt — 2026-11-21
+
+At the owner's request, briefly enabled the saved test provider and initiated one authorization-code flow through Supabase with S256 PKCE and the existing callback. GT's authorization endpoint returned **Application Login Failure: The application you attempted to authenticate to is not authorized to use CAS.** This occurred before the user login form. Verified that the outgoing client ID matched Jian's issued ID, `redirect_uri` was the Supabase callback above, and scopes were `openid profile email`. This does not test the client secret/token exchange or establish the exact missing IDP-side setting. Restored the provider to disabled; the website flag remained off. Wait for IAM to authorize this client/callback on `sso-upgrade`, then repeat the real sign-in test. No deployment or iOS build.
+
+## Real GT login accepted — 2026-11-23
+
+Jian confirmed `sso-upgrade` ready. Enabled the saved provider for a controlled PKCE authorization attempt. The owner completed GT login and returned to the configured leaderboard callback with a code. The server-side Supabase PKCE exchange and authenticated `/auth/v1/user` request both returned200. The campus provider returned a confirmed GT email, `email_verified:true`, immutable subject and current sign-in timestamp. The live member record already uses that verified campus email, so no member change, duplicate or alias mapping is needed. The owner explicitly confirmed that the username address and named email alias belong to the same GT account; do not ask them to reconfirm this. Exact identifiers are in the private operational acceptance record, not this public repository.
+
+Corrected the application identity check to read Supabase's provider subject from identity `id`, not its database column name `provider_id` or the separate identity row UUID `identity_id`. Mocked callback and negative subject tests cover the actual wire format. Full 280-file /3,191-test suite passes, alongside typecheck, changed-file lint, production build and secret scan. No authorization or verified-email checks were weakened.
+
+This was provider/token acceptance, not a full deployed website member-session test: public `GT_MEMBER_SSO_ENABLED` stayed off throughout. Restored the hosted provider to disabled, revoked the temporary Supabase test session and deleted temporary verifier/tokens. No member data or permissions changed. Obtain the production IAM configuration and complete real website/PWA session testing before campus-wide activation.
 
 ## Current implementation
 
@@ -69,4 +85,4 @@ The earlier pre-member-rewards statement that no SSO routes existed is supersede
    identities, disabled chapter accounts, account-link collisions and forged form
    verification. Verify the production-like integration before enabling the UI.
 
-Institutional credentials/approval and production testing are still pending.
+Test-instance GT authentication and token/identity verification passed on 2026-11-23. Full website-session acceptance and production IAM registration remain pending.

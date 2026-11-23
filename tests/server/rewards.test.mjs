@@ -229,7 +229,7 @@ describe("Campus sign-in round trip", () => {
     email: "member@gatech.edu",
     email_confirmed_at: new Date().toISOString(),
     identities: [{
-      provider: "custom:gatech", provider_id: "immutable-subject",
+      provider: "custom:gatech", id: "immutable-subject",
       last_sign_in_at: new Date().toISOString(),
       identity_data: { email: "member@gatech.edu", email_verified: true },
     }],
@@ -333,7 +333,7 @@ describe("Campus identity verification", () => {
       identities: [
         {
           provider: "custom:gatech",
-          provider_id: "immutable-subject",
+          id: "immutable-subject",
           last_sign_in_at: new Date(now).toISOString(),
           identity_data: { email: "member@gatech.edu", email_verified: true },
         },
@@ -344,7 +344,14 @@ describe("Campus identity verification", () => {
       email: "member@gatech.edu",
       subject: "custom:gatech:immutable-subject",
     }));
+  it("uses Supabase's provider subject id rather than the identity row UUID", () => {
+    const identity = { ...user.identities[0], identity_id: randomUUID() };
+    expect(verifiedGtIdentity({ ...user, identities: [identity] }, "custom:gatech", now).subject)
+      .toBe("custom:gatech:immutable-subject");
+  });
   it.each([
+    { ...user, identities: [{ ...user.identities[0], id: undefined, provider_id: "incorrect-field", identity_id: randomUUID() }] },
+    { ...user, identities: [{ ...user.identities[0], id: " " }] },
     { ...user, identities: [{ ...user.identities[0], provider: "google" }] },
     { ...user, email_confirmed_at: null },
     {

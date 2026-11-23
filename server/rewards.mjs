@@ -91,8 +91,8 @@ export function verifiedGtIdentity(user, provider, startedAt) {
   if (
     d?.email_verified !== true ||
     d.email?.trim().toLowerCase() !== user.email.trim().toLowerCase() ||
-    typeof i.provider_id !== "string" ||
-    !i.provider_id ||
+    typeof i.id !== "string" ||
+    !i.id.trim() ||
     Date.parse(i.last_sign_in_at || "") < startedAt - 10000 ||
     !Number.isFinite(Date.parse(i.last_sign_in_at || ""))
   )
@@ -103,7 +103,7 @@ export function verifiedGtIdentity(user, provider, startedAt) {
     );
   return {
     email: d.email.trim().toLowerCase(),
-    subject: provider + ":" + i.provider_id,
+    subject: provider + ":" + i.id,
   };
 }
 async function quota(store, request, response, config, scope, limit = 120) {

@@ -23,7 +23,7 @@ try {
     provider: gtOidcTest,
     registerAtGt: gtProviderCallback,
     supabaseRedirectAllowlist: gtApplicationCallbacks,
-    activation: "Waiting for IAM registration, client ID and client secret; real sign-in testing required before enabling member login.",
+    activation: "Metadata preflight only. Confirm hosted provider configuration and real sign-in acceptance before enabling member login; this test issuer is separate from production IAM.",
   }, null, 2));
 } catch (error) {
   console.error("GT SSO preflight failed:", error.message);
