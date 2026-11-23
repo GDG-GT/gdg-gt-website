@@ -72,7 +72,12 @@ export default function Leaderboard() {
       body: unknown;
       key: string;
     }>();
-  useDraftGuard(dirty || !!attempt, { busy, label: "Member profile changes" });
+  // Signing in deliberately leaves this page; only authenticated member writes
+  // need in-flight protection in addition to unsaved profile changes.
+  useDraftGuard(dirty || !!attempt, {
+    busy: busy && !!me,
+    label: "Member profile changes",
+  });
   const load = useCallback(async () => {
     setError("");
     try {

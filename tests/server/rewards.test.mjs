@@ -228,10 +228,11 @@ describe("Campus sign-in round trip", () => {
   const user = () => ({
     email: "member@gatech.edu",
     email_confirmed_at: new Date().toISOString(),
+    last_sign_in_at: new Date().toISOString(),
     identities: [{
       provider: "custom:gatech", id: "immutable-subject",
-      last_sign_in_at: new Date().toISOString(),
-      identity_data: { email: "member@gatech.edu", email_verified: true },
+      last_sign_in_at: new Date(Date.now() - 86400000).toISOString(),
+      identity_data: { email: "member@gatech.edu", email_verified: true, iat: Math.floor(Date.now() / 1000) },
     }],
   });
   function callbackFixture() {
@@ -330,12 +331,13 @@ describe("Campus identity verification", () => {
     user = {
       email: "member@gatech.edu",
       email_confirmed_at: new Date(now).toISOString(),
+      last_sign_in_at: new Date(now).toISOString(),
       identities: [
         {
           provider: "custom:gatech",
           id: "immutable-subject",
           last_sign_in_at: new Date(now).toISOString(),
-          identity_data: { email: "member@gatech.edu", email_verified: true },
+          identity_data: { email: "member@gatech.edu", email_verified: true, iat: Math.floor(Date.now() / 1000) },
         },
       ],
     };
@@ -349,7 +351,26 @@ describe("Campus identity verification", () => {
     expect(verifiedGtIdentity({ ...user, identities: [identity] }, "custom:gatech", now).subject)
       .toBe("custom:gatech:immutable-subject");
   });
+  it("accepts a returning GT identity whose row timestamp was not refreshed", () => {
+    const returning = { ...user, identities: [{ ...user.identities[0],
+      last_sign_in_at: new Date(now - 86400000).toISOString(),
+    }] };
+    expect(verifiedGtIdentity(returning, "custom:gatech", now)).toEqual({
+      email: "member@gatech.edu", subject: "custom:gatech:immutable-subject",
+    });
+  });
+  it.each([NaN, undefined, Infinity, now + 60000])("rejects an invalid flow start time %s", (startedAt) => {
+    expect(() => verifiedGtIdentity(user, "custom:gatech", startedAt)).toThrow();
+  });
   it.each([
+    { ...user, last_sign_in_at: new Date(now - 60000).toISOString() },
+    { ...user, last_sign_in_at: new Date(now + 60000).toISOString() },
+    { ...user, last_sign_in_at: undefined },
+    { ...user, last_sign_in_at: "invalid" },
+    ...[undefined, "1795461024", null, NaN, Infinity, (now - 60000) / 1000, (now + 60000) / 1000].map(iat => ({
+      ...user, identities: [{ ...user.identities[0], identity_data: { ...user.identities[0].identity_data, iat } }],
+    })),
+    { ...user, identities: [...user.identities, ...user.identities] },
     { ...user, identities: [{ ...user.identities[0], id: undefined, provider_id: "incorrect-field", identity_id: randomUUID() }] },
     { ...user, identities: [{ ...user.identities[0], id: " " }] },
     { ...user, identities: [{ ...user.identities[0], provider: "google" }] },
@@ -369,15 +390,6 @@ describe("Campus identity verification", () => {
         {
           ...user.identities[0],
           identity_data: { email: "other@gatech.edu", email_verified: true },
-        },
-      ],
-    },
-    {
-      ...user,
-      identities: [
-        {
-          ...user.identities[0],
-          last_sign_in_at: new Date(now - 60000).toISOString(),
         },
       ],
     },

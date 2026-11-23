@@ -87,14 +87,26 @@ export function verifiedGtIdentity(user, provider, startedAt) {
       "Use the Georgia Tech account listed in the chapter member directory.",
     );
   const i = identities[0],
-    d = i.identity_data;
+    d = i.identity_data,
+    signedInAt = Date.parse(user.last_sign_in_at || ""),
+    issuedAt = typeof d?.iat === "number" ? d.iat * 1000 : NaN,
+    latest = Date.now() + 10000;
+  // Supabase may retain an identity row's original last_sign_in_at on repeat
+  // login. Require both its server-owned account sign-in and the selected
+  // provider's verified token issuance to be fresh for this browser-bound flow.
   if (
     d?.email_verified !== true ||
     d.email?.trim().toLowerCase() !== user.email.trim().toLowerCase() ||
     typeof i.id !== "string" ||
     !i.id.trim() ||
-    Date.parse(i.last_sign_in_at || "") < startedAt - 10000 ||
-    !Number.isFinite(Date.parse(i.last_sign_in_at || ""))
+    !Number.isFinite(startedAt) ||
+    startedAt > latest ||
+    !Number.isFinite(signedInAt) ||
+    signedInAt < startedAt - 10000 ||
+    signedInAt > latest ||
+    !Number.isFinite(issuedAt) ||
+    issuedAt < startedAt - 10000 ||
+    issuedAt > latest
   )
     throw new ApiError(
       403,

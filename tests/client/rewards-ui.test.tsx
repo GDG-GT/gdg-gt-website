@@ -12,6 +12,8 @@ import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 import Leaderboard from "../../src/ui/rewards/Leaderboard";
 import RewardsWorkspace from "../../src/ui/rewards/RewardsWorkspace";
 import NfcControls from "../../src/ui/rewards/NfcControls";
+import { NavigationSafetyContext } from "../../src/contexts/NavigationSafetyContext";
+import { createDraftRegistry } from "../../src/lib/draft-registry.mjs";
 const { apiMock } = vi.hoisted(() => ({ apiMock: vi.fn() }));
 vi.mock("@/lib/api", async (original) => ({
   ...(await original<typeof import("../../src/lib/api")>()),
@@ -62,6 +64,38 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 describe("Member rewards interactions and recovery", () => {
+  it("allows the intentional campus redirect while sign-in is opening", async () => {
+    const registry = createDraftRegistry();
+    apiMock.mockImplementation((path) => path === "/rewards/login"
+      ? new Promise(() => {})
+      : path === "/rewards/me" ? Promise.reject(new Error("Sign in required"))
+      : Promise.resolve({ ...board, ssoAvailable: true }));
+    mount(<NavigationSafetyContext.Provider value={{
+      register: (id, read) => registry.register(id, read),
+      changed: () => {}, allow: (run) => registry.allow(run), request: (run) => run(),
+    }}><Leaderboard /></NavigationSafetyContext.Provider>, "/leaderboard/member");
+    const button = await screen.findByRole("button", { name: "Sign in with Georgia Tech" });
+    await waitFor(() => expect(button).toHaveProperty("disabled", false));
+    fireEvent.click(button);
+    await screen.findByRole("button", { name: "Opening campus sign-in…" });
+    expect(registry.shouldBlock()).toBe(false);
+  });
+  it("still protects an authenticated member write in flight", async () => {
+    const registry = createDraftRegistry();
+    apiMock.mockImplementation((path) => Promise.resolve(path === "/rewards/me"
+      ? { ...member, alias: "Builder", isPublic: false, csrf: "fixture", ledger: [], claims: [] }
+      : board));
+    vi.stubGlobal("fetch", vi.fn(() => new Promise(() => {})));
+    mount(<NavigationSafetyContext.Provider value={{
+      register: (id, read) => registry.register(id, read),
+      changed: () => {}, allow: (run) => registry.allow(run), request: (run) => run(),
+    }}><Leaderboard /></NavigationSafetyContext.Provider>, "/leaderboard/member");
+    await screen.findByRole("heading", { name: "Hi, Fictional Member" });
+    fireEvent.change(screen.getByRole("textbox", { name: /Display name/ }), { target: { value: "New Builder" } });
+    fireEvent.click(screen.getByRole("button", { name: /Save/ }));
+    await waitFor(() => expect(registry.states().some((state: { busy: boolean }) => state.busy)).toBe(true));
+    expect(registry.shouldBlock()).toBe(true);
+  });
   it("offers QR Wallet downloads only for active Wallet credentials", async () => {
     const wallet = {
       id: member.id,

@@ -50,6 +50,14 @@ Corrected the application identity check to read Supabase's provider subject fro
 
 This was provider/token acceptance, not a full deployed website member-session test: public `GT_MEMBER_SSO_ENABLED` stayed off throughout. Restored the hosted provider to disabled, revoked the temporary Supabase test session and deleted temporary verifier/tokens. No member data or permissions changed. Obtain the production IAM configuration and complete real website/PWA session testing before campus-wide activation.
 
+## Full website-session investigation — 2026-11-23
+
+The owner requested the deployed member-session test. Temporarily enabled the test provider and the website flag on the existing production host. The first full return failed the application's freshness check: a direct authenticated Supabase user response showed fresh server `user.last_sign_in_at` and provider-verified `identity_data.iat`, but the identity row's `last_sign_in_at` remained at its original creation sign-in. The separate diagnostic session was revoked (204) and its verifier/tokens deleted.
+
+The callback now requires both the server-owned account sign-in and selected provider's verified token issuance to be current for the PKCE flow, within ten seconds of allowed clock skew. Missing, stale, malformed and future timestamps are rejected; mutable user metadata is not trusted. The unchanged exact-provider, confirmed-email, immutable-subject and active-member checks still apply. Returning-identity and negative timestamp tests cover the real wire behavior. The sign-in button also avoids registering its intentional redirect as an unsaved member write; authenticated writes retain navigation protection.
+
+These fixes require deployed browser verification before claiming a complete website session. Restore the website flag and test provider to disabled after acceptance. Production IAM registration remains separate; no native app source changed.
+
 ## Current implementation
 
 - Member rewards implement the Supabase custom OIDC provider flow behind `GT_MEMBER_SSO_ENABLED`, with campus identity validation, PKCE/browser binding, active community membership matching and separate opaque member sessions. The provider remains disabled until configured and tested.
