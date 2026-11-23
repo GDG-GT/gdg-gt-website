@@ -139,8 +139,9 @@ export default function Leaderboard() {
       setDirty(false);
       setNotice("Saved.");
       if (a.path === "logout") {
+        // The session is already revoked. Show sign-in here without a full
+        // document navigation racing React's completed-write state updates.
         setMe(undefined);
-        window.location.assign(paths.home);
       } else await load();
     } catch (e) {
       setError(

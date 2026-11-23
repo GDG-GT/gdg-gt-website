@@ -96,6 +96,22 @@ describe("Member rewards interactions and recovery", () => {
     await waitFor(() => expect(registry.states().some((state: { busy: boolean }) => state.busy)).toBe(true));
     expect(registry.shouldBlock()).toBe(true);
   });
+  it("clears the member and completed-write guard after confirmed sign-out", async () => {
+    const registry = createDraftRegistry();
+    apiMock.mockImplementation((path) => Promise.resolve(path === "/rewards/me"
+      ? { ...member, alias: "Builder", isPublic: false, csrf: "fixture", ledger: [], claims: [] }
+      : { ...board, ssoAvailable: true }));
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ data: { signedOut: true } }))));
+    mount(<NavigationSafetyContext.Provider value={{
+      register: (id, read) => registry.register(id, read),
+      changed: () => {}, allow: (run) => registry.allow(run), request: (run) => run(),
+    }}><Leaderboard /></NavigationSafetyContext.Provider>, "/leaderboard/member");
+    fireEvent.click(await screen.findByRole("button", { name: "Sign out" }));
+    await screen.findByRole("button", { name: "Sign in with Georgia Tech" });
+    expect(screen.queryByRole("heading", { name: "Hi, Fictional Member" })).toBeNull();
+    expect(registry.shouldBlock()).toBe(false);
+    expect(screen.queryByRole("button", { name: "Retry same request" })).toBeNull();
+  });
   it("offers QR Wallet downloads only for active Wallet credentials", async () => {
     const wallet = {
       id: member.id,
